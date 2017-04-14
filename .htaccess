@@ -16,8 +16,8 @@ Rewriterule ^(.*)?\.yaml$ - [F,L]
 RewriteRule ^(.*/)?\.git+ - [F,L]
 
 # Use this to redirect www to non-wwww on apache servers
-RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
-RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+# RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+# RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
 
 # Remove the index.php
 RewriteCond %{REQUEST_URI} !^/index\.php
