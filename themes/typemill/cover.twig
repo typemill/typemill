@@ -1,0 +1,15 @@
+{% extends '/partials/layoutCover.twig' %}
+
+{% block title %}{{ settings.title }}{% endblock %}
+
+{% block content %}
+	
+	<div class="lead">
+
+		{{ content }}
+
+		<a href="{{ navigation[0].urlRel }}">Start</a>
+
+	</div>
+	
+{% endblock %}

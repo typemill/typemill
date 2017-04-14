@@ -1,0 +1,231 @@
+/**********************
+*  		HELPERS		  *
+**********************/
+
+a, a:link, a:visited, a:focus, a:hover, a:active, button, .button, input{
+	-webkit-transition: all 0.2s ease;
+	-moz-transition: all 0.2s ease;
+	-o-transition: all 0.2s ease;
+	-ms-transition: all 0.2s ease;
+	transition: all 0.2s ease;
+}
+
+/**********************
+*    	 COLORS 	  *
+**********************/
+
+body{ 								background: #f9f8f6; color: #444; }
+.card{ 								background: #FFF; }
+.card header{						background: #e0494c; color: #f9f8f6; }
+.onoffswitch-label {				border: 0px solid #DDD; }
+.onoffswitch-inner:before {			background: #8ce196; color: #f9f8f6; }
+.onoffswitch-inner:after {			background: #e0474c; color: #f9f8f6; }
+.onoffswitch-switch {				background: #f9f8f6; border: 1px solid #999; }
+input, select{ 						border: 1px solid #ddd;	background: #fff; }
+select:focus, input:focus{			border: 1px solid #FFF; outline: none; box-shadow: 0 0 2px #e0474c; }
+input[type="submit"]{				border: 2px solid #FFF; background: #e0474c; color: #f9f8f6; }
+input[type="submit"]:hover{			background: #FFF; color: #444; }
+a.button{							border: 2px solid #e0474c; background: #e0474c; color: #f9f8f6; }
+a.button:hover{						border: 2px solid #e0474c; background: #FFF; color: #444; }
+.error label{						color: #e0474c; }
+.error input, .error select{		border: 1px solid #e0474c; }
+.error small, .error p{				color: #e0474c; }
+
+/********************
+*  		FONTS 	    *
+********************/
+
+header, nav, h1, h2, h3, h4, h5, h6{
+	font-family: arial, sans-serif;
+}
+
+/********************
+*  	   HEADLINES    *
+********************/
+
+h1, h2, h3, h4, h5, h6{ font-weight: 700; }
+h1{ font-size: 1em; margin: 0.6em 0 0.6em; }
+h2{ font-size: 1em; margin: 0.6em 0 0.6em; }
+h3{	font-size: 1em; margin: 0.6em 0 0.6em; }
+
+html,body{
+	padding: 0;
+	margin:0;
+}
+body{
+	padding: 20px;
+	font-size: 18px;
+}
+.card{
+	display: block;
+	margin: auto;
+	max-width: 400px;
+	box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+}
+.card img{
+	width: 100%;
+}
+.card header{
+	display: inlin-block;
+	width: 100%;
+	padding: 20px;
+	box-sizing: border-box;
+}
+.card header h1{
+	display: inline-block;
+}
+form{}
+fieldset{
+	padding: 30px 20px;
+	margin: 0;
+	box-sizing: border-box;
+	border: none;
+}
+label,.label{
+	display: block;
+	font-size: 0.65em;
+	font-weight: 300;
+	padding: 15px 0 0;
+	line-height: 1.5em;
+	text-transform: uppercase;
+}
+.field{
+	margin: 5px 0;
+	box-sizing: border-box;
+}
+.size100{
+	width: 100%;
+}
+.size25, .size50, .size75{
+	display: inline-block;
+	vertical-align: top;	
+}
+.size75{ width: 74%; }
+.size50{ width: 49%; }
+.size25{ width: 24%; }
+input, select{
+	display: inline-block;
+	margin-top: 5px;
+	box-shadow: none;
+	width: 100%;
+	font-size: 0.8em;
+	box-sizing: border-box;
+	min-height: 42px;
+}
+input{
+	padding: 10px;
+}
+select{
+	padding: 8px;
+}
+input[type="submit"]{
+	border-radius: 3px;
+	float: right;
+	margin-top: 0px;
+	width: 150px;
+}
+input[type="submit"]:hover{
+	cursor: pointer;
+}
+
+/* Select Button, see https://codepen.io/vkjgr/pen/VYMeXp */
+select {
+	/* reset */
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	
+	/* style */
+	background-image:
+		linear-gradient(45deg, transparent 50%, #444 50%),
+		linear-gradient(135deg, #444 50%, transparent 50%),
+		linear-gradient(to right, #f9f8f6, #f9f8f6);
+	background-position:
+		calc(100% - 20px) calc(1em + 2px),
+		calc(100% - 15px) calc(1em + 2px),
+		100% 0;
+	background-size: 
+		5px 5px,
+		5px 5px,
+		2.8em 2.8em;
+	background-repeat: no-repeat;	
+}
+
+/* On Off Switch */
+.onoffswitch {
+	margin-top: 5px;
+	display: inline-block;
+	position: relative;
+	width: 100%;
+    -webkit-user-select:none; 
+	-moz-user-select:none; 
+	-ms-user-select:none;
+}
+.onoffswitch label{
+	padding: 0;
+}
+.onoffswitch-checkbox {
+	display: none;
+}
+.onoffswitch-label {
+	display: block; 
+	overflow: hidden; 
+	cursor: pointer;
+}
+.onoffswitch-inner {
+	display: block; 
+	width: 200%;
+	margin-left: -100%;
+	transition: margin 0.3s ease-in 0s;
+}
+.onoffswitch-inner:before, .onoffswitch-inner:after {
+	display: block; 
+	float: left; 
+	width: 50%;
+	padding: 10px 0; 
+	font-size: 1.5em;
+	line-height: 1.9em;
+	font-family: Trebuchet, Arial, sans-serif; 
+	font-weight: bold;
+	box-sizing: border-box;
+	min-height: 42px;
+}
+.onoffswitch-inner:before {
+	content: "ON";
+	padding-left: 20px;
+}
+.onoffswitch-inner:after {
+	content: "OFF";
+	padding-right: 20px;
+	text-align: right;
+}
+.onoffswitch-switch {
+	display: block; 
+	width: 18px; 
+	margin: 6px;
+	position: absolute; 
+	top: 0; 
+	bottom: 0;
+	right: 60%;
+	border-radius: 20px;
+	transition: all 0.3s ease-in 0s; 
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+	margin-left: 0;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+	right: 0px; 
+}
+.welcome{
+	padding: 20px;
+	font-size: 0.9em;
+}
+a.button{
+	display: block;
+	width: 100%;
+	padding: 10px;
+	text-align: center;
+	margin: 20px 0;
+	border-radius: 3px;
+	box-sizing: border-box;
+	text-decoration: none;
+}

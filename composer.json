@@ -1,0 +1,26 @@
+{
+    "name": "trendschau/writeitdown",
+    "type": "project",
+    "description": "A crazy simple tool to create web-documentations and online manuals with markdown files.",
+    "keywords": ["documentations","manuals","flat-file","Markdown","php"],
+    "homepage": "http://writeitdown.net",
+    "license": "MIT",
+    "config": {
+        "vendor-dir": "system/vendor"
+    },
+    "require": {
+        "slim/slim": "^3.7",
+		"twig/twig": "^1.18",		
+		"slim/twig-view": "dev-master",
+		"slim/flash": "dev-master",
+        "symfony/yaml": "~2.8",
+		"erusev/parsedown": "~1.4",
+		"erusev/parsedown-extra": "dev-master",
+		"jbroadway/urlify": "dev-master"
+    },
+	"autoload": {
+		"psr-4": {
+			"System\\": "system"
+		}
+	}
+}

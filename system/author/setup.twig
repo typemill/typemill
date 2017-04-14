@@ -1,0 +1,74 @@
+{% extends '/layout.twig' %}
+
+{% block title %}Setup{% endblock %}
+
+{% block content %}
+	<div class="card">
+		<form method="POST" action="{{ base_url() }}/setup">
+			<header>
+				<h1>Setup</h1>
+				<input type="submit" value="save" />
+			</header>
+			<fieldset>
+				{% if errors.folder %}
+					<div class="field error">
+						<p>{{ errors.folder }}</p>
+					</div>
+				{% endif %}
+				<div class="field size100{% if errors.title %} error{% endif %}">
+					<label for="title">Website Title *</label>
+					<input type="text" name="title" id="title" pattern=".{2,20}" required title="Use 2 to 20 characters." value="{{ inputs.title }}" />
+					{% if errors.title %}<small>{{ errors.title }}</small>{% endif %}
+				</div>
+				<div class="field size100{% if errors.author %} error{% endif %}">
+					<label for="author">Author</label>
+					<input type="text" name="author" id="author" value="{{ inputs.author }}" pattern="[^()/><\]\{\}\?\$@#!*%§=[\\\x22;:|]{2,40}" title="Use 2 to 40 characters. Only the following special characters are allowed: a,b a.b a-b a_b a&b a+b" />
+					{% if errors.author %}<small>{{ errors.author }}</small>{% endif %}				
+				</div>
+				<div class="field size75{% if errors.copyright %} error{% endif %}">
+					<label for="copyright">Copyright/Licence</label>
+					<select name="copyright" id="copyright">
+					{% for copy in copyright %}
+						<option value="{{ copy }}">{{ copy }}</option>
+					{% endfor %}
+					</select>
+					{% if errors.copyright %}<small>{{ errors.copyright }}</small>{% endif %}					
+				</div>
+				<div class="field size25{% if errors.year %} error{% endif %}">
+					<label for="year">Year *</label>
+					<input type="text" name="year" id="year" value="{{ "now"|date("Y") }}" pattern="[0-9]{4}" required title="Use a valid year, e.g. 2017" />
+					{% if errors.year %}<small>{{ errors.year }}</small>{% endif %}
+				</div>
+				<div class="field size75{% if errors.theme %} error{% endif %}">
+					<label for="theme">Theme</label>
+					<select name="theme" id="themeSwitch">
+					{% for theme in themes %}
+						<option value="{{ theme }}">{{ theme }}</option>
+					{% endfor %}
+					</select>
+					{% if errors.theme %}<small>{{ errors.theme }}</small>{% endif %}
+				</div>
+				<div class="field size25"><span class="label">Startpage</label>
+					<div class="onoffswitch">
+						<input type="checkbox" name="startpage" class="onoffswitch-checkbox" id="startpage" checked >
+						<label class="onoffswitch-label" for="startpage">
+							<span class="onoffswitch-inner"></span>
+							<span class="onoffswitch-switch"></span>
+						</label>
+					</div>
+				</div>
+			</fieldset>
+		</form>
+		<img id="themePrev" src="{{ base_url() }}/themes/typemill/typemill.jpg">
+	</div>
+	<script>
+		var themeSwitch	= document.getElementById("themeSwitch"),
+			themePrev	= document.getElementById("themePrev"),
+			themePath	= themePrev.src.split("themes")[0];
+		themeSwitch.addEventListener('change', function()
+		{
+			themePrev.src = themePath + 'themes/' + themeSwitch.value + '/' + themeSwitch.value + '.jpg';
+		});
+		
+	</script>
+{% endblock %}
