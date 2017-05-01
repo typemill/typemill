@@ -13,6 +13,8 @@ RewriteRule ^(system) - [F,L]
 RewriteRule ^(content) - [F,L]
 RewriteRule ^(.*)?\.yml$ - [F,L]
 Rewriterule ^(.*)?\.yaml$ - [F,L]
+RewriteRule ^(.*)?\.txt$ - [F,L]
+RewriteRule ^(.*)?\.example$ - [F,L]
 RewriteRule ^(.*/)?\.git+ - [F,L]
 
 # Use this to redirect www to non-wwww on apache servers

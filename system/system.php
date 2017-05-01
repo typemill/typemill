@@ -71,7 +71,7 @@ $container['notFoundHandler'] = function($c)
 	return new \System\Handlers\NotFoundHandler($c['view']);
 };
 
-require __DIR__ . '/Routes/web.php';
 require __DIR__ . '/Routes/api.php';
+require __DIR__ . '/Routes/web.php';
 
 ?>

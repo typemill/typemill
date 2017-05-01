@@ -3,12 +3,15 @@
 namespace System\Controllers;
 
 use System\Models\Folder;
-use System\Models\Cache;
+use System\Models\WriteCache;
+use System\Models\WriteSitemap;
+use System\Models\WriteYaml;
+use \Symfony\Component\Yaml\Yaml;
+use System\Models\VersionCheck;
 use System\Models\Helpers;
 
 class PageController extends Controller
 {
-	
 	public function index($request, $response, $args)
 	{
 		
@@ -20,30 +23,54 @@ class PageController extends Controller
 		$description	= '';
 		$settings		= $this->c->get('settings');
 		$pathToContent	= $settings['rootPath'] . $settings['contentFolder'];
-		$cache 			= new Cache();
+		$cache 			= new WriteCache();
 		$uri 			= $request->getUri();
 		$base_url		= $uri->getBaseUrl();
-		
-		if($cache->validate())
+
+		try
 		{
-			$structure	= $this->getCachedStructure($cache);
-			$cached 	= true;
-		}
-		else
-		{
-			$structure 	= $this->getFreshStructure($pathToContent, $cache, $uri);
-			$cached		= false;
-			
-			if(!$structure)
-			{ 
-				$content = '<h1>No Content</h1><p>Your content folder is empty.</p>'; 
-				$this->c->view->render($response, '/index.twig', [ 'content' => $content ]);
+			if($cache->validate('cache', 'lastCache.txt',600))
+			{				
+				$structure	= $this->getCachedStructure($cache);
+				$cached 	= true;
+			}
+			else
+			{
+				$structure 	= $this->getFreshStructure($pathToContent, $cache, $uri);
+				$cached		= false;
+				
+				if(!$structure)
+				{ 
+					$content = '<h1>No Content</h1><p>Your content folder is empty.</p>'; 
+					$this->c->view->render($response, '/index.twig', [ 'content' => $content ]);
+				}
+				elseif(!$cache->validate('cache', 'lastSitemap.txt', 86400))
+				{
+					/* update sitemap */
+					$sitemap = new WriteSitemap();
+					$sitemap->updateSitemap('cache', 'sitemap.xml', 'lastSitemap.txt', $structure, $uri->getBaseUrl());
+					
+					$version = new VersionCheck();
+					$latestVersion = $version->checkVersion($uri->getBaseUrl());
+					if($latestVersion)
+					{
+						$yaml = new WriteYaml();
+						$yamlContent = $yaml->getYaml('settings', 'settings.yaml');
+						$yamlContent['latestVersion'] = $latestVersion;
+						$yaml->updateYaml('settings', 'settings.yaml', $yamlContent);
+					}
+				}
 			}
 		}
-
+		catch (Exception $e)
+		{
+			echo $e->getMessage();
+			exit(1);
+		}
+		
 		/* if the user is on startpage */
 		if(empty($args))
-		{
+		{			
 			/* check, if there is an index-file in the root of the content folder */
 			$contentMD = file_exists($pathToContent . DIRECTORY_SEPARATOR . 'index.md') ? file_get_contents($pathToContent . DIRECTORY_SEPARATOR . 'index.md') : NULL;
 		}
@@ -100,13 +127,11 @@ class PageController extends Controller
 
 		$this->c->view->render($response, $route, array('navigation' => $structure, 'content' => $contentHTML, 'item' => $item, 'breadcrumb' => $breadcrumb, 'settings' => $settings, 'description' => $description, 'base_url' => $base_url ));
 	}
-
 	
 	protected function getCachedStructure($cache)
 	{
-		return $cache->getData('structure');
+		return $cache->getCache('cache', 'structure.txt');
 	}
-
 	
 	protected function getFreshStructure($pathToContent, $cache, $uri)
 	{
@@ -120,13 +145,13 @@ class PageController extends Controller
 		}
 
 		/* create an array of object with the whole content of the folder */
-		$structure = Folder::getFolderContentDetails($structure, $uri->getBaseUrl(), $uri->getBasePath());
-		
+		$structure = Folder::getFolderContentDetails($structure, $uri->getBaseUrl(), $uri->getBasePath());		
+
 		/* cache navigation */
-		$cache->refresh($structure, 'structure');
+		$cache->updateCache('cache', 'structure.txt', 'lastCache.txt', $structure);
 		
 		return $structure;
-	}	
+	}
 }
 
 ?>

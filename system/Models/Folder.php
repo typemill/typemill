@@ -40,16 +40,16 @@ class Folder
 	* vars: multidimensional array with folder- and file-names
 	* returns: array of objects. Each object contains information about an item (file or folder).
 	*/	
-	public static function getFolderContentDetails(array $folderContent, $baseUrl, $fullSlug = NULL, $fullPath = NULL, $keyPath = NULL, $chapter = NULL)
-	{
+	public static function getFolderContentDetails(array $folderContent, $baseUrl, $fullSlugWithFolder = NULL, $fullSlugWithoutFolder = NULL, $fullPath = NULL, $keyPath = NULL, $chapter = NULL)
+	{	
 		$contentDetails 	= [];
 		$iteration 			= 0;
 		$chapternr 			= 1;
-
+		
 		foreach($folderContent as $key => $name)
 		{
 			$item = new \stdClass();
-						
+
 			if(is_array($name))
 			{
 				$nameParts = self::getStringParts($key);
@@ -63,21 +63,22 @@ class Folder
 				$item->slug				= implode("-",$nameParts);
 				$item->slug				= URLify::filter(iconv('ISO-8859-15', 'UTF-8', $item->slug));
 				$item->path				= $fullPath . DIRECTORY_SEPARATOR . $key;
-				$item->urlRel			= $fullSlug . '/' . $item->slug;
-				$item->urlAbs			= $baseUrl . $fullSlug . '/' . $item->slug;
+				$item->urlRelWoF		= $fullSlugWithoutFolder . '/' . $item->slug;
+				$item->urlRel			= $fullSlugWithFolder . '/' . $item->slug;
+				$item->urlAbs			= $baseUrl . $fullSlugWithoutFolder . '/' . $item->slug;
 				$item->key				= $iteration;
 				$item->keyPath			= $keyPath ? $keyPath . '.' . $iteration : $iteration;
 				$item->keyPathArray		= explode('.', $item->keyPath);
 				$item->chapter			= $chapter ? $chapter . '.' . $chapternr : $chapternr;
 				
-				$item->folderContent 	= self::getFolderContentDetails($name, $baseUrl, $item->urlRel, $item->path, $item->keyPath, $item->chapter);
+				$item->folderContent 	= self::getFolderContentDetails($name, $baseUrl, $item->urlRel, $item->urlRelWoF, $item->path, $item->keyPath, $item->chapter);
 			}
 			else
 			{
 				$nameParts 				= self::getStringParts($name);
 				$fileType 				= array_pop($nameParts);
 				
-				if($name == 'index.md' || $fileType !== 'md' ) break;
+				if($name == 'index.md' || $fileType !== 'md' ) continue;
 												
 				$item->originalName 	= $name;
 				$item->elementType		= 'file';
@@ -92,8 +93,9 @@ class Folder
 				$item->keyPath			= $keyPath . '.' . $iteration;
 				$item->keyPathArray		= explode('.',$item->keyPath);
 				$item->chapter			= $chapter . '.' . $chapternr;
-				$item->urlRel			= $fullSlug . '/' . $item->slug;
-				$item->urlAbs			= $baseUrl . $fullSlug . '/' . $item->slug;
+				$item->urlRelWoF		= $fullSlugWithoutFolder . '/' . $item->slug;
+				$item->urlRel			= $fullSlugWithFolder . '/' . $item->slug;
+				$item->urlAbs			= $baseUrl . $fullSlugWithoutFolder . '/' . $item->slug;
 			}
 			$iteration++;
 			$chapternr++;
