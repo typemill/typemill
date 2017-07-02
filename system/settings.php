@@ -4,8 +4,8 @@ DEFINE('DS', DIRECTORY_SEPARATOR);
 
 return [
 	'title'					=> 'TYPEMILL',
-	'author'				=> 'unknown',
-	'copyright'				=> 'copyright',
+	'author'				=> 'Unknown',
+	'copyright'				=> 'Copyright',
 	'startpage'				=> true,
 	'rootPath'				=> __DIR__ . DS .  '..' . DS,
 	'theme'					=> ($theme = 'typemill'),

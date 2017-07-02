@@ -47,7 +47,7 @@ $container['view'] = function ($container) use ($settings){
 	$path = array($settings['settings']['themePath'], $settings['settings']['authorPath']);
 	
     $view = new \Slim\Views\Twig( $path, [
-        'cache' => false,
+		'cache' => false,
 		'autoescape' => false
     ]);
     

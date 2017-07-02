@@ -82,13 +82,6 @@ class ComposerStaticInit836351be733ecbf4741aea17e1973480
     );
 
     public static $prefixesPsr0 = array (
-        'V' => 
-        array (
-            'Valitron' => 
-            array (
-                0 => __DIR__ . '/..' . '/vlucas/valitron/src',
-            ),
-        ),
         'U' => 
         array (
             'URLify' => 

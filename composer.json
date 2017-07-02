@@ -16,8 +16,7 @@
         "symfony/yaml": "~2.8",
 		"erusev/parsedown": "~1.4",
 		"erusev/parsedown-extra": "dev-master",
-		"jbroadway/urlify": "dev-master",
-		"vlucas/valitron": "dev-master"
+		"jbroadway/urlify": "dev-master"
     },
 	"autoload": {
 		"psr-4": {

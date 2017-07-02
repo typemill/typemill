@@ -75,7 +75,6 @@ h4{	font-size: 1.1em; margin: 1.2em 0 0.6em; }
 h5{	font-size: 1em; margin: 1.2em 0 0.6em; }
 h6{	font-size: 1em; font-style: italic; font-weight:300; margin: 1em 0 0.6em; }
 
-
 /********************
 *    STRUCTURE      *
 ********************/
@@ -140,10 +139,10 @@ header p{
 	padding-top: 0;
 	margin-top: 0;
 }
+
 /************************
 *  		NAVIGATION  	*
 ************************/
-
 .close{
 	max-height: 0;
 	transition: max-height 0.25s ease-out;
@@ -216,7 +215,6 @@ nav > ul > li
 /************************
 *  		CHAPTER		    *
 ************************/
-
 .chapter{
 	text-align: center;
 }
@@ -234,7 +232,6 @@ nav > ul > li
 /************************
 *  		ARTICLE		    *
 ************************/
-
 article{
 	padding: 30px 30px;
 	font-size: 1em;
@@ -247,7 +244,6 @@ article img{
 /************************
 *  	PAGING / BREADCRUMB *
 ************************/
-
 article .paging, article .breadcrumb{
 	position: relative;
 	width: 100%;
