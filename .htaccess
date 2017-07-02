@@ -11,6 +11,7 @@ RewriteEngine On
 RewriteRule ^(system\/author\/) - [L]
 RewriteRule ^(system) - [F,L]
 RewriteRule ^(content) - [F,L]
+RewriteRule ^(settings) - [F,L]
 RewriteRule ^(.*)?\.yml$ - [F,L]
 Rewriterule ^(.*)?\.yaml$ - [F,L]
 RewriteRule ^(.*)?\.txt$ - [F,L]

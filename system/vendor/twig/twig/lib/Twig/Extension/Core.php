@@ -1,8 +1,7 @@
 <?php
 
 if (!defined('ENT_SUBSTITUTE')) {
-    // use 0 as hhvm does not support several flags yet
-    define('ENT_SUBSTITUTE', 0);
+    define('ENT_SUBSTITUTE', 8);
 }
 
 /*
@@ -1006,30 +1005,22 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
             // Using a static variable to avoid initializing the array
             // each time the function is called. Moving the declaration on the
             // top of the function slow downs other escaping strategies.
-            static $htmlspecialcharsCharsets;
-
-            if (null === $htmlspecialcharsCharsets) {
-                if (defined('HHVM_VERSION')) {
-                    $htmlspecialcharsCharsets = array('utf-8' => true, 'UTF-8' => true);
-                } else {
-                    $htmlspecialcharsCharsets = array(
-                        'ISO-8859-1' => true, 'ISO8859-1' => true,
-                        'ISO-8859-15' => true, 'ISO8859-15' => true,
-                        'utf-8' => true, 'UTF-8' => true,
-                        'CP866' => true, 'IBM866' => true, '866' => true,
-                        'CP1251' => true, 'WINDOWS-1251' => true, 'WIN-1251' => true,
-                        '1251' => true,
-                        'CP1252' => true, 'WINDOWS-1252' => true, '1252' => true,
-                        'KOI8-R' => true, 'KOI8-RU' => true, 'KOI8R' => true,
-                        'BIG5' => true, '950' => true,
-                        'GB2312' => true, '936' => true,
-                        'BIG5-HKSCS' => true,
-                        'SHIFT_JIS' => true, 'SJIS' => true, '932' => true,
-                        'EUC-JP' => true, 'EUCJP' => true,
-                        'ISO8859-5' => true, 'ISO-8859-5' => true, 'MACROMAN' => true,
-                    );
-                }
-            }
+            static $htmlspecialcharsCharsets = array(
+                'ISO-8859-1' => true, 'ISO8859-1' => true,
+                'ISO-8859-15' => true, 'ISO8859-15' => true,
+                'utf-8' => true, 'UTF-8' => true,
+                'CP866' => true, 'IBM866' => true, '866' => true,
+                'CP1251' => true, 'WINDOWS-1251' => true, 'WIN-1251' => true,
+                '1251' => true,
+                'CP1252' => true, 'WINDOWS-1252' => true, '1252' => true,
+                'KOI8-R' => true, 'KOI8-RU' => true, 'KOI8R' => true,
+                'BIG5' => true, '950' => true,
+                'GB2312' => true, '936' => true,
+                'BIG5-HKSCS' => true,
+                'SHIFT_JIS' => true, 'SJIS' => true, '932' => true,
+                'EUC-JP' => true, 'EUCJP' => true,
+                'ISO8859-5' => true, 'ISO-8859-5' => true, 'MACROMAN' => true,
+            );
 
             if (isset($htmlspecialcharsCharsets[$charset])) {
                 return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, $charset);
@@ -1264,15 +1255,23 @@ if (function_exists('mb_get_info')) {
      */
     function twig_length_filter(Twig_Environment $env, $thing)
     {
+        if (null === $thing) {
+            return 0;
+        }
+
         if (is_scalar($thing)) {
             return mb_strlen($thing, $env->getCharset());
         }
 
-        if (method_exists($thing, '__toString') && !$thing instanceof \Countable) {
+        if (is_object($thing) && method_exists($thing, '__toString') && !$thing instanceof \Countable) {
             return mb_strlen((string) $thing, $env->getCharset());
         }
 
-        return count($thing);
+        if ($thing instanceof \Countable || is_array($thing)) {
+            return count($thing);
+        }
+
+        return 1;
     }
 
     /**
@@ -1355,15 +1354,23 @@ else {
      */
     function twig_length_filter(Twig_Environment $env, $thing)
     {
+        if (null === $thing) {
+            return 0;
+        }
+
         if (is_scalar($thing)) {
             return strlen($thing);
         }
 
-        if (method_exists($thing, '__toString') && !$thing instanceof \Countable) {
+        if (is_object($thing) && method_exists($thing, '__toString') && !$thing instanceof \Countable) {
             return strlen((string) $thing);
         }
 
-        return count($thing);
+        if ($thing instanceof \Countable || is_array($thing)) {
+            return count($thing);
+        }
+
+        return 1;
     }
 
     /**
@@ -1425,7 +1432,7 @@ function twig_test_empty($value)
         return 0 == count($value);
     }
 
-    if (method_exists($value, '__toString')) {
+    if (is_object($value) && method_exists($value, '__toString')) {
         return '' === (string) $value;
     }
 
@@ -1601,3 +1608,5 @@ function twig_array_batch($items, $size, $fill = null)
 
     return $result;
 }
+
+class_alias('Twig_Extension_Core', 'Twig\Extension\CoreExtension', false);

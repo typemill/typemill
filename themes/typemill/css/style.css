@@ -240,6 +240,9 @@ article{
 	font-size: 1em;
 	line-height: 1.35em;
 }
+article img{
+	width: 100%;
+}
 
 /************************
 *  	PAGING / BREADCRUMB *

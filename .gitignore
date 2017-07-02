@@ -1,6 +1,7 @@
 cache/structure.txt
 cache/sitemap.txt
 cache/lastSitemap.txt
+cache/lastCache.txt
 settings/settings.yaml
 typemill.zip
 typemill-1.0.1.zip

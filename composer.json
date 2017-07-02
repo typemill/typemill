@@ -1,9 +1,9 @@
 {
-    "name": "trendschau/writeitdown",
+    "name": "trendschau/typemill",
     "type": "project",
     "description": "A crazy simple tool to create web-documentations and online manuals with markdown files.",
     "keywords": ["documentations","manuals","flat-file","Markdown","php"],
-    "homepage": "http://writeitdown.net",
+    "homepage": "http://typemill.net",
     "license": "MIT",
     "config": {
         "vendor-dir": "system/vendor"
@@ -16,7 +16,8 @@
         "symfony/yaml": "~2.8",
 		"erusev/parsedown": "~1.4",
 		"erusev/parsedown-extra": "dev-master",
-		"jbroadway/urlify": "dev-master"
+		"jbroadway/urlify": "dev-master",
+		"vlucas/valitron": "dev-master"
     },
 	"autoload": {
 		"psr-4": {
