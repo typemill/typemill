@@ -2,6 +2,10 @@
 
 This is the version history with some release notes.
 
+## Version 1.0.2 (02.07.2017)
+
+- Bugfix: The theme can now be changed in the yaml-file again.
+
 ## Version 1.0.1 (01.05.2017)
 
 - Bugfix: Index file in the content folder won't break the building of the navigation tree anymore. 
