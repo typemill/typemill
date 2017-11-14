@@ -9,14 +9,14 @@
         "vendor-dir": "system/vendor"
     },
     "require": {
-        "slim/slim": "^3.7",
-		"twig/twig": "^1.18",		
-		"slim/twig-view": "dev-master",
-		"slim/flash": "dev-master",
+        "slim/slim": "~3.7",
+		"twig/twig": "~1.18",		
+		"slim/twig-view": "~2.3",
+		"slim/flash": "~0.4",
         "symfony/yaml": "~2.8",
 		"erusev/parsedown": "~1.4",
 		"erusev/parsedown-extra": "dev-master",
-		"jbroadway/urlify": "dev-master"
+		"jbroadway/urlify": "~1.1"
     },
 	"autoload": {
 		"psr-4": {

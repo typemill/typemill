@@ -15,7 +15,7 @@ return [
 	'settingsPath'			=> __DIR__ . DS . '..' . DS . 'settings',
 	'authorPath'			=> __DIR__ . DS . 'author' . DS,
 	'contentFolder'			=> 'content',
-	'displayErrorDetails' 	=> false,
+	'displayErrorDetails' 	=> true,
 	'version'				=> '1.0.2'
 ];
 
