@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Models;
+namespace Typemill\Models;
 
 use \URLify;
 
@@ -273,4 +273,3 @@ class Folder
 		return end($parts);
 	}	
 }
-?>

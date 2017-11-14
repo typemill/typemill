@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Models;
+namespace Typemill\Models;
 
 class WriteCache extends Write
 {
@@ -28,6 +28,7 @@ class WriteCache extends Write
 		}
 				
 		$lastRefresh = file_get_contents($folderName . DIRECTORY_SEPARATOR . $fileName);
+		
 		if(time() - $lastRefresh > $duration)
 		{
 			return false;
@@ -81,5 +82,3 @@ class WriteCache extends Write
 	{
 	}
 }
-
-?>

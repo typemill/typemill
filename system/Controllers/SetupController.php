@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Controllers;
+namespace Typemill\Controllers;
 
 use \Symfony\Component\Yaml\Yaml;
 
@@ -14,7 +14,7 @@ class SetupController extends Controller
 		$base_url		= $uri->getBaseUrl();
 		$errors 		= false;
 		
-		/* Check, if setting folder is */
+		/* Check, if setting folder is writable */
 		if(!is_writable($this->c->get('settings')['settingsPath'])){ $errors['folder'] = 'Your settings folder is not writable.'; }
 				
 		$data = array(
@@ -134,5 +134,3 @@ class SetupController extends Controller
 		return $themes;
 	}
 }
-
-?>

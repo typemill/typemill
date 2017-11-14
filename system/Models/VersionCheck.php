@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Models;
+namespace Typemill\Models;
 
 class VersionCheck
 {
@@ -28,6 +28,3 @@ class VersionCheck
 		}
 	}
 }
-
-
-?>

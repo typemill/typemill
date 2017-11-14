@@ -1,7 +1,7 @@
 <?php
 
-use System\Controllers\PageController;
-use System\Controllers\SetupController;
+use Typemill\Controllers\PageController;
+use Typemill\Controllers\SetupController;
 
 if(!isset($userSettings))
 {
@@ -10,4 +10,3 @@ if(!isset($userSettings))
 }
 
 $app->get('/[{params:.*}]', PageController::class . ':index');
-?>

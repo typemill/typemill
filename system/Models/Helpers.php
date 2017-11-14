@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Models;
+namespace Typemill\Models;
 
 class Helpers{
 

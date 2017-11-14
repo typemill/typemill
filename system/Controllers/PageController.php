@@ -1,14 +1,14 @@
 <?php
 
-namespace System\Controllers;
+namespace Typemill\Controllers;
 
-use System\Models\Folder;
-use System\Models\WriteCache;
-use System\Models\WriteSitemap;
-use System\Models\WriteYaml;
+use Typemill\Models\Folder;
+use Typemill\Models\WriteCache;
+use Typemill\Models\WriteSitemap;
+use Typemill\Models\WriteYaml;
 use \Symfony\Component\Yaml\Yaml;
-use System\Models\VersionCheck;
-use System\Models\Helpers;
+use Typemill\Models\VersionCheck;
+use Typemill\Models\Helpers;
 
 class PageController extends Controller
 {
@@ -113,9 +113,12 @@ class PageController extends Controller
 		$Parsedown = new \ParsedownExtra();
 
 		/* parse markdown-file to html-string */
-		$contentHTML = $Parsedown->text($contentMD);
-		$description = substr(strip_tags($contentHTML),0,150);
-		$description = trim(preg_replace('/\s+/', ' ', $description));
+		$contentHTML 	= $Parsedown->text($contentMD);
+		$excerpt		= substr($contentHTML,0,200);
+		$excerpt		= explode("</h1>", $excerpt);
+		$title			= isset($excerpt[0]) ? strip_tags($excerpt[0]) : $settings['title'];
+		$description	= isset($excerpt[1]) ? strip_tags($excerpt[1]) : false;
+		$description 	= $description ? trim(preg_replace('/\s+/', ' ', $description)) : false;
 		
 		/* 
 			$timer['topiccontroller']=microtime(true);
@@ -125,7 +128,7 @@ class PageController extends Controller
 		
 		$route = empty($args) && $settings['startpage'] ? '/cover.twig' : '/index.twig';
 
-		$this->c->view->render($response, $route, array('navigation' => $structure, 'content' => $contentHTML, 'item' => $item, 'breadcrumb' => $breadcrumb, 'settings' => $settings, 'description' => $description, 'base_url' => $base_url ));
+		$this->c->view->render($response, $route, array('navigation' => $structure, 'content' => $contentHTML, 'item' => $item, 'breadcrumb' => $breadcrumb, 'settings' => $settings, 'title' => $title, 'description' => $description, 'base_url' => $base_url ));
 	}
 	
 	protected function getCachedStructure($cache)
@@ -153,5 +156,3 @@ class PageController extends Controller
 		return $structure;
 	}
 }
-
-?>

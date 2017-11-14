@@ -13,11 +13,11 @@ class ComposerStaticInit836351be733ecbf4741aea17e1973480
     public static $prefixLengthsPsr4 = array (
         'T' => 
         array (
+            'Typemill\\' => 9,
             'Twig\\' => 5,
         ),
         'S' => 
         array (
-            'System\\' => 7,
             'Symfony\\Component\\Yaml\\' => 23,
             'Slim\\Views\\' => 11,
             'Slim\\Flash\\' => 11,
@@ -39,13 +39,13 @@ class ComposerStaticInit836351be733ecbf4741aea17e1973480
     );
 
     public static $prefixDirsPsr4 = array (
+        'Typemill\\' => 
+        array (
+            0 => __DIR__ . '/../../..' . '/system',
+        ),
         'Twig\\' => 
         array (
             0 => __DIR__ . '/..' . '/twig/twig/src',
-        ),
-        'System\\' => 
-        array (
-            0 => __DIR__ . '/../../..' . '/system',
         ),
         'Symfony\\Component\\Yaml\\' => 
         array (

@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Models;
+namespace Typemill\Models;
 
 class WriteYaml extends Write
 {
@@ -31,5 +31,3 @@ class WriteYaml extends Write
 		$this->writeFile($folderName, $yamlFileName, $yaml);
 	}
 }
-
-?>

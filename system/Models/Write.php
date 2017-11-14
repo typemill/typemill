@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Models;
+namespace Typemill\Models;
 
 class Write
 {
@@ -21,6 +21,7 @@ class Write
 			throw new Exception("The folder '{$folder}' is missing and we could not create it. Please create the folder manually on your server.");
 			return false;
 		}
+		
 		if(!is_writable($folderPath))
 		{
 			throw new Exception("Please make the folder '{$folder}' writable.");
@@ -57,5 +58,3 @@ class Write
 		return false;
 	}
 }
-
-?>

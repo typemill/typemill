@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Models;
+namespace Typemill\Models;
 
 class WriteSitemap extends Write
 {
@@ -43,5 +43,3 @@ class WriteSitemap extends Write
 		return $urlset;
 	}
 }
-
-?>

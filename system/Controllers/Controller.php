@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Controllers;
+namespace Typemill\Controllers;
 
 /* Use the slim-container */
 use Interop\Container\ContainerInterface;

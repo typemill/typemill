@@ -72,7 +72,7 @@ $container['flash'] = function () {
 
 $container['notFoundHandler'] = function($c)
 {
-	return new \System\Handlers\NotFoundHandler($c['view']);
+	return new \Typemill\Handlers\NotFoundHandler($c['view']);
 };
 
 require __DIR__ . '/Routes/api.php';
