@@ -1,5 +1,8 @@
 <?php
 
+use Typemill\Models\Helpers;
+$timer['before session start']=microtime(true);
+
 /************************
 * START SESSION			*
 ************************/
@@ -10,23 +13,7 @@ session_start();
 * LOAD SETTINGS			*
 ************************/
 
-$settings = require_once( __DIR__ . '/settings.php');
-
-if(file_exists($settings['settingsPath'] . DIRECTORY_SEPARATOR . 'settings.yaml'))
-{
-	$yaml = new \Symfony\Component\Yaml\Parser();
-
-	try {
-		$userSettings 	= $yaml->parse( file_get_contents($settings['settingsPath'] . DIRECTORY_SEPARATOR . 'settings.yaml' ) );
-	} catch (ParseException $e) {
-		printf("Unable to parse the YAML string: %s", $e->getMessage());
-	}
-	
-	$settings = array_merge($settings, $userSettings);
-	$settings['themePath'] = $settings['themeBasePath'] . $settings['themeFolder'] . DIRECTORY_SEPARATOR . $settings['theme'];
-}
-
-$settings['settings'] = $settings;
+$settings = Typemill\Settings::loadSettings();
 
 /************************
 * INITIATE SLIM 		*
@@ -35,14 +22,15 @@ $settings['settings'] = $settings;
 $app = new \Slim\App($settings);
 
 /************************
-* 	SLIM CONTAINER		*
+*  GET SLIM CONTAINER	*
 ************************/
 
 $container = $app->getContainer();
 
 /************************
-* 		LOAD TWIG		*
+* 	LOAD TWIG VIEW		*
 ************************/
+
 $container['view'] = function ($container) use ($settings){
 	$path = array($settings['settings']['themePath'], $settings['settings']['authorPath']);
 	
@@ -66,8 +54,37 @@ $container['flash'] = function () {
     return new \Slim\Flash\Messages();
 };
 
+/****************************
+* CREATE EVENT DISPATCHER	*
+****************************/
+
+$dispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
+
 /************************
-* 	NOT FOUND HANDLER	*
+* LOAD PLUGINS 			*
+************************/
+
+$plugins 				= new Typemill\Plugins();
+$pluginClassNames		= $plugins->load();
+$routes = $middleware	= array();
+
+foreach($pluginClassNames as $pluginClassName)
+{
+	$routes 			= $plugins->getNewRoutes($pluginClassName, $routes);
+	$middleware[]		= $plugins->getNewMiddleware($pluginClassName);
+	
+	$dispatcher->addSubscriber(new $pluginClassName($container, $app));	
+}
+
+$dispatcher->dispatch('onPluginsInitialized');	
+
+$container['dispatcher'] = function($container) use ($dispatcher)
+{
+	return $dispatcher;
+};
+
+/************************
+* 	ADD MIDDLEWARE		*
 ************************/
 
 $container['notFoundHandler'] = function($c)
@@ -75,7 +92,11 @@ $container['notFoundHandler'] = function($c)
 	return new \Typemill\Handlers\NotFoundHandler($c['view']);
 };
 
+/************************
+* 	ADD ROUTES			*
+************************/
+
+$timer['before router']=microtime(true);
+
 require __DIR__ . '/Routes/api.php';
 require __DIR__ . '/Routes/web.php';
-
-?>

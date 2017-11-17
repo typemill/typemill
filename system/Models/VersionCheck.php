@@ -18,7 +18,7 @@ class VersionCheck
 		try {
 			$version = file_get_contents('http://typemill.net/tma1/checkversion', false, $context);
 
-			if ($version) 
+			if ($version)
 			{
 				$version = json_decode($version);			
 				return $version->version;

@@ -19,6 +19,7 @@ class ComposerStaticInit836351be733ecbf4741aea17e1973480
         'S' => 
         array (
             'Symfony\\Component\\Yaml\\' => 23,
+            'Symfony\\Component\\EventDispatcher\\' => 34,
             'Slim\\Views\\' => 11,
             'Slim\\Flash\\' => 11,
             'Slim\\' => 5,
@@ -27,6 +28,7 @@ class ComposerStaticInit836351be733ecbf4741aea17e1973480
         array (
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Container\\' => 14,
+            'Plugins\\' => 8,
         ),
         'I' => 
         array (
@@ -51,6 +53,10 @@ class ComposerStaticInit836351be733ecbf4741aea17e1973480
         array (
             0 => __DIR__ . '/..' . '/symfony/yaml',
         ),
+        'Symfony\\Component\\EventDispatcher\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/event-dispatcher',
+        ),
         'Slim\\Views\\' => 
         array (
             0 => __DIR__ . '/..' . '/slim/twig-view/src',
@@ -70,6 +76,10 @@ class ComposerStaticInit836351be733ecbf4741aea17e1973480
         'Psr\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
+        ),
+        'Plugins\\' => 
+        array (
+            0 => __DIR__ . '/../../..' . '/plugins',
         ),
         'Interop\\Container\\' => 
         array (
