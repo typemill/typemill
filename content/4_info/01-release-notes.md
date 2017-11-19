@@ -2,6 +2,11 @@
 
 This is the version history with some release notes.
 
+## Version 1.0.4 (17.11.2017)
+
+- Bugfix: Settings file was generated after a page refresh, this is fixed now.
+- Improvement: Cleaned up the load and merge process for settings, managed in a new static class now.
+
 ## Version 1.0.3 (14.11.2017)
 
 - Bugfix: Deleted a config-file in the download-version, that broke the setup url.

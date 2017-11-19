@@ -36,7 +36,7 @@ class Settings
 			'settingsPath'							=> $rootPath . 'settings',
 			'authorPath'							=> __DIR__ . DIRECTORY_SEPARATOR . 'author' . DIRECTORY_SEPARATOR,
 			'contentFolder'							=> 'content',
-			'version'								=> '1.0.3'
+			'version'								=> '1.0.4'
 		];
 	}
 	

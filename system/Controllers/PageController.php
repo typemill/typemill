@@ -56,7 +56,7 @@ class PageController extends Controller
 					/* update sitemap */
 					$sitemap = new WriteSitemap();
 					$sitemap->updateSitemap('cache', 'sitemap.xml', 'lastSitemap.txt', $structure, $uri->getBaseUrl());
-					
+
 					/* check and update the typemill-version in the user settings */
 					$this->updateVersion($uri->getBaseUrl());					
 				}
@@ -192,5 +192,5 @@ class PageController extends Controller
 				}
 			}
 		}	
-	}
+	}	
 }

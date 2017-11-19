@@ -13,7 +13,7 @@ session_start();
 * LOAD SETTINGS			*
 ************************/
 
-$settings = Typemill\Settings::loadSettings();
+$settings = Typemill\settings::loadSettings();
 
 /************************
 * INITIATE SLIM 		*
