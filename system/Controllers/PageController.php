@@ -49,16 +49,9 @@ class PageController extends Controller
 					/* update sitemap */
 					$sitemap = new WriteSitemap();
 					$sitemap->updateSitemap('cache', 'sitemap.xml', 'lastSitemap.txt', $structure, $uri->getBaseUrl());
-					
-					$version = new VersionCheck();
-					$latestVersion = $version->checkVersion($uri->getBaseUrl());
-					if($latestVersion)
-					{
-						$yaml = new WriteYaml();
-						$yamlContent = $yaml->getYaml('settings', 'settings.yaml');
-						$yamlContent['latestVersion'] = $latestVersion;
-						$yaml->updateYaml('settings', 'settings.yaml', $yamlContent);
-					}
+
+					/* check and update the typemill-version in the user settings */
+					$this->updateVersion($uri->getBaseUrl());					
 				}
 			}
 		}
@@ -155,4 +148,28 @@ class PageController extends Controller
 		
 		return $structure;
 	}
+	
+	protected function updateVersion($baseUrl)
+	{
+		/* check the latest public typemill version */
+		$version 		= new VersionCheck();
+		$latestVersion 	= $version->checkVersion($baseUrl);
+
+		if($latestVersion)
+		{
+			/* check, if user-settings exist */
+			$yaml 			= new WriteYaml();
+			$userSettings 	= $yaml->getYaml('settings', 'settings.yaml');
+			if($userSettings)
+			{
+				/* if there is no version info in the settings or if the version info is outdated */
+				if(!isset($userSettings['latestVersion']) || $userSettings['latestVersion'] != $latestVersion)
+				{
+					/* write the latest version into the user-settings */
+					$userSettings['latestVersion'] = $latestVersion;
+					$yaml->updateYaml('settings', 'settings.yaml', $userSettings);									
+				}
+			}
+		}	
+	}	
 }

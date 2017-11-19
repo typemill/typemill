@@ -10,23 +10,7 @@ session_start();
 * LOAD SETTINGS			*
 ************************/
 
-$settings = require_once( __DIR__ . '/settings.php');
-
-if(file_exists($settings['settingsPath'] . DIRECTORY_SEPARATOR . 'settings.yaml'))
-{
-	$yaml = new \Symfony\Component\Yaml\Parser();
-
-	try {
-		$userSettings 	= $yaml->parse( file_get_contents($settings['settingsPath'] . DIRECTORY_SEPARATOR . 'settings.yaml' ) );
-	} catch (ParseException $e) {
-		printf("Unable to parse the YAML string: %s", $e->getMessage());
-	}
-	
-	$settings = array_merge($settings, $userSettings);
-	$settings['themePath'] = $settings['themeBasePath'] . $settings['themeFolder'] . DIRECTORY_SEPARATOR . $settings['theme'];
-}
-
-$settings['settings'] = $settings;
+$settings = Typemill\Settings::loadSettings();
 
 /************************
 * INITIATE SLIM 		*
