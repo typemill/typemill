@@ -8,7 +8,7 @@ use Symfony\Component\EventDispatcher\Event;
  * Event for the pure content.
  */
 
-class RenderSiteEvent extends Event
+class RenderPageEvent extends Event
 {
     protected $data;
 

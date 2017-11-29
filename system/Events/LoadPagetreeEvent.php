@@ -8,7 +8,7 @@ use Symfony\Component\EventDispatcher\Event;
  * Event for the folder structure.
  */
  
-class LoadStructureEvent extends Event
+class LoadPagetreeEvent extends Event
 {
     protected $data;
 

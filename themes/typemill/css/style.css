@@ -426,6 +426,26 @@ cite{}
 abbr{}
 hr{}
 
+ul.TOC,.TOC ul{
+	list-style: none;
+	padding-left: 0px;
+	margin-left: 0px;
+}
+ul.TOC{
+	background: #f9f8f6;
+	width: 100%;
+	padding: 20px;
+	box-sizing:border-box;
+}
+li.h1{
+	font-weight: 700;
+}
+li.h2, li.h3, li.h4, li.h5, li.h6
+{
+	font-weight: 400;
+	padding-left: 25px;	
+}
+
 /************************
 *  		GitHub Ribbon	*
 ************************/

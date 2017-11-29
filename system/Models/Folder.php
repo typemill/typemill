@@ -59,9 +59,9 @@ class Folder
 				$item->index			= array_search('index.md', $name) === false ? false : true;
 				$item->order 			= count($nameParts) > 1 ? array_shift($nameParts) : NULL;
 				$item->name 			= implode(" ",$nameParts);
-				$item->name				= iconv('ISO-8859-15', 'UTF-8', $item->name);
+				$item->name				= iconv(mb_detect_encoding($item->name, mb_detect_order(), true), "UTF-8", $item->name);
 				$item->slug				= implode("-",$nameParts);
-				$item->slug				= URLify::filter(iconv('ISO-8859-15', 'UTF-8', $item->slug));
+				$item->slug				= URLify::filter(iconv(mb_detect_encoding($item->slug, mb_detect_order(), true), "UTF-8", $item->slug));				
 				$item->path				= $fullPath . DIRECTORY_SEPARATOR . $key;
 				$item->urlRelWoF		= $fullSlugWithoutFolder . '/' . $item->slug;
 				$item->urlRel			= $fullSlugWithFolder . '/' . $item->slug;
@@ -85,9 +85,9 @@ class Folder
 				$item->fileType			= $fileType;
 				$item->order 			= count($nameParts) > 1 ? array_shift($nameParts) : NULL;
 				$item->name 			= implode(" ",$nameParts);
-				$item->name				= iconv('ISO-8859-15', 'UTF-8', $item->name);
+				$item->name				= iconv(mb_detect_encoding($item->name, mb_detect_order(), true), "UTF-8", $item->name);				
 				$item->slug				= implode("-",$nameParts);
-				$item->slug				= URLify::filter(iconv('ISO-8859-15', 'UTF-8', $item->slug));
+				$item->slug				= URLify::filter(iconv(mb_detect_encoding($item->slug, mb_detect_order(), true), "UTF-8", $item->slug));				
 				$item->path				= $fullPath . DIRECTORY_SEPARATOR . $name;
 				$item->key				= $iteration;
 				$item->keyPath			= $keyPath . '.' . $iteration;

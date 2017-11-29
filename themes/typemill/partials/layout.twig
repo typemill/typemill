@@ -17,10 +17,15 @@
 		<link rel="icon" type="image/png" href="{{ base_url }}/themes/typemill/img/favicon-32x32.png" sizes="32x32" />
 		<link rel="icon" type="image/png" href="{{ base_url }}/themes/typemill/img/favicon-16x16.png" sizes="16x16" />
 
-		<link rel="stylesheet" href="{{ base_url }}/themes/typemill/css/fontello/css/fontello.css" />
-		<link rel="stylesheet" href="{{ base_url }}/themes/typemill/css/normalize.css" />
-		<link rel="stylesheet" href="{{ base_url }}/themes/typemill/js/highlight/styles/default.css" />
-		<link rel="stylesheet" href="{{ base_url }}/themes/typemill/css/style.css" />
+		{% block stylesheets %}
+			<link rel="stylesheet" href="{{ base_url }}/themes/typemill/css/fontello/css/fontello.css" />
+			<link rel="stylesheet" href="{{ base_url }}/themes/typemill/css/normalize.css" />
+			<link rel="stylesheet" href="{{ base_url }}/themes/typemill/js/highlight/styles/default.css" />
+			<link rel="stylesheet" href="{{ base_url }}/themes/typemill/css/style.css" />
+			
+			{{ assets.renderCSS() }}
+			
+		{% endblock %}		
 	</head>
 	<body>
 		<div class="main">
@@ -29,6 +34,7 @@
 			</header>
 			<article>
 				{% block content %}{% endblock %}
+				<small>{{content|rot13}}</small>
 			</article>
 			<aside id="navigation" class="close">
 				<nav>
@@ -36,30 +42,37 @@
 				</nav>
 			</aside>
 			<footer>
+				<p>hello {{ myName() }}</p>
 				{% include 'partials/footer.twig' %}
 			</footer>
 		</div>
-		<script src="{{ base_url }}/themes/typemill/js/highlight/highlight.pack.js"></script>
-		<script>hljs.initHighlightingOnLoad();</script>
-		<script>
-			var menu = document.getElementById("menu"),
-				navi = document.getElementById("navigation");
+		{% block javascripts %}
+		
+			<script src="{{ base_url }}/themes/typemill/js/highlight/highlight.pack.js"></script>
+			<script>hljs.initHighlightingOnLoad();</script>
+			<script>
+				var menu = document.getElementById("menu"),
+					navi = document.getElementById("navigation");
+				
+				if(menu)
+				{
+					menu.addEventListener("click", function(){
+						if(navi.className == "close")
+						{
+							navi.className = "open";
+							menu.className = "active";
+						}
+						else
+						{
+							navi.className = "close";
+							menu.className = "";
+						}
+					});
+				}
+			</script>
 			
-			if(menu)
-			{
-				menu.addEventListener("click", function(){
-					if(navi.className == "close")
-					{
-						navi.className = "open";
-						menu.className = "active";
-					}
-					else
-					{
-						navi.className = "close";
-						menu.className = "";
-					}
-				});
-			}
-		</script>
+			{{ assets.renderJS() }}
+		
+		{% endblock %}		
 	</body>
 </html>

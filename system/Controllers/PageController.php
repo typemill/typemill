@@ -9,9 +9,10 @@ use Typemill\Models\WriteYaml;
 use \Symfony\Component\Yaml\Yaml;
 use Typemill\Models\VersionCheck;
 use Typemill\Models\Helpers;
-use Typemill\Events\LoadStructureEvent;
+use Typemill\Events\LoadPagetreeEvent;
 use Typemill\Events\LoadMarkdownEvent;
 use Typemill\Events\ParseHtmlEvent;
+use Typemill\Extensions\ParsedownExtension;
 
 class PageController extends Controller
 {
@@ -63,7 +64,7 @@ class PageController extends Controller
 			}
 			
 			/* dispatch event and let others manipulate the structure */
-			$structure = $this->c->dispatcher->dispatch('onStructureLoaded', new LoadStructureEvent($structure))->getData();
+			$structure = $this->c->dispatcher->dispatch('onPagetreeLoaded', new LoadPagetreeEvent($structure))->getData();
 		}
 		catch (Exception $e)
 		{
@@ -122,7 +123,8 @@ class PageController extends Controller
 		$contentMD = $this->c->dispatcher->dispatch('onMarkdownLoaded', new LoadMarkdownEvent($contentMD))->getData();
 		
 		/* initialize parsedown */
-		$Parsedown = new \ParsedownExtra();
+//		$Parsedown = new \ParsedownExtra();
+		$Parsedown = new ParsedownExtension();
 		
 		/* parse markdown-file to html-string */
 		$contentHTML 	= $Parsedown->text($contentMD);
@@ -141,7 +143,7 @@ class PageController extends Controller
 		*/
 		
 		$route = empty($args) && $settings['startpage'] ? '/cover.twig' : '/index.twig';
-				
+
 		$this->render($response, $route, array('navigation' => $structure, 'content' => $contentHTML, 'item' => $item, 'breadcrumb' => $breadcrumb, 'settings' => $settings, 'title' => $title, 'description' => $description, 'base_url' => $base_url ));
 	}
 	

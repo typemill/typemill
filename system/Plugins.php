@@ -39,16 +39,18 @@ class Plugins
 				/* if they are properly formatted, add them to routes array */
 				foreach($pluginRoutes as $pluginRoute)
 				{
-					if($this->checkRouteArray($pluginRoute))
+					if($this->checkRouteArray($routes,$pluginRoute))
 					{
+						$pluginRoute['route'] = strtolower($pluginRoute['route']);
 						$routes[] = $pluginRoute;
 					}
 				}
 			}
 			elseif(is_array($routes))
 			{
-				if($this->checkRouteArray($pluginRoutes))
+				if($this->checkRouteArray($routes,$pluginRoutes))
 				{
+					$pluginRoutes['route'] = strtolower($pluginRoutes['route']);
 					$routes[] = $pluginRoutes;
 				}
 			}
@@ -66,16 +68,29 @@ class Plugins
 		}
 	}
 	
-	private function checkRouteArray($route)
+	private function checkRouteArray($routes,$route)
 	{
 		if( 
 			isset($route['httpMethod']) AND in_array($route['httpMethod'], array('get','post','put','delete','head','patch','options'))
 			AND isset($route['route']) AND is_string($route['route'])
-			AND isset($route['class']) AND is_string($route['class']))
+			AND isset($route['class']) AND is_string($route['class'])
+			AND !$this->in_array_r(strtolower($route['route']),$routes))
 		{
 			return true;
 		}
 		return false;
+	}
+	
+	private function in_array_r($needle, $haystack, $strict = false) 
+	{		
+		foreach ($haystack as $item)
+		{
+			if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && $this->in_array_r($needle, $item, $strict)))
+			{
+				return true;
+			}
+		}
+		return false;		
 	}
 	
 	private function scanPluginFolder()

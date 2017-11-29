@@ -11,7 +11,7 @@ You will find all themes in the `theme` folder of TYPEMILL. Change the  theme in
 There is no theme structure. There are only two files that are required: 
 
 - `index.twig`: All content files will be rendered with this template. 
-- `404.twig`: This is the template for a not found message.  
+- `404.twig`: This is the template for a not found message.
 
 There is another optional template:
 

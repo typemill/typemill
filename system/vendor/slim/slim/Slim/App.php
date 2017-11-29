@@ -52,7 +52,7 @@ class App
      *
      * @var string
      */
-    const VERSION = '3.9.0';
+    const VERSION = '3.9.2';
 
     /**
      * Container
@@ -292,10 +292,28 @@ class App
         $response = $this->container->get('response');
 
         try {
+            ob_start();
             $response = $this->process($this->container->get('request'), $response);
         } catch (InvalidMethodException $e) {
             $response = $this->processInvalidMethod($e->getRequest(), $response);
+        } finally {
+            $output = ob_get_clean();
         }
+
+        if (!empty($output) && $response->getBody()->isWritable()) {
+            $outputBuffering = $this->container->get('settings')['outputBuffering'];
+            if ($outputBuffering === 'prepend') {
+                // prepend output buffer content
+                $body = new Http\Body(fopen('php://temp', 'r+'));
+                $body->write($output . $response->getBody());
+                $response = $response->withBody($body);
+            } elseif ($outputBuffering === 'append') {
+                // append output buffer content
+                $response->getBody()->write($output);
+            }
+        }
+
+        $response = $this->finalize($response);
 
         if (!$silent) {
             $this->respond($response);
@@ -374,13 +392,11 @@ class App
             $response = $this->handlePhpError($e, $request, $response);
         }
 
-        $response = $this->finalize($response);
-
         return $response;
     }
 
     /**
-     * Send the response the client
+     * Send the response to the client
      *
      * @param ResponseInterface $response
      */
