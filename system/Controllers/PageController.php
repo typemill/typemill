@@ -17,7 +17,7 @@ use Typemill\Extensions\ParsedownExtension;
 class PageController extends Controller
 {
 	public function index($request, $response, $args)
-	{		
+	{
 		/* Initiate Variables */
 		$structure		= false;
 		$contentHTML	= false;
@@ -123,9 +123,8 @@ class PageController extends Controller
 		$contentMD = $this->c->dispatcher->dispatch('onMarkdownLoaded', new LoadMarkdownEvent($contentMD))->getData();
 		
 		/* initialize parsedown */
-//		$Parsedown = new \ParsedownExtra();
-		$Parsedown = new ParsedownExtension();
-		
+		$Parsedown 		= new ParsedownExtension();
+
 		/* parse markdown-file to html-string */
 		$contentHTML 	= $Parsedown->text($contentMD);
 		$contentHTML 	= $this->c->dispatcher->dispatch('onHtmlParsed', new ParseHtmlEvent($contentHTML))->getData();

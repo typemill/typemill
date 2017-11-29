@@ -23,7 +23,7 @@ class Settings
 		
 		return [
 			'determineRouteBeforeAppMiddleware' 	=> true,
-			'displayErrorDetails' 					=> true,
+			'displayErrorDetails' 					=> false,
 			'title'									=> 'TYPEMILL',
 			'author'								=> 'Unknown',
 			'copyright'								=> 'Copyright',
@@ -36,7 +36,7 @@ class Settings
 			'settingsPath'							=> $rootPath . 'settings',
 			'authorPath'							=> __DIR__ . DIRECTORY_SEPARATOR . 'author' . DIRECTORY_SEPARATOR,
 			'contentFolder'							=> 'content',
-			'version'								=> '1.0.4'
+			'version'								=> '1.0.5'
 		];
 	}
 	

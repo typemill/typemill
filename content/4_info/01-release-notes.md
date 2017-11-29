@@ -2,6 +2,11 @@
 
 This is the version history with some release notes.
 
+## Version 1.0.5 (30.11.2017)
+
+- Improvement: Character encoding for the navigation has improved. You can try to use other characters than english for your file names now, but there is no garanty for it. If the characters do not work in the navigation, please use english characters only.
+- Improvement: A [TOC]-tag for generating a table of contents is now implemented. You can use the tag anywhere in your text-files, but please use a separate line for it. Update the theme for stylings.
+
 ## Version 1.0.4 (17.11.2017)
 
 - Bugfix: Settings file was generated after a page refresh, this is fixed now.
