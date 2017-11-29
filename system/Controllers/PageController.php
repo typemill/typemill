@@ -9,12 +9,12 @@ use Typemill\Models\WriteYaml;
 use \Symfony\Component\Yaml\Yaml;
 use Typemill\Models\VersionCheck;
 use Typemill\Models\Helpers;
+use Typemill\Extensions\ParsedownExtension;
 
 class PageController extends Controller
 {
 	public function index($request, $response, $args)
 	{
-		
 		/* Initiate Variables */
 		$structure		= false;
 		$contentHTML	= false;
@@ -75,12 +75,18 @@ class PageController extends Controller
 			/* find the url in the content-item-tree and return the item-object for the file */
 			$item = Folder::getItemForUrl($structure, $urlRel);
 
+			/*
 			if(!$item && $cached)
 			{
 				$structure = $this->getFreshStructure($pathToContent, $cache, $uri); 
 				$item = Folder::getItemForUrl($structure, $urlRel);
 			}
-			if(!$item){	return $this->render404($response, array( 'navigation' => $structure, 'settings' => $settings,  'base_url' => $base_url )); }
+			*/
+			
+			if(!$item)
+			{	
+				return $this->render404($response, array( 'navigation' => $structure, 'settings' => $settings,  'base_url' => $base_url )); 
+			}
 			
 			/* get breadcrumb for page */
 			$breadcrumb = Folder::getBreadcrumb($structure, $item->keyPathArray);
@@ -103,7 +109,7 @@ class PageController extends Controller
 		}
 		
 		/* initialize parsedown */
-		$Parsedown = new \ParsedownExtra();
+		$Parsedown 		= new ParsedownExtension();
 
 		/* parse markdown-file to html-string */
 		$contentHTML 	= $Parsedown->text($contentMD);

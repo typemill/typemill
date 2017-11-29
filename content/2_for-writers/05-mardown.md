@@ -2,6 +2,10 @@
 
 Never heard of Markdown? Markdown is  very similar to the markup used by Wikipedia. It is a simple syntax to format headlines, lists or paragraphs in a text file. Markdown files end with `.md`.
 
+[TOC]
+
+## Simple Example
+
 Today, Markdown is a standard formatting language used by a lot of technology platforms like GitHub or StackOverflow. And Markdown is also entering the non technical mainstream. The press releases of dpa are written in Markdown, for example.
 
 Markdown uses some special chars like `#` or `-` to format a text. A short example: 
@@ -150,6 +154,10 @@ This text is followed by a code-block:
 	echo $string;
 ?>
 ````
+
+###Table of Contents
+
+As of version 1.0.5 you can use the tag `[TOC]` to create a table of contents. Simply add the tag in a separate line into your document. Typemill will generate a link-list with all headlines of your text. 
 
 ### Advanced Formats
 

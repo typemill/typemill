@@ -13,7 +13,7 @@ The rules are simple:
 - **Use prefixes**: Please use some kind of sorting-prefix for your files and folders. You can use numbers `01-` or letters `aa-`. The part before the first separator (the prefix) is striped out by TYPEMILL.
 - **Use Separators**: Please use separators like dashes `-` or underscores `_` to separate words or prefixes in your file names and folder names. Do not use space!!!
 - **Use index.md**: You can use a file named `index.md` to create content for the folder itself. This is optional.
-- **Avoid Language Specific Characters**: Use the english character set to name your files and folders. French, German, Russian or Turkish are beautiful languages, but right now it is not guarantied, that these characters are interpreted correctly. But you can use all character sets to write the content in your files of course.
+- **Avoid Language Specific Characters**: As of version 1.0.5. the character encoding has been improved. You can try to use german, french or other character sets to name your files and folders now. If you see some errors in the Navigation of the website, please use english characters instead. In the content itself you can use all character sets of course.
 
 When you name your files and folders, then always keep in mind, that the names are used to generate the navigation and the table of contents. So keep it short to keep the layout and design healthy.
 

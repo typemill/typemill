@@ -2,6 +2,12 @@
 
 This is just a test file to check, if all the html elements created by the markdown syntax are styled correctly. If you create a new template, please use this page to check your css styling.
 
+## Table of Contents
+
+You can create a table of contents with the [TOC] tag written in a separate line. The TOC-Tag will be replaced with a link-list to all headlines of the page.
+
+[TOC]
+
 ## Inline Elements
 
 This is an ordinary paragraph containing only simple text. 
