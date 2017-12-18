@@ -5,10 +5,10 @@ namespace Typemill\Events;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Event for the page rendering data.
+ * Event for breadcrumb.
  */
-
-class RenderPageEvent extends BaseEvent
+ 
+class LoadBreadcrumbEvent extends BaseEvent
 {
 
 }

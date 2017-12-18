@@ -1,7 +1,7 @@
 <?php
 
-use Typemill\Models\Helpers;
-$timer['before session start']=microtime(true);
+use Typemill\Events\LoadSettingsEvent;
+use Typemill\Events\LoadPluginsEvent;
 
 /************************
 * START SESSION			*
@@ -9,11 +9,18 @@ $timer['before session start']=microtime(true);
 
 session_start();
 
+/****************************
+* CREATE EVENT DISPATCHER	*
+****************************/
+
+$dispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
+
 /************************
 * LOAD SETTINGS			*
 ************************/
 
 $settings = Typemill\settings::loadSettings();
+$settings = $dispatcher->dispatch('onSettingsLoaded', new LoadSettingsEvent($settings))->getData();
 
 /************************
 * INITIATE SLIM 		*
@@ -27,12 +34,6 @@ $app = new \Slim\App($settings);
 
 $container = $app->getContainer();
 
-/****************************
-* CREATE EVENT DISPATCHER	*
-****************************/
-
-$dispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
-
 /************************
 * LOAD PLUGINS 			*
 ************************/
@@ -45,11 +46,11 @@ foreach($pluginClassNames as $pluginClassName)
 {
 	$routes 			= $plugins->getNewRoutes($pluginClassName, $routes);
 	$middleware			= $plugins->getNewMiddleware($pluginClassName, $middleware);
-	
-	$dispatcher->addSubscriber(new $pluginClassName($container, $app));	
+
+	$dispatcher->addSubscriber(new $pluginClassName($container));	
 }
 
-$dispatcher->dispatch('onPluginsInitialized');	
+$dispatcher->dispatch('onPluginsLoaded', new LoadPluginsEvent($pluginClassNames));
 
 /******************************
 * ADD DISPATCHER TO CONTAINER *
@@ -107,14 +108,28 @@ $container['view'] = function ($container) use ($settings)
 
 $container->dispatcher->dispatch('onTwigLoaded');
 
-/************************
-* 	ADD MIDDLEWARE		*
-************************/
+/***************************
+* 	ADD NOT FOUND HANDLER  *
+***************************/
 
 $container['notFoundHandler'] = function($c)
 {
 	return new \Typemill\Handlers\NotFoundHandler($c['view']);
 };
+
+/************************
+* 	ADD MIDDLEWARE  	*
+************************/
+
+foreach($middleware as $pluginMiddleware)
+{
+	$middlewareClass 	= $pluginMiddleware['classname'];
+	$middlewareParams	= $pluginMiddleware['params'];
+	if(class_exists($middlewareClass))
+	{
+		$app->add(new $middlewareClass($middlewareParams));
+	}
+}
 
 /************************
 * 	ADD ROUTES			*

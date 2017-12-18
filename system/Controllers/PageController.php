@@ -10,6 +10,8 @@ use \Symfony\Component\Yaml\Yaml;
 use Typemill\Models\VersionCheck;
 use Typemill\Models\Helpers;
 use Typemill\Events\LoadPagetreeEvent;
+use Typemill\Events\LoadBreadcrumbEvent;
+use Typemill\Events\LoadItemEvent;
 use Typemill\Events\LoadMarkdownEvent;
 use Typemill\Events\ParseHtmlEvent;
 use Typemill\Extensions\ParsedownExtension;
@@ -53,7 +55,7 @@ class PageController extends Controller
 					$this->render($response, '/index.twig', [ 'content' => $content ]);
 				}
 				elseif(!$cache->validate('cache', 'lastSitemap.txt', 86400))
-				{					
+				{
 					/* update sitemap */
 					$sitemap = new WriteSitemap();
 					$sitemap->updateSitemap('cache', 'sitemap.xml', 'lastSitemap.txt', $structure, $uri->getBaseUrl());
@@ -74,7 +76,7 @@ class PageController extends Controller
 		
 		/* if the user is on startpage */
 		if(empty($args))
-		{			
+		{	
 			/* check, if there is an index-file in the root of the content folder */
 			$contentMD = file_exists($pathToContent . DIRECTORY_SEPARATOR . 'index.md') ? file_get_contents($pathToContent . DIRECTORY_SEPARATOR . 'index.md') : NULL;
 		}
@@ -102,9 +104,11 @@ class PageController extends Controller
 			
 			/* get breadcrumb for page */
 			$breadcrumb = Folder::getBreadcrumb($structure, $item->keyPathArray);
-			
+			$breadcrumb = $this->c->dispatcher->dispatch('onBreadcrumbLoaded', new LoadBreadcrumbEvent($breadcrumb))->getData();
+						
 			/* add the paging to the item */
 			$item = Folder::getPagingForItem($structure, $item);
+			$item = $this->c->dispatcher->dispatch('onItemLoaded', new LoadItemEvent($item))->getData();
 			
 			/* check if url is a folder. If so, check if there is an index-file in that folder */
 			if($item->elementType == 'folder' && $item->index)
@@ -128,7 +132,7 @@ class PageController extends Controller
 		/* parse markdown-file to html-string */
 		$contentHTML 	= $Parsedown->text($contentMD);
 		$contentHTML 	= $this->c->dispatcher->dispatch('onHtmlParsed', new ParseHtmlEvent($contentHTML))->getData();
-
+		
 		$excerpt		= substr($contentHTML,0,200);
 		$excerpt		= explode("</h1>", $excerpt);
 		$title			= isset($excerpt[0]) ? strip_tags($excerpt[0]) : $settings['title'];
@@ -192,6 +196,6 @@ class PageController extends Controller
 					$yaml->updateYaml('settings', 'settings.yaml', $userSettings);									
 				}
 			}
-		}	
-	}	
+		}
+	}
 }

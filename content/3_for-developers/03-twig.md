@@ -8,6 +8,8 @@ Twig is a flexible, fast and secure template engine for PHP. If you have never u
 
 The full Twig documentation for template designers is just one page long, so just head [over to Twig](http://twig.sensiolabs.org/doc/2.x/templates.html) and read it. You can learn the most important essentials for TYPEMILL in the following list.
 
+[TOC]
+
 ## Basic Twig Syntax
 
 In a Twig template, you can use ordinary HTML markup. Statements and expressions are written in curly brackets.
@@ -183,9 +185,9 @@ Macros in Twig are like functions in PHP: You can use them for repeating tasks. 
 This is an example for a navigation:
 
     {% macro loop_over(navigation) %}
-    
+
       {% import _self as macros %}
-    
+
       {% for element in navigation %} 
         <li>
           {% if element.elementType == 'folder' %}

@@ -4,6 +4,8 @@ The item variable is an object. It provides informations about the actual page, 
 
 Some informations are only available for the type `folder` while some other informations are specific to the type `file`. But most informations are shared by both.
 
+[TOC]
+
 ## Example of the {{ item }} variable
 
 This is an example of an item variable:

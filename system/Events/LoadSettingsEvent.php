@@ -5,10 +5,10 @@ namespace Typemill\Events;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Event for the page rendering data.
+ * Event for settings
  */
-
-class RenderPageEvent extends BaseEvent
+ 
+class LoadSettingsEvent extends BaseEvent
 {
 
 }

@@ -5,23 +5,17 @@ namespace Typemill;
 use \Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 abstract class Plugin implements EventSubscriberInterface
-{
-	
-	private $app;
-	
+{	
 	private $container;
 
     /**
-     * Constructor.
+     * Constructor
      *
-     * @param string $name
-     * @param Grav   $grav
-     * @param Config $config
      */
-    public function __construct($container, $app)
+	 
+    public function __construct($container)
     {
 		$this->container 	= $container;
-		$this->app			= $app;
     }
 
 	protected function getRoute()

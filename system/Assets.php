@@ -17,15 +17,14 @@ class Assets
 	
 	public function addCSS(string $CSS)
 	{
-		$CSSpath = __DIR__ . '/../plugins' . $CSS;
-
-		if(file_exists($CSSfile))
+		$CSSfile = $this->getFileUrl($CSS);
+		
+		if($CSSfile)
 		{
-			$CSSfile = $this->baseUrl . '/plugins' . $CSS;
 			$this->CSS[] = '<link rel="stylesheet" href="' . $CSSfile . '" />';
 		}
 	}
-	
+		
 	public function addInlineCSS($CSS)
 	{
 		$this->inlineCSS[] = '<style>' . $CSS . '</style>';
@@ -33,11 +32,10 @@ class Assets
 	
 	public function addJS(string $JS)
 	{
-		$JSpath = __DIR__ . '/../plugins' . $JS;
+		$JSfile = $this->getFileUrl($JS);
 		
-		if(file_exists($JSpath))
+		if($JSfile)
 		{
-			$JSfile = $this->baseUrl . '/plugins' . $JS;
 			$this->JS[] = '<script src="' . $JSfile . '"></script>';
 		}
 	}
@@ -55,5 +53,27 @@ class Assets
 	public function renderJS()
 	{
 		return implode('<br/>', $this->JS) . implode('<br/>', $this->inlineJS);
+	}
+
+	/**
+	 * Checks, if a string is a valid internal or external ressource like js-file or css-file
+	 * @params $path string
+	 * @return string or false 
+	 */
+	public function getFileUrl(string $path)
+	{				
+		$internalFile = __DIR__ . '/../plugins' . $path;
+		
+		if(file_exists($internalFile))
+		{
+			return $this->baseUrl . '/plugins' . $path;
+		}
+		
+		if(fopen($path, "r"))
+		{
+			return $path;
+		}
+		
+		return false;		
 	}
 }

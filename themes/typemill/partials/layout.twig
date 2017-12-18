@@ -34,7 +34,6 @@
 			</header>
 			<article>
 				{% block content %}{% endblock %}
-				<small>{{content|rot13}}</small>
 			</article>
 			<aside id="navigation" class="close">
 				<nav>
@@ -42,7 +41,6 @@
 				</nav>
 			</aside>
 			<footer>
-				<p>hello {{ myName() }}</p>
 				{% include 'partials/footer.twig' %}
 			</footer>
 		</div>

@@ -5,25 +5,10 @@ namespace Typemill\Events;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Event for the pure content.
+ * Event for html page.
  */
 
-class ParseHtmlEvent extends Event
+class ParseHtmlEvent extends BaseEvent
 {
-    protected $data;
 
-    public function __construct($data)
-    {
-        $this->data = $data;
-    }
-
-    public function getData()
-    {
-        return $this->data;		
-    }
-	
-	public function setData($data)
-	{
-		$this->data = $data;
-	}
 }

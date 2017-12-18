@@ -12,7 +12,6 @@ class Plugins
 		/* iterate over plugin folders */
 		foreach($pluginFolder as $plugin)
 		{
-
 			$className = DIRECTORY_SEPARATOR . 'Plugins' . DIRECTORY_SEPARATOR . $plugin . DIRECTORY_SEPARATOR . $plugin;
 						
 			/* if plugin-class and subscribe-method exists, add classname to array */			
@@ -26,7 +25,6 @@ class Plugins
 	
 	public function getNewRoutes($className, $routes)
 	{
-		
 		/* if route-method exists in plugin-class */
 		if(method_exists($className, 'addNewRoutes'))
 		{
@@ -59,13 +57,19 @@ class Plugins
 		return $routes;
 	}
 	
-	public function getNewMiddleware($className)
+	public function getNewMiddleware($className, $middleware)
 	{
 		if(method_exists($className, 'addNewMiddleware'))
 		{
-			/* check array */
-			return $className::addNewMiddleware();
+			$pluginMiddleware = $className::addNewMiddleware();
+			
+			if($pluginMiddleware)
+			{
+				$middleware[] = $pluginMiddleware;				
+			}
 		}
+		
+		return $middleware;
 	}
 	
 	private function checkRouteArray($routes,$route)
