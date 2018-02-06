@@ -2,7 +2,7 @@
 *  		HELPERS		  *
 **********************/
 
-a, a:link, a:visited, a:focus, a:hover, a:active, button, .button, input{
+a, a:link, a:visited, a:focus, a:hover, a:active, button, .button, input, .control-group{
 	-webkit-transition: all 0.2s ease;
 	-moz-transition: all 0.2s ease;
 	-o-transition: all 0.2s ease;
@@ -14,26 +14,69 @@ a, a:link, a:visited, a:focus, a:hover, a:active, button, .button, input{
 *    	 COLORS 	  *
 **********************/
 
-body{ 								background: #f9f8f6; color: #444; }
-.card{ 								background: #FFF; }
-.card header{						background: #e0494c; color: #f9f8f6; }
-.onoffswitch-label {				border: 0px solid #DDD; }
-.onoffswitch-inner:before {			background: #8ce196; color: #f9f8f6; }
-.onoffswitch-inner:after {			background: #e0474c; color: #f9f8f6; }
-.onoffswitch-switch {				background: #f9f8f6; border: 1px solid #999; }
-input, select{ 						border: 1px solid #ddd;	background: #fff; }
-select:focus, input:focus{			border: 1px solid #FFF; outline: none; box-shadow: 0 0 2px #e0474c; }
-input[type="submit"]{				border: 2px solid #FFF; background: #e0474c; color: #f9f8f6; }
-input[type="submit"]:hover{			background: #FFF; color: #444; }
-a.button{							border: 2px solid #e0474c; background: #e0474c; color: #f9f8f6; }
-a.button:hover{						border: 2px solid #e0474c; background: #FFF; color: #444; }
+body, .pluginHead header{ 			background: #f9f8f6; color: #444; }
+.errors .pluginHead header{			background: #e0474c; color: #fff; }
+.onoffswitch-label {				border: 1px solid #999; }
+.onoffswitch-inner:before,
+.onoffswitch-inner:after {			color: #FFFFFF; }
+.onoffswitch-inner:before {			background: #70c1b3; color: #f9f8f6; }
+.onoffswitch-inner:after {			background: #f9f8f6; color: #999999; }
+.onoffswitch-switch {				border: 1px solid #999; background: #f9f8f6; }
+input, select, textarea, 
+.large img{ 						border: 1px solid #ddd;	background: #fff; }
+section, .welcome{					background: #FFFFFF; box-shadow: 0 0 2px #ddd; }
+select:focus, input:focus,
+textarea:focus{						border: 1px solid #FFF; outline: none; box-shadow: 0 0 2px #000; }
+button[type="button"].active{		background: #70c1b3; color: #f9f8f6; border-top: 1px solid #70c1b3; }
+button[type="button"].active:hover{	background: #66b0a3; border-top: 1px solid #66b0a3; }
+button[type="button"]{				background: #f9f8f6; color: #444; border-top: 1px solid #ddd; }
+input[type="submit"],
+a.button,a.button:link,
+a.button:visited{					border: 2px solid #e0474c; background: #e0474c; color: #f9f8f6; }
+input[type="submit"]:hover,
+a.button:focus,a.button:hover,
+a.button:active{					border: 2px solid #cc4146; background: #cc4146; }
 .error label{						color: #e0474c; }
-.error input, .error select{		border: 1px solid #e0474c; }
-.error small, .error p{				color: #e0474c; }
+.error input, .error select,
+.error textarea{					border: 1px solid #e0474c; }
+.error, .error small, .error p{		color: #e0474c; }
+.pluginInner{						border: 1px solid #ddd; background: #FFF; }
+.color-box{							border: 1px solid #ddd; }
+label .help, .label .help{ 			color: #FFF; background: #70c1b3; }
+.help .tooltip { 					color: #fff; background-color: #70c1b3; }
+.help .tooltip:after{ 				border-color: transparent transparent transparent #70c1b3; }
+
+.checkmark,.radiomark { 						border: 2px solid #ccc; background-color: #fff;}
+.control-group:hover input ~ .checkmark,
+.control-group:hover input ~ .radiomark { 		background-color: #ccc; }
+.control-group input:checked ~ .checkmark,
+.control-group input:checked ~ .radiomark {		border: 2px solid #70c1b3; background-color: #70c1b3; }
+.control-group .checkmark:after {				border: solid #fff; }
+.control-group .radiomark:after { 				background: #fff; }
+.control-group input:disabled ~ .checkmark,
+.control-group input:disabled ~ .radiomark {	border: 2px solid #eee; background-color: #eee; }
+.pluginInfo a,.pluginInfo a:link,
+.pluginInfo a:visited{							color: #70c1b3; text-decoration: none;}
+.pluginInfo a:focus,.pluginInfo a:hover,
+.pluginInfo a:active{							color: #70c1b3; text-decoration: underline;}
+
 
 /********************
 *  		FONTS 	    *
 ********************/
+
+html,body{
+	padding: 0;
+	margin:0;
+}
+
+body{
+	padding: 20px;
+	font-size: 16px;
+	font-family: Helvetica, Calibri, Arial, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;	
+}
 
 header, nav, h1, h2, h3, h4, h5, h6{
 	font-family: arial, sans-serif;
@@ -44,75 +87,109 @@ header, nav, h1, h2, h3, h4, h5, h6{
 ********************/
 
 h1, h2, h3, h4, h5, h6{ font-weight: 700; }
-h1{ font-size: 1em; margin: 0.6em 0 0.6em; }
-h2{ font-size: 1em; margin: 0.6em 0 0.6em; }
-h3{	font-size: 1em; margin: 0.6em 0 0.6em; }
+h1{ font-size: 1.8em; margin: 1em 0 0.8em; }
+h2{ font-size: 1.6em; margin: 1em 0 0.8em; }
+h3{	font-size: 1.1em; margin: 0.6em 0 0.6em; }
 
-html,body{
-	padding: 0;
-	margin:0;
-}
-body{
-	padding: 20px;
-	font-size: 18px;
-}
-.card{
-	display: block;
-	margin: auto;
-	max-width: 400px;
-	box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
-}
-.card img{
-	width: 100%;
-}
-.card header{
-	display: inlin-block;
-	width: 100%;
-	padding: 20px;
+section{
+	margin-bottom: 40px;
+	padding: 20px 20px 40px;
 	box-sizing: border-box;
 }
-.card header h1{
+header{
+	padding: 0 20px;
+}
+header h1, header h2{
 	display: inline-block;
 }
-form{}
+header input[type="submit"]{
+	margin-top: 1.5em;
+	margin-right: 10px;
+	float: right;
+	width: 150px;
+	box-sizing:border-box;
+	border: 0px;
+}
+.formWrapper, .welcome{
+	display: block;
+	position: relative;
+	max-width: 900px;
+	margin: auto;
+}
+.welcome{
+	padding: 30px 50px;
+	box-sizing: border-box;
+}
+.welcome p{
+	font-size: 1.1em;
+	line-height: 1.5em;
+	padding: 0px;
+}
+.welcome a.button{
+	margin: 40px auto;
+	display: block;
+	width: 200px;
+	text-align: center;
+	padding: 10px;
+	border-radius: 3px;
+	text-decoration: none;	
+}
+
 fieldset{
-	padding: 30px 20px;
+	display: block;
+	position: relative;
+	width: 100%;
 	margin: 0;
 	box-sizing: border-box;
 	border: none;
+	padding: 0;	
+}
+.large, .medium, .small{
+	padding: 18px 20px;
+	box-sizing:border-box;
+	vertical-align: top;
+}
+form .large, form .medium, form .small{
+	width: 100%;
+	display: block;
+}
+.large img{
+	width: 100%;
 }
 label,.label{
-	display: block;
-	font-size: 0.65em;
+	display: inline-block;
+	width: 100%;
+	font-size: 0.75em;
 	font-weight: 300;
-	padding: 15px 0 0;
+	padding: 0px;
 	line-height: 1.5em;
 	text-transform: uppercase;
 }
-.field{
-	margin: 5px 0;
-	box-sizing: border-box;
+label .help, .label .help{
+	float:right;
+	width: 20px;
+	height: 20px;
+	line-height: 20px;
+	font-weight: bold;
+	border-radius: 50%;
+	text-align: center;
+	cursor: pointer;
 }
-.size100{
-	width: 100%;
-}
-.size25, .size50, .size75{
-	display: inline-block;
-	vertical-align: top;	
-}
-.size75{ width: 74%; }
-.size50{ width: 49%; }
-.size25{ width: 24%; }
-input, select{
-	display: inline-block;
+input, select, textarea, .onoffswitch{
 	margin-top: 5px;
+}
+input, select, textarea{
+	display: inline-block;
 	box-shadow: none;
 	width: 100%;
-	font-size: 0.8em;
+	font-size: 1em;
 	box-sizing: border-box;
 	min-height: 42px;
 }
-input{
+textarea{
+	min-height: 84px;
+}
+input, textarea{
 	padding: 10px;
 }
 select{
@@ -120,15 +197,109 @@ select{
 }
 input[type="submit"]{
 	border-radius: 3px;
-	float: right;
-	margin-top: 0px;
-	width: 150px;
 }
-input[type="submit"]:hover{
+button,input[type="submit"]:hover{
 	cursor: pointer;
 }
 
-/* Select Button, see https://codepen.io/vkjgr/pen/VYMeXp */
+fieldset.plugin{
+	width: 100%;
+	display: inline-block;
+	padding: 15px 20px;
+	box-sizing: border-box;
+	vertical-align: top;	
+}
+.pluginInner{
+	box-sizing: border-box;
+}
+.pluginHead header, .pluginHead p, .pluginHead ul{
+	padding: 15px 20px;
+}
+.pluginHead header{
+	width: 100%;
+	display: inline-block;
+	box-sizing: border-box;
+}
+.pluginHead legend{
+	font-size: 1.2em;
+	font-weight: 700;
+	float:left;
+}
+.pluginHead .pluginActive{
+	float: right;
+}
+.pluginHead header label{
+	display: inline-block;
+	width: auto;
+	line-height: 20px;
+	margin: 0;
+	padding: 0 25px 0 0;
+}
+.pluginHead header .control-group .checkmark{
+	right:-5px;
+	left: auto;
+}
+.pluginHead header input{
+	width: auto;
+	min-height: 0px;
+	padding: 0;
+	margin: 0;
+	vertical-align: middle;
+}
+.pluginHead button[type="button"]{
+	width: 100%;
+	text-align: center;
+	padding: 15px 0;
+	border-left: 0px;
+	border-right: 0px;
+	border-bottom: 0px;
+	margin-top: 10px;
+}
+ul.pluginInfo{
+	font-size: 0.8em;
+	padding: 0 20px;
+}
+.pluginInfo li{
+	display: inline-block;
+	box-sizing: border-box;
+	vertical-align: top;
+	padding: 0px 5px 0 0;
+	margin: 0px 5px 0 0;
+	color: grey;
+	border-right: 1px solid grey;
+}
+.pluginInfo li:last-child{
+	border-right: 0px;
+}
+.pluginFields{
+	max-height: 0;
+	transition: max-height 0.5s ease-out;
+	overflow: hidden;
+	padding: 0px 20px;
+	border: 0px;
+}
+.pluginFields.open{
+	max-height: 1800px;
+	transition: max-height 0.5s ease-in;
+	overflow: hidden;
+	border: 1px;
+}
+.pluginFields label{
+	margin-top: 12px;
+}
+.pluginFields .pluginField:first-child{
+	margin-top: 50px;
+}
+.pluginFields input, .pluginFields select, .pluginFields textarea, .pluginFields .onoffswitch{
+	margin-bottom: 12px;
+}
+
+
+
+/*
+** SELECT BUTTON
+** https://codepen.io/vkjgr/pen/VYMeXp
+*/
 select {
 	/* reset */
 	-webkit-appearance: none;
@@ -147,21 +318,29 @@ select {
 		5px 5px,
 		5px 5px,
 		2.8em 2.8em;
-	background-repeat: no-repeat;	
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+span.error{
+	font-size: 0.8em;
+	line-height: 1em;
+}
+.pluginInner span.error{
+	display: block;	
+	margin-top: -8px;
+	margin-bottom: 8px;	
 }
 
-/* On Off Switch */
+/*
+** ON OFF SWITCH
+** https://proto.io/freebies/onoff/
+*/
 .onoffswitch {
-	margin-top: 5px;
-	display: inline-block;
-	position: relative;
-	width: 100%;
-    -webkit-user-select:none; 
+	position: relative; 
+	width: 90px;
+	-webkit-user-select:none; 
 	-moz-user-select:none; 
 	-ms-user-select:none;
-}
-.onoffswitch label{
-	padding: 0;
 }
 .onoffswitch-checkbox {
 	display: none;
@@ -170,32 +349,33 @@ select {
 	display: block; 
 	overflow: hidden; 
 	cursor: pointer;
+	border-radius: 20px;
 }
 .onoffswitch-inner {
 	display: block; 
-	width: 200%;
+	width: 200%; 
 	margin-left: -100%;
 	transition: margin 0.3s ease-in 0s;
 }
 .onoffswitch-inner:before, .onoffswitch-inner:after {
 	display: block; 
 	float: left; 
-	width: 50%;
-	padding: 10px 0; 
-	font-size: 1.5em;
-	line-height: 1.9em;
+	width: 50%; 
+	height: 38px; 
+	padding: 0; 
+	line-height: 38px;
+	font-size: 14px; 
 	font-family: Trebuchet, Arial, sans-serif; 
 	font-weight: bold;
 	box-sizing: border-box;
-	min-height: 42px;
 }
 .onoffswitch-inner:before {
 	content: "ON";
-	padding-left: 20px;
+	padding-left: 10px;
 }
 .onoffswitch-inner:after {
 	content: "OFF";
-	padding-right: 20px;
+	padding-right: 10px;
 	text-align: right;
 }
 .onoffswitch-switch {
@@ -205,7 +385,7 @@ select {
 	position: absolute; 
 	top: 0; 
 	bottom: 0;
-	right: 60%;
+	right: 56px;
 	border-radius: 20px;
 	transition: all 0.3s ease-in 0s; 
 }
@@ -215,17 +395,170 @@ select {
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
 	right: 0px; 
 }
-.welcome{
-	padding: 20px;
-	font-size: 0.9em;
-}
-a.button{
-	display: block;
+
+/*
+** COLOR PICKER
+*/
+.color-box{
 	width: 100%;
-	padding: 10px;
-	text-align: center;
-	margin: 20px 0;
-	border-radius: 3px;
-	box-sizing: border-box;
-	text-decoration: none;
+	height: 36px;
+	margin-top: 5px;
+	margin-bottom: 12px;
+	display: inline-block;
+}
+.color-box:hover{
+	cursor: pointer;
+}
+.color-picker-control{
+	width: 172px;
+}
+.color-picker-control input{
+	margin-top: 0px;
+}
+
+/*
+** CHECKBOX / RADIO
+*/
+
+/* Hide the browser's default checkbox */
+.control-group input {
+	position: absolute;
+	opacity: 0;
+	cursor: pointer;
+	width: 0;
+	height: 0;
+	padding: 0;
+	margin: 0;
+	font-size: 0.1em;
+	min-height: 0px;
+}
+
+/* Customize the label (the container) */
+.control-group {
+	text-transform: none;
+	display: block;
+	position: relative;
+	padding-left: 30px;
+	margin-bottom: 7px;
+	margin-top: 5px;
+	cursor: pointer;
+	font-size: 1em;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+.checkmark {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 16px;
+	width: 16px;
+	border-radius: 2px;
+}
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+/* Show the checkmark when checked */
+.control-group input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.control-group .checkmark:after {
+  left: 5px;
+  top: 0px;
+  width: 5px;
+  height: 10px;
+  border-width: 0 2px 2px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+/* Create a custom radio button */
+.radiomark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+}
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.radiomark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+/* Show the indicator (dot/circle) when checked */
+.control-group input:checked ~ .radiomark:after {
+  display: block;
+}
+/* Style the indicator (dot/circle) */
+.control-group .radiomark:after {
+  top: 5px;
+  left: 5px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+/* TOOLTIP */
+/* Tooltip container */
+.help {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.help .tooltip {
+    visibility: hidden;
+    width: 200px;
+	top: -5px;
+	right: 25px;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+ 
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    z-index: 1;
+	opacity: 0;
+	transition: opacity .6s;
+	
+	text-transform: none;
+}
+.help .tooltip:after{
+	content: "";
+	position: absolute;
+	top: 15px;
+	left: 100%;
+	margin-top: -5px;
+	border-width: 5px;
+	border-style: solid;
+}
+/* Show the tooltip text when you mouse over the tooltip container */
+.help:hover .tooltip {
+    visibility: visible;
+	opacity: 1;
+}
+
+@media only screen and (min-width: 600px) {
+	form .medium{
+		width: 49.5%;
+		display: inline-block;
+	}
+	form .small{
+		width: 33.3%;
+		display: inline-block;
+	}
+}
+@media only screen and (min-width: 750px) {
+	fieldset.plugin{
+		width: 49.5%;
+	}
 }

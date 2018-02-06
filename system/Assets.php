@@ -15,7 +15,7 @@ class Assets
 		$this->inlineCSS	= array();
 	}
 	
-	public function addCSS(string $CSS)
+	public function addCSS($CSS)
 	{
 		$CSSfile = $this->getFileUrl($CSS);
 		
@@ -30,7 +30,7 @@ class Assets
 		$this->inlineCSS[] = '<style>' . $CSS . '</style>';
 	}
 	
-	public function addJS(string $JS)
+	public function addJS($JS)
 	{
 		$JSfile = $this->getFileUrl($JS);
 		
@@ -52,7 +52,7 @@ class Assets
 	
 	public function renderJS()
 	{
-		return implode('<br/>', $this->JS) . implode('<br/>', $this->inlineJS);
+		return implode('<br/>', $this->JS) . '<br/>' . implode('<br/>', $this->inlineJS);
 	}
 
 	/**
@@ -60,8 +60,8 @@ class Assets
 	 * @params $path string
 	 * @return string or false 
 	 */
-	public function getFileUrl(string $path)
-	{				
+	public function getFileUrl($path)
+	{
 		$internalFile = __DIR__ . '/../plugins' . $path;
 		
 		if(file_exists($internalFile))

@@ -7,13 +7,16 @@ class Settings
 	public static function loadSettings()
 	{
 		$settings 			= self::getDefaultSettings();
-		$userSettings 		= self::getUserSettings($settings['settingsPath']);
+		$userSettings 		= self::getUserSettings();
 		
 		if($userSettings)
 		{
 			$settings = array_merge($settings, $userSettings);
+			$settings['setup'] = false;
 		}
+		
 		$settings['themePath'] = $settings['rootPath'] . $settings['themeFolder'] . DIRECTORY_SEPARATOR . $settings['theme'];
+		
 		return array('settings' => $settings);
 	}
 	
@@ -36,21 +39,87 @@ class Settings
 			'settingsPath'							=> $rootPath . 'settings',
 			'authorPath'							=> __DIR__ . DIRECTORY_SEPARATOR . 'author' . DIRECTORY_SEPARATOR,
 			'contentFolder'							=> 'content',
-			'version'								=> '1.0.5'
+			'version'								=> '1.1.0',
+			'setup'									=> true
 		];
 	}
 	
-	private function getUserSettings($settingsPath)
+	private function getUserSettings()
 	{
-		if(file_exists($settingsPath . DIRECTORY_SEPARATOR . 'settings.yaml'))
-		{
-			$yaml = new \Symfony\Component\Yaml\Parser();
+		$yaml = new Models\WriteYaml();
+		
+		$userSettings = $yaml->getYaml('settings', 'settings.yaml');
+		
+		return $userSettings;
+	}
+	
+	public static function getPluginSettings($pluginName)
+	{
+		$yaml = new Models\WriteYaml();
+		
+		$pluginFolder 	= 'plugins' . DIRECTORY_SEPARATOR . $pluginName;
+		$pluginFile		= $pluginName . '.yaml';
+		$pluginSettings = $yaml->getYaml($pluginFolder, $pluginFile);
 
-			try {
-				$userSettings 	= $yaml->parse( file_get_contents($settingsPath . DIRECTORY_SEPARATOR . 'settings.yaml' ) );
-			} catch (ParseException $e) {
-				printf("Unable to parse the YAML string: %s", $e->getMessage());
+		return $pluginSettings;
+	}
+
+	public static function getThemeSettings($themeName)
+	{
+		$yaml = new Models\WriteYaml();
+		
+		$themeFolder 	= 'themes' . DIRECTORY_SEPARATOR . $themeName;
+		$themeFile		= $themeName . '.yaml';
+		$themeSettings = $yaml->getYaml($themeFolder, $themeFile);
+
+		return $themeSettings;
+	}
+	
+	public static function updateSettings($settings)
+	{
+		$yaml = new Models\WriteYaml();
+		
+		/* write settings to yaml */
+		$yaml->updateYaml('settings', 'settings.yaml', $settings);
+	}
+	
+	public static function removePluginSettings($pluginName)
+	{
+		$userSettings 	= self::getUserSettings();
+		
+		if($userSettings && isset($userSettings['plugins'][$pluginName]))
+		{
+			$yaml = new Models\WriteYaml();
+			
+			/* delete the plugin from settings */
+			unset($userSettings['plugins'][$pluginName]);
+			
+			/* write settings to yaml */
+			$yaml->updateYaml('settings', 'settings.yaml', $userSettings);			
+		}
+		
+		return $userSettings;
+	}
+	
+	public static function addPluginSettings($pluginName)
+	{
+		$userSettings 	= self::getUserSettings();
+		
+		if($userSettings)
+		{
+			$yaml = new Models\WriteYaml();
+			
+			$pluginSettings = self::getPluginSettings($pluginName);
+			if($pluginSettings['settings'])
+			{
+				$userSettings['plugins'][$pluginName] = $pluginSettings['settings'];
 			}
+			
+			$userSettings['plugins'][$pluginName]['active'] = true;
+			
+			/* write settings to yaml */
+			$yaml->updateYaml('settings', 'settings.yaml', $userSettings);
+
 			return $userSettings;
 		}
 		return false;

@@ -13,11 +13,13 @@
 		"twig/twig": "~1.18",		
 		"slim/twig-view": "~2.3",
 		"slim/flash": "~0.4",
+        "Slim/csrf": "~0.8",		
         "symfony/yaml": "~2.8",
 		"symfony/event-dispatcher": "~3.3",		
 		"erusev/parsedown": "~1.4",
 		"erusev/parsedown-extra": "dev-master",
-		"jbroadway/urlify": "~1.1"
+		"jbroadway/urlify": "~1.1",
+		"vlucas/valitron": "dev-master"
     },
 	"autoload": {
 		"psr-4": {

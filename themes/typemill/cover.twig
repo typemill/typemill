@@ -9,7 +9,11 @@
 		{{ content }}
 
 		<a href="{{ navigation[0].urlRel }}">Start</a>
-
+		
+		{% if settings.setup  %}
+			<a href="{{ base_url }}/setup">Setup</a>
+		{% endif %}
+		
 	</div>
 	
 {% endblock %}

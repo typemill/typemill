@@ -3,15 +3,16 @@
 {% block title %}Setup Welcome{% endblock %}
 
 {% block content %}
-	<div class="card">
-		<header>
-			<h1>Congratulations!</h1>
-		</header>
-		<div class="welcome">
-			<p>Hello {{ author }}!</p>
-			<p>Your settings are stored in your settings folder now. If you want to change the settings, simply open the file "settings.yaml" and edit them.</p>
-			<p>Not sure how to start? Simply create some content for your new website or visit the homepage and read the documentation... </p>
-			<a class="button" href="{{ base_url }}">Homepage</a>
-		</div>
+		
+	<div class="welcome">
+
+		<h1>Congratulations</h1>
+			
+		<p>Hello {{ author }}!</p>
+		<p>Your settings are stored in your settings folder now. If you want to change the settings, simply open the file "settings.yaml" in the folder "settings" and edit the setting-data.</p>
+		<p>Not sure how to start? Simply create some content for your new website or visit the homepage and read the documentation... </p>
+		<a class="button" href="{{ base_url }}">Homepage</a>
+		
 	</div>
+	
 {% endblock %}

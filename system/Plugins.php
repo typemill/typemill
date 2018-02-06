@@ -8,16 +8,16 @@ class Plugins
 	{
 		$pluginFolder = $this->scanPluginFolder();
 		$classNames = array();
-
+		
 		/* iterate over plugin folders */
 		foreach($pluginFolder as $plugin)
 		{
-			$className = DIRECTORY_SEPARATOR . 'Plugins' . DIRECTORY_SEPARATOR . $plugin . DIRECTORY_SEPARATOR . $plugin;
-						
+			$className = '\\Plugins\\' . $plugin . '\\' . $plugin;
+			
 			/* if plugin-class and subscribe-method exists, add classname to array */			
 			if(class_exists($className) /* && method_exists($className, 'getSubscribedEvents') */)
 			{
-				$classNames[] = $className;				
+				$classNames[]	= array('className' => $className, 'name' => $plugin);
 			}
 		}
 		return $classNames;

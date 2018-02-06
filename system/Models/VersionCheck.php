@@ -15,16 +15,11 @@ class VersionCheck
 		
 		$context = stream_context_create($opts);
 		
-		try {
-			$version = file_get_contents('http://typemill.net/tma1/checkversion', false, $context);
-
-			if ($version)
-			{
-				$version = json_decode($version);			
-				return $version->version;
-			}
-		} catch (Exception $e) {
+		if(false === ($version = @file_get_contents('http://typemill.net/api/v1/checkversion', false, $context)))
+		{
 			return false;
 		}
+		$version = json_decode($version);
+		return $version->version;		
 	}
 }

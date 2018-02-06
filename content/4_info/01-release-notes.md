@@ -2,6 +2,24 @@
 
 This is the version history with some release notes.
 
+## Version 1.1.0 (05.02.2018)
+
+Version 1.1.0 introduces plugins to typemill. And because of the GDPR, the first plugin is an implementation of the famous cookieconsent. So heads up, you can publish GDPR-compliant websites with typemill now! 
+
+All plugins are in the "plugin"-folder, and I can't wait, that this folder will be stuffed with cool extensions.
+
+To update the system, please delete, replace and upload
+
+* the "system" folder and
+* the "theme" folder.
+* the "plugin" folder (new).
+
+Then backup and delete your settings.yaml in the settings-folder. 
+
+Now visit your startpage and click on the new setup-button. The button will direct you to the new setup page, where you can configure the basic system and the new cookieconsent-plugin.
+
+Plugins are easy to use for writers, but a plugin system is pretty complex to implement for a developer, so there is a lot of new code. For now, there is no documentation for developers, but it will follow, soon.
+
 ## Version 1.0.5 (30.11.2017)
 
 - Improvement: Character encoding for the navigation has improved. You can try to use other characters than english for your file names now, but there is no garanty for it. If the characters do not work in the navigation, please use english characters only.

@@ -54,10 +54,10 @@ pre{ border-left: 4px solid #e0474c;	}
 ********************/
 
 header, nav, h1, h2, h3, h4, h5, h6, article .paging, article .breadcrumb, .cover .lead a, a.readMore{
-	font-family: Calibri, "Helvetica Neue", Arial, sans-serif;
+	font-family: Calibri, Helvetica, Arial, sans-serif;
 }
 article{
-	font-family: Calibri, "Helvetica Neue", Arial, sans-serif;
+	font-family: Calibri, Helvetica, Arial, sans-serif;
 }	
 pre,code{
 	font-family: monospace;
@@ -82,6 +82,20 @@ h6{	font-size: 1em; font-style: italic; font-weight:300; margin: 1em 0 0.6em; }
 html,body{
 	padding: 0;
 	margin:0;
+}
+html{
+    /* Adjust font size */
+    font-size: 100%;
+    -webkit-text-size-adjust: 100%;
+    /* Font varient */
+    font-variant-ligatures: none;
+    -webkit-font-variant-ligatures: none;
+    /* Smoothing */
+    text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
+    font-smoothing: antialiased;
+    -webkit-font-smoothing: antialiased;
+	text-shadow: rgba(0, 0, 0, .01) 0 0 1px;
 }
 body{
 	padding: 20px;
@@ -444,6 +458,10 @@ li.h2, li.h3, li.h4, li.h5, li.h6
 {
 	font-weight: 400;
 	padding-left: 25px;	
+}
+
+.control-set{
+	margin: 10px 0;
 }
 
 /************************

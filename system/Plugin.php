@@ -33,6 +33,11 @@ abstract class Plugin implements EventSubscriberInterface
 		return $this->$dispatcher;
 	}
 	
+	protected function getTwig()
+	{
+		return $this->container['view'];
+	}
+	
 	protected function addTwigGlobal($name, $class)
 	{
 		$this->container->view->getEnvironment()->addGlobal($name, $class);
@@ -47,7 +52,7 @@ abstract class Plugin implements EventSubscriberInterface
 	protected function addTwigFunction($name, $function)
 	{
 		$function = new \Twig_SimpleFunction($name, $function);
-		$this->container->view->getEnvironment()->addFunction($function);		
+		$this->container->view->getEnvironment()->addFunction($function);
 	}
 	
 	protected function addJS($JS)

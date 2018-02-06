@@ -3,7 +3,7 @@
 use Typemill\Controllers\PageController;
 use Typemill\Controllers\SetupController;
 
-if(!isset($userSettings))
+if($settings['settings']['setup'])
 {
 	$app->get('/setup', SetupController::class . ':setup')->setName('setup');
 	$app->post('/setup', SetupController::class . ':save')->setName('save');

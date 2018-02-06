@@ -31,7 +31,7 @@ class Write
 	}
 	
 	protected function checkFile($folder, $file)
-	{
+	{		
 		if(!file_exists($this->basePath . $folder . DIRECTORY_SEPARATOR . $file))
 		{
 			return false;

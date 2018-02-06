@@ -8,6 +8,7 @@ class ComposerStaticInit836351be733ecbf4741aea17e1973480
 {
     public static $files = array (
         '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
+        '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -22,6 +23,7 @@ class ComposerStaticInit836351be733ecbf4741aea17e1973480
             'Symfony\\Component\\EventDispatcher\\' => 34,
             'Slim\\Views\\' => 11,
             'Slim\\Flash\\' => 11,
+            'Slim\\Csrf\\' => 10,
             'Slim\\' => 5,
         ),
         'P' => 
@@ -65,6 +67,10 @@ class ComposerStaticInit836351be733ecbf4741aea17e1973480
         array (
             0 => __DIR__ . '/..' . '/slim/flash/src',
         ),
+        'Slim\\Csrf\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/slim/csrf/src',
+        ),
         'Slim\\' => 
         array (
             0 => __DIR__ . '/..' . '/slim/slim/Slim',
@@ -92,6 +98,13 @@ class ComposerStaticInit836351be733ecbf4741aea17e1973480
     );
 
     public static $prefixesPsr0 = array (
+        'V' => 
+        array (
+            'Valitron' => 
+            array (
+                0 => __DIR__ . '/..' . '/vlucas/valitron/src',
+            ),
+        ),
         'U' => 
         array (
             'URLify' => 
