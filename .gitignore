@@ -1,7 +1,7 @@
 cache/structure.txt
 cache/sitemap.xml
 cache/lastSitemap.txt
-cache/lastCache.txt
+cache/stats.txt
 settings/settings.yaml
 plugins/admin
 plugins/demo
