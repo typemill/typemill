@@ -1,1 +1,0 @@
-a:2:{s:31:"http://localhost/typemill/setup";i:1517561841;s:25:"http://localhost/typemill";i:1517562535;}
