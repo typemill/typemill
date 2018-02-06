@@ -1,0 +1,81 @@
+name: Cookie Consent
+version: 1.0.0
+description: Enables a cookie consent for websites
+author: Sebastian Schürmanns
+homepage: https://cookieconsent.insites.com/
+licence: MIT
+
+settings:
+  popup_background: '#70c1b3'
+  popup_text: '#ffffff'
+  button_background: '#66b0a3'
+  button_text: '#ffffff'
+  theme: 'edgeless'
+  position: 'bottom'
+  message: 'This website uses cookies to ensure you get the best experience on our website.'
+  link: 'Learn More'
+  dismiss: 'Got It'
+
+forms:
+  fields:
+
+    theme:
+      type: select
+      label: Theme
+      placeholder: 'Add name of theme'
+      required: true
+      options:
+        edgeless: Edgeless
+        block: Block
+        classic: Classic
+
+    position:
+      type: select
+      label: Position of Cookie Banner
+      options:
+        bottom: Bottom
+        top: Top
+        bottom-left: Bottom left
+        bottom-right: Bottom right
+
+    message:
+      type: textarea
+      label: Message
+      placeholder: 'Message for cookie-popup'
+      required: true
+
+    link:
+      type: text
+      label: Label for Link
+      placeholder: 'Link-Lable like More infos'
+      required: true
+
+    dismiss:
+      type: text
+      label: Label for Button
+      placeholder: 'Got it'
+      required: true
+
+    popup_background:
+      type: color
+      label: Background Color of Popup
+      placeholder: 'Add hex color value like #ffffff'
+      required: true
+
+    popup_text:
+      type: color
+      label: Text Color of Popup
+      placeholder: 'Add hex color value like #ffffff'
+      required: true
+
+    button_background:
+      type: color
+      label: Background Color of Button
+      placeholder: 'Add hex color value like #ffffff'
+      required: true
+
+    button_text:
+      type: color
+      label: Text Color of Button
+      placeholder: 'Add hex color value like #ffffff'
+      required: true

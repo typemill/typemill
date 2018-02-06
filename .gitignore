@@ -3,6 +3,9 @@ cache/sitemap.xml
 cache/lastSitemap.txt
 cache/lastCache.txt
 settings/settings.yaml
-plugins
+plugins/admin
+plugins/demo
+plugins/version
+tests
 zips
 zip.php
