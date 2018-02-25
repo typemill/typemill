@@ -9,17 +9,19 @@ use Typemill\Models\WriteYaml;
 use \Symfony\Component\Yaml\Yaml;
 use Typemill\Models\VersionCheck;
 use Typemill\Models\Helpers;
-use Typemill\Events\LoadPagetreeEvent;
-use Typemill\Events\LoadBreadcrumbEvent;
-use Typemill\Events\LoadItemEvent;
-use Typemill\Events\LoadMarkdownEvent;
-use Typemill\Events\ParseHtmlEvent;
+use Typemill\Events\OnPagetreeLoaded;
+use Typemill\Events\OnBreadcrumbLoaded;
+use Typemill\Events\OnItemloaded;
+use Typemill\Events\OnMarkdownLoaded;
+use Typemill\Events\OnContentArrayLoaded;
+use Typemill\Events\OnHtmlLoaded;
 use Typemill\Extensions\ParsedownExtension;
 
 class PageController extends Controller
 {
 	public function index($request, $response, $args)
 	{
+	
 		/* Initiate Variables */
 		$structure		= false;
 		$contentHTML	= false;
@@ -52,7 +54,7 @@ class PageController extends Controller
 				{
 					$content = '<h1>No Content</h1><p>Your content folder is empty.</p>'; 
 
-					$this->render($response, '/index.twig', [ 'content' => $content ]);
+					$this->render($response, '/index.twig', array( 'content' => $content ));
 				}
 				elseif(!$cache->validate('cache', 'lastSitemap.txt', 86400))
 				{
@@ -66,7 +68,7 @@ class PageController extends Controller
 			}
 			
 			/* dispatch event and let others manipulate the structure */
-			$structure = $this->c->dispatcher->dispatch('onPagetreeLoaded', new LoadPagetreeEvent($structure))->getData();
+			$structure = $this->c->dispatcher->dispatch('onPagetreeLoaded', new OnPagetreeLoaded($structure))->getData();
 		}
 		catch (Exception $e)
 		{
@@ -104,11 +106,11 @@ class PageController extends Controller
 			
 			/* get breadcrumb for page */
 			$breadcrumb = Folder::getBreadcrumb($structure, $item->keyPathArray);
-			$breadcrumb = $this->c->dispatcher->dispatch('onBreadcrumbLoaded', new LoadBreadcrumbEvent($breadcrumb))->getData();
-						
+			$breadcrumb = $this->c->dispatcher->dispatch('onBreadcrumbLoaded', new OnBreadcrumbLoaded($breadcrumb))->getData();
+			
 			/* add the paging to the item */
 			$item = Folder::getPagingForItem($structure, $item);
-			$item = $this->c->dispatcher->dispatch('onItemLoaded', new LoadItemEvent($item))->getData();
+			$item = $this->c->dispatcher->dispatch('onItemLoaded', new OnItemLoaded($item))->getData();
 			
 			/* check if url is a folder. If so, check if there is an index-file in that folder */
 			if($item->elementType == 'folder' && $item->index)
@@ -124,20 +126,49 @@ class PageController extends Controller
 			$contentMD = isset($filePath) ? file_get_contents($filePath) : false;
 		}
 		
-		$contentMD = $this->c->dispatcher->dispatch('onMarkdownLoaded', new LoadMarkdownEvent($contentMD))->getData();
+		$contentMD = $this->c->dispatcher->dispatch('onMarkdownLoaded', new OnMarkdownLoaded($contentMD))->getData();
 		
 		/* initialize parsedown */
-		$Parsedown 		= new ParsedownExtension();
+		$parsedown 		= new ParsedownExtension();
 
-		/* parse markdown-file to html-string */
-		$contentHTML 	= $Parsedown->text($contentMD);
-		$contentHTML 	= $this->c->dispatcher->dispatch('onHtmlParsed', new ParseHtmlEvent($contentHTML))->getData();
+		/* parse markdown-file to content-array */
+		$contentArray 	= $parsedown->text($contentMD);
+		$contentArray 	= $this->c->dispatcher->dispatch('onContentArrayLoaded', new OnContentArrayLoaded($contentArray))->getData();
+	
+		/* get the first image from content array */
+		$firstImage		= $this->getFirstImage($contentArray);
 		
-		$excerpt		= substr($contentHTML,0,200);
+		/* parse markdown-content-array to content-string */
+		$contentHTML	= $parsedown->markup($contentArray);
+		$contentHTML 	= $this->c->dispatcher->dispatch('onHtmlLoaded', new OnHtmlLoaded($contentHTML))->getData();
+		
+		/* create excerpt from content */
+		$excerpt		= substr($contentHTML,0,320);
 		$excerpt		= explode("</h1>", $excerpt);
+		
+		/* extract title from excerpt */
 		$title			= isset($excerpt[0]) ? strip_tags($excerpt[0]) : $settings['title'];
+		
+		/* create description from excerpt */
 		$description	= isset($excerpt[1]) ? strip_tags($excerpt[1]) : false;
-		$description 	= $description ? trim(preg_replace('/\s+/', ' ', $description)) : false;
+		if($description)
+		{
+			$description 	= trim(preg_replace('/\s+/', ' ', $description));
+			$lastSpace 		= strrpos($description, ' ');
+			$description 	= substr($description, 0, $lastSpace);
+		}
+		
+		/* get url and alt-tag for first image, if exists */
+		if($firstImage)
+		{	
+			preg_match('#\((.*?)\)#', $firstImage, $img_url);
+			if($img_url[1])
+			{
+				preg_match('#\[(.*?)\]#', $firstImage, $img_alt);
+				
+				$firstImage = array('img_url' => $base_url . $img_url[1], 'img_alt' => $img_alt[1]);
+			}
+		}
 		
 		/* 
 			$timer['topiccontroller']=microtime(true);
@@ -146,10 +177,10 @@ class PageController extends Controller
 		*/
 		
 		$route = empty($args) && $settings['startpage'] ? '/cover.twig' : '/index.twig';
-
-		$this->render($response, $route, array('navigation' => $structure, 'content' => $contentHTML, 'item' => $item, 'breadcrumb' => $breadcrumb, 'settings' => $settings, 'title' => $title, 'description' => $description, 'base_url' => $base_url ));
+		
+		$this->render($response, $route, array('navigation' => $structure, 'content' => $contentHTML, 'item' => $item, 'breadcrumb' => $breadcrumb, 'settings' => $settings, 'title' => $title, 'description' => $description, 'base_url' => $base_url, 'image' => $firstImage ));
 	}
-	
+
 	protected function getCachedStructure($cache)
 	{
 		return $cache->getCache('cache', 'structure.txt');
@@ -197,5 +228,18 @@ class PageController extends Controller
 				}
 			}
 		}
+	}
+	
+	protected function getFirstImage(array $contentBlocks)
+	{
+		foreach($contentBlocks as $block)
+		{
+			if($block['element']['name'] == 'p' && substr($block['element']['text'], 0, 2) == '![' )
+			{
+				return $block['element']['text'];
+			}
+		}
+		
+		return false;
 	}
 }

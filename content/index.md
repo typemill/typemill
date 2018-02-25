@@ -1,2 +1,1 @@
-TYPEMILL is a simple system to **publish** your **text-work** (markdown) as a **website**. Nearly no technical skills are required. Just download, learn and start.
-
+TYPEMILL is a content management system for **writers** and their **text-work** (markdown). TYPEMILL is simple, lightweight (< 1mb) and open source. Just download and start.

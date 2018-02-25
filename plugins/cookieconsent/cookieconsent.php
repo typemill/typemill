@@ -1,19 +1,19 @@
 <?php
 
-namespace Plugins\cookieconsent;
+namespace Plugins\CookieConsent;
 
 use \Typemill\Plugin;
 
-class cookieconsent extends Plugin
+class CookieConsent extends Plugin
 {
 	protected $settings;
 	
     public static function getSubscribedEvents()
     {
-		return [
-			'onSettingsLoaded'		=> ['onSettingsLoaded',0],
-			'onTwigLoaded' 			=> ['onTwigLoaded', 0]
-		];
+		return array(
+			'onSettingsLoaded'		=> 'onSettingsLoaded',
+			'onTwigLoaded' 			=> 'onTwigLoaded'
+		);
     }
 	
 	public function onSettingsLoaded($settings)
@@ -22,7 +22,7 @@ class cookieconsent extends Plugin
 	}
 	
 	public function onTwigLoaded()
-	{	
+	{
 		/* add external CSS and JavaScript */
 		$this->addCSS('/cookieconsent/public/cookieconsent.min.css');
 		$this->addJS('/cookieconsent/public/cookieconsent.min.js');
@@ -33,6 +33,6 @@ class cookieconsent extends Plugin
 		$loader->addPath(__DIR__ . '/templates');
 	
 		/* fetch the template, render it with twig and add it as inline-javascript */
-		$this->addInlineJS($twig->fetch('/cookieconsent.twig', $this->settings));	
+		$this->addInlineJS($twig->fetch('/cookieconsent.twig', $this->settings));
 	}
 }

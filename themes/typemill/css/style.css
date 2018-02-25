@@ -16,9 +16,9 @@ a, a:link, a:visited, a:focus, a:hover, a:active, button, .button{
 
 body{ background: #f9f8f6; color: #444; }
 aside{	background: #f9f8f6; border-left: 30px solid #FFF; border-right: 30px solid #FFF; border-bottom: 30px solid #FFF; }
-nav li.folder.level-1{ border-left: 4px solid #f9f8f6; }
-nav li.active.folder.level-1{ background: #fdfcfa; border-left: 4px solid #e0474c; }
-nav li a:focus, nav li a:hover, nav li a:active, nav li.active.file a{ color: #e0474c; }
+.main-menu li.folder.level-1{ border-left: 4px solid #f9f8f6; }
+.main-menu li.active.folder.level-1{ background: #fdfcfa; border-left: 4px solid #e0474c; }
+.main-menu li a:focus, .main-menu li a:hover, .main-menu li a:active, .main-menu li.active.file a{ color: #e0474c; }
 article {background: #FFF; }
 article a, article a:link, article a:visited,
 footer a, footer a:link, footer a:visited{ text-decoration: none; color: #e0474c; }
@@ -34,7 +34,7 @@ article .paging a:focus, article .paging a:hover, article .paging a:active{ colo
 header a span, .cover span{ color: #e0474c; }
 header a, .cover{ color: #444; }
 footer{ background: #FFF; }
-.chapterNumber{ color: #BBB; }
+.chapterNumber{ color: #bbb; }
 .chapter h1{ border-bottom: 2px solid #f9f8f6; }
 .cover .lead a, .cover .lead a:link, .cover .lead a:visited,
 a.readMore, a.readMore:link, a.readMore:visited{ border: 2px solid #e0474c; background: #e0474c; color: #f9f8f6; }
@@ -48,6 +48,7 @@ a.readMore:focus, a.readMore:hover, a.readMore:active{
 pre,code{ color: #333; background: #f9f8f6; }
 pre{ border-left: 4px solid #e0474c;	}
 .hljs{ background: transparent; }
+.TOC li:before{ color: #bbb; }
 
 /********************
 *  		FONTS 	    *
@@ -167,15 +168,17 @@ header p{
 	transition: max-height 0.25s ease-in;
 	overflow: hidden;
 }
-nav{ 
+.main-menu{ 
 	line-height: 1.4em; 
+	padding-left: 0px;
+	margin-left: 0px;
 }
-nav a, nav a:link, nav a:focus, nav a:hover, nav a:active, nav a:visited{
+.main-menu a, .main-menu a:link, .main-menu a:focus, .main-menu a:hover, .main-menu a:active, .main-menu a:visited{
 	text-decoration: none;
 	color: #333;
 }
-nav a:focus, nav a:hover, nav a:active, nav a.active{}
-nav ul, nav li{
+.main-menu a:focus, .main-menu a:hover, .main-menu a:active, .main-menu a.active{}
+.main-menu ul, .main-menu li{
 	padding:0 5px;
 	margin: 0;
 	list-style: none;
@@ -183,13 +186,13 @@ nav ul, nav li{
 	font-size: 1em;
 	font-weight: 300;
 }
-nav li.folder{
+.main-menu li.folder{
 	padding:5px;
 }
-nav li.folder.level-1{
+.main-menu li.folder.level-1{
 	padding-left: 15px;
 }
-nav > ul > li
+.main-menu > ul > li
 {
 	text-transform: uppercase;
 	margin: 15px 0 5px;
@@ -225,6 +228,74 @@ nav > ul > li
 .cover.startpage .breadcrumb{
 	background: transparent;
 }
+.cover footer{
+	background: transparent;
+	width: 100%;
+	float: none;
+}
+
+/************************
+*  		TOC-NAV		    *
+************************/
+
+.toc-nav{
+	display: inline-block;
+	width: 100%;
+	font-size: 0.8em;
+	border-top: 2px solid #f9f8f6;
+	padding-top: 50px;
+	margin-bottom: 50px;
+}
+.cover .toc-nav{
+	border-top: 0;
+	margin-top: 100px;
+}
+.toc-nav ul, .toc-nav li{
+	padding: 0 0 0 0;
+	margin: 0 0 0 0;
+	list-style: none;
+	text-transform: none;
+	font-weight: 300;
+}
+.toc-nav li{
+	box-sizing: border-box;
+    width: 100%;
+    display: inline-block;
+    text-transform: capitalize;
+	text-align: left;
+}
+.toc-nav li a {
+    display: inline-block;
+	margin: 5px 0;
+    width: 100%;
+    padding: 12px 8px;
+    box-sizing: border-box;
+}
+.toc-nav li.level-1{
+	padding-left: 15px;
+	text-transform: uppercase;
+	margin: 15px 0 5px;
+	font-weight: 700;	
+}
+.toc-nav li.level-1 a{
+	text-decoration: none;
+	color: #444;
+}
+.toc-nav li.level-2{
+    width: 100%;
+    margin: 0% 1%;
+}
+.toc-nav li.level-2 a{
+	background: #fdfcfa;	
+	border-left: 2px solid #ddd;
+	color: #444;
+	text-decoration: none;
+}
+.toc-nav li.level-2 a:hover{
+	background: #f4f3f1;
+	border-left: 2px solid #e0474c;
+}
+
 
 /************************
 *  		CHAPTER		    *
@@ -233,7 +304,8 @@ nav > ul > li
 	text-align: center;
 }
 .chapterNumber{
-	font-size: 1.2em;
+	font-size: 1em;
+	font-weight: 300;
 	padding: 1.5em;
 	margin: 0px
 }
@@ -241,6 +313,9 @@ nav > ul > li
 	text-transform: uppercase;
 	padding-bottom: 40px;
 	margin:0;
+}
+.chapter p{
+	text-align: left;
 }
 
 /************************
@@ -415,6 +490,10 @@ ul,ol{
 	margin-left: 18px;
 }
 blockquote{
+	border-left: 4px solid #e0474c;
+	background: #f9f8f6;
+}
+blockquote{
 	position: relative;
 	font-style: italic;
 	font-family: serif;
@@ -440,10 +519,22 @@ cite{}
 abbr{}
 hr{}
 
+/************************
+*  	TABLE OF CONTENTS 	*
+************************/
+
 ul.TOC,.TOC ul{
 	list-style: none;
 	padding-left: 0px;
 	margin-left: 0px;
+}
+.TOC li:before{
+	content: "\2192";
+	margin-left: -7px;
+	margin-right: 7px;
+}
+.TOC li.h1:before{
+	content: "";
 }
 ul.TOC{
 	background: #f9f8f6;
@@ -483,6 +574,8 @@ li.h2, li.h3, li.h4, li.h5, li.h6
 .github a:hover{
 	text-decoration: underline;
 }
+
+
 
 /************************
 *  		RESPONSIVE		*
@@ -546,6 +639,12 @@ li.h2, li.h3, li.h4, li.h5, li.h6
 	.cover .lead a, a.readMore{
 		min-width: 150px;
 	}
+	.cover .toc-nav{
+		margin-top: 150px;
+	}	
+	.toc-nav li.level-2{
+		width: 47.5%;
+	}	
 	article .paging a{
 		width: auto;
 	}

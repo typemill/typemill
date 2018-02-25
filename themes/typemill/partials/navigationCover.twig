@@ -1,0 +1,29 @@
+{% macro loop_over(navigation) %}
+
+    {% import _self as macros %}
+
+    {% for element in navigation %}
+        {% if element.activeParent %}
+			<li class="{{ element.elementType }} level-{{ element.keyPathArray|length }} active parent">
+		{% elseif element.active %}
+			<li class="{{ element.elementType }} level-{{ element.keyPathArray|length }} active">
+		{% else %}
+			<li class="{{ element.elementType }} level-{{ element.keyPathArray|length }}">
+		{% endif %}
+            {% if element.elementType == 'folder' and element.keyPathArray|length == 1 %}
+				<a href="{{ element.urlRel }}">{{ element.name|title }}</a>		
+                <ul>
+                    {{ macros.loop_over(element.folderContent) }}
+                </ul>
+            {% else %}
+				<a href="{{ element.urlRel }}">{{ element.name|title }}</a>
+            {% endif %}
+        </li>
+    {% endfor %}
+{% endmacro %}
+
+{% import _self as macros %}
+
+<ul>
+    {{ macros.loop_over(navigation) }}
+</ul>

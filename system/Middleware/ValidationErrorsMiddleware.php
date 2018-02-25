@@ -24,7 +24,6 @@ class ValidationErrorsMiddleware
 			unset($_SESSION['errors']);
 		}
 		
-		$response = $next($request, $response);
-		return $response;
+		return $next($request, $response);
 	}
 }

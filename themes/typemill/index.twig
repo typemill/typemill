@@ -4,78 +4,15 @@
 
 {% block content %}
 
-	{% if item.prevItem or item.nextItem %}
-		<div class="breadcrumb">
-			{% if item.prevItem %}
-				<span class="prev"><a href="{{ item.prevItem.urlRel }}"><i class="icon-left-open-big"></i></a></span>
-			{% endif %}			
-			<ul>
-			{% for crumb in breadcrumb %}
-				<li><a href="{{ crumb.urlRel }}">{{ crumb.name }}</a></li>
-			{% endfor %}
-			</ul>
-			<button id="menu" class="menu">contents</button>
-			{% if item.nextItem %}
-				<span class="next"><a href="{{ item.nextItem.urlRel }}"><i class="icon-right-open-big"></i></a></span>
-			{% endif %}			
-		</div>
-	{% endif %}
-	
-	{% if(item.elementType == 'folder') %}
+	{% include '/partials/breadcrumb.twig' %}
+
+	{% if item.elementType == 'file' %}
 		
-		<div class="chapter">
-		
-			<div class="chapterNumber">Chapter {{ item.chapter }}</div>
+		{% include 'page.twig' %}
 
-			{% if content is empty %}
-					
-				<h1>{{ item.name }}</h1>
-						
-			{% endif %}
-			
-			{{ content }}
-			
-			<a class="readMore" href="{{ item.nextItem.urlRel }}">Start Reading</a>
-		</div>
-		
-	{% elseif item.elementType == 'file' %}
-
-		{% if content is empty %}
-					
-			<h1>{{ item.name }}</h1>
-						
-		{% endif %}
-	
-		{{ content }}
-
-		{% if item.prevItem or item.nextItem %}
-
-			<div class="paging">
-				{% if item.prevItem %}
-					<span class="prev"><a href="{{ item.prevItem.urlRel }}"><i class="icon-left-open-big"></i> {{ item.prevItem.name }}</a></span>
-				{% endif %}
-				{% if item.nextItem %}
-					<span class="next"><a href="{{ item.nextItem.urlRel }}">{{ item.nextItem.name }} <i class="icon-right-open-big"></i></a></span>
-				{% endif %}
-			</div>
-
-		{% endif %}
 	{% else %}
-	
-		<div class="cover startpage">
-		
-			<div class="breadcrumb">
-				<button id="menu" class="menu">contents</button>
-			</div>
-		
-			<h1>{{ settings.title }}</h1>
-			
-			<div class="lead">
-				{{ content }}
-				<a href="{{ navigation[0].urlRel }}">Start</a>
-			</div>
-			
-		</div>
+
+		{% include 'chapter.twig' %}
 	
 	{% endif %}
 	

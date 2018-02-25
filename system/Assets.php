@@ -69,6 +69,8 @@ class Assets
 			return $this->baseUrl . '/plugins' . $path;
 		}
 		
+		return $path;
+		
 		if(fopen($path, "r"))
 		{
 			return $path;

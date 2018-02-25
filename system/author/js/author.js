@@ -1,6 +1,5 @@
 (function () 
 {
-	
 	/**********************************
 	** Global HttpRequest-Function   **
 	** for AJAX-Requests             **
@@ -30,10 +29,35 @@
 		return httpRequest;
 	}
 	
-	function sendJson(callback, getPost, url, jsonData)
-	{	
-		var httpRequest = prepareHttpRequest();
-		httpRequest.open(getPost, url, true);
+	function prepareCORSRequest(method, url){
+		var xhr = prepareHttpRequest();
+		if ("withCredentials" in xhr)
+		{
+			xhr.open(method, url, true);
+		}
+		else if (typeof XDomainRequest != "undefined")
+		{
+			xhr = new XDomainRequest();
+			xhr.open(method, url);
+		}
+		else
+		{
+			xhr = null;
+		}
+		return xhr;
+	}
+	
+	function sendJson(callback, getPost, url, jsonData, cors = false)
+	{
+		if(cors)
+		{
+			var httpRequest = prepareCORSRequest(getPost, url);
+		}
+		else
+		{
+			var httpRequest = prepareHttpRequest();
+			httpRequest.open(getPost, url, true);			
+		}
 		httpRequest.onreadystatechange = function(e) 
 		{
 			if (this.readyState == 4) 
@@ -47,20 +71,30 @@
 				}
 				else
 				{
-					console.log('connection error, status is not 200');
+					console.log('connection error, status '+this.status);
 				}
 			}
 		};
 
 		// if you use application/json, make sure you collect the data in php 
 		// with file_get_contents('php://input') instead of $_POST
-		httpRequest.setRequestHeader('Content-Type', 'application/json'); 
+
 		// httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		// httpRequest.setRequestHeader('Content-Type', 'text/plain'); 
+		httpRequest.setRequestHeader('Content-Type', 'application/json'); 
+		
+		// required by slim ???
 		httpRequest.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 		
-		httpRequest.send(JSON.stringify(jsonData));
+		if(jsonData)
+		{
+			httpRequest.send(JSON.stringify(jsonData));
+		}
+		else
+		{
+			httpRequest.send();
+		}
 	}
-	
 	
 	/* change the theme if choosen in selectbox */
 	var themeSwitch	= document.getElementById("themeSwitch");
@@ -102,7 +136,7 @@
 			{
 				return false;
 			}
-		}, getPost, url, false);
+		}, getPost, url, false, true);
 	}
 
 	function updatePluginVersions(pluginVersions)

@@ -4,7 +4,7 @@ namespace Typemill\Controllers;
 
 /* Use the slim-container */
 use Interop\Container\ContainerInterface;
-use Typemill\Events\RenderPageEvent;
+use Typemill\Events\OnPageReady;
 
 abstract class Controller
 {
@@ -17,7 +17,7 @@ abstract class Controller
 	
 	protected function render($response, $route, $data)
 	{
-		$data = $this->c->dispatcher->dispatch('onPageRendered', new RenderPageEvent($data))->getData();
+		$data = $this->c->dispatcher->dispatch('onPageReady', new OnPageReady($data))->getData();
 		
 		return $this->c->view->render($response, $route, $data);
 	}

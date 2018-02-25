@@ -10,7 +10,7 @@ class SetupController extends Controller
 {
 	public function setup($request, $response, $args)
 	{
-		$settings 	= $this->c->get('settings');
+		$settings 	= $this->c->get('settings');		
 		$themes 	= $this->getThemes();
 		$copyright	= $this->getCopyright();
 		
@@ -125,7 +125,7 @@ class SetupController extends Controller
 				else
 				{					
 					/* now fetch the original plugin settings from the plugin folder to get the field definitions */
-					$pluginOriginalSettings = \Typemill\settings::getPluginSettings($pluginName);
+					$pluginOriginalSettings = \Typemill\Settings::getPluginSettings($pluginName);
 					
 					if($pluginOriginalSettings)
 					{
@@ -166,7 +166,7 @@ class SetupController extends Controller
 			/* if everything is valid, add plugin settings to base settings again */
 			$appSettings['plugins'] = $pluginSettings;
 						
-			/* store updated settings */			
+			/* store updated settings */
 			\Typemill\Settings::updateSettings($appSettings);
 			
 			unset($_SESSION['old']);

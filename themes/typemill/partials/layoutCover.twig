@@ -8,7 +8,6 @@
 		<meta name="description" content="{{ description }}" />
 		<meta name="author" content="{{ settings.author }}" />
 		<meta name="generator" content="TYPEMILL" />
-		<meta name="application-name" content="TYPEMILL"/>
 		<meta name="msapplication-TileColor" content="#F9F8F6" />
 		<meta name="msapplication-TileImage" content="{{ base_url }}/themes/typemill/img/mstile-144x144.png" />
 
@@ -16,16 +15,45 @@
 		<link rel="apple-touch-icon-precomposed" sizes="152x152" href="{{ base_url }}/themes/typemill/img/apple-touch-icon-152x152.png" />
 		<link rel="icon" type="image/png" href="{{ base_url }}/themes/typemill/img/favicon-32x32.png" sizes="32x32" />
 		<link rel="icon" type="image/png" href="{{ base_url }}/themes/typemill/img/favicon-16x16.png" sizes="16x16" />
+		
+		<link rel="canonical" href="{{ item.urlAbs }}" />
+		
+		<meta property="og:site_name" content="{{ settings.title }}">
+		<meta property="og:title" content="{{ title }}">
+		<meta property="og:description" content="{{ description }}">
+		<meta property="og:type" content="article">
+		<meta property="og:url" content="{{ item.urlAbs }}">
+		<meta property="og:image" content="{{ image.img_url }}">
+		<meta name="twitter:image:alt" content="{{ image.img_alt }}">		
+		<meta name="twitter:card" content="summary_large_image">		
 
-		<link rel="stylesheet" href="{{ base_url }}/themes/typemill/css/fontello/css/fontello.css" />
-		<link rel="stylesheet" href="{{ base_url }}/themes/typemill/css/normalize.css" />
-		<link rel="stylesheet" href="{{ base_url }}/themes/typemill/js/highlight/styles/default.css" />
-		<link rel="stylesheet" href="{{ base_url }}/themes/typemill/css/style.css" />
+		{% block stylesheets %}
+			<link rel="stylesheet" href="{{ base_url }}/themes/typemill/css/fontello/css/fontello.css" />
+			<link rel="stylesheet" href="{{ base_url }}/themes/typemill/css/normalize.css" />
+			<link rel="stylesheet" href="{{ base_url }}/themes/typemill/js/highlight/styles/default.css" />
+			<link rel="stylesheet" href="{{ base_url }}/themes/typemill/css/style.css" />
+			
+			{{ assets.renderCSS() }}
+			
+		{% endblock %}
 	</head>
 	<body>
 		<div class="cover">
 			<h1>{{ settings.title }}</h1>
 			{% block content %}{% endblock %}
+			<nav class="toc-nav">
+				{% include 'partials/navigationCover.twig' %}
+			</nav>
+			<footer>
+				{% include 'partials/footer.twig' %}
+			</footer>			
 		</div>
+
+		{% block javascripts %}
+		
+			{{ assets.renderJS() }}
+		
+		{% endblock %}		
+		
 	</body>
 </html>

@@ -1,7 +1,7 @@
 <?php
 
-use Typemill\Events\LoadSettingsEvent;
-use Typemill\Events\LoadPluginsEvent;
+use Typemill\Events\OnSettingsLoaded;
+use Typemill\Events\OnPluginsLoaded;
 
 /************************
 * START SESSION			*
@@ -79,7 +79,7 @@ foreach($pluginNames as $pluginName)
 		$DIsettings = $container->get('settings');
 		$DIsettings->replace($pluginSettings);		
 	}
-	
+
 	/* if the plugin is activated, add routes/middleware and add plugin as event subscriber */
 	if(isset($settings['settings']['plugins'][$name]['active']) && $settings['settings']['plugins'][$name]['active'] != false)
 	{
@@ -91,11 +91,11 @@ foreach($pluginNames as $pluginName)
 }
 
 /* dispatch the event onPluginsLoaded */
-$dispatcher->dispatch('onPluginsLoaded', new LoadPluginsEvent($pluginNames));
+$dispatcher->dispatch('onPluginsLoaded', new OnPluginsLoaded($pluginNames));
 
 /* dispatch settings event and get all setting-updates from plugins */
 /* TODO, how to update the settings with a plugin? You cannot replace the full settings in the container, so you have to add settings in the container directly */
-$dispatcher->dispatch('onSettingsLoaded', new LoadSettingsEvent($settings))->getData();
+$dispatcher->dispatch('onSettingsLoaded', new OnSettingsLoaded($settings))->getData();
 
 /******************************
 * ADD DISPATCHER TO CONTAINER *
@@ -180,7 +180,6 @@ foreach($middleware as $pluginMiddleware)
 		$app->add(new $middlewareClass($middlewareParams));
 	}
 }
-
 $app->add(new \Typemill\Middleware\ValidationErrorsMiddleware($container['view']));
 $app->add(new \Typemill\Middleware\OldInputMiddleware($container['view']));
 $app->add($container->get('csrf'));

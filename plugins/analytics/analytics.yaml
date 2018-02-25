@@ -1,0 +1,38 @@
+name: Analytics
+version: 1.0.0
+description: Integrate Piwik or Google Analytics Script
+author: Sebastian Schürmanns
+homepage: http://typemill.net
+licence: MIT
+
+settings:
+  tool: none
+
+forms:
+  fields:
+
+    tool:
+      type: radio
+      label: Choose Your Tool
+      options:
+        none: None
+        piwik: Piwik
+        google: Google Analytics
+
+    piwik_url:
+      type: text
+      label: Piwik URL
+      help: Add the URL to your piwik installation without protocol like this: my-site.com.
+      placeholder: 'url like my-piwik-installation.com'
+
+    piwik_id:
+      type: number
+      label: Piwik Site-ID
+      help: You can find the id in Piwik under configuration and tracking code.
+      placeholder: 'simple number like 8'
+
+    google_id:
+      type: text
+      label: Google Tracking ID
+      help: You can find the tracking id in google under property. It starts with UA-
+      placeholder: 'UA-12345-6'

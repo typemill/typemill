@@ -20,7 +20,7 @@ class Settings
 		return array('settings' => $settings);
 	}
 	
-	private function getDefaultSettings()
+	private static function getDefaultSettings()
 	{
 		$rootPath = __DIR__ . DIRECTORY_SEPARATOR .  '..' . DIRECTORY_SEPARATOR;
 		
@@ -44,7 +44,7 @@ class Settings
 		];
 	}
 	
-	private function getUserSettings()
+	private static function getUserSettings()
 	{
 		$yaml = new Models\WriteYaml();
 		
@@ -110,12 +110,12 @@ class Settings
 			$yaml = new Models\WriteYaml();
 			
 			$pluginSettings = self::getPluginSettings($pluginName);
-			if($pluginSettings['settings'])
+			if(isset($pluginSettings['settings']))
 			{
 				$userSettings['plugins'][$pluginName] = $pluginSettings['settings'];
 			}
 			
-			$userSettings['plugins'][$pluginName]['active'] = true;
+			$userSettings['plugins'][$pluginName]['active'] = false;
 			
 			/* write settings to yaml */
 			$yaml->updateYaml('settings', 'settings.yaml', $userSettings);

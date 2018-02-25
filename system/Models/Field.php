@@ -63,7 +63,6 @@ class Field
 									'id',
 									'autocomplete',
 									'placeholder',
-									'value',
 									'size',
 									'rows',
 									'cols',
@@ -208,7 +207,7 @@ class Field
 	{
 		foreach($fieldConfigs as $key => $value)
 		{
-			if(is_string($key) && array_key_exists($key, $this->attrValues))
+			if(is_string($key) && in_array($key, $this->attrValues))
 			{
 				$this->attributeValues[$key] = $value;
 			}
