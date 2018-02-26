@@ -23,8 +23,8 @@
     },
 	"autoload": {
 		"psr-4": {
-			"Typemill\\": "system",
-			"Plugins\\": "plugins"
+			"Typemill\\": "system/",
+			"Plugins\\": "plugins/"
 		}
 	}
 }

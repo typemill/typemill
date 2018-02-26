@@ -19,7 +19,7 @@ $dispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
 * LOAD SETTINGS			*
 ************************/
 
-$settings = Typemill\settings::loadSettings();
+$settings = Typemill\Settings::loadSettings();
 
 /************************
 * INITIATE SLIM 		*
@@ -188,5 +188,5 @@ $app->add($container->get('csrf'));
 * 	ADD ROUTES			*
 ************************/
 
-require __DIR__ . '/Routes/api.php';
-require __DIR__ . '/Routes/web.php';
+require __DIR__ . '/Routes/Api.php';
+require __DIR__ . '/Routes/Web.php';

@@ -5,6 +5,7 @@ cache/stats.txt
 settings/settings.yaml
 plugins/admin
 plugins/demo
+plugins/disqus
 plugins/version
 tests
 zips

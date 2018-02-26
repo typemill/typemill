@@ -370,54 +370,6 @@
         ]
     },
     {
-        "name": "vlucas/valitron",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/vlucas/valitron.git",
-            "reference": "1712b04f16db5f243ddfa5ce26a9b51eb1948a36"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/vlucas/valitron/zipball/1712b04f16db5f243ddfa5ce26a9b51eb1948a36",
-            "reference": "1712b04f16db5f243ddfa5ce26a9b51eb1948a36",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.2"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "~4.8.35"
-        },
-        "time": "2017-12-20T08:03:40+00:00",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "psr-0": {
-                "Valitron": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD"
-        ],
-        "authors": [
-            {
-                "name": "Vance Lucas",
-                "email": "vance@vancelucas.com",
-                "homepage": "http://www.vancelucas.com"
-            }
-        ],
-        "description": "Simple, elegant, stand-alone validation library with NO dependencies",
-        "homepage": "http://github.com/vlucas/valitron",
-        "keywords": [
-            "valid",
-            "validation",
-            "validator"
-        ]
-    },
-    {
         "name": "psr/container",
         "version": "1.0.0",
         "version_normalized": "1.0.0.0",
@@ -500,51 +452,6 @@
         ],
         "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
         "homepage": "https://github.com/container-interop/container-interop"
-    },
-    {
-        "name": "nikic/fast-route",
-        "version": "v1.2.0",
-        "version_normalized": "1.2.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/nikic/FastRoute.git",
-            "reference": "b5f95749071c82a8e0f58586987627054400cdf6"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/nikic/FastRoute/zipball/b5f95749071c82a8e0f58586987627054400cdf6",
-            "reference": "b5f95749071c82a8e0f58586987627054400cdf6",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.4.0"
-        },
-        "time": "2017-01-19T11:35:12+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "FastRoute\\": "src/"
-            },
-            "files": [
-                "src/functions.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "authors": [
-            {
-                "name": "Nikita Popov",
-                "email": "nikic@php.net"
-            }
-        ],
-        "description": "Fast request router for PHP",
-        "keywords": [
-            "router",
-            "routing"
-        ]
     },
     {
         "name": "pimple/pimple",
@@ -888,5 +795,101 @@
         ],
         "description": "Symfony EventDispatcher Component",
         "homepage": "https://symfony.com"
+    },
+    {
+        "name": "nikic/fast-route",
+        "version": "v1.3.0",
+        "version_normalized": "1.3.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nikic/FastRoute.git",
+            "reference": "181d480e08d9476e61381e04a71b34dc0432e812"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nikic/FastRoute/zipball/181d480e08d9476e61381e04a71b34dc0432e812",
+            "reference": "181d480e08d9476e61381e04a71b34dc0432e812",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.4.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^4.8.35|~5.7"
+        },
+        "time": "2018-02-13T20:26:39+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "FastRoute\\": "src/"
+            },
+            "files": [
+                "src/functions.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Nikita Popov",
+                "email": "nikic@php.net"
+            }
+        ],
+        "description": "Fast request router for PHP",
+        "keywords": [
+            "router",
+            "routing"
+        ]
+    },
+    {
+        "name": "vlucas/valitron",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/vlucas/valitron.git",
+            "reference": "4b32e6067a7f611113161b2c6f8258d85c16d0e2"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/vlucas/valitron/zipball/4b32e6067a7f611113161b2c6f8258d85c16d0e2",
+            "reference": "4b32e6067a7f611113161b2c6f8258d85c16d0e2",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.2"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "~4.8.35"
+        },
+        "time": "2018-02-10T22:02:11+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Valitron": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Vance Lucas",
+                "email": "vance@vancelucas.com",
+                "homepage": "http://www.vancelucas.com"
+            }
+        ],
+        "description": "Simple, elegant, stand-alone validation library with NO dependencies",
+        "homepage": "http://github.com/vlucas/valitron",
+        "keywords": [
+            "valid",
+            "validation",
+            "validator"
+        ]
     }
 ]

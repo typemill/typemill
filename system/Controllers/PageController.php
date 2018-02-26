@@ -11,7 +11,7 @@ use Typemill\Models\VersionCheck;
 use Typemill\Models\Helpers;
 use Typemill\Events\OnPagetreeLoaded;
 use Typemill\Events\OnBreadcrumbLoaded;
-use Typemill\Events\OnItemloaded;
+use Typemill\Events\OnItemLoaded;
 use Typemill\Events\OnMarkdownLoaded;
 use Typemill\Events\OnContentArrayLoaded;
 use Typemill\Events\OnHtmlLoaded;

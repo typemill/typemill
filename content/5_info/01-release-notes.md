@@ -2,6 +2,17 @@
 
 This is the version history with some release notes.
 
+## Version 1.1.1 (25.02.2018)
+
+* Added new plugin "analytics" for integration of Matomo/Piwik and Google Analytics.
+* Theme "TYPEMILL": Design refresh.
+* Theme "TYPEMILL": Added cannonical url.
+* Theme "TYPEMILL": Added meta tags for social sharing including image reference.
+* Increased length of meta-description for google.
+* Fixed error with field builder (getAttributeValues).
+* Fixed error with static functions in settings (added declaration as static).
+* Added documentation for plugin developers.
+
 ## Version 1.1.0 (05.02.2018)
 
 Version 1.1.0 introduces plugins to typemill. And because of the GDPR, the first plugin is an implementation of the famous cookieconsent. So heads up, you can publish GDPR-compliant websites with typemill now! 
