@@ -11,12 +11,12 @@
 			<li class="{{ element.elementType }} level-{{ element.keyPathArray|length }}">
 		{% endif %}
             {% if element.elementType == 'folder' %}
-				<a href="{{ element.urlRel }}">{{ element.name|title }}</a>		
+				<a href="{{ element.urlAbs }}">{{ element.name|title }}</a>		
                 <ul>
                     {{ macros.loop_over(element.folderContent) }}
                 </ul>
             {% else %}
-				<a href="{{ element.urlRel }}">{{ element.name|title }}</a>
+				<a href="{{ element.urlAbs }}">{{ element.name|title }}</a>
             {% endif %}
         </li>
     {% endfor %}

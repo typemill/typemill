@@ -7,6 +7,7 @@ plugins/admin
 plugins/demo
 plugins/disqus
 plugins/version
+plugins/finalwords
 system/vendor
 tests
 zips
