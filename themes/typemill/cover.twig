@@ -8,7 +8,7 @@
 
 		{{ content }}
 
-		<a href="{{ navigation[0].urlRel }}">Start</a>
+		<a href="{{ navigation[0].urlRel }}">{{ settings.themesettings.start ? settings.themesettings.start : 'Start'}}</a>
 		
 		{% if settings.setup  %}
 			<a href="{{ base_url }}/setup">Setup</a>

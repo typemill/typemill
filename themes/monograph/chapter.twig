@@ -1,0 +1,25 @@
+<div class="chapter">
+	
+	<div class="chapterNumber">Chapter {{ item.chapter }}</div>
+
+	{% if content is empty %}
+	
+		<h1>{{ item.name }}</h1>
+
+	{% endif %}
+	
+	{{ content }}
+
+</div>
+
+<div class="toc-nav">
+	
+	<ul>
+		{% for element in item.folderContent %}
+
+			<li class="level-2"><a href="{{ element.urlAbs }}">{{ element.name }}</a></li>
+		
+		{% endfor %}
+	</ul>
+	
+</div>

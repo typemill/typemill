@@ -30,6 +30,7 @@ class Settings
 			'title'									=> 'TYPEMILL',
 			'author'								=> 'Unknown',
 			'copyright'								=> 'Copyright',
+			'language'								=> 'en',
 			'startpage'								=> true,
 			'rootPath'								=> $rootPath,
 			'theme'									=> ($theme = 'typemill'),
@@ -39,7 +40,7 @@ class Settings
 			'settingsPath'							=> $rootPath . 'settings',
 			'authorPath'							=> __DIR__ . DIRECTORY_SEPARATOR . 'author' . DIRECTORY_SEPARATOR,
 			'contentFolder'							=> 'content',
-			'version'								=> '1.1.1',
+			'version'								=> '1.1.2',
 			'setup'									=> true
 		];
 	}

@@ -76,14 +76,11 @@
 			}
 		};
 
-		// if you use application/json, make sure you collect the data in php 
-		// with file_get_contents('php://input') instead of $_POST
-
 		// httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 		// httpRequest.setRequestHeader('Content-Type', 'text/plain'); 
 		httpRequest.setRequestHeader('Content-Type', 'application/json'); 
 		
-		// required by slim ???
+		// required for slim
 		httpRequest.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 		
 		if(jsonData)
@@ -95,41 +92,218 @@
 			httpRequest.send();
 		}
 	}
+
+	/**********************************
+	** 		START THEMESWITCH	 	 **
+	**********************************/
 	
 	/* change the theme if choosen in selectbox */
-	var themeSwitch	= document.getElementById("themeSwitch");
+	var themeSwitch		= document.getElementById("themeSwitch"),
+		pluginVersions 	= document.getElementsByClassName("fc-plugin-version");
+	
+	
 	if(themeSwitch)
 	{
-		var themePrev	= document.getElementById("themePrev"),
-			themePath	= themePrev.src.split("themes")[0];
-			
+		getTheme(themeSwitch.value);
+		getVersions(pluginVersions, themeSwitch.value);
+		
 		themeSwitch.addEventListener('change', function()
 		{
-			themePrev.src = themePath + 'themes/' + themeSwitch.value + '/' + themeSwitch.value + '-large.jpg';
+			removeVersionBanner('theme-banner');
+			getTheme(themeSwitch.value);
+			getVersions(false, themeSwitch.value);
 		});
-		
+	}
+	
+	function removeVersionBanner(bannerID)
+	{
+		var banner = document.getElementById(bannerID);
+		if(banner)
+		{
+			banner.parentElement.removeChild(banner);
+		}
 	}
 
-	var pluginVersions = document.getElementsByClassName("fc-plugin-version");
-	if(pluginVersions)
+	/* use API to get theme informations from theme folder */
+	function getTheme(themeName)
 	{
-		var query = 'plugins=';
-		for (var i = 0, len = pluginVersions.length; i < len; i++)
+		var getUrl 		= window.location,
+			baseUrl 	= getUrl .protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1],
+			url 		= baseUrl+'/api/v1/themes?theme='+themeName,
+			getPost 	= 'GET',
+			themeImg	= document.getElementById("themePrev");
+
+		themeImg.src = baseUrl + '/themes/' + themeName + '/' + themeName + '.jpg';
+		
+		sendJson(function(response)
 		{
-			query += pluginVersions[i].id + ',';
+			if(response !== 'error')
+			{
+				var themeData 	= JSON.parse(response),
+					fields		= themeData.forms.fields ? themeData.forms.fields : false,
+					settings	= themeData.settings ? themeData.settings : false;
+				
+				/* add the theme information and the theme fields to frontend */
+				addThemeInfo(themeData);
+				addThemeFields(fields, settings);
+			}
+			else
+			{
+				return false;
+			}
+		}, getPost, url, false);
+	}
+	
+	function addThemeInfo(themeData)
+	{
+		var themeVersion 	= document.getElementById('themeVersion'),
+			themeLicence 	= document.getElementById('themeLicence'),
+			themeAuthor 	= document.getElementById('themeAuthor'),
+			themeUrl 		= document.getElementById('themeUrl');
+			
+		if(themeVersion && themeLicence && themeAuthor && themeUrl)
+		{
+			themeVersion.innerHTML 	= themeData.version;
+			themeLicence.innerHTML 	= themeData.licence;
+			themeAuthor.innerHTML 	= themeData.author;
+			themeUrl.innerHTML 		= '<a id="themeLink" href="' + themeData.homepage + '" target="_blank">Web</a>';		
+		}
+	}
+	
+	/* add input fields for theme configurations in frontend */
+	function addThemeFields(fields, settings)
+	{
+		var themeFields = document.getElementById('themeFields');
+		themeFields.innerHTML = '';
+		
+		for (var fieldName in fields) 
+		{
+			if (fields.hasOwnProperty(fieldName)) 
+			{
+				var newField = document.createElement('div');
+				newField.className = 'medium';
+				newField.innerHTML = generateHtmlField(fieldName, fields[fieldName], settings);
+				themeFields.appendChild(newField);
+			}
+		}
+	}
+	
+	/* generate an input field */
+	function generateHtmlField(fieldName, fieldDefinitions, settings)
+	{
+		var html = 	'<span class="label">' + fieldDefinitions.label + '</span>';
+		
+		if(fieldDefinitions.type == 'textarea')
+		{
+			var content = settings[fieldName] ? settings[fieldName] : '';
+			var attributes = generateHtmlAttributes(fieldDefinitions);
+			html += '<textarea name="themesettings['+ fieldName + ']"' + attributes + '>' + content + '</textarea>';
+		}
+		else if(fieldDefinitions.type == 'checkbox')
+		{
+			var attributes = generateHtmlAttributes(fieldDefinitions);
+			
+			html += '<label class="control-group">' + fieldDefinitions.description +
+					  '<input type="checkbox" name="themesettings[' + fieldName + ']"'+ attributes + '>' +
+					  '<span class="checkmark"></span>' +
+					'</label>';
+		}
+		else if(fieldDefinitions.type == 'checkboxlist')
+		{
+			
+		}
+		else if(fieldDefinitions.type == 'select')
+		{
+			
+		}
+		else if(fieldDefinitions.type == 'radio')
+		{
+			
+		}
+		else
+		{
+			var value = settings[fieldName] ? settings[fieldName] : '';
+			var attributes = generateHtmlAttributes(fieldDefinitions);
+			html += '<input name="themesettings[' + fieldName + ']" type="' + fieldDefinitions.type + '" value="'+value+'"' + attributes + '>';
 		}
 		
+		return html;
+	}
+	
+	/* generate field attributes */
+	function generateHtmlAttributes(fieldDefinitions)
+	{
+		var attributes 	= '',
+			attr 		= getAttributes(),
+			attrValues	= getAttributeValues();
+		
+		for(var fieldName in fieldDefinitions)
+		{
+			if(attr.indexOf(fieldName) > -1)
+			{
+				attributes += ' ' + fieldName;
+			}
+			if(attrValues.indexOf(fieldName) > -1)
+			{
+				attributes += ' ' + fieldName + '="' + fieldDefinitions[fieldName] + '"';
+			}
+		}
+		return attributes;
+	}
+	
+	function getAttributes()
+	{	
+		return ['autofocus','checked','disabled','formnovalidate','multiple','readonly','required'];
+	}
+	
+	function getAttributeValues()
+	{
+		return ['id','autocomplete','placeholder','size','rows','cols','class','pattern'];
+	}
+	
+	
+	/**********************************
+	** 		START VERSIONING	 	 **
+	**********************************/
+			
+	function getVersions(plugins, theme)
+	{
 		var getPost 	= 'GET';
-		url 			= 'http://typemill.net/api/v1/checkversion?' + query;
+		url 			= 'http://typemill.net/api/v1/checkversion?';
+		
+		if(plugins)
+		{
+			var pluginList = '&plugins=';
+			for (var i = 0, len = plugins.length; i < len; i++)
+			{
+				pluginList += plugins[i].id + ',';
+			}
+			
+			url += pluginList;
+		}
+
+		if(theme)
+		{
+			url += '&themes=' + theme; 
+		}
 
 		sendJson(function(response)
 		{
 			if(response !== 'error')
 			{
 				var versions = JSON.parse(response);
+				
+				if(versions.version)
+				{
+					updateTypemillVersion(versions.version);
+				}
 				if(versions.plugins)
 				{
 					updatePluginVersions(versions.plugins);
+				}
+				if(versions.themes[theme])
+				{
+					updateThemeVersion(versions.themes[theme]);					
 				}
 			}
 			else
@@ -154,6 +328,38 @@
 		}
 	}
 	
+	function updateTypemillVersion(typemillVersion)
+	{
+		if(!document.getElementById('app-banner'))
+		{
+			var localTypemillVersion = document.getElementById('baseapp').dataset.version;
+			if(cmpVersions(typemillVersion,localTypemillVersion) > 0)
+			{
+				addUpdateNotice('baseapp', 'app-banner', typemillVersion, 'http://typemill.net');
+			}			
+		}
+	}
+	
+	function updateThemeVersion(themeVersion)
+	{
+		var localThemeVersion = document.getElementById('themeVersion').innerHTML;
+		var themeUrl = document.getElementById('themeLink').href;
+		if(cmpVersions(themeVersion,localThemeVersion) > 0)
+		{
+			addUpdateNotice('themes', 'theme-banner', themeVersion, themeUrl);
+		}
+	}
+	
+	function addUpdateNotice(elementID, bannerID, version, url)
+	{
+		var updateElement 	= document.getElementById(elementID);
+		var banner 			= document.createElement('div');
+		banner.id 			= bannerID;
+		banner.className 	= 'version-banner';
+		banner.innerHTML 	= '<a href="' + url + '">update to ' + version + '</a>';
+		updateElement.appendChild(banner);
+	}
+	
 	/* credit: https://stackoverflow.com/questions/6832596/how-to-compare-software-version-number-using-js-only-number */
 	function cmpVersions (a, b) 
 	{
@@ -173,8 +379,12 @@
 		}
 		return segmentsA.length - segmentsB.length;
 	}
+
 	
-	/* activate/deactivate plugin and open/close settings */
+	/*************************************
+	**	PLUGINS: ACTIVATE/OPEN CLOSE	**
+	*************************************/
+	
 	var plugins = document.getElementsByClassName("plugin");
 	if(plugins)
 	{
@@ -193,8 +403,11 @@
 			});
 		}
 	}
+
+	/*************************************
+	**			COLOR PICKER			**
+	*************************************/
 	
-	/* add color picker for color fields */
     var target = document.querySelectorAll('input[type=color]');
     // set hooks for each target element
     for (var i = 0, len = target.length; i < len; ++i)

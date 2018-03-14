@@ -1,0 +1,19 @@
+{% extends '/partials/layout.twig' %}
+
+{% block title %}{{ title|title }} | {{ settings.title }}{% endblock %}
+
+{% block content %}
+
+	{% include '/partials/breadcrumb.twig' %}
+
+	{% if item.elementType == 'file' %}
+		
+		{% include 'page.twig' %}
+
+	{% else %}
+
+		{% include 'chapter.twig' %}
+	
+	{% endif %}
+	
+{% endblock %}

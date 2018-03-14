@@ -42,9 +42,9 @@ a.button:active{					border: 2px solid #cc4146; background: #cc4146; }
 .error, .error small, .error p{		color: #e0474c; }
 .pluginInner{						border: 1px solid #ddd; background: #FFF; }
 .color-box{							border: 1px solid #ddd; }
-label .help, .label .help{ 			color: #FFF; background: #70c1b3; }
-.help .tooltip { 					color: #fff; background-color: #70c1b3; }
-.help .tooltip:after{ 				border-color: transparent transparent transparent #70c1b3; }
+label .help, .label .help{ 			color: #FFF; background: #999; }
+.help .tooltip { 					color: #fff; background-color: #999; }
+.help .tooltip:after{ 				border-color: transparent transparent transparent #999; }
 
 .checkmark,.radiomark { 						border: 2px solid #ccc; background-color: #fff;}
 .control-group:hover input ~ .checkmark,
@@ -55,10 +55,14 @@ label .help, .label .help{ 			color: #FFF; background: #70c1b3; }
 .control-group .radiomark:after { 				background: #fff; }
 .control-group input:disabled ~ .checkmark,
 .control-group input:disabled ~ .radiomark {	border: 2px solid #eee; background-color: #eee; }
-.pluginInfo a,.pluginInfo a:link,
-.pluginInfo a:visited{							color: #70c1b3; text-decoration: none;}
+.pluginInfo a, .pluginInfo a:link,
+.pluginInfo a:visited,
+.themeInfo a, .themeInfo a:link,
+.themeInfo a:visited{							color: #70c1b3; text-decoration: none;}
 .pluginInfo a:focus,.pluginInfo a:hover,
-.pluginInfo a:active{							color: #70c1b3; text-decoration: underline;}
+.pluginInfo a:active,
+.themeInfo a:focus,.themeInfo a:hover,
+.themeInfo a:active{							color: #70c1b3; text-decoration: underline;}
 
 
 /********************
@@ -92,6 +96,7 @@ h2{ font-size: 1.6em; margin: 1em 0 0.8em; }
 h3{	font-size: 1.1em; margin: 0.6em 0 0.6em; }
 
 section{
+	position: relative;
 	margin-bottom: 40px;
 	padding: 20px 20px 40px;
 	box-sizing: border-box;
@@ -197,6 +202,7 @@ select{
 }
 input[type="submit"]{
 	border-radius: 3px;
+	margin-bottom: 40px;
 }
 button,input[type="submit"]:hover{
 	cursor: pointer;
@@ -255,11 +261,16 @@ fieldset.plugin{
 	border-bottom: 0px;
 	margin-top: 10px;
 }
-ul.pluginInfo{
+ul.pluginInfo,ul.themeInfo{
 	font-size: 0.8em;
-	padding: 0 20px;
 }
-.pluginInfo li{
+ul.pluginInfo{
+	padding: 0 20px;	
+}
+ul.themeInfo{
+	padding: 0px 0px;
+}
+.pluginInfo li,.themeInfo li{
 	display: inline-block;
 	box-sizing: border-box;
 	vertical-align: top;
@@ -268,7 +279,7 @@ ul.pluginInfo{
 	color: grey;
 	border-right: 1px solid grey;
 }
-.pluginInfo li:last-child{
+.pluginInfo li:last-child,.themeInfo li:last-child{
 	border-right: 0px;
 }
 .pluginFields{
@@ -511,7 +522,7 @@ span.error{
 .help {
     position: relative;
     display: inline-block;
-    border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+    border-bottom: 0px dotted black; /* If you want dots under the hoverable text */
 }
 
 /* Tooltip text */
@@ -546,6 +557,59 @@ span.error{
     visibility: visible;
 	opacity: 1;
 }
+
+
+
+.version-banner{
+	position:absolute;
+	display:block;
+	top:0;
+	right:0;
+	width:150px;
+	overflow:hidden;
+	height:150px;
+	z-index:9999;
+}
+.version-banner a{
+	text-decoration:none;
+	font-family: calibri,"Helvetica Neue",arial,sans-serif;
+	text-align:center;
+	font-weight:300;
+	padding:5px 30px;
+	font-size:1rem;
+	line-height:1.5rem;
+	background:#e0474c;
+	color:#f9f8f6;	
+	font-weight: 700;
+	width:150px;
+	position:absolute;
+	top:45px;
+	right:-45px;
+	transform:rotate(45deg);
+	-webkit-transform:rotate(45deg);
+	-ms-transform:rotate(45deg);
+	-moz-transform:rotate(45deg);
+	-o-transform:rotate(45deg);
+	box-shadow:1px 1px 2px rgba(0,0,0,0.8);
+}
+.version-banner a:hover{
+	text-decoration: none;	
+}
+.version-banner a::before,.version-banner a::after{
+	content:"";
+	width:100%;
+	display:block;
+	position:absolute;
+	top:1px;
+	left:0;
+	height:1px;
+	background:#f9f8f6;
+}
+.version-banner a::after{
+	bottom:1px;
+	top:auto;
+}	
+
 
 @media only screen and (min-width: 600px) {
 	form .medium{
