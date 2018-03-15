@@ -6,8 +6,9 @@ settings/settings.yaml
 plugins/admin
 plugins/demo
 plugins/disqus
-plugins/version
 plugins/finalwords
+plugins/share
+plugins/version
 system/vendor
 tests
 zips

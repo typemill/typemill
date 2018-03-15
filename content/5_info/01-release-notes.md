@@ -2,6 +2,17 @@
 
 This is the version history with some release notes.
 
+## Version 1.1.2 (15.03.2018)
+
+With version 1.1.2 we added the possibility to configure the theme in the setup a bit more. We also fixed a bug in the htaccess. So next to the "system"-folder, you should also update the theme-folder and the htaccess-file. As always, backup your settings.yaml-file, then delete it and setup your website again (visit /setup).
+
+* Added configurations for themes in the setup.
+* Improved update check for themes, plugins and base app.
+* optimized design of setup.
+* Added language selection to setup (used only for lang-attribute right now).
+* Updated typemill theme accordingly
+* Bugfix: Index.php is not reachable anymore, prevents duplicate content. Please update htaccess-file. 
+
 ## Version 1.1.1 (25.02.2018)
 
 * Added new plugin "analytics" for integration of Matomo/Piwik and Google Analytics.

@@ -121,7 +121,21 @@ class SetupController extends Controller
 			if($themeSettings)
 			{
 				// load theme definitions by theme name
-				// validate input with field definitions
+				$themeOriginalSettings = \Typemill\Settings::getThemeSettings($appSettings['theme']);
+
+				// validate input with field definitions				
+				if($themeOriginalSettings)
+				{
+					foreach($themeSettings as $fieldName => $fieldValue)
+					{
+						$fieldDefinition = isset($themeOriginalSettings['forms']['fields'][$fieldName]) ? $themeOriginalSettings['forms']['fields'][$fieldName] : false;
+						if($fieldDefinition)
+						{
+							/* validate user input for this field */
+							$validate->pluginField($fieldName, $fieldValue, $appSettings['theme'], $fieldDefinition);
+						}						
+					}
+				}
 				$appSettings['themesettings'] = $themeSettings;
 			}
 			
@@ -134,7 +148,7 @@ class SetupController extends Controller
 					$pluginSettings[$pluginName] = $pluginUserSettings;
 				}
 				else
-				{					
+				{
 					/* now fetch the original plugin settings from the plugin folder to get the field definitions */
 					$pluginOriginalSettings = \Typemill\Settings::getPluginSettings($pluginName);
 					

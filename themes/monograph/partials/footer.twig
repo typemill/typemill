@@ -1,8 +1,0 @@
-{% set nowYear = "now"|date("Y") %}
-{% if settings.year is empty or settings.year == nowYear %}
-    {% set copyrightYears = nowYear %}
-{% else %}
-    {% set copyrightYears = settings.year ~ ' - ' ~ nowYear %}
-{% endif %}
-
-<div class="copyrightLine"><p>{{ settings.copyright }} by {{ settings.author }}, {{ copyrightYears }}. All Rights Reserved. Built with <a href="http://typemill.net">TYPEMILL</a>.{% if settings.version < settings.latestVersion %} Please <a href="http://typemill.net>Update</a>{% endif %}</p></div>
