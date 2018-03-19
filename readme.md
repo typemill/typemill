@@ -6,7 +6,7 @@ To create a website, simply add your Markdown files to the content folder of TYP
 
 TYPEMILL is a lightweight tool for writers, who do not want to fiddle around with complicated technology. If you are a developer, you can easily craft your own theme based on the template language Twig.
 
-![TYPEMILL Screenshot](/themes/typemill/typemill-large.jpg)
+![TYPEMILL Screenshot](/themes/typemill/typemill.jpg)
 
 ## Documentation
 
