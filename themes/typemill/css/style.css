@@ -54,12 +54,9 @@ pre{ border-left: 4px solid #e0474c;	}
 *  		FONTS 	    *
 ********************/
 
-header, nav, h1, h2, h3, h4, h5, h6, article .paging, article .breadcrumb, .cover .lead a, a.readMore{
-	font-family: Calibri, Helvetica, Arial, sans-serif;
+body{
+	font-family: Calibri, Helvetica, Arial, sans-serif;	
 }
-article{
-	font-family: Calibri, Helvetica, Arial, sans-serif;
-}	
 pre,code{
 	font-family: monospace;
 }

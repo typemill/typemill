@@ -93,198 +93,70 @@
 		}
 	}
 
+	var openModal 	= document.getElementById("openModal"),
+		closeModal	= document.getElementById("closeModal");
+		
+	if(openModal && closeModal)
+	{
+		openModal.addEventListener("click", function(e){ e.preventDefault(); toggle("modalWindow", "show"); });
+		closeModal.addEventListener("click", function(e){ e.preventDefault(); toggle("modalWindow", "show"); });
+	}
+	
+	var mobileMenu	= document.getElementById("mobile-menu");
+	
+	if(mobileMenu)
+	{
+		mobileMenu.addEventListener("click", function(e){ toggle("sidebar-menu", "expand"); });		
+	}
+	
+	function toggle(myid, myclass)
+	{
+		var toggleElement = document.getElementById(myid);
+		toggleElement.classList.toggle(myclass);
+	}
+	
 	/**********************************
 	** 		START THEMESWITCH	 	 **
 	**********************************/
-	
-	/* change the theme if choosen in selectbox */
-	var themeSwitch		= document.getElementById("themeSwitch"),
-		pluginVersions 	= document.getElementsByClassName("fc-plugin-version");
-	
-	
-	if(themeSwitch)
-	{
-		getTheme(themeSwitch.value);
-		getVersions(pluginVersions, themeSwitch.value);
 		
-		themeSwitch.addEventListener('change', function()
-		{
-			removeVersionBanner('theme-banner');
-			getTheme(themeSwitch.value);
-			getVersions(false, themeSwitch.value);
-		});
-	}
-	
-	function removeVersionBanner(bannerID)
+	if(document.getElementById("baseapp"))
 	{
-		var banner = document.getElementById(bannerID);
-		if(banner)
-		{
-			banner.parentElement.removeChild(banner);
-		}
+		getVersions('app', false);
 	}
-
-	/* use API to get theme informations from theme folder */
-	function getTheme(themeName)
+	
+	if(document.getElementById("plugins"))
 	{
-		var getUrl 		= window.location,
-			baseUrl 	= getUrl .protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1],
-			url 		= baseUrl+'/api/v1/themes?theme='+themeName,
-			getPost 	= 'GET',
-			themeImg	= document.getElementById("themePrev");
-
-		themeImg.src = baseUrl + '/themes/' + themeName + '/' + themeName + '.jpg';
-		
-		sendJson(function(response)
-		{
-			if(response !== 'error')
-			{
-				var themeData 	= JSON.parse(response),
-					fields		= themeData.forms.fields ? themeData.forms.fields : false,
-					settings	= themeData.settings ? themeData.settings : false;
-				
-				/* add the theme information and the theme fields to frontend */
-				addThemeInfo(themeData);
-				addThemeFields(fields, settings);
-			}
-			else
-			{
-				return false;
-			}
-		}, getPost, url, false);
+		getVersions('plugins', document.getElementsByClassName("fc-plugin-version"));
 	}
 	
-	function addThemeInfo(themeData)
+	if(document.getElementById("themes"))
 	{
-		var themeVersion 	= document.getElementById('themeVersion'),
-			themeLicence 	= document.getElementById('themeLicence'),
-			themeAuthor 	= document.getElementById('themeAuthor'),
-			themeUrl 		= document.getElementById('themeUrl');
-			
-		if(themeVersion && themeLicence && themeAuthor && themeUrl)
-		{
-			themeVersion.innerHTML 	= themeData.version;
-			themeLicence.innerHTML 	= themeData.licence;
-			themeAuthor.innerHTML 	= themeData.author;
-			themeUrl.innerHTML 		= '<a id="themeLink" href="' + themeData.homepage + '" target="_blank">Web</a>';		
-		}
+		// getVersions('theme', themeSwitch.value);
 	}
-	
-	/* add input fields for theme configurations in frontend */
-	function addThemeFields(fields, settings)
-	{
-		var themeFields = document.getElementById('themeFields');
-		themeFields.innerHTML = '';
-		
-		for (var fieldName in fields) 
-		{
-			if (fields.hasOwnProperty(fieldName)) 
-			{
-				var newField = document.createElement('div');
-				newField.className = 'medium';
-				newField.innerHTML = generateHtmlField(fieldName, fields[fieldName], settings);
-				themeFields.appendChild(newField);
-			}
-		}
-	}
-	
-	/* generate an input field */
-	function generateHtmlField(fieldName, fieldDefinitions, settings)
-	{
-		var html = 	'<span class="label">' + fieldDefinitions.label + '</span>';
-		
-		if(fieldDefinitions.type == 'textarea')
-		{
-			var content = settings[fieldName] ? settings[fieldName] : '';
-			var attributes = generateHtmlAttributes(fieldDefinitions);
-			html += '<textarea name="themesettings['+ fieldName + ']"' + attributes + '>' + content + '</textarea>';
-		}
-		else if(fieldDefinitions.type == 'checkbox')
-		{
-			var attributes = generateHtmlAttributes(fieldDefinitions);
-			
-			html += '<label class="control-group">' + fieldDefinitions.description +
-					  '<input type="checkbox" name="themesettings[' + fieldName + ']"'+ attributes + '>' +
-					  '<span class="checkmark"></span>' +
-					'</label>';
-		}
-		else if(fieldDefinitions.type == 'checkboxlist')
-		{
-			
-		}
-		else if(fieldDefinitions.type == 'select')
-		{
-			
-		}
-		else if(fieldDefinitions.type == 'radio')
-		{
-			
-		}
-		else
-		{
-			var value = settings[fieldName] ? settings[fieldName] : '';
-			var attributes = generateHtmlAttributes(fieldDefinitions);
-			html += '<input name="themesettings[' + fieldName + ']" type="' + fieldDefinitions.type + '" value="'+value+'"' + attributes + '>';
-		}
-		
-		return html;
-	}
-	
-	/* generate field attributes */
-	function generateHtmlAttributes(fieldDefinitions)
-	{
-		var attributes 	= '',
-			attr 		= getAttributes(),
-			attrValues	= getAttributeValues();
-		
-		for(var fieldName in fieldDefinitions)
-		{
-			if(attr.indexOf(fieldName) > -1)
-			{
-				attributes += ' ' + fieldName;
-			}
-			if(attrValues.indexOf(fieldName) > -1)
-			{
-				attributes += ' ' + fieldName + '="' + fieldDefinitions[fieldName] + '"';
-			}
-		}
-		return attributes;
-	}
-	
-	function getAttributes()
-	{	
-		return ['autofocus','checked','disabled','formnovalidate','multiple','readonly','required'];
-	}
-	
-	function getAttributeValues()
-	{
-		return ['id','autocomplete','placeholder','size','rows','cols','class','pattern'];
-	}
-	
 	
 	/**********************************
 	** 		START VERSIONING	 	 **
 	**********************************/
 			
-	function getVersions(plugins, theme)
+	function getVersions(name, value)
 	{
 		var getPost 	= 'GET';
 		url 			= 'http://typemill.net/api/v1/checkversion?';
 		
-		if(plugins)
+		if(name == 'plugins')
 		{
 			var pluginList = '&plugins=';
-			for (var i = 0, len = plugins.length; i < len; i++)
+			for (var i = 0, len = value.length; i < len; i++)
 			{
-				pluginList += plugins[i].id + ',';
+				pluginList += value[i].id + ',';
 			}
 			
 			url += pluginList;
 		}
 
-		if(theme)
+		if(name == 'theme')
 		{
-			url += '&themes=' + theme; 
+			url += '&themes=' + value; 
 		}
 
 		sendJson(function(response)
@@ -293,17 +165,17 @@
 			{
 				var versions = JSON.parse(response);
 				
-				if(versions.version)
+				if(name == 'app' && versions.version)
 				{
 					updateTypemillVersion(versions.version);
 				}
-				if(versions.plugins)
+				if(name == 'plugins' && versions.plugins)
 				{
 					updatePluginVersions(versions.plugins);
 				}
-				if(versions.themes[theme])
+				if(name == 'theme' && versions.themes[value])
 				{
-					updateThemeVersion(versions.themes[theme]);					
+					updateThemeVersion(versions.themes[value]);					
 				}
 			}
 			else
@@ -333,7 +205,7 @@
 		if(!document.getElementById('app-banner'))
 		{
 			var localTypemillVersion = document.getElementById('baseapp').dataset.version;
-			if(cmpVersions(typemillVersion,localTypemillVersion) > 0)
+			if(localTypemillVersion && cmpVersions(typemillVersion,localTypemillVersion) > 0)
 			{
 				addUpdateNotice('baseapp', 'app-banner', typemillVersion, 'http://typemill.net');
 			}			
@@ -344,7 +216,7 @@
 	{
 		var localThemeVersion = document.getElementById('themeVersion').innerHTML;
 		var themeUrl = document.getElementById('themeLink').href;
-		if(cmpVersions(themeVersion,localThemeVersion) > 0)
+		if(localThemeVersion && themeUrl && cmpVersions(themeVersion,localThemeVersion) > 0)
 		{
 			addUpdateNotice('themes', 'theme-banner', themeVersion, themeUrl);
 		}
@@ -382,15 +254,15 @@
 
 	
 	/*************************************
-	**	PLUGINS: ACTIVATE/OPEN CLOSE	**
+	** 		CARDS: ACTIVATE/OPEN CLOSE	**
 	*************************************/
 	
-	var plugins = document.getElementsByClassName("plugin");
-	if(plugins)
+	var cards = document.getElementsByClassName("card");
+	if(cards)
 	{
-		for (var i = 0, len = plugins.length; i < len; i++)
+		for (var i = 0, len = cards.length; i < len; i++)
 		{
-			plugins[i].addEventListener("click", function(e)
+			cards[i].addEventListener("click", function(e)
 			{
 				if(e.target.classList.contains("fc-active"))
 				{
@@ -398,7 +270,7 @@
 				}
 				if(e.target.classList.contains("fc-settings"))
 				{
-					this.getElementsByClassName("pluginFields")[0].classList.toggle("open");
+					this.getElementsByClassName("cardFields")[0].classList.toggle("open");
 				}
 			});
 		}

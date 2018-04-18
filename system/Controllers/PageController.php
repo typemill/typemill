@@ -127,7 +127,7 @@ class PageController extends Controller
 		}
 		
 		$contentMD = $this->c->dispatcher->dispatch('onMarkdownLoaded', new OnMarkdownLoaded($contentMD))->getData();
-		
+				
 		/* initialize parsedown */
 		$parsedown 		= new ParsedownExtension();
 
@@ -234,7 +234,7 @@ class PageController extends Controller
 	{
 		foreach($contentBlocks as $block)
 		{
-			if($block['element']['name'] == 'p' && substr($block['element']['text'], 0, 2) == '![' )
+			if(isset($block['element']['name']) && $block['element']['name'] == 'p' && substr($block['element']['text'], 0, 2) == '![' )
 			{
 				return $block['element']['text'];
 			}

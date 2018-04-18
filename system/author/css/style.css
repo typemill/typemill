@@ -2,7 +2,7 @@
 *  		HELPERS		  *
 **********************/
 
-a, a:link, a:visited, a:focus, a:hover, a:active, button, .button, input, .control-group{
+a, a:link, a:visited, a:focus, a:hover, a:active, button, .button, input, .control-group, .sidebar-menu, .menu-action{
 	-webkit-transition: all 0.2s ease;
 	-moz-transition: all 0.2s ease;
 	-o-transition: all 0.2s ease;
@@ -14,8 +14,8 @@ a, a:link, a:visited, a:focus, a:hover, a:active, button, .button, input, .contr
 *    	 COLORS 	  *
 **********************/
 
-body, .pluginHead header{ 			background: #f9f8f6; color: #444; }
-.errors .pluginHead header{			background: #e0474c; color: #fff; }
+body, .cardHead header{ 			background: #f9f8f6; color: #444; }
+.errors .cardHead header{			background: #e0474c; color: #fff; }
 .onoffswitch-label {				border: 1px solid #999; }
 .onoffswitch-inner:before,
 .onoffswitch-inner:after {			color: #FFFFFF; }
@@ -27,9 +27,11 @@ input, select, textarea,
 section, .welcome{					background: #FFFFFF; box-shadow: 0 0 2px #ddd; }
 select:focus, input:focus,
 textarea:focus{						border: 1px solid #FFF; outline: none; box-shadow: 0 0 2px #000; }
+button[type="button"].has-settings:hover{ background: #efece7; }
 button[type="button"].active{		background: #70c1b3; color: #f9f8f6; border-top: 1px solid #70c1b3; }
-button[type="button"].active:hover{	background: #66b0a3; border-top: 1px solid #66b0a3; }
+button[type="button"].has-settings.active:hover{	background: #66b0a3; border-top: 1px solid #66b0a3; }
 button[type="button"]{				background: #f9f8f6; color: #444; border-top: 1px solid #ddd; }
+input:disabled{						background: #f9f8f6; }
 input[type="submit"],
 a.button,a.button:link,
 a.button:visited{					border: 2px solid #e0474c; background: #e0474c; color: #f9f8f6; }
@@ -40,7 +42,7 @@ a.button:active{					border: 2px solid #cc4146; background: #cc4146; }
 .error input, .error select,
 .error textarea{					border: 1px solid #e0474c; }
 .error, .error small, .error p{		color: #e0474c; }
-.pluginInner{						border: 1px solid #ddd; background: #FFF; }
+.cardInner{							border: 1px solid #ddd; background: #FFF; }
 .color-box{							border: 1px solid #ddd; }
 label .help, .label .help{ 			color: #FFF; background: #999; }
 .help .tooltip { 					color: #fff; background-color: #999; }
@@ -55,54 +57,311 @@ label .help, .label .help{ 			color: #FFF; background: #999; }
 .control-group .radiomark:after { 				background: #fff; }
 .control-group input:disabled ~ .checkmark,
 .control-group input:disabled ~ .radiomark {	border: 2px solid #eee; background-color: #eee; }
-.pluginInfo a, .pluginInfo a:link,
-.pluginInfo a:visited,
-.themeInfo a, .themeInfo a:link,
-.themeInfo a:visited{							color: #70c1b3; text-decoration: none;}
-.pluginInfo a:focus,.pluginInfo a:hover,
-.pluginInfo a:active,
-.themeInfo a:focus,.themeInfo a:hover,
-.themeInfo a:active{							color: #70c1b3; text-decoration: underline;}
+.cardInfo a, .cardInfo a:link,
+.cardInfo a:visited{							color: #70c1b3; text-decoration: none;}
+.cardInfo a:focus,.cardInfo a:hover,
+.cardInfo a:active{								color: #70c1b3; text-decoration: underline;}
 
 
 /********************
-*  		FONTS 	    *
+*  	COMMONS 	    *
 ********************/
 
 html,body{
 	padding: 0;
 	margin:0;
 }
-
 body{
-	padding: 20px;
 	font-size: 16px;
 	font-family: Helvetica, Calibri, Arial, sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;	
 }
-
 header, nav, h1, h2, h3, h4, h5, h6{
 	font-family: arial, sans-serif;
 }
+h1{ font-size: 1.8em; margin: 1em 0 0.8em; font-weight: 700: }
+h2{ font-size: 1.6em; margin: 1em 0 0.8em; font-weight: 700; }
+h3{	font-size: 1em; margin: 0.6em 0 0.6em; text-transform: uppercase; font-weight: 300; }
 
 /********************
-*  	   HEADLINES    *
+*  	SETUP FORM 	    *
 ********************/
 
-h1, h2, h3, h4, h5, h6{ font-weight: 700; }
-h1{ font-size: 1.8em; margin: 1em 0 0.8em; }
-h2{ font-size: 1.6em; margin: 1em 0 0.8em; }
-h3{	font-size: 1.1em; margin: 0.6em 0 0.6em; }
+.setupWrapper{
+	max-width: 300px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 8%;
+	background: #fff;
+	padding: 40px;
+	border-radius: 3px;
+	box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+}
+.setupWrapper label{
+	font-weight: 700;
+}
+.setupWrapper input[type="submit"]
+{
+	border-radius: 0px;
+	margin-bottom: 0px;
+}
+.setupWrapper .formElement{
+	margin: 0 0 20px 0;
+}
 
+/********************
+*  	AUTHOR NAVI     *
+********************/
+
+.main-header{
+	display: inline-block;
+	width: 100%;
+	background: #fff;
+	border-bottom: 1px solid #eee;
+}
+.header-navi, .main{
+	margin: auto;
+	max-width: 1200px;
+}
+.header-navi .logo{
+	display: inline-block;
+	font-size: 1.6em;
+	font-weight: 700;
+	width: 18%;
+	box-sizing: border-box;
+}
+.header-navi .logo a{
+	color: #000;
+	text-decoration: none;
+	line-height: 2em;
+	margin-left: 10px;
+}
+.header-navi ul{
+	display: inline-block;
+	width: 80%;
+	box-sizing: border-box;
+	text-align: right;
+	list-style: none;
+	padding:0px;
+	margin:0px;
+	font-size: 1.2em;
+}
+.header-navi li{
+	display: inline-block;
+	padding: 0px;
+	margin: 0px;
+}
+.navi-items a{
+	color: #000;
+	font-size: 0.9em;
+	text-transform: uppercase;
+	text-decoration: none;
+	margin: 0px 1px;
+	padding: 20px 10px 10px;
+	line-height: 2em;
+	border-bottom: 3px solid transparent;
+}
+.navi-items a:hover, .navi-items a:focus, .navi-items a:active, .navi-items a.active{
+	background: #f9f8f6;
+	border-bottom: 3px solid #e0474c;
+}
+.navi-items i{
+	color: #ddd;
+}
+.navi-items span{
+	display: none;
+}
+.navi-items a.active,.navi-items a.active i{
+	color: #e0474c;
+}
+
+.main{
+	margin: 0px auto;
+	box-sizing:border-box;
+	padding: 20px;
+}
+article{
+	width: 100%;
+}
+aside.sidebar{
+	display: block;
+	width: 100%;
+	background: #fff;
+	margin-bottom: 10px;
+	box-sizing: border-box;
+}
+.sidebar-menu{
+	max-height: 40px;
+	padding: 0px 20px;
+	overflow: hidden;
+	box-sizing: border-box;
+	font-size: 0.9em;	
+}
+.sidebar-menu.expand{
+	max-height: 500px;
+}
+.menu-action{
+	display: block;
+	width: 100%;
+	height: 40px;
+	text-align: center;
+	line-height: 40px;
+	text-transform: uppercase;
+	font-weight: 300;
+	
+	background-image:
+		linear-gradient(45deg, transparent 50%, #444 50%),
+		linear-gradient(135deg, #444 50%, transparent 50%),
+		linear-gradient(to right, #fff, #fff);
+	background-position:
+		calc(50% + 30px) calc(1em + 2px),
+		calc(50% + 35px) calc(1em + 2px),
+		100% 0;
+	background-size: 
+		5px 5px,
+		5px 5px,
+		2.8em 2.8em;
+	background-repeat: no-repeat;
+	cursor: pointer;	
+}
+.expand .menu-action{
+	background-image:
+		linear-gradient(135deg, transparent 50%, #444 50%),
+		linear-gradient(45deg, #444 50%, transparent 50%),
+		linear-gradient(to right, #fff, #fff);	
+}
+ul.menu-list{
+	list-style: none;
+	margin:5px 0 30px;
+	padding:0;
+}
+li.menu-item{
+	padding: 0;
+	margin: 8px 0;	
+}
+.menu-item a, .menu-item a:link, .menu-item a:visited{
+	text-decoration: none;
+	color: #444;
+	padding: 0px 10px;
+	display: inline-block;
+	line-height: 2px;
+	width: auto;
+	height: 0; 
+	border-top: 8px solid transparent;
+	border-bottom: 8px solid transparent; 
+	border-left: 10px solid white;
+	border-radius: 3px;
+}
+.menu-item a:hover, .menu-item a:focus, .menu-item a:active, .menu-item a.active{
+	border-left: 10px solid #e0474c;
+}
+.menu-item a.active{
+	color: #e0474c;
+}
+
+/*************
+**  MODAL	**
+*************/
+
+.modal{
+	position:fixed;
+	display: none;
+	width: 100%;
+	height: 100%;
+	padding: 20px;
+	box-sizing: border-box;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: #FFF;
+	background: rgba(255,255,255,0.9);
+}
+.modal.show{
+	display: block;
+}
+.modalInner{
+	position: relative;
+	max-width: 350px;
+	margin: 10% auto;
+	background: #FFF;
+	padding: 50px 50px 20px 50px;
+	border-radius: 3px;
+	box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+}
+.closeModal{
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	font-weight: 700; 
+	padding: 0.6em;
+	cursor: pointer;
+}
+.closeModal:focus, .closeModal:hover{
+	background: #f9f8f6;
+}
+.modal .actionLink{
+	display: block;
+	width: 100%;
+	text-align: center;
+	margin-top: -20px;
+	margin-bottom: 20px;
+}
+a.openModal:link,a.openModal:active,a.openModal:visited{
+	color: #cc4146;
+	padding: 0px 20px 20px;
+	text-decoration: none;
+	display: block;
+	margin: auto;
+	text-align: center;
+	width: 100px;
+}
+a.openModal:focus,a.openModal:hover{
+	text-decoration: underline;
+}
+ul.userlist{
+	padding: 0;
+	margin: 10px 20px 30px;
+	list-style: none;
+}
+li.row{
+	display: inline-block;
+	width: 100%;
+	background: #f9f8f6;
+	box-sizing: border-box;
+}
+li.row ul{
+	margin: 0px;
+	padding: 0px;
+	width: 100%;
+}
+li.col{
+	display: inline-block;
+	padding: 15px 10px;
+	box-sizing: border-box;
+	margin: 0px;
+}
+li.col.username, li.col.email, li.col.userrole, li.col.edit{
+	border: 1px solid #fff;
+}
+li.col.username{
+	border-top: 2px solid #70c1b3;
+}
+.col.username,.col.email,.col.userrole, .col.edit{
+	width: 100%;
+}
+.settings .medium a.button{
+	width: 100%;
+	display: block;
+	box-sizing:border-box;
+	text-align: center;
+}
 section{
 	position: relative;
 	margin-bottom: 40px;
 	padding: 20px 20px 40px;
 	box-sizing: border-box;
-}
-header{
-	padding: 0 20px;
 }
 header h1, header h2{
 	display: inline-block;
@@ -121,12 +380,24 @@ header input[type="submit"]{
 	max-width: 900px;
 	margin: auto;
 }
+
+/*********************
+**  WELCOME PAGE	**
+*********************/
+
 .welcome{
 	padding: 30px 50px;
 	box-sizing: border-box;
+	box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+}
+.welcome .welcomeIntro a, .welcome .welcomeCard a:link, .welcome .welcomeCard a:visited{
+	text-decoration: none;
+	color: #e0474c;
+}
+.welcome .welcomeIntro a:hover, .welcome .welcomeCard a:focus, .welcome .welcomeCard a:active{
+	text-decoration: underline;
 }
 .welcome p{
-	font-size: 1.1em;
 	line-height: 1.5em;
 	padding: 0px;
 }
@@ -139,6 +410,47 @@ header input[type="submit"]{
 	border-radius: 3px;
 	text-decoration: none;	
 }
+.welcome .welcomeCard{
+	position: relative;
+	margin-top: -1px;
+	border-top: 1px solid #efece7;
+	border-bottom: 1px solid #efece7;
+	width: 100%;
+}
+.welcome .welcomeCard h3{
+	font-weight: 700;
+}
+.welcome .welcomeCard a, .welcome .welcomeCard a:link, .welcome .welcomeCard a:visited{
+	color: #444;
+	text-decoration: none;
+	width: 100%;
+}
+.welcome .welcomeCard a:hover, .welcome .welcomeCard a:focus, .welcome .welcomeCard a:active{
+	color: #e0474c;
+}
+.welcome .welcomeCard a:after{
+	content: '';
+	display: block;
+	position: absolute;
+	left: 100%;
+	top: 20px;
+	bottom: 0;
+	width: 0;
+	height: 0;
+	border-top: 50px solid transparent;
+	border-right: 0px solid transparent;
+	border-bottom: 50px solid transparent;
+	border-left: 20px solid #efece7;
+}
+.welcome .welcomeCard a:hover:after{
+	border-left: 20px solid #e0474c;	
+}
+.welcome .welcomeInner{
+	margin-top: 20px;
+	width: 90%;
+	height: 120px;
+}
+
 
 fieldset{
 	display: block;
@@ -207,70 +519,120 @@ input[type="submit"]{
 button,input[type="submit"]:hover{
 	cursor: pointer;
 }
+.button{
+	color: #fff;
+	padding: 10px;
+	border-radius: 3px;
+}
 
-fieldset.plugin{
+/*****************
+** CARDS		**
+*****************/
+
+.settings header
+{
+	padding: 0px 20px;
+}
+.userlist a, .userlist a:link, .userlist a:visited{
+	color: #e0474c;
+	text-decoration: none;
+}
+.userlist a:hover, .userlist a:focus, .userlist a:active{
+	text-decoration: underline;
+}
+a.button{
+	color: #fff;
+	text-decoration: none;
+}
+fieldset.card{
 	width: 100%;
 	display: inline-block;
 	padding: 15px 20px;
 	box-sizing: border-box;
-	vertical-align: top;	
+	vertical-align: top;
 }
-.pluginInner{
+.card > .cardInner{
+	box-shadow: 0px 0px 5px rgba(0,0,0,0.2)	
+}
+.cardInner{
 	box-sizing: border-box;
 }
-.pluginHead header, .pluginHead p, .pluginHead ul{
+.cardHead h2{
+	padding: 5px 20px 0;
+	margin-bottom: 0px;
+}
+.cardHead header, .cardHead p, .cardHead ul{
 	padding: 15px 20px;
 }
-.pluginHead header{
+.cardHead header{
 	width: 100%;
 	display: inline-block;
 	box-sizing: border-box;
 }
-.pluginHead legend{
+.cardHead legend{
 	font-size: 1.2em;
 	font-weight: 700;
 	float:left;
 }
-.pluginHead .pluginActive{
+.cardHead .cardActive{
 	float: right;
 }
-.pluginHead header label{
+.cardHead header label{
 	display: inline-block;
 	width: auto;
 	line-height: 20px;
 	margin: 0;
 	padding: 0 25px 0 0;
 }
-.pluginHead header .control-group .checkmark{
+.cardHead header .control-group .checkmark{
 	right:-5px;
 	left: auto;
 }
-.pluginHead header input{
+.cardHead header input{
 	width: auto;
 	min-height: 0px;
 	padding: 0;
 	margin: 0;
 	vertical-align: middle;
 }
-.pluginHead button[type="button"]{
+.cardContent{
+	line-height: 1.5em;
+}
+.card button[type="button"]{
 	width: 100%;
 	text-align: center;
-	padding: 15px 0;
+}
+.card button[type="button"].plugin-button{
 	border-left: 0px;
 	border-right: 0px;
 	border-bottom: 0px;
 	margin-top: 10px;
+	padding: 15px 0;
 }
-ul.pluginInfo,ul.themeInfo{
+.card button[type="button"].theme-button{
+	border: 0px;
+	margin: 5px 0 20px;
+	padding: 12px;
+	border-radius: 3px;
+	min-height: 42px;
+}
+.card button[type="button"].theme-button:hover{
+	border:0px;
+}
+.card button[type="button"].no-settings:hover{
+	cursor: default;
+}
+.card .medium{
+	padding: 0px 20px;
+}
+.card .medium button[type="button"]{
+	margin: 10px 0;
+}
+ul.cardInfo{
 	font-size: 0.8em;
-}
-ul.pluginInfo{
 	padding: 0 20px;	
 }
-ul.themeInfo{
-	padding: 0px 0px;
-}
-.pluginInfo li,.themeInfo li{
+.cardInfo li{
 	display: inline-block;
 	box-sizing: border-box;
 	vertical-align: top;
@@ -279,33 +641,34 @@ ul.themeInfo{
 	color: grey;
 	border-right: 1px solid grey;
 }
-.pluginInfo li:last-child,.themeInfo li:last-child{
+.cardInfo li:last-child{
 	border-right: 0px;
 }
-.pluginFields{
+.cardFields{
 	max-height: 0;
 	transition: max-height 0.5s ease-out;
 	overflow: hidden;
 	padding: 0px 20px;
 	border: 0px;
 }
-.pluginFields.open{
+.cardFields.open{
 	max-height: 1800px;
 	transition: max-height 0.5s ease-in;
 	overflow: hidden;
 	border: 1px;
 }
-.pluginFields label{
+.cardFields label{
 	margin-top: 12px;
 }
-.pluginFields .pluginField:first-child{
+.cardFields .cardField:first-child{
 	margin-top: 50px;
 }
-.pluginFields input, .pluginFields select, .pluginFields textarea, .pluginFields .onoffswitch{
+.cardFields input, .cardFields select, .cardFields textarea, .cardFields .onoffswitch{
 	margin-bottom: 12px;
 }
-
-
+.card img{
+	width: 100%;
+}
 
 /*
 ** SELECT BUTTON
@@ -336,10 +699,26 @@ span.error{
 	font-size: 0.8em;
 	line-height: 1em;
 }
-.pluginInner span.error{
+.cardInner span.error{
 	display: block;	
 	margin-top: -8px;
 	margin-bottom: 8px;	
+}
+
+.alert{
+	color: #fff;
+	width: 100%;
+	line-height: 20px;
+	display: block;
+	margin:0px;
+	text-align: center;
+	padding: 5px 0px;
+}
+.alert-info{
+	background: #70c1b3;
+}
+.alert-error{
+	background: #e0474c;
 }
 
 /*
@@ -610,7 +989,6 @@ span.error{
 	top:auto;
 }	
 
-
 @media only screen and (min-width: 600px) {
 	form .medium{
 		width: 49.5%;
@@ -620,9 +998,77 @@ span.error{
 		width: 33.3%;
 		display: inline-block;
 	}
+	.settings .medium a.button{
+		display: inline-block;
+		width: auto;
+	}	
 }
-@media only screen and (min-width: 750px) {
+@media only screen and (min-width: 800px) {
 	fieldset.plugin{
 		width: 49.5%;
+	}
+	.welcome .medium{
+		width: 66%;
+		display: inline-block;
+	}
+	.welcome .small{
+		width: 33.3%;
+		display: inline-block;		
+	}
+	.navi-items span{
+		display: inline;
+	}	
+	.header-navi ul{
+		font-size: 1em;
+	}
+	.main{
+		margin: 30px auto;
+	}
+	article{
+		width: 80%;
+		display: inline-block;
+		vertical-align: top;
+	}
+	aside.sidebar{
+		width: 19%;
+		display: inline-block;
+		vertical-align: top;
+		background: transparent;
+	}
+	.sidebar-menu{
+		max-height: 2000px;
+		padding: 0px 20px;
+		overflow: hidden;
+		box-sizing: border-box;
+		font-size: 1em;
+	}
+	.menu-action{
+		display: none;
+		width: 0px;
+		height: 0px;
+	}
+	ul.menu-list{
+		margin:5px 0 50px;
+	}
+	.card .medium{
+		padding: 0px 20px;
+	}
+	.card .medium button[type="button"]{
+		margin-top: 10px;
+		margin-bottom: 40px;
+	}
+	.card .medium input[type="submit"]{
+		margin-top: 10px;
+		margin-bottom: 40px;
+	}
+	.col.username,.col.email,.col.userrole{
+		width: 30%;
+	}
+	.col.edit{
+		width: 10%;
+	}	
+	li.col.username{
+		border-top: 0px;
+		border-left: 2px solid #70c1b3;
 	}
 }

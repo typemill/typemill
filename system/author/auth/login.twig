@@ -1,0 +1,34 @@
+{% extends 'layouts/layoutAuth.twig' %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+	<div class="setupWrapper">
+
+		<form method="POST" action="{{ path_for("auth.login") }}" autocomplete="off">
+		
+			<fieldset class="auth">
+				<div class="formElement{{ errors.username ? ' errors' : '' }}">
+					<label for="username">Username <abbr title="required">*</abbr></label>
+					<input type="text" name="username" value="{{ old.username }}" required>
+					{% if errors.signup_username %}
+						<span class="error">{{ errors.username | first }}</span>
+					{% endif %}
+				</div>
+				<div class="formElement{{ errors.password ? ' errors' : '' }}">
+					<label for="password">Password <abbr title="required">*</abbr></label>
+					<input type="password" name="password" required>
+					{% if errors.password %}
+						<span class="error">{{ errors.password | first }}</span>
+					{% endif %}
+				</div>
+			</fieldset>
+
+			<input type="submit" value="Login" />
+			{{ csrf_field() | raw }}
+					
+		</form>
+		
+	</div>
+	
+{% endblock %}

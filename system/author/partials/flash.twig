@@ -1,0 +1,31 @@
+{% if flash.getMessage('info') %}
+
+	<div class="alert alert-info">
+		{{ flash.getMessage('info') | first }}
+	</div>
+
+{% endif %}
+
+{% if messages.info %}
+
+	<div class="alert alert-error">
+		{{ messages.info | first }}
+	</div>
+
+{% endif %}
+
+{% if flash.getMessage('error') %}
+
+	<div class="alert alert-error">
+		{{ flash.getMessage('error') | first }}
+	</div>
+
+{% endif %}
+
+{% if messages.error %}
+
+	<div class="alert alert-error">
+		{{ messages.error | first }}
+	</div>
+
+{% endif %}

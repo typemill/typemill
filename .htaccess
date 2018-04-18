@@ -22,10 +22,13 @@ RewriteRule ^(.*/)?\.git+ - [F,L]
 # RewriteCond %{HTTPS} off
 # RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
-
 # Use this to redirect www to non-wwww on apache servers
 # RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
 # RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+
+# Use this to redirect slash/ to no slash urls on apache servers
+# RewriteCond %{REQUEST_FILENAME} !-d
+# RewriteRule ^(.*)/$ /$1 [R=301,L]
 
 # Removes index.php
 RewriteCond %{THE_REQUEST} ^GET.*index\.php [NC]

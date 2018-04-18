@@ -1,0 +1,36 @@
+{% extends 'layouts/layout.twig' %}
+{% block title %}User{% endblock %}
+
+{% block content %}
+	
+	<div class="formWrapper">
+
+		<section id="users" class="settings">
+
+			<header>
+				<h1>All Users</h1>
+			</header>
+			
+			<ul class="userlist">
+				{% for user in userdata %}
+				
+					<li class="row">
+						<ul>
+							<li class="col username">{{ user.username }}
+							</li><li class="col userrole">{{ user.userrole }}
+							</li><li class="col email">{{ user.email }}
+							</li><li class="col edit"><a href="{{ path_for('user.show', {'username' : user.username }) }}">edit</a></li>
+						</ul>
+					</li>
+				
+				{% endfor %}
+			</ul>
+			
+			<div class="medium">
+				<a class="button" href="{{ path_for('user.new') }}">Create New User</a>
+			</div>
+		</section>
+		
+	</div>
+	
+{% endblock %}

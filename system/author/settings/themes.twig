@@ -1,0 +1,137 @@
+{% extends 'layouts/layout.twig' %}
+{% block title %}Setup{% endblock %}
+{% set startpage = old.settings.startpage ? old.settings.startpage : settings.startpage %}
+
+{% block content %}
+	
+	<div class="formWrapper">
+
+			<section id="themes" class="settings">
+			
+				<header>
+					<h1>Themes</h1>
+				</header>
+				
+				{% for themeName, theme in themes %}
+				
+					<form method="POST" action="{{ path_for('themes.save') }}">
+					
+						<fieldset class="card{{ errors[themeName] ? ' errors' : '' }}">
+							<div class="cardInner cardHead">
+								
+								{% if theme.img %}
+									<img src="{{ base_url() }}/themes/{{themeName}}/{{themeName}}.jpg" />
+								{% else %}
+									<div class="no-preview">No Preview</div>
+								{% endif %}
+
+								<div class="cardContent">
+									<h2>{{ themeName }}</h2>
+									<p>{{ theme.description }}</p>
+									<ul class="cardInfo">
+										<li id="{{ themeName }}">{{ theme.version ? theme.version : 'Unknown' }}</li><li>
+										{{ theme.licence ? theme.licence : 'Unkown' }}</li><li>
+										by {{ theme.author ? theme.author : 'Unknown' }}</li>{% if theme.homepage %}<li>
+										<a href="{{ theme.homepage}}" target="blank">Web</a></li>{% endif %}
+									</ul>
+								</div>
+								
+								<div class="cardInner cardFields{{ errors[themeName] ? ' open' : '' }}">
+								
+									{% for field in theme.forms.fields %}
+															
+										<div class="cardField{{ errors[themeName][field.name] ? ' error' : '' }}">
+											<label for="{{ themeName }}[{{ field.name }}]">{{ field.getLabel() }}
+												{% if field.getAttribute('required') %}<strong><abbr title="required">*</abbr></strong>{% endif %}
+												{% if field.help %}<div class="help">?<span class="tooltip">{{field.help|slice(0,100)}}</span></div>{% endif %}
+											</label>
+										
+											{% if field.type == 'textarea' %}
+										
+												<textarea name="{{ themeName }}[{{ field.name }}]"{{field.getAttributeValues() }}{{ field.getAttributes() }}>{{ field.getContent() }}</textarea>
+										
+											{% elseif field.type == 'checkbox' %}
+														
+												<label class="control-group">{{ field.description }}
+													<input type="checkbox" name="{{themeName}}[{{ field.name }}]"{{ field.getAttributeValues() }}{{ field.getAttributes() }}>
+													<span class="checkmark"></span>
+												</label>							
+										
+											{% elseif field.type == 'checkboxlist' %}
+
+												{% set options = field.getOptions() %}
+											
+												{% for value,label in options %}
+												
+													<label class="control-group">{{ label }}
+														<input type="checkbox" name="{{fieldName}}[{{ field.name }}]" value="{{value}}">
+														<span class="checkmark"></span>
+													</label>
+														
+												{% endfor %}
+										
+											{% elseif field.type == 'select' %}
+										
+												{% set options = field.getOptions() %}
+											
+												<select name="{{themeName}}[{{ field.name }}]"{{field.getAttributeValues() }}{{ field.getAttributes() }}>
+													{% for value,label in options %}
+														<option value="{{ value }}">{{ label }}</option>
+													{% endfor %}
+												</select>
+
+											{% elseif field.type == 'radio' %}
+											
+												{% set options = field.getOptions() %}
+
+												{% for value,label in options %}
+
+													<label class="control-group">{{ label }}
+														<input type="radio" name="{{ themeName }}[{{ field.name }}]" value="{{value}}">
+														<span class="radiomark"></span>
+													</label>
+											
+												{% endfor %}
+											
+											{% else %}
+										
+												<input name="{{themeName}}[{{ field.name }}]" type="{{ field.type }}"{{ field.getAttributeValues() }}{{ field.getAttributes() }}>
+										
+											{% endif %}
+										
+											{% if errors[themeName][field.name] %}
+												<span class="error">{{ errors[themeName][field.name] | first }}</span>
+											{% endif %}
+										
+										</div>
+								
+									{% endfor %}
+								
+								</div>
+								
+								<input type="hidden" name="theme" value="{{ themeName }}">
+								
+								<div class="medium">
+									<button type="button" class="theme-button fc-settings{{ (settings.theme == themeName) ? ' active' : '' }}{{ theme.forms.fields|length > 0 ? ' has-settings' : ' no-settings'}}">{{ theme.forms.fields|length > 0 ? 'Settings' : 'No Settings'}}</button>
+								</div>
+								<div class="medium">
+									<input type="submit" value="Save Theme" />								
+								</div>
+								
+							</div>
+							
+						</fieldset>
+						
+						{{ csrf_field() | raw }}
+
+					</form>
+				
+				{% endfor %}
+
+			</section>
+			
+		</form>
+	
+	</div>
+	
+{% endblock %}

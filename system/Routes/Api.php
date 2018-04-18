@@ -1,5 +1,5 @@
 <?php
 
-use Typemill\Controllers\SetupController;
+use Typemill\Controllers\SettingsController;
 
-$app->get('/api/v1/themes', SetupController::class . ':themes')->setName('themes');
+$app->get('/api/v1/themes', SettingsController::class . ':getThemeSettings')->setName('api.themes');

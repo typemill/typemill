@@ -1,0 +1,124 @@
+{% extends 'layouts/layout.twig' %}
+{% block title %}Setup{% endblock %}
+{% set startpage = old.settings.startpage ? old.settings.startpage : settings.startpage %}
+
+{% block content %}
+	
+	<div class="formWrapper">
+
+		<form method="POST" action="{{ path_for('plugins.save') }}">
+
+			<section id="plugins" class="settings">
+			
+				<header>
+					<h1>Plugins</h1>
+				</header>
+				
+				{% for pluginName,plugin in plugins %}
+				
+					<fieldset class="medium card{{ errors[pluginName] ? ' errors' : '' }}">
+						<div class="cardInner cardHead">
+							<header>
+								<legend>{{ pluginName }}</legend>							
+								<div class="cardActive">
+									<label class="control-group">Active
+										<input type="checkbox" class="fc-active" name="{{pluginName}}[active]"{% if plugin.settings.active %} checked {% endif %}>
+										<span class="checkmark"></span>
+									</label>
+								</div>
+							</header>
+
+							<p>{{ plugin.description ? plugin.description : 'No description' }}</p>
+							
+							<ul class="cardInfo">
+								<li id="{{ pluginName }}" class="fc-plugin-version">{{ plugin.version ? plugin.version : 'Unknown' }}</li><li>
+								{{ plugin.licence ? plugin.licence : 'Unkown' }}</li><li>
+								by {{ plugin.author ? plugin.author : 'Unknown' }}</li>{% if plugin.homepage %}<li>
+								<a href="{{ plugin.homepage}}" target="blank">Web</a></li>{% endif %}
+							</ul>
+						<div class="cardInner cardFields{{ errors[pluginName] ? ' open' : '' }}">
+							{% for field in plugin.forms.fields %}
+													
+							<div class="cardField{{ errors[pluginName][field.name] ? ' error' : '' }}">
+								<label for="{{ pluginName }}[{{ field.name }}]">{{ field.getLabel() }}
+									{% if field.getAttribute('required') %}<strong><abbr title="required">*</abbr></strong>{% endif %}
+									{% if field.help %}<div class="help">?<span class="tooltip">{{field.help|slice(0,100)}}</span></div>{% endif %}
+								</label>
+								
+								{% if field.type == 'textarea' %}
+								
+									<textarea name="{{ pluginName }}[{{ field.name }}]"{{field.getAttributeValues() }}{{ field.getAttributes() }}>{{ field.getContent() }}</textarea>
+								
+								{% elseif field.type == 'checkbox' %}
+												
+									<label class="control-group">{{ field.description }}
+										<input type="checkbox" name="{{pluginName}}[{{ field.name }}]"{{ field.getAttributeValues() }}{{ field.getAttributes() }}>
+										<span class="checkmark"></span>
+									</label>							
+								
+								{% elseif field.type == 'checkboxlist' %}
+
+									{% set options = field.getOptions() %}
+									
+									{% for value,label in options %}
+												
+										<label class="control-group">{{ label }}
+											<input type="checkbox" name="{{pluginName}}[{{ field.name }}]" value="{{value}}">
+											<span class="checkmark"></span>
+										</label>
+												
+									{% endfor %}
+								
+								{% elseif field.type == 'select' %}
+								
+									{% set options = field.getOptions() %}
+									
+									<select name="{{pluginName}}[{{ field.name }}]"{{field.getAttributeValues() }}{{ field.getAttributes() }}>
+										{% for value,label in options %}
+											<option value="{{ value }}">{{ label }}</option>
+										{% endfor %}
+									</select>
+
+								{% elseif field.type == 'radio' %}
+									
+									{% set options = field.getOptions() %}
+
+									{% for value,label in options %}
+
+										<label class="control-group">{{ label }}
+											<input type="radio" name="{{pluginName}}[{{ field.name }}]" value="{{value}}">
+											<span class="radiomark"></span>
+										</label>
+									
+									{% endfor %}
+									
+								{% else %}
+								
+									<input name="{{pluginName}}[{{ field.name }}]" type="{{ field.type }}"{{ field.getAttributeValues() }}{{ field.getAttributes() }}>
+								
+								{% endif %}
+								
+								{% if errors[pluginName][field.name] %}
+									<span class="error">{{ errors[pluginName][field.name] | first }}</span>
+								{% endif %}
+								
+							</div>
+							{% endfor %}
+						</div>
+							<button type="button" class="plugin-button fc-settings{{ plugin.settings.active ? ' active' : '' }}{{ plugin.forms.fields|length > 0 ? ' has-settings' : ' no-settings'}}">{{ plugin.forms.fields|length > 0 ? 'Settings' : 'No Settings'}}</button>
+						</div>
+					</fieldset>
+					
+				{% endfor %}
+			
+			</section>
+			
+			<input type="submit" value="Save All Settings" />
+
+			{{ csrf_field() | raw }}
+			
+		</form>
+	
+	</div>
+	
+{% endblock %}

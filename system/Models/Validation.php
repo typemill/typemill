@@ -2,6 +2,7 @@
 
 namespace Typemill\Models;
 
+use Typemill\Models\User;
 use Valitron\Validator;
 
 class Validation
@@ -13,10 +14,33 @@ class Validation
 	*/
 
 	public function __construct()
-	{		
+	{
+		$user = new User();
+		
 		Validator::langDir(__DIR__.'/../vendor/vlucas/valitron/lang'); // always set langDir before lang.
 		Validator::lang('en');
 
+		Validator::addRule('userAvailable', function($field, $value, array $params, array $fields) use ($user)
+		{
+			$userdata = $user->getUser($value);
+			if($userdata){ return false; }
+			return true;
+		}, 'taken');
+
+		Validator::addRule('userExists', function($field, $value, array $params, array $fields) use ($user)
+		{
+			$userdata = $user->getUser($value);
+			if($userdata){ return true; }
+			return false;
+		}, 'does not exist');
+		
+		Validator::addRule('checkPassword', function($field, $value, array $params, array $fields) use ($user)
+		{
+			$userdata = $user->getUser($fields['username']);
+			if($userdata && password_verify($value, $userdata['password'])){ return true; }
+			return false;
+		}, 'wrong password');
+		
 		Validator::addRule('emailAvailable', function($field, $value, array $params, array $fields)
 		{
 			$email = 'testmail@gmail.com';
@@ -30,19 +54,6 @@ class Validation
 			if(!$email){ return false; }
 			return true;
 		}, 'unknown');
-
-		Validator::addRule('userAvailable', function($field, $value, array $params, array $fields)
-		{
-			$username = 'trendschau';
-			if($username){ return false; }
-			return true;
-		}, 'taken');
-		
-		Validator::addRule('checkPassword', function($field, $value, array $params, array $fields)
-		{
-			if(password_verify($value, $fields['user_password'])){ return true; }
-			return false;
-		}, 'not valid');
 		
 		Validator::addRule('noHTML', function($field, $value, array $params, array $fields)
 		{
@@ -61,13 +72,13 @@ class Validation
 	* @return obj $v the validation object passed to a result method.
 	*/
 	
-	public function validateSignin(array $params)
+	public function signin(array $params)
 	{
 		$v = new Validator($params);
-		$v->rule('required', ['username', 'password'])->message("notwendig");
-		$v->rule('alphaNum', 'username')->message("ungültig");
-		$v->rule('lengthBetween', 'password', 5, 20)->message("Länge 5 - 20");
-		$v->rule('lengthBetween', 'username', 5, 20)->message("Länge 5 - 20");
+		$v->rule('required', ['username', 'password'])->message("Required");
+		$v->rule('alphaNum', 'username')->message("Invalid characters");
+		$v->rule('lengthBetween', 'password', 5, 20)->message("Length between 5 - 20");
+		$v->rule('lengthBetween', 'username', 3, 20)->message("Length between 3 - 20");
 		
 		if($v->validate())
 		{
@@ -86,27 +97,39 @@ class Validation
 	* @return obj $v the validation object passed to a result method.
 	*/
 	
-	public function validateSignup(array $params)
-	{		
+	public function newUser(array $params, $userroles)
+	{
 		$v = new Validator($params);
-		$v->rule('required', ['signup_username', 'signup_email', 'signup_password'])->message("notwendig");
-		$v->rule('alphaNum', 'signup_username')->message("ungültig");
-		$v->rule('lengthBetween', 'signup_password', 5, 20)->message("Länge 5 - 20");
-		$v->rule('lengthBetween', 'signup_username', 5, 20)->message("Länge 5 - 20"); 
-		$v->rule('userAvailable', 'signup_username')->message("vergeben");
-		$v->rule('email', 'signup_email')->message("ungültig");
-		$v->rule('emailAvailable', 'signup_email')->message("vergeben");
+		$v->rule('required', ['username', 'email', 'password'])->message("required");
+		$v->rule('alphaNum', 'username')->message("invalid characters");
+		$v->rule('lengthBetween', 'password', 5, 20)->message("Length between 5 - 20");
+		$v->rule('lengthBetween', 'username', 3, 20)->message("Length between 3 - 20"); 
+		$v->rule('userAvailable', 'username')->message("User already exists");
+		$v->rule('email', 'email')->message("e-mail is invalid");
+		$v->rule('in', 'userrole', $userroles);
 		
 		return $this->validationResult($v);
 	}
-
-	public function validateReset(array $params)
+	
+	public function existingUser(array $params, $userroles)
 	{
 		$v = new Validator($params);
-		$v->rule('required', 'email')->message("notwendig");
-		$v->rule('email', 'email')->message("ungültig");
-		$v->rule('emailKnown', 'email')->message("unbekannt");
-		
+		$v->rule('required', ['username', 'email', 'userrole'])->message("required");
+		$v->rule('alphaNum', 'username')->message("invalid");
+		$v->rule('lengthBetween', 'username', 3, 20)->message("Length between 3 - 20"); 
+		$v->rule('userExists', 'username')->message("user does not exist");
+		$v->rule('email', 'email')->message("e-mail is invalid");
+		$v->rule('in', 'userrole', $userroles);
+
+		return $this->validationResult($v);		
+	}
+	
+	public function username($username)
+	{
+		$v = new Validator($username);
+		$v->rule('alphaNum', 'username')->message("Only alpha-numeric characters allowed");
+		$v->rule('lengthBetween', 'username', 3, 20)->message("Length between 3 - 20"); 
+
 		return $this->validationResult($v);
 	}
 
@@ -117,28 +140,12 @@ class Validation
 	* @return obj $v the validation object passed to a result method.
 	*/
 	
-	public function validatePassword(array $params)
+	public function newPassword(array $params)
 	{
 		$v = new Validator($params);
-		$v->rule('required', ['password', 'password_old']);
-		$v->rule('lengthBetween', 'password', 5, 50);
-		$v->rule('checkPassword', 'password_old');
-		
-		return $this->validationResult($v);
-	}
-
-	/**
-	* validation for password reset
-	* 
-	* @param array $params with form data.
-	* @return obj $v the validation object passed to a result method.
-	*/
-	
-	public function validateResetPassword(array $params)
-	{
-		$v = new Validator($params);
-		$v->rule('required', ['password', 'username']);
-		$v->rule(['lengthBetween' => [['password', 5, 50], ['username', 3,20]]]);
+		$v->rule('required', ['password', 'newpassword']);
+		$v->rule('lengthBetween', 'newpassword', 5, 20);
+		$v->rule('checkPassword', 'password')->message("Password is wrong");
 		
 		return $this->validationResult($v);
 	}
@@ -150,11 +157,11 @@ class Validation
 	* @return obj $v the validation object passed to a result method.
 	*/
 
-	public function settings(array $params, array $themes, array $copyright, $name = false)
+	public function settings(array $params, array $copyright, $name = false)
 	{
 		$v = new Validator($params);
 		
-		$v->rule('required', ['title', 'author', 'copyright', 'year', 'theme']);
+		$v->rule('required', ['title', 'author', 'copyright', 'year']);
 		$v->rule('lengthBetween', 'title', 2, 20);
 		$v->rule('lengthBetween', 'author', 2, 40);
 		$v->rule('regex', 'title', '/^[\pL0-9_ \-]*$/u');
@@ -162,7 +169,6 @@ class Validation
 		$v->rule('integer', 'year');
 		$v->rule('length', 'year', 4);
 		$v->rule('in', 'copyright', $copyright);
-		$v->rule('in', 'theme', $themes);
 		
 		return $this->validationResult($v, $name);
 	}
@@ -217,39 +223,6 @@ class Validation
 		return $this->validationResult($v, $pluginName);
 	}
 	
-	/**
-	* validation for election input
-	* 
-	* @param array $params with form data.
-	* @return obj $v the validation object passed to a result method.
-	*/
-
-	public function validateShowroom(array $params)
-	{
-		$v = new Validator($params);
-		$v->rule('required', ['title']);
-		$v->rule('lengthBetween', 'title', 2, 50);
-		$v->rule('regex', 'title', '/^[^-_\-\s][0-9A-Za-zÄäÜüÖöß_ \-]+$/');
-		$v->rule('integer', 'election' );
-		$v->rule('email', 'email');
-		$v->rule('length', 'invite', 40);
-		$v->rule('alphaNum', 'invite');
-		$v->rule('required', ['group_id', 'politician_id', 'ressort_id']);
-		$v->rule('integer', ['group_id', 'politician_id', 'ressort_id']);
-		
-		return $this->validationResult($v);
-	}
-
-
-	public function validateGroup(array $params)
-	{
-//		$v->rule('date', 'deadline');
-//		$v->rule('dateAfter', 'deadline', new \DateTime('now'));
-//		$v->rule('dateBefore', 'deadline', new \DateTime($params['election_date']));
-
-		return $this->validationResult($v);
-	}
-		
 	/**
 	* result for validation
 	* 

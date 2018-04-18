@@ -1,0 +1,75 @@
+{% extends 'layouts/layout.twig' %}
+{% block title %}Setup{% endblock %}
+{% set startpage = old.settings.startpage ? old.settings.startpage : settings.startpage %}
+
+{% block content %}
+	
+	<div class="formWrapper">
+
+		<form method="POST" action="{{ path_for('settings.save') }}">
+		
+			<section id="baseapp" class="settings" data-version="{{ settings.version }}">
+
+				<header>
+					<h1>System</h1>
+				</header>
+				
+				<fieldset>
+				
+					<div class="medium{{ errors.settings.title ? ' error' : '' }}">
+						<label for="settings[title]">Website Title *</label>
+						<input type="text" name="settings[title]" id="title" pattern=".{2,20}" required title="Use 2 to 20 characters." value="{{ old.settings.title ? old.settings.title : settings.title }}" />
+						{% if errors.settings.title %}
+							<span class="error">{{ errors.settings.title | first }}</span>
+						{% endif %}
+					</div><div class="medium{{ errors.settings.author ? ' error' : '' }}">
+						<label for="settings[author]">Author</label>
+						<input type="text" name="settings[author]" id="author" pattern="[^()/><\]\{\}\?\$@#!*%§=[\\\x22;:|]{2,40}" value="{{ old.settings.author ? old.settings.author : settings.author }}" title="Use 2 to 40 characters. Only the following special characters are allowed: a,b a.b a-b a_b a&b a+b" />
+						{% if errors.settings.author %}
+							<span class="error">{{ errors.settings.author | first }}</span>
+						{% endif %}
+					</div><div class="medium{{ errors.settings.copyright ? ' error' : '' }}">
+						<label for="settings[copyright]">Copyright/Licence</label>
+						<select name="settings[copyright]" id="copyright">
+							{% for copy in copyright %}
+								<option value="{{ copy }}"{% if copy == old.settings.copyright %} selected{% endif %}>{{ copy }}</option>
+							{% endfor %}
+						</select>
+						{% if errors.settings.copyright %}
+							<span class="error">{{ errors.settings.copyright | first }}</span>
+						{% endif %}
+					</div><div class="medium{{ errors.settings.year ? ' error' : '' }}">
+						<label for="settings[year]">Year *</label>
+						<input type="text" name="settings[year]" id="year" value="{{ old.settings.year ? old.settings.year : "now"|date("Y") }}" pattern="[0-9]{4}" required title="Use a valid year, e.g. 2017" />
+						{% if errors.settings.year %}
+							<span class="error">{{ errors.settings.year | first }}</span>
+						{% endif %}
+					</div><div class="medium{{ errors.settings.language ? ' error' : '' }}">
+						<label for="settings[language]">Language</label>
+						<select name="settings[language]" id="language">
+							{% for key,lang in languages %}
+								<option value="{{ key }}"{% if (key == old.settings.language or key == locale) %} selected{% endif %}>{{ lang }}</option>
+							{% endfor %}
+						</select>
+						{% if errors.settings.language %}
+							<span class="error">{{ errors.settings.language | first }}</span>
+						{% endif %}
+					</div><div class="medium">
+						<span class="label">Startpage</span>
+						<label class="control-group">Startpage is designed as landing-page.
+							<input name="settings[startpage]" type="checkbox" id="startpage"{{ startpage ? ' checked' : '' }}>
+							<span class="checkmark"></span>
+						</label>
+					</div>
+				</fieldset>
+
+			</section>
+			<input type="submit" value="Save All Settings" />
+
+			{{ csrf_field() | raw }}
+			
+		</form>
+	
+	</div>
+	
+{% endblock %}

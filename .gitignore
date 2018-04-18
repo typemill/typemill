@@ -3,6 +3,7 @@ cache/sitemap.xml
 cache/lastSitemap.txt
 cache/stats.txt
 settings/settings.yaml
+settings/users
 plugins/admin
 plugins/demo
 plugins/disqus
@@ -11,5 +12,6 @@ plugins/share
 plugins/version
 system/vendor
 tests
+themes/monograf
 zips
 zip.php

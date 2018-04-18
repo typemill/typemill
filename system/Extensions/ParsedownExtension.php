@@ -15,7 +15,7 @@ class ParsedownExtension extends \ParsedownExtra
     {
         # make sure no definitions are set
         $this->DefinitionData = array();
-				
+
         # standardize line breaks
         $text = str_replace(array("\r\n", "\r"), "\n", $text);
 
@@ -38,27 +38,25 @@ class ParsedownExtension extends \ParsedownExtra
 		
         # trim line breaks
         $markup = trim($markup, "\n");
-		
-        if (isset($this->DefinitionData['TableOfContents']))
+
+        if(isset($this->DefinitionData['TableOfContents']))
         {
 			$TOC = $this->buildTOC($this->headlines);
 			
 			$markup = preg_replace('%(<p[^>]*>\[TOC\]</p>)%i', $TOC, $markup);
         }
-
+		
         # merge consecutive dl elements
-
         $markup = preg_replace('/<\/dl>\s+<dl>\s+/', '', $markup);
 
         # add footnotes
-		
         if (isset($this->DefinitionData['Footnote']))
         {
             $Element = $this->buildFootnoteElement();
 
             $markup .= "\n" . $this->element($Element);
         }
-				
+			
         return $markup;
     }
 		

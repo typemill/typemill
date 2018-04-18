@@ -1,0 +1,49 @@
+{% extends 'layouts/layoutAuth.twig' %}
+
+{% block title %}Setup Welcome{% endblock %}
+
+{% block content %}
+		
+	<div class="welcome">
+	
+		<div class="medium">
+			<div class="welcomeIntro">
+				<h1>Hurra!</h1>
+				<p>Your account has been created and you are logged in now.</p>
+				<p><strong>Next step:</strong> Visit the author panel and setup your new website. You can configure the system, choose themes and add plugins.</p>
+				<p><strong>Coming soon:</strong> You will probably miss a content editor in the author panel, but it will follow very soon. For time beeing you can write your content offline and upload the markdown files via FTP.</p>
+				<p><strong>Get help:</strong> If you have any questions, please consult the <a target="_blank" href="http://typemill.net/typemill"><i class="icon-link-ext"></i> docs</a> or open a new issue on <a target="_blank" href="https://github.com/trendschau/typemill"><i class="icon-link-ext"></i> github</a>.</p>
+			</div>
+			<a class="button" href="{{ path_for('settings.show') }}">Setup your website</a>
+ 		</div>
+		
+		<div class="small">
+			<div class="welcomeCard">
+				<a href="{{ path_for('settings.show') }}">
+					<div class="welcomeInner">
+						<h3>System</h3>
+						<p>Give your new website a name, add the author and choose a copyright.</p>				
+					</div>
+				</a>				
+			</div>
+			<div class="welcomeCard">
+				<a href="{{ path_for('themes.show') }}">
+					<div class="welcomeInner">
+						<h3>Themes</h3>
+						<p>Choose a theme for your website and configure the theme details.</p>
+					</div>
+				</a>
+			</div>
+			<div class="welcomeCard">
+				<a href="{{ path_for('plugins.show') }}">
+					<div class="welcomeInner">
+						<h3>Plugins</h3>
+						<p>Add new features to your website with plugins and configure them.</p>
+					</div>
+				</a>
+			</div>
+		</div>
+		
+	</div>
+	
+{% endblock %}

@@ -1,6 +1,6 @@
 ﻿name: Typemill Theme
 version: 1.0.4
-description: The Standard Theme For Typemill
+description: The Standard Theme For Typemill. Responsive, minimal and without any dependencies. It uses the system fonts Calibri and Helvetica. Only JavaScript is for code highlighting, skip it, if you don't need it. 
 author: Sebastian Schürmanns
 homepage: http://typemill.net
 licence: MIT
@@ -13,13 +13,13 @@ forms:
   fields:
 
     chapter:
-      type: input
+      type: text
       label: chapter
       placeholder: Add Name for Chapter
-      falsch: falsch
-      id: MyId
+      required: true
 
     start:
-      type: input
+      type: text
       label: Start-Button
-      placeholder: Add Label for Start-Button      
+      placeholder: Add Label for Start-Button
+      required: true

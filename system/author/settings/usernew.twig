@@ -1,0 +1,63 @@
+{% extends 'layouts/layout.twig' %}
+{% block title %}User{% endblock %}
+
+{% block content %}
+	
+	<div class="formWrapper">
+
+		<form method="POST" action="{{ path_for('user.create') }}">
+		
+			<section id="new-user" class="settings">
+
+				<header>
+					<h1>Create New User</h1>
+				</header>
+				
+				<fieldset class="auth">
+
+					<div class="large{{ errors.username ? ' errors' : '' }}">
+						<label for="username">Username <abbr title="required">*</abbr></label>
+						<input type="text" name="username" value="{{ old.username ? old.username : '' }}" required>
+						{% if errors.username %}
+							<span class="error">{{ errors.username | first }}</span>
+						{% endif %}
+					</div>
+					
+					<div class="large{{ errors.email ? ' errors' : '' }}">
+						<label for="email">E-Mail <abbr title="required">*</abbr></label>
+						<input type="text" name="email" value="{{ old.email ? old.email : '' }}" required>
+						{% if errors.email %}
+							<span class="error">{{ errors.email | first }}</span>
+						{% endif %}
+					</div>
+
+					<div class="large{{ errors.userrole ? ' errors' : '' }}">
+						<label for="userrole">Role <abbr title="required">*</abbr></label>
+						<select name="userrole" required>
+							{% for role in userrole %}
+								<option value="{{ role }}"{% if (role == old.userrole) %} selected{% endif %}>{{ role }}</option>
+							{% endfor %}
+						</select>
+						{% if errors.userrole %}
+							<span class="error">{{ errors.userrole | first }}</span>
+						{% endif %}
+					</div>					
+					
+					<div class="large{{ errors.password ? ' errors' : '' }}">
+						<label for="password">Password <abbr title="required">*</abbr></label>
+						<input type="password" name="password" required>
+						{% if errors.password %}
+							<span class="error">{{ errors.password | first }}</span>
+						{% endif %}
+					</div>
+					
+				</fieldset>
+
+			</section>
+			<input type="submit" value="Create User" />
+
+			{{ csrf_field() | raw }}
+		</form>		
+	</div>	
+	
+{% endblock %}

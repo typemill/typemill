@@ -18,7 +18,8 @@ abstract class Controller
 	protected function render($response, $route, $data)
 	{
 		$data = $this->c->dispatcher->dispatch('onPageReady', new OnPageReady($data))->getData();
-		
+
+		unset($_SESSION['old']);
 		return $this->c->view->render($response, $route, $data);
 	}
 	

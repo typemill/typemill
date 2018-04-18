@@ -11,27 +11,38 @@ class Write
 		$basePath			= getcwd() . DIRECTORY_SEPARATOR;
 		$this->basePath 	= $basePath;
 	}
-		
-	protected function checkPath($folder)
+
+	public function checkPath($folder)
 	{
 		$folderPath = $this->basePath . $folder;
 		
-		if(!is_dir($folderPath) AND !mkdir($folderPath, 0774, true))
+		if(!is_dir($folderPath))
 		{
-			throw new Exception("The folder '{$folder}' is missing and we could not create it. Please create the folder manually on your server.");
-			return false;
+			if(@mkdir($folderPath, 0774, true))
+			{
+				return true;
+			}
+			else
+			{
+				throw new \Exception("The folder '{$folder}' is missing and we could not create it. Please create the folder manually on your server.");
+				return false;				
+			}
 		}
 		
-		if(!is_writable($folderPath))
+		if(@is_writable($folderPath))
 		{
-			throw new Exception("Please make the folder '{$folder}' writable.");
+			return true;
+		}
+		else
+		{
+			throw new \Exception("Please make the folder '{$folder}' writable.");
 			return false;
 		}
 		return true;
 	}
 	
 	protected function checkFile($folder, $file)
-	{		
+	{
 		if(!file_exists($this->basePath . $folder . DIRECTORY_SEPARATOR . $file))
 		{
 			return false;
@@ -41,11 +52,17 @@ class Write
 
 	protected function writeFile($folder, $file, $data)
 	{
-		$filePath 	= $this->basePath . $folder . DIRECTORY_SEPARATOR . $file;
-		$openFile 	= fopen($filePath, "w");
-		
-		fwrite($openFile, $data);
-		fclose($openFile);
+		if($this->checkPath($folder))
+		{
+			$filePath 	= $this->basePath . $folder . DIRECTORY_SEPARATOR . $file;
+			$openFile 	= fopen($filePath, "w");
+			
+			fwrite($openFile, $data);
+			fclose($openFile);
+			
+			return true;
+		}
+		return false;
 	}
 	
 	public function getFile($folderName, $fileName)

@@ -12,7 +12,7 @@ class WriteYaml extends Write
 	public function getYaml($folderName, $yamlFileName)
 	{
 		$yaml = $this->getFile($folderName, $yamlFileName);
-		
+			
 		if($yaml)
 		{
 			return \Symfony\Component\Yaml\Yaml::parse($yaml);
@@ -29,6 +29,10 @@ class WriteYaml extends Write
 	public function updateYaml($folderName, $yamlFileName, $contentArray)
 	{
 		$yaml = \Symfony\Component\Yaml\Yaml::dump($contentArray,6);
-		$this->writeFile($folderName, $yamlFileName, $yaml);
+		if($this->writeFile($folderName, $yamlFileName, $yaml))
+		{
+			return true;
+		}
+		return false;
 	}
 }

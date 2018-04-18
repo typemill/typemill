@@ -30,15 +30,18 @@ class Analytics extends Plugin
 
 		$analyticSettings = $this->settings['settings']['plugins']['analytics'];
 	
-		/* fetch the template, render it with twig and add javascript with settings */
-		if($analyticSettings['tool'] == 'piwik')
+		if(isset($analyticsSettings['tool']))
 		{
-			$this->addInlineJS($twig->fetch('/piwikanalytics.twig', $this->settings));
-		}
-		elseif($analyticSettings['tool'] == 'google')
-		{
-			$this->addJS('https://www.googletagmanager.com/gtag/js?id=' . $analyticSettings['google_id']);
-			$this->addInlineJS($twig->fetch('/googleanalytics.twig', $analyticSettings));
+			/* fetch the template, render it with twig and add javascript with settings */
+			if($analyticSettings['tool'] == 'piwik')
+			{
+				$this->addInlineJS($twig->fetch('/piwikanalytics.twig', $this->settings));
+			}
+			elseif($analyticSettings['tool'] == 'google')
+			{
+				$this->addJS('https://www.googletagmanager.com/gtag/js?id=' . $analyticSettings['google_id']);
+				$this->addInlineJS($twig->fetch('/googleanalytics.twig', $analyticSettings));
+			}			
 		}
 	}
 }

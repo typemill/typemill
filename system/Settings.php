@@ -26,7 +26,7 @@ class Settings
 		
 		return [
 			'determineRouteBeforeAppMiddleware' 	=> true,
-			'displayErrorDetails' 					=> false,
+			'displayErrorDetails' 					=> true,
 			'title'									=> 'TYPEMILL',
 			'author'								=> 'Unknown',
 			'copyright'								=> 'Copyright',
@@ -38,6 +38,7 @@ class Settings
 			'themeBasePath'							=> $rootPath,
 			'themePath'								=> $rootPath . $themeFolder . DIRECTORY_SEPARATOR . $theme,
 			'settingsPath'							=> $rootPath . 'settings',
+			'userPath'								=> $rootPath . 'settings' . DIRECTORY_SEPARATOR . 'users',
 			'authorPath'							=> __DIR__ . DIRECTORY_SEPARATOR . 'author' . DIRECTORY_SEPARATOR,
 			'contentFolder'							=> 'content',
 			'version'								=> '1.1.2',
@@ -45,7 +46,7 @@ class Settings
 		];
 	}
 	
-	private static function getUserSettings()
+	public static function getUserSettings()
 	{
 		$yaml = new Models\WriteYaml();
 		
