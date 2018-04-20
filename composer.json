@@ -26,5 +26,7 @@
 			"Typemill\\": "system/",
 			"Plugins\\": "plugins/"
 		}
-	}
+	},
+    "minimum-stability": "dev",
+    "prefer-stable": true	
 }

@@ -30,7 +30,7 @@ class Analytics extends Plugin
 
 		$analyticSettings = $this->settings['settings']['plugins']['analytics'];
 	
-		if(isset($analyticsSettings['tool']))
+		if(isset($analyticSettings['tool']))
 		{
 			/* fetch the template, render it with twig and add javascript with settings */
 			if($analyticSettings['tool'] == 'piwik')

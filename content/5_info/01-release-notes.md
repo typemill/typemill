@@ -2,6 +2,18 @@
 
 This is the version history with some release notes.
 
+## Version 1.1.3 (19.04.2018)
+
+**Please follow the instructions for major updates** in the [documentation](/gettings-started/update).
+
+Version 1.1.3 introduces an author panel. Now you can authenticate, configure the system, themes and plugins and manage users. This is the first step towards a full authoring panel that helps you to manage, create and edit everything online.
+
+* Author panel.
+* Authentication.
+* Configuration of the system, the theme and the plugins.
+* User management (create update and deleted).
+* Bugfix: Footnotes in Markdown didn't work due to parsedown library. Fixed in the new library version.
+
 ## Version 1.1.2 (15.03.2018)
 
 With version 1.1.2 we added the possibility to configure the theme in the setup a bit more. We also fixed a bug in the htaccess. So next to the "system"-folder, you should also update the theme-folder and the htaccess-file. As always, backup your settings.yaml-file, then delete it and setup your website again (visit /setup).

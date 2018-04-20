@@ -234,9 +234,13 @@ class PageController extends Controller
 	{
 		foreach($contentBlocks as $block)
 		{
-			if(isset($block['element']['name']) && $block['element']['name'] == 'p' && substr($block['element']['text'], 0, 2) == '![' )
+			/* is it a paragraph? */
+			if(isset($block['element']['name']) && $block['element']['name'] == 'p')
 			{
-				return $block['element']['text'];
+				if(isset($block['element']['handler']['argument']) && substr($block['element']['handler']['argument'], 0, 2) == '![' )
+				{
+					return $block['element']['handler']['argument'];	
+				}
 			}
 		}
 		
