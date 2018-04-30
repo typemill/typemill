@@ -6,6 +6,10 @@
 	
 {{ content }}
 
+{% if settings.themes.typemill.modified %}	
+	<small>{{ settings.themes.typemill.modifiedText }}: {{ item.modified|date(settings.themes.typemill.modifiedFormat) }}</small>
+{% endif %}
+	
 {% if item.prevItem or item.nextItem %}
 
 	<div class="paging">

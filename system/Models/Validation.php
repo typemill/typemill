@@ -173,7 +173,7 @@ class Validation
 		return $this->validationResult($v, $name);
 	}
 	
-	public function pluginField($fieldName, $fieldValue, $pluginName, $fieldDefinitions)
+	public function objectField($fieldName, $fieldValue, $pluginName, $fieldDefinitions)
 	{	
 		$v = new Validator(array($fieldName => $fieldValue));
 
@@ -186,6 +186,11 @@ class Validation
 		switch($fieldDefinitions['type'])
 		{
 			case "select":
+				/* create array with option keys as value */
+				$options = array();
+				foreach($fieldDefinitions['options'] as $key => $value){ $options[] = $key; }
+				$v->rule('in', $fieldName, $options);
+				break;
 			case "radio":
 			case "checkboxlist":
 				$v->rule('in', $fieldName, $fieldDefinitions['options']);

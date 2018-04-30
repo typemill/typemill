@@ -192,6 +192,11 @@ class Field
 		$this->attributes[$key] = $value;
 	}
 	
+	public function unsetAttribute($key)
+	{
+		unset($this->attributes[$key]);
+	}
+	
 	/* get a single attribute, if it is defined. For usage in templates like getAttribute('required') */
 	public function getAttribute($key)
 	{
@@ -238,7 +243,7 @@ class Field
 		$this->attributeValues[$key] = $value;
 	}
 	
-	private function getAttributeValue($key)
+	public function getAttributeValue($key)
 	{
 		if(isset($this->attributeValues[$key]))
 		{

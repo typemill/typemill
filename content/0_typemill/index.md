@@ -1,3 +1,3 @@
 #About TYPEMILL
 
-TYPEMILL is a simple tool to create a website like this. It transforms a bunch of **text files** (Markdown) into a **website** and generates a **navigation**. TYPEMILL is a perfect tool for web books, documentations or manuals.
+TYPEMILL is a simple flat file CMS to create a website like this. It transforms a bunch of **text files** (Markdown) into a **website** and generates a **navigation**. TYPEMILL is under construction and provides a simple admin area for settings right now. An online editor and different output formats for e-books like mobi and epub are on their way. If you are a developer: TYPEMILL already supports themes and plugins.

@@ -119,7 +119,7 @@ class Folder
 			}
 		}
 		return $result;
-	}	
+	}
 
 	public static function getPagingForItem($content, $item)
 	{

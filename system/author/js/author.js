@@ -116,12 +116,12 @@
 	}
 	
 	/**********************************
-	** 		START THEMESWITCH	 	 **
+	** 		START VERSION CHECK	 	 **
 	**********************************/
 		
-	if(document.getElementById("baseapp"))
+	if(document.getElementById("system"))
 	{
-		getVersions('app', false);
+		getVersions('system', document.getElementsByClassName("fc-system-version"));
 	}
 	
 	if(document.getElementById("plugins"))
@@ -131,13 +131,9 @@
 	
 	if(document.getElementById("themes"))
 	{
-		// getVersions('theme', themeSwitch.value);
+		getVersions('theme', document.getElementsByClassName("fc-theme-version"));
 	}
-	
-	/**********************************
-	** 		START VERSIONING	 	 **
-	**********************************/
-			
+				
 	function getVersions(name, value)
 	{
 		var getPost 	= 'GET';
@@ -156,7 +152,13 @@
 
 		if(name == 'theme')
 		{
-			url += '&themes=' + value; 
+			var themeList = '&themes=';
+			for (var i = 0, len = value.length; i < len; i++)
+			{
+				themeList += value[i].id + ',';
+			}
+			
+			url += themeList;
 		}
 
 		sendJson(function(response)
@@ -165,17 +167,17 @@
 			{
 				var versions = JSON.parse(response);
 				
-				if(name == 'app' && versions.version)
+				if(name == 'system' && versions.system)
 				{
-					updateTypemillVersion(versions.version);
+					updateVersions(versions.system);
 				}
 				if(name == 'plugins' && versions.plugins)
 				{
-					updatePluginVersions(versions.plugins);
+					updateVersions(versions.plugins);
 				}
-				if(name == 'theme' && versions.themes[value])
+				if(name == 'theme' && versions.themes)
 				{
-					updateThemeVersion(versions.themes[value]);					
+					updateVersions(versions.themes);					
 				}
 			}
 			else
@@ -184,52 +186,22 @@
 			}
 		}, getPost, url, false, true);
 	}
-
-	function updatePluginVersions(pluginVersions)
-	{		
-		for (var key in pluginVersions)
+	
+	function updateVersions(elementVersions)
+	{
+		for (var key in elementVersions)
 		{
-			if (pluginVersions.hasOwnProperty(key))
+			if (elementVersions.hasOwnProperty(key))
 			{
-				pluginElement = document.getElementById(key);
-				if(pluginVersions[key] && pluginElement && cmpVersions(pluginVersions[key], pluginElement.innerHTML) > 0)
+				singleElement = document.getElementById(key);
+				
+				if(elementVersions[key] && singleElement && cmpVersions(elementVersions[key], singleElement.innerHTML) > 0)
 				{
-					pluginElement.innerHTML = "update to " + pluginVersions[key];
+					singleElement.innerHTML = "<span>update<br/>to " + elementVersions[key] + "</span>";
+					singleElement.classList.add("show-banner");
 				}
 			}
 		}
-	}
-	
-	function updateTypemillVersion(typemillVersion)
-	{
-		if(!document.getElementById('app-banner'))
-		{
-			var localTypemillVersion = document.getElementById('baseapp').dataset.version;
-			if(localTypemillVersion && cmpVersions(typemillVersion,localTypemillVersion) > 0)
-			{
-				addUpdateNotice('baseapp', 'app-banner', typemillVersion, 'http://typemill.net');
-			}			
-		}
-	}
-	
-	function updateThemeVersion(themeVersion)
-	{
-		var localThemeVersion = document.getElementById('themeVersion').innerHTML;
-		var themeUrl = document.getElementById('themeLink').href;
-		if(localThemeVersion && themeUrl && cmpVersions(themeVersion,localThemeVersion) > 0)
-		{
-			addUpdateNotice('themes', 'theme-banner', themeVersion, themeUrl);
-		}
-	}
-	
-	function addUpdateNotice(elementID, bannerID, version, url)
-	{
-		var updateElement 	= document.getElementById(elementID);
-		var banner 			= document.createElement('div');
-		banner.id 			= bannerID;
-		banner.className 	= 'version-banner';
-		banner.innerHTML 	= '<a href="' + url + '">update to ' + version + '</a>';
-		updateElement.appendChild(banner);
 	}
 	
 	/* credit: https://stackoverflow.com/questions/6832596/how-to-compare-software-version-number-using-js-only-number */
@@ -271,6 +243,7 @@
 				if(e.target.classList.contains("fc-settings"))
 				{
 					this.getElementsByClassName("cardFields")[0].classList.toggle("open");
+					this.getElementsByClassName("fc-settings")[0].classList.toggle("expand");
 				}
 			});
 		}

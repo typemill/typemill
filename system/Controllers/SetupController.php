@@ -54,18 +54,22 @@ class SetupController extends Controller
 					$user->login($username);
 
 					/* store updated settings */
-					$settings = $this->c->get('settings');
-					$settings->replace(['setup' => false]);
-									
-					/* store updated settings */
-					\Typemill\Settings::updateSettings(array('setup' => false));
-
-					return $this->render($response, 'auth/welcome.twig', array());
+					\Typemill\Settings::createSettings(array('setup' => false));
+					
+					return $response->withRedirect($this->c->router->pathFor('setup.welcome'));
 				}
 			}
 			
 			$this->c->flash->addMessage('error', 'Please check your input and try again');
 			return $response->withRedirect($this->c->router->pathFor('setup.show'));
 		}
+	}
+	
+	public function welcome($request, $response, $args)
+	{
+		/* store updated settings */
+		\Typemill\Settings::updateSettings(array('welcome' => false));
+		
+		return $this->render($response, 'auth/welcome.twig', array());		
 	}
 }

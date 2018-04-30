@@ -40,14 +40,11 @@ class PageController extends Controller
 			if($cache->validate('cache', 'lastCache.txt',600))
 			{
 				$structure	= $this->getCachedStructure($cache);
-				$cached 	= true;
 			}
 			else
 			{
 				/* if not, get a fresh structure of the content folder */
 				$structure 	= $this->getFreshStructure($pathToContent, $cache, $uri);
-				
-				$cached		= false;
 
 				/* if there is no structure at all, the content folder is probably empty */
 				if(!$structure)
@@ -89,15 +86,7 @@ class PageController extends Controller
 			
 			/* find the url in the content-item-tree and return the item-object for the file */
 			$item = Folder::getItemForUrl($structure, $urlRel);
-			
-			/* if structure is cached and there is no item 
-			if($cached && !$item)
-			{
-				/* get a fresh structure and search for the item again 
-				$structure = $this->getFreshStructure($pathToContent, $cache, $uri); 
-				$item = Folder::getItemForUrl($structure, $urlRel);
-			}
-			
+						
 			/* if there is still no item, return a 404-page */
 			if(!$item)
 			{
@@ -122,8 +111,11 @@ class PageController extends Controller
 				$filePath = $pathToContent . $item->path;
 			}
 			
+			/* add the modified date for the file */
+			$item->modified	= isset($filePath) ? filemtime($filePath) : false;
+						
 			/* read the content of the file */
-			$contentMD = isset($filePath) ? file_get_contents($filePath) : false;
+			$contentMD 		= isset($filePath) ? file_get_contents($filePath) : false;			
 		}
 		
 		$contentMD = $this->c->dispatcher->dispatch('onMarkdownLoaded', new OnMarkdownLoaded($contentMD))->getData();
@@ -143,7 +135,7 @@ class PageController extends Controller
 		$contentHTML 	= $this->c->dispatcher->dispatch('onHtmlLoaded', new OnHtmlLoaded($contentHTML))->getData();
 		
 		/* create excerpt from content */
-		$excerpt		= substr($contentHTML,0,320);
+		$excerpt		= substr($contentHTML,0,500);
 		$excerpt		= explode("</h1>", $excerpt);
 		
 		/* extract title from excerpt */
@@ -154,13 +146,14 @@ class PageController extends Controller
 		if($description)
 		{
 			$description 	= trim(preg_replace('/\s+/', ' ', $description));
+			$description	= substr($description, 0, 300);		
 			$lastSpace 		= strrpos($description, ' ');
 			$description 	= substr($description, 0, $lastSpace);
 		}
-		
+				
 		/* get url and alt-tag for first image, if exists */
 		if($firstImage)
-		{	
+		{
 			preg_match('#\((.*?)\)#', $firstImage, $img_url);
 			if($img_url[1])
 			{
@@ -169,13 +162,7 @@ class PageController extends Controller
 				$firstImage = array('img_url' => $base_url . $img_url[1], 'img_alt' => $img_alt[1]);
 			}
 		}
-		
-		/* 
-			$timer['topiccontroller']=microtime(true);
-			$timer['end topiccontroller']=microtime(true);
-			Helpers::printTimer($timer);
-		*/
-		
+
 		$route = empty($args) && $settings['startpage'] ? '/cover.twig' : '/index.twig';
 		
 		$this->render($response, $route, array('navigation' => $structure, 'content' => $contentHTML, 'item' => $item, 'breadcrumb' => $breadcrumb, 'settings' => $settings, 'title' => $title, 'description' => $description, 'base_url' => $base_url, 'image' => $firstImage ));
@@ -214,19 +201,8 @@ class PageController extends Controller
 
 		if($latestVersion)
 		{
-			/* check, if user-settings exist */
-			$yaml 			= new WriteYaml();
-			$userSettings 	= $yaml->getYaml('settings', 'settings.yaml');
-			if($userSettings)
-			{
-				/* if there is no version info in the settings or if the version info is outdated */
-				if(!isset($userSettings['latestVersion']) || $userSettings['latestVersion'] != $latestVersion)
-				{
-					/* write the latest version into the user-settings */
-					$userSettings['latestVersion'] = $latestVersion;
-					$yaml->updateYaml('settings', 'settings.yaml', $userSettings);									
-				}
-			}
+			/* store latest version */
+			\Typemill\Settings::updateSettings(array('latestVersion' => $latestVersion));			
 		}
 	}
 	

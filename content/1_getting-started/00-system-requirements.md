@@ -12,4 +12,4 @@ What you don't need:
 - **A database** (TYPEMILL uses files, not a database)
 - **Technical skills** (TYPEMILL is easy to use for non-technical people)
 
-Almost any hosting package provides a webserver with php. If you ever hosted a website with WordPress, then chances are high, that you can run TYPEMILL there without any problems.
+Almost any hosting package provides a webserver with php. If you ever hosted your own website, then chances are high, that you can run TYPEMILL there without any problems.

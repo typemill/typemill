@@ -1,6 +1,6 @@
 # Item
 
-The item variable is an object. It provides informations about the actual page, like the page title,  the url, the slug or the next and the previous page. 
+The item variable is an object. It provides informations about the actual page like the page title,  the url, the slug or the next and the previous page. 
 
 Some informations are only available for the type `folder` while some other informations are specific to the type `file`. But most informations are shared by both.
 
@@ -32,6 +32,7 @@ stdClass Object
     [urlRel] => /typemill/developers/theme-variables/navigation
     [urlAbs] => http://localhost/typemill/developers/theme-variables/navigation
     [active] => 1
+    [modified] => 1525088781
     [thisChapter] => stdClass Object
         (
             [originalName] => 05-theme-variables
@@ -110,9 +111,9 @@ stdClass Object
 The following informations (properties) are shared by folders and files. The examples are based on a simple file and folder structure like this: 
 
 - content
-  - 1.my-folder
+  - 01-my-folder
     - index.md
-    - 04.my-content-file.md
+    - 04-my-content-file.md
 
 ### {{ item.elementType }}
 
@@ -223,6 +224,12 @@ The `item.prevItem` is an item object again, so you have access to all the infor
 
 Example: `<a href="{{ item.prevItem.urlRel }}">{{ item.prevItem.name }}</a>`
 
+### {{ item.modified }}
+
+Returns the last modified date of the file as a number. You can use this to print out the last modified date in your theme. Use the date-function of Twig to format the date.
+
+Example: `Last modified: {{ item.modified|date(m/d/Y) }}`
+
 ## Specific to Folders or Files
 
 The following informations are specific to files or folders
@@ -252,11 +259,11 @@ The whole usecase might look like this:
 
 ### {{ item.folderContent }}
 
-This information is only available for **folders**. It contains the whole content of that folder, again as an multidimensional array of item objects. You can use it to list the content of a folder.
+This information is only available for **folders**. It contains the whole content of that folder as a multidimensional array of item objects. You can use it to list the content of a folder.
 
 To do so, you have two options:
 
-1. Display only the first level items in the current folder. This can be done with a simple for loop.
+1. Display only the first level items in the current folder. This can be done with a simple `for` loop.
 2. Display all nested items and folders within the current folder recursively. You have to write a Twig macro for that.
 
 The simple solution with all first level items of the current folder looks like this:

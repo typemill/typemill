@@ -15,7 +15,7 @@ Don't forget to make some folders and files writable (set permission to `774`):
 
 All settings and users are stored in the folder `settings`. You can manually edit these files, but it is not recommended because it can crash the system if done wrong.
 
-You can configure your system online, but there is no content editor yet. So for time beeing, you have to edit your content offline with a markdown editor and upload the files with an FTP software. If your changes are not visible at once, press `F5` to refresh the cache.
+You can configure your system online, but there is no content editor yet. So for time beeing, you have to edit your content offline with a markdown editor and upload the files with an FTP software. If your changes are not immediately visible, press `F5` to refresh the cache.
 
 If you need more detailed instructions, please read on.
 
@@ -54,9 +54,8 @@ To make the folders and files writable, use your ftp programm, click on the fold
 
 ## htaccess 
 
-If you run your website with https (recommended) or if you want to redirect www-urls to non-www urls, then please check the htaccess file in the root folder. There are several use cases already prepared and you only have to uncomment them. 
+If you run your website with https (recommended) or if you want to redirect www-urls to non-www urls, then please check the htaccess file in the root folder. There are several use cases already prepared and you can simply uncomment them, if needed. 
 
 ## Run Locally
 
 If you are a developer and if you want to run TYPEMILL locally, then simply download TYPEMILL (zip or git) and visit your local folder like `localhost/typemill`. No additional work is required.
-

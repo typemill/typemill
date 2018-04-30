@@ -1,6 +1,7 @@
 {% extends 'layouts/layout.twig' %}
 {% block title %}Setup{% endblock %}
 {% set startpage = old.settings.startpage ? old.settings.startpage : settings.startpage %}
+{% set year = settings.year ? settings.year : "now"|date("Y") %}
 
 {% block content %}
 	
@@ -8,11 +9,13 @@
 
 		<form method="POST" action="{{ path_for('settings.save') }}">
 		
-			<section id="baseapp" class="settings" data-version="{{ settings.version }}">
+			<section id="system" class="settings">
 
-				<header>
+				<header class="headline">
 					<h1>System</h1>
 				</header>
+				
+				<div id="typemill" class="fc-system-version update-banner">{{ settings.version ? settings.version : 'Unknown' }}</div>
 				
 				<fieldset>
 				
@@ -40,7 +43,7 @@
 						{% endif %}
 					</div><div class="medium{{ errors.settings.year ? ' error' : '' }}">
 						<label for="settings[year]">Year *</label>
-						<input type="text" name="settings[year]" id="year" value="{{ old.settings.year ? old.settings.year : "now"|date("Y") }}" pattern="[0-9]{4}" required title="Use a valid year, e.g. 2017" />
+						<input type="text" name="settings[year]" id="year" value="{{ old.settings.year ? old.settings.year : year }}" pattern="[0-9]{4}" required title="Use a valid year, e.g. 2017" />
 						{% if errors.settings.year %}
 							<span class="error">{{ errors.settings.year | first }}</span>
 						{% endif %}

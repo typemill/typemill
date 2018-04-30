@@ -1,10 +1,10 @@
 # Templates with Twig
 
-Twig is a flexible, fast and secure template engine for PHP. If you have never used a template language before, then there are some good reasons to start with it today:
+Twig is a flexible, fast and secure template engine for PHP. Twig is used by many modern software projects and content management systems like CraftCMS, Statamic and even Drupal. If you have never used a template language before, then there are some good reasons to start with it today:
 
 - The Twig syntax is **much shorter**, so your templates look cleaner and are easier to maintain.
-- Twig produces **less errors**. An unknown variable produces an error in PHP, but it does not in Twig. Twig handles most of these cases, so you don't have to care about it.
-- Twig is very **widespread**. Even Drupal switched to Twig in version 8.
+- Twig produces **less errors**. An unknown variable produces an error in PHP, but it does not in Twig. Twig handles most of these cases, so you skip a lot of ugly logic in your theme.
+- Twig is very **widespread**, so you can work with Twig in many other cms.
 
 The full Twig documentation for template designers is just one page long, so just head [over to Twig](http://twig.sensiolabs.org/doc/2.x/templates.html) and read it. You can learn the most important essentials for TYPEMILL in the following list.
 
@@ -30,7 +30,7 @@ Twig uses one curly bracket with a procent sign **to execute** statements such a
 </ul>
 ````
 
-As you can see, the Twig syntax is a cleaner and easier than pure PHP:
+As you can see, the Twig syntax is cleaner and easier than pure PHP:
 
 - You don't need the long `<?php echo something; ?>` introduction.
 - You don't need the `$` to mark a variable.
@@ -58,7 +58,8 @@ Set an array and print out a value:
 
 ````
 {% set content = ['first' => 'one value', 'second' => 'another value'] %}
-{{ content.first }}
+
+{{ content.first }} // prints out 'one value'
 ````
 
 ### Object
@@ -67,7 +68,8 @@ Set an object and print out a value:
 
 ````
 {% set content = {'first' : 'first value', 'second' : 'another value'} %}
-{{ content.first }}
+
+{{ content.first }} // prints out 'first value'
 ````
 
 ### Loop
@@ -102,7 +104,7 @@ Output:
 - First Value
 - Another Value
 
-You can manipulate variables with filters. Fiters are used after a pipe notation. See a list of all filters in the [Twig documentation](http://twig.sensiolabs.org/doc/2.x/filters/index.html).
+You can manipulate variables with filters. Filters are used after a pipe notation. See a list of all filters in the [Twig documentation](http://twig.sensiolabs.org/doc/2.x/filters/index.html).
 
 ### Functions
 
@@ -124,7 +126,7 @@ To include a template, just write:
 {{ include(sidebar.twig) }}
 ````
 
-**Example usage**: Your layout-template includes other templates like header.twig, footer.twig or sidebar.twig.
+**Example usage**: Your layout-template **includes** other templates like header.twig, footer.twig or sidebar.twig.
 
 ### Extend Template
 
@@ -134,7 +136,7 @@ To extend a template, just write:
 {% extends "partials/layout.twig" %}
 ````
 
-**Example usage:** Your content template (e.g. index.twig) extends your layout template. This means, index.twig is rendered within the layout.twig, and the layout.twig includes a header.twig, a footer.twig and a sidebar.twig.
+**Example usage:** Your content template (e.g. index.twig) **extends** your layout template. This means, index.twig is rendered within the layout.twig, and the layout.twig includes a header.twig, a footer.twig and a sidebar.twig.
 
 ### Example: Include and Extend
 
@@ -180,14 +182,16 @@ Now, your template `index.twig` extends your template `layout.twig` and the `blo
 
 ### Macros
 
-Macros in Twig are like functions in PHP: You can use them for repeating tasks. A typical example is a navigation, where you loop over a complex array recursively. But you can also use macros to render forms and input fields.
+Macros in Twig are like functions in PHP: You can use them for repeating tasks. A typical example is a navigation, where you loop over a comlex and multi-dimensional array recursively. But you can also use macros to render forms and input fields.
 
-This is an example for a navigation:
+Macros are usually the most complex parts of your theme and they are mostly used for generating a navigation. You can use the macro for the navigation used in the typemill theme as a starting point. In most cases, you won't even touch it, but if you read the code in detail, it will probably pretty easy for you to costumize it for your needs.
+
+A typical macro code for a navigation looks like this: 
 
     {% macro loop_over(navigation) %}
-
+    
       {% import _self as macros %}
-
+    
       {% for element in navigation %} 
         <li>
           {% if element.elementType == 'folder' %}
@@ -208,3 +212,4 @@ This is an example for a navigation:
       {{ macros.loop_over(navigation) }}
     </ul>
 These are only some small examples, how you can use Twig to create templates and themes for TYPEMILL. In fact, you can do a lot more complex stuff with Twig. Just read the [official documentation](https://twig.sensiolabs.org/doc).
+

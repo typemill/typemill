@@ -1,6 +1,6 @@
 # Breadcrumb
 
-The `{{ breadcrumb }}` variable contains the breadcrumb for the page as an one dimensional array. The array contains item objects. You can loop over the breadcrumb and print the elements out like this: 
+The `{{ breadcrumb }}` variable contains the breadcrumb for the page. It is a simple one dimensional array of item objects. You can loop over the breadcrumb and print the elements out like this: 
 
     <ul class="breadcrumb">
     {% for element in breadcrumb %}

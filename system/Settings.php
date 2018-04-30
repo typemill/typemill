@@ -41,8 +41,9 @@ class Settings
 			'userPath'								=> $rootPath . 'settings' . DIRECTORY_SEPARATOR . 'users',
 			'authorPath'							=> __DIR__ . DIRECTORY_SEPARATOR . 'author' . DIRECTORY_SEPARATOR,
 			'contentFolder'							=> 'content',
-			'version'								=> '1.1.3',
-			'setup'									=> true
+			'version'								=> '1.1.4',
+			'setup'									=> true,
+			'welcome'								=> true
 		];
 	}
 	
@@ -54,35 +55,39 @@ class Settings
 		
 		return $userSettings;
 	}
-	
-	public static function getPluginSettings($pluginName)
+
+	public static function getObjectSettings($objectType, $objectName)
 	{
 		$yaml = new Models\WriteYaml();
 		
-		$pluginFolder 	= 'plugins' . DIRECTORY_SEPARATOR . $pluginName;
-		$pluginFile		= $pluginName . '.yaml';
-		$pluginSettings = $yaml->getYaml($pluginFolder, $pluginFile);
+		$objectFolder 	= $objectType . DIRECTORY_SEPARATOR . $objectName;
+		$objectFile		= $objectName . '.yaml';
+		$objectSettings = $yaml->getYaml($objectFolder, $objectFile);
 
-		return $pluginSettings;
-	}
-
-	public static function getThemeSettings($themeName)
-	{
-		$yaml = new Models\WriteYaml();
-		
-		$themeFolder 	= 'themes' . DIRECTORY_SEPARATOR . $themeName;
-		$themeFile		= $themeName . '.yaml';
-		$themeSettings = $yaml->getYaml($themeFolder, $themeFile);
-
-		return $themeSettings;
+		return $objectSettings;
 	}
 	
-	public static function updateSettings($settings)
+	public static function createSettings($settings)
 	{
 		$yaml = new Models\WriteYaml();
 		
 		/* write settings to yaml */
 		$yaml->updateYaml('settings', 'settings.yaml', $settings);
+	}
+	
+	public static function updateSettings($settings)
+	{
+		$userSettings 	= self::getUserSettings();
+		
+		if($userSettings)
+		{
+			
+			$yaml 		= new Models\WriteYaml();
+			$settings 	= array_merge($userSettings, $settings);
+
+			/* write settings to yaml */
+			$yaml->updateYaml('settings', 'settings.yaml', $settings);					
+		}
 	}
 	
 	public static function removePluginSettings($pluginName)
@@ -111,7 +116,7 @@ class Settings
 		{
 			$yaml = new Models\WriteYaml();
 			
-			$pluginSettings = self::getPluginSettings($pluginName);
+			$pluginSettings = self::getObjectSettings('plugins', $pluginName);
 			if(isset($pluginSettings['settings']))
 			{
 				$userSettings['plugins'][$pluginName] = $pluginSettings['settings'];

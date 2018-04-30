@@ -1,6 +1,6 @@
 # Settings
 
-As of Version 1.1.3 you can edit all settings in the new authoring panel of TYPEMILL. Just login and go to settings. There you can edit:
+As of Version 1.1.3 you can edit all settings in the new authoring panel of TYPEMILL. Just login to your typemill installation and go to settings. There you can edit:
 
 * The system (basic settings).
 * Themes (choose themes and configure it).

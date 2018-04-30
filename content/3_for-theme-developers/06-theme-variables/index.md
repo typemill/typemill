@@ -1,3 +1,3 @@
 # Theme Variables
 
-TYPEMILL provides **six variables** for your theme. They are easy to understand and simple to use.  
+TYPEMILL provides **9 variables** for your theme right now. They are easy to understand and simple to use.  

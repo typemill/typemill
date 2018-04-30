@@ -2,6 +2,25 @@
 
 This is the version history with some release notes.
 
+## Version 1.1.4 (30.04.2018)
+
+**Please follow the instructions for minor updates** in the [documentation](/gettings-started/update). Please update the Typemill theme, too.
+
+Version 1.1.4 is mainly an optimization and refactoring of the author panel released in version 1.1.3. Some details of the changes:
+
+* Length of description is optimized for SEO now.
+* You can display a last modified date on each page now (update the TYPEMILL theme for that).
+* Optimized mobile version of the author-panel navigation.
+* Form rendering is now done in a seperate form template.
+* SettingsController is deeply refactored and some bugs are fixed.
+* FormModel partly fixed and refactored.
+* ValidationModel fixed.
+* Update notifications for system, themes and plugins are completely refactored and unified.
+* Welcome page is fixed, so that the linked themes- and plugin settings show the initial values now.
+* Settings functions for plugins and themes are cleaned up and unified.
+* Design is partly fixed and unified (open-close icons and more).
+* User documentation has been enhanced and corrected.
+
 ## Version 1.1.3 (19.04.2018)
 
 **Please follow the instructions for major updates** in the [documentation](/gettings-started/update).

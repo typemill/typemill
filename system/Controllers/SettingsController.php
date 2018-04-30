@@ -8,8 +8,7 @@ use Typemill\Models\Validation;
 use Typemill\Models\User;
 
 class SettingsController extends Controller
-{
-	
+{	
 	/*********************
 	**	BASIC SETTINGS	**
 	*********************/
@@ -65,14 +64,14 @@ class SettingsController extends Controller
 	
 	public function showThemes($request, $response, $args)
 	{
-		$settings 	= $this->c->get('settings');
-		$themes 	= $this->getThemes();
-		$themedata	= array();
-			
+		$userSettings 	= $this->c->get('settings');
+		$themes 		= $this->getThemes();
+		$themedata		= array();
+
 		foreach($themes as $themeName)
-		{	
+		{
 			/* if theme is active, list it first */
-			if($settings['theme'] == $themeName)
+			if($userSettings['theme'] == $themeName)
 			{
 				$themedata = array_merge(array($themeName => null), $themedata);
 			}
@@ -80,60 +79,20 @@ class SettingsController extends Controller
 			{
 				$themedata[$themeName] = null;
 			}
-			
-			$themeSettings = \Typemill\Settings::getThemeSettings($themeName);
+
+			$themeSettings = \Typemill\Settings::getObjectSettings('themes', $themeName);
 			if($themeSettings)
 			{
 				/* store them as default theme data with author, year, default settings and field-definitions */
 				$themedata[$themeName] = $themeSettings;
 			}
 			
-			if(isset($themeSettings['forms']))
+			if(isset($themeSettings['forms']['fields']))
 			{
-				$fields = array();
-				
-				/* then iterate through the fields */
-				foreach($themeSettings['forms']['fields'] as $fieldName => $fieldConfigs)
-				{
-					/* and create a new field object with the field name and the field configurations. */
-					$field = new Field($fieldName, $fieldConfigs);
+				$fields = $this->getFields($userSettings, 'themes', $themeName, $themeSettings);
 
-					$userValue = false;
-
-					/* add value from stored usersettings */
-					if($settings['theme'] == $themeName && isset($settings['themesettings'][$fieldName]))
-					{
-						$userValue = $settings['themesettings'][$fieldName];
-					}
-					/* alternatively add value from original theme settings */
-					elseif(isset($themeSettings['settings'][$fieldName]))
-					{
-						$userValue = $themeSettings['settings'][$fieldName];
-					}
-					/* overwrite it with old input in form, if exists */
-					if(isset($_SESSION['old'][$themeName][$fieldName]))
-					{
-						$userValue = $_SESSION['old'][$themeName][$fieldName];
-					}
-										
-					if($field->getType() == "textarea")
-					{
-						if($userValue)
-						{
-							$field->setContent($userValue);
-						}
-					}
-					elseIf($field->getType() != "checkbox")
-					{
-						$field->setAttributeValue('value', $userValue);	
-					}
-
-					/* add the field to the field-List with the plugin-name as key */
-					$fields[] = $field;					
-				}
-								
 				/* overwrite original theme form definitions with enhanced form objects */
-				$themedata[$themeName]['forms']['fields'] = $fields;				
+				$themedata[$themeName]['forms']['fields'] = $fields;
 			}
 			
 			/* add the preview image */
@@ -148,81 +107,21 @@ class SettingsController extends Controller
 		$users		= $user->getUsers();
 		$route 		= $request->getAttribute('route');
 	
-		$this->render($response, 'settings/themes.twig', array('settings' => $settings, 'themes' => $themedata, 'users' => $users, 'route' => $route->getName() ));
+		$this->render($response, 'settings/themes.twig', array('settings' => $userSettings, 'themes' => $themedata, 'users' => $users, 'route' => $route->getName() ));
 	}
-	
-	public function saveThemes($request, $response, $args)
-	{
-		if($request->isPost())
-		{
-			$settings 		= \Typemill\Settings::getUserSettings();
-			$params 		= $request->getParams();
-			$theme			= isset($params['theme']) ? $params['theme'] : false;
-			$themeSettings	= isset($params[$theme]) ? $params[$theme] : false;
-			$validate		= new Validation();
-			
-			/* set theme name and delete theme settings from user settings for the case, that the new theme has no settings */
-
-			$settings['theme'] = $theme;
-			unset($settings['themesettings']);
-						
-			if($themeSettings)
-			{
-				// load theme definitions by theme name
-				$themeOriginalSettings = \Typemill\Settings::getThemeSettings($theme);
-
-				// validate input with field definitions				
-				if($themeOriginalSettings)
-				{
-					foreach($themeSettings as $fieldName => $fieldValue)
-					{
-						$fieldDefinition = isset($themeOriginalSettings['forms']['fields'][$fieldName]) ? $themeOriginalSettings['forms']['fields'][$fieldName] : false;
-						if($fieldDefinition)
-						{
-							/* validate user input for this field */
-							$validate->pluginField($fieldName, $fieldValue, $theme, $fieldDefinition);
-						}
-						else
-						{
-							$_SESSION['errors'][$themeName][$fieldName] = 'This field is not defined for the theme!';
-						}
-					}
-				}
-				$settings['themesettings'] 	= $themeSettings;
-			}
-						
-			/* check for errors and redirect to path, if errors found */
-			if(isset($_SESSION['errors']))
-			{
-				$this->c->flash->addMessage('error', 'Please correct the errors');
-				return $response->withRedirect($this->c->router->pathFor('themes.show'));
-			}
-
-			/* store updated settings */
-			\Typemill\Settings::updateSettings($settings);
-			
-			$this->c->flash->addMessage('info', 'Settings are stored');
-			return $response->withRedirect($this->c->router->pathFor('themes.show'));
-		}
-	}
-
-
-	/*********************
-	**	Plugin SETTINGS	**
-	*********************/
 	
 	public function showPlugins($request, $response, $args)
 	{
-		$settings 	= $this->c->get('settings');
-		$plugins	= array();
-		$fields 	= array();
+		$userSettings 	= $this->c->get('settings');
+		$plugins		= array();
+		$fields 		= array();
 
 		/* iterate through the plugins in the stored user settings */
-		foreach($settings['plugins'] as $pluginName => $pluginUserSettings)
-		{
+		foreach($userSettings['plugins'] as $pluginName => $pluginUserSettings)
+		{		
 			/* add plugin to plugin Data, if active, set it first */
-			/* if theme is active, list it first */
-			if($settings['plugins'][$pluginName]['active'] == true)
+			/* if plugin is active, list it first */
+			if($userSettings['plugins'][$pluginName]['active'] == true)
 			{
 				$plugins = array_merge(array($pluginName => null), $plugins);
 			}
@@ -230,71 +129,35 @@ class SettingsController extends Controller
 			{
 				$plugins[$pluginName] = Null;
 			}
-						
+			
 			/* Check if the user has deleted a plugin. Then delete it in the settings and store the updated settings. */
-			if(!is_dir($settings['rootPath'] . 'plugins' . DIRECTORY_SEPARATOR . $pluginName))
+			if(!is_dir($userSettings['rootPath'] . 'plugins' . DIRECTORY_SEPARATOR . $pluginName))
 			{
 				/* remove the plugin settings and store updated settings */
 				\Typemill\Settings::removePluginSettings($pluginName);
 				continue;
 			}
-
+			
 			/* load the original plugin definitions from the plugin folder (author, version and stuff) */
-			$pluginOriginalSettings = \Typemill\Settings::getPluginSettings($pluginName);
+			$pluginOriginalSettings = \Typemill\Settings::getObjectSettings('plugins', $pluginName);
 			if($pluginOriginalSettings)
 			{
 				/* store them as default plugin data with plugin author, plugin year, default settings and field-definitions */
 				$plugins[$pluginName] = $pluginOriginalSettings;
 			}
-
-			/* overwrite the original plugin settings with the stored user settings, if they exist */
-			if($pluginUserSettings)
-			{
-				$plugins[$pluginName]['settings'] = $pluginUserSettings;
-			}
 			
 			/* check, if the plugin has been disabled in the form-session-data */
-			/* TODO: Works only, if there is at least one plugin with settings */
 			if(isset($_SESSION['old']) && !isset($_SESSION['old'][$pluginName]['active']))
 			{
 				$plugins[$pluginName]['settings']['active'] = false;
 			}
 			
 			/* if the plugin defines forms and fields, so that the user can edit the plugin settings in the frontend */
-			if(isset($pluginOriginalSettings['forms']))
+			if(isset($pluginOriginalSettings['forms']['fields']))
 			{
-				$fields = array();
+				/* get all the fields and prefill them with the dafault-data, the user-data or old input data */
+				$fields = $this->getFields($userSettings, 'plugins', $pluginName, $pluginOriginalSettings);
 				
-				/* then iterate through the fields */
-				foreach($pluginOriginalSettings['forms']['fields'] as $fieldName => $fieldConfigs)
-				{
-					/* and create a new field object with the field name and the field configurations. */
-					$field = new Field($fieldName, $fieldConfigs);
-					
-					/* now you have the configurations of the field. Time to set the values */
-					
-					/* At first, get the value for the field from the stored user settings */
-					// $userValue = isset($pluginUserSettings[$fieldName]) ? $pluginUserSettings[$fieldName] : NULL;
-					$userValue = isset($plugins[$pluginName]['settings'][$fieldName]) ? $plugins[$pluginName]['settings'][$fieldName] : NULL;
-					
-					/* Then overwrite the value, if there are old input values for the field in the session */
-					$userValue = isset($_SESSION['old'][$pluginName][$fieldName]) ? $_SESSION['old'][$pluginName][$fieldName] : $userValue;
-					
-					if($field->getType() == "textarea")
-					{
-						if($userValue)
-						{
-							$field->setContent($userValue);
-						}
-					}
-					elseIf($field->getType() != "checkbox")
-					{
-						$field->setAttributeValue('value', $userValue);	
-					}
-
-					/* add the field to the field-List with the plugin-name as key */
-					$fields[] = $field;
-				}
 				/* overwrite original plugin form definitions with enhanced form objects */
 				$plugins[$pluginName]['forms']['fields'] = $fields;
 			}
@@ -304,61 +167,146 @@ class SettingsController extends Controller
 		$users 	= $user->getUsers();
 		$route 	= $request->getAttribute('route');
 		
-		$this->render($response, 'settings/plugins.twig', array('settings' => $settings, 'plugins' => $plugins, 'users' => $users, 'route' => $route->getName() ));
+		$this->render($response, 'settings/plugins.twig', array('settings' => $userSettings, 'plugins' => $plugins, 'users' => $users, 'route' => $route->getName() ));
 	}
 
+	private function getFields($userSettings, $objectType, $objectName, $objectSettings)
+	{
+		$fields = array();
+
+		/* then iterate through the fields */
+		foreach($objectSettings['forms']['fields'] as $fieldName => $fieldConfigs)
+		{
+			/* and create a new field object with the field name and the field configurations. */
+			$field = new Field($fieldName, $fieldConfigs);
+			
+			/* you have to prefil the value for the field with default settings, user settings or old user-input from form */
+			$userValue = false;
+
+			/* first, add the default values from the original plugin or theme settings. Ignore checkboxes, otherwiese they might be always checked */
+			if(isset($objectSettings['settings'][$fieldName]))
+			{
+				$userValue = $objectSettings['settings'][$fieldName];
+			}
+						
+			/* now overwrite them with the local stored user settings */
+			if(isset($userSettings[$objectType][$objectName][$fieldName]))
+			{
+				$userValue = $userSettings[$objectType][$objectName][$fieldName];
+			}
+
+			/* overwrite it with old input in form, if exists */
+			if(isset($_SESSION['old'][$objectName][$fieldName]))
+			{
+				$userValue = $_SESSION['old'][$objectName][$fieldName];
+			}
+		
+			/* now we have set the uservalue for the field. Prepopulate the field object with it now */
+			if($field->getType() == "textarea")
+			{
+				if($userValue)
+				{
+					$field->setContent($userValue);
+				}
+			}
+			elseif($field->getType() == "checkbox")
+			{
+				/* needs special treatment, because field does not exist in settings if unchecked by user */
+				if(isset($userSettings[$objectType][$objectName][$fieldName]))
+				{
+					$field->setAttribute('checked', 'checked');
+				}
+				else
+				{
+					$field->unsetAttribute('checked');
+				}
+			}
+			else
+			{
+				$field->setAttributeValue('value', $userValue);	
+			}
+
+			/* add the field to the field-List with the plugin-name as key */
+			$fields[] = $field;
+		}
+		
+		return $fields;
+	}	
+
+	/*************************************
+	**	SAVE THEME- AND PLUGIN-SETTINGS	**
+	*************************************/
+
+	public function saveThemes($request, $response, $args)
+	{
+		if($request->isPost())
+		{	
+			$userSettings 	= \Typemill\Settings::getUserSettings();
+			$params 		= $request->getParams();
+			$themeName		= isset($params['theme']) ? $params['theme'] : false;
+			$userInput		= isset($params[$themeName]) ? $params[$themeName] : false;
+			$validate		= new Validation();
+			
+			/* set theme name and delete theme settings from user settings for the case, that the new theme has no settings */
+			$userSettings['theme'] = $themeName;
+
+			if($userInput)
+			{
+				/* validate the user-input */
+				$this->validateInput('themes', $themeName, $userInput, $validate);
+				
+				/* set user input as theme settings */
+				$userSettings['themes'][$themeName] = $userInput;
+			}
+			
+			/* check for errors and redirect to path, if errors found */
+			if(isset($_SESSION['errors']))
+			{
+				$this->c->flash->addMessage('error', 'Please correct the errors');
+				return $response->withRedirect($this->c->router->pathFor('themes.show'));
+			}
+			
+			/* store updated settings */
+			\Typemill\Settings::updateSettings($userSettings);
+			
+			$this->c->flash->addMessage('info', 'Settings are stored');
+			return $response->withRedirect($this->c->router->pathFor('themes.show'));
+		}
+	}
+		
 	public function savePlugins($request, $response, $args)
 	{
 		if($request->isPost())
 		{
-			$settings 		= \Typemill\Settings::getUserSettings();
+			$userSettings 	= \Typemill\Settings::getUserSettings();
 			$pluginSettings	= array();
-			$params 		= $request->getParams();
+			$userInput 		= $request->getParams();
 			$validate		= new Validation();
-					
+
 			/* use the stored user settings and iterate over all original plugin settings, so we do not forget any... */
-			foreach($settings['plugins'] as $pluginName => $pluginUserSettings)
+			foreach($userSettings['plugins'] as $pluginName => $pluginUserSettings)
 			{
 				/* if there are no input-data for this plugin, then use the stored plugin settings */
-				if(!isset($params[$pluginName]))
+				if(!isset($userInput[$pluginName]))
 				{
 					$pluginSettings[$pluginName] = $pluginUserSettings;
 				}
 				else
 				{
-					/* now fetch the original plugin settings from the plugin folder to get the field definitions */
-					$pluginOriginalSettings = \Typemill\Settings::getPluginSettings($pluginName);
-					
-					if($pluginOriginalSettings)
-					{
-						/* take the user input data and iterate over all fields and values */
-						foreach($params[$pluginName] as $fieldName => $fieldValue)
-						{
-							/* get the corresponding field definition from original plugin settings */
-							$fieldDefinition = isset($pluginOriginalSettings['forms']['fields'][$fieldName]) ? $pluginOriginalSettings['forms']['fields'][$fieldName] : false;
-							if($fieldDefinition)
-							{
-								/* validate user input for this field */
-								$validate->pluginField($fieldName, $fieldValue, $pluginName, $fieldDefinition);
-							}
-							if(!$fieldDefinition && $fieldName != 'active')
-							{
-								$_SESSION['errors'][$pluginName][$fieldName] = 'This field is not defined in the plugin!';
-							}
-						}
-					}
-					
+					/* validate the user-input */
+					$this->validateInput('plugins', $pluginName, $userInput[$pluginName], $validate);
+										
 					/* use the input data */
-					$pluginSettings[$pluginName] = $params[$pluginName];
+					$pluginSettings[$pluginName] = $userInput[$pluginName];
 				}
 				
 				/* deactivate the plugin, if there is no active flag */
-				if(!isset($params[$pluginName]['active']))
+				if(!isset($userInput[$pluginName]['active']))
 				{
 					$pluginSettings[$pluginName]['active'] = false;
 				}
 			}
-						
+
 			if(isset($_SESSION['errors']))
 			{
 				$this->c->flash->addMessage('error', 'Please correct the errors below');
@@ -366,10 +314,10 @@ class SettingsController extends Controller
 			else
 			{
 				/* if everything is valid, add plugin settings to base settings again */
-				$settings['plugins'] = $pluginSettings;
+				$userSettings['plugins'] = $pluginSettings;
 				
 				/* store updated settings */
-				\Typemill\Settings::updateSettings($settings);
+				\Typemill\Settings::updateSettings($userSettings);
 
 				$this->c->flash->addMessage('info', 'Settings are stored');
 			}
@@ -378,7 +326,31 @@ class SettingsController extends Controller
 		}
 	}
 
-	
+	private function validateInput($objectType, $objectName, $userInput, $validate)
+	{
+		/* fetch the original settings from the folder (plugin or theme) to get the field definitions */
+		$originalSettings = \Typemill\Settings::getObjectSettings($objectType, $objectName);
+
+		if($originalSettings)
+		{
+			/* take the user input data and iterate over all fields and values */
+			foreach($userInput as $fieldName => $fieldValue)
+			{
+				/* get the corresponding field definition from original plugin settings */
+				$fieldDefinition = isset($originalSettings['forms']['fields'][$fieldName]) ? $originalSettings['forms']['fields'][$fieldName] : false;
+				if($fieldDefinition)
+				{
+					/* validate user input for this field */
+					$validate->objectField($fieldName, $fieldValue, $objectName, $fieldDefinition);
+				}
+				if(!$fieldDefinition && $fieldName != 'active')
+				{
+					$_SESSION['errors'][$objectName][$fieldName] = 'This field is not defined!';
+				}				
+			}
+		}
+	}
+		
 	/***********************
 	**   USER MANAGEMENT  **
 	***********************/

@@ -15,7 +15,15 @@ if($settings['settings']['setup'])
 }
 else
 {
-	$app->get('/setup', AuthController::class . ':redirect');
+	$app->get('/setup', AuthController::class . ':redirect');	
+}
+if($settings['settings']['welcome'])
+{
+	$app->get('/setup/welcome', SetupController::class . ':welcome')->setName('setup.welcome')->add(new RedirectIfUnauthenticated($container['router'], $container['flash']));
+}
+else
+{
+	$app->get('/setup/welcome', AuthController::class . ':redirect')->setName('setup.welcome');	
 }
 
 $app->get('/tm-author', AuthController::class . ':redirect');

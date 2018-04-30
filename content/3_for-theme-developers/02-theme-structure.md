@@ -2,12 +2,23 @@
 
 TYPEMILL requires a minimal structure and a small set of mandatory files:
 
+````
+/myTheme
+- 404.twig
+- index.twig
+- cover.twig
+- myTheme.jpg
+- myTheme.yaml
+````
+
+Some Details:
+
 - **/myTheme**: A theme folder. The name of the folder is the name of the theme.
-  - **404.twig**: The template for a not found page. It is mandatory.
-  - **index.twig**: The template for all other pages. It is mandatory.
-  - **cover.twig**: The template for a different startpage-design. It is optional.
-  - **myTheme.jpg**: A preview picture of your theme. It is mandatory. The file must be named exactly like the theme folder. Minimum width is 800px.
-  - **myTheme.yaml**: A configuration file for your theme with author, version number and others. This is not mandatory, but highly recommended. The file must be named exactly like the theme folder.
+- **404.twig**: The template for a not found page. It is mandatory.
+- **index.twig**: The template for all other pages. It is mandatory.
+- **cover.twig**: The template for a different startpage-design. It is optional.
+- **myTheme.jpg**: A preview picture of your theme. It is mandatory. The file must be named exactly like the theme folder. Minimum width is 800px.
+- **myTheme.yaml**: A configuration file for your theme with author, version number and others. This is not mandatory, but highly recommended. The file must be named exactly like the theme folder.
 
 That's it.
 

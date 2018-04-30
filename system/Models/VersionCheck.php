@@ -20,6 +20,6 @@ class VersionCheck
 			return false;
 		}
 		$version = json_decode($version);
-		return $version->version;		
+		return $version->system->typemill;		
 	}
 }

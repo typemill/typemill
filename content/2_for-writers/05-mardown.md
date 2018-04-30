@@ -8,7 +8,7 @@ Never heard of Markdown? Markdown is  very similar to the markup used by Wikiped
 
 Today, Markdown is a standard formatting language used by a lot of technology platforms like GitHub or StackOverflow. And Markdown is also entering the non technical mainstream. The press releases of dpa are written in Markdown, for example.
 
-Markdown uses some special chars like `#` or `-` to format a text. A short example: 
+Markdown uses some special characters like `#` or `-` to format a text. A short example: 
 
 ````
 # My first level headline
@@ -27,7 +27,7 @@ There are some good reasons for the rise of Markdown:
 - Different to proprietary formats like word.docx, the Markdown syntax is universal and not bound to a special text software.
 - You can use the most simple text editor (e.g. the "editor" of microsoft office) or a special Markdown editor like Typora to create Markdown files.
 - Markdown can be transformed into a valid HTML document easily.
-- Compared to the well known WISYWIG HTML editors (e.g. used by WordPress), Markdown is less hacky and the content is more reusable.
+- Compared to the well known WISYWIG HTML editors (e.g. used by WordPress), Markdown is less hacky, more secure and the content is more reusable.
 
 There are also some disadvantages:
 
@@ -76,7 +76,7 @@ Just use the character `#` for headlines like this:
 
 ### Lists
 
-To create an unordered `-` or ordered `1.` list, just follow your intuition:
+To create an unordered `-` / `*`or ordered `1.` list, just follow your intuition:
 
 ````
 This is an unordered list: 
@@ -85,7 +85,13 @@ This is an unordered list:
 - Another item
 - Last item
 
-And this is an ordred list: 
+You can write it this way:
+
+* Item
+* Another item
+* Last item
+
+And this is an ordered list: 
 
 1. Item 1
 2. Item 2
@@ -134,7 +140,7 @@ Images look similar to links, simply add an ! like this:
 
 ### Code (inline)
 
-To create a inline code, just use the ` sign like this:
+To create inline code, just use the ` sign like this:
 
 ````
 Inline code `<?php echo 'hello world!'; ?>` within a sentence.
@@ -161,4 +167,4 @@ As of version 1.0.5 you can use the tag `[TOC]` to create a table of contents. S
 
 ### Advanced Formats
 
-With enhancements like Markdown Extra you can also create more complex formats like tables, abbreviations, footnotes and special attributes. TYPEMILL supports Markdown Extra, so just check the [specification of Markdown Extra](https://michelf.ca/projects/php-markdown/extra/) if you want to use these kind of formats.
+You can also create more complex formats like tables, abbreviations, footnotes and special attributes.  Just check the [specification of Markdown Extra](https://michelf.ca/projects/php-markdown/extra/) if you want to use these kind of formats.

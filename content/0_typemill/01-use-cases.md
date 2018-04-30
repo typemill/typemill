@@ -1,20 +1,21 @@
 # Use Cases
 
-Whenever you want to publish a finished text work as a website, then TYPEMILL is a smart and lightweight solution. Possible use cases are ...
+Whenever you want to publish a finished text work as a website and if you like writing with Markdown, then TYPEMILL is a smart and lightweight solution. Possible use cases are ...
 
-- a book
-- a drama
-- a lyric collection
-- a whitepaper
 - a documentation
-- a manual or user guide
+- a manual
+- a user guide
+- a whitepaper
 - a handbook
 - a tutorial
 - a study
+- a book
+- a drama
+- a lyric collection
 - a collection of articles
 
-TYPEMILL is not a full blown Content Management System (CMS). It has no admin panel and it does not support any content creation right now. Instead, it takes some existing markdown files and generates a beautiful website. 
+If you want to create a blog, a wiki or a classic corporate website, please use a specialized CMS for that instead of TYPEMILL.
 
-Use your favourite text or markdown editor (e.g. Typora) to create markdown files and upload them with a FTP software (e.g. FileZilla) to your server.
+TYPEMILL is under heavy developement and not finished right now. It has an admin panel for settings, but it does not provide an online content editor at the moment. An online editor and different output formats like mobi and ePup are on the roadmap, so stay tuned.
 
-TYPEMILL is not the right solution, if you want to create a blog, a wiki or any website with an author interface. But it is a smart solution to publish any text work based on markdown files.
+For time being, you can use an offline markdown-editor like Typora and upload your content-files with a FTP software like FileZilla.

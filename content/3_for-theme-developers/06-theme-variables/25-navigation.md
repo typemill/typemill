@@ -2,7 +2,7 @@
 
 The variable `{{ navigation }}` represents the structure of the whole content folder and can be used to create a navigation. 
 
-The `{{ navigation }}` variable is a multidimensional array of item objects. So you have access to nearly all informations, that an item object provides. Only the following informations for the paging is not part of the item objects within the navigation variable:
+The `{{ navigation }}` variable is a multi dimensional array of item objects. With that array you have access to nearly all informations, that an item object provides. Only the following informations for the paging is not part of the item objects within the navigation variable:
 
 - thisChapter
 - nextItem
@@ -93,7 +93,7 @@ The whole usecase with the macro and the navigation in one template looks like t
             {{ macros.loop_over(navigation) }}
         </ul>
     </nav>
-Just as a recommendation for your theme-structure: Typically you create a separate file like `navigation.twig`  with all the code above. Then you place this template in a folder like `partials`. You can include this navigation.twig-file in a `layout.twig` file, so that the navigation is included in all websites of your theme. So the structure might look like this:
+Just as a recommendation for your theme-structure: Typically you create a separate file like `navigation.twig`  with all the code above. Then you place this template in a folder like `partials`. You can include this navigation-file in a `layout.twig` file, so that the navigation is included in all pages of your theme. So the structure might look like this:
 
 - theme
   - partials

@@ -2,7 +2,7 @@
 *  		HELPERS		  *
 **********************/
 
-a, a:link, a:visited, a:focus, a:hover, a:active, button, .button, input, .control-group, .sidebar-menu, .menu-action{
+a, a:link, a:visited, a:focus, a:hover, a:active, button, .button, input, .control-group, .sidebar-menu, .menu-action, .button-arrow{
 	-webkit-transition: all 0.2s ease;
 	-moz-transition: all 0.2s ease;
 	-o-transition: all 0.2s ease;
@@ -196,7 +196,8 @@ aside.sidebar{
 	padding: 0px 20px;
 	overflow: hidden;
 	box-sizing: border-box;
-	font-size: 0.9em;	
+	font-size: 0.9em;
+	text-align: center;
 }
 .sidebar-menu.expand{
 	max-height: 500px;
@@ -209,28 +210,32 @@ aside.sidebar{
 	line-height: 40px;
 	text-transform: uppercase;
 	font-weight: 300;
-	
-	background-image:
-		linear-gradient(45deg, transparent 50%, #444 50%),
-		linear-gradient(135deg, #444 50%, transparent 50%),
-		linear-gradient(to right, #fff, #fff);
-	background-position:
-		calc(50% + 30px) calc(1em + 2px),
-		calc(50% + 35px) calc(1em + 2px),
-		100% 0;
-	background-size: 
-		5px 5px,
-		5px 5px,
-		2.8em 2.8em;
-	background-repeat: no-repeat;
 	cursor: pointer;	
 }
-.expand .menu-action{
-	background-image:
-		linear-gradient(135deg, transparent 50%, #444 50%),
-		linear-gradient(45deg, #444 50%, transparent 50%),
-		linear-gradient(to right, #fff, #fff);	
+
+.button-arrow{
+  width: 0; 
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-top: 5px solid #000;
+  display:inline-block;
+  margin-left: 5px;
 }
+.active .button-arrow{
+	border-top: 5px solid #fff;
+}
+.expand .button-arrow{
+  border-bottom: 5px solid #000;
+  border-top: 0px solid transparent;
+  margin-bottom: 5px;
+}
+.expand.active .button-arrow{	
+	border-bottom: 5px solid #fff;
+}
+
+
 ul.menu-list{
 	list-style: none;
 	margin:5px 0 30px;
@@ -241,23 +246,28 @@ li.menu-item{
 	margin: 8px 0;	
 }
 .menu-item a, .menu-item a:link, .menu-item a:visited{
+	background: #f9f8f6;
+	width: 100%;
+	box-sizing: border-box;
+	display: inline-block;	
 	text-decoration: none;
 	color: #444;
-	padding: 0px 10px;
-	display: inline-block;
-	line-height: 2px;
-	width: auto;
-	height: 0; 
-	border-top: 8px solid transparent;
-	border-bottom: 8px solid transparent; 
-	border-left: 10px solid white;
+	border: 1px solid #eee;
 	border-radius: 3px;
+	line-height: 2.3em;
+	
+//	padding: 0px 10px;
+//	line-height: 2px;
+//	width: auto;
+//	height: 0; 
+//	border-top: 8px solid transparent;
+//	border-bottom: 8px solid transparent; 
+//	border-left: 10px solid white;
 }
 .menu-item a:hover, .menu-item a:focus, .menu-item a:active, .menu-item a.active{
-	border-left: 10px solid #e0474c;
-}
-.menu-item a.active{
-	color: #e0474c;
+	color: #fff;
+	background: #e0474c;
+//	border-left: 10px solid #e0474c;
 }
 
 /*************
@@ -328,11 +338,11 @@ ul.userlist{
 li.row{
 	display: inline-block;
 	width: 100%;
-	background: #f9f8f6;
 	box-sizing: border-box;
 }
 li.row ul{
-	margin: 0px;
+	background: #f9f8f6;
+	margin: 5px 0;
 	padding: 0px;
 	width: 100%;
 }
@@ -462,7 +472,7 @@ fieldset{
 	padding: 0;	
 }
 .large, .medium, .small{
-	padding: 18px 20px;
+	padding: 18px 0px;
 	box-sizing:border-box;
 	vertical-align: top;
 }
@@ -529,9 +539,9 @@ button,input[type="submit"]:hover{
 ** CARDS		**
 *****************/
 
-.settings header
+header.headline
 {
-	padding: 0px 20px;
+	padding: 0px 0px;
 }
 .userlist a, .userlist a:link, .userlist a:visited{
 	color: #e0474c;
@@ -547,7 +557,7 @@ a.button{
 fieldset.card{
 	width: 100%;
 	display: inline-block;
-	padding: 15px 20px;
+	padding: 15px 0px;
 	box-sizing: border-box;
 	vertical-align: top;
 }
@@ -556,6 +566,7 @@ fieldset.card{
 }
 .cardInner{
 	box-sizing: border-box;
+	position: relative;
 }
 .cardHead h2{
 	padding: 5px 20px 0;
@@ -566,6 +577,7 @@ fieldset.card{
 }
 .cardHead header{
 	width: 100%;
+	height: 52px;
 	display: inline-block;
 	box-sizing: border-box;
 }
@@ -669,6 +681,40 @@ ul.cardInfo{
 .card img{
 	width: 100%;
 }
+.update-banner{
+	display: none;
+	position: absolute;
+	right: 0;
+	width: 0; 
+	height: 0; 
+	border-top: 100px solid #e0474c;
+	border-bottom: 100px solid transparent;
+	border-left: 100px solid transparent;	
+}
+.settings .update-banner{
+	top: 0px;
+}
+.plugins .update-banner{
+	top: 52px;	
+}
+.update-banner.show-banner{
+	display: block;
+}
+.update-banner span{
+	position: absolute;
+	top: -85px;
+	left: -55px;
+	text-align: center;
+	font-size: 0.9em;
+	transform: rotate(45deg);
+	display: block;
+	color: #fff;	
+}
+.update-banner a{
+	color: #fff;
+	text-decoration: none;
+}
+
 
 /*
 ** SELECT BUTTON
@@ -990,6 +1036,12 @@ span.error{
 }	
 
 @media only screen and (min-width: 600px) {
+	header.headline{
+		padding: 0px 20px;
+	}
+	.large, .medium, .small{
+		padding: 18px 20px;
+	}
 	form .medium{
 		width: 49.5%;
 		display: inline-block;
@@ -997,6 +1049,9 @@ span.error{
 	form .small{
 		width: 33.3%;
 		display: inline-block;
+	}
+	fieldset.card{
+		padding: 15px 20px;
 	}
 	.settings .medium a.button{
 		display: inline-block;
@@ -1041,6 +1096,7 @@ span.error{
 		overflow: hidden;
 		box-sizing: border-box;
 		font-size: 1em;
+		text-align: left;
 	}
 	.menu-action{
 		display: none;
@@ -1049,6 +1105,22 @@ span.error{
 	}
 	ul.menu-list{
 		margin:5px 0 50px;
+	}
+	.menu-item a, .menu-item a:link, .menu-item a:visited{
+		background: transparent;
+		width: auto;		
+		height: 0; 
+		padding: 0px 10px;
+		line-height: 2px;
+		border-top: 8px solid transparent;
+		border-bottom: 8px solid transparent; 
+		border-left: 10px solid white;
+	}
+	.menu-item a:hover, .menu-item a:focus, .menu-item a:active, .menu-item a.active{
+		color: #fff;
+		color: #e0474c;
+		background: transparent;
+		border-left: 10px solid #e0474c;
 	}
 	.card .medium{
 		padding: 0px 20px;
@@ -1060,6 +1132,9 @@ span.error{
 	.card .medium input[type="submit"]{
 		margin-top: 10px;
 		margin-bottom: 40px;
+	}
+	li.row ul{
+		margin: 0px;
 	}
 	.col.username,.col.email,.col.userrole{
 		width: 30%;
