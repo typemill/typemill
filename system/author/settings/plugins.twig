@@ -41,7 +41,7 @@
 						
 							{% for field in plugin.forms.fields %}
 								
-								{% include '/partials/forms.twig' with {'itemName' : pluginName } %}
+								{% include '/partials/forms.twig' with {'itemName' : pluginName, 'object' : 'plugins' } %}
 								
 							{% endfor %}
 							

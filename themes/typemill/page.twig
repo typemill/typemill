@@ -7,7 +7,11 @@
 {{ content }}
 
 {% if settings.themes.typemill.modified %}	
-	<small>{{ settings.themes.typemill.modifiedText }}: {{ item.modified|date(settings.themes.typemill.modifiedFormat) }}</small>
+	<p><small>{{ settings.themes.typemill.modifiedText }}: {{ item.modified|date(settings.themes.typemill.modifiedFormat) }}</small></p>
+{% endif %}
+
+{% if settings.themes.typemill.social %}	
+	{% include 'partials/share.twig' with {'share' : settings.themes.typemill.socialbuttons } %}
 {% endif %}
 	
 {% if item.prevItem or item.nextItem %}

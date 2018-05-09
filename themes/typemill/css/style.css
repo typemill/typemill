@@ -47,7 +47,7 @@ a.readMore:focus, a.readMore:hover, a.readMore:active{
 }
 pre,code{ color: #333; background: #f9f8f6; }
 pre{ border-left: 4px solid #e0474c;	}
-.hljs{ background: transparent; }
+code.hljs{ background: transparent; }
 .TOC li:before{ color: #bbb; }
 
 /********************
@@ -201,7 +201,7 @@ header p{
 *  		COVER		    *
 ************************/
 .cover h1{ 
-	font-size: 3em; 
+	font-size: 2.5em; 
 	font-weight: 700;
 }
 .cover .lead{
@@ -269,7 +269,7 @@ header p{
     box-sizing: border-box;
 }
 .toc-nav li.level-1{
-	padding-left: 15px;
+	padding-left: 0px;
 	text-transform: uppercase;
 	margin: 15px 0 5px;
 	font-weight: 700;	
@@ -569,14 +569,74 @@ li.h2, li.h3, li.h4, li.h5, li.h6
 	text-decoration: underline;
 }
 
+/************************
+*  		GitHub Ribbon	*
+************************/
 
+.share-box{
+	width:100%;
+	display: inline-block;
+	vertical-align:top;
+	box-sizing:border-box;
+	background: transparent;
+	overflow:hidden;
+	height: auto;
+}
+.share-button{
+	display:inline-block;
+	height: auto;
+	text-align: center;
+}
+.grid-1 .share-button{ width: 100%; }
+.grid-2 .share-button{ width: 49.7%; }
+.grid-3 .share-button{ width: 33.2%; }
+.grid-4 .share-button{ width: 24.9%; }
+.grid-5 .share-button{ width: 19.9%; }
+.grid-6 .share-button{ width: 16.5%; }
+.share-button a,.share-button a:link,.share-button a:visited{
+	display: block;
+	width: 100%;
+	background: transparent;
+	color: #fff;
+	font-size: 1.3em;
+	line-height: 1.7em;
+}
+.share-button.twitter a{
+	background:#C8E0EF;
+}
+.share-button.twitter a:hover{
+	background:#1DA1F2;
+}
+.share-button.facebook a{
+	background:#CDD3DE;
+}
+.share-button.facebook a:hover{
+	background: #3B5998;
+}
+.share-button.xing a{
+	background: #E8EBC3;
+}
+.share-button.xing a:hover{
+	background: #cfdc00;
+}
+
+/* for test only */
+
+img.imgClass{
+	width: auto;
+	max-width: 100px;
+	display: block;
+}
+img.myClass{
+	border: 4px solid #e0474c;
+}
 
 /************************
 *  		RESPONSIVE		*
 ************************/
 @media only screen and (min-width: 360px) {
 	.cover h1{ 
-		font-size: 4em; 
+		font-size: 3em; 
 	}
 	h1{
 		margin: 1.6em 0 0.6em;
@@ -586,6 +646,9 @@ li.h2, li.h3, li.h4, li.h5, li.h6
 	}
 }
 @media only screen and (min-width: 600px) {
+	.cover h1{ 
+		font-size: 4em; 
+	}
 	.github{
 		position:absolute;
 		display:block;

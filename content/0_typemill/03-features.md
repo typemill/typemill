@@ -7,7 +7,8 @@ This is what you can **do with TYPEMILL**:
 - Create a website with simple files and folders.
 - Use markdown for your content files.
 - Use an admin panel to configure your site.
-- Choose themes and activate plugins.
+- Choose themes.
+- Activate plugins. Check the [list of plugins](/writers/plugins) for that.
 - Create your own theme with HTML, CSS and Twig (a template language for PHP).
 - Create your own plugins with PHP.
 

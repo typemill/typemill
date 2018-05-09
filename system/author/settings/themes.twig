@@ -42,7 +42,7 @@
 								
 									{% for field in theme.forms.fields %}
 
-										{% include '/partials/forms.twig' with {'itemName' : themeName } %}
+										{% include '/partials/forms.twig' with {'itemName' : themeName, 'object' : 'themes' } %}
 								
 									{% endfor %}
 								

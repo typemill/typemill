@@ -1,5 +1,5 @@
 ﻿name: Typemill Theme
-version: 1.0.5
+version: 1.0.6
 description: The standard theme for Typemill. Responsive, minimal and without any dependencies. It uses the system fonts Calibri and Helvetica. JavaScript is only used for code highlighting. Skip it, if you don't need it. 
 author: Sebastian Schürmanns
 homepage: http://typemill.net
@@ -44,3 +44,16 @@ forms:
       options:
         'm/d/Y': 01/20/2020
         'd.m.Y': 20.01.2020
+
+    social:
+      type: checkbox
+      label: Share Links
+      description: Activate Share Links On Page?
+
+    socialbuttons:
+      type: checkboxlist
+      label: Select Share buttons
+      options:
+        facebook: Facebook
+        twitter: Twitter
+        xing: Xing

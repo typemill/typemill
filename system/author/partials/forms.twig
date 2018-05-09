@@ -24,7 +24,7 @@
 			{% for value,label in options %}
 				
 				<label class="control-group">{{ label }}
-					<input type="checkbox" name="{{ itemName }}[{{ field.name }}]" value="{{value}}" {{ (value == settings.plugins[itemName][field.name]) ? ' checked' : '' }}>
+					<input type="checkbox" name="{{ itemName }}[{{ field.name }}][{{value}}]" {{ settings[object][itemName][field.name][value] ? ' checked' : '' }}>
 					<span class="checkmark"></span>
 				</label>
 
@@ -47,7 +47,7 @@
 			{% for value,label in options %}
 				
 				<label class="control-group">{{ label }} 
-					<input type="radio" name="{{ itemName }}[{{ field.name }}]" value="{{ value }}" {{ (value == settings.plugins[itemName][field.name]) ? ' checked' : '' }}>
+					<input type="radio" name="{{ itemName }}[{{ field.name }}]" value="{{ value }}" {{ (value == settings[object][itemName][field.name]) ? ' checked' : '' }}>
 					<span class="radiomark"></span>
 				</label>
 

@@ -41,7 +41,7 @@ class Settings
 			'userPath'								=> $rootPath . 'settings' . DIRECTORY_SEPARATOR . 'users',
 			'authorPath'							=> __DIR__ . DIRECTORY_SEPARATOR . 'author' . DIRECTORY_SEPARATOR,
 			'contentFolder'							=> 'content',
-			'version'								=> '1.1.4',
+			'version'								=> '1.1.5',
 			'setup'									=> true,
 			'welcome'								=> true
 		];

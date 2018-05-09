@@ -1,0 +1,11 @@
+	<div class="share-box grid-{{ share|length }}">
+		{% if share.twitter %}
+			<div class="share-button twitter">
+				<a href="https://twitter.com/intent/tweet?source=webclient&text='{{ title|url_encode }}:{{ description|url_encode }}&url={{ item.urlAbs }}" target="_blank"><i class="icon-twitter"></i></a>
+			</div>{% endif %}{% if share.facebook %}<div class="share-button facebook">
+				<a href="https://facebook.com/sharer/sharer.php?u={{ item.urlAbs }}&t={{ title|url_encode }}" target="_blank"><i class="icon-facebook"></i></a>
+			</div>{% endif %}{% if share.xing %}<div class="share-button xing">
+				<a href="https://www.xing.com/spi/shares/new?url={{ item.urlAbs }}" target="_blank"><i class="icon-xing"></i></a>
+			</div>
+		{% endif %}
+	</div>

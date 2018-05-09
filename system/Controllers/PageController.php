@@ -119,7 +119,7 @@ class PageController extends Controller
 		}
 		
 		$contentMD = $this->c->dispatcher->dispatch('onMarkdownLoaded', new OnMarkdownLoaded($contentMD))->getData();
-				
+			
 		/* initialize parsedown */
 		$parsedown 		= new ParsedownExtension();
 

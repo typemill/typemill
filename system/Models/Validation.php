@@ -151,7 +151,7 @@ class Validation
 	}
 
 	/**
-	* validation for basic settings input
+	* validation for system settings
 	* 
 	* @param array $params with form data.
 	* @return obj $v the validation object passed to a result method.
@@ -173,7 +173,17 @@ class Validation
 		return $this->validationResult($v, $name);
 	}
 	
-	public function objectField($fieldName, $fieldValue, $pluginName, $fieldDefinitions)
+	/**
+	* validation for dynamic settings (themes and plugins)
+	* 
+	* @param string $fieldName with the name of the field.
+	* @param array or string $fieldValue with the values of the field.
+	* @param string $objectName with the name of the plugin or theme.
+	* @param array $fieldDefinitions with the field definitions as multi-dimensional array.
+	* @return obj $v the validation object passed to a result method.
+	*/
+	
+	public function objectField($fieldName, $fieldValue, $objectName, $fieldDefinitions)
 	{	
 		$v = new Validator(array($fieldName => $fieldValue));
 
@@ -192,9 +202,18 @@ class Validation
 				$v->rule('in', $fieldName, $options);
 				break;
 			case "radio":
-			case "checkboxlist":
 				$v->rule('in', $fieldName, $fieldDefinitions['options']);
 				break;
+			case "checkboxlist":				
+				/* create array with option keys as value */
+				$options = array();
+				foreach($fieldDefinitions['options'] as $key => $value){ $options[] = $key; }
+				/* loop over input values and check, if the options of the field definitions (options for checkboxlist) contains the key (input from user, key is used as value, value is used as label) */
+				foreach($fieldValue as $key => $value)
+				{
+					$v->rule('in', $key, $options);
+				}
+				break;				
 			case "color":
 				$v->rule('regex', $fieldName, '/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/');
 				break;
@@ -225,7 +244,7 @@ class Validation
 				$v->rule('regex', $fieldName, '/^[\pL0-9_ \-]*$/u');				
 		}
 		
-		return $this->validationResult($v, $pluginName);
+		return $this->validationResult($v, $objectName);
 	}
 	
 	/**
