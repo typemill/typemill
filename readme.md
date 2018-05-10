@@ -1,16 +1,26 @@
 # About TYPEMILL
 
-TYPEMILL is a small system to create a website based on Markdown files. It is perfect for web books, online manuals or documentations.
-
-To create a website, simply add your Markdown files to the content folder of TYPEMILL. TYPEMILL will take your files and folders and create a website with a corresponding navigation.
-
-TYPEMILL is a lightweight tool for writers, who do not want to fiddle around with complicated technology. If you are a developer, you can easily craft your own theme based on the template language Twig.
+TYPEMILL is a small flat file cms designed for writers. It creates websites based on markdown files and can be used for manuals, documentations, web-books and similar publications. The website http://typemill.net itself is an example-website for TYPEMILL.
 
 ![TYPEMILL Screenshot](/themes/typemill/typemill.jpg)
 
-## Documentation
+## Features
 
-You can read the full documentation for writers and developers on the [TYPEMILL website](http://typemill.net).
+* Creates a website based on markdown files.
+* Ships with a fully responsive standard theme.
+* Works with a natural folder and file structure (like on your file-system).
+* Creates a navigation, a breadcrumb and a pagination based on your file structure.
+* Creates chapter numbers.
+* Creates SEO-friendly urls.
+* Supports configurable themes and plugins.
+* Provides an author panel to configure the system, the themes and the plugins.
+* Creates and manages users.
+* Online editing is on its way (for time beeing upload markdown files).
+* Markdown supports table of contents (TOC), tables, footnotes, abbreviations and definition lists.
+* Supports MathJax and KaTeX (plugin).
+* Supports code highlighting (plugin).
+* Supports Matomo/Piwik and Google Analytics (plugin).
+* Supports Cookie Consent (plugin).
 
 ## Installation
 
@@ -18,26 +28,28 @@ Download TYPEMILL from the [TYPEMILL website](http://typemill.net) or clone this
 
     git clone git://github.com/trendschau/typemill.git
 
-Then open your command line, go to your fresh TYPEMILL folder and update the libraries with composer:
+The GitHub-version has no vendor-folder, so you have to update and include all libraries and dependencies with composer. To do so, open your command line, go to your TYPEMILL folder and type:
 
     composer update
 If you did not use composer before, please go to the [composer website](http://getcomposer.org) and start to learn.
 
 To run TYPEMILL **live**, simply upload the files to your server.
 
+## Setup
+
+Please go to `your-typemill-website.com/setup`, create an initial user and then setup your system in the author panel. 
+
+##Login
+
+You can find your login screen under `/tm-author/login` or simply go to `/setup` and you will be redirected to the login-page. 
+
 ## Requirements
 
 Your server should run with PHP 5.6 or newer. No database is required.
 
-## Setup
+## Documentation
 
-To setup TYPEMILL, please visit yourdomain.com/setup and fill out the forms.  
-
-You can also setup TYPEMILL manually: Go to the settings folder, copy the file `settings.yaml.example` and rename it to `settings.yaml`. Then open the file and edit the settings manually.
-
-It is recommended to setup your TYPEMILL website before you push it live, because the setup url is open to everybody. After the first setup, the setup url is not active anymore.
-
-Please read the full documentation on the [TYPEMILL website](http://typemill.net).
+You can read the full documentation for writers, for theme developers and for plugin developers on the [TYPEMILL website](http://typemill.net).
 
 ## Contribute
 
