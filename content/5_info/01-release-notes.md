@@ -2,7 +2,24 @@
 
 This is the version history with some release notes.
 
-## Version 1.1.4 (30.04.2018)
+## Version 1.1.5: Typemill Learns Math
+
+_Release date: 10.05.2018_
+
+**Please follow the instructions for minor updates** in the [documentation](/gettings-started/update). Please also update the Typemill theme and the plugins.
+
+With version 1.1.5 Typemill learns math. There is a plugin called "math" that you can activate in the author panel. you can choose between MathJax and KaTeX. For the syntax to write math in markdown, please check the [markdown reference page](/info/markdown-test). Here are the details of this version:
+
+* Extend markdown to support latex syntax.
+* New plugin to activate MathJax or KaTeX.
+* Highlight for code blocks is now a plugin.
+* Share buttons for twitter, facebook and xing can be added to the TYPEMILL theme.
+* Optimized mobile startpage.
+* Table of content has now permanent ids and anchors (headline) instead of dynamic numbers. 
+
+## Version 1.1.4: Refactoring
+
+_Release date:  (30.04.2018)_
 
 **Please follow the instructions for minor updates** in the [documentation](/gettings-started/update). Please update the Typemill theme, too.
 
@@ -21,7 +38,9 @@ Version 1.1.4 is mainly an optimization and refactoring of the author panel rele
 * Design is partly fixed and unified (open-close icons and more).
 * User documentation has been enhanced and corrected.
 
-## Version 1.1.3 (19.04.2018)
+## Version 1.1.3: The Author Panel
+
+_Release date:  19.04.2018_
 
 **Please follow the instructions for major updates** in the [documentation](/gettings-started/update).
 
@@ -33,7 +52,9 @@ Version 1.1.3 introduces an author panel. Now you can authenticate, configure th
 * User management (create update and deleted).
 * Bugfix: Footnotes in Markdown didn't work due to parsedown library. Fixed in the new library version.
 
-## Version 1.1.2 (15.03.2018)
+## Version 1.1.2: Improved Setup
+
+_Release Date:  15.03.2018_
 
 With version 1.1.2 we added the possibility to configure the theme in the setup a bit more. We also fixed a bug in the htaccess. So next to the "system"-folder, you should also update the theme-folder and the htaccess-file. As always, backup your settings.yaml-file, then delete it and setup your website again (visit /setup).
 
@@ -44,7 +65,11 @@ With version 1.1.2 we added the possibility to configure the theme in the setup 
 * Updated typemill theme accordingly
 * Bugfix: Index.php is not reachable anymore, prevents duplicate content. Please update htaccess-file. 
 
-## Version 1.1.1 (25.02.2018)
+## Version 1.1.1: Refactoring
+
+_Release date: 25.02.2018_
+
+Version 1.1.1 is mainly an improvement and some refactoring for the plugin release.
 
 * Added new plugin "analytics" for integration of Matomo/Piwik and Google Analytics.
 * Theme "TYPEMILL": Design refresh.
@@ -55,7 +80,9 @@ With version 1.1.2 we added the possibility to configure the theme in the setup 
 * Fixed error with static functions in settings (added declaration as static).
 * Added documentation for plugin developers.
 
-## Version 1.1.0 (05.02.2018)
+## Version 1.1.0: Introduce Plugins
+
+_Release date: 05.02.2018_
 
 Version 1.1.0 introduces plugins to typemill. And because of the GDPR, the first plugin is an implementation of the famous cookieconsent. So heads up, you can publish GDPR-compliant websites with typemill now! 
 
@@ -82,34 +109,48 @@ Also introduced with 1.1.0 :
 * Simple Asset Manager
 * Twig Extensions
 
-## Version 1.0.5 (30.11.2017)
+## Version 1.0.5: Table of Contents
+
+_Release date:  30.11.2017_
 
 - Improvement: Character encoding for the navigation has improved. You can try to use other characters than english for your file names now, but there is no garanty for it. If the characters do not work in the navigation, please use english characters only.
 - Improvement: A [TOC]-tag for generating a table of contents is now implemented. You can use the tag anywhere in your text-files, but please use a separate line for it. Update the theme for stylings.
 
-## Version 1.0.4 (17.11.2017)
+## Version 1.0.4: Bugfixes
+
+_Release date:  17.11.2017_
 
 - Bugfix: Settings file was generated after a page refresh, this is fixed now.
 - Improvement: Cleaned up the load and merge process for settings, managed in a new static class now.
 
-## Version 1.0.3 (14.11.2017)
+## Version 1.0.3: Getting Slim
+
+_Release date:  14.11.2017_
+
+Main improvement is a litte build process, that strips out all developer related files and reduces the size of typemill dramatically from 2.5 MB to less then 1 MB (gzipped).
 
 - Bugfix: Deleted a config-file in the download-version, that broke the setup url.
 - Improvement: Meta-title is now created with the first h1-headline in the content file. File-name is used as fall back. **Please update the theme-folder with the theme-folder of version 1.0.3!!!** This will improve SEO.
 - Improvement: Stripped out all developer files in the download-version. This reduced the size of the zip-download from 2.5 MB to 800kb.
 - Improvement: Changed Namespace from "System" to "Typemill".
 
-## Version 1.0.2 (02.07.2017)
+## Version 1.0.2: Bugfix
+
+_Release date:  02.07.2017_
 
 - Bugfix: The theme can now be changed in the yaml-file again.
 
-## Version 1.0.1 (01.05.2017)
+## Version 1.0.1: Google Sitemap
+
+_Release date: 01.05.2017_
 
 - Bugfix: Index file in the content folder won't break the building of the navigation tree anymore. 
 - New Feature: Added a google sitemap.xml in the cache folder.
 - New Feature: Added a version check, an update message can be displayed in theme now.
 
-## Version 1.0.0 (13.04.2017)
+## Version 1.0.0: Hello TYPEMILL!
+_Release date:  13.04.2017_
+
 The first alpha version of typemill with all basic features for a simple website:
 
 - **Content** with Markdown files and folders
