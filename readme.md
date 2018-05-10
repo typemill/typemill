@@ -1,4 +1,4 @@
-# About TYPEMILL
+ # About TYPEMILL
 
 TYPEMILL is a small flat file cms designed for writers. It creates websites based on markdown files and can be used for manuals, documentations, web-books and similar publications. The website http://typemill.net itself is an example-website for TYPEMILL.
 
@@ -39,7 +39,7 @@ To run TYPEMILL **live**, simply upload the files to your server.
 
 Please go to `your-typemill-website.com/setup`, create an initial user and then setup your system in the author panel. 
 
-##Login
+## Login
 
 You can find your login screen under `/tm-author/login` or simply go to `/setup` and you will be redirected to the login-page. 
 
