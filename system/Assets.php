@@ -47,12 +47,12 @@ class Assets
 	
 	public function renderCSS()
 	{
-		return implode('<br/>', $this->CSS) . implode('<br/>', $this->inlineCSS);
+		return implode('', $this->CSS) . implode('', $this->inlineCSS);
 	}
 	
 	public function renderJS()
 	{
-		return implode('<br/>', $this->JS) . '<br/>' . implode('<br/>', $this->inlineJS);
+		return implode('', $this->JS) . implode('', $this->inlineJS);
 	}
 
 	/**

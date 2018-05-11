@@ -161,7 +161,7 @@ header p{
 	overflow: hidden;
 }
 .open{
-	max-height: 1500px;
+	max-height: 2500px;
 	transition: max-height 0.25s ease-in;
 	overflow: hidden;
 }

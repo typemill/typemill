@@ -137,7 +137,7 @@
 	function getVersions(name, value)
 	{
 		var getPost 	= 'GET';
-		url 			= 'http://typemill.net/api/v1/checkversion?';
+		url 			= 'https://typemill.net/api/v1/checkversion?';
 		
 		if(name == 'plugins')
 		{

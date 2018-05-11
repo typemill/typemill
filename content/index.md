@@ -1,1 +1,1 @@
-TYPEMIL is a content management system for **writers** and their **text-work**. It plublishes markdown files as a website and it will help you to create online-based e-books in future. TYPEMILL is simple, lightweight and open source. Just download and start.
+TYPEMILL is a small flat file cms designed for **writers**. It creates websites based on markdown files and fits perfectly for text-works like studies, manuals or documentations. TYPEMILL is simple, lightweight and open source. Just download and start.
