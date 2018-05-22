@@ -1,14 +1,11 @@
-cache/structure.txt
-cache/sitemap.xml
-cache/lastSitemap.txt
-cache/stats.txt
+cache
 settings/settings.yaml
 settings/users
 plugins/admin
 plugins/demo
 plugins/disqus
+plugins/download
 plugins/finalwords
-plugins/share
 plugins/version
 system/vendor
 tests

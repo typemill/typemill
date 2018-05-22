@@ -66,4 +66,35 @@ forms:
 
 TYPEMILL will use these definitions and generate input fields for the author panel on the fly, so that the user can edit the values and customize the theme. If you have defined settings with the same name as the field name (e.g. `chapter`), then the input field in the author panel will automatically be prefilled with your settings from the YAML-file. 
 
-If you read the YAML-definition for input fields carefully, then you will notice that the definitions are pretty similar HTML: You simply define types and attributes like input-type, labels and placeholders. Nearly all valid field-types and field attributes are supported. You can find a detailed list in the [documentation for plugins](/plugin-developers/documentation/field-overview).
+If you have a lot of fields, you can even group some fields together in a fieldset like this:
+
+````
+forms:
+  fields:
+
+    chapter:
+      type: text
+      label: chapter
+      placeholder: Add Name for Chapter
+      required: true
+
+    MyFirstfieldset:
+      type: fieldset
+      legend: Last Modified
+      fields:
+
+        modified:
+          type: checkbox
+          label: Activate Last Modified
+          description: Show last modified date at the end of each page?
+
+        modifiedText:
+          type: text
+          label: Last Modified Text
+          placeholder: Last Updated
+
+````
+
+The fields `modified` and `modifiedText` will then be grouped in a fieldset with the legend `Last Modified`.
+
+If you read the YAML-definition for input fields carefully, then you will notice that the definitions are pretty similar to HTML: You simply define types and attributes like input-type, labels and placeholders. Nearly all valid field-types and field attributes are supported. You can find a detailed list in the [documentation for plugins](/plugin-developers/documentation/field-overview).

@@ -47,6 +47,7 @@ TYPEMILL accepts the following field type definitions:
 * textarea
 * tel
 * url
+* fieldset
 
 A simple field definition looks like this:
 
@@ -174,6 +175,38 @@ SimpleCheckbox:
   description: Please check me
 ````
 
+## Using Fieldsets
+
+If you have a lot of fields, you can group them togeter with a fieldset like this:
+
+````
+forms:
+  fields:
+
+    chapter:
+      type: text
+      label: chapter
+      placeholder: Add Name for Chapter
+      required: true
+
+    MyFirstfieldset:
+      type: fieldset
+      legend: Last Modified
+      fields:
+
+        modified:
+          type: checkbox
+          label: Activate Last Modified
+          description: Show last modified date at the end of each page?
+
+        modifiedText:
+          type: text
+          label: Last Modified Text
+          placeholder: Last Updated
+````
+
+The fields `modified` and `modifiedText` will then be grouped in a fieldset with the legend `Last Modified`.
+
 ## Example for a complete yaml configuration
 
 To sum it up, this is a complete example of a yaml configuration file for a plugin with the meta-description, a default value and a field definition for user input:
@@ -201,3 +234,4 @@ forms:
         block: Block
         classic: Classic
 ````
+

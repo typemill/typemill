@@ -3,14 +3,17 @@
     {% import _self as macros %}
 
     {% for element in navigation %}
+	
+		{% set depth = element.keyPathArray|length %}
+		
         {% if element.activeParent %}
-			<li class="{{ element.elementType }} level-{{ element.keyPathArray|length }} active parent">
+			<li class="{{ element.elementType }} level-{{ depth }} active parent">
 		{% elseif element.active %}
-			<li class="{{ element.elementType }} level-{{ element.keyPathArray|length }} active">
+			<li class="{{ element.elementType }} level-{{ depth }} active">
 		{% else %}
-			<li class="{{ element.elementType }} level-{{ element.keyPathArray|length }}">
+			<li class="{{ element.elementType }} level-{{ depth }}">
 		{% endif %}
-            {% if element.elementType == 'folder' %}
+            {% if (element.elementType == 'folder') %}
 				<a href="{{ element.urlAbs }}">{{ element.name|title }}</a>		
                 <ul>
                     {{ macros.loop_over(element.folderContent) }}

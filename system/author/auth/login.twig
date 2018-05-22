@@ -22,11 +22,18 @@
 						<span class="error">{{ errors.password | first }}</span>
 					{% endif %}
 				</div>
-			</fieldset>
+			</fieldset>			
 
-			<input type="submit" value="Login" />
-			{{ csrf_field() | raw }}
-					
+			<div class="loginarea" id="loginarea">			
+				<input type="submit" value="Login" id="loginbutton" class="loginbutton" />
+				{{ csrf_field() | raw }}
+				
+				{% if messages.time %}
+					<div id="counter" class="counter">wait <span id="wait">{{ messages.time }}</span> sec</div>
+					<div class="forgotpw"><a href="https://typemill.net/writers/forgot-password" target="_blank">Forgot password?</a></div>
+				{% endif %}			
+			</div>
+
 		</form>
 		
 	</div>

@@ -1,6 +1,6 @@
 # Settings
 
-As of Version 1.1.3 you can edit all settings in the new authoring panel of TYPEMILL. Just login to your typemill installation and go to settings. There you can edit:
+As of Version 1.1.3 you can edit all settings in the new authoring panel of TYPEMILL. Just visit the url `yourwebsite.com/tm/login` and go to settings after the login. There you can edit:
 
 * The system (basic settings).
 * Themes (choose themes and configure it).
@@ -18,3 +18,4 @@ displayErrorDetails: true
 ````
 
 Don't forget to set it back to `false` before you deploy the website live. It is not secure to show the world your internal errors and many hosters will turn off all public error reports by default.
+

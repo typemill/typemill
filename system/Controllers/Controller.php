@@ -20,6 +20,11 @@ abstract class Controller
 		$data = $this->c->dispatcher->dispatch('onPageReady', new OnPageReady($data))->getData();
 
 		unset($_SESSION['old']);
+		
+		$response = $response->withAddedHeader('X-Content-Type-Options', 'nosniff');
+		$response = $response->withAddedHeader('X-Frame-Options', 'SAMEORIGIN');
+		$response = $response->withAddedHeader('X-XSS-Protection', '1;mode=block');
+		
 		return $this->c->view->render($response, $route, $data);
 	}
 	

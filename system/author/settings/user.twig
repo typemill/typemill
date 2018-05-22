@@ -9,7 +9,7 @@
 		
 			<section id="user" class="settings">
 
-				<header>
+				<header class="headline">
 					<h1>Edit User</h1>
 				</header>
 				
@@ -32,17 +32,19 @@
 						{% endif %}
 					</div>
 
-					<div class="large{{ errors.userrole ? ' errors' : '' }}">
-						<label for="userrole">Role <abbr title="required">*</abbr></label>
-						<select name="userrole" required>
-							{% for role in userrole %}
-								<option value="{{ role }}"{% if (role == old.userrole or role == userdata.userrole) %} selected{% endif %}>{{ role }}</option>
-							{% endfor %}
-						</select>
-						{% if errors.userrole %}
-							<span class="error">{{ errors.userrole | first }}</span>
-						{% endif %}
-					</div>					
+					{% if is_role('administrator') %}
+						<div class="large{{ errors.userrole ? ' errors' : '' }}">
+							<label for="userrole">Role <abbr title="required">*</abbr></label>
+							<select name="userrole" required>
+								{% for role in userrole %}
+									<option value="{{ role }}"{% if (role == old.userrole or role == userdata.userrole) %} selected{% endif %}>{{ role }}</option>
+								{% endfor %}
+							</select>
+							{% if errors.userrole %}
+								<span class="error">{{ errors.userrole | first }}</span>
+							{% endif %}
+						</div>
+					{% endif %}
 					
 					<div class="large{{ errors.password ? ' errors' : '' }}">
 						<label for="password">Actual Password</label>

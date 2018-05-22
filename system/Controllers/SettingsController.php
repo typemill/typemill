@@ -90,7 +90,7 @@ class SettingsController extends Controller
 			if(isset($themeSettings['forms']['fields']))
 			{
 				$fields = $this->getFields($userSettings, 'themes', $themeName, $themeSettings);
-
+				
 				/* overwrite original theme form definitions with enhanced form objects */
 				$themedata[$themeName]['forms']['fields'] = $fields;
 			}
@@ -177,57 +177,73 @@ class SettingsController extends Controller
 		/* then iterate through the fields */
 		foreach($objectSettings['forms']['fields'] as $fieldName => $fieldConfigs)
 		{
-			/* and create a new field object with the field name and the field configurations. */
-			$field = new Field($fieldName, $fieldConfigs);
-			
-			/* you have to prefil the value for the field with default settings, user settings or old user-input from form */
-			$userValue = false;
-
-			/* first, add the default values from the original plugin or theme settings. Ignore checkboxes, otherwiese they might be always checked */
-			if(isset($objectSettings['settings'][$fieldName]))
+			if($fieldConfigs['type'] == 'fieldset')
 			{
-				$userValue = $objectSettings['settings'][$fieldName];
-			}
-						
-			/* now overwrite them with the local stored user settings */
-			if(isset($userSettings[$objectType][$objectName][$fieldName]))
-			{
-				$userValue = $userSettings[$objectType][$objectName][$fieldName];
-			}
-
-			/* overwrite it with old input in form, if exists */
-			if(isset($_SESSION['old'][$objectName][$fieldName]))
-			{
-				$userValue = $_SESSION['old'][$objectName][$fieldName];
-			}
-		
-			/* now we have set the uservalue for the field. Prepopulate the field object with it now */
-			if($field->getType() == "textarea")
-			{
-				if($userValue)
-				{
-					$field->setContent($userValue);
-				}
-			}
-			elseif($field->getType() == "checkbox")
-			{
-				/* needs special treatment, because field does not exist in settings if unchecked by user */
-				if(isset($userSettings[$objectType][$objectName][$fieldName]))
-				{
-					$field->setAttribute('checked', 'checked');
-				}
-				else
-				{
-					$field->unsetAttribute('checked');
-				}
+				/* Create an array for the subsettings of the fieldset with the same structure and data as the original settings array */
+				$subSettings 			= $objectSettings;
+				$subSettings['forms']	= $fieldConfigs;
+				
+				$fieldset 				= array();
+				$fieldset['type'] 		= 'fieldset';
+				$fieldset['legend']		= $fieldConfigs['legend'];
+				$fieldset['fields'] 	= $this->getFields($userSettings, $objectType, $objectName, $subSettings);
+ 				$fields[] 				= $fieldset;
 			}
 			else
 			{
-				$field->setAttributeValue('value', $userValue);	
-			}
+				/* and create a new field object with the field name and the field configurations. */
+				$field = new Field($fieldName, $fieldConfigs);
+				
+				/* you have to prefil the value for the field with default settings, user settings or old user-input from form */
+				$userValue = false;
 
-			/* add the field to the field-List with the plugin-name as key */
-			$fields[] = $field;
+				/* first, add the default values from the original plugin or theme settings. Ignore checkboxes, otherwiese they might be always checked */
+				if(isset($objectSettings['settings'][$fieldName]))
+				{
+					$userValue = $objectSettings['settings'][$fieldName];
+				}
+
+				/* now overwrite them with the local stored user settings */
+				if(isset($userSettings[$objectType][$objectName][$fieldName]))
+				{
+					$userValue = $userSettings[$objectType][$objectName][$fieldName];
+				}
+
+				/* overwrite it with old input in form, if exists */
+				if(isset($_SESSION['old'][$objectName][$fieldName]))
+				{
+					$userValue = $_SESSION['old'][$objectName][$fieldName];
+				}
+			
+				/* now we have set the uservalue for the field. Prepopulate the field object with it now */
+				if($field->getType() == "textarea")
+				{
+					if($userValue)
+					{
+						$field->setContent($userValue);
+					}
+				}
+				elseif($field->getType() == "checkbox")
+				{
+					/* needs special treatment, because field does not exist in settings if unchecked by user */
+					if(isset($userSettings[$objectType][$objectName][$fieldName]))
+					{
+						$field->setAttribute('checked', 'checked');
+					}
+					else
+					{
+						$field->unsetAttribute('checked');
+					}
+				}
+				else
+				{
+					$field->setAttributeValue('value', $userValue);	
+				}
+
+				/* add the field to the field-List with the plugin-name as key */
+				$fields[] = $field;
+
+			}
 		}
 		
 		return $fields;
@@ -331,13 +347,31 @@ class SettingsController extends Controller
 		/* fetch the original settings from the folder (plugin or theme) to get the field definitions */
 		$originalSettings = \Typemill\Settings::getObjectSettings($objectType, $objectName);
 
-		if($originalSettings)
+		if(isset($originalSettings['forms']['fields']))
 		{
+			/* flaten the multi-dimensional array with fieldsets to a one-dimensional array */
+			$originalFields = array();
+			foreach($originalSettings['forms']['fields'] as $fieldName => $fieldValue)
+			{
+				if(isset($fieldValue['fields']))
+				{
+					foreach($fieldValue['fields'] as $subFieldName => $subFieldValue)
+					{
+						$originalFields[$subFieldName] = $subFieldValue;
+					}
+				}
+				else
+				{
+					$originalFields[$fieldName] = $fieldValue;
+				}
+			}
+
 			/* take the user input data and iterate over all fields and values */
 			foreach($userInput as $fieldName => $fieldValue)
 			{
 				/* get the corresponding field definition from original plugin settings */
-				$fieldDefinition = isset($originalSettings['forms']['fields'][$fieldName]) ? $originalSettings['forms']['fields'][$fieldName] : false;
+				$fieldDefinition = isset($originalFields[$fieldName]) ? $originalFields[$fieldName] : false;
+
 				if($fieldDefinition)
 				{
 					/* validate user input for this field */
@@ -345,18 +379,23 @@ class SettingsController extends Controller
 				}
 				if(!$fieldDefinition && $fieldName != 'active')
 				{
-					$_SESSION['errors'][$objectName][$fieldName] = 'This field is not defined!';
+					$_SESSION['errors'][$objectName][$fieldName] = array('This field is not defined!');
 				}				
 			}
 		}
 	}
-		
+
 	/***********************
 	**   USER MANAGEMENT  **
 	***********************/
 	
 	public function showUser($request, $response, $args)
 	{
+		if($_SESSION['role'] == 'editor' && $_SESSION['user'] !== $args['username'])
+		{
+			return $response->withRedirect($this->c->router->pathFor('user.show', ['username' => $_SESSION['user']] ));
+		}
+		
 		$validate 	= new Validation();
 		
 		if($validate->username($args['username']))
@@ -428,12 +467,25 @@ class SettingsController extends Controller
 	public function updateUser($request, $response, $args)
 	{
 		if($request->isPost())
-		{
+		{			
 			$params 		= $request->getParams();
 			$user 			= new User();
 			$userroles		= $user->getUserroles();
 			$validate		= new Validation();
-
+			
+			/* non admins have different update rights */
+			if($_SESSION['role'] !== 'administrator')
+			{
+				/* if an editor tries to update other userdata than its own */
+				if($_SESSION['user'] !== $params['username'])
+				{
+					return $response->withRedirect($this->c->router->pathFor('user.show', ['username' => $_SESSION['user']] ));
+				}
+				
+				/* non admins cannot change his userrole */
+				$params['userrole'] = $_SESSION['role'];
+			}
+	
 			if($validate->existingUser($params, $userroles))
 			{
 				$userdata	= array('username' => $params['username'], 'email' => $params['email'], 'userrole' => $params['userrole']);
@@ -442,14 +494,14 @@ class SettingsController extends Controller
 				{
 					$user->updateUser($userdata);
 					$this->c->flash->addMessage('info', 'Saved all changes');
-					return $response->withRedirect($this->c->router->pathFor('user.list'));
+					return $response->withRedirect($this->c->router->pathFor('user.show', ['username' => $params['username']]));
 				}
 				elseif($validate->newPassword($params))
 				{
 					$userdata['password'] = $params['newpassword'];				
 					$user->updateUser($userdata);
 					$this->c->flash->addMessage('info', 'Saved all changes');
-					return $response->withRedirect($this->c->router->pathFor('user.list'));
+					return $response->withRedirect($this->c->router->pathFor('user.show', ['username' => $params['username']]));
 				}
 			}
 			
@@ -465,6 +517,16 @@ class SettingsController extends Controller
 			$params 		= $request->getParams();
 			$validate		= new Validation();
 			$user			= new User();
+
+			/* non admins have different update rights */
+			if($_SESSION['role'] !== 'administrator')
+			{
+				/* if an editor tries to delete other user than its own */
+				if($_SESSION['user'] !== $params['username'])
+				{
+					return $response->withRedirect($this->c->router->pathFor('user.show', ['username' => $_SESSION['user']] ));
+				}				
+			}
 			
 			if($validate->username($params['username']))
 			{

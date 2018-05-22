@@ -6,7 +6,7 @@ use Slim\Interfaces\RouterInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class RedirectIfUnauthenticated
+class RedirectIfNoAdmin
 {	
 	protected $router;
 	
@@ -17,11 +17,16 @@ class RedirectIfUnauthenticated
 
 	public function __invoke(Request $request, Response $response, $next)
 	{
-		if(!isset($_SESSION['login']))
+		if(!isset($_SESSION['login']) || !isset($_SESSION['role']))
 		{
 			$response = $response->withRedirect($this->router->pathFor('auth.show'));
 		}
-				
+		
+		if($_SESSION['role'] != 'administrator')
+		{
+			$response = $response->withRedirect($this->router->pathFor('content.show'));			
+		}
+		
 		return $next($request, $response);
 	}
 }

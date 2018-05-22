@@ -28,15 +28,17 @@
 								</div>
 							</header>
 							<div id="{{ pluginName }}" class="fc-plugin-version update-banner">{{ plugin.version ? plugin.version : 'Unknown' }}</div>
-
-							<p>{{ plugin.description ? plugin.description : 'No description' }}</p>
 							
-							<ul class="cardInfo">
-								<li>{{ plugin.version ? plugin.version : 'Unknown' }}</li><li>
-								{{ plugin.licence ? plugin.licence : 'Unkown' }}</li><li>
-								by {{ plugin.author ? plugin.author : 'Unknown' }}</li>{% if plugin.homepage %}<li>
-								<a href="{{ plugin.homepage}}" target="blank">Web</a></li>{% endif %}
-							</ul>
+							<div class="cardDescPlugin">
+								<p>{{ plugin.description ? plugin.description : 'No description' }}</p>
+								
+								<ul class="cardInfo">
+									<li>{{ plugin.version ? plugin.version : 'Unknown' }}</li><li>
+									{{ plugin.licence ? plugin.licence : 'Unkown' }}</li><li>
+									by {{ plugin.author ? plugin.author : 'Unknown' }}</li>{% if plugin.homepage %}<li>
+									<a href="{{ plugin.homepage}}" target="blank">Web</a></li>{% endif %}
+								</ul>
+							</div>
 						<div class="cardInner cardFields{{ errors[pluginName] ? ' open' : '' }}">
 						
 							{% for field in plugin.forms.fields %}

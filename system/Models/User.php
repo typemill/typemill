@@ -13,12 +13,14 @@ class User extends WriteYaml
 		
 		/* get all plugins folder */
 		$users = array_diff(scandir($userDir), array('..', '.'));
-		
+				
 		$cleanUser	= array();
 		foreach($users as $key => $user)
 		{
+			if($user == '.logins'){ continue; }
 			$cleanUser[] = str_replace('.yaml', '', $user);
 		}
+
 		return $cleanUser;
 	}
 	
@@ -75,8 +77,13 @@ class User extends WriteYaml
 	
 	public function login($username)
 	{
-		$_SESSION['user'] = $username;
-		$_SESSION['login'] = true;
+		$user = $this->getUser($username);
+		if($user)
+		{
+			$_SESSION['user'] 	= $user['username'];
+			$_SESSION['role'] 	= $user['userrole'];
+			$_SESSION['login'] 	= true;
+		}
 	}
 	
 	public function generatePassword($password)

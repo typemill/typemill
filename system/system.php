@@ -7,6 +7,8 @@ use Typemill\Events\OnPluginsLoaded;
 * START SESSION			*
 ************************/
 
+ini_set( 'session.cookie_httponly', 1 );
+session_name('typemill_session');
 session_start();
 
 /****************************
@@ -133,7 +135,7 @@ $container['view'] = function ($container)
 	$path = array($container->get('settings')['themePath'], $container->get('settings')['authorPath']);
 	
     $view = new \Slim\Views\Twig( $path, [
-		'cache' => false,
+		'cache' => $container->get('settings')['cache'] ? $container->get('settings')['cachePath'] : false,
 		'autoescape' => false,
 		'debug' => true
     ]);
@@ -143,6 +145,7 @@ $container['view'] = function ($container)
     $view->addExtension(new Slim\Views\TwigExtension($container['router'], $basePath));
 	$view->addExtension(new Twig_Extension_Debug());
     $view->addExtension(new Typemill\Extensions\TwigCsrfExtension($container['csrf']));
+    $view->addExtension(new Typemill\Extensions\TwigUserExtension());
 	
 	/* use {{ base_url() }} in twig templates */
 	$view['base_url'] = $container['request']->getUri()->getBaseUrl();

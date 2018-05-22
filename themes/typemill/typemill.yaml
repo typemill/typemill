@@ -1,6 +1,6 @@
 ﻿name: Typemill Theme
-version: 1.0.6
-description: The standard theme for Typemill. Responsive, minimal and without any dependencies. It uses the system fonts Calibri and Helvetica. JavaScript is only used for code highlighting. Skip it, if you don't need it. 
+version: 1.0.7
+description: The standard theme for Typemill. Responsive, minimal and without any dependencies. It uses the system fonts Calibri and Helvetica. No JavaScript is used. 
 author: Sebastian Schürmanns
 homepage: http://typemill.net
 licence: MIT
@@ -17,43 +17,51 @@ forms:
 
     chapter:
       type: text
-      label: chapter
+      label: Text For Chapter
       placeholder: Add Name for Chapter
       required: true
 
     start:
       type: text
-      label: Start-Button
+      label: Label For Start Button
       placeholder: Add Label for Start-Button
       required: true
 
-    modified:
-      type: checkbox
-      label: Last Updated
-      description: Show last updated note at the end of each page?
+    fieldset1:
+      type: fieldset
+      legend: Last Modified
+      fields:
+        modified:
+          type: checkbox
+          label: Activate Last Modified
+          description: Show last modified date at the end of each page?
 
-    modifiedText:
-      type: text
-      label: Last Updated Text
-      placeholder: Last Updated
+        modifiedText:
+          type: text
+          label: Last Modified Text
+          placeholder: Last Updated
 
-    modifiedFormat:
-      type: select
-      label: Last Updated Format
-      placeholder: 'Add name of theme'
-      options:
-        'm/d/Y': 01/20/2020
-        'd.m.Y': 20.01.2020
+        modifiedFormat:
+          type: select
+          label: Last Modified Format
+          placeholder: 'Add name of theme'
+          options:
+            'm/d/Y': 01/20/2020
+            'd.m.Y': 20.01.2020
 
-    social:
-      type: checkbox
-      label: Share Links
-      description: Activate Share Links On Page?
+    fieldset2:
+      type: fieldset
+      legend: Share
+      fields:
+        social:
+          type: checkbox
+          label: Activate Share
+          description: Activate Share Buttons On Page?
 
-    socialbuttons:
-      type: checkboxlist
-      label: Select Share buttons
-      options:
-        facebook: Facebook
-        twitter: Twitter
-        xing: Xing
+        socialbuttons:
+          type: checkboxlist
+          label: Select Share Buttons
+          options:
+            facebook: Facebook
+            twitter: Twitter
+            xing: Xing
