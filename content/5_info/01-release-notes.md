@@ -2,6 +2,21 @@
 
 This is the version history with some release notes.
 
+## Version 1.1.6: Refactoring
+
+_Release date: 22.05.2018_
+
+**Please follow the instructions for minor updates** in the [documentation](/gettings-started/update). Please also update the Typemill theme and the plugins.
+
+* Added security headers.
+* Added a temporary ip-blocker if login fails 3 times.
+
+- Added fieldsets for configuration fields of themes and plugins.
+- Added logic for user roles.
+- Changed url-structure from `tm-author` to `tm`.
+- Activated twig cache.
+- Started to refactored css for author panel.
+
 ## Version 1.1.5: Typemill Learns Math
 
 _Release date: 10.05.2018_
