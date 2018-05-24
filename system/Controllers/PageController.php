@@ -51,7 +51,7 @@ class PageController extends Controller
 				{
 					$content = '<h1>No Content</h1><p>Your content folder is empty.</p>'; 
 
-					$this->render($response, '/index.twig', array( 'content' => $content ));
+					return $this->render($response, '/index.twig', array( 'content' => $content ));
 				}
 				elseif(!$cache->validate('cache', 'lastSitemap.txt', 86400))
 				{
@@ -165,7 +165,7 @@ class PageController extends Controller
 
 		$route = empty($args) && $settings['startpage'] ? '/cover.twig' : '/index.twig';
 		
-		$this->render($response, $route, array('navigation' => $structure, 'content' => $contentHTML, 'item' => $item, 'breadcrumb' => $breadcrumb, 'settings' => $settings, 'title' => $title, 'description' => $description, 'base_url' => $base_url, 'image' => $firstImage ));
+		return $this->render($response, $route, array('navigation' => $structure, 'content' => $contentHTML, 'item' => $item, 'breadcrumb' => $breadcrumb, 'settings' => $settings, 'title' => $title, 'description' => $description, 'base_url' => $base_url, 'image' => $firstImage ));
 	}
 
 	protected function getCachedStructure($cache)
