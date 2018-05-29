@@ -18,9 +18,17 @@ abstract class Controller
 	protected function render($response, $route, $data)
 	{
 		$data = $this->c->dispatcher->dispatch('onPageReady', new OnPageReady($data))->getData();
-
-		unset($_SESSION['old']);
 		
+		if(isset($_SESSION['old']))
+		{
+			unset($_SESSION['old']);
+		}
+		
+		if($this->c->request->getUri()->getScheme() == 'https')
+		{
+			$response = $response->withAddedHeader('Strict-Transport-Security', 'max-age=63072000');			
+		}
+			
 		$response = $response->withAddedHeader('X-Content-Type-Options', 'nosniff');
 		$response = $response->withAddedHeader('X-Frame-Options', 'SAMEORIGIN');
 		$response = $response->withAddedHeader('X-XSS-Protection', '1;mode=block');

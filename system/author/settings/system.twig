@@ -58,6 +58,9 @@
 							<span class="error">{{ errors.settings.language | first }}</span>
 						{% endif %}
 					</div><div class="medium">
+						<label for="settings[sitemap]">Google Sitemap <small>(Readonly)</small></label>
+						<input type="text" name="settings[sitemap]" id="sitemap" readonly value="{{ base_url }}cache/sitemap.xml" />
+					</div><div class="medium">
 						<span class="label">Startpage</span>
 						<label class="control-group">Startpage is designed as landing-page.
 							<input name="settings[startpage]" type="checkbox" id="startpage"{{ startpage ? ' checked' : '' }}>

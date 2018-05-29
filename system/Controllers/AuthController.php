@@ -34,7 +34,7 @@ class AuthController extends Controller
 	*/
 	
 	public function show(Request $request, Response $response, $args)
-	{
+	{	
 		$data 			= array();
 
 		/* check previous login attemps */		
@@ -63,7 +63,7 @@ class AuthController extends Controller
 			}
 		}
 
-		$this->c->view->render($response, '/auth/login.twig', $data);
+		$this->render($response, '/auth/login.twig', $data);
 	}
 	
 	/**

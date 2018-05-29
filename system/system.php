@@ -3,14 +3,6 @@
 use Typemill\Events\OnSettingsLoaded;
 use Typemill\Events\OnPluginsLoaded;
 
-/************************
-* START SESSION			*
-************************/
-
-ini_set( 'session.cookie_httponly', 1 );
-session_name('typemill_session');
-session_start();
-
 /****************************
 * CREATE EVENT DISPATCHER	*
 ****************************/
@@ -34,17 +26,6 @@ $app = new \Slim\App($settings);
 ************************/
 
 $container = $app->getContainer();
-
-/************************
-* ADD CSRF PROTECTION 	*
-************************/
-
-$container['csrf'] = function ($c) {
-    $guard = new \Slim\Csrf\Guard();
-    $guard->setPersistentTokenMode(true);
-	
-	return $guard;
-};
 
 /************************
 * LOAD PLUGINS 			*
@@ -117,14 +98,52 @@ $container['assets'] = function($c)
 	return new \Typemill\Assets($c['request']->getUri()->getBaseUrl());
 };
 
-/******************************
-* ADD FLASH MESSAGES FOR TIWG *
-******************************/
 
-$container['flash'] = function () 
+/************************
+* 	DECIDE FOR SESSION	*
+************************/
+
+$session_segments = array('setup/', 'tm/');
+$path = $container['request']->getUri()->getPath();
+$container['flash'] = false;
+$container['csrf'] = false;
+
+foreach($session_segments as $segment)
 {
-    return new \Slim\Flash\Messages();
-};
+	if(substr( $path, 0, strlen($segment) ) === $segment)
+	{
+		/* start a session */
+		ini_set( 'session.cookie_httponly', 1 );
+		ini_set('session.use_strict_mode', 1);
+		if($container['request']->getUri()->getScheme() == 'https')
+		{
+			ini_set('session.cookie_secure', 1);
+			session_name('__Secure-typemill-session');
+		}
+		else
+		{
+			session_name('typemill-session');
+		}
+		session_start();
+		
+		/* add csrf-protection */
+		$container['csrf'] = function ($c)
+		{
+			$guard = new \Slim\Csrf\Guard();
+			$guard->setPersistentTokenMode(true);
+			
+			return $guard;
+		};
+		
+		/* add flash to container */
+		$container['flash'] = function () 
+		{
+			return new \Slim\Flash\Messages();
+		};
+				
+		break;
+	}
+}
 
 /************************
 * 	LOAD TWIG VIEW		*
@@ -144,14 +163,17 @@ $container['view'] = function ($container)
     $basePath = rtrim(str_ireplace('index.php', '', $container['request']->getUri()->getBasePath()), '/');
     $view->addExtension(new Slim\Views\TwigExtension($container['router'], $basePath));
 	$view->addExtension(new Twig_Extension_Debug());
-    $view->addExtension(new Typemill\Extensions\TwigCsrfExtension($container['csrf']));
     $view->addExtension(new Typemill\Extensions\TwigUserExtension());
 	
 	/* use {{ base_url() }} in twig templates */
 	$view['base_url'] = $container['request']->getUri()->getBaseUrl();
 	
-	/* add flash messages to all views */
-	$view->getEnvironment()->addGlobal('flash', $container->flash);
+	/* if session route, add flash messages and csrf-protection */
+	if($container['flash'])
+	{
+		$view->getEnvironment()->addGlobal('flash', $container->flash);
+		$view->addExtension(new Typemill\Extensions\TwigCsrfExtension($container['csrf']));
+	}
 
 	/* add asset-function to all views */
 	$view->getEnvironment()->addGlobal('assets', $container->assets);
@@ -183,9 +205,13 @@ foreach($middleware as $pluginMiddleware)
 		$app->add(new $middlewareClass($middlewareParams));
 	}
 }
-$app->add(new \Typemill\Middleware\ValidationErrorsMiddleware($container['view']));
-$app->add(new \Typemill\Middleware\OldInputMiddleware($container['view']));
-$app->add($container->get('csrf'));
+
+if($container['flash'])
+{
+	$app->add(new \Typemill\Middleware\ValidationErrorsMiddleware($container['view']));
+	$app->add(new \Typemill\Middleware\OldInputMiddleware($container['view']));
+	$app->add($container->get('csrf'));	
+}
 
 /************************
 * 	ADD ROUTES			*
