@@ -38,9 +38,17 @@ class SettingsController extends Controller
 		
 			if($newSettings)
 			{
-				$copyright 					= $this->getCopyright();
-				$newSettings['startpage'] 	= isset($newSettings['startpage']) ? true : false;
+				/* make sure only allowed fields are stored */
+				$newSettings = array(
+					'title' 	=> $newSettings['title'],
+					'author' 	=> $newSettings['author'],
+					'copyright' => $newSettings['copyright'],
+					'year'		=> $newSettings['year'],
+					'statpage' 	=> isset($newSettings['startpage']) ? true : false
+				);
 				
+				$copyright 					= $this->getCopyright();
+								
 				$validate->settings($newSettings, $copyright, 'settings');
 			}
 			
@@ -572,7 +580,7 @@ class SettingsController extends Controller
 			"None"
 		);
 	}
-	
+		
 	private function getLanguages()
 	{
 		return array(
