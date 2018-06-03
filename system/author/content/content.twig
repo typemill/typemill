@@ -6,15 +6,19 @@
 	<div class="formWrapper">
 
 		<section>
-
-			<header>
-				<h1>Coming Soon!</h1>
-			</header>
-			<p>Yes, we are now working on a content area and you can edit your text online very soon!</p>
-			<p>For time beeing, please write your pages offline with markdown and upload your markdown-files to the content folder via ftp.</p>
-			<p>Stay updated, the content editor will be added in one of the next releases ...</p>
-			<p>Happy writing</p>
-			<p>TYPEMILL</p>
+			<form>
+				<fieldset>
+				
+					<div class="large">
+						<label for="title">Title*</label>
+						<input name="title" type="text" value="{{ title }}" required />
+					</div>
+					<div class="large">
+						<label for="content">Text*</label>
+						<textarea name="content" rows="20" required>{{ content }}</textarea>
+					</div>
+				</fieldset>
+			</form>
 			
 		</section>
 		

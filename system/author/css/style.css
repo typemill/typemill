@@ -1104,7 +1104,7 @@ label .help, .label .help{
 	}
 	.sidebar-menu{
 		max-height: 2000px;
-		padding: 0px 20px;
+		padding: 0px 20px 0 0;
 		overflow: hidden;
 		box-sizing: border-box;
 		font-size: 1em;
@@ -1116,8 +1116,22 @@ label .help, .label .help{
 		height: 0px;
 	}
 	ul.menu-list{
-		margin:5px 0 50px;
+		margin: 5px 0 0 20px;
 	}
+	.level-1 > ul.menu-list{
+		margin-bottom: 30px;
+	}
+	.menu-list li{
+		font-weight: 300;
+	}
+	.sidebar-menu, .sidebar-menu--content{
+		font-size: 0.9em;
+	}
+	.sidebar-menu--content li.level-1{
+		font-weight: 700;
+	}
+	
+	/*
 	.menu-item a, .menu-item a:link, .menu-item a:visited{
 		background: transparent;
 		width: auto;		
@@ -1134,6 +1148,31 @@ label .help, .label .help{
 		background: transparent;
 		border-left: 10px solid #e0474c;
 	}
+	*/
+	.menu-item a, .menu-item a:link, .menu-item a:visited{
+		position: relative;
+		width: auto;		
+		padding: 1px 0px;
+		line-height: 1.2em;
+		border: 0px;
+	}
+	.menu-item a:hover, .menu-item a:focus, .menu-item a:active, .menu-item a.active, .active > a{
+		color: #fff;
+		color: #e0474c;
+		background: transparent;
+	}
+	.menu-item a::before{
+		position: absolute;
+		left: -15px;
+		content:"\A";
+		border-style: solid;
+		border-width: 8px 0px 8px 8px;
+		border-color: transparent transparent transparent #fff;
+	}
+	.menu-item a:hover:before, .menu-item a:focus:before, .menu-item a:active:before, .menu-item a.active:before{
+		border-left-color: #e0474c;
+	}
+	
 	.card .medium{
 		padding: 0px 20px;
 	}

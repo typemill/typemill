@@ -1,0 +1,39 @@
+{% macro loop_over(navigation, base_url) %}
+
+    {% import _self as macros %}
+
+    {% for element in navigation %}
+
+		{% set depth = element.keyPathArray|length %}
+		
+        {% if element.activeParent %}
+			<li class="menu-item {{ element.elementType }} level-{{ depth }} active parent">
+		{% elseif element.active %}
+			<li class="menu-item {{ element.elementType }} level-{{ depth }} active">
+		{% else %}
+			<li class="menu-item {{ element.elementType }} level-{{ depth }}">
+		{% endif %}
+			{% if element.activeParent %}
+				<a class="parent active" href="{{base_url}}/tm/content{{ element.urlRelWoF }}">{{ element.name|title }}</a>
+			{% elseif element.active %}
+				<a class="active" href="{{base_url}}/tm/content{{ element.urlRelWoF }}">{{ element.name|title }}</a>
+			{% else %}
+				<a href="{{base_url}}/tm/content{{ element.urlRelWoF }}">{{ element.name|title }}</a>
+			{% endif %}
+		
+			{% if (element.elementType == 'folder') %}
+				<ul class="menu-list">
+					{{ macros.loop_over(element.folderContent, base_url) }}
+				</ul>
+			{% endif %}			
+        </li>
+    {% endfor %}
+{% endmacro %}
+
+{% import _self as macros %}
+
+<nav id="sidebar-menu" class="sidebar-menu--content">
+	<ul class="menu-list">
+		{{ macros.loop_over(navigation, base_url) }}
+	</ul>
+</nav>

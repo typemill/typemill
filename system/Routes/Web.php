@@ -31,7 +31,6 @@ $app->get('/tm', AuthController::class . ':redirect');
 $app->get('/tm/login', AuthController::class . ':show')->setName('auth.show')->add(new RedirectIfAuthenticated($container['router']));
 $app->post('/tm/login', AuthController::class . ':login')->setName('auth.login')->add(new RedirectIfAuthenticated($container['router']));
 $app->get('/tm/logout', AuthController::class . ':logout')->setName('auth.logout')->add(new RedirectIfUnauthenticated($container['router'], $container['flash']));
-$app->get('/tm/content', ContentController::class . ':showContent')->setName('content.show')->add(new RedirectIfUnauthenticated($container['router'], $container['flash']));
 
 $app->get('/tm/settings', SettingsController::class . ':showSettings')->setName('settings.show')->add(new RedirectIfNoAdmin($container['router'], $container['flash']));
 $app->post('/tm/settings', SettingsController::class . ':saveSettings')->setName('settings.save')->add(new RedirectIfNoAdmin($container['router'], $container['flash']));
@@ -45,8 +44,9 @@ $app->post('/tm/user/create', SettingsController::class . ':createUser')->setNam
 $app->post('/tm/user/update', SettingsController::class . ':updateUser')->setName('user.update')->add(new RedirectIfUnauthenticated($container['router'], $container['flash']));
 $app->post('/tm/user/delete', SettingsController::class . ':deleteUser')->setName('user.delete')->add(new RedirectIfUnauthenticated($container['router'], $container['flash']));
 $app->get('/tm/user/{username}', SettingsController::class . ':showUser')->setName('user.show')->add(new RedirectIfUnauthenticated($container['router'], $container['flash']));
-
 $app->get('/tm/user', SettingsController::class . ':listUser')->setName('user.list')->add(new RedirectIfNoAdmin($container['router'], $container['flash']));
+
+$app->get('/tm/content/[{params:.*}]', ContentController::class . ':showContent')->setName('content.show')->add(new RedirectIfUnauthenticated($container['router'], $container['flash']));
 
 foreach($routes as $pluginRoute)
 {

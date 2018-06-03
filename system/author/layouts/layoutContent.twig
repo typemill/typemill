@@ -26,7 +26,13 @@
 		</header>
 		{% include 'partials/flash.twig' %}
 		<div class="main">
-			{% block content %}{% endblock %}
+			<aside class="sidebar">
+				{% include 'partials/contentNavi.twig' %}
+			</aside>
+			<article>
+				{% block content %}{% endblock %}
+			</article>
+			<footer></footer>		
 		</div>
 		<script src="{{ base_url }}/system/author/js/author.js"></script>
 	</body>
