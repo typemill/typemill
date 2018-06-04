@@ -27,7 +27,6 @@ abstract class Controller
 		if($this->c->request->getUri()->getScheme() == 'https')
 		{
 			$response = $response->withAddedHeader('Strict-Transport-Security', 'max-age=63072000');
-			$response = $response->withAddedHeader('Content-Security-Policy', 'default-src https:');
 		}
 			
 		$response = $response->withAddedHeader('X-Content-Type-Options', 'nosniff');

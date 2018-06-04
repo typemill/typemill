@@ -2,6 +2,16 @@
 
 This is the version history with some release notes.
 
+## Version 1.1.7: Improved Session Management
+
+_Release date: 04.06.2018_
+
+**Please follow the instructions for minor updates** in the [documentation](/gettings-started/update). Please also update the Typemill theme.
+
+- URL to google sitemap is not displayed in settings.
+- Session Cookies are only set when authentication is required.
+- Added security headers for content security policy, refferers, strict transport.
+
 ## Version 1.1.6: Refactoring
 
 _Release date: 22.05.2018_
