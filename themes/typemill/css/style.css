@@ -204,10 +204,6 @@ header p{
 	font-size: 2.5em; 
 	font-weight: 700;
 }
-.cover .lead{
-	font-size: 0.9em;
-	text-transform: uppercase;
-}
 .cover .lead a, a.readMore{
 	display: inline-block;
 	min-width: 100px;
