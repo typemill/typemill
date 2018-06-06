@@ -26,12 +26,13 @@ abstract class Controller
 		
 		if($this->c->request->getUri()->getScheme() == 'https')
 		{
-			$response = $response->withAddedHeader('Strict-Transport-Security', 'max-age=63072000');			
+			$response = $response->withAddedHeader('Strict-Transport-Security', 'max-age=63072000');
 		}
 			
 		$response = $response->withAddedHeader('X-Content-Type-Options', 'nosniff');
 		$response = $response->withAddedHeader('X-Frame-Options', 'SAMEORIGIN');
 		$response = $response->withAddedHeader('X-XSS-Protection', '1;mode=block');
+		$response = $response->withAddedHeader('Referrer-Policy', 'no-referrer-when-downgrade');
 		
 		return $this->c->view->render($response, $route, $data);
 	}

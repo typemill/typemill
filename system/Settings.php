@@ -26,7 +26,7 @@ class Settings
 		
 		return [
 			'determineRouteBeforeAppMiddleware' 	=> true,
-			'displayErrorDetails' 					=> true,
+			'displayErrorDetails' 					=> false,
 			'title'									=> 'TYPEMILL',
 			'author'								=> 'Unknown',
 			'copyright'								=> 'Copyright',
@@ -43,7 +43,7 @@ class Settings
 			'contentFolder'							=> 'content',
 			'cache'									=> true,
 			'cachePath'								=> $rootPath . 'cache',
-			'version'								=> '1.1.6',
+			'version'								=> '1.1.7',
 			'setup'									=> true,
 			'welcome'								=> true
 		];

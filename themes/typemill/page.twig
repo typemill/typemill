@@ -3,10 +3,12 @@
 	<h1>{{ item.name }}</h1>
 
 {% endif %}
+
+<h1>{{ title }}</h1>
 	
 {{ content }}
 
-{% if settings.themes.typemill.modified %}	
+{% if settings.themes.typemill.modified %}
 	<p><small>{{ settings.themes.typemill.modifiedText }}: {{ item.modified|date(settings.themes.typemill.modifiedFormat) }}</small></p>
 {% endif %}
 

@@ -103,15 +103,15 @@ $container['assets'] = function($c)
 * 	DECIDE FOR SESSION	*
 ************************/
 
-$session_segments = array('setup/', 'tm/');
+$session_segments = array('setup', 'tm/', '/setup', '/tm/');
 $path = $container['request']->getUri()->getPath();
 $container['flash'] = false;
 $container['csrf'] = false;
 
 foreach($session_segments as $segment)
-{
+{	
 	if(substr( $path, 0, strlen($segment) ) === $segment)
-	{
+	{		
 		/* start a session */
 		ini_set( 'session.cookie_httponly', 1 );
 		ini_set('session.use_strict_mode', 1);
@@ -140,8 +140,6 @@ foreach($session_segments as $segment)
 		{
 			return new \Slim\Flash\Messages();
 		};
-				
-		break;
 	}
 }
 

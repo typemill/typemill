@@ -1,12 +1,12 @@
 cache
-settings/settings.yaml
-settings/users
 plugins/admin
 plugins/demo
 plugins/disqus
 plugins/download
 plugins/finalwords
 plugins/version
+settings/settings.yaml
+settings/users
 system/vendor
 tests
 themes/monograf

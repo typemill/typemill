@@ -119,7 +119,7 @@ class PageController extends Controller
 		}
 		
 		$contentMD = $this->c->dispatcher->dispatch('onMarkdownLoaded', new OnMarkdownLoaded($contentMD))->getData();
-			
+				
 		/* initialize parsedown */
 		$parsedown 		= new ParsedownExtension();
 
@@ -133,16 +133,18 @@ class PageController extends Controller
 		/* parse markdown-content-array to content-string */
 		$contentHTML	= $parsedown->markup($contentArray);
 		$contentHTML 	= $this->c->dispatcher->dispatch('onHtmlLoaded', new OnHtmlLoaded($contentHTML))->getData();
+
+		/* extract the h1 headline*/
+		$contentParts	= explode("</h1>", $contentHTML);
+		$title			= isset($contentParts[0]) ? strip_tags($contentParts[0]) : $settings['title'];
+		
+		$contentHTML	=  isset($contentParts[1]) ? $contentParts[1] : $contentHTML;
 		
 		/* create excerpt from content */
 		$excerpt		= substr($contentHTML,0,500);
-		$excerpt		= explode("</h1>", $excerpt);
-		
-		/* extract title from excerpt */
-		$title			= isset($excerpt[0]) ? strip_tags($excerpt[0]) : $settings['title'];
 		
 		/* create description from excerpt */
-		$description	= isset($excerpt[1]) ? strip_tags($excerpt[1]) : false;
+		$description	= isset($excerpt) ? strip_tags($excerpt) : false;
 		if($description)
 		{
 			$description 	= trim(preg_replace('/\s+/', ' ', $description));
@@ -162,7 +164,7 @@ class PageController extends Controller
 				$firstImage = array('img_url' => $base_url . $img_url[1], 'img_alt' => $img_alt[1]);
 			}
 		}
-
+		
 		$route = empty($args) && $settings['startpage'] ? '/cover.twig' : '/index.twig';
 		
 		return $this->render($response, $route, array('navigation' => $structure, 'content' => $contentHTML, 'item' => $item, 'breadcrumb' => $breadcrumb, 'settings' => $settings, 'title' => $title, 'description' => $description, 'base_url' => $base_url, 'image' => $firstImage ));

@@ -54,7 +54,14 @@ foreach($routes as $pluginRoute)
 	$route	= $pluginRoute['route'];
 	$class	= $pluginRoute['class'];
 
-	$app->{$method}($route, $class);
+	if(isset($pluginRoute['name']))
+	{
+		$app->{$method}($route, $class)->setName($pluginRoute['name']);
+	}
+	else
+	{
+		$app->{$method}($route, $class);
+	}
 }
 
 $app->get('/[{params:.*}]', PageController::class . ':index')->setName('home');
