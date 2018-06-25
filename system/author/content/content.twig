@@ -8,18 +8,26 @@
 		<section>
 			<form>
 				<fieldset>
-				
-					<div class="large">
-						<label for="title">Title*</label>
-						<input name="title" type="text" value="{{ title }}" required />
-					</div>
-					<div class="large">
-						<label for="content">Text*</label>
-						<textarea name="content" rows="20" required>{{ content }}</textarea>
+					<div id="editor" class="editor">
+						<div class="large">
+							<label for="title">Title*</label>
+							<input name="title" id="title" type="text" value="{{ title }}" required />
+						</div>
+						<input name="url" id="url" type="hidden" value="{{ item.urlRel }}" required />
+						<div class="large">
+							<label for="content">Content*</label>
+							<resizable-textarea>
+								<textarea id="content" v-model="markdown" name=="content" required></textarea>
+							</resizable-textarea>
+						</div>
+						<div class="large">
+							<button v-on:click="saveMarkdown">Save</button>
+							<div id="message" class="message"></div>
+						</div>
 					</div>
 				</fieldset>
 			</form>
-			
+			<textarea id="origContent" style="display:none">{{ content }}</textarea>
 		</section>
 		
 	</div>

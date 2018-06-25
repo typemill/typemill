@@ -152,7 +152,7 @@ $container['view'] = function ($container)
 	$path = array($container->get('settings')['themePath'], $container->get('settings')['authorPath']);
 	
     $view = new \Slim\Views\Twig( $path, [
-		'cache' => $container->get('settings')['cache'] ? $container->get('settings')['cachePath'] : false,
+		'cache' => false,
 		'autoescape' => false,
 		'debug' => true
     ]);
@@ -164,7 +164,8 @@ $container['view'] = function ($container)
     $view->addExtension(new Typemill\Extensions\TwigUserExtension());
 	
 	/* use {{ base_url() }} in twig templates */
-	$view['base_url'] = $container['request']->getUri()->getBaseUrl();
+	$view['base_url']	 = $container['request']->getUri()->getBaseUrl();
+	$view['current_url'] = $container['request']->getUri()->getPath();
 	
 	/* if session route, add flash messages and csrf-protection */
 	if($container['flash'])

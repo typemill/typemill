@@ -1,13 +1,13 @@
 # Settings
 
-As of Version 1.1.3 you can edit all settings in the new authoring panel of TYPEMILL. Just visit the url `yourwebsite.com/tm/login` and go to settings after the login. There you can edit:
+As of Version 1.1.3 you can edit all settings in the new author panel of TYPEMILL. Just visit the url `yourwebsite.com/tm/login` and go to settings after the login. There you can edit:
 
 * The system (basic settings).
 * Themes (choose themes and configure it).
 * Plugins (activate plugins and configure them).
 * Users (create, update and delete).
 
-All settings are stored in the `\settings` folder of TYPEMILL. It is not recommended to edit the settings manually, because it can crash the system if done wrong.
+All settings are stored in the `\settings` folder of TYPEMILL. It is not recommended to edit the settings manually, because it might crash the system if done wrong.
 
 ## Advanced Settings
 
@@ -18,4 +18,3 @@ displayErrorDetails: true
 ````
 
 Don't forget to set it back to `false` before you deploy the website live. It is not secure to show the world your internal errors and many hosters will turn off all public error reports by default.
-

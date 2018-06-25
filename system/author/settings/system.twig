@@ -12,7 +12,7 @@
 			<section id="system" class="settings">
 
 				<header class="headline">
-					<h1>System</h1>
+					<h1>System <span class="version-number">v. {{settings.version}}</span></h1>
 				</header>
 				
 				<div id="typemill" class="fc-system-version update-banner">{{ settings.version ? settings.version : 'Unknown' }}</div>
@@ -59,7 +59,7 @@
 						{% endif %}
 					</div><div class="medium">
 						<label for="settings[sitemap]">Google Sitemap <small>(Readonly)</small></label>
-						<input type="text" name="settings[sitemap]" id="sitemap" readonly value="{{ base_url }}cache/sitemap.xml" />
+						<input type="text" name="settings[sitemap]" id="sitemap" readonly value="{{ base_url }}/cache/sitemap.xml" />
 					</div><div class="medium">
 						<span class="label">Startpage</span>
 						<label class="control-group">Startpage is designed as landing-page.

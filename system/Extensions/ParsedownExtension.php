@@ -401,7 +401,18 @@ class ParsedownExtension extends \ParsedownExtra
             return $Block;
         }
     }
-	
+	/*
+	protected function blockFencedCodeComplete($Block)
+	{	
+		$text = $Block['element']['element']['text'];
+		unset($Block['element']['element']['text']);
+
+		$Block['element']['element']['rawHtml'] = "<p>$text</p>";
+		$Block['element']['element']['allowRawHtmlInSafeMode'] = true;
+
+		return $Block;
+	}	
+	*/
     #
     # Fenced MathJax
     protected function blockFencedMathJaxLaTeX($Line)
@@ -449,5 +460,5 @@ class ParsedownExtension extends \ParsedownExtra
         $text = $Block['element']['text'];
         $Block['element']['text'] = "\$\$\n" . $text . "\n\$\$";
         return $Block;
-    }	
+    }
 }

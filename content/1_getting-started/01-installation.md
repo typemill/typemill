@@ -13,9 +13,9 @@ Don't forget to make some folders and files writable (set permission to `774`):
 - `\settings` folder and files
 - `\content` folder and files
 
-All settings and users are stored in the folder `settings`. You can manually edit these files, but it is not recommended because it can crash the system if done wrong.
+All settings and users are stored in the folder `settings`. You can manually edit these files, but it is not recommended because it might crash the system if done wrong.
 
-You can configure your system online, but there is no content editor yet. So for time beeing, you have to edit your content offline with a markdown editor and upload the files with an FTP software. If your changes are not immediately visible, press `F5` to refresh the cache.
+You can configure your system online, but there is only a simple editor to change existing content right now. So for time beeing, you have to create new content offline with a markdown editor and upload the files with an FTP software. If your changes are not immediately visible, press `F5` to refresh the cache.
 
 If you need more detailed instructions, please read on.
 

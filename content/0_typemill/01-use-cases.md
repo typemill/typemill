@@ -16,6 +16,6 @@ Whenever you want to publish a finished text work as a website and if you like w
 
 If you want to create a blog, a wiki or a classic corporate website, please use a specialized CMS for that instead of TYPEMILL.
 
-TYPEMILL is under heavy developement and not finished right now. It has an admin panel for settings, but it does not provide an online content editor at the moment. An online editor and different output formats like mobi and ePup are on the roadmap, so stay tuned.
+TYPEMILL is under heavy developement and not finished right now. It has an admin panel for settings and a very basic editor for existing content. More options like delete or create new pages and manage your media-files will be added step by step in next weeks. Also  different output formats like mobi and ePup are on the roadmap, so stay tuned.
 
-For time being, you can use an offline markdown-editor like Typora and upload your content-files with a FTP software like FileZilla.
+You have to use a FTP-software like FileZilla until the basic editing features are ready. Check the roadmap for more informations.

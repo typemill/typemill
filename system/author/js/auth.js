@@ -21,10 +21,8 @@ if(wait)
 			loginbtn.disabled = false;
 			loginbtn.value = 'Login';
 			var countdown = document.getElementById("counter");
-		//	var flash = document.getElementById("flash-message");
 			
 			countdown.parentNode.removeChild(countdown);
-		//	flash.parentNode.removeChild(flash);
 			
 			clearInterval(counter);
 		}

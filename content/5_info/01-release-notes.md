@@ -1,12 +1,33 @@
-#Release Notes
+# Release Notes
 
 This is the version history with some release notes.
+
+## Version 1.2.0: Introducing a Basic Content Editor
+
+_Release date: 25.06.2018_
+
+**Please follow the instruction for simple updates**  in the [documentation](/gettings-started/update), so simply update the `system` folder.
+
+Version 1.2.0 introduces a very basic content editor and is a major milestone for the developement of TYPEMILL as a full CMS. With the editor, the author can only edit existing content with markdown syntax right now. It is not possible to delete content or to create new content. These features will be added very soon.
+
+There are quite a lot of changes in the background:
+
+* IMPORTANT: HTML and other code is now completely disabled. All code is disallowed in the content editor and all code-syntax will be escaped in the frontend. You can use markdown syntax for fenced code blocks and for inline code to display code-examples on pages.
+* Vue.js is added.
+* A content navigation is added.
+* Save functionality is added with ajax.
+* API-routes are added for managing content.
+* The content of the editor is validated (might cause problems with lot of code-syntax).
+* Errors are displayed in frontend.
+* Appropriate server status is send.
+* The twig-cache is disabled again. It might become an optional feature in future.
+* URL for xml-sitemap is displayed correctly now.
 
 ## Version 1.1.7: Improved Session Management
 
 _Release date: 04.06.2018_
 
-**Please follow the instructions for minor updates** in the [documentation](/gettings-started/update). Please also update the Typemill theme.
+**Please follow the instructions for simple updates** in the [documentation](/gettings-started/update). Please also update the Typemill theme.
 
 - URL to google sitemap is not displayed in settings.
 - Session Cookies are only set when authentication is required.

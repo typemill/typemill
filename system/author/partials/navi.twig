@@ -1,6 +1,6 @@
 <nav class="header-navi">
 	<div class="logo">
-		<a href="#">Typemill</a>
+		<a href="{{ path_for('content.show') }}">Typemill</a>
 	</div>
 	<ul class="navi-items">
 		<li><a href="{{ path_for('content.show') }}"{{ navigation ? 'class="active"' : '' }}><i class="icon-doc-text"></i><span class="nav-label"> Content</span></a></li><li>

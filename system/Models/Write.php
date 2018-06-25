@@ -50,7 +50,7 @@ class Write
 		return true;
 	}
 
-	protected function writeFile($folder, $file, $data)
+	public function writeFile($folder, $file, $data)
 	{
 		if($this->checkPath($folder))
 		{

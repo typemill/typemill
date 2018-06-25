@@ -63,6 +63,22 @@ class Validation
 			}
 			return false;
 		}, 'contains html');
+		
+		Validator::addRule('markdownSecure', function($field, $value, array $params, array $fields)
+		{
+			/* strip out code blocks and blockquotes */			
+			$value = preg_replace('/[````][\s\S]+?[````]/', '', $value);
+			$value = preg_replace('/[```][\s\S]+?[```]/', '', $value);
+			$value = preg_replace('/[``][\s\S]+?[``]/', '', $value);
+			$value = preg_replace('/`[\s\S]+?`/', '', $value);
+			$value = preg_replace('/>[\s\S]+?[\n\r]/', '', $value);
+						
+			if ( $value == strip_tags($value) )
+			{
+				return true;
+			}
+			return false;
+		}, 'not secure. For code please use markdown `inline-code` or ````fenced code blocks````.');
 	}
 
 	/**
@@ -172,9 +188,35 @@ class Validation
 		
 		return $this->validationResult($v, $name);
 	}
+
+	/**
+	* validation for content editor
+	* 
+	* @param array $params with form data.
+	* @return true or $v->errors with array of errors to use in json-response
+	*/
+	
+	public function editorInput(array $params)
+	{
+		$v = new Validator($params);
+		
+		$v->rule('required', ['title', 'content', 'url']);
+		$v->rule('lengthBetween', 'title', 2, 40);
+		$v->rule('noHTML', 'title');
+		$v->rule('markdownSecure', 'content');
+		
+		if($v->validate()) 
+		{
+			return true;
+		} 
+		else
+		{
+			return $v->errors();
+		}		
+	}
 	
 	/**
-	* validation for dynamic settings (themes and plugins)
+	* validation for dynamic fields ( settings for themes and plugins)
 	* 
 	* @param string $fieldName with the name of the field.
 	* @param array or string $fieldValue with the values of the field.

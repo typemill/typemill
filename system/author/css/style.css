@@ -2,7 +2,7 @@
 *  		TRANSITION	  *
 **********************/
 
-a, a:link, a:visited, a:focus, a:hover, a:active, button, .button, input, .control-group, .sidebar-menu, .menu-action, .button-arrow{
+a, a:link, a:visited, a:focus, a:hover, a:active, button, .button, input, .control-group, .sidebar-menu, .sidebar-menu--content, .menu-action, .button-arrow{
 	-webkit-transition: all 0.2s ease;
 	-moz-transition: all 0.2s ease;
 	-o-transition: all 0.2s ease;
@@ -22,6 +22,8 @@ body{
 	background: #f9f8f6; 
 	color: #444;
 	font-size: 16px;
+}
+body,input,select,textarea{
 	font-family: Helvetica, Calibri, Arial, sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;	
@@ -125,7 +127,7 @@ aside.sidebar{
 *  		MENU			*
 ************************/
 
-.sidebar-menu{
+.sidebar-menu,.sidebar-menu--content{
 	max-height: 40px;
 	padding: 0px 20px;
 	overflow: hidden;
@@ -135,6 +137,9 @@ aside.sidebar{
 }
 .sidebar-menu.expand{
 	max-height: 500px;
+}
+.sidebar-menu--content.expand{
+	max-height: 3000px;
 }
 .menu-action{
 	display: block;
@@ -186,6 +191,11 @@ header input[type="submit"]{
 	box-sizing:border-box;
 	border: 0px;
 }
+h1 .version-number{
+	text-transform: uppercase;
+	font-size: 0.5em;
+	font-weight: 300;
+}
 
 /********************
 *  	SETUP FORM 	    *
@@ -210,7 +220,6 @@ header input[type="submit"]{
 	margin-bottom: 0px;
 }
 .setupWrapper input[type="submit"]:disabled{
-	pointer: cursor;
 	cursor: default;
 	background: #f9f8f6;
 	border: 2px solid #f9f8f6;
@@ -1047,6 +1056,92 @@ label .help, .label .help{
 }
 
 
+
+/********************
+*		EDITOR		*
+********************/
+
+.editor .large{
+	position: relative;	
+}
+.editor input[name="title"]{
+	font-size: 1.8em;
+	padding: 10px 20px;
+}
+.editor textarea{
+	font-size: 1em;
+	padding: 20px;
+	line-height: 1.4em;
+}
+.editor span.error{
+	position: absolute;
+	left:20px;
+	bottom: 0px;
+}
+.editor .message{
+	display: inline-block;
+	width: 70%;
+}
+.editor .message span.error{
+	position: relative;
+	left: 0;
+	width: 100%;
+	padding: 15px 20px;
+	color: #e0474c;
+}
+.editor button{
+	position: relative;
+	border-radius: 3px;
+	color: #f9f8f6;
+	border: 2px solid #e0474c; 
+	background: #e0474c; 
+	padding:10px;
+	min-width: 200px;
+}
+.editor button:hover{
+	border: 2px solid #cc4146; 
+	background: #cc4146; 
+}
+.editor button:disabled, .editor button[disabled]{
+	border: 2px solid #cc4146; 
+	background: #cc4146; 
+	color: #eee;
+	cursor: default;
+}
+.editor button:disabled:after, 
+.editor button[disabled]:after,
+.editor button.success:after,
+.editor button.fail:after{
+	position: absolute;
+	right: 8px;
+	top: 8px;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	content: '';
+}
+.editor button:disabled:after, 
+.editor button[disabled]:after{
+	border: 8px solid #eee;
+	border-top: 8px solid #ccc;
+	background: #ccc;
+    animation: spin 2s linear infinite;	
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.editor button.success:after,
+.editor button.fail:after{
+	border: 8px solid #eee;
+}
+.editor button.success:after{
+	background: #00cc00;
+}
+.editor button.fail:after{
+	background: #e0474c;
+}
+
 @media only screen and (min-width: 600px) {
 	header.headline{
 		padding: 0px 20px;
@@ -1102,13 +1197,19 @@ label .help, .label .help{
 		vertical-align: top;
 		background: transparent;
 	}
-	.sidebar-menu{
+	.sidebar-menu, .sidebar-menu--content{
 		max-height: 2000px;
 		padding: 0px 20px 0 0;
 		overflow: hidden;
 		box-sizing: border-box;
 		font-size: 1em;
 		text-align: left;
+	}
+	.sidebar-menu{
+		max-height: 2000px;
+	}
+	.sidebar-menu--content{
+		max-height: 3000px;
 	}
 	.menu-action{
 		display: none;
@@ -1127,28 +1228,12 @@ label .help, .label .help{
 	.sidebar-menu, .sidebar-menu--content{
 		font-size: 0.9em;
 	}
-	.sidebar-menu--content li.level-1{
+	.sidebar-menu--content li.level-1, .sidebar-menu--content li.level-0 {
 		font-weight: 700;
 	}
-	
-	/*
-	.menu-item a, .menu-item a:link, .menu-item a:visited{
-		background: transparent;
-		width: auto;		
-		height: 0; 
-		padding: 0px 10px;
-		line-height: 2px;
-		border-top: 8px solid transparent;
-		border-bottom: 8px solid transparent; 
-		border-left: 10px solid white;
-	}
-	.menu-item a:hover, .menu-item a:focus, .menu-item a:active, .menu-item a.active{
-		color: #fff;
-		color: #e0474c;
-		background: transparent;
-		border-left: 10px solid #e0474c;
-	}
-	*/
+	.menu-list.margin-bottom{
+		margin-bottom: 40px;
+	}	
 	.menu-item a, .menu-item a:link, .menu-item a:visited{
 		position: relative;
 		width: auto;		

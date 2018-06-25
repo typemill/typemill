@@ -1,5 +1,3 @@
-(function () 
-{
 	/**********************************
 	** Global HttpRequest-Function   **
 	** for AJAX-Requests             **
@@ -56,26 +54,20 @@
 		else
 		{
 			var httpRequest = prepareHttpRequest();
-			httpRequest.open(getPost, url, true);			
+			httpRequest.open(getPost, url, true);
 		}
+				
 		httpRequest.onreadystatechange = function(e) 
 		{
 			if (this.readyState == 4) 
-			{
-				if(this.status == 200)
+			{				
+				if(httpRequest.response && callback)
 				{
-					if(httpRequest.responseText && callback)
-					{
-						callback(httpRequest.response);
-					}
-				}
-				else
-				{
-					console.log('connection error, status '+this.status);
-				}
+					callback(httpRequest.response, this.status);
+				}				
 			}
 		};
-
+		
 		// httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 		// httpRequest.setRequestHeader('Content-Type', 'text/plain'); 
 		httpRequest.setRequestHeader('Content-Type', 'application/json'); 
@@ -309,5 +301,4 @@
 			
 			
 		})(thisTarget);		
-    }	
-})();
+    }

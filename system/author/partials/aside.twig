@@ -2,7 +2,7 @@
 	{% if is_role('administrator') %}
 		<div id="mobile-menu" class="menu-action">Menu <span class="button-arrow"></span></div>
 		<h3>Settings</h3>
-		<ul class="menu-list">
+		<ul class="menu-list margin-bottom">
 			<li class="menu-item"><a href="{{ path_for('settings.show') }}"{{ (route == 'settings.show') ? 'class="active"' : '' }}>System</a></li>
 			<li class="menu-item"><a href="{{ path_for('themes.show') }}"{{ (route == 'themes.show') ? 'class="active"' : '' }}>Themes</a></li>
 			<li class="menu-item"><a href="{{ path_for('plugins.show') }}"{{ (route == 'plugins.show') ? 'class="active"' : '' }}>Plugins</a></li>

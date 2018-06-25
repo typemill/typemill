@@ -122,6 +122,7 @@ class PageController extends Controller
 				
 		/* initialize parsedown */
 		$parsedown 		= new ParsedownExtension();
+		$parsedown->setSafeMode(true);
 
 		/* parse markdown-file to content-array */
 		$contentArray 	= $parsedown->text($contentMD);
