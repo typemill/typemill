@@ -35,7 +35,7 @@
 <nav id="sidebar-menu" class="sidebar-menu--content">
 	<div id="mobile-menu" class="menu-action">Menu <span class="button-arrow"></span></div>
 	<ul class="menu-list">
-		<li class="menu-item folder level-0"><a {% if current_url == 'tm/content/' %}class="active"{% endif %} href="{{base_url}}/tm/content/">Startpage</a></li>
+		<li class="menu-item folder level-0"><a {% if current_url == 'tm/content' %}class="active"{% endif %} href="{{base_url}}/tm/content">Startpage</a></li>
 		{{ macros.loop_over(navigation, base_url) }}
 	</ul>
 </nav>
