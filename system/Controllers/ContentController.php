@@ -102,9 +102,12 @@ class ContentController extends Controller
 		$title = false;
 		$content = $contentMD;
 		
+        $content = str_replace(array("\r\n", "\r"), "\n", $content);
+        $content = trim($content, "\n");		
+		
 		if($contentMD[0] == '#')
 		{
-			$contentParts = explode("\r\n", $contentMD, 2);
+			$contentParts = explode("\n", $contentMD, 2);
 			$title = trim($contentParts[0],  "# \t\n\r\0\x0B");
 			$content = trim($contentParts[1]);
 		}
