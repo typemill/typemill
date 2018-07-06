@@ -6,28 +6,33 @@
 	<div class="formWrapper">
 
 		<section>
-			<form>
-				<fieldset>
-					<div id="editor" class="editor">
-						<div class="large">
+			<div id="editor" class="editor">
+				<form action="#" @submit.prevent="saveMarkdown">
+					<fieldset>
+						<div class="large" :class="{'error' : errors.title}">
 							<label for="title">Title*</label>
-							<input name="title" id="title" type="text" value="{{ title }}" required />
+							<input id="title" name="title" type="text" v-model="form.title" required />
+							<span class="error" v-if="errors.title">${ errors.title }</span>
 						</div>
-						<input name="url" id="url" type="hidden" value="{{ item.urlRel }}" required />
-						<div class="large">
+						<div class="large" :class="{'error' : errors.content}">
 							<label for="content">Content*</label>
 							<resizable-textarea>
-								<textarea id="content" v-model="markdown" name=="content" required></textarea>
+								<textarea id="content" v-model="form.content" required></textarea>
 							</resizable-textarea>
+							<span class="error" v-if="errors.content">${ errors.content }</span>
 						</div>
+						<input id="path" type="hidden" value="{{ item.urlRel }}" required readonly />
 						<div class="large">
-							<button v-on:click="saveMarkdown">Save</button>
-							<div id="message" class="message"></div>
+							<button :class="bresult" :disabled="bdisabled">Save</button>
+							<div v-if="errors.message" class="message error">${ errors.message }</div>
 						</div>
-					</div>
-				</fieldset>
-			</form>
+					</fieldset>
+				</form>
+			</div>
+			<input id="origTitle" style="display:none" value="{{title}}">
 			<textarea id="origContent" style="display:none">{{ content }}</textarea>
+			{{ csrf_field() | raw }}
+
 		</section>
 		
 	</div>

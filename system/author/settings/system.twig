@@ -1,6 +1,7 @@
 {% extends 'layouts/layout.twig' %}
 {% block title %}Setup{% endblock %}
 {% set startpage = old.settings.startpage ? old.settings.startpage : settings.startpage %}
+{% set linebreaks = old.settings.linebreaks ? old.settings.linebreaks : settings.linebreaks %}
 {% set year = settings.year ? settings.year : "now"|date("Y") %}
 
 {% block content %}
@@ -66,9 +67,8 @@
 							<input name="settings[startpage]" type="checkbox" id="startpage"{{ startpage ? ' checked' : '' }}>
 							<span class="checkmark"></span>
 						</label>
-					</div>
+					</div>					
 				</fieldset>
-
 			</section>
 			<input type="submit" value="Save All Settings" />
 

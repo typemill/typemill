@@ -15,7 +15,7 @@ TYPEMILL is a small flat file cms designed for writers. It creates websites base
 * Supports configurable themes and plugins.
 * Provides an author panel to configure the system, the themes and the plugins.
 * Creates and manages users.
-* Online editing is on its way (for time beeing upload markdown files).
+* Provides a basic online editing (only for existing files so far, in development).
 * Markdown supports table of contents (TOC), tables, footnotes, abbreviations and definition lists.
 * Supports MathJax and KaTeX (plugin).
 * Supports code highlighting (plugin).
@@ -24,7 +24,9 @@ TYPEMILL is a small flat file cms designed for writers. It creates websites base
 
 ## Installation
 
-Download TYPEMILL from the [TYPEMILL website](http://typemill.net) or clone this repository with git. Open your git command line (e.g. gitbash), go to your project folder (e.g. htdocs) and type:
+Download TYPEMILL from the [TYPEMILL website](http://typemill.net), unzip the files and you are done.
+
+If you are a developer, you can also clone this repository. To do so, open your git command line (e.g. gitbash), go to your project folder (e.g. htdocs) and type:
 
     git clone git://github.com/trendschau/typemill.git
 
@@ -33,7 +35,7 @@ The GitHub-version has no vendor-folder, so you have to update and include all l
     composer update
 If you did not use composer before, please go to the [composer website](http://getcomposer.org) and start to learn.
 
-To run TYPEMILL **live**, simply upload the files to your server.
+To run TYPEMILL on a **live** system, simply upload the files to your server.
 
 ## Setup
 
@@ -41,7 +43,7 @@ Please go to `your-typemill-website.com/setup`, create an initial user and then 
 
 ## Login
 
-You can find your login screen under `/tm-author/login` or simply go to `/setup` and you will be redirected to the login-page. 
+You can find your login screen under `/tm/login` or simply go to `/setup` and you will be redirected to the login-page. 
 
 ## Requirements
 
@@ -53,10 +55,25 @@ You can read the full documentation for writers, for theme developers and for pl
 
 ## Contribute
 
-If you want to contribute to TYPEMILL, please fork this GitHub repository first. Then make your changes and create a pull request. I will review all request as soon as possible.
+Typemill is still in an early stage and contributions are highly welcome. Here are some ideas for non-coder:
+
+* Find bugs and errors (open a new issue on github for it).
+* Improve the documentation.
+* Describe some missing features and explain, why they are important for other users.
+
+Some ideas for devs (please fork this repository make your changes and create a pull request):
+
+* Fix a bug.
+* Create a nice theme.
+* Create a new plugin.
+* Improve the CSS-code with BEM and make it modular.
+* Rebuild the theme with css-grid.
+* Improve accessibility of html and css.
+* Help to establish autotests with selenium or cypress.
+* Write unit-tests.
 
 For hints, questions, problems and support, please open up a new issue on GitHub.
 
 ## Licence
 
-TYPEMILL is published under MIT licence.
+TYPEMILL is published under MIT licence. Please check the licence of the included libraries, too.

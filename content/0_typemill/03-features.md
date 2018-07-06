@@ -1,4 +1,4 @@
-# Features
+# Features qwer
 
 TYPEMILL has a limited set of features right now. It transforms a bunch of **markdown files** into a **website** and generates a list of contents for **navigation**. 
 

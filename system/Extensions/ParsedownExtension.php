@@ -18,34 +18,25 @@ class ParsedownExtension extends \ParsedownExtra
         array_unshift($this->BlockTypes['['], 'TableOfContents');
     }
 	
-    function text($text)
-    {
-        # make sure no definitions are set
-        $this->DefinitionData = array();
-
-        # standardize line breaks
-        $text = str_replace(array("\r\n", "\r"), "\n", $text);
-
-        # remove surrounding line breaks
-        $text = trim($text, "\n");
-
-        # split text into lines
-        $lines = explode("\n", $text);
-
-        # iterate through lines to identify blocks and return array of content
-        $blocks = $this->getContentArray($lines);
+	function text($text)
+	{
+        $Elements = $this->textElements($text);
 		
-		return $blocks;
+		return $Elements;
 	}
 	
-	function markup($blocks)
-	{
-		# iterate through array of content and get markup
-		$markup = $this->getMarkup($blocks);
-		
+	function markup($Elements)
+	{	
+        # convert to markup
+        $markup = $this->elements($Elements);
+				
         # trim line breaks
         $markup = trim($markup, "\n");
 
+        # merge consecutive dl elements
+        $markup = preg_replace('/<\/dl>\s+<dl>\s+/', '', $markup);
+
+		# create table of contents
         if(isset($this->DefinitionData['TableOfContents']))
         {
 			$TOC = $this->buildTOC($this->headlines);
@@ -53,9 +44,6 @@ class ParsedownExtension extends \ParsedownExtra
 			$markup = preg_replace('%(<p[^>]*>\[TOC\]</p>)%i', $TOC, $markup);
         }
 		
-        # merge consecutive dl elements
-        $markup = preg_replace('/<\/dl>\s+<dl>\s+/', '', $markup);
-
         # add footnotes
         if (isset($this->DefinitionData['Footnote']))
         {
@@ -63,10 +51,10 @@ class ParsedownExtension extends \ParsedownExtra
 
             $markup .= "\n" . $this->element($Element);
         }
-			
-        return $markup;
-    }
 		
+		return $markup;
+	}
+			
     # TableOfContents
 
     protected function blockTableOfContents($line, $block)
@@ -157,180 +145,7 @@ class ParsedownExtension extends \ParsedownExtra
 		return $markup;
 	}
 	
-	
-    #
-    # Blocks
-    #
-
-    protected function getContentArray(array $lines)
-    {
-        $CurrentBlock = null;
-
-        foreach ($lines as $line)
-        {
-            if (chop($line) === '')
-            {
-                if (isset($CurrentBlock))
-                {
-                    $CurrentBlock['interrupted'] = true;
-                }
-
-                continue;
-            }
-
-            if (strpos($line, "\t") !== false)
-            {
-                $parts = explode("\t", $line);
-
-                $line = $parts[0];
-
-                unset($parts[0]);
-
-                foreach ($parts as $part)
-                {
-                    $shortage = 4 - mb_strlen($line, 'utf-8') % 4;
-
-                    $line .= str_repeat(' ', $shortage);
-                    $line .= $part;
-                }
-            }
-
-            $indent = 0;
-
-            while (isset($line[$indent]) and $line[$indent] === ' ')
-            {
-                $indent ++;
-            }
-
-            $text = $indent > 0 ? substr($line, $indent) : $line;
-
-            # ~
-
-            $Line = array('body' => $line, 'indent' => $indent, 'text' => $text);
-
-            # ~
-
-            if (isset($CurrentBlock['continuable']))
-            {
-                $Block = $this->{'block'.$CurrentBlock['type'].'Continue'}($Line, $CurrentBlock);
-
-                if (isset($Block))
-                {
-                    $CurrentBlock = $Block;
-
-                    continue;
-                }
-                else
-                {
-                    if ($this->isBlockCompletable($CurrentBlock['type']))
-                    {
-                        $CurrentBlock = $this->{'block'.$CurrentBlock['type'].'Complete'}($CurrentBlock);
-                    }
-                }
-            }
-
-            # ~
-
-            $marker = $text[0];
-
-            # ~
-
-            $blockTypes = $this->unmarkedBlockTypes;
-
-            if (isset($this->BlockTypes[$marker]))
-            {
-                foreach ($this->BlockTypes[$marker] as $blockType)
-                {
-                    $blockTypes []= $blockType;
-                }
-            }
-
-            #
-            # ~
-
-            foreach ($blockTypes as $blockType)
-            {
-                $Block = $this->{'block'.$blockType}($Line, $CurrentBlock);
-
-                if (isset($Block))
-                {
-                    $Block['type'] = $blockType;
-
-                    if ( ! isset($Block['identified']))
-                    {
-                        $Blocks []= $CurrentBlock;
-
-                        $Block['identified'] = true;
-                    }
-
-                    if ($this->isBlockContinuable($blockType))
-                    {
-                        $Block['continuable'] = true;
-                    }
-
-                    $CurrentBlock = $Block;
-
-                    continue 2;
-                }
-            }
-
-            # ~
-
-            if (isset($CurrentBlock) and ! isset($CurrentBlock['type']) and ! isset($CurrentBlock['interrupted']))
-            {
-                $CurrentBlock['element']['text'] .= "\n".$text;
-            }
-            else
-            {
-                $Blocks []= $CurrentBlock;
-
-                $CurrentBlock = $this->paragraph($Line);
-
-                $CurrentBlock['identified'] = true;
-            }
-        }
-
-        # ~
-
-        if (isset($CurrentBlock['continuable']) and $this->isBlockCompletable($CurrentBlock['type']))
-        {
-            $CurrentBlock = $this->{'block'.$CurrentBlock['type'].'Complete'}($CurrentBlock);
-        }
-
-        # ~
-
-        $Blocks []= $CurrentBlock;
-
-        unset($Blocks[0]);
-
-        # ~
-		return $Blocks;
-	}
-	
-	public function getMarkup($Blocks)
-	{
-        $markup = '';
-
-        foreach ($Blocks as $Block)
-        {
-            if (isset($Block['hidden']))
-            {
-                continue;
-            }
-
-            $markup .= "\n";
-            $markup .= isset($Block['markup']) ? $Block['markup'] : $this->element($Block['element']);
-        }
-
-        $markup .= "\n";
-
-        # ~
-
-        return $markup;
-    }
-	
 	# math support. Check https://github.com/aidantwoods/parsedown/blob/mathjaxlatex/ParsedownExtensionMathJaxLaTeX.php
-
 
     protected function inlineCode($Excerpt)
     {
@@ -401,18 +216,7 @@ class ParsedownExtension extends \ParsedownExtra
             return $Block;
         }
     }
-	/*
-	protected function blockFencedCodeComplete($Block)
-	{	
-		$text = $Block['element']['element']['text'];
-		unset($Block['element']['element']['text']);
 
-		$Block['element']['element']['rawHtml'] = "<p>$text</p>";
-		$Block['element']['element']['allowRawHtmlInSafeMode'] = true;
-
-		return $Block;
-	}	
-	*/
     #
     # Fenced MathJax
     protected function blockFencedMathJaxLaTeX($Line)
@@ -436,7 +240,8 @@ class ParsedownExtension extends \ParsedownExtra
 	
     protected function blockFencedMathJaxLaTeXContinue($Line, $Block)
     {
-        if (isset($Block['complete']))
+
+		if (isset($Block['complete']))
         {
             return;
         }

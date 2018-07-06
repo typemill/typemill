@@ -40,11 +40,11 @@ class SettingsController extends Controller
 			{
 				/* make sure only allowed fields are stored */
 				$newSettings = array(
-					'title' 	=> $newSettings['title'],
-					'author' 	=> $newSettings['author'],
-					'copyright' => $newSettings['copyright'],
-					'year'		=> $newSettings['year'],
-					'statpage' 	=> isset($newSettings['startpage']) ? true : false
+					'title' 		=> $newSettings['title'],
+					'author' 		=> $newSettings['author'],
+					'copyright' 	=> $newSettings['copyright'],
+					'year'			=> $newSettings['year'],
+					'startpage' 	=> isset($newSettings['startpage']) ? true : false
 				);
 				
 				$copyright 					= $this->getCopyright();

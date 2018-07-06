@@ -119,15 +119,17 @@ class PageController extends Controller
 		}
 		
 		$contentMD = $this->c->dispatcher->dispatch('onMarkdownLoaded', new OnMarkdownLoaded($contentMD))->getData();
-				
+		
 		/* initialize parsedown */
 		$parsedown 		= new ParsedownExtension();
+		
+		/* set safe mode to escape javascript and html in markdown */
 		$parsedown->setSafeMode(true);
 
 		/* parse markdown-file to content-array */
 		$contentArray 	= $parsedown->text($contentMD);
 		$contentArray 	= $this->c->dispatcher->dispatch('onContentArrayLoaded', new OnContentArrayLoaded($contentArray))->getData();
-	
+
 		/* get the first image from content array */
 		$firstImage		= $this->getFirstImage($contentArray);
 		

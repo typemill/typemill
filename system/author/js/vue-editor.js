@@ -1,5 +1,3 @@
-const root = document.getElementById("main").dataset.url;
-
 Vue.component('resizable-textarea', {
   methods: {
     resizeTextarea (event) {
@@ -22,115 +20,58 @@ Vue.component('resizable-textarea', {
   },
 });
 
-new Vue({
+let app = new Vue({
+    delimiters: ['${', '}'],
 	el: '#editor',
 	data: {
-		markdown: document.getElementById("origContent").value
+		form: {
+			title: 		document.getElementById("origTitle").value,
+			content: 	document.getElementById("origContent").value,
+			url: 		document.getElementById("path").value,
+			csrf_name: 	document.getElementById("csrf_name").value,
+			csrf_value:	document.getElementById("csrf_value").value,			
+		},
+		root: 		document.getElementById("main").dataset.url,
+		errors:{
+			title: false,
+			content: false,
+			message: false,
+		},
+		bdisabled: false,
+		bresult: false,
 	},
 	methods: {
 		saveMarkdown: function(e){
-			e.preventDefault();
+		
+			var self = this;
+			self.errors = {title: false, content: false, message: false},
+			self.bresult = '';
+			self.bdisabled = "disabled";
+		
+			var url = this.root + '/api/v1/article';
+			var method 	= 'PUT';
 			
-			e.target.disabled = true;
-			e.target.classList.remove("success", "fail");
-			
-			deleteErrors();
-			
-			var getPost 	= 'PUT',
-			url 			= root + '/api/v1/article',
-			contentData		= {'url': document.getElementById("url").value, 'title': document.getElementById("title").value, 'content': document.getElementById("content").value };
-
 			sendJson(function(response, httpStatus)
 			{
 				if(response)
 				{
-					e.target.disabled = false;
+					self.bdisabled = false;
+					
 					var result = JSON.parse(response);
 					
 					if(result.errors)
 					{
-						e.target.classList.add('fail');
-						processErrors(result.errors, httpStatus);
+						self.bresult = 'fail';						
+						if(result.errors.title){ self.errors.title = result.errors.title[0] };
+						if(result.errors.content){ self.errors.content = result.errors.content[0] };
+						if(result.errors.message){ self.errors.message = result.errors.message };
 					}
 					else
 					{
-						e.target.classList.add('success');
+						self.bresult = 'success';
 					}
 				}
-				else
-				{
-					e.target.disabled = false;
-					e.target.classList.add('fail');
-					console.info('no response');
-				}
-			}, getPost, url, contentData );
+			}, method, url, this.form );
 		}
 	}
 })
-
-function processErrors(errors, httpStatus)
-{
-	if(errors.length == 0) return;
-
-	var message = '';
-	
-	if(httpStatus == "404")
-	{
-		message = errors[0];
-	}
-	
-	if(httpStatus == "422")
-	{
-		var fields = '';
-	
-		for (var key in errors)
-		{
-			fields = fields + ' "' + key + '"';
-			
-			if(key == 'url' || !errors.hasOwnProperty(key)) continue;
-
-			
-			var errorMessages	= errors[key],
-				fieldElement	= document.getElementById(key),
-				fieldMessage 	= document.createElement("span"),
-				fieldWrapper	= fieldElement.parentElement;
-			
-			fieldWrapper.classList.add("error");
-
-			fieldMessage.className = "error";
-			fieldMessage.innerHTML = errorMessages[0];
-			fieldWrapper.classList.add("error");
-			fieldWrapper.appendChild(fieldMessage);
-		}
-		
-		message = 'Please correct the errors in these Fields: ' + fields.toUpperCase() + '. '; 
-	}
-	
-	var messageWrapper	= document.getElementById("message"),
-		messageSpan		= document.createElement("span");
-	
-	messageSpan.className = "error";
-	messageSpan.innerHTML = message;
-	messageWrapper.appendChild(messageSpan);
-}
-
-function deleteErrors()
-{
-	var errors = document.querySelectorAll('.error');
-	
-	if(errors.length == 0) return;
-	
-	for(var key in errors)
-	{
-		if(!errors.hasOwnProperty(key)) continue;
-		
-		if(errors[key].tagName == "SPAN")
-		{
-			errors[key].parentElement.removeChild(errors[key]);
-		}
-		else
-		{
-			errors[key].classList.remove("error");
-		}
-	}
-}

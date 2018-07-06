@@ -19,7 +19,7 @@ class RedirectIfAuthenticated
 	{
 		if(isset($_SESSION['login']))
 		{
-			$response = $response->withRedirect($this->router->pathFor('settings.show'));
+			$response = $response->withRedirect($this->router->pathFor('content.show'));
 		}
 		
 		return $next($request, $response);

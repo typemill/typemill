@@ -7,13 +7,14 @@
 	<div class="lead">
 
 		{{ content }}
-
-		<a href="{{ navigation[0].urlRel }}">{{ settings.themes.typemill.start ? settings.themes.typemill.start : 'Start'}}</a>
 		
-		{% if settings.setup  %}
-			<a href="{{ base_url }}/setup">Setup</a>
-		{% endif %}
-		
+		<div class="actionLink">
+			<a href="{{ navigation[0].urlRel }}">{{ settings.themes.typemill.start ? settings.themes.typemill.start : 'Start'}}</a>
+			
+			{% if settings.setup  %}
+				<a href="{{ base_url }}/setup">Setup</a>
+			{% endif %}
+		</div>
 	</div>
 	
 {% endblock %}

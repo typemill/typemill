@@ -55,7 +55,12 @@ class Write
 		if($this->checkPath($folder))
 		{
 			$filePath 	= $this->basePath . $folder . DIRECTORY_SEPARATOR . $file;
-			$openFile 	= fopen($filePath, "w");
+			$openFile 	= @fopen($filePath, "w");
+			
+			if(!$openFile)
+			{
+				return false;
+			}
 			
 			fwrite($openFile, $data);
 			fclose($openFile);

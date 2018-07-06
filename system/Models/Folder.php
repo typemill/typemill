@@ -67,7 +67,7 @@ class Folder
 				$item->urlRel			= $fullSlugWithFolder . '/' . $item->slug;
 				$item->urlAbs			= $baseUrl . $fullSlugWithoutFolder . '/' . $item->slug;
 				$item->key				= $iteration;
-				$item->keyPath			= $keyPath ? $keyPath . '.' . $iteration : $iteration;
+				$item->keyPath			= isset($keyPath) ? $keyPath . '.' . $iteration : $iteration;
 				$item->keyPathArray		= explode('.', $item->keyPath);
 				$item->chapter			= $chapter ? $chapter . '.' . $chapternr : $chapternr;
 				
@@ -150,7 +150,7 @@ class Folder
 		if($item->elementType == 'folder')
 		{
 			/* get the first element in the folder */
-			$item->nextItem = isset($item->folderContent[0]) ? $item->folderContent[0] : false;
+			$item->nextItem = isset($item->folderContent[0]) ? clone($item->folderContent[0]) : false;
 		}
 		
 		if(!$item->nextItem)

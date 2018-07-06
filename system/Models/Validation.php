@@ -201,7 +201,7 @@ class Validation
 		$v = new Validator($params);
 		
 		$v->rule('required', ['title', 'content', 'url']);
-		$v->rule('lengthBetween', 'title', 2, 40);
+		$v->rule('lengthBetween', 'title', 2, 100);
 		$v->rule('noHTML', 'title');
 		$v->rule('markdownSecure', 'content');
 		

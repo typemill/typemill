@@ -29,7 +29,6 @@ class ContentController extends Controller
 	
 	public function showContent(Request $request, Response $response, $args)
 	{
-
 		$settings		= $this->c->get('settings');
 		$pathToContent	= $settings['rootPath'] . $settings['contentFolder'];
 		$uri 			= $request->getUri();
@@ -115,8 +114,6 @@ class ContentController extends Controller
 		return $this->render($response, 'content/content.twig', array('navigation' => $structure, 'title' => $title, 'content' => $content, 'item' => $item, 'settings' => $settings ));
 	}
 
-	
-	
 	public function updateArticle(Request $request, Response $response, $args)
 	{
 		/* Extract the parameters from get-call */
@@ -147,7 +144,7 @@ class ContentController extends Controller
 			$structure 	= $this->getFreshStructure($pathToContent, $write, $uri);
 			if(!$structure)
 			{
-				return $response->withJson(['errors' => ['content folder is empty']], 404);
+				return $response->withJson(['errors' => ['message' => 'content folder is empty']], 404);
 			}
 		}
 		
@@ -163,10 +160,10 @@ class ContentController extends Controller
 			/* search for the url in the structure */
 			$item = Folder::getItemForUrl($structure, $params['url']);			
 		}
-				
+
 		if(!$item)
 		{
-			return $response->withJson(['errors' => ['requested page-url not found']], 404);
+			return $response->withJson(['errors' => ['message' => 'requested page-url not found']], 404);
 		}
 				
 		if($item->elementType == 'folder')
@@ -182,14 +179,20 @@ class ContentController extends Controller
 		$mdFile	= $write->getFile($settings['contentFolder'], $path);		
 		if($mdFile)
 		{
-			/* merge title with content for complete markdown document */
+			/* merge title with content forcomplete markdown document */
 			$updatedContent = '# ' . $params['title'] . "\r\n\r\n" . $params['content'];
 			
 			/* update the file */
-			$write->writeFile($settings['contentFolder'], $path, $updatedContent);
-			return $response->withJson(['success'], 200);
+			if($write->writeFile($settings['contentFolder'], $path, $updatedContent))
+			{
+				return $response->withJson(['success'], 200);
+			}
+			else
+			{
+				return $response->withJson(['errors' => ['message' => 'Could not write to file. Please check if file is writable']], 404);
+			}
 		}
-		return $response->withJson(['errors' => ['requested markdown-file not found']], 404);
+		return $response->withJson(['errors' => ['message' => 'requested markdown-file not found']], 404);
 	}
 	
 	protected function getFreshStructure($pathToContent, $cache, $uri)

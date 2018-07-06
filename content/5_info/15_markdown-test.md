@@ -51,6 +51,20 @@ A paragraph is a simple text-block separated with a new line above and below.
 
 A paragraph is a simple text-block separated with a new line above and below.
 
+## Soft Linebreak
+
+````
+For a soft linebreak (eg. for dialoges in literature), add two spaces at the end of a line and use a simple return.
+
+She said: "Hello"  
+He said: "again"
+````
+
+For a soft linebreak (eg. for dialoges in literature), add two spaces at the end of a line and use a simple return.
+
+She said: "Hello"  
+He said: "again"
+
 ##Emphasis
 
 ````
@@ -137,11 +151,11 @@ Or you can use a shortcut like http://typemill.net.
 ```
 The same rules as with links, but with a !
 
-![alt-text](/info/markdown.png)
+![alt-text](/media/markdown.png)
 
-![alt-text](/info/markdown.png "my title")
+![alt-text](/media/markdown.png "my title")
 
-![alt-text](/info/markdown.png "my title"){#myid .myclass}
+![alt-text](/media/markdown.png "my title"){#myid .myclass}
 ```
 
 The same rules as with links, but with a !
@@ -151,6 +165,40 @@ The same rules as with links, but with a !
 ![alt-text](/media/markdown.png "my title"){.imgClass}
 
 ![alt-text](/media/markdown.png "my title"){#myid .imgClass .myClass}
+
+## Linked Images
+
+````
+You can link an image with a nested syntax like this:
+
+[![alt-text](/media/markdown.png)](https://typemill.net)
+````
+
+You can link an image with a nested syntax like this:
+
+[![alt-text](/media/markdown.png)](https://typemill.net)
+
+## Image Position
+
+````
+You can controll the image position with the classes .left, .right and .middle like this:
+
+![alt-text](/media/markdown.png){.left}
+![alt-text](/media/markdown.png){.right}
+![alt-text](/media/markdown.png){.middle}
+````
+
+![image float left](/media/markdown.png){.left}
+
+The first image should float on the left side of this paragraph. This might not work with all themes. If you are a theme developer, please ensure that you support the image classes "left", "right" and "middle".
+
+![image float right](/media/markdown.png){.right}
+
+The second image should float on the right side of this paragraph. This might not work with all themes. If you are a theme developer, please ensure that you support the image classes "left", "right" and "middle".
+
+![image middle](/media/markdown.png){.middle}
+
+The thirds image should be placed above this paragraph and centered to the middle of the content area. This might not work with all themes. If you are a theme developer, please ensure that you support the image classes "left", "right" and "middle".
 
 ## Blockquote
 

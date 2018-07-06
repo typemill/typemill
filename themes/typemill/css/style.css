@@ -21,9 +21,11 @@ aside{	background: #f9f8f6; border-left: 30px solid #FFF; border-right: 30px sol
 .main-menu li a:focus, .main-menu li a:hover, .main-menu li a:active, .main-menu li.active.file a{ color: #e0474c; }
 article {background: #FFF; }
 article a, article a:link, article a:visited,
-footer a, footer a:link, footer a:visited{ text-decoration: none; color: #e0474c; }
+footer a, footer a:link, footer a:visited
+.lead a, .lead a:link, .lead a:visited{ text-decoration: none; color: #e0474c; }
 article a:focus, article a:hover, article a:active,
-footer a:focus, footer a:hover, footer a:active{ text-decoration: underline }
+footer a:focus, footer a:hover, footer a:active
+.lead a:focus, .lead a:hover, .lead a:active{ text-decoration: underline }
 article .breadcrumb,article .paging a{ background: #f9f8f6; }
 article .breadcrumb span a{ background: #e0474c; color: #f9f8f6; border: 1px solid #e0474c; }
 article .breadcrumb a:focus,article .breadcrumb a:hover,article .breadcrumb a:active { background: #f9f8f6; color: #e0474c; }
@@ -36,9 +38,9 @@ header a, .cover{ color: #444; }
 footer{ background: #FFF; }
 .chapterNumber{ color: #bbb; }
 .chapter h1{ border-bottom: 2px solid #f9f8f6; }
-.cover .lead a, .cover .lead a:link, .cover .lead a:visited,
+.cover .actionLink a, .cover .actionLink a:link, .cover .actionLink a:visited,
 a.readMore, a.readMore:link, a.readMore:visited{ border: 2px solid #e0474c; background: #e0474c; color: #f9f8f6; }
-.cover .lead a:focus, .cover .lead a:hover, .cover .lead a:active,
+.cover .lead a:focus, .cover .actionLink a:hover, .cover .actionLink a:active,
 a.readMore:focus, a.readMore:hover, a.readMore:active{
 	border: 2px solid #e0474c;
 	color: #444;
@@ -204,7 +206,7 @@ header p{
 	font-size: 2.5em; 
 	font-weight: 700;
 }
-.cover .lead a, a.readMore{
+.cover .actionLink a, a.readMore{
 	display: inline-block;
 	min-width: 100px;
 	padding: 5px 10px;
@@ -319,6 +321,25 @@ article{
 article img{
 	width: 100%;
 }
+article img.left{
+	width: auto;
+	max-width: 100%;
+	float: left;
+	margin: 10px 10px 10px 0;
+}
+article img.right{
+	width: auto;
+	max-width: 100%;
+	float: right;
+	margin: 10px 0px 10px 10px;	
+}
+article img.middle{
+	display:block;
+	width: auto;
+	max-width: 100%;
+	margin: auto;
+}
+
 
 /************************
 *  	PAGING / BREADCRUMB *
