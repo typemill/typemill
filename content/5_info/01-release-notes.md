@@ -2,6 +2,26 @@
 
 This is the version history with some release notes.
 
+## Version 1.2.1: Improved editor and fixes
+
+_Release date: 06.07.2018_
+
+** Version 1.2.1 has an important security-update, so please switch to version 1.2.1 asap. Follow the instruction for simple updates**  in the [documentation](/gettings-started/update), so update the `system` folder and please also update the theme `typemill`.
+
+The changes are:
+
+* Fixed soft linebreaks in markdown. Now you can add two spaces at the end of a line and you will get a soft linebreak with `<br/>`.
+* Fixed navigation-error. The navigation will work now if the content starts with multiple nested folders.
+* Links on startpage are now displayed correctly.
+* You can now position your images with three classes `.left`, `.right`, `.middle`. Check the markdown test in the documentation for more info and examples.
+* Added markdown example for linked image in documentation.
+* Maximum lenght of title in editor is now 100 characters instead of 40.
+* All redirects to the author panel go to content now instead of settings.
+* Added error message, if file is not writable.
+* Added csrf-check and more security to the content-api.
+* Massively improved vue-code for the editor. Now it is vue.js logic and not vanilla script.
+* Massivley reduced and cleaned up custom code for parsedown-extension.
+
 ## Version 1.2.0: Introducing a Basic Content Editor
 
 _Release date: 25.06.2018_

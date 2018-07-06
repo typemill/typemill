@@ -176,7 +176,7 @@ You can link an image with a nested syntax like this:
 
 You can link an image with a nested syntax like this:
 
-[![alt-text](/media/markdown.png)](https://typemill.net)
+[![alt-text](/media/markdown.png){.imgClass}](https://typemill.net)
 
 ## Image Position
 
