@@ -24,10 +24,10 @@ class ContentBackendController extends ContentController
 		$this->params	= isset($args['params']) ? ['url' => $this->uri->getBasePath() . '/' . $args['params']] : ['url' => $this->uri->getBasePath()];
 		
 		# set structure
-		if(!$this->setStructure($draft = true)){ die('no structure'); return $this->render404($response, array( 'navigation' => true, 'content' => $this->errors )); }
+		if(!$this->setStructure($draft = true)){ return $this->render404($response, array( 'navigation' => true, 'content' => $this->errors )); }
 		
 		# set item
-		if(!$this->setItem()){ die('no item'); return $this->render404($response, array( 'navigation' => $this->structure, 'settings' => $this->settings, 'content' => $this->errors )); }
+		if(!$this->setItem()){ return $this->render404($response, array( 'navigation' => $this->structure, 'settings' => $this->settings, 'content' => $this->errors )); }
 		
 		# set the status for published and drafted
 		$this->setPublishStatus();

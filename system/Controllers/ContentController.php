@@ -93,19 +93,24 @@ abstract class ContentController
 	
 	protected function setStructure($draft = false, $cache = true)
 	{
+		# set initial structure to false
+		$structure = false;
+
 		# name of structure-file for draft or live
 		$filename = $draft ? $this->structureDraftName : $this->structureLiveName;
 		
 		# set variables and objects
 		$this->write = new writeCache();
-		
+				
 		# check, if cached structure is still valid 
 		if($cache && $this->write->validate('cache', 'lastCache.txt', 600))
 		{
 			# get the cached structure
 			$structure = $this->write->getCache('cache', $filename);
 		}
-		else
+		
+		# if no structure was found or cache is deactivated
+		if(!$structure)
 		{
 			# scan the content of the folder
 			$structure = Folder::scanFolder($this->settings['rootPath'] . $this->settings['contentFolder'], $draft);
