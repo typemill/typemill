@@ -143,7 +143,7 @@ abstract class ContentController
 			# search for the url in the structure
 			$item = Folder::getItemForUrl($this->structure, $this->params['url']);
 		}
-				
+
 		if($item)
 		{
 			if($item->elementType == 'file')
@@ -161,7 +161,7 @@ abstract class ContentController
 			$this->item = $item;
 			return true;
 		}
-				
+
 		$this->errors = ['errors' => ['message' => 'requested page-url not found']];
 		return false;
 	}
@@ -170,13 +170,13 @@ abstract class ContentController
 	protected function setItemPath($fileType)
 	{
 		$this->path = $this->item->pathWithoutType . '.' . $fileType;
-	}	
+	}
 	
 	protected function setPublishStatus()
 	{
 		$this->item->published = false;
 		$this->item->drafted = false;
-		
+				
 		if(file_exists($this->settings['rootPath'] . $this->settings['contentFolder'] . $this->item->pathWithoutType . '.md'))
 		{
 			$this->item->published = true;
@@ -184,14 +184,16 @@ abstract class ContentController
 			# add file-type in case it is a folder
 			$this->item->fileType = "md"; 
 		}
-		elseif(file_exists($this->settings['rootPath'] . $this->settings['contentFolder'] . $this->item->pathWithoutType . '.txt'))
+		
+		if(file_exists($this->settings['rootPath'] . $this->settings['contentFolder'] . $this->item->pathWithoutType . '.txt'))
 		{
 			$this->item->drafted = true;
 			
 			# add file-type in case it is a folder
 			$this->item->fileType = "txt"; 
 		}
-		elseif($this->item->elementType == "folder")
+		
+		if(!$this->item->drafted && !$this->item->published && $this->item->elementType == "folder")
 		{
 			# set txt as default for a folder, so that we can create an index.txt for a folder.
 			$this->item->fileType = "txt"; 			
@@ -217,7 +219,7 @@ abstract class ContentController
 	}
 	
 	protected function setContent()
-	{
+	{		
 		# if the file exists
 		if($this->item->published OR $this->item->drafted)
 		{

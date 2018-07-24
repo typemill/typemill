@@ -2,6 +2,24 @@
 
 This is the version history with some release notes.
 
+## Version 1.2.2: Draft Management
+
+_Release date: 24.07.2018_
+
+Version 1.2.2 introduces a draft management. Follow the instruction for simple updates in the [documentation](/gettings-started/update), so update the `system` folder and please also update the theme `typemill`.
+
+The changes are:
+
+- Safe a draft.
+- Publish a page.
+- Depublish a page.
+- Delete a page.
+- All buttons for editing are fixed at the bottom of the page now.
+- Created a new shared contentController for the whole page management.
+- Extended the content-api with update, depublish and delete functionalities.
+- Converted markdown to json for edit- and draft-management (stored as txt).
+- Extended the vue-js for the editor.
+
 ## Version 1.2.1: Improved editor and fixes
 
 _Release date: 06.07.2018_

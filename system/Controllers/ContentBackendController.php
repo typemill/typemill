@@ -28,13 +28,13 @@ class ContentBackendController extends ContentController
 		
 		# set item
 		if(!$this->setItem()){ die('no item'); return $this->render404($response, array( 'navigation' => $this->structure, 'settings' => $this->settings, 'content' => $this->errors )); }
-
+		
 		# set the status for published and drafted
 		$this->setPublishStatus();
 
 		# set path
 		$this->setItemPath($this->item->fileType);
-		
+						
 		# add the modified date for the file
 		$this->item->modified	= ($this->item->published OR $this->item->drafted) ? filemtime($this->settings['contentFolder'] . $this->path) : false;
 		
