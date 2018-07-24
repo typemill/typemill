@@ -4,7 +4,7 @@ use Typemill\Controllers\PageController;
 use Typemill\Controllers\SetupController;
 use Typemill\Controllers\AuthController;
 use Typemill\Controllers\SettingsController;
-use Typemill\Controllers\ContentController;
+use Typemill\Controllers\ContentBackendController;
 use Typemill\Middleware\RedirectIfUnauthenticated;
 use Typemill\Middleware\RedirectIfAuthenticated;
 use Typemill\Middleware\RedirectIfNoAdmin;
@@ -46,7 +46,7 @@ $app->post('/tm/user/delete', SettingsController::class . ':deleteUser')->setNam
 $app->get('/tm/user/{username}', SettingsController::class . ':showUser')->setName('user.show')->add(new RedirectIfUnauthenticated($container['router'], $container['flash']));
 $app->get('/tm/user', SettingsController::class . ':listUser')->setName('user.list')->add(new RedirectIfNoAdmin($container['router'], $container['flash']));
 
-$app->get('/tm/content[/{params:.*}]', ContentController::class . ':showContent')->setName('content.show')->add(new RedirectIfUnauthenticated($container['router'], $container['flash']));
+$app->get('/tm/content[/{params:.*}]', ContentBackendController::class . ':showContent')->setName('content.show')->add(new RedirectIfUnauthenticated($container['router'], $container['flash']));
 
 foreach($routes as $pluginRoute)
 {

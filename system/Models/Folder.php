@@ -11,7 +11,7 @@ class Folder
 	* vars: folder path as string
 	* returns: multi-dimensional array with names of folders and files
 	*/
-	public static function scanFolder($folderPath)
+	public static function scanFolder($folderPath, $draft = false)
 	{
 		$folderItems 	= scandir($folderPath);
 		$folderContent 	= array();
@@ -22,13 +22,31 @@ class Folder
 			{
 				if (is_dir($folderPath . DIRECTORY_SEPARATOR . $item))
 				{
+					/* TODO: if folder is empty or folder has only txt files, continue */
 					$subFolder 					= $item;
-					$folderContent[$subFolder] 	= self::scanFolder($folderPath . DIRECTORY_SEPARATOR . $subFolder);					
+					$folderContent[$subFolder] 	= self::scanFolder($folderPath . DIRECTORY_SEPARATOR . $subFolder, $draft);					
 				}
 				else
 				{
-					$file						= $item;
-					$folderContent[] 			= $file;
+					$nameParts 					= self::getStringParts($item);
+					$fileType 					= array_pop($nameParts);
+					
+					if($fileType == 'md')
+					{
+						$folderContent[] 			= $item;						
+					}
+					
+					if($draft === true && $fileType == 'txt')
+					{
+						if(isset($last) && ($last == implode($nameParts)) )
+						{
+							array_pop($folderContent);
+						}
+						$folderContent[] = $item;
+					}
+					
+					/* store the name of the last file */
+					$last = implode($nameParts);
 				}
 			}
 		}
@@ -78,8 +96,9 @@ class Folder
 				$nameParts 				= self::getStringParts($name);
 				$fileType 				= array_pop($nameParts);
 				
-				if($name == 'index.md' || $fileType !== 'md' ) continue;
-												
+				# if($name == 'index.md' || $fileType !== 'md' ) continue;
+				if($name == 'index.md' || $name == 'index.txt' ) continue;
+													
 				$item->originalName 	= $name;
 				$item->elementType		= 'file';
 				$item->fileType			= $fileType;
@@ -271,5 +290,11 @@ class Folder
 	{
 		$parts = preg_split('/\./',$fileName);
 		return end($parts);
-	}	
+	}
+	
+	public static function splitFileName($fileName)
+	{
+		$parts = preg_split('/\./',$fileName);
+		return $parts;
+	}
 }

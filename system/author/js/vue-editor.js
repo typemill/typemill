@@ -9,7 +9,6 @@ Vue.component('resizable-textarea', {
     this.$nextTick(() => {
       this.$el.setAttribute('style', 'height:' + (this.$el.scrollHeight) + 'px;overflow-y:hidden;')
     })
-
     this.$el.addEventListener('input', this.resizeTextarea)
   },
   beforeDestroy () {
@@ -24,29 +23,81 @@ let app = new Vue({
     delimiters: ['${', '}'],
 	el: '#editor',
 	data: {
+		root: document.getElementById("main").dataset.url,
 		form: {
-			title: 		document.getElementById("origTitle").value,
-			content: 	document.getElementById("origContent").value,
+			title: 		this.title = document.getElementById("title").value,
+			content: 	this.title = document.getElementById("content").value,
 			url: 		document.getElementById("path").value,
 			csrf_name: 	document.getElementById("csrf_name").value,
 			csrf_value:	document.getElementById("csrf_value").value,			
 		},
-		root: 		document.getElementById("main").dataset.url,
 		errors:{
 			title: false,
 			content: false,
 			message: false,
 		},
-		bdisabled: false,
-		bresult: false,
+		modalWindow: "modal hide",
+		draftDisabled: true,
+		publishDisabled: document.getElementById("publishController").dataset.drafted ? false : true,
+		deleteDisabled: false,
+		draftResult: "",
+		publishResult: "",
+		deleteResult: "",
+		publishStatus: document.getElementById("publishController").dataset.published ? false : true,
+		publishLabel: document.getElementById("publishController").dataset.published ? "online" : "offline",
 	},
 	methods: {
-		saveMarkdown: function(e){
+		submit: function(e){
+			/* count submits and react to line before. */
+		},
+		changeContent: function(e){
+			this.draftDisabled = false;
+			this.publishDisabled = false;
+			this.draftResult = "";
+			this.publishResult = "";
+		},
+		publishDraft: function(e){
+			var self = this;
+			self.errors = {title: false, content: false, message: false};
+			
+			self.publishResult = "load";
+			self.publishDisabled = "disabled";
+
+			var url = this.root + '/api/v1/article/publish';
+			var method 	= 'POST';
+
+			sendJson(function(response, httpStatus)
+			{
+				if(response)
+				{					
+					var result = JSON.parse(response);
+					
+					if(result.errors)
+					{
+						self.publishDisabled = false;
+						self.publishResult = "fail";
+
+						if(result.errors.title){ self.errors.title = result.errors.title[0] };
+						if(result.errors.content){ self.errors.content = result.errors.content[0] };
+						if(result.errors.message){ self.errors.message = result.errors.message };
+					}
+					else
+					{
+						self.draftDisabled = "disabled";
+						self.publishResult = "success";
+						self.publishStatus = false;
+						self.publishLabel = "online";
+					}
+				}
+			}, method, url, this.form );			
+		},
+		saveDraft: function(e){
 		
 			var self = this;
-			self.errors = {title: false, content: false, message: false},
-			self.bresult = '';
-			self.bdisabled = "disabled";
+			self.errors = {title: false, content: false, message: false};
+			
+			self.draftDisabled = "disabled";
+			self.draftResult = "load";
 		
 			var url = this.root + '/api/v1/article';
 			var method 	= 'PUT';
@@ -54,24 +105,88 @@ let app = new Vue({
 			sendJson(function(response, httpStatus)
 			{
 				if(response)
-				{
-					self.bdisabled = false;
-					
+				{					
 					var result = JSON.parse(response);
 					
 					if(result.errors)
 					{
-						self.bresult = 'fail';						
+						self.draftDisabled = false;
+						self.draftResult = 'fail';
 						if(result.errors.title){ self.errors.title = result.errors.title[0] };
 						if(result.errors.content){ self.errors.content = result.errors.content[0] };
 						if(result.errors.message){ self.errors.message = result.errors.message };
 					}
 					else
 					{
-						self.bresult = 'success';
+						self.draftResult = 'success';
 					}
 				}
 			}, method, url, this.form );
-		}
+		},
+		depublishArticle: function(e){
+		
+			var self = this;
+			self.errors = {title: false, content: false, message: false};
+
+			self.publishStatus = "disabled";
+		
+			var url = this.root + '/api/v1/article/unpublish';
+			var method 	= 'DELETE';
+			
+			sendJson(function(response, httpStatus)
+			{
+				if(response)
+				{
+					var result = JSON.parse(response);
+					
+					if(result.errors)
+					{
+						self.publishStatus = false;
+						if(result.errors.message){ self.errors.message = result.errors.message };
+					}
+					else
+					{
+						self.publishResult = "";
+						self.publishLabel = "offline";
+						self.publishDisabled = false;
+					}
+				}
+			}, method, url, this.form );
+		},
+		deleteArticle: function(e){
+			var self = this;
+			self.errors = {title: false, content: false, message: false};
+
+			self.deleteDisabled = "disabled";
+			self.deleteResult = "load";
+		
+			var url = this.root + '/api/v1/article';
+			var method 	= 'DELETE';
+
+			sendJson(function(response, httpStatus)
+			{
+				if(response)
+				{
+					var result = JSON.parse(response);
+					
+					if(result.errors)
+					{
+						self.modalWindow = "modal";
+						if(result.errors.message){ self.errors.message = result.errors.message };
+					}
+					else
+					{
+						self.modalWindow = "modal";
+						window.location.replace(self.root + '/tm/content');
+					}
+				}
+			}, method, url, this.form );
+		},
+		showModal: function(e){
+			this.modalWindow = "modal show";
+		},
+		hideModal: function(e){
+			this.modalWindow = "modal";
+		},
 	}
 })

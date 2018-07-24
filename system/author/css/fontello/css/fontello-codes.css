@@ -1,7 +1,8 @@
 
 .icon-picture:before { content: '\e800'; } /* '' */
-.icon-edit:before { content: '\e801'; } /* '' */
-.icon-cog:before { content: '\e802'; } /* '' */
-.icon-off:before { content: '\e803'; } /* '' */
+.icon-off:before { content: '\e801'; } /* '' */
+.icon-eye:before { content: '\e802'; } /* '' */
+.icon-cancel:before { content: '\e803'; } /* '' */
+.icon-cog:before { content: '\e804'; } /* '' */
 .icon-link-ext:before { content: '\f08e'; } /* '' */
 .icon-doc-text:before { content: '\f0f6'; } /* '' */

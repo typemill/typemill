@@ -17,7 +17,7 @@ class ParsedownExtension extends \ParsedownExtra
 		# table of content support
         array_unshift($this->BlockTypes['['], 'TableOfContents');
     }
-	
+		
 	function text($text)
 	{
         $Elements = $this->textElements($text);
@@ -67,7 +67,7 @@ class ParsedownExtension extends \ParsedownExtra
 
     # Header
 	
-	private $headlines 			= array();
+	private $headlines = array();
 	
     protected function blockHeader($Line)
     {
@@ -266,4 +266,102 @@ class ParsedownExtension extends \ParsedownExtra
         $Block['element']['text'] = "\$\$\n" . $text . "\n\$\$";
         return $Block;
     }
+	
+	# turn markdown into an array of markdown blocks for typemill edit mode	
+	function markdownToArrayBlocks($markdown)
+	{
+        # standardize line breaks
+        $markdown = str_replace(array("\r\n", "\r"), "\n", $markdown);
+
+        # remove surrounding line breaks
+        $markdown = trim($markdown, "\n");
+
+		# trim to maximum two linebreaks
+		
+        # split text into blocks
+        $blocks = explode("\n\n", $markdown);
+		
+		# clean up code blocks
+		$cleanBlocks = array();
+		
+		# holds the content of codeblocks
+		$codeBlock = '';
+		
+		# flag if codeblock is on or off.
+		$codeBlockOn = false;
+		
+		foreach($blocks as $block)
+		{
+			// remove empty lines
+			if (chop($block) === '') continue;
+				
+			// if the block starts with a fenced code
+			if(substr($block,0,2) == '``')
+			{
+				// and if we are in an open code-block
+				if($codeBlockOn)
+				{
+					// it must be the end of the codeblock, so add it to the codeblock
+					$block = $codeBlock . "\n" . $block;
+					
+					// reset codeblock-value and close the codeblock.
+					$codeBlock = '';
+					$codeBlockOn = false;
+				}
+				else
+				{
+					// it must be the start of the codeblock.
+					$codeBlockOn = true;
+				}
+			}
+			if($codeBlockOn)
+			{
+				// if the codeblock is complete
+				if($this->isComplete($block))
+				{
+					$block = $codeBlock . "\n" . $block;
+
+					// reset codeblock-value and close the codeblock.
+					$codeBlock = '';
+					$codeBlockOn = false;
+				}
+				else
+				{
+					$codeBlock .= "\n" . $block;
+					continue;
+				}
+			}
+			
+			$cleanBlocks[] = $block;
+		}
+
+		return $cleanBlocks;
+	}
+
+	protected function isComplete($codeblock)
+	{
+		$lines = explode("\n", $codeblock);
+		if(count($lines) > 1)
+		{
+			$lastLine = array_pop($lines);
+			if(substr($lastLine,0,2) == '``')
+			{
+				return true;
+			}
+			return false;
+		}
+		return false;
+	}
+	
+	public function arrayBlocksToMarkdown(array $arrayBlocks)
+	{	
+		$markdown = '';
+		
+		foreach($arrayBlocks as $block)
+		{
+			$markdown .=  $block . "\n\n";
+		}
+		
+		return $markdown;
+	}	
 }

@@ -9,6 +9,7 @@ use Typemill\Models\WriteYaml;
 use \Symfony\Component\Yaml\Yaml;
 use Typemill\Models\VersionCheck;
 use Typemill\Models\Helpers;
+use Typemill\Models\Markdown;
 use Typemill\Events\OnPagetreeLoaded;
 use Typemill\Events\OnBreadcrumbLoaded;
 use Typemill\Events\OnItemLoaded;
@@ -21,7 +22,6 @@ class PageController extends Controller
 {
 	public function index($request, $response, $args)
 	{
-	
 		/* Initiate Variables */
 		$structure		= false;
 		$contentHTML	= false;
@@ -33,7 +33,7 @@ class PageController extends Controller
 		$cache 			= new WriteCache();
 		$uri 			= $request->getUri();
 		$base_url		= $uri->getBaseUrl();
-
+		
 		try
 		{
 			/* if the cached structure is still valid, use it */
@@ -72,7 +72,7 @@ class PageController extends Controller
 			echo $e->getMessage();
 			exit(1);
 		}
-		
+				
 		/* if the user is on startpage */
 		if(empty($args))
 		{	
@@ -122,14 +122,14 @@ class PageController extends Controller
 		
 		/* initialize parsedown */
 		$parsedown 		= new ParsedownExtension();
-		
+				
 		/* set safe mode to escape javascript and html in markdown */
 		$parsedown->setSafeMode(true);
 
 		/* parse markdown-file to content-array */
 		$contentArray 	= $parsedown->text($contentMD);
 		$contentArray 	= $this->c->dispatcher->dispatch('onContentArrayLoaded', new OnContentArrayLoaded($contentArray))->getData();
-
+		
 		/* get the first image from content array */
 		$firstImage		= $this->getFirstImage($contentArray);
 		

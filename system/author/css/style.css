@@ -1089,59 +1089,98 @@ label .help, .label .help{
 	padding: 15px 20px;
 	color: #e0474c;
 }
+.buttonset{
+	position: fixed;
+	display: block;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	box-sizing: border-box;
+	padding: 2px;
+	max-width: 900px;
+	background: #fff;
+	box-shadow: 0 0 2px #ddd;
+}
+.buttonset .message.error{
+	position: absolute;
+	background: #e0474c;
+	color: #fff;
+	width: 100%;
+	left: 0;
+	top: -25px;
+	padding: 5px 40px;
+	box-sizing: border-box;
+	box-shadow: 0 0 2px #ddd;
+}
 .editor button{
 	position: relative;
-	border-radius: 3px;
+	border-radius: 0px;
+	padding:10px;
+	min-width: 70px;
+	font-size: 0.8em;
+	margin: 4px 2px;
+}
+.editor button:enabled,
+.editor button[enabled]{
 	color: #f9f8f6;
 	border: 2px solid #e0474c; 
 	background: #e0474c; 
-	padding:10px;
-	min-width: 200px;
 }
-.editor button:hover{
+.editor button:enabled:hover,
+.editor button[enabled]:hover{
 	border: 2px solid #cc4146; 
 	background: #cc4146; 
 }
-.editor button:disabled, .editor button[disabled]{
-	border: 2px solid #cc4146; 
-	background: #cc4146; 
-	color: #eee;
+.editor button:disabled,
+.editor button[disabled]{
+	border: 2px solid #eee;
+	background: #eee;
+	color: #444;
 	cursor: default;
 }
-.editor button:disabled:after, 
-.editor button[disabled]:after,
-.editor button.success:after,
-.editor button.fail:after{
-	position: absolute;
-	right: 8px;
-	top: 8px;
-	width: 8px;
-	height: 8px;
-	border-radius: 50%;
-	content: '';
-}
-.editor button:disabled:after, 
-.editor button[disabled]:after{
-	border: 8px solid #eee;
-	border-top: 8px solid #ccc;
-	background: #ccc;
-    animation: spin 2s linear infinite;	
-}
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-.editor button.success:after,
-.editor button.fail:after{
-	border: 8px solid #eee;
-}
-.editor button.success:after{
-	background: #00cc00;
-}
-.editor button.fail:after{
-	background: #e0474c;
-}
 
+.buttonset .secondary{
+	display: inline-block;
+	float: right;
+}
+.buttonset .secondary--block{
+	display: inline-block;
+}
+.editor button.button--secondary{
+	display: inline-block;
+	min-width: 40px;
+	max-width: 40px;
+	background: #fff;
+	border: 1px solid #eee;
+	color: #444;
+}
+.editor button.button--secondary:hover{
+	background: #e0474c;
+	border: 1px solid #e0474c;
+	color: #eee;
+}
+.editor button.button--secondary[disabled],
+.editor button.button--secondary:disabled{
+	border: 1px solid #eee; 
+	background: #eee;
+	color: #444;
+	cursor: default;
+}
+.editor button.button--secondary__hightlight[enabled],
+.editor button.button--secondary__hightlight:enabled{
+	background: #66b0a3;
+	border: 1px solid #66b0a3;
+	color: #fff;
+}
+[v-cloak]{
+	display: none;
+}
+.mobile{
+	display: block;
+}
+.desktop{
+	display: none;
+}
 @media only screen and (min-width: 600px) {
 	header.headline{
 		padding: 0px 20px;
@@ -1163,6 +1202,58 @@ label .help, .label .help{
 	.settings .medium a.button{
 		display: inline-block;
 		width: auto;
+	}
+	.editor button{
+		min-width: 150px;
+		font-size: 0.9em;
+	}	
+	.editor button.load:after,
+	.editor button.success:after,
+	.editor button.fail:after{
+		position: absolute;
+		right: 8px;
+		top: 6px;
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		content: '';
+	}
+	.editor button.load:after{
+		border: 8px solid #fff;
+		border-top: 8px solid #ccc;
+		background: #ccc;
+		animation: spin 2s linear infinite;	
+	}
+	@keyframes spin {
+		0% { transform: rotate(0deg); }
+		100% { transform: rotate(360deg); }
+	}
+	.editor button.success:after,
+	.editor button.fail:after{
+		border: 8px solid #eee;
+	}
+	.editor button.success:after{
+		background: #00cc00;
+	}
+	.editor button.fail:after{
+		background: #e0474c;
+	}
+	.buttonset .secondary--block{
+		display: inline-block;
+	}
+	.editor button.button--secondary{
+		display: inline-block;
+		width: auto;
+		min-width: auto;
+		max-width: inherit;
+		border: 1px solid #eee;
+		color: #444;
+	}
+	.mobile{
+		display: none;
+	}
+	.desktop{
+		display: inline-block;
 	}	
 }
 @media only screen and (min-width: 800px) {
@@ -1282,4 +1373,14 @@ label .help, .label .help{
 		border-top: 0px;
 		border-left: 2px solid #70c1b3;
 	}
+	.buttonset{
+		width: 76%;
+		padding: 10px 40px;
+		left: auto;
+		right: auto;
+		max-width: 900px;
+	}	
+	.editor button{
+		border-radius: 3px;
+	}	
 }

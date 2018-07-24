@@ -2,216 +2,243 @@
 
 namespace Typemill\Controllers;
 
-use Slim\Views\Twig;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Interop\Container\ContainerInterface;
 use Typemill\Models\Validation;
 use Typemill\Models\Folder;
 use Typemill\Models\Write;
-use Typemill\Models\WriteYaml;
 use Typemill\Models\WriteCache;
-use \Symfony\Component\Yaml\Yaml;
-use Typemill\Models\Helpers;
-use Typemill\Extensions\ParsedownExtension;
-use \Parsedown;
 
-
-class ContentController extends Controller
+abstract class ContentController
 {
+	# holds the pimple container
+	protected $c;
 	
-	/**
-	* Show Content
-	* 
-	* @param obj $request the slim request object
-	* @param obj $response the slim response object
-	* @return obje $response with redirect to route
-	*/
+	# holds the params from request
+	protected $params;
+		
+	# holds the slim-uri-object
+	protected $uri;
 	
-	public function showContent(Request $request, Response $response, $args)
+	# holds the errors to output in frontend 
+	protected $errors;
+	
+	# holds a write object to write files 
+	protected $write;
+	
+	# holds the structure of content folder as a serialized array of objects 
+	protected $structure;
+	
+	# holds the name of the structure-file with drafts for author environment 
+	protected $structureDraftName;
+	
+	# holds the name of the structure-file without drafts for live site 
+	protected $structureLiveName;
+	
+	# hold the page-item as an object
+	protected $item;
+	
+	# holds the path to the requested file
+	protected $path = false;
+	
+	# holds the content of the page
+	protected $content;
+	
+	public function __construct(ContainerInterface $c)
 	{
-		$settings		= $this->c->get('settings');
-		$pathToContent	= $settings['rootPath'] . $settings['contentFolder'];
-		$uri 			= $request->getUri();
-
-		/* scan the content of the folder */
-		$structure = Folder::scanFolder($pathToContent);
-
-		/* if there is no content, render an empty page */
-		if(count($structure) == 0)
-		{
-			return $this->render($response, 'content/content.twig', array( 'navigation' => true, 'content' => 'Nothing found in content folder.' ));
-		}
-
-		/* create an array of object with the whole content of the folder */
-		$structure = Folder::getFolderContentDetails($structure, $uri->getBaseUrl(), $uri->getBasePath());		
-		
-		/* if there is no structure at all, the content folder is probably empty */
-		if(!$structure)
-		{
-			return $this->render($response, 'content/content.twig', array( 'navigation' => true, 'content' => 'Nothing found in content folder.' ));
-		}
-		
-		/* if it is the startpage */
-		if(empty($args))
-		{
-			/* check, if there is an index-file in the root of the content folder */
-			$contentMD = file_exists($pathToContent . DIRECTORY_SEPARATOR . 'index.md') ? file_get_contents($pathToContent . DIRECTORY_SEPARATOR . 'index.md') : NULL;
-			
-			/* if there is content (index.md), then add a marker for frontend, so ajax calls for homepage-index-urls work */
-			if($contentMD)
-			{
-				$item = new \stdClass;
-				$item->urlRel = 'is_homepage_index';
-			}
-		}
-		else
-		{
-			/* get the request url */
-			$urlRel = $uri->getBasePath() . '/' . $args['params'];			
-			
-			/* find the url in the content-item-tree and return the item-object for the file */
-			$item = Folder::getItemForUrl($structure, $urlRel);
-						
-			/* if there is still no item, return a 404-page */
-			if(!$item)
-			{
-				return $this->render404($response, array( 'navigation' => $structure, 'settings' => $settings,  'base_url' => $base_url )); 
-			}
-		
-			/* add the paging to the item */
-			$item = Folder::getPagingForItem($structure, $item);
-		
-			/* check if url is a folder. If so, check if there is an index-file in that folder */
-			if($item->elementType == 'folder' && $item->index)
-			{
-				$filePath = $pathToContent . $item->path . DIRECTORY_SEPARATOR . 'index.md';
-			}
-			elseif($item->elementType == 'file')
-			{
-				$filePath = $pathToContent . $item->path;
-			}
-
-			/* add the modified date for the file */
-			$item->modified	= isset($filePath) ? filemtime($filePath) : false;
-
-			/* read the content of the file */
-			$contentMD 		= isset($filePath) ? file_get_contents($filePath) : false;
-		}
-		
-		$title = false;
-		$content = $contentMD;
-		
-        $content = str_replace(array("\r\n", "\r"), "\n", $content);
-        $content = trim($content, "\n");		
-		
-		if($contentMD[0] == '#')
-		{
-			$contentParts = explode("\n", $contentMD, 2);
-			$title = trim($contentParts[0],  "# \t\n\r\0\x0B");
-			$content = trim($contentParts[1]);
-		}
-					
-		return $this->render($response, 'content/content.twig', array('navigation' => $structure, 'title' => $title, 'content' => $content, 'item' => $item, 'settings' => $settings ));
+		$this->c 					= $c;
+		$this->settings				= $this->c->get('settings');
+		$this->structureLiveName 	= 'structure.txt';
+		$this->structureDraftName 	= 'structure-draft.txt';
 	}
-
-	public function updateArticle(Request $request, Response $response, $args)
+	
+	protected function render($response, $route, $data)
 	{
-		/* Extract the parameters from get-call */
-		$params 		= $request->getParams();
+		if(isset($_SESSION['old']))
+		{
+			unset($_SESSION['old']);
+		}
 		
-		/* validate input */
-		$validate		= new Validation();
-		$vResult		= $validate->editorInput($params);
+		if($this->c->request->getUri()->getScheme() == 'https')
+		{
+			$response = $response->withAddedHeader('Strict-Transport-Security', 'max-age=63072000');
+		}
 
+		$response = $response->withAddedHeader('X-Content-Type-Options', 'nosniff');
+		$response = $response->withAddedHeader('X-Frame-Options', 'SAMEORIGIN');
+		$response = $response->withAddedHeader('X-XSS-Protection', '1;mode=block');
+		$response = $response->withAddedHeader('Referrer-Policy', 'no-referrer-when-downgrade');
+		
+		return $this->c->view->render($response, $route, $data);
+	}
+	
+	protected function render404($response, $data = NULL)
+	{
+		return $this->c->view->render($response->withStatus(404), '/404.twig', $data);
+	}
+	
+	protected function validateEditorInput()
+	{
+		$validate = new Validation();
+		$vResult = $validate->editorInput($this->params);
+		
 		if(is_array($vResult))
-		{
-			return $response->withJson(['errors' => $vResult], 422);
-		}
-		
-		/* initiate variables and objects that we need */
-		$settings		= $this->c->get('settings');
-		$pathToContent	= $settings['rootPath'] . $settings['contentFolder'];
-		$uri 			= $request->getUri();
-		$base_url		= $uri->getBaseUrl();
-		$write			= new writeCache();
-		
-		/* we will use the cached structure to find the url for the page-update. It acts as whitelist and is more secure than a file-path, for example. */
-		$structure 		= $write->getCache('cache', 'structure.txt');
-
-		/* if there is no structure, create a fresh structure */
-		if(!$structure)
-		{
-			$structure 	= $this->getFreshStructure($pathToContent, $write, $uri);
-			if(!$structure)
-			{
-				return $response->withJson(['errors' => ['message' => 'content folder is empty']], 404);
-			}
-		}
-		
-		/* if it is the homepage */
-		if($params['url'] == 'is_homepage_index')
-		{
-			$item = new \stdClass;
-			$item->elementType = 'folder';
-			$item->path = '';
-		}
-		else
-		{
-			/* search for the url in the structure */
-			$item = Folder::getItemForUrl($structure, $params['url']);			
-		}
-
-		if(!$item)
-		{
-			return $response->withJson(['errors' => ['message' => 'requested page-url not found']], 404);
-		}
-				
-		if($item->elementType == 'folder')
-		{
-			$path = $item->path . DIRECTORY_SEPARATOR . 'index.md';
-		}
-		elseif($item->elementType == 'file')
-		{
-			$path = $item->path;
-		}
-		
-		/* get the markdown file */
-		$mdFile	= $write->getFile($settings['contentFolder'], $path);		
-		if($mdFile)
-		{
-			/* merge title with content forcomplete markdown document */
-			$updatedContent = '# ' . $params['title'] . "\r\n\r\n" . $params['content'];
-			
-			/* update the file */
-			if($write->writeFile($settings['contentFolder'], $path, $updatedContent))
-			{
-				return $response->withJson(['success'], 200);
-			}
-			else
-			{
-				return $response->withJson(['errors' => ['message' => 'Could not write to file. Please check if file is writable']], 404);
-			}
-		}
-		return $response->withJson(['errors' => ['message' => 'requested markdown-file not found']], 404);
-	}
-	
-	protected function getFreshStructure($pathToContent, $cache, $uri)
-	{
-		/* scan the content of the folder */
-		$structure = Folder::scanFolder($pathToContent);
-
-		/* if there is no content, render an empty page */
-		if(count($structure) == 0)
-		{
+		{ 
+			$this->errors = ['errors' => $vResult];
 			return false;
 		}
-
-		/* create an array of object with the whole content of the folder */
-		$structure = Folder::getFolderContentDetails($structure, $uri->getBaseUrl(), $uri->getBasePath());		
-
-		/* cache navigation */
-		$cache->updateCache('cache', 'structure.txt', 'lastCache.txt', $structure);
+		return true;
+	}
+	
+	protected function setStructure($draft = false, $cache = true)
+	{
+		# name of structure-file for draft or live
+		$filename = $draft ? $this->structureDraftName : $this->structureLiveName;
 		
-		return $structure;
+		# set variables and objects
+		$this->write = new writeCache();
+		
+		# check, if cached structure is still valid 
+		if($cache && $this->write->validate('cache', 'lastCache.txt', 600))
+		{
+			# get the cached structure
+			$structure = $this->write->getCache('cache', $filename);
+		}
+		else
+		{
+			# scan the content of the folder
+			$structure = Folder::scanFolder($this->settings['rootPath'] . $this->settings['contentFolder'], $draft);
+
+			# if there is no content, render an empty page
+			if(count($structure) == 0)
+			{
+				$this->errors = ['errors' => ['message' => 'content folder is empty']];
+				return false;
+			}
+
+			# create an array of object with the whole content of the folder
+			$structure = Folder::getFolderContentDetails($structure, $this->uri->getBaseUrl(), $this->uri->getBasePath());
+
+			# cache navigation
+			$this->write->updateCache('cache', $filename, 'lastCache.txt', $structure);
+		}
+		
+		$this->structure = $structure;
+		return true;
+	}
+
+	protected function setItem()
+	{
+		# if it is the homepage
+		if($this->params['url'] == $this->uri->getBasePath() OR $this->params['url'] == '/')
+		{
+			$item 					= new \stdClass;
+			$item->elementType 		= 'folder';
+			$item->path				= '';
+			$item->urlRel			= '/';
+		}
+		else
+		{
+			# search for the url in the structure
+			$item = Folder::getItemForUrl($this->structure, $this->params['url']);
+		}
+				
+		if($item)
+		{
+			if($item->elementType == 'file')
+			{
+				$pathParts 					= explode('.', $item->path);
+				$fileType 					= array_pop($pathParts);
+				$pathWithoutType 			= implode('.', $pathParts);
+				$item->pathWithoutType		= $pathWithoutType;
+			}
+			elseif($item->elementType == 'folder')
+			{
+				$item->path 				= $item->path . DIRECTORY_SEPARATOR . 'index';
+				$item->pathWithoutType		= $item->path;
+			}
+			$this->item = $item;
+			return true;
+		}
+				
+		$this->errors = ['errors' => ['message' => 'requested page-url not found']];
+		return false;
+	}
+	
+	# determine if you want to write to published file (md) or to draft (txt)
+	protected function setItemPath($fileType)
+	{
+		$this->path = $this->item->pathWithoutType . '.' . $fileType;
+	}	
+	
+	protected function setPublishStatus()
+	{
+		$this->item->published = false;
+		$this->item->drafted = false;
+		
+		if(file_exists($this->settings['rootPath'] . $this->settings['contentFolder'] . $this->item->pathWithoutType . '.md'))
+		{
+			$this->item->published = true;
+			
+			# add file-type in case it is a folder
+			$this->item->fileType = "md"; 
+		}
+		elseif(file_exists($this->settings['rootPath'] . $this->settings['contentFolder'] . $this->item->pathWithoutType . '.txt'))
+		{
+			$this->item->drafted = true;
+			
+			# add file-type in case it is a folder
+			$this->item->fileType = "txt"; 
+		}
+		elseif($this->item->elementType == "folder")
+		{
+			# set txt as default for a folder, so that we can create an index.txt for a folder.
+			$this->item->fileType = "txt"; 			
+		}
+	}
+		
+	protected function deleteContentFiles($fileTypes)
+	{
+		$basePath = $this->settings['rootPath'] . $this->settings['contentFolder'];
+		
+		foreach($fileTypes as $fileType)
+		{
+			if(file_exists($basePath . $this->item->pathWithoutType . '.' . $fileType))
+			{
+				unlink($basePath . $this->item->pathWithoutType . '.' . $fileType);
+				
+				# if file could not be deleted
+				# $this->errors = ['errors' => ['message' => 'Could not delete files, please check, if files are writable.']];
+			}			
+		}
+		
+		return true;
+	}
+	
+	protected function setContent()
+	{
+		# if the file exists
+		if($this->item->published OR $this->item->drafted)
+		{
+			$content = $this->write->getFile($this->settings['contentFolder'], $this->path);			
+			if($this->item->fileType == 'txt')
+			{
+				# decode the json-draft to an array
+				$content = json_decode($content);
+			}
+		}
+		elseif($this->item->elementType == "folder")
+		{
+			$content = '';
+		}
+		else
+		{
+			$this->errors = ['errors' => ['message' => 'requested file not found']];
+			return false;
+		}
+		
+		$this->content = $content;
+		return true;		
 	}
 }
