@@ -18,9 +18,7 @@
 						</div>
 						<div class="large" :class="{'error' : errors.content}">
 							<label for="content">Content*</label>
-							<resizable-textarea>
-								<textarea @input="changeContent" id="content" v-model="form.content" @keyup.enter="submit" required>{{ content }}</textarea>
-							</resizable-textarea>
+								<textarea id="content" v-model="form.content" @input="changeContent" @keyup.enter="submit" required>{{ content }}</textarea>
 							<span class="error" v-if="errors.content">${ errors.content }</span>
 						</div>
 						<input id="path" type="hidden" value="{{ item.urlRel }}" required readonly />
