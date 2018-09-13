@@ -11,13 +11,12 @@ Here are some **milestones** of the past:
 - Added an author panel for configurations (v. 1.1.3)
 - Added math support (mathjax/katex) (v. 1.1.5) 
 - Added a basic content editor to change existing pages (v. 1.2.0)
+- Added a draft management for pages (v. 1.2.2)
+- Re-order content pages with drag&drop (v. 1.2.3)
 
 And here is the **roadmap** for this year (2018):
 
-- Editor: Delete content / pages (v. 1.2.1)
-- Editor: Create new pages (v. 1.2.2)
-- Editor: Move pages (v. 1.2.2)
-- Editor: Save as draft or publish live (v. 1.2.3)
+- Editor: Create new pages (v. 1.2.3)
 - Editor: Edit meta-information (v. 1.2.4)
 - Editor: Markdown and HTML-preview (v. 1.2.5)
 - Editor: Manage images and assets (v. 1.3.0)

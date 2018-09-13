@@ -125,7 +125,7 @@ let navi = new Vue({
 			this.$refs.draggit[0].onStart(evt);			
 		},
 		onEnd(evt){
-			this.$refs.draggit[0].save(evt);
+			this.$refs.draggit[0].onEnd(evt);
 		},
 		showModal: function(e){
 			this.modalWindow = "modal show";

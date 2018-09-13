@@ -8,7 +8,7 @@
 				<a href="{{ base_url }}/tm/content"><i class="icon-home"></i><span class="level-1">Homepage</span></a>
 			</div>
 		</div>
-		<draggable :element="'ul'" class="navi-list" :list="items" @start="onStart" @start="onEnd" :options="{group:{ name:'folder'}, animation: 150, 'disabled': freeze }">
+		<draggable :element="'ul'" class="navi-list" :list="items" @start="onStart" @end="onEnd" :options="{group:{ name:'folder'}, animation: 150, 'disabled': freeze }">
 			<navigation ref="draggit" v-for="item in items" :freeze="freeze" :name="item.name" :active="item.active" :parent="item.activeParent" :level="item.keyPath" :root="root" :url="item.urlRelWoF" v-bind:id="item.keyPath" :key="item.keyPath" :filetype="item.elementType" :folder="item.folderContent"></navigation>
 		</draggable>
 		

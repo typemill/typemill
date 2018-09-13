@@ -14,6 +14,7 @@ In the **content area** of the author panel you can:
 
 * Navigate through your existing content.
 * Edit all existing content pages with markdown syntax.
+* Re-order existing content with simple drag&drop.
 
 There are several **limitations** right now:
 

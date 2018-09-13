@@ -2,6 +2,27 @@
 
 This is the version history with some release notes.
 
+## Version 1.2.3: Reorder Pages
+
+_Release date: 14.09.2018_
+
+**Important: Upgrade to PHP 7**: With version 1.2.3 TYPEMILL requires PHP Version 7.0 or higher. This is due to a library (CSRF-protection), that uses a PHP7 function that is not supported by PHP 5.6. PHP 5.6 and PHP 7.0 will run out of life cycle in december 2018, so you should upgrade your server to PHP 7.1 or PHP 7.2 anyway. 
+
+Wow!! More than six weeks and only one feature: As of version 1.2.3 you can re-order your existing content. To do so, simply drag&drop the items in the new navigation of the author panel. It looks so easy, but it was so complex in the background!!
+
+Follow the instruction for simple updates in the [documentation](/gettings-started/update) and simply update the `system` folder.
+
+Be aware, that all existing content-files will be renamed if you reorder a file, because we add a new order-prefix to the file name. And be aware of some rules and limitations:
+
+* You can move files to any other folder.
+* Only folders are allowed at the first level.
+* Folders can be reordered within the same level.
+* But a folder can not be moved to another folder or another level.
+
+Here is the reason for the last restriction: If you move a folder to another folder, then the adress (url) will change for the whole folder and all its content (pages). It is a nightmare for your readers and for google.
+
+If you really want to reorder your content completely, then you have to do it on the file system for now. In version 2.3.5 you will be able to create new folders and files in the author system, so you can create a new folder and move all files to the new folder manually.
+
 ## Version 1.2.2: Draft Management
 
 _Release date: 24.07.2018_
