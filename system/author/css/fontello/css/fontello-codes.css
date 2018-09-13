@@ -1,8 +1,10 @@
 
-.icon-picture:before { content: '\e800'; } /* '' */
-.icon-off:before { content: '\e801'; } /* '' */
-.icon-eye:before { content: '\e802'; } /* '' */
-.icon-cancel:before { content: '\e803'; } /* '' */
-.icon-cog:before { content: '\e804'; } /* '' */
+.icon-cog:before { content: '\e800'; } /* '' */
+.icon-picture:before { content: '\e801'; } /* '' */
+.icon-off:before { content: '\e802'; } /* '' */
+.icon-home:before { content: '\e803'; } /* '' */
 .icon-link-ext:before { content: '\f08e'; } /* '' */
+.icon-resize-full-alt:before { content: '\f0b2'; } /* '' */
 .icon-doc-text:before { content: '\f0f6'; } /* '' */
+.icon-folder-empty:before { content: '\f114'; } /* '' */
+.icon-folder-open-empty:before { content: '\f115'; } /* '' */

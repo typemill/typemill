@@ -39,6 +39,9 @@ abstract class ContentController
 	# hold the page-item as an object
 	protected $item;
 	
+	# hold the breadcrumb as an object
+	protected $breadcrumb;
+	
 	# holds the path to the requested file
 	protected $path = false;
 	
@@ -85,6 +88,19 @@ abstract class ContentController
 		
 		if(is_array($vResult))
 		{ 
+			$this->errors = ['errors' => $vResult];
+			return false;
+		}
+		return true;
+	}
+	
+	protected function validateNavigationSort()
+	{
+		$validate = new Validation();
+		$vResult = $validate->navigationSort($this->params);
+		
+		if(is_array($vResult))
+		{
 			$this->errors = ['errors' => $vResult];
 			return false;
 		}
@@ -176,7 +192,7 @@ abstract class ContentController
 	{
 		$this->path = $this->item->pathWithoutType . '.' . $fileType;
 	}
-	
+		
 	protected function setPublishStatus()
 	{
 		$this->item->published = false;

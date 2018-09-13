@@ -26,8 +26,8 @@
 		</header>
 		{% include 'partials/flash.twig' %}
 		<div class="main" id="main" data-url="{{ base_url }}">
-			<aside class="sidebar">
-				{% include 'partials/contentNavi.twig' %}
+			<aside class="sidebar">				
+				{% include 'partials/editorNavi.twig' %}
 			</aside>
 			<article>
 				{% block content %}{% endblock %}
@@ -36,7 +36,10 @@
 		</div>
 		<script src="{{ base_url }}/system/author/js/vue.min.js"></script>
 		<script src="{{ base_url }}/system/author/js/autosize.min.js"></script>
+		<script src="{{ base_url }}/system/author/js/sortable.min.js"></script>
+		<script src="{{ base_url }}/system/author/js/vuedraggable.min.js"></script>
 		<script src="{{ base_url }}/system/author/js/author.js?20180724"></script>
 		<script src="{{ base_url }}/system/author/js/vue-editor.js?20180724"></script>
+		<script src="{{ base_url }}/system/author/js/vue-navi.js"></script>
 	</body>
 </html>

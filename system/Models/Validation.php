@@ -214,6 +214,33 @@ class Validation
 			return $v->errors();
 		}		
 	}
+
+	/**
+	* validation for resort navigation
+	* 
+	* @param array $params with form data.
+	* @return true or $v->errors with array of errors to use in json-response
+	*/
+	
+	public function navigationSort(array $params)
+	{
+		$v = new Validator($params);
+				
+		$v->rule('required', ['item_id', 'parent_id_from', 'parent_id_to']);
+		$v->rule('regex', 'item_id', '/^[0-9.]+$/i');
+		$v->rule('regex', 'parent_id_from', '/^[a-zA-Z0-9.]+$/i');
+		$v->rule('regex', 'parent_id_to', '/^[a-zA-Z0-9.]+$/i');
+		$v->rule('integer', 'index_new');
+		
+		if($v->validate()) 
+		{
+			return true;
+		} 
+		else
+		{
+			return $v->errors();
+		}
+	}
 	
 	/**
 	* validation for dynamic fields ( settings for themes and plugins)

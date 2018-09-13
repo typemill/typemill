@@ -5,6 +5,7 @@ plugins/disqus
 plugins/download
 plugins/finalwords
 plugins/version
+plugins/textadds
 settings/settings.yaml
 settings/users
 system/vendor

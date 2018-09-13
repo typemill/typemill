@@ -1,3 +1,5 @@
 # Typemill
 
-TYPEMILL is a small flat file cms designed for **writers**. It creates websites based on markdown files and is a perfect solution for text-works like studies, manuals or documentations. TYPEMILL is simple, lightweight and open source. Just download and start.
+Modern Web Publishing For Writers.
+
+Typemill is a user-friendly and lightweight open source CMS for publishing text-works like prosa, lyrics, manuals, documentations, studies and more. Just download and start.

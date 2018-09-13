@@ -4,6 +4,8 @@ namespace Typemill\Controllers;
 
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Typemill\Models\Folder;
+use Typemill\Models\Write;
 use Typemill\Extensions\ParsedownExtension;
 
 class ContentApiController extends ContentController
@@ -178,6 +180,103 @@ class ContentApiController extends ContentController
 		{
 			return $response->withJson(['errors' => ['message' => 'Could not write to file. Please check if the file is writable']], 404);
 		}
+	}
+
+	public function sortArticle(Request $request, Response $response, $args)
+	{
+		# get params from call
+		$this->params 	= $request->getParams();
+		$this->uri 		= $request->getUri();
+		
+		# url is only needed, if an active page is moved
+		$url 			= false;
+		
+		# set structure
+		if(!$this->setStructure($draft = true)){ return $response->withJson(array('data' => false, 'errors' => $this->errors, 'url' => $url), 404); }
+		
+		# validate input
+		if(!$this->validateNavigationSort()){ return $response->withJson(array('data' => $this->structure, 'errors' => 'Data not valid. Please refresh the page and try again.', 'url' => $url), 422); }
+		
+		# get the ids (key path) for item, old folder and new folder
+		$itemKeyPath 	= explode('.', $this->params['item_id']);
+		$parentKeyFrom	= explode('.', $this->params['parent_id_from']);
+		$parentKeyTo	= explode('.', $this->params['parent_id_to']);
+		
+		# get the item from structure
+		$item 			= Folder::getItemWithKeyPath($this->structure, $itemKeyPath);
+
+		if(!$item){ return $response->withJson(array('data' => $this->structure, 'errors' => 'We could not find this page. Please refresh and try again.', 'url' => $url), 404); }
+		
+		# if a folder is moved on the first level
+		if($this->params['parent_id_from'] == 'navi')
+		{
+			# create empty and default values so that the logic below still works
+			$newFolder 			=  new \stdClass();
+			$newFolder->path	= '';
+			$folderContent		= $this->structure;
+		}
+		else
+		{
+			# get the target folder from structure
+			$newFolder 		= Folder::getItemWithKeyPath($this->structure, $parentKeyTo);
+			
+			# get the content of the target folder
+			$folderContent	= $newFolder->folderContent;
+		}
+		
+		# if the item has been moved within the same folder
+		if($this->params['parent_id_from'] == $this->params['parent_id_to'])
+		{
+			# get key of item
+			$itemKey = end($itemKeyPath);
+			reset($itemKeyPath);
+			
+			# delete item from folderContent
+			unset($folderContent[$itemKey]);
+		}
+		elseif($this->params['active'] == 'active')
+		{
+			# an active file has been moved to another folder
+			$url = $this->uri->getBaseUrl() . '/tm/content' . $newFolder->urlRelWoF . '/' . $item->slug;
+		}
+		
+		# add item to newFolder
+		array_splice($folderContent, $this->params['index_new'], 0, array($item));
+
+		# initialize index
+		$index = 0;
+		
+		# initialise write object
+		$write = new Write();
+
+		# iterate through the whole content of the new folder
+		$writeError = false;
+		foreach($folderContent as $folderItem)
+		{
+			if(!$write->moveElement($folderItem, $newFolder->path, $index))
+			{
+				$writeError = true;
+			}
+			$index++;
+		}
+		if($writeError){ return $response->withJson(array('data' => $this->structure, 'errors' => 'Something went wrong. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404); }
+
+		# update the structure for editor
+		$this->setStructure($draft = true, $cache = false);
+		
+		# get item for url and set it active again
+		if(isset($this->params['url']))
+		{
+			$activeItem = Folder::getItemForUrl($this->structure, $this->params['url']);
+		}
+		
+		# keep the internal structure for response
+		$internalStructure = $this->structure;
+		
+		# update the structure for website
+		$this->setStructure($draft = false, $cache = false);
+		
+		return $response->withJson(array('data' => $internalStructure, 'errors' => false, 'url' => $url));
 	}
 
 	public function createBlock(Request $request, Response $response, $args)

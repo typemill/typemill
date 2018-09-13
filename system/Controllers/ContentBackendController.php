@@ -5,6 +5,7 @@ namespace Typemill\Controllers;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Views\Twig;
+use Typemill\Models\Folder;
 use Typemill\Extensions\ParsedownExtension;
 
 class ContentBackendController extends ContentController
@@ -28,6 +29,9 @@ class ContentBackendController extends ContentController
 		
 		# set item
 		if(!$this->setItem()){ return $this->render404($response, array( 'navigation' => $this->structure, 'settings' => $this->settings, 'content' => $this->errors )); }
+		
+		# get the breadcrumb (here we need it only to mark the actual item active in navigation)
+		$breadcrumb = isset($this->item->keyPathArray) ? Folder::getBreadcrumb($this->structure, $this->item->keyPathArray) : false;
 		
 		# set the status for published and drafted
 		$this->setPublishStatus();
@@ -68,6 +72,6 @@ class ContentBackendController extends ContentController
 			}
 		}
 
-		return $this->render($response, 'content/content.twig', array('navigation' => $this->structure, 'title' => $title, 'content' => $content, 'item' => $this->item, 'settings' => $this->settings ));
+		return $this->render($response, 'editor/editor.twig', array('navigation' => $this->structure, 'title' => $title, 'content' => $content, 'item' => $this->item, 'settings' => $this->settings ));
 	}
 }

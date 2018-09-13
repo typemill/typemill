@@ -9,7 +9,13 @@ a, a:link, a:visited, a:focus, a:hover, a:active, button, .button, input, .contr
 	-ms-transition: all 0.2s ease;
 	transition: all 0.2s ease;
 }
-
+.navi-item a, .navi-item.folder a i, .navi-item.file a i{
+	-webkit-transition: all 0.1s ease;
+	-moz-transition: all 0.1s ease;
+	-o-transition: all 0.1s ease;
+	-ms-transition: all 0.1s ease;
+	transition: all 0.1s ease;	
+}
 /********************
 *  	COMMONS 	    *
 ********************/
@@ -153,7 +159,7 @@ aside.sidebar{
 }
 ul.menu-list{
 	list-style: none;
-	margin:5px 0 30px;
+	margin: 5px 0 30px;
 	padding:0;
 }
 li.menu-item{
@@ -175,6 +181,75 @@ li.menu-item{
 	color: #fff;
 	background: #e0474c;
 }
+
+/********************
+*   CONTENT-NAVI	*
+********************/
+.infoline{
+	display: none;
+}
+.content-navi{
+	background: transparent;
+	padding: 0;
+	position: relative;
+	text-align: left;
+}
+.navi-list{
+	padding: 0px;
+}
+.navi-item{
+	list-style: none;
+	padding: 0px;
+	position: relative;
+}
+.navi-item i.icon-doc-text, .navi-item i.icon-folder-empty, .navi-item i.icon-home{
+	display: inline-block;
+	position: absolute;
+	top: 0px;
+	background: #fff;
+	color: #ccc;
+	padding: 7px 2px 7px;
+}
+.navi-item i.icon-resize-full-alt{
+	position: absolute;
+	right: 5px;
+	top: 7px;
+	color: #fff;
+}
+.navi-item a{
+	display: block;
+	padding: 7px 0;
+	width: 100%;
+	margin-bottom: 2px;
+	box-shadow: 0 0 1px #ddd;
+	text-decoration: none;
+	color: #444;
+	background: #fff;
+}
+.navi-item.folder a{
+	font-weight: 700;
+}
+.navi-item.file a{
+	font-weight: 300;
+}
+.navi-item a:hover, .navi-item a:hover i{
+	background: #66b0a3;
+	color: #f9f8f6;
+}
+.navi-item a.active, .navi-item a.active i{
+	background: #e0474c;
+	color: #f9f8f6;
+}
+[class^="level-"]{
+	padding-left: 80px;
+	display: block;
+	box-sizing: border-box;	
+}
+span.level-1{ padding-left: 30px; }
+span.level-2{ padding-left: 40px; }
+span.level-3{ padding-left: 50px; }
+span.level-4{ padding-left: 60px; }
+span.level-5{ padding-left: 70px; }
 
 /********************
 *   	CONTENT		*
@@ -275,6 +350,7 @@ h1 .version-number{
 }
 .modal.show{
 	display: block;
+	z-index: 99999;
 }
 .modalInner{
 	position: relative;
@@ -284,6 +360,12 @@ h1 .version-number{
 	padding: 50px 50px 20px 50px;
 	border-radius: 3px;
 	box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+}
+.modalInner h2{
+	margin-top: 0px;
+}
+.modalInner.wide{
+	max-width: 500px;
 }
 .closeModal{
 	position: absolute;
@@ -1055,8 +1137,6 @@ label .help, .label .help{
 	text-decoration: underline;
 }
 
-
-
 /********************
 *		EDITOR		*
 ********************/
@@ -1138,7 +1218,6 @@ label .help, .label .help{
 	color: #444;
 	cursor: default;
 }
-
 .buttonset .secondary{
 	display: inline-block;
 	float: right;
@@ -1206,10 +1285,13 @@ label .help, .label .help{
 	.editor button{
 		min-width: 150px;
 		font-size: 0.9em;
-	}	
+	}
+	
+	/* load design editor button */
 	.editor button.load:after,
 	.editor button.success:after,
-	.editor button.fail:after{
+	.editor button.fail:after
+	{
 		position: absolute;
 		right: 8px;
 		top: 6px;
@@ -1238,6 +1320,23 @@ label .help, .label .help{
 	.editor button.fail:after{
 		background: #e0474c;
 	}
+	
+	/* load design navi buttons */
+	.navi-item.load:after
+	{
+		position: absolute;
+		right: 6px;
+		top: 6px;
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+		content: '';
+		border: 8px solid #eee; /* background */
+		border-top: 8px solid #ccc; /* moving border */
+		background: #ccc; /* dot in the middle */
+		animation: spin 2s linear infinite;
+	}
+	
 	.buttonset .secondary--block{
 		display: inline-block;
 	}
@@ -1256,7 +1355,36 @@ label .help, .label .help{
 		display: inline-block;
 	}	
 }
-@media only screen and (min-width: 800px) {
+@media only screen and (min-width: 900px) {
+	.main{
+		margin: 30px auto;
+		padding: 20px 30px;
+	}
+	.infoline{
+		min-height: 30px;
+		width: 100%;
+		display: block;
+		color: #bbb;
+		font-size: 0.9em;
+	}
+	.infoline .help{
+		float: right;
+		text-align: center;
+		width: 20px;
+		height: 20px;
+		line-height: 20px;
+		border-radius: 50%;
+		background: #fff;
+		cursor: pointer;
+	}
+	span.level-1{ padding-left: 5px; }
+	span.level-2{ padding-left: 20px; }
+	span.level-3{ padding-left: 35px; }
+	span.level-4{ padding-left: 50px; }
+	span.level-5{ padding-left: 65px; }
+	.navi-item i.icon-doc-text, .navi-item i.icon-folder-empty, .navi-item i.icon-home{
+		left: -27px;
+	}	
 	fieldset.plugin{
 		width: 49.5%;
 	}
@@ -1268,14 +1396,8 @@ label .help, .label .help{
 		width: 33.3%;
 		display: inline-block;		
 	}
-	.navi-items span{
-		display: inline;
-	}	
 	.header-navi ul{
 		font-size: 1em;
-	}
-	.main{
-		margin: 30px auto;
 	}
 	article{
 		width: 80%;
@@ -1290,8 +1412,8 @@ label .help, .label .help{
 	}
 	.sidebar-menu, .sidebar-menu--content{
 		max-height: 2000px;
-		padding: 0px 20px 0 0;
-		overflow: hidden;
+		padding: 0 0 0 0;
+		overflow: visible;
 		box-sizing: border-box;
 		font-size: 1em;
 		text-align: left;
@@ -1306,10 +1428,13 @@ label .help, .label .help{
 		display: none;
 		width: 0px;
 		height: 0px;
-	}
+	}	
 	ul.menu-list{
 		margin: 5px 0 0 20px;
 	}
+	.navi-items span{
+		display: inline;
+	}	
 	.level-1 > ul.menu-list{
 		margin-bottom: 30px;
 	}

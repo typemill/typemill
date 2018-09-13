@@ -3,11 +3,11 @@
 		<a href="{{ path_for('content.show') }}">Typemill</a>
 	</div>
 	<ul class="navi-items">
-		<li><a href="{{ path_for('content.show') }}"{{ navigation ? 'class="active"' : '' }}><i class="icon-doc-text"></i><span class="nav-label"> Content</span></a></li><li>
+		<li><a href="{{ path_for('content.show') }}"{{ navigation ? ' class="active"' : '' }}><i class="icon-doc-text"></i><span class="nav-label"> Content</span></a></li><li>
 			{% if is_role('administrator') %}
-				<a href="{{ path_for('settings.show') }}"{{ users ? 'class="active"' : '' }}><i class="icon-cog"></i><span class="nav-label">  Settings</span></a></li><li>
+				<a href="{{ path_for('settings.show') }}"{{ users ? ' class="active"' : '' }}><i class="icon-cog"></i><span class="nav-label">  Settings</span></a></li><li>
 			{% else %}
-				<a href="{{ path_for('user.show', {'username' : get_username() }) }}"{{ users ? 'class="active"' : '' }}><i class="icon-cog"></i><span class="nav-label">  Account</span></a></li><li>			
+				<a href="{{ path_for('user.show', {'username' : get_username() }) }}"{{ users ? ' class="active"' : '' }}><i class="icon-cog"></i><span class="nav-label">  Account</span></a></li><li>			
 			{% endif %}
 			<a href="{{ base_url }}"><i class="icon-link-ext"></i><span class="nav-label"> View Site</span></a></li><li>
 			<a href="{{ path_for('auth.logout') }}"><i class="icon-off"></i><span class="nav-label">  Logout</span></a></li>

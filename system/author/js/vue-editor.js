@@ -1,4 +1,4 @@
-let app = new Vue({
+let editor = new Vue({
     delimiters: ['${', '}'],
 	el: '#editor',
 	data: {
@@ -8,7 +8,7 @@ let app = new Vue({
 			content: 	this.title = document.getElementById("content").value,
 			url: 		document.getElementById("path").value,
 			csrf_name: 	document.getElementById("csrf_name").value,
-			csrf_value:	document.getElementById("csrf_value").value,			
+			csrf_value:	document.getElementById("csrf_value").value,
 		},
 		errors:{
 			title: false,
@@ -171,4 +171,4 @@ let app = new Vue({
 			this.modalWindow = "modal";
 		},
 	}
-})
+});

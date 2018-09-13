@@ -6,6 +6,34 @@ use \URLify;
 
 class Folder
 {	
+
+	/*
+	* scans content of a folder (without recursion)
+	* vars: folder path as string
+	* returns: one-dimensional array with names of folders and files
+	*/
+	public static function scanFolderFlat($folderPath)
+	{
+		$folderItems 	= scandir($folderPath);
+		$folderContent 	= array();
+		
+		foreach ($folderItems as $key => $item)
+		{
+			if (!in_array($item, array(".","..")))
+			{
+				$nameParts 					= self::getStringParts($item);
+				$fileType 					= array_pop($nameParts);
+				
+				if($fileType == 'md' OR $fileType == 'txt' )
+				{
+					$folderContent[] 			= $item;						
+				}
+			}
+		}
+		return $folderContent;		
+	}
+	
+	
 	/*
 	* scans content of a folder recursively
 	* vars: folder path as string
@@ -88,6 +116,8 @@ class Folder
 				$item->keyPath			= isset($keyPath) ? $keyPath . '.' . $iteration : $iteration;
 				$item->keyPathArray		= explode('.', $item->keyPath);
 				$item->chapter			= $chapter ? $chapter . '.' . $chapternr : $chapternr;
+				$item->active			= false;
+				$item->activeParent		= false;
 				
 				$item->folderContent 	= self::getFolderContentDetails($name, $baseUrl, $item->urlRel, $item->urlRelWoF, $item->path, $item->keyPath, $item->chapter);
 			}
@@ -115,6 +145,8 @@ class Folder
 				$item->urlRelWoF		= $fullSlugWithoutFolder . '/' . $item->slug;
 				$item->urlRel			= $fullSlugWithFolder . '/' . $item->slug;
 				$item->urlAbs			= $baseUrl . $fullSlugWithoutFolder . '/' . $item->slug;
+				$item->active			= false;
+				$item->activeParent		= false;
 			}
 			$iteration++;
 			$chapternr++;
@@ -213,7 +245,14 @@ class Folder
 		
 		return $item;
 	}
-		
+
+	/*
+	 * Gets a copy of an item with a key
+	 * @param array $content with the full structure of the content as multidimensional array
+	 * @param array $searchArray with the key as a one-dimensional array like array(0,3,4)
+	 * @return array $item
+	 */
+	 
 	public static function getItemWithKeyPath($content, array $searchArray)
 	{
 		$item = false;
@@ -231,6 +270,51 @@ class Folder
 		return $item;
 	}
 
+	# https://www.quora.com/Learning-PHP-Is-there-a-way-to-get-the-value-of-multi-dimensional-array-by-specifying-the-key-with-a-variable
+	# NOT IN USE
+	public static function getItemWithKeyPathNew($array, array $keys)
+	{
+		$item = $array;
+		
+        foreach ($keys as $key)
+		{
+			$item = isset($item[$key]->folderContent) ? $item[$key]->folderContent : $item[$key];
+		}
+		
+		return $item;
+    }
+
+	/*
+	 * Extracts an item with a key https://stackoverflow.com/questions/52097092/php-delete-value-of-array-with-dynamic-key
+	 * @param array $content with the full structure of the content as multidimensional array
+	 * @param array $searchArray with the key as a one-dimensional array like array(0,3,4)
+	 * @return array $item
+	 * NOT IN USE ??
+	 */
+	 
+	public static function extractItemWithKeyPath($structure, array $keys)
+	{
+		$result = &$structure;
+		$last = array_pop($keys);
+
+		foreach ($keys as $key) {
+			if(isset($result[$key]->folderContent))
+			{
+				$result = &$result[$key]->folderContent;
+			}
+			else
+			{
+				$result = &$result[$key];
+			}
+		}
+
+		$item = $result[$last];
+		unset($result[$last]);
+		
+		return array('structure' => $structure, 'item' => $item);
+	}
+	
+				
 	/* get breadcrumb as copied array, set elements active in original and mark parent element in original */
 	public static function getBreadcrumb($content, $searchArray, $i = NULL, $breadcrumb = NULL)
 	{
@@ -280,7 +364,7 @@ class Folder
 		}
 		return $lastItem;
 	}
-
+		
 	public static function getStringParts($name)
 	{
 		return preg_split('/[\-\.\_\=\+\?\!\*\#\(\)\/ ]/',$name);
