@@ -19,10 +19,10 @@ In the **content area** of the author panel you can:
 There are several **limitations** right now:
 
 * You cannot use HTML, JavaScript or any other code in the editor, only markdown-syntax is allowed.
-* You cannot delete, create or reorder the pages right now (use FTP for this), but these features are on the way.
+* You cannot create new pages right now (use FTP for this), but these feature is on its way.
 * There is no media-management right now.
 
-The content editor has highest priority in the roadmap, so you can expect al lot of improvements in the next weeks.
+The content editor has highest priority in the roadmap, so you can expect a lot of improvements in the next weeks.
 
 ## Settings, Themes and Plugins
 

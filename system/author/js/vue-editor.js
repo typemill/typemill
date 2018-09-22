@@ -25,7 +25,7 @@ let editor = new Vue({
 		publishStatus: document.getElementById("publishController").dataset.published ? false : true,
 		publishLabel: document.getElementById("publishController").dataset.published ? "online" : "offline",
 	},
-	mounted(){
+	mounted: function(){
 		autosize(document.querySelector('textarea'));
 	},
 	methods: {
@@ -50,6 +50,12 @@ let editor = new Vue({
 
 			sendJson(function(response, httpStatus)
 			{
+				if(httpStatus == 400)
+				{
+					self.publishDisabled 	= false;
+					self.publishResult 		= "fail";
+					self.errors.message 	= "You are probably logged out. Please backup your changes, login and then try again."
+				}
 				if(response)
 				{					
 					var result = JSON.parse(response);
@@ -107,6 +113,12 @@ let editor = new Vue({
 		},
 		depublishArticle: function(e){
 		
+			if(this.draftDisabled == false)
+			{
+				this.errors.message = 'Please save your changes as draft first.';
+				return;
+			}
+			
 			var self = this;
 			self.errors = {title: false, content: false, message: false};
 

@@ -2,7 +2,7 @@
 *  	TRANSITIONS		  *
 **********************/
 
-a, a:link, a:visited, a:focus, a:hover, a:active, button, .button{
+a, a:link, a:visited, a:focus, a:hover, a:active, button, .button, .share-link, .open .share-link{
 	-webkit-transition: all 0.2s ease;
 	-moz-transition: all 0.2s ease;
 	-o-transition: all 0.2s ease;
@@ -587,54 +587,40 @@ li.h2, li.h3, li.h4, li.h5, li.h6
 }
 
 /************************
-*  		GitHub Ribbon	*
+*  		Share Buttons	*
 ************************/
 
-.share-box{
-	width:100%;
-	display: inline-block;
-	vertical-align:top;
-	box-sizing:border-box;
-	background: transparent;
-	overflow:hidden;
-	height: auto;
-}
-.share-button{
-	display:inline-block;
-	height: auto;
-	text-align: center;
-}
-.grid-1 .share-button{ width: 100%; }
-.grid-2 .share-button{ width: 49.7%; }
-.grid-3 .share-button{ width: 33.2%; }
-.grid-4 .share-button{ width: 24.9%; }
-.grid-5 .share-button{ width: 19.9%; }
-.grid-6 .share-button{ width: 16.5%; }
-.share-button a,.share-button a:link,.share-button a:visited{
-	display: block;
+.meta-info{
+	position: relative;
+	display: inline-block; 
 	width: 100%;
-	background: transparent;
+}
+.meta-info .share-icons{
+	position: absolute;
+	right: 0px;
+	display: inline-block;
+	background: #fff;
+}
+.meta-info .share-link, .meta-info .share-button{
+	display: inline-block;
+	text-align: right;
+}
+.meta-info .hide .share-link{
+	width: 0px;
+	opacity: 1;
+}
+.meta-info .hide .share-link a{
 	color: #fff;
-	font-size: 1.3em;
-	line-height: 1.7em;
 }
-.share-button.twitter a{
-	background:#C8E0EF;
+.meta-info .show .share-link{
+	width: 30px;
+	opacity: 1;
 }
-.share-button.twitter a:hover{
-	background:#1DA1F2;
+.share-link{
+	transition: width 0.25s ease out;
 }
-.share-button.facebook a{
-	background:#CDD3DE;
-}
-.share-button.facebook a:hover{
-	background: #3B5998;
-}
-.share-button.xing a{
-	background: #E8EBC3;
-}
-.share-button.xing a:hover{
-	background: #cfdc00;
+.share-icons .share-button{
+	cursor: pointer;
 }
 
 /* for test only */
@@ -735,6 +721,9 @@ img.myClass{
 	dt{
 		width: 19%;
 		text-align: right;
+	}
+	.meta-info .show .share-link{
+		width: 40px;
 	}
 }
 @media only screen and (min-width: 980px) {

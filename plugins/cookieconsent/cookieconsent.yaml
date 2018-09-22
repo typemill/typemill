@@ -1,5 +1,5 @@
 name: Cookie Consent
-version: 1.0.0
+version: 1.0.1
 description: Enables a cookie consent for websites
 author: Sebastian Schürmanns
 homepage: https://cookieconsent.insites.com/
@@ -14,6 +14,7 @@ settings:
   position: 'bottom'
   message: 'This website uses cookies to ensure you get the best experience on our website.'
   link: 'Learn More'
+  href: 'https://cookiesandyou.com/'
   dismiss: 'Got It'
 
 forms:
@@ -42,6 +43,12 @@ forms:
       type: textarea
       label: Message
       placeholder: 'Message for cookie-popup'
+      required: true
+
+    href:
+      type: url
+      label: Link to more informations
+      placeholder: 'https://cookiesandyou.com/'
       required: true
 
     link:

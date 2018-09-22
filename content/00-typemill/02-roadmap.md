@@ -10,18 +10,17 @@ Here are some **milestones** of the past:
 - Introduced plugins (v. 1.1.0)
 - Added an author panel for configurations (v. 1.1.3)
 - Added math support (mathjax/katex) (v. 1.1.5) 
-- Added a basic content editor to change existing pages (v. 1.2.0)
+- Added a basic content editor to edit and delete existing pages (v. 1.2.0)
 - Added a draft management for pages (v. 1.2.2)
 - Re-order content pages with drag&drop (v. 1.2.3)
 
 And here is the **roadmap** for this year (2018):
 
-- Editor: Create new pages (v. 1.2.3)
-- Editor: Edit meta-information (v. 1.2.4)
-- Editor: Markdown and HTML-preview (v. 1.2.5)
-- Editor: Manage images and assets (v. 1.3.0)
+- Editor: Create new pages (v. 1.2.5)
+- Editor: Manage images and assets (v. 1.2.6)
+- Editor: Edit meta-information (v. 1.2.7)
 - Editor: Add formatting options (v. 1.3.0)
-- Editor: Create a solution for direct preview or WYSIWYG (1.3.0)
+- Editor: WYSIWYG-Preview for markdown blocks (v. 1.3.0)
 - Editor: Create the best author- and writing experience you have ever seen (1.4.0)
 
 Other features with lower prio: 

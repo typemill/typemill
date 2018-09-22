@@ -5,17 +5,50 @@
 {% endif %}
 
 <h1>{{ title }}</h1>
-	
+
+{% if (settings.themes.typemill.socialPosition.top or settings.themes.typemill.modifiedPosition.top or settings.themes.typemill.authorPosition.top) %}	
+	<div class="meta-info">
+		{% if settings.themes.typemill.authorPosition.top %}
+			<small>{{ settings.themes.typemill.authorIntro }}: {{ settings.author }}</small>
+		{% endif %}
+		{% if settings.themes.typemill.modifiedPosition.top %}
+			<small>{{ settings.themes.typemill.modifiedText }}: {{ item.modified|date(settings.themes.typemill.modifiedFormat) }}</small>
+		{% endif %}
+		{% if settings.themes.typemill.socialPosition.top %}
+			<div id="share-icons" class="share-icons hide">
+				{% include 'partials/share.twig' with {'share' : settings.themes.typemill.socialButtons } %}
+				<div class="share-button" id="share-button">
+					<i class="icon-share-1"></i>
+				</div>
+			</div>
+		{% endif %}
+	</div>
+{% endif %}
+
 {{ content }}
 
-{% if settings.themes.typemill.modified %}
-	<p><small>{{ settings.themes.typemill.modifiedText }}: {{ item.modified|date(settings.themes.typemill.modifiedFormat) }}</small></p>
+
+{% if (settings.themes.typemill.socialPosition.bottom or settings.themes.typemill.modifiedPosition.bottom or settings.themes.typemill.authorPosition.bottom) %}	
+	<div class="meta-info">
+		{% if settings.themes.typemill.authorPosition.bottom %}
+			<small>{{ settings.themes.typemill.authorIntro }}: {{ settings.author }}</small>
+		{% endif %}
+		{% if settings.themes.typemill.modifiedPosition.bottom %}
+			<small>{{ settings.themes.typemill.modifiedText }}: {{ item.modified|date(settings.themes.typemill.modifiedFormat) }}</small>
+		{% endif %}
+		{% if settings.themes.typemill.socialPosition.bottom %}
+			<div id="share-icons-bottom" class="share-icons hide">
+				{% include 'partials/share.twig' with {'share' : settings.themes.typemill.socialButtons } %}
+				<div id="share-button-bottom" class="share-button">
+					<i class="icon-share-1"></i>
+				</div>
+			</div>
+		{% endif %}
+	</div>
 {% endif %}
 
-{% if settings.themes.typemill.social %}	
-	{% include 'partials/share.twig' with {'share' : settings.themes.typemill.socialbuttons } %}
-{% endif %}
-	
+
+
 {% if item.prevItem or item.nextItem %}
 
 	<div class="paging">
@@ -27,4 +60,4 @@
 		{% endif %}
 	</div>
 
-{% endif %}	
+{% endif %}

@@ -82,13 +82,55 @@ class Write
 
 	public function moveElement($item, $folderPath, $index)
 	{
-		$result				= false;
+		$filetypes			= array('md', 'txt');
 		
+		# set new order as string
 		$newOrder			= ($index < 10) ? '0' . $index : $index;
+
+		# create new path with foldername or filename but without file-type
+		$newPath 			= $this->basePath . 'content' . $folderPath . DIRECTORY_SEPARATOR . $newOrder . '-' . $item->name;
 		
 		if($item->elementType == 'folder')
 		{
-			$newName		= $newOrder . '-' . $item->name;			
+			$oldPath = $this->basePath . 'content' . $item->path;
+			if(@rename($oldPath, $newPath))
+			{
+				return true;
+			}
+			return false;
+		}
+		
+		# create old path but without filetype
+		$oldPath		= substr($item->path, 0, strpos($item->path, "."));
+		$oldPath		= $this->basePath . 'content' . $oldPath;
+				
+		$result 		= true;
+		
+		foreach($filetypes as $filetype)
+		{
+			$oldFilePath = $oldPath . '.' . $filetype;
+			$newFilePath = $newPath . '.' . $filetype;
+			
+			#check if file with filetype exists and rename
+			if($oldFilePath != $newFilePath && file_exists($oldFilePath))
+			{
+				if(@rename($oldFilePath, $newFilePath))
+				{
+					$result = $result;
+				}
+				else
+				{
+					$result = false;
+				}
+			}
+		}
+
+		return $result;
+		
+		/*
+		if($item->elementType == 'folder')
+		{
+			$newName		= $newOrder . '-' . $item->name;
 		}
 		else
 		{
@@ -97,11 +139,21 @@ class Write
 		
 		$oldPath			= $this->basePath . 'content' . $item->path;
 		$newPath 			= $this->basePath . 'content' . $folderPath . DIRECTORY_SEPARATOR . $newName;
-		
+
 		if(@rename($oldPath, $newPath))
 		{
 			$result = true;
 		}
+		
+		foreach($filetypes as $filetype)
+		{
+			#check if file exists
+			if(file_exists($oldPath))
+			{
+
+			}
+		}
+		
 		
 		# if it is a txt file, check, if there is a corresponding .md file and move it
 		if($result && $item->elementType == 'file' && $item->fileType == 'txt')
@@ -124,5 +176,7 @@ class Write
 		}
 		
 		return $result;
+		*/
+		
 	}
 }

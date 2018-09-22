@@ -22,4 +22,4 @@ This is, what **TYPEMILL does** for you:
 - It adds hierarchic numbers to your chapters and pages.
 - It generates a google sitemap, a last modified date and much more.
 
-Right now there is only a simple content editor that provides basic editing of existing pages. If you want to create new pages, then you have to use an offline markdown editor like Typora and a FTP software like FileZilla. These missing feature will be added in version 1.2.6.
+Right now there is only a simple content editor that provides basic editing of existing pages. If you want to create new pages, then you have to use an offline markdown editor like Typora and a FTP software like FileZilla.

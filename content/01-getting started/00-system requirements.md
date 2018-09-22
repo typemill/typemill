@@ -13,3 +13,5 @@ What you don't need:
 - **Technical skills** (TYPEMILL is easy to use for non-technical people)
 
 Almost any hosting package provides a webserver with php. If you ever hosted your own website, then chances are high, that you can run TYPEMILL there without any problems.
+
+Typemill is developed with Firefox and tested with Chrome. Microsoft Edge and Safari do also work, but they are not deeply tested. The content editor of TYPEMILL does not work with Internet Explorer. However, IE has nearly no market share anymore, so do not use outdated software, please. 

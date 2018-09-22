@@ -1,11 +1,15 @@
-	<div class="share-box grid-{{ share|length }}">
-		{% if share.twitter %}
-			<div class="share-button twitter">
+{% if share.twitter %}
+		<div class="share-link twitter">
 				<a href="https://twitter.com/intent/tweet?source=webclient&text='{{ title|url_encode }}:{{ description|url_encode }}&url={{ item.urlAbs }}" target="_blank"><i class="icon-twitter"></i></a>
-			</div>{% endif %}{% if share.facebook %}<div class="share-button facebook">
+		</div>{% endif %}{% if share.facebook %}<div class="share-link facebook">
 				<a href="https://facebook.com/sharer/sharer.php?u={{ item.urlAbs }}&t={{ title|url_encode }}" target="_blank"><i class="icon-facebook"></i></a>
-			</div>{% endif %}{% if share.xing %}<div class="share-button xing">
+		</div>{% endif %}{% if share.xing %}<div class="share-link xing">
 				<a href="https://www.xing.com/spi/shares/new?url={{ item.urlAbs }}" target="_blank"><i class="icon-xing"></i></a>
-			</div>
-		{% endif %}
-	</div>
+		</div>{% endif %}{% if share.linkedin %}<div class="share-link linkedin">
+				<a href="https://www.linkedin.com/shareArticle?mini=true&url={{ item.urlAbs }}&title={{ title|url_encode }}" target="_blank"><i class="icon-linkedin"></i></a>
+		</div>{% endif %}{% if share.whatsapp %}<div class="share-link whatsapp">
+				<a href="whatsapp://send?text={{ item.urlAbs }}" target="_blank"><i class="icon-whatsapp"></i></a>
+		</div>{% endif %}{% if share.mail %}<div class="share-link mail">
+				<a href="mailto:?subject={{ title|url_encode }}&amp;body={{ item.urlAbs }}" target="_blank"><i class="icon-mail"></i></a>
+		</div>
+{% endif %}

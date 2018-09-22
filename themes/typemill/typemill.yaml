@@ -1,8 +1,8 @@
 ﻿name: Typemill Theme
-version: 1.0.9
+version: 1.1.0
 description: The standard theme for Typemill. Responsive, minimal and without any dependencies. It uses the system fonts Calibri and Helvetica. No JavaScript is used. 
 author: Sebastian Schürmanns
-homepage: http://typemill.net
+homepage: https://typemill.net
 licence: MIT
 
 settings:
@@ -11,6 +11,7 @@ settings:
   modified: true
   modifiedText: 'Last updated'
   modifiedFormat: 'd.m.Y'
+  authorIntro: 'Author'
 
 forms:
   fields:
@@ -27,14 +28,32 @@ forms:
       placeholder: Add Label for Start-Button
       required: true
 
+    fieldset0:
+      type: fieldset
+      legend: Author
+      fields:
+        authorPosition:
+          type: checkboxlist
+          label: Position of Author
+          options:
+            top: Top
+            bottom: Bottom
+
+        authorIntro:
+          type: text
+          label: Author Intro
+          placeholder: Author
+
     fieldset1:
       type: fieldset
       legend: Last Modified
       fields:
-        modified:
-          type: checkbox
-          label: Activate Last Modified
-          description: Show last modified date at the end of each page?
+        modifiedPosition:
+          type: checkboxlist
+          label: Position of Modified Text
+          options:
+            top: Top
+            bottom: Bottom
 
         modifiedText:
           type: text
@@ -53,15 +72,20 @@ forms:
       type: fieldset
       legend: Share
       fields:
-        social:
-          type: checkbox
-          label: Activate Share
-          description: Activate Share Buttons On Page?
+        socialPosition:
+          type: checkboxlist
+          label: Position of Share-Buttons
+          options:
+            top: Top
+            bottom: Bottom
 
-        socialbuttons:
+        socialButtons:
           type: checkboxlist
           label: Select Share Buttons
           options:
             facebook: Facebook
             twitter: Twitter
             xing: Xing
+            linkedin: Linkedin
+            whatsapp: WhatsApp
+            mail: Mail

@@ -45,7 +45,7 @@
 		return xhr;
 	}
 	
-	function sendJson(callback, getPost, url, jsonData, cors = false)
+	function sendJson(callback, getPost, url, jsonData, cors)
 	{
 		if(cors)
 		{

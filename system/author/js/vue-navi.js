@@ -3,23 +3,24 @@ const navcomponent = Vue.component('navigation', {
 	props: ['name', 'parent', 'active', 'filetype', 'element', 'folder', 'level', 'url', 'root', 'freeze'],
 	methods: {
 		checkMove : function(evt)
-		{
+		{			
 			if(evt.dragged.classList.contains('folder') && evt.from.parentNode.id != evt.to.parentNode.id)
 			{
 				return false;				
 			}
+			if(evt.dragged.firstChild.className == 'active' && !editor.draftDisabled)
+			{
+				editor.errors.message = "Please save your changes before you move the file";
+				return false;
+			}
 			return true;
 		},
-		onStart(evt)
+		onStart : function(evt)
 		{
 			/* delete error messages if exist */
-			var errorMessages = document.getElementById("navi-errors");
-			if(errorMessages)
-			{
-				errorMessages.parentNode.removeChild(errorMessages);
-			}
+			editor.errors.message = false;
 		},
-		onEnd(evt)
+		onEnd : function(evt)
 		{
 			var locator = {
 				'item_id': 			evt.item.id,
@@ -57,12 +58,7 @@ const navcomponent = Vue.component('navigation', {
 					
 					if(result.errors)
 					{
-						var publishController 	= document.getElementById("publishController");
-						var errorMessage 		= document.createElement("div");
-						errorMessage.id			= "navi-errors";
-						errorMessage.className 	= "message error";
-						errorMessage.innerHTML	= result.errors;
-						publishController.insertBefore(errorMessage, publishController.childNodes[0]); 
+						editor.errors.message = result.errors;
 					}
 					if(result.url)
 					{
@@ -111,7 +107,7 @@ const navcomponent = Vue.component('navigation', {
 let navi = new Vue({
 	el: "#navi",
 	components: {
-		navcomponent
+		'navcomponent': navcomponent,
 	},
 	data: {
 		title: "Navigation",
@@ -121,10 +117,10 @@ let navi = new Vue({
 		modalWindow: "modal hide",		
 	},
 	methods:{
-		onStart(evt){
+		onStart: function(evt){
 			this.$refs.draggit[0].onStart(evt);			
 		},
-		onEnd(evt){
+		onEnd: function(evt){
 			this.$refs.draggit[0].onEnd(evt);
 		},
 		showModal: function(e){
