@@ -14,4 +14,12 @@ What you don't need:
 
 Almost any hosting package provides a webserver with php. If you ever hosted your own website, then chances are high, that you can run TYPEMILL there without any problems.
 
-Typemill is developed with Firefox and tested with Chrome. Microsoft Edge and Safari do also work, but they are not deeply tested. The content editor of TYPEMILL does not work with Internet Explorer. However, IE has nearly no market share anymore, so do not use outdated software, please. 
+Typemill supports the following browsers:
+
+- Firefox (heavily tested)
+- Chrome (tested)
+- Edge (basic tests)
+- IE11 (basic tests)
+- Safari (not tested)
+
+I use Firefox and XAMPP for development. If you use another stack like Safari / OS, then try it, but I have no possibility to test or fix it.

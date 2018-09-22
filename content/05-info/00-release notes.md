@@ -2,6 +2,20 @@
 
 This is the version history with some release notes.
 
+## Version 1.2.4: Refactoring and Browser Support
+
+_Release date: 22.09.2018_
+
+Version 1.2.4 is a small update with some improvements like browser-support and optimizing some themes and plugins, so please update the system folder, the plugin folder and the theme folder.
+
+- Tested and optimized the admin panel with Firefox, Chrome, Edge and IE11.
+- Add an individual info-link for the cookieconsent plugin.
+- Redesigned and enhanced author info, share-links and date for standard theme.
+- Fixed: Get error message if session is out when saving changes in the editor.
+- Fixed: Get error message if try to move a page with unsafed changes.
+- Fixed: Optimized logic if moved file with live, draft or json version.
+- Fixed: Saves changes first before page is unpublished.
+
 ## Version 1.2.3: Reorder Pages
 
 _Release date: 14.09.2018_
