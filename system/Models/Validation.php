@@ -54,6 +54,16 @@ class Validation
 			if(!$email){ return false; }
 			return true;
 		}, 'unknown');
+
+		Validator::addRule('noSpecialChars', function($field, $value, array $params, array $fields)
+		{
+			$format = '/[!@#$%^&*()_+=\[\]{};\':"\\|,.<>\/?]/';
+			if ( preg_match($format, $value))
+			{
+				return false;
+			}
+			return true;
+		}, 'contains special characters');
 		
 		Validator::addRule('noHTML', function($field, $value, array $params, array $fields)
 		{
@@ -241,6 +251,33 @@ class Validation
 			return $v->errors();
 		}
 	}
+
+	/**
+	* validation for new navigation items
+	* 
+	* @param array $params with form data.
+	* @return true or $v->errors with array of errors to use in json-response
+	*/
+
+	public function navigationItem(array $params)
+	{
+		$v = new Validator($params);
+						
+		$v->rule('required', ['folder_id', 'item_name', 'type', 'url']);
+		$v->rule('regex', 'folder_id', '/^[0-9.]+$/i');
+		$v->rule('noSpecialChars', 'item_name');
+		$v->rule('lengthBetween', 'item_name', 1, 20);
+		$v->rule('in', 'type', ['file', 'folder']);
+		
+		if($v->validate()) 
+		{
+			return true;
+		} 
+		else
+		{
+			return $v->errors();
+		}
+	}	
 	
 	/**
 	* validation for dynamic fields ( settings for themes and plugins)

@@ -9,8 +9,17 @@
 			</div>
 		</div>
 		<draggable :element="'ul'" class="navi-list" :list="items" @start="onStart" @end="onEnd" :options="{group:{ name:'folder'}, animation: 150, 'disabled': freeze }">
-			<navigation ref="draggit" v-for="item in items" :freeze="freeze" :name="item.name" :active="item.active" :parent="item.activeParent" :level="item.keyPath" :root="root" :url="item.urlRelWoF" v-bind:id="item.keyPath" :key="item.keyPath" :filetype="item.elementType" :folder="item.folderContent"></navigation>
+			<navigation ref="draggit" v-for="item in items" :freeze="freeze" :name="item.name" :active="item.active" :parent="item.activeParent" :level="item.keyPath" :root="root" :url="item.urlRelWoF" v-bind:id="item.keyPath" :key="item.keyPath" :elementtype="item.elementType" :filetype="item.fileType" :folder="item.folderContent"></navigation>
 		</draggable>
+		<ul class="navi-list addBaseFolder">
+			<li class="navi-item file">
+				<i class="icon-plus"></i>
+				<div class="addNaviForm">
+					<input type="text" v-model="folderName" />
+					<button class="fullWidth" @click="addFolder">add folder to base level</button>
+				</div>
+			</li>
+		</ul>
 		
 		<div id="modalWindow" :class="modalWindow">
 			<div class="modalInner wide">
@@ -32,11 +41,11 @@
 
 {% verbatim %}
 	<template id="navigation-template">
-		<li class="navi-item" :class="filetype"><a v-bind:href="getUrl(root, url)" :class="checkActive(active,parent)"><i :class="getIcon(filetype)"></i><span :class="getLevel(level)">{{ name }}</span><i class="icon-resize-full-alt"></i></a>
+		<li class="navi-item" :class="elementtype"><a v-bind:href="getUrl(root, url)" :class="checkActive(active,parent)"><i :class="getIcon(elementtype, filetype)"></i><span :class="getLevel(level)">{{ name }}</span><i class="icon-resize-full-alt"></i></a>
 			<draggable v-if="folder" :element="'ul'" class="navi-list" :list="folder" :move="checkMove" @start="onStart" @end="onEnd" :options="{group:{ name:'file'}, animation: 150, 'disabled': freeze }">
-				<navigation ref="draggit" v-for="item in folder" :freeze="freeze" :name="item.name" :active="item.active" :parent="item.activeParent" :level="item.keyPath" :url="item.urlRelWoF" :root="root" v-bind:id="item.keyPath" :key="item.keyPath" :filetype="item.elementType" :folder="item.folderContent"></navigation>
+				<navigation ref="draggit" v-for="item in folder" :freeze="freeze" :name="item.name" :active="item.active" :parent="item.activeParent" :level="item.keyPath" :url="item.urlRelWoF" :root="root" v-bind:id="item.keyPath" :key="item.keyPath" :filetype="item.fileType" :elementtype="item.elementType" :folder="item.folderContent"></navigation>
 			</draggable>
-		<!--	<div v-if="folder">+ add</div> -->
+			<ul v-if="folder" class="navi-list"><li class="navi-item file"><i class="icon-plus"></i><span :class="getLevel(level + '.0')" class="addNaviItem"><a class="addNaviLink" href="#" @click.prevent="toggleForm">add item</a></span><transition name="fade"><div v-if="showForm" class="addNaviForm"><input v-model="newItem"><button class="b-left" @click="addFile('file')">add file</button><button class="b-right" @click="addFile('folder')">add folder</button></div></transition></li></ul>
 		</li>
 	</template>
 {% endverbatim %}

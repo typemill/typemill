@@ -10,4 +10,5 @@ You are a pro and don't want to read the whole manual? No problem, this is a qui
 - **F5**: After some changes, use the `F5` key to refresh the navigation manually.
 - **Lean back** and let TYPEMILL create a nice website for you.
 
+
 The TYPEMILL system ships with this user manual in the content folder. Check how the files are written and how the folders are organized.

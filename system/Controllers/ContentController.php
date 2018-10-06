@@ -22,7 +22,7 @@ abstract class ContentController
 	protected $uri;
 	
 	# holds the errors to output in frontend 
-	protected $errors;
+	protected $errors = false;
 	
 	# holds a write object to write files 
 	protected $write;
@@ -81,6 +81,11 @@ abstract class ContentController
 		return $this->c->view->render($response->withStatus(404), '/404.twig', $data);
 	}
 	
+	protected function renderIntern404($response, $data = NULL)
+	{
+		return $this->c->view->render($response->withStatus(404), '/intern404.twig', $data);
+	}	
+		
 	protected function validateEditorInput()
 	{
 		$validate = new Validation();
@@ -98,6 +103,19 @@ abstract class ContentController
 	{
 		$validate = new Validation();
 		$vResult = $validate->navigationSort($this->params);
+		
+		if(is_array($vResult))
+		{
+			$this->errors = ['errors' => $vResult];
+			return false;
+		}
+		return true;
+	}
+
+	protected function validateNaviItem()
+	{
+		$validate = new Validation();
+		$vResult = $validate->navigationItem($this->params);
 		
 		if(is_array($vResult))
 		{
@@ -176,6 +194,7 @@ abstract class ContentController
 			}
 			elseif($item->elementType == 'folder')
 			{
+				$item->pathWithoutItem		= $item->path;
 				$item->path 				= $item->path . DIRECTORY_SEPARATOR . 'index';
 				$item->pathWithoutType		= $item->path;
 			}
@@ -221,22 +240,54 @@ abstract class ContentController
 		}
 	}
 		
-	protected function deleteContentFiles($fileTypes)
+	protected function deleteContentFiles($fileTypes, $folder = false)
 	{
 		$basePath = $this->settings['rootPath'] . $this->settings['contentFolder'];
-		
+
 		foreach($fileTypes as $fileType)
 		{
-			if(file_exists($basePath . $this->item->pathWithoutType . '.' . $fileType))
+			if(file_exists($basePath . $this->item->pathWithoutType . '.' . $fileType) && !unlink($basePath . $this->item->pathWithoutType . '.' . $fileType) )
 			{
-				unlink($basePath . $this->item->pathWithoutType . '.' . $fileType);
-				
-				# if file could not be deleted
-				# $this->errors = ['errors' => ['message' => 'Could not delete files, please check, if files are writable.']];
-			}			
+				$this->errors = ['message' => 'We could not delete the file, please check, if the file is writable.'];				
+			}
+		}
+		
+		if($this->errors)
+		{
+			return false;
 		}
 		
 		return true;
+	}
+	
+	protected function deleteContentFolder()
+	{
+		$basePath = $this->settings['rootPath'] . $this->settings['contentFolder'];
+		$path = $basePath . $this->item->pathWithoutItem;
+
+		if(file_exists($path))
+		{
+			$files = array_diff(scandir($path), array('.', '..'));
+			
+			# check if there are folders first, then stop the operation
+			foreach ($files as $file)
+			{
+				if(is_dir(realpath($path) . DIRECTORY_SEPARATOR . $file))
+				{
+					$this->errors = ['message' => 'Please delete the sub-folder first.'];
+				}
+			}
+
+			if(!$this->errors)
+			{
+				foreach ($files as $file)
+				{
+					unlink(realpath($path) . DIRECTORY_SEPARATOR . $file);
+				}
+				return rmdir($path);
+			}
+		}
+		return false;
 	}
 	
 	protected function setContent()

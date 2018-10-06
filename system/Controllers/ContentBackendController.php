@@ -25,10 +25,10 @@ class ContentBackendController extends ContentController
 		$this->params	= isset($args['params']) ? ['url' => $this->uri->getBasePath() . '/' . $args['params']] : ['url' => $this->uri->getBasePath()];
 		
 		# set structure
-		if(!$this->setStructure($draft = true)){ return $this->render404($response, array( 'navigation' => true, 'content' => $this->errors )); }
+		if(!$this->setStructure($draft = true)){ return $this->renderIntern404($response, array( 'navigation' => true, 'content' => $this->errors )); }
 		
 		# set item
-		if(!$this->setItem()){ return $this->render404($response, array( 'navigation' => $this->structure, 'settings' => $this->settings, 'content' => $this->errors )); }
+		if(!$this->setItem()){ return $this->renderIntern404($response, array( 'navigation' => $this->structure, 'settings' => $this->settings, 'content' => $this->errors )); }
 		
 		# get the breadcrumb (here we need it only to mark the actual item active in navigation)
 		$breadcrumb = isset($this->item->keyPathArray) ? Folder::getBreadcrumb($this->structure, $this->item->keyPathArray) : false;

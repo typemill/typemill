@@ -11,7 +11,7 @@ use Typemill\Extensions\ParsedownExtension;
 class ContentApiController extends ContentController
 {
 	public function publishArticle(Request $request, Response $response, $args)
-	{
+	{		
 		# get params from call 
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri();
@@ -40,7 +40,10 @@ class ContentApiController extends ContentController
 			# update the file
 			$delete = $this->deleteContentFiles(['txt']);
 			
-			# update the structure
+			# update the internal structure
+			$this->setStructure($draft = true, $cache = false);
+			
+			# update the public structure
 			$this->setStructure($draft = false, $cache = false);
 
 			return $response->withJson(['success'], 200);
@@ -52,7 +55,7 @@ class ContentApiController extends ContentController
 	}
 
 	public function unpublishArticle(Request $request, Response $response, $args)
-	{
+	{		
 		# get params from call 
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri();
@@ -99,6 +102,9 @@ class ContentApiController extends ContentController
 		
 		if($delete)
 		{
+			# update the internal structure
+			$this->setStructure($draft = true, $cache = false);
+			
 			# update the live structure
 			$this->setStructure($draft = false, $cache = false);
 			
@@ -116,28 +122,50 @@ class ContentApiController extends ContentController
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri();
 
+		# set url to base path initially
+		$url = $this->uri->getBaseUrl() . '/tm/content';
+		
 		# set structure
 		if(!$this->setStructure($draft = true)){ return $response->withJson($this->errors, 404); }
 
-		# set item 
+		# set item
 		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
 		
-		# update the file
-		$delete = $this->deleteContentFiles(['md','txt']);
-		
+		if($this->item->elementType == 'file')
+		{
+			$delete = $this->deleteContentFiles(['md','txt']);
+		}
+		elseif($this->item->elementType == 'folder')
+		{
+			$delete = $this->deleteContentFolder();
+		}
+
 		if($delete)
 		{
+			# check if it is a subfile or subfolder and set the redirect-url to the parent item
+			if(count($this->item->keyPathArray) > 1)
+			{
+				# get the parent item
+				$parentItem = Folder::getParentItem($this->structure, $this->item->keyPathArray);
+
+				if($parentItem)
+				{
+					# an active file has been moved to another folder
+					$url .= $parentItem->urlRelWoF;
+				}
+			}
+			
 			# update the live structure
 			$this->setStructure($draft = false, $cache = false);
-			
+				
 			#update the backend structure
 			$this->setStructure($draft = true, $cache = false);
 			
-			return $response->withJson(['success'], 200);
+			return $response->withJson(array('data' => $this->structure, 'errors' => false, 'url' => $url), 200);
 		}
 		else
 		{
-			return $response->withJson(['errors' => ['message' => "Could not delete some files. Please check if the files exists and are writable"]], 404);
+			return $response->withJson(array('data' => $this->structure, 'errors' => $this->errors), 404); 
 		}
 	}
 	
@@ -174,6 +202,9 @@ class ContentApiController extends ContentController
 		/* update the file */
 		if($this->write->writeFile($this->settings['contentFolder'], $this->path, $contentJson))
 		{
+			# update the internal structure
+			$this->setStructure($draft = true, $cache = false);
+			
 			return $response->withJson(['success'], 200);
 		}
 		else
@@ -278,10 +309,171 @@ class ContentApiController extends ContentController
 		
 		return $response->withJson(array('data' => $internalStructure, 'errors' => false, 'url' => $url));
 	}
+	
+	public function createArticle(Request $request, Response $response, $args)
+	{
+		# get params from call
+		$this->params 	= $request->getParams();
+		$this->uri 		= $request->getUri();
+		
+		# url is only needed, if an active page is moved
+		$url 			= false;
+		
+		# set structure
+		if(!$this->setStructure($draft = true)){ return $response->withJson(array('data' => false, 'errors' => $this->errors, 'url' => $url), 404); }
+		
+		# validate input
+		if(!$this->validateNaviItem()){ return $response->withJson(array('data' => $this->structure, 'errors' => 'Special Characters not allowed. Length between 1 and 20 chars.', 'url' => $url), 422); }
+		
+		# get the ids (key path) for item, old folder and new folder
+		$folderKeyPath 	= explode('.', $this->params['folder_id']);
+		
+		# get the item from structure
+		$folder			= Folder::getItemWithKeyPath($this->structure, $folderKeyPath);
 
+		if(!$folder){ return $response->withJson(array('data' => $this->structure, 'errors' => 'We could not find this page. Please refresh and try again.', 'url' => $url), 404); }
+		
+		# Rename all files within the folder to make sure, that namings and orders are correct
+		# get the content of the target folder
+		$folderContent	= $folder->folderContent;
+		
+		# create the name for the new item
+		$nameParts = Folder::getStringParts($this->params['item_name']);		
+		$name 		= implode("-", $nameParts);
+		$slug		= $name;
+				
+		# initialize index
+		$index = 0;		
+		
+		# initialise write object
+		$write = new Write();
+
+		# iterate through the whole content of the new folder
+		$writeError = false;
+		
+		foreach($folderContent as $folderItem)
+		{
+			# check, if the same name as new item, then return an error
+			if($folderItem->slug == $slug)
+			{
+				return $response->withJson(array('data' => $this->structure, 'errors' => 'There is already a page with this name. Please choose another name.', 'url' => $url), 404);
+			}
+			
+			if(!$write->moveElement($folderItem, $folder->path, $index))
+			{
+				$writeError = true;
+			}
+			$index++;
+		}
+
+		if($writeError){ return $response->withJson(array('data' => $this->structure, 'errors' => 'Something went wrong. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404); }
+
+		# add prefix number to the name
+		$namePath 	= $index > 9 ? $index . '-' . $name : '0' . $index . '-' . $name;
+		$folderPath	= 'content' . $folder->path;
+		
+		if($this->params['type'] == 'file')
+		{
+			if(!$write->writeFile($folderPath, $namePath . '.txt', ''))
+			{
+				return $response->withJson(array('data' => $this->structure, 'errors' => 'We could not create the file. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404);
+			}
+		}
+		elseif($this->params['type'] == 'folder')
+		{
+			if(!$write->checkPath($folderPath . DIRECTORY_SEPARATOR . $namePath))
+			{
+				return $response->withJson(array('data' => $this->structure, 'errors' => 'We could not create the folder. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404);
+			}
+			$write->writeFile($folderPath . DIRECTORY_SEPARATOR . $namePath, 'index.txt', '');
+		}
+		
+		# update the structure for editor
+		$this->setStructure($draft = true, $cache = false);
+
+		# get item for url and set it active again
+		if(isset($this->params['url']))
+		{
+			$activeItem = Folder::getItemForUrl($this->structure, $this->params['url']);
+		}
+
+		# activate this if you want to redirect after creating the page...
+		# $url = $this->uri->getBaseUrl() . '/tm/content' . $folder->urlRelWoF . '/' . $name;
+		
+		return $response->withJson(array('data' => $this->structure, 'errors' => false, 'url' => $url));
+	}
+
+	public function createBaseFolder(Request $request, Response $response, $args)
+	{
+		# get params from call
+		$this->params 	= $request->getParams();
+		$this->uri 		= $request->getUri();
+		
+		# url is only needed, if an active page is moved
+		$url 			= false;
+		
+		# set structure
+		if(!$this->setStructure($draft = true)){ return $response->withJson(array('data' => false, 'errors' => $this->errors, 'url' => $url), 404); }
+		
+		# validate input
+		#if(!$this->validateBaseFolder()){ return $response->withJson(array('data' => $this->structure, 'errors' => 'Special Characters not allowed. Length between 1 and 20 chars.', 'url' => $url), 422); }
+				
+		# create the name for the new item
+		$nameParts 	= Folder::getStringParts($this->params['item_name']);		
+		$name 		= implode("-", $nameParts);
+		$slug		= $name;
+
+		# initialize index
+		$index = 0;		
+		
+		# initialise write object
+		$write = new Write();
+
+		# iterate through the whole content of the new folder
+		$writeError = false;
+		
+		foreach($this->structure as $folder)
+		{
+			# check, if the same name as new item, then return an error
+			if($folder->slug == $slug)
+			{
+				return $response->withJson(array('data' => $this->structure, 'errors' => 'There is already a page with this name. Please choose another name.', 'url' => $url), 404);
+			}
+			
+			if(!$write->moveElement($folder, '', $index))
+			{
+				$writeError = true;
+			}
+			$index++;
+		}
+
+		if($writeError){ return $response->withJson(array('data' => $this->structure, 'errors' => 'Something went wrong. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404); }
+
+		# add prefix number to the name
+		$namePath 	= $index > 9 ? $index . '-' . $name : '0' . $index . '-' . $name;
+		$folderPath	= 'content';
+		
+		if(!$write->checkPath($folderPath . DIRECTORY_SEPARATOR . $namePath))
+		{
+			return $response->withJson(array('data' => $this->structure, 'errors' => 'We could not create the folder. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404);
+		}
+		$write->writeFile($folderPath . DIRECTORY_SEPARATOR . $namePath, 'index.txt', '');
+		
+		# update the structure for editor
+		$this->setStructure($draft = true, $cache = false);
+
+		# get item for url and set it active again
+		if(isset($this->params['url']))
+		{
+			$activeItem = Folder::getItemForUrl($this->structure, $this->params['url']);
+		}
+
+		return $response->withJson(array('data' => $this->structure, 'errors' => false, 'url' => $url));
+	}
+	
+	
 	public function createBlock(Request $request, Response $response, $args)
 	{
-		
 		/* get params from call */
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri();

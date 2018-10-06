@@ -15,7 +15,7 @@ class Write
 	public function checkPath($folder)
 	{
 		$folderPath = $this->basePath . $folder;
-		
+				
 		if(!is_dir($folderPath))
 		{
 			if(@mkdir($folderPath, 0774, true))
@@ -55,6 +55,7 @@ class Write
 		if($this->checkPath($folder))
 		{
 			$filePath 	= $this->basePath . $folder . DIRECTORY_SEPARATOR . $file;
+			
 			$openFile 	= @fopen($filePath, "w");
 			
 			if(!$openFile)
@@ -79,7 +80,7 @@ class Write
 		}
 		return false;
 	}
-
+	
 	public function moveElement($item, $folderPath, $index)
 	{
 		$filetypes			= array('md', 'txt');
@@ -88,7 +89,7 @@ class Write
 		$newOrder			= ($index < 10) ? '0' . $index : $index;
 
 		# create new path with foldername or filename but without file-type
-		$newPath 			= $this->basePath . 'content' . $folderPath . DIRECTORY_SEPARATOR . $newOrder . '-' . $item->name;
+		$newPath 			= $this->basePath . 'content' . $folderPath . DIRECTORY_SEPARATOR . $newOrder . '-' . str_replace(" ", "-", $item->name);
 		
 		if($item->elementType == 'folder')
 		{
@@ -125,58 +126,6 @@ class Write
 			}
 		}
 
-		return $result;
-		
-		/*
-		if($item->elementType == 'folder')
-		{
-			$newName		= $newOrder . '-' . $item->name;
-		}
-		else
-		{
-			$newName		= $newOrder . '-' . $item->name . '.' . $item->fileType;
-		}
-		
-		$oldPath			= $this->basePath . 'content' . $item->path;
-		$newPath 			= $this->basePath . 'content' . $folderPath . DIRECTORY_SEPARATOR . $newName;
-
-		if(@rename($oldPath, $newPath))
-		{
-			$result = true;
-		}
-		
-		foreach($filetypes as $filetype)
-		{
-			#check if file exists
-			if(file_exists($oldPath))
-			{
-
-			}
-		}
-		
-		
-		# if it is a txt file, check, if there is a corresponding .md file and move it
-		if($result && $item->elementType == 'file' && $item->fileType == 'txt')
-		{
-			$result = false;
-			
-			$oldPath		= substr($item->path, 0, strpos($item->path, "."));
-			$oldPath		= $this->basePath . 'content' . $oldPath . '.md';
-
-			if(file_exists($oldPath))
-			{
-				$newName			= $newOrder . '-' . $item->name . '.md';
-				$newPath 			= $this->basePath . 'content' . $folderPath . DIRECTORY_SEPARATOR . $newName;
-				
-				if(@rename($oldPath, $newPath))
-				{
-					$result = true;
-				}
-			}
-		}
-		
-		return $result;
-		*/
-		
+		return $result;		
 	}
 }

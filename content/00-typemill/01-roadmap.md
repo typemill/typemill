@@ -1,6 +1,6 @@
 # Roadmap
 
-There are a lot of plans for future releases of TYPEMILL, but it also follows the concept of simplicity. To prevent TYPEMILL from becomming a feature soup, it will strictly focus on the writers needs. 
+There are a lot of plans for future releases of TYPEMILL, but it also follows the concept of simplicity. To prevent TYPEMILL from becomming a feature soup, it will strictly focus on the writers needs.
 
 Here are some **milestones** of the past:
 

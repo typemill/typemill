@@ -168,10 +168,10 @@ let editor = new Vue({
 						self.modalWindow = "modal";
 						if(result.errors.message){ self.errors.message = result.errors.message };
 					}
-					else
+					else if(result.url)
 					{
 						self.modalWindow = "modal";
-						window.location.replace(self.root + '/tm/content');
+						window.location.replace(result.url);
 					}
 				}
 			}, method, url, this.form );

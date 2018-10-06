@@ -212,13 +212,17 @@ li.menu-item{
 	padding: 0px;
 	position: relative;
 }
-.navi-item i.icon-doc-text, .navi-item i.icon-folder-empty, .navi-item i.icon-home{
+.navi-item i.icon-doc-text, .navi-item i.icon-folder-empty, .navi-item i.icon-home, .navi-item i.icon-plus{
 	display: inline-block;
 	position: absolute;
 	top: 0px;
 	background: #fff;
 	color: #ccc;
 	padding: 7px 2px 7px;
+}
+.navi-item i.txt{
+	background: #e0474c;
+	color: #fff;
 }
 .navi-item i.icon-resize-full-alt{
 	position: absolute;
@@ -231,7 +235,6 @@ li.menu-item{
 	padding: 7px 0;
 	width: 100%;
 	margin-bottom: 2px;
-	box-shadow: 0 0 1px #ddd;
 	text-decoration: none;
 	color: #444;
 	background: #fff;
@@ -260,6 +263,64 @@ span.level-2{ padding-left: 40px; }
 span.level-3{ padding-left: 50px; }
 span.level-4{ padding-left: 60px; }
 span.level-5{ padding-left: 70px; }
+
+.addNaviItem{
+	padding: 5px;
+	display: block;
+}
+.addNaviItem .hide{
+	height: 0px;
+	overflow: hidden;
+}
+a.addNaviLink, a.addNaviLink:link, a.addNaviLink:visited{
+	padding: 3px 0;
+	margin: 0;
+	width: auto;
+	background: transparent;
+	color: #e0474c;
+}
+a.addNaviLink:focus, a.addNaviLink:hover, a.addNaviLink:active{
+	text-decoration: underline;
+}
+.addNaviForm input{
+	min-height: 0px;
+	width: 100%;
+	background: #fff;
+	padding: 7px;
+	outline: 1px solid #efefef;
+}
+.addNaviForm button{
+	display: inline-block;
+	box-sizing: border-box;
+	margin: 5px 0 10px;
+	padding: 5px;
+	background: #e0474c;
+	color: #f9f8f6;
+	width: 50%;
+	border: 0px;
+	border-radius: 2px;
+}
+.addNaviForm button.fullWidth{
+	width: 100%;
+}
+.addNaviForm button:hover{
+	background: #cc4146;
+}
+.addNaviForm button.b-left{
+	border-right: 1px solid #f9f8f6;
+}
+.addNaviForm button.b-right{
+	border-left: 1px solid #f9f8f6;
+}
+.fade-enter-active {
+  transition: opacity 0.25s ease-out;
+}
+.fade-leave-active{
+  transition: opacity 0.1s ease-out;	
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
 
 /********************
 *   	CONTENT		*
@@ -1393,7 +1454,7 @@ label .help, .label .help{
 	span.level-3{ padding-left: 35px; }
 	span.level-4{ padding-left: 50px; }
 	span.level-5{ padding-left: 65px; }
-	.navi-item i.icon-doc-text, .navi-item i.icon-folder-empty, .navi-item i.icon-home{
+	.navi-item i.icon-doc-text, .navi-item i.icon-folder-empty, .navi-item i.icon-home, .navi-item i.icon-plus{
 		left: -27px;
 	}	
 	fieldset.plugin{

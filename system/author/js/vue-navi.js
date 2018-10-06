@@ -1,6 +1,11 @@
 const navcomponent = Vue.component('navigation', {
 	template: '#navigation-template',
-	props: ['name', 'parent', 'active', 'filetype', 'element', 'folder', 'level', 'url', 'root', 'freeze'],
+	props: ['name', 'newItem', 'parent', 'active', 'filetype', 'elementtype', 'element', 'folder', 'level', 'url', 'root', 'freeze'],
+	data: function () {
+		return {
+			showForm: false
+		}
+	},
 	methods: {
 		checkMove : function(evt)
 		{			
@@ -26,14 +31,14 @@ const navcomponent = Vue.component('navigation', {
 				'item_id': 			evt.item.id,
 				'parent_id_from': 	evt.from.parentNode.id, 
 				'parent_id_to': 	evt.to.parentNode.id, 
-				'index_old': 		evt.oldIndex, 
+				'index_old': 		evt.oldIndex,
 				'index_new': 		evt.newIndex,
 				'active':			evt.item.firstChild.className,
 				'url':				document.getElementById("path").value,
 				'csrf_name': 		document.getElementById("csrf_name").value,
 				'csrf_value':		document.getElementById("csrf_value").value,				
 			};
-			
+						
 			if(locator.parent_id_from == locator.parent_id_to && locator.index_old == locator.index_new)
 			{
 				return
@@ -82,15 +87,15 @@ const navcomponent = Vue.component('navigation', {
 			level = level.split('.').length;
 			return 'level-' + level;
 		},
-		getIcon : function(filetype)
+		getIcon : function(elementtype, filetype)
 		{
-			if(filetype == 'file')
+			if(elementtype == 'file')
 			{
-				return 'icon-doc-text'
+				return 'icon-doc-text ' + filetype
 			}
-			if(filetype == 'folder')
+			if(elementtype == 'folder')
 			{
-				return 'icon-folder-empty'
+				return 'icon-folder-empty ' + filetype
 			}
 		},
 		checkActive : function(active,parent)
@@ -100,7 +105,64 @@ const navcomponent = Vue.component('navigation', {
 				return 'active';
 			}
 			return 'inactive';
-		}
+		},
+		toggleForm : function()
+		{
+			this.showForm = !this.showForm;
+		},
+		addFile : function(type)
+		{
+			editor.errors.message = false;
+
+			if(this.$root.$data.format.test(this.newItem) || !this.newItem || this.newItem.length > 20)
+			{ 
+				editor.errors.message = 'Special Characters are not allowed. Length between 1 and 20.';
+				return;
+			}
+			
+			var newItem = {
+				'folder_id': 		this.$el.id,
+				'item_name': 		this.newItem,
+				'type':				type,
+				'url':				document.getElementById("path").value,
+				'csrf_name': 		document.getElementById("csrf_name").value,
+				'csrf_value':		document.getElementById("csrf_value").value,
+			};
+			
+			// evt.item.classList.add("load");
+			
+			var self = this;
+			
+			self.$root.$data.freeze = true;
+			self.errors = {title: false, content: false, message: false};
+			
+			var url = this.root + '/api/v1/article';
+			var method 	= 'POST';
+
+			sendJson(function(response, httpStatus)
+			{
+				if(response)
+				{
+					self.$root.$data.freeze = false;
+					var result = JSON.parse(response);
+					
+					if(result.errors)
+					{
+						editor.errors.message = result.errors;
+					}
+					if(result.url)
+					{
+						window.location.replace(result.url);
+					}
+					if(result.data)
+					{
+						// evt.item.classList.remove("load");
+						self.$root.$data.items = result.data;						
+						self.showForm = false;
+					}
+				}
+			}, method, url, newItem );
+		},
 	}
 })
 
@@ -109,12 +171,16 @@ let navi = new Vue({
 	components: {
 		'navcomponent': navcomponent,
 	},
-	data: {
-		title: "Navigation",
-		items: JSON.parse(document.getElementById("data-navi").dataset.navi),
-		root: document.getElementById("main").dataset.url,
-		freeze: false,
-		modalWindow: "modal hide",		
+	data: function () {
+		return {
+			title: "Navigation",
+			items: JSON.parse(document.getElementById("data-navi").dataset.navi),
+			root: document.getElementById("main").dataset.url,
+			freeze: false,
+			modalWindow: "modal hide",
+			format: /[!@#$%^&*()_+=\[\]{};':"\\|,.<>\/?]/,
+			folderName: '',
+		}
 	},
 	methods:{
 		onStart: function(evt){
@@ -129,5 +195,52 @@ let navi = new Vue({
 		hideModal: function(e){
 			this.modalWindow = "modal";
 		},
+		addFolder: function()
+		{
+			editor.errors.message = false;
+
+			if(this.format.test(this.folderName) || this.folderName < 1 || this.folderName.length > 20)
+			{ 
+				editor.errors.message = 'Special Characters are not allowed. Length between 1 and 20.';
+				return;
+			}
+			
+			var newFolder = {
+				'item_name': 		this.folderName,
+				'url':				document.getElementById("path").value,
+				'csrf_name': 		document.getElementById("csrf_name").value,
+				'csrf_value':		document.getElementById("csrf_value").value,
+			};
+						
+			var self = this;
+			
+			self.freeze = true;
+			self.errors = {title: false, content: false, message: false};
+			
+			var url = this.root + '/api/v1/basefolder';
+			var method 	= 'POST';
+
+			sendJson(function(response, httpStatus)
+			{
+				if(response)
+				{
+					self.freeze = false;
+					var result = JSON.parse(response);
+					
+					if(result.errors)
+					{
+						editor.errors.message = result.errors;
+					}
+					if(result.url)
+					{
+						window.location.replace(result.url);
+					}
+					if(result.data)
+					{
+						self.items = result.data;						
+					}
+				}
+			}, method, url, newFolder );
+		}
 	}
 })
