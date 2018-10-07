@@ -13,14 +13,14 @@ Here are some **milestones** of the past:
 - Added a basic content editor to edit and delete existing pages (v. 1.2.0)
 - Added a draft management for pages (v. 1.2.2)
 - Re-order content pages with drag&drop (v. 1.2.3)
+- Editor: Create new pages (v. 1.2.5)
 
 And here is the **roadmap** for this year (2018):
 
-- Editor: Create new pages (v. 1.2.5)
-- Editor: Manage images and assets (v. 1.2.6)
-- Editor: Edit meta-information (v. 1.2.7)
+- Editor: Basic WYSIWYG-Preview for markdown blocks (v. 1.2.6)
+- Editor: Manage images and assets (v. 1.2.7)
+- Editor: Edit meta-information (v. 1.2.8)
 - Editor: Add formatting options (v. 1.3.0)
-- Editor: WYSIWYG-Preview for markdown blocks (v. 1.3.0)
 - Editor: Create the best author- and writing experience you have ever seen (1.4.0)
 
 Other features with lower prio: 

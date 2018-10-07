@@ -2,6 +2,17 @@
 
 This is the version history with some release notes.
 
+## Version 1.2.5: Create New Pages Online
+
+_Release date: 07.10.2018_
+
+Version 1.2.5 is a simple system update, so you only have to delete the system folder and upload the new system folder of version 1.2.5. The main changes are:
+
+* Create new folders and files.
+* Mark drafted and unpublished pages in navigation.
+* Add internal 404 page for the author panel.
+* Improve delete pages (redirect and subfolder).
+
 ## Version 1.2.4: Refactoring and Browser Support
 
 _Release date: 22.09.2018_

@@ -1,6 +1,8 @@
 # Quick Start for Writers
 
-You are a pro and don't want to read the whole manual? No problem, this is a quick overview:
+In earlier versions of Typemill authors had to create content files with an offline Markdown editor and upload the files to the server. Since Typemill provides an online editor to create, reorder and edit content pages, a separate offline editor is not needed anymore.
+
+However, if you still want to use your favourite Markdown editor to create your content files, then please follow this rules:
 
 - **Setup**: Login to your system and setup the system, the themes and the plugins in the author panel.
 - **Content**: Organize your content in folders and markdown files and put them in the `\content` folder of TYPEMILL. 
@@ -10,5 +12,4 @@ You are a pro and don't want to read the whole manual? No problem, this is a qui
 - **F5**: After some changes, use the `F5` key to refresh the navigation manually.
 - **Lean back** and let TYPEMILL create a nice website for you.
 
-
-The TYPEMILL system ships with this user manual in the content folder. Check how the files are written and how the folders are organized.
+TYPEMILL ships with this user manual in the content folder. Check how the files are written and how the folders are organized.

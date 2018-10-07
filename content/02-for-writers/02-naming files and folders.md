@@ -1,5 +1,7 @@
 # Naming your Files and Folders
 
+Naming conventions are not very relevant anymore since you can create new pages online with the author panel right now. If you still want to create your content offline, then please follow the rules below.
+
 To create a clean website with TYPEMILL, you have to follow some naming conventions for your files and folders. A typcial structure for folders and file looks like this:
 
 ````
@@ -20,4 +22,3 @@ The rules are simple:
 - **Avoid Language Specific Characters**: As of version 1.0.5 the character encoding has been improved, but it is still not perfect. You can try to use german, french or other character sets to name your files and folders. But if you see some errors in the navigation of the website, please use english characters instead. In the content files itself you can use all character sets of course.
 
 When you name your files and folders, then always keep in mind, that the names are used to generate the navigation and the table of contents. So keep it short. Otherwise it might break the layout and the design.
-

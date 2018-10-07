@@ -149,20 +149,17 @@ abstract class ContentController
 			# scan the content of the folder
 			$structure = Folder::scanFolder($this->settings['rootPath'] . $this->settings['contentFolder'], $draft);
 
-			# if there is no content, render an empty page
-			if(count($structure) == 0)
+			# if there is content, then get the content details
+			if(count($structure) > 0)
 			{
-				$this->errors = ['errors' => ['message' => 'content folder is empty']];
-				return false;
+				# create an array of object with the whole content of the folder
+				$structure = Folder::getFolderContentDetails($structure, $this->uri->getBaseUrl(), $this->uri->getBasePath());
 			}
-
-			# create an array of object with the whole content of the folder
-			$structure = Folder::getFolderContentDetails($structure, $this->uri->getBaseUrl(), $this->uri->getBasePath());
-
+			
 			# cache navigation
 			$this->write->updateCache('cache', $filename, 'lastCache.txt', $structure);
 		}
-		
+				
 		$this->structure = $structure;
 		return true;
 	}

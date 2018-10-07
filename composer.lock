@@ -649,7 +649,7 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v3.4.15",
+            "version": "v3.4.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
@@ -770,16 +770,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v2.8.45",
+            "version": "v2.8.46",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "fbf876678e29dc634430dcf0096e216eb0004467"
+                "reference": "5baf0f821b14eee8ca415e6a0361a9fa140c002c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/fbf876678e29dc634430dcf0096e216eb0004467",
-                "reference": "fbf876678e29dc634430dcf0096e216eb0004467",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/5baf0f821b14eee8ca415e6a0361a9fa140c002c",
+                "reference": "5baf0f821b14eee8ca415e6a0361a9fa140c002c",
                 "shasum": ""
             },
             "require": {
@@ -816,7 +816,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2018-07-26T09:03:18+00:00"
+            "time": "2018-08-29T13:11:53+00:00"
         },
         {
             "name": "twig/twig",
@@ -890,12 +890,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/vlucas/valitron.git",
-                "reference": "14702f00d36938a04c23c667630d83cd4d001b31"
+                "reference": "e3b3eb31a2fc41827ac8d5646e406dde4584f3c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vlucas/valitron/zipball/14702f00d36938a04c23c667630d83cd4d001b31",
-                "reference": "14702f00d36938a04c23c667630d83cd4d001b31",
+                "url": "https://api.github.com/repos/vlucas/valitron/zipball/e3b3eb31a2fc41827ac8d5646e406dde4584f3c2",
+                "reference": "e3b3eb31a2fc41827ac8d5646e406dde4584f3c2",
                 "shasum": ""
             },
             "require": {
@@ -931,7 +931,7 @@
                 "validation",
                 "validator"
             ],
-            "time": "2018-09-11T16:59:23+00:00"
+            "time": "2018-09-23T19:46:36+00:00"
         }
     ],
     "packages-dev": [],

@@ -4,7 +4,7 @@ TYPEMILL is a modern and lightweight software with nearly no requirements. All y
 
 - **A webserver (Apache)** (to host TYPEMILL)
 - **PHP 7.0+** (to run TYPEMILL)
-- **FTP** (to upload your content files)
+- **FTP** (to upload your images and media files)
 
 What you don't need:
 
