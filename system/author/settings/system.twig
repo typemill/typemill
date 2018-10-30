@@ -67,7 +67,25 @@
 							<input name="settings[startpage]" type="checkbox" id="startpage"{{ startpage ? ' checked' : '' }}>
 							<span class="checkmark"></span>
 						</label>
-					</div>					
+					</div>
+					<hr>
+					<header class="headline">
+						<h2>Writing</h2>
+					</header>
+					<div class="medium{{ errors.settings.editor ? ' error' : '' }}">
+						<label for="settings[editor]">Standard Editor Mode *</label>
+						<label class="control-group">Raw Markdown
+							<input name="settings[editor]" value="raw" type="radio" {% if (old.settings.editor == "raw") or (settings.editor == "raw") %} checked {% endif %}>
+							<span class="radiomark"></span>
+						</label>
+						<label class="control-group">Visual Markdown
+							<input name="settings[editor]" value="visual" type="radio" {% if (old.settings.editor == "visual") or (settings.editor == "visual") %} checked {% endif %}>
+							<span class="radiomark"></span>
+						</label>
+						{% if errors.settings.editor %}
+							<span class="error">{{ errors.settings.editor | first }}</span>
+						{% endif %}
+					</div>							
 				</fieldset>
 			</section>
 			<input type="submit" value="Save All Settings" />

@@ -1,0 +1,38 @@
+{% extends 'layouts/layoutEditor.twig' %}
+{% block title %}Raw Content Editor{% endblock %}
+
+{% block content %}
+	
+	<div class="formWrapper">
+
+		<div id="editor" class="editor">
+			<form action="#" v-cloak>
+			
+				<section>
+				
+					<fieldset>
+						<div class="large" :class="{'error' : errors.title}">
+							<label for="title">Title*</label>
+							<input @input="changeContent" id="title" name="title" type="text" v-model="form.title" value="{{title}}" required />
+							<span class="error" v-if="errors.title">${ errors.title }</span>
+						</div>
+						<div class="large" :class="{'error' : errors.content}">
+							<label for="content">Content*</label>
+								<textarea id="content" v-model="form.content" @input="changeContent" required>{{ content }}</textarea>
+							<span class="error" v-if="errors.content">${ errors.content }</span>
+						</div>
+						<input id="path" type="hidden" value="{{ item.urlRel }}" required readonly />
+					</fieldset>
+					
+				</section>
+				
+			</form>
+		</div>
+		
+		{% include 'editor/publish-controller.twig' %}
+
+		{{ csrf_field() | raw }}
+		
+	</div>
+	
+{% endblock %}

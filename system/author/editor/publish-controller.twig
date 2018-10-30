@@ -1,0 +1,26 @@
+<div class="editor">
+	<div class="buttonset" id="publishController" data-published="{{ item.published }}" data-drafted="{{ item.drafted }}">
+		<div id="publishController"  v-cloak>
+			<div v-if="errors.message" class="message error">${ errors.message }</div>
+			<button v-if="raw" @click.prevent="saveDraft" id="draft" :class="draftResult" :disabled="draftDisabled"><span class="desktop">Save&nbsp;</span>Draft</button><button @click.prevent="publishDraft" id="publish" :class="publishResult" :disabled="publishDisabled">Publish</button>
+			<div class="secondary">
+				<div class="secondary--block">
+					<button @click.prevent="depublishArticle" class="button--secondary button--secondary__hightlight" :disabled="publishStatus"><span class="desktop">${publishLabel}</span><span class="mobile">ON</span></button>
+					<a v-if="visual" href="{{ base_url }}/tm/content/raw{{item.urlRelWoF}}" class="button--secondary">raw mode</a>
+					<a v-if="raw" href="{{ base_url }}/tm/content/visual{{item.urlRelWoF}}" class="button--secondary">visual mode</a>
+					<button @click.prevent="showModal" class="button--secondary"><span class="desktop">delete</span><span class="mobile">X</mobile></button>
+				</div>
+			</div>
+			<transition name="fade">
+				<div v-if="modalWindow" id="modalWindow" class="modalWindow">
+					<div class="modalInner">
+						<div @click="hideModal" id="closeModal" class="closeModal">X</div>
+						<h2>Delete page</h2>
+						<p>Do you really want to delete this page? Please confirm.</p>
+						<button @click.prevent="deleteArticle" class="large" :class="deleteResult" :disabled="deleteDisabled">Delete Page</button>
+					</div>
+				</div>
+			</transition>
+		</div>
+	</div>
+</div>

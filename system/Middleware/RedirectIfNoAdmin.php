@@ -24,7 +24,7 @@ class RedirectIfNoAdmin
 		
 		if($_SESSION['role'] != 'administrator')
 		{
-			$response = $response->withRedirect($this->router->pathFor('content.show'));			
+			$response = $response->withRedirect($this->router->pathFor('content.raw'));			
 		}
 		
 		return $next($request, $response);

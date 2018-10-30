@@ -11,7 +11,7 @@ use Typemill\Extensions\ParsedownExtension;
 class ContentBackendController extends ContentController
 {
 	/**
-	* Show Content
+	* Show Content for raw editor
 	* 
 	* @param obj $request the slim request object
 	* @param obj $response the slim response object
@@ -43,7 +43,7 @@ class ContentBackendController extends ContentController
 		$this->item->modified	= ($this->item->published OR $this->item->drafted) ? filemtime($this->settings['contentFolder'] . $this->path) : false;
 		
 		# read content from file
-		if(!$this->setContent()){ return $this->render404($response, array( 'navigation' => $this->structure, 'settings' => $this->settings, 'content' => $this->errors )); }
+		if(!$this->setContent()){ return $this->renderIntern404($response, array( 'navigation' => $this->structure, 'settings' => $this->settings, 'content' => $this->errors )); }
 		
 		$content = $this->content;
 		$title = false;
@@ -72,6 +72,76 @@ class ContentBackendController extends ContentController
 			}
 		}
 
-		return $this->render($response, 'editor/editor.twig', array('navigation' => $this->structure, 'title' => $title, 'content' => $content, 'item' => $this->item, 'settings' => $this->settings ));
+		return $this->render($response, 'editor/editor-raw.twig', array('navigation' => $this->structure, 'title' => $title, 'content' => $content, 'item' => $this->item, 'settings' => $this->settings ));
+	}
+	
+	/**
+	* Show Content for raw editor
+	* 
+	* @param obj $request the slim request object
+	* @param obj $response the slim response object
+	* @return obje $response with redirect to route
+	*/
+	
+	public function showBlox(Request $request, Response $response, $args)
+	{
+		# get params from call
+		$this->uri 		= $request->getUri();
+		$this->params	= isset($args['params']) ? ['url' => $this->uri->getBasePath() . '/' . $args['params']] : ['url' => $this->uri->getBasePath()];
+		
+		# set structure
+		if(!$this->setStructure($draft = true)){ return $this->renderIntern404($response, array( 'navigation' => true, 'content' => $this->errors )); }
+		
+		# set item
+		if(!$this->setItem()){ return $this->renderIntern404($response, array( 'navigation' => $this->structure, 'settings' => $this->settings, 'content' => $this->errors )); }
+		
+		# get the breadcrumb (here we need it only to mark the actual item active in navigation)
+		$breadcrumb = isset($this->item->keyPathArray) ? Folder::getBreadcrumb($this->structure, $this->item->keyPathArray) : false;
+		
+		# set the status for published and drafted
+		$this->setPublishStatus();
+
+		# set path
+		$this->setItemPath($this->item->fileType);
+
+		# add the modified date for the file
+		$this->item->modified	= ($this->item->published OR $this->item->drafted) ? filemtime($this->settings['contentFolder'] . $this->path) : false;
+
+		# read content from file
+		if(!$this->setContent()){ return $this->renderIntern404($response, array( 'navigation' => $this->structure, 'settings' => $this->settings, 'content' => $this->errors )); }
+
+		$content = $this->content;
+		$title = false;
+
+		if($content == '')
+		{
+			$content = [];
+		}
+		
+		# initialize parsedown extension
+		$parsedown = new ParsedownExtension();
+		
+		# if content is not an array, then transform it
+		if(!is_array($content))
+		{
+			# turn markdown into an array of markdown-blocks
+			$content = $parsedown->markdownToArrayBlocks($content);
+		}
+
+		foreach($content as $key => $block)
+		{
+			/* parse markdown-file to content-array */
+			$contentArray 	= $parsedown->text($block);
+
+			/* parse markdown-content-array to content-string */
+			$content[$key]	= $parsedown->markup($contentArray);			
+		}
+		
+		return $this->render($response, 'editor/editor-blox.twig', array('navigation' => $this->structure, 'title' => $title, 'content' => $content, 'item' => $this->item, 'settings' => $this->settings ));
+	}
+	
+	public function showEmpty(Request $request, Response $response, $args)
+	{		
+		return $this->renderIntern404($response, array( 'settings' => $this->settings ));	
 	}
 }

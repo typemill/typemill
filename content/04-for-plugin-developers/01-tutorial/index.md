@@ -1,3 +1,0 @@
-# Plugin Tutorial
-
-In this short tutorial we will create the **cookie consent plugin** step by step and learn about the **file structure**, about the **configuration with YAML** and about the basic **PHP-file** for the plugin. You will also learn how to register **events**, how to use your own **templates** and how to create a **user interface** for your plugin. Everything is pretty simple and the tutorial can be finished in one hour or two.

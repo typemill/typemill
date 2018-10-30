@@ -46,7 +46,9 @@ $app->post('/tm/user/delete', SettingsController::class . ':deleteUser')->setNam
 $app->get('/tm/user/{username}', SettingsController::class . ':showUser')->setName('user.show')->add(new RedirectIfUnauthenticated($container['router'], $container['flash']));
 $app->get('/tm/user', SettingsController::class . ':listUser')->setName('user.list')->add(new RedirectIfNoAdmin($container['router'], $container['flash']));
 
-$app->get('/tm/content[/{params:.*}]', ContentBackendController::class . ':showContent')->setName('content.show')->add(new RedirectIfUnauthenticated($container['router'], $container['flash']));
+$app->get('/tm/content/raw[/{params:.*}]', ContentBackendController::class . ':showContent')->setName('content.raw')->add(new RedirectIfUnauthenticated($container['router'], $container['flash']));
+$app->get('/tm/content/visual[/{params:.*}]', ContentBackendController::class . ':showBlox')->setName('content.visual')->add(new RedirectIfUnauthenticated($container['router'], $container['flash']));
+$app->get('/tm/content[/{params:.*}]', ContentBackendController::class . ':showEmpty')->setName('content.empty')->add(new RedirectIfUnauthenticated($container['router'], $container['flash']));
 
 foreach($routes as $pluginRoute)
 {

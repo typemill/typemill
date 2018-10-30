@@ -44,7 +44,8 @@ class SettingsController extends Controller
 					'author' 		=> $newSettings['author'],
 					'copyright' 	=> $newSettings['copyright'],
 					'year'			=> $newSettings['year'],
-					'startpage' 	=> isset($newSettings['startpage']) ? true : false
+					'startpage' 	=> isset($newSettings['startpage']) ? true : false,
+					'editor' 		=> $newSettings['editor'], 
 				);
 				
 				$copyright 					= $this->getCopyright();

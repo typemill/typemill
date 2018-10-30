@@ -3,19 +3,19 @@ const navcomponent = Vue.component('navigation', {
 	props: ['name', 'newItem', 'parent', 'active', 'filetype', 'elementtype', 'element', 'folder', 'level', 'url', 'root', 'freeze'],
 	data: function () {
 		return {
-			showForm: false
+			showForm: false,
 		}
 	},
 	methods: {
 		checkMove : function(evt)
-		{			
+		{
 			if(evt.dragged.classList.contains('folder') && evt.from.parentNode.id != evt.to.parentNode.id)
 			{
 				return false;				
 			}
 			if(evt.dragged.firstChild.className == 'active' && !editor.draftDisabled)
 			{
-				editor.errors.message = "Please save your changes before you move the file";
+				publishController.errors.message = "Please save your changes before you move the file";
 				return false;
 			}
 			return true;
@@ -23,7 +23,7 @@ const navcomponent = Vue.component('navigation', {
 		onStart : function(evt)
 		{
 			/* delete error messages if exist */
-			editor.errors.message = false;
+			publishController.errors.message = false;
 		},
 		onEnd : function(evt)
 		{
@@ -63,7 +63,7 @@ const navcomponent = Vue.component('navigation', {
 					
 					if(result.errors)
 					{
-						editor.errors.message = result.errors;
+						publishController.errors.message = result.errors;
 					}
 					if(result.url)
 					{
@@ -79,7 +79,7 @@ const navcomponent = Vue.component('navigation', {
 		},
 		getUrl : function(root, url)
 		{
-			return root + '/tm/content' + url
+			return root + '/tm/content/' + this.$root.$data.editormode + url
 		},
 		getLevel : function(level)
 		{
@@ -112,11 +112,11 @@ const navcomponent = Vue.component('navigation', {
 		},
 		addFile : function(type)
 		{
-			editor.errors.message = false;
+			publishController.errors.message = false;
 
 			if(this.$root.$data.format.test(this.newItem) || !this.newItem || this.newItem.length > 20)
 			{ 
-				editor.errors.message = 'Special Characters are not allowed. Length between 1 and 20.';
+				publishController.errors.message = 'Special Characters are not allowed. Length between 1 and 20.';
 				return;
 			}
 			
@@ -129,7 +129,7 @@ const navcomponent = Vue.component('navigation', {
 				'csrf_value':		document.getElementById("csrf_value").value,
 			};
 			
-			// evt.item.classList.add("load");
+			/* evt.item.classList.add("load"); */
 			
 			var self = this;
 			
@@ -148,7 +148,7 @@ const navcomponent = Vue.component('navigation', {
 					
 					if(result.errors)
 					{
-						editor.errors.message = result.errors;
+						publishController.errors.message = result.errors;
 					}
 					if(result.url)
 					{
@@ -175,9 +175,10 @@ let navi = new Vue({
 		return {
 			title: "Navigation",
 			items: JSON.parse(document.getElementById("data-navi").dataset.navi),
+			editormode: document.getElementById("data-navi").dataset.editormode,
 			root: document.getElementById("main").dataset.url,
 			freeze: false,
-			modalWindow: "modal hide",
+			modalWindow: false,
 			format: /[!@#$%^&*()_+=\[\]{};':"\\|,.<>\/?]/,
 			folderName: '',
 		}
@@ -190,18 +191,18 @@ let navi = new Vue({
 			this.$refs.draggit[0].onEnd(evt);
 		},
 		showModal: function(e){
-			this.modalWindow = "modal show";
+			this.modalWindow = true;
 		},
 		hideModal: function(e){
-			this.modalWindow = "modal";
+			this.modalWindow = false;
 		},
 		addFolder: function()
 		{
-			editor.errors.message = false;
+			publishController.errors.message = false;
 
 			if(this.format.test(this.folderName) || this.folderName < 1 || this.folderName.length > 20)
 			{ 
-				editor.errors.message = 'Special Characters are not allowed. Length between 1 and 20.';
+				publishController.errors.message = 'Special Characters are not allowed. Length between 1 and 20.';
 				return;
 			}
 			
@@ -211,7 +212,7 @@ let navi = new Vue({
 				'csrf_name': 		document.getElementById("csrf_name").value,
 				'csrf_value':		document.getElementById("csrf_value").value,
 			};
-						
+
 			var self = this;
 			
 			self.freeze = true;
@@ -229,7 +230,7 @@ let navi = new Vue({
 					
 					if(result.errors)
 					{
-						editor.errors.message = result.errors;
+						publishController.errors.message = result.errors;
 					}
 					if(result.url)
 					{

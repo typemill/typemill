@@ -187,13 +187,14 @@ class Validation
 	{
 		$v = new Validator($params);
 		
-		$v->rule('required', ['title', 'author', 'copyright', 'year']);
+		$v->rule('required', ['title', 'author', 'copyright', 'year', 'editor']);
 		$v->rule('lengthBetween', 'title', 2, 20);
 		$v->rule('lengthBetween', 'author', 2, 40);
 		$v->rule('regex', 'title', '/^[\pL0-9_ \-]*$/u');
 		$v->rule('regex', 'author', '/^[\pL_ \-]*$/u');
 		$v->rule('integer', 'year');
 		$v->rule('length', 'year', 4);
+		$v->rule('in', 'editor', ['raw', 'visual']);
 		$v->rule('in', 'copyright', $copyright);
 		
 		return $this->validationResult($v, $name);
@@ -223,6 +224,24 @@ class Validation
 		{
 			return $v->errors();
 		}		
+	}
+	
+	public function blockInput(array $params)
+	{
+		$v = new Validator($params);
+		
+		$v->rule('required', ['markdown', 'block_id', 'url']);
+		$v->rule('markdownSecure', 'markdown');
+		$v->rule('regex', 'block_id', '/^[0-9.]+$/i');
+		
+		if($v->validate())
+		{
+			return true;
+		} 
+		else
+		{
+			return $v->errors();
+		}
 	}
 
 	/**

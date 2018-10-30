@@ -1,3 +1,0 @@
-# Google Sitemap
-
-As of version 1.0.1, TYPEMILL creates a google sitemap in the cache folder. You can find the url for the sitemap in the system settings (basically it is something like `https://yourwebsite.net/cache/sitemap.xml`). Simply add the url to the google search console and you are donw. The sitemap will update once a day. You can also trigger a manual update with the F5 key (Windows) that refreshs the cache of your browser and the cache of TYPEMILL.

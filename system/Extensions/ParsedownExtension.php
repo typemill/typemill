@@ -29,7 +29,7 @@ class ParsedownExtension extends \ParsedownExtra
 	{	
         # convert to markup
         $markup = $this->elements($Elements);
-				
+
         # trim line breaks
         $markup = trim($markup, "\n");
 
@@ -266,7 +266,7 @@ class ParsedownExtension extends \ParsedownExtra
         $Block['element']['text'] = "\$\$\n" . $text . "\n\$\$";
         return $Block;
     }
-	
+		
 	# turn markdown into an array of markdown blocks for typemill edit mode	
 	function markdownToArrayBlocks($markdown)
 	{
@@ -294,7 +294,7 @@ class ParsedownExtension extends \ParsedownExtra
 		{
 			// remove empty lines
 			if (chop($block) === '') continue;
-				
+			
 			// if the block starts with a fenced code
 			if(substr($block,0,2) == '``')
 			{
@@ -332,12 +332,25 @@ class ParsedownExtension extends \ParsedownExtra
 				}
 			}
 			
+			$block = trim($block, "\n");
+			
 			$cleanBlocks[] = $block;
 		}
-
 		return $cleanBlocks;
 	}
 
+	public function arrayBlocksToMarkdown(array $arrayBlocks)
+	{	
+		$markdown = '';
+		
+		foreach($arrayBlocks as $block)
+		{
+			$markdown .=  $block . "\n\n";
+		}
+		
+		return $markdown;
+	}	
+	
 	protected function isComplete($codeblock)
 	{
 		$lines = explode("\n", $codeblock);
@@ -351,17 +364,5 @@ class ParsedownExtension extends \ParsedownExtra
 			return false;
 		}
 		return false;
-	}
-	
-	public function arrayBlocksToMarkdown(array $arrayBlocks)
-	{	
-		$markdown = '';
-		
-		foreach($arrayBlocks as $block)
-		{
-			$markdown .=  $block . "\n\n";
-		}
-		
-		return $markdown;
 	}	
 }

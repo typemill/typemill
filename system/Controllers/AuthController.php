@@ -16,7 +16,7 @@ class AuthController extends Controller
 	{
 		if(isset($_SESSION['login']))
 		{
-			return $response->withRedirect($this->c->router->pathFor('content.show'));
+			return $response->withRedirect($this->c->router->pathFor('content.raw'));
 		}
 		else
 		{
@@ -125,7 +125,7 @@ class AuthController extends Controller
 					$yaml->updateYaml('settings/users', '.logins', $logins);					
 				}
 
-				return $response->withRedirect($this->c->router->pathFor('content.show'));
+				return $response->withRedirect($this->c->router->pathFor('content.raw'));
 			}
 		}
 

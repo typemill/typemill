@@ -11,13 +11,16 @@ use Typemill\Extensions\ParsedownExtension;
 class ContentApiController extends ContentController
 {
 	public function publishArticle(Request $request, Response $response, $args)
-	{		
+	{
 		# get params from call 
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri();
 
-		# validate input 
-		if(!$this->validateEditorInput()){ return $response->withJson($this->errors,422); }
+		# validate input only if raw mode
+		if($this->params['raw'])
+		{
+			if(!$this->validateEditorInput()){ return $response->withJson($this->errors,422); }
+		}
 
 		# set structure
 		if(!$this->setStructure($draft = true)){ return $response->withJson($this->errors, 404); }
@@ -27,15 +30,36 @@ class ContentApiController extends ContentController
 		
 		# set the status for published and drafted
 		$this->setPublishStatus();
+		
+		# set path
+		$this->setItemPath($this->item->fileType);
+		
+		# if raw mode, use the content from request
+		if($this->params['raw'])
+		{
+			$this->content = '# ' . $this->params['title'] . "\r\n\r\n" . $this->params['content'];	
+		}
+		else
+		{
+			# read content from file
+			if(!$this->setContent()){ return $response->withJson(array('data' => false, 'errors' => $this->errors), 404); }
+			
+			# If it is a draft, then create clean markdown content
+			if(is_array($this->content))
+			{
+				# initialize parsedown extension
+				$parsedown = new ParsedownExtension();
 
+				# turn markdown into an array of markdown-blocks
+				$this->content = $parsedown->arrayBlocksToMarkdown($this->content);				
+			}
+		}
+		
 		# set path for the file (or folder)
 		$this->setItemPath('md');
-
-		# merge title with content for complete markdown document
-		$updatedContent = '# ' . $this->params['title'] . "\r\n\r\n" . $this->params['content'];
 		
 		# update the file
-		if($this->write->writeFile($this->settings['contentFolder'], $this->path, $updatedContent))
+		if($this->write->writeFile($this->settings['contentFolder'], $this->path, $this->content))
 		{
 			# update the file
 			$delete = $this->deleteContentFiles(['txt']);
@@ -123,7 +147,7 @@ class ContentApiController extends ContentController
 		$this->uri 		= $request->getUri();
 
 		# set url to base path initially
-		$url = $this->uri->getBaseUrl() . '/tm/content';
+		$url = $this->uri->getBaseUrl() . '/tm/content/' . $this->settings['editor'];
 		
 		# set structure
 		if(!$this->setStructure($draft = true)){ return $response->withJson($this->errors, 404); }
@@ -197,8 +221,8 @@ class ContentApiController extends ContentController
 		$contentArray = $parsedown->markdownToArrayBlocks($updatedContent);
 		
 		# encode the content into json
-		$contentJson = json_encode($contentArray);
-		
+		$contentJson = json_encode($contentArray);		
+				
 		/* update the file */
 		if($this->write->writeFile($this->settings['contentFolder'], $this->path, $contentJson))
 		{
@@ -212,7 +236,7 @@ class ContentApiController extends ContentController
 			return $response->withJson(['errors' => ['message' => 'Could not write to file. Please check if the file is writable']], 404);
 		}
 	}
-
+	
 	public function sortArticle(Request $request, Response $response, $args)
 	{
 		# get params from call
@@ -338,12 +362,12 @@ class ContentApiController extends ContentController
 		$folderContent	= $folder->folderContent;
 		
 		# create the name for the new item
-		$nameParts = Folder::getStringParts($this->params['item_name']);		
+		$nameParts 	= Folder::getStringParts($this->params['item_name']);		
 		$name 		= implode("-", $nameParts);
 		$slug		= $name;
 				
 		# initialize index
-		$index = 0;		
+		$index = 0;
 		
 		# initialise write object
 		$write = new Write();
@@ -372,9 +396,12 @@ class ContentApiController extends ContentController
 		$namePath 	= $index > 9 ? $index . '-' . $name : '0' . $index . '-' . $name;
 		$folderPath	= 'content' . $folder->path;
 		
+		# create default content
+		$content = json_encode(['# Add Title', 'Add Content']);
+		
 		if($this->params['type'] == 'file')
 		{
-			if(!$write->writeFile($folderPath, $namePath . '.txt', ''))
+			if(!$write->writeFile($folderPath, $namePath . '.txt', $content))
 			{
 				return $response->withJson(array('data' => $this->structure, 'errors' => 'We could not create the file. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404);
 			}
@@ -385,7 +412,7 @@ class ContentApiController extends ContentController
 			{
 				return $response->withJson(array('data' => $this->structure, 'errors' => 'We could not create the folder. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404);
 			}
-			$write->writeFile($folderPath . DIRECTORY_SEPARATOR . $namePath, 'index.txt', '');
+			$write->writeFile($folderPath . DIRECTORY_SEPARATOR . $namePath, 'index.txt', $content);
 		}
 		
 		# update the structure for editor
@@ -457,7 +484,11 @@ class ContentApiController extends ContentController
 		{
 			return $response->withJson(array('data' => $this->structure, 'errors' => 'We could not create the folder. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404);
 		}
-		$write->writeFile($folderPath . DIRECTORY_SEPARATOR . $namePath, 'index.txt', '');
+
+		# create default content
+		$content = json_encode(['# Add Title', 'Add Content']);
+		
+		$write->writeFile($folderPath . DIRECTORY_SEPARATOR . $namePath, 'index.txt', $content);
 		
 		# update the structure for editor
 		$this->setStructure($draft = true, $cache = false);
@@ -471,53 +502,239 @@ class ContentApiController extends ContentController
 		return $response->withJson(array('data' => $this->structure, 'errors' => false, 'url' => $url));
 	}
 	
-	
-	public function createBlock(Request $request, Response $response, $args)
+	public function getArticleMarkdown(Request $request, Response $response, $args)
 	{
 		/* get params from call */
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri();
 		
-		/* validate input */
-		if(!$this->validateInput()){ return $response->withJson($this->errors,422); }
+		# set structure
+		if(!$this->setStructure($draft = true)){ return $response->withJson(array('data' => false, 'errors' => $this->errors), 404); }
 		
-		/* set structure */
-		if(!$this->setStructure()){ return $response->withJson($this->errors, 404); }
+		/* set item */
+		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
+		
+		# set the status for published and drafted
+		$this->setPublishStatus();
 
+		# set path
+		$this->setItemPath($this->item->fileType);
+		
+		# read content from file
+		if(!$this->setContent()){ return $response->withJson(array('data' => false, 'errors' => $this->errors), 404); }
+
+		$content = $this->content;
+
+		if($content == '')
+		{
+			$content = [];
+		}
+		
+		# if content is not an array, then transform it
+		if(!is_array($content))
+		{
+			# initialize parsedown extension
+			$parsedown = new ParsedownExtension();
+
+			# turn markdown into an array of markdown-blocks
+			$content = $parsedown->markdownToArrayBlocks($content);
+		}
+		
+		# delete markdown from title
+		if(isset($content[0]))
+		{
+			$content[0] = trim($content[0], "# ");
+		}
+		
+		return $response->withJson(array('data' => $content, 'errors' => false));
+	}
+	
+	public function updateBlock(Request $request, Response $response, $args)
+	{
+		/* get params from call */
+		$this->params 	= $request->getParams();
+		$this->uri 		= $request->getUri();
+
+		/* validate input */
+		if(!$this->validateBlockInput()){ return $response->withJson($this->errors,422); }
+		
+		# set structure
+		if(!$this->setStructure($draft = true)){ return $response->withJson(array('data' => false, 'errors' => $this->errors), 404); }
+		
 		/* set item */
 		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
 
-		/* set path */
-		$this->setItemPath();
+		# set the status for published and drafted
+		$this->setPublishStatus();
 
-		/* get markdown-file */
-		if(!$this->setMarkdownFile()){ return $response->withJson($this->errors, 404); }
+		# set path
+		$this->setItemPath($this->item->fileType);
+
+		# read content from file
+		if(!$this->setContent()){ return $response->withJson(array('data' => false, 'errors' => $this->errors), 404); }
+
+		# make it more clear which content we have
+		$pageMarkdown = $this->content;
+
+		$blockMarkdown = $this->params['markdown'];
+
+        # standardize line breaks
+        $blockMarkdown = str_replace(array("\r\n", "\r"), "\n", $blockMarkdown);
+
+        # remove surrounding line breaks
+        $blockMarkdown = trim($blockMarkdown, "\n");		
 		
-		/* get txt-file with content array */
-		$contentArray = NULL;
+		if($pageMarkdown == '')
+		{
+			$pageMarkdown = [];
+		}
+
+		# initialize parsedown extension
+		$parsedown = new ParsedownExtension();
+
+		# if content is not an array, then transform it
+		if(!is_array($pageMarkdown))
+		{
+			# turn markdown into an array of markdown-blocks
+			$pageMarkdown = $parsedown->markdownToArrayBlocks($pageMarkdown);
+		}
+
+		# if it is a new content-block
+		if($this->params['block_id'] == 99999)
+		{
+			# update the markdown block in the page content
+			$pageMarkdown[] = $blockMarkdown;
+			$id = (count($pageMarkdown)-1);
+			$blockId = 'blox-' . $id;
+		}
+		elseif(!isset($pageMarkdown[$this->params['block_id']]))
+		{
+			# return error
+			return $response->withJson(array('data' => false, 'errors' => 'The ID of the content-block is wrong.'), 404);
+		}
+		elseif($this->params['block_id'] == 0)
+		{
+			# update the markdown block in the page content
+			$blockMarkdown = trim($blockMarkdown, "# ");
+			
+			$blockMarkdownTitle = '# ' . $blockMarkdown;
+			
+			$pageMarkdown[$this->params['block_id']] = $blockMarkdownTitle;
+			$id = $this->params['block_id'];
+			$blockId = $this->params['block_id'];
+		}
+		else
+		{
+			# update the markdown block in the page content
+			$pageMarkdown[$this->params['block_id']] = $blockMarkdown;
+			$id = $this->params['block_id'];
+			$blockId = $this->params['block_id'];
+		}
+	
+		# encode the content into json
+		$pageJson = json_encode($pageMarkdown);
+
+		# set path for the file (or folder)
+		$this->setItemPath('txt');		
+	
+		/* update the file */
+		if($this->write->writeFile($this->settings['contentFolder'], $this->path, $pageJson))
+		{
+			# update the internal structure
+			$this->setStructure($draft = true, $cache = false);
+		}
+		else
+		{
+			return $response->withJson(['errors' => ['message' => 'Could not write to file. Please check if the file is writable']], 404);
+		}
+	
+		/* set safe mode to escape javascript and html in markdown */
+		$parsedown->setSafeMode(true);
+
+		/* parse markdown-file to content-array, if title parse title. */
+		if($this->params['block_id'] == 0)
+		{
+			$blockArray		= $parsedown->text($blockMarkdownTitle);
+		}
+		else
+		{
+			$blockArray 	= $parsedown->text($blockMarkdown);
+		}
 		
-		/* 
-			create a txt-file with parsedown-array.
-			you will have .md and .txt file.
-			scan folder with option to show drafts.
-			but what is with structure? We use the cached structure, do not forget!!!
-			if there is a draft, replace the md file with txt-file.
-			display content: you have to check if md or txt. if txt, then directly open the txt-file.
-			in here set markdown-file or
-			set txt-file.
-			if publish, render txt-content, replace markdown-file, delete txt-file
-		*/
+		/* parse markdown-content-array to content-string */
+		$blockHTML		= $parsedown->markup($blockArray);
+
+		return $response->withJson(array('content' => $blockHTML, 'markdown' => $blockMarkdown, 'blockId' => $blockId, 'id' => $id, 'errors' => false));
+	}
+
+	public function deleteBlock(Request $request, Response $response, $args)
+	{
+		/* get params from call */
+		$this->params 	= $request->getParams();
+		$this->uri 		= $request->getUri();
 		
-		/* initialize pagedown */
+		# set structure
+		if(!$this->setStructure($draft = true)){ return $response->withJson(array('data' => false, 'errors' => $this->errors), 404); }
 		
-		/* turn input into array */
+		# set item
+		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
+
+		# set the status for published and drafted
+		$this->setPublishStatus();
+
+		# set path
+		$this->setItemPath($this->item->fileType);
+
+		# read content from file
+		if(!$this->setContent()){ return $response->withJson(array('data' => false, 'errors' => $this->errors), 404); }
+
+		# get content
+		$this->content;
+
+		if($this->content == '')
+		{
+			$this->content = [];
+		}
+
+		# initialize parsedown extension
+		$parsedown = new ParsedownExtension();
+
+		# if content is not an array, then transform it
+		if(!is_array($this->content))
+		{
+			# turn markdown into an array of markdown-blocks
+			$this->content = $parsedown->markdownToArrayBlocks($this->content);
+		}
+
+		# check if id exists
+		if(!isset($this->content[$this->params['block_id']])){ return $response->withJson(array('data' => false, 'errors' => 'The ID of the content-block is wrong.'), 404); }
+
+		# delete the block
+		unset($this->content[$this->params['block_id']]);
+		$this->content = array_values($this->content);
+
+		# delete markdown from title
+		if(isset($this->content[0]))
+		{
+			$this->content[0] = trim($this->content[0], "# ");
+		}
 		
-		/* add input to contentArray */
-		
-		/* store updated contentArray */
-		
-		/* transform input to html */
-		
-		/* send html to client */
-	}	
+		# encode the content into json
+		$pageJson = json_encode($this->content);
+
+		# set path for the file (or folder)
+		$this->setItemPath('txt');		
+	
+		/* update the file */
+		if($this->write->writeFile($this->settings['contentFolder'], $this->path, $pageJson))
+		{
+			# update the internal structure
+			$this->setStructure($draft = true, $cache = false);
+		}
+		else
+		{
+			return $response->withJson(['errors' => ['message' => 'Could not write to file. Please check if the file is writable']], 404);
+		}
+		return $response->withJson(array('markdown' => $this->content, 'errors' => false));
+	}
 }

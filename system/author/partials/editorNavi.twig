@@ -1,11 +1,11 @@
 <nav id="sidebar-menu" class="sidebar-menu--content">
-	<div id="data-navi" data-navi='{{ navigation|json_encode() }}'></div>
+	<div id="data-navi" data-navi='{{ navigation|json_encode() }}' data-editormode="{{settings.editor}}"></div>
 	<div id="mobile-menu" class="menu-action">Menu <span class="button-arrow"></span></div>
 	<div id="navi" class="content-navi" v-model="freeze" v-cloak>
 		<div class="infoline">Reorder navi with drag&drop<div class="help"  @click="showModal">?</div></div>
 		<div class="navi-list">
 			<div class="navi-item folder">
-				<a href="{{ base_url }}/tm/content"><i class="icon-home"></i><span class="level-1">Homepage</span></a>
+				<a href="{{ base_url }}/tm/content/{{ settings.editor }}"><i class="icon-home"></i><span class="level-1">Homepage</span></a>
 			</div>
 		</div>
 		<draggable :element="'ul'" class="navi-list" :list="items" @start="onStart" @end="onEnd" :options="{group:{ name:'folder'}, animation: 150, 'disabled': freeze }">
@@ -20,22 +20,23 @@
 				</div>
 			</li>
 		</ul>
-		
-		<div id="modalWindow" :class="modalWindow">
-			<div class="modalInner wide">
-				<div @click="hideModal" id="closeModal" class="closeModal">X</div>
-				<h2>Reorder The Navigation</h2>
-				<p>You can reorder the navigation with simple drag&drop. However, there are some rules and limitations:</p>
-				<ul>
-					<li>You can move <strong>files</strong> to any other <strong>folder</strong>.</li>
-					<li>Only <strong>folders</strong> are allowed at the <strong>first level</strong>.</li>
-					<li><strong>Folders</strong> can be reordered within the <strong>same level</strong>.</li>
-					<li>But a <strong>folder</strong> can not be moved to another folder or <strong>another level</strong>.</li>
-				</ul>
-				<p>Here is the reason for the last restriction: If you move a folder to another folder, then the adress (url) will change for the whole folder and all its content (pages). It is a nightmare for your readers and for google.</p>
-				<p>If you really want to move the whole folder content, then create a new folder in the desired place and move all files manually to the new folder.</p>
+		<transition name="fade">
+			<div v-if="modalWindow" id="modalWindow" class="modalWindow">
+				<div class="modalInner wide">
+					<div @click="hideModal" id="closeModal" class="closeModal">X</div>
+					<h2>Reorder The Navigation</h2>
+					<p>You can reorder the navigation with simple drag&drop. However, there are some rules and limitations:</p>
+					<ul>
+						<li>You can move <strong>files</strong> to any other <strong>folder</strong>.</li>
+						<li>Only <strong>folders</strong> are allowed at the <strong>first level</strong>.</li>
+						<li><strong>Folders</strong> can be reordered within the <strong>same level</strong>.</li>
+						<li>But a <strong>folder</strong> can not be moved to another folder or <strong>another level</strong>.</li>
+					</ul>
+					<p>Here is the reason for the last restriction: If you move a folder to another folder, then the adress (url) will change for the whole folder and all its content (pages). It is a nightmare for your readers and for google.</p>
+					<p>If you really want to move the whole folder content, then create a new folder in the desired place and move all files manually to the new folder.</p>
+				</div>
 			</div>
-		</div>
+		</transition>
 	</div>
 </nav>
 

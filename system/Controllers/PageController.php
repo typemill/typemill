@@ -122,7 +122,7 @@ class PageController extends Controller
 		
 		/* initialize parsedown */
 		$parsedown 		= new ParsedownExtension();
-				
+
 		/* set safe mode to escape javascript and html in markdown */
 		$parsedown->setSafeMode(true);
 

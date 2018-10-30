@@ -1,0 +1,45 @@
+{% extends 'layouts/layoutBlox.twig' %}
+{% block title %}Visual Content Editor{% endblock %}
+
+{% block content %}
+	
+	<div class="formWrapper">
+		
+		<section id="blox">
+
+			<div class="blox-title"></div>
+			
+			<div class="blox-body">
+				
+				{% for id, block in content %}
+					{% if loop.first %}
+						<content-block class="title" :body="false">
+							<div class="blox title" @click="setData( $event, 'text-markdown')" data-id="{{ id }}" id="blox-{{id}}">{{block}}</div>
+						</content-block>						
+					{% else %}
+						<content-block :body="true">
+							<div class="blox" @click="setData( $event, 'textarea-markdown' )" data-id="{{ id }}" id="blox-{{id}}">{{block}}</div>
+						</content-block>
+					{% endif %}
+				{% endfor %}
+
+				<content-block :body="true" v-for="newBlock in newBlocks"><div class="blox" @click="setData( $event, 'textarea-markdown' )" :data-id="newBlock.id" :id="newBlock.blockId" v-html="newBlock.content"></div></content-block>
+				
+				<div class="format-bar">
+					<content-block :body="false">
+						<button class="format-item" @click="setData( $event, 'textarea-markdown' )" data-id="99999" id="blox-99999"><i class="icon-font"></i></button>
+					</content-block>
+				</div>
+				
+			</div>
+			
+		</section>
+
+		{% include 'editor/publish-controller.twig' %}
+				
+		<input id="path" type="hidden" value="{{ item.urlRel }}" required readonly />
+		{{ csrf_field() | raw }}
+		
+	</div>
+	
+{% endblock %}

@@ -85,11 +85,24 @@ abstract class ContentController
 	{
 		return $this->c->view->render($response->withStatus(404), '/intern404.twig', $data);
 	}	
-		
+
 	protected function validateEditorInput()
 	{
 		$validate = new Validation();
 		$vResult = $validate->editorInput($this->params);
+		
+		if(is_array($vResult))
+		{ 
+			$this->errors = ['errors' => $vResult];
+			return false;
+		}
+		return true;
+	}
+
+	protected function validateBlockInput()
+	{
+		$validate = new Validation();
+		$vResult = $validate->blockInput($this->params);
 		
 		if(is_array($vResult))
 		{ 
@@ -288,7 +301,7 @@ abstract class ContentController
 	}
 	
 	protected function setContent()
-	{		
+	{
 		# if the file exists
 		if($this->item->published OR $this->item->drafted)
 		{

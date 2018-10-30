@@ -73,6 +73,9 @@ aside.sidebar{
 	margin-bottom: 10px;
 	box-sizing: border-box;
 }
+.right{
+	float: right;
+}
 
 /********************
 * 		NAVI 		*
@@ -405,9 +408,10 @@ h1 .version-number{
 **  MODAL	**
 *************/
 
-.modal{
+.modalWindow{
 	position:fixed;
-	display: none;
+	display: block;
+	z-index: 9999;
 	width: 100%;
 	height: 100%;
 	padding: 20px;
@@ -418,10 +422,6 @@ h1 .version-number{
 	right: 0;
 	background: #FFF;
 	background: rgba(255,255,255,0.9);
-}
-.modal.show{
-	display: block;
-	z-index: 99999;
 }
 .modalInner{
 	position: relative;
@@ -1264,7 +1264,7 @@ label .help, .label .help{
 	box-sizing: border-box;
 	box-shadow: 0 0 2px #ddd;
 }
-.editor button{
+.editor button, .editor a{
 	position: relative;
 	border-radius: 0px;
 	padding:10px;
@@ -1297,15 +1297,16 @@ label .help, .label .help{
 .buttonset .secondary--block{
 	display: inline-block;
 }
-.editor button.button--secondary{
+.editor button.button--secondary, .editor a.button--secondary{
 	display: inline-block;
 	min-width: 40px;
 	max-width: 40px;
 	background: #fff;
 	border: 1px solid #eee;
 	color: #444;
+	text-decoration: none;
 }
-.editor button.button--secondary:hover{
+.editor button.button--secondary:hover, .editor a.button--secondary:hover, .editor a.button-secondary:focus, .editor a.button--secondary:active{
 	background: #e0474c;
 	border: 1px solid #e0474c;
 	color: #eee;
@@ -1332,6 +1333,273 @@ label .help, .label .help{
 .desktop{
 	display: none;
 }
+
+/****************
+** BLOX EDITOR **
+****************/
+
+.blox-body{
+	padding: 18px 20px			
+}
+.blox{
+	padding: 1px 20px;
+	line-height: 1.5em;
+	font-size: 16px;
+}
+.blox p{
+	margin-top: 12px;
+	margin-bottom: 12px;
+}
+.blox-editor{
+	position: relative;
+}
+.blox-editor:hover{
+	background: #f9f8f6;
+}
+.blox-buttons{
+	background: #fff;
+}
+.blox-editor textarea{
+	font-family: arial;
+	line-height: 1.5em;
+	font-size: 16px;
+	padding-left: 20px;
+	padding-right: 20px;
+	box-sizing: border-blox;
+}
+.blox-editor button{
+	display: inline-block;
+	box-sizing: border-box;
+	margin: 2px 2px 10px 0;
+	padding: 6px 12px;
+	border-radius: 2px;
+	font-size: 0.9em;
+}
+.blox-editor button.edit{
+	background: #e0474c;
+	color: #f9f8f6;
+	border: 1px solid #e0474c;
+}
+.blox-editor button.edit:hover{
+	background: #cc4146;
+	border: 1px solid #cc4146;
+}
+.blox-editor button.cancel{
+	background: #fff;
+	border: 1px solid #eee;
+	color: #444;	
+}
+.blox-editor button.cancel:hover{
+	background: #e0474c;
+	border: 1px solid #e0474c;
+	color: #eee;
+}
+.blox-editor button.delete{
+	position: absolute;
+	right: 1px;
+	top: 1px;
+	font-weight: 700;
+	background: #fff;
+	color: #fff;
+	border: 0px;
+	border-radius: 2px;
+	padding: 2px 4px;
+}
+.blox-editor:hover button.delete{
+	background: #e0474c;
+	color: #fff;
+}
+.blox-editor button.delete:hover{
+	background: #cc4146;
+}
+.blox-editor button.edit:disabled, .blox-editor button.cancel:disabled{
+	background: #eee;
+	color: #444;
+	border: 1px solid #eee;
+}
+.blox:hover{
+	//	background: #f9f8f6;
+}
+.visible{
+	display: block;
+}
+.hidden{
+	display: none;
+}
+.fade-editor-enter-active{
+  transition: opacity .5s;
+}
+.fade-editor-enter{
+  opacity: 0.3;
+}
+.format-bar{
+	padding: 20px;
+	width:100%;
+}
+.format-bar .blox-editor{
+	display: inline;
+}
+.format-item{
+	margin-right: 2px;
+	padding: 5px;
+	background: #70c1b3;
+	color: #fff;
+	display: inline;
+	border: 0px;
+	border-radius: 2px;
+	width: 40px;
+	height: 40px;
+	text-align: center;
+}
+.format-item:hover{
+	background: #66b0a3;
+	cursor: pointer;
+}
+
+/************************
+** BLOX EDITOR CONTENT **
+************************/
+
+.blox h1, .blox h2, .blox h3, .blox h4, .blox h5, .blox h6{ font-weight: 700; line-height: 1em; }
+.blox h1{ font-size: 2.2em; margin: 0.6em 0 0.6em; }
+.blox h2{ font-size: 1.6em; margin: 1.3em 0 0.6em; }
+.blox h3{ font-size: 1.3em; margin: 1.2em 0 0.6em; }
+.blox h4{ font-size: 1.1em; margin: 1.2em 0 0.6em; }
+.blox h5{ font-size: 1em; margin: 1.2em 0 0.6em; }
+.blox h6{ font-size: 1em; font-style: italic; font-weight:300; margin: 1em 0 0.6em; }
+.title input{
+	font-size: 2.2em;
+	font-weight: 700;
+	padding: 20px;
+}
+.blox pre,.blox code{
+	white-space: pre;
+	color: #333; 
+	background: #f9f8f6;
+}
+.blox code{
+	display: inline-block;
+	padding: 0 0.5em;
+	font-size: 0.8em; 
+	line-height: 1.4em;	
+	border-radius: 3px;	
+}
+.blox code.hljs{ 
+	background: transparent; 
+}
+.blox pre{
+	padding: 10px;
+	display: block;	
+	max-width: 100%;
+	overflow-x: auto;
+	border-left: 4px solid #e0474c;
+}
+.blox table{
+	width: 100%;
+	border-collapse: collapse;
+}
+.blox thead{
+	border-bottom: 1px solid #e0474c;
+	border-top: 1px solid #e0474c;
+	background: #f9f8f6;
+	font-weight: 700;
+}
+.blox tbody{}
+.blox tr{}
+.blox tr:nth-child(odd){ }
+.blox tr:nth-child(even){ background-color:#f9f8f6; }
+.blox td{ padding: 5px;}
+.blox th{ padding: 10px 0;}
+.blox dl{
+	border-top: 1px solid #e0474c;
+	border-bottom: 1px solid #e0474c;
+	padding: 0.5em 0;
+	box-sizing: border-box;
+}
+.blox dt, .blox dd{
+	width: 100%;
+	margin: 0;
+	padding: 3px 5px;
+	box-sizing: border-box;
+	display: inline-block;
+	vertical-align: top;
+}
+.blox dt{
+	font-weight: 700;
+}
+.blox dt::after{
+	content: ":";
+}
+.blox dd{
+	width: 80%
+}
+.blox ul, .blox ol{ 
+	padding-left: 0px;
+	margin-left: 18px;
+}
+.blox blockquote{
+	border-left: 4px solid #e0474c;
+	background: #f9f8f6;
+	position: relative;
+	font-style: italic;
+	font-family: serif;
+	border-left: 4px solid #e0474c;
+	background: #f9f8f6;
+	margin: 12px 0;
+	padding: 5px;
+}
+.blox blockquote:before {
+	position: absolute;
+	left: 0px;
+	top: 20px; 
+	color: #ccc;
+	content: open-quote;
+	font-size: 4em;
+}
+.blox blockquote p{
+	margin-left: 50px;
+}
+img{}
+sup{}
+cite{}
+abbr{}
+hr{}
+.blox ul.TOC,.blox .TOC ul{
+	list-style: none;
+	padding-left: 0px;
+	margin-left: 0px;
+}
+.blox .TOC li:before{
+	content: "\2192";
+	margin-left: -7px;
+	margin-right: 7px;
+}
+.blox .TOC li.h1:before{
+	content: "";
+}
+.blox ul.TOC{
+	background: #f9f8f6;
+	width: 100%;
+	padding: 20px;
+	box-sizing:border-box;
+}
+.blox li.h1{
+	font-weight: 700;
+}
+.blox li.h2,.blox li.h3,.blox li.h4,.blox li.h5,.blox li.h6{
+	font-weight: 400;
+	padding-left: 25px;	
+}
+.blox a, .blox a:link, .blox a:visited{ 
+	text-decoration: none; 
+	color: #e0474c; 
+}
+.blox a:focus, .blox a:hover, .blox a:active{ 
+	text-decoration: underline;
+}
+.blox .TOC li:before{ color: #bbb; }
+
+
 @media only screen and (min-width: 600px) {
 	header.headline{
 		padding: 0px 20px;
@@ -1354,7 +1622,7 @@ label .help, .label .help{
 		display: inline-block;
 		width: auto;
 	}
-	.editor button{
+	.editor button, .editor a.button--secondary{
 		min-width: 150px;
 		font-size: 0.9em;
 	}
@@ -1412,7 +1680,7 @@ label .help, .label .help{
 	.buttonset .secondary--block{
 		display: inline-block;
 	}
-	.editor button.button--secondary{
+	.editor button.button--secondary, .editor a.button--secondary{
 		display: inline-block;
 		width: auto;
 		min-width: auto;
@@ -1577,7 +1845,7 @@ label .help, .label .help{
 		right: auto;
 		max-width: 900px;
 	}	
-	.editor button{
+	.editor button, .editor a{
 		border-radius: 3px;
 	}	
 }
