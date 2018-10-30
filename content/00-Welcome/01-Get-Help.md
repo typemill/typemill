@@ -1,4 +1,4 @@
-Get Help
+# Get Help
 
 If you need any help, then please read the [documentation on typemill.net](https://typemill.net/typemill) first. Some short video-tutorials are in work right now.
 

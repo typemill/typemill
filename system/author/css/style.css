@@ -1417,9 +1417,6 @@ label .help, .label .help{
 	color: #444;
 	border: 1px solid #eee;
 }
-.blox:hover{
-	//	background: #f9f8f6;
-}
 .visible{
 	display: block;
 }
@@ -1559,7 +1556,9 @@ label .help, .label .help{
 .blox blockquote p{
 	margin-left: 50px;
 }
-img{}
+.blox img{
+	width: 100%;
+}
 sup{}
 cite{}
 abbr{}

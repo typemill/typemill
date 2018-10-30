@@ -254,11 +254,11 @@ let editor = new Vue({
 		blockMarkdown: '',
 		freeze: false,
 		newBlocks: [],
+		draftDisabled: true,
 	},
 	mounted: function(){
 		
 		publishController.visual = true;
-		editor.draftDisabled = true;
 		
 		var url = this.root + '/api/v1/article/markdown';
 		
