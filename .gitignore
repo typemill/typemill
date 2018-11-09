@@ -4,8 +4,8 @@ plugins/demo
 plugins/disqus
 plugins/download
 plugins/finalwords
-plugins/version
 plugins/textadds
+plugins/version
 settings/settings.yaml
 settings/users
 system/vendor

@@ -6,24 +6,24 @@
 	<div class="formWrapper">
 		
 		<section id="blox">
-
-			<div class="blox-title"></div>
 			
 			<div class="blox-body">
+			
+				<content-block class="title" :body="false">
+					<div class="blox title" @click="setData( $event, 'text-markdown')" data-id="0" id="blox-0">{{ title }}</div>
+				</content-block>
+
+				<div id="sortblox">
 				
-				{% for id, block in content %}
-					{% if loop.first %}
-						<content-block class="title" :body="false">
-							<div class="blox title" @click="setData( $event, 'text-markdown')" data-id="{{ id }}" id="blox-{{id}}">{{block}}</div>
-						</content-block>						
-					{% else %}
+					{% for id, block in content %}
 						<content-block :body="true">
 							<div class="blox" @click="setData( $event, 'textarea-markdown' )" data-id="{{ id }}" id="blox-{{id}}">{{block}}</div>
 						</content-block>
-					{% endif %}
-				{% endfor %}
+					{% endfor %}
 
-				<content-block :body="true" v-for="newBlock in newBlocks"><div class="blox" @click="setData( $event, 'textarea-markdown' )" :data-id="newBlock.id" :id="newBlock.blockId" v-html="newBlock.content"></div></content-block>
+					<content-block :body="true" v-for="newBlock in newBlocks"><div class="blox" @click="setData( $event, 'textarea-markdown' )" :data-id="newBlock.id" :id="newBlock.blockId" v-html="newBlock.content"></div></content-block>
+				
+				</div>
 				
 				<div class="format-bar">
 					<content-block :body="false">

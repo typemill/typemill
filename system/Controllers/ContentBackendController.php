@@ -111,7 +111,6 @@ class ContentBackendController extends ContentController
 		if(!$this->setContent()){ return $this->renderIntern404($response, array( 'navigation' => $this->structure, 'settings' => $this->settings, 'content' => $this->errors )); }
 
 		$content = $this->content;
-		$title = false;
 
 		if($content == '')
 		{
@@ -136,7 +135,11 @@ class ContentBackendController extends ContentController
 			/* parse markdown-content-array to content-string */
 			$content[$key]	= $parsedown->markup($contentArray);			
 		}
-		
+
+		# extract title and delete from content array, array will start at 1 after that.
+		$title = $content[0];
+		unset($content[0]);
+
 		return $this->render($response, 'editor/editor-blox.twig', array('navigation' => $this->structure, 'title' => $title, 'content' => $content, 'item' => $this->item, 'settings' => $this->settings ));
 	}
 	

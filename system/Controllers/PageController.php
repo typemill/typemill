@@ -132,7 +132,7 @@ class PageController extends Controller
 		
 		/* get the first image from content array */
 		$firstImage		= $this->getFirstImage($contentArray);
-		
+				
 		/* parse markdown-content-array to content-string */
 		$contentHTML	= $parsedown->markup($contentArray);
 		$contentHTML 	= $this->c->dispatcher->dispatch('onHtmlLoaded', new OnHtmlLoaded($contentHTML))->getData();
@@ -216,11 +216,11 @@ class PageController extends Controller
 		foreach($contentBlocks as $block)
 		{
 			/* is it a paragraph? */
-			if(isset($block['element']['name']) && $block['element']['name'] == 'p')
+			if(isset($block['name']) && $block['name'] == 'p')
 			{
-				if(isset($block['element']['handler']['argument']) && substr($block['element']['handler']['argument'], 0, 2) == '![' )
+				if(isset($block['handler']['argument']) && substr($block['handler']['argument'], 0, 2) == '![' )
 				{
-					return $block['element']['handler']['argument'];	
+					return $block['handler']['argument'];	
 				}
 			}
 		}

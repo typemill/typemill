@@ -5,8 +5,10 @@
 .icon-off:before { content: '\e803'; } /* '' */
 .icon-home:before { content: '\e804'; } /* '' */
 .icon-plus:before { content: '\e805'; } /* '' */
+.icon-resize-vertical:before { content: '\e806'; } /* '' */
+.icon-cancel:before { content: '\e807'; } /* '' */
+.icon-move:before { content: '\f047'; } /* '' */
 .icon-link-ext:before { content: '\f08e'; } /* '' */
 .icon-resize-full-alt:before { content: '\f0b2'; } /* '' */
 .icon-doc-text:before { content: '\f0f6'; } /* '' */
 .icon-folder-empty:before { content: '\f114'; } /* '' */
-.icon-paragraph:before { content: '\f1dd'; } /* '' */

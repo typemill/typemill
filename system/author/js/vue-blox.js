@@ -11,7 +11,7 @@ const contentComponent = Vue.component('content-block', {
 	},
 	methods: {
 		getData: function()
-		{			
+		{
 			self = this;
 			
 			if(self.$root.$data.freeze == false && self.$root.$data.blockType != '')
@@ -21,7 +21,25 @@ const contentComponent = Vue.component('content-block', {
 				this.edit = true;
 				this.compmarkdown = self.$root.$data.blockMarkdown;
 				this.componentType = self.$root.$data.blockType;
+				self.$root.sortable.option("disabled",true);
 			}
+			/*
+				window.addEventListener('click', function(e)
+				{
+					if (!e.target.closest('.editactive'))
+					{
+						console.info('not found');
+						publishController.errors.message = false;
+						
+						this.preview = 'visible';
+						this.edit = false;
+						this.compmarkdown = '';
+						self.componentType = false;
+						self.$root.$data.freeze = false;
+						self.$root.sortable.option("disabled",false);
+					}
+				});
+			*/
 		},
 		cancelBlock: function()
 		{
@@ -32,6 +50,7 @@ const contentComponent = Vue.component('content-block', {
 			this.componentType = false;
 			self = this;
 			self.$root.$data.freeze = false;
+			self.$root.sortable.option("disabled",false);
 		},
  		submitBlock: function(e){
 			var emptyline = /^\s*$(?:\r\n?|\n)/gm;
@@ -47,9 +66,11 @@ const contentComponent = Vue.component('content-block', {
 					this.componentType = false;
 					self = this;
 					self.$root.$data.freeze = false;
+					self.$root.sortable.option("disabled",false);
 				}
 				else
 				{
+					self.$root.sortable.option("disabled",false);
 					this.saveBlock();
 				}
 			}
@@ -129,8 +150,9 @@ const contentComponent = Vue.component('content-block', {
 			}, method, url, params);
 		},
 		deleteBlock: function(event)
-		{
-			var bloxeditor = event.target.parentElement;
+		{	
+			var bloxeditor = event.target.parentElement.parentElement;
+			console.info(bloxeditor);
 			var bloxid = bloxeditor.getElementsByClassName('blox')[0].dataset.id;
 			bloxeditor.id = "delete-"+bloxid;
 			
@@ -181,6 +203,7 @@ const contentComponent = Vue.component('content-block', {
 						var length = blox.length;
 						for (var i = 0; i < length; i++ ) {
 							blox[i].id = "blox-" + i;
+							blox[i].dataset.id = i;
 						}
 
 						self.$root.$data.freeze = false;
@@ -195,7 +218,26 @@ const contentComponent = Vue.component('content-block', {
 			}, method, url, params);
 		},
 	},
-	template: '<div class="blox-editor"><div><div @keyup.enter="submitBlock" @click="getData"><transition name="fade-editor"><component :disabled="disabled" :compmarkdown="compmarkdown" @updatedMarkdown="compmarkdown = $event" :is="componentType"></component></transition><div :class="preview"><slot></slot></div></div><div class="blox-buttons" v-if="edit"><button class="edit" :disabled="disabled" @click.prevent="saveBlock">save</button><button class="cancel" :disabled="disabled" @click.prevent="cancelBlock">cancel</button></div><button v-if="body" class="delete" :disabled="disabled" title="delete content-block" @click.prevent="deleteBlock($event)">x</button></div></div>',
+	/*
+	mounted: function() {
+		var self = this;
+		
+		self.sortable = new Sortable(sortblox, {
+			animation: 150,
+			onEnd: function (evt) {
+				var params = {
+					'url':			document.getElementById("path").value,
+					'old_index': 	evt.oldIndex,
+					'new_index':	evt.newIndex,
+					'csrf_name': 	document.getElementById("csrf_name").value,
+					'csrf_value':	document.getElementById("csrf_value").value,
+				};
+				self.moveBlock(params);
+			},
+		});
+	},
+	*/
+	template: '<div class="blox-editor"><div :class="{ editactive: edit }"><div @keyup.enter="submitBlock" @click="getData"><transition name="fade-editor"><component :disabled="disabled" :compmarkdown="compmarkdown" @updatedMarkdown="compmarkdown = $event" :is="componentType"></component></transition><div :class="preview"><slot></slot></div></div><div class="blox-buttons" v-if="edit"><button class="edit" :disabled="disabled" @click.prevent="saveBlock">save</button><button class="cancel" :disabled="disabled" @click.prevent="cancelBlock">cancel</button></div><div class="sideaction" v-if="body"><button class="delete" :disabled="disabled" title="delete content-block" @click.prevent="deleteBlock($event)"><i class="icon-cancel"></i></button></div></div></div>',
 })
 
 const textareaComponent = Vue.component('textarea-markdown', {
@@ -291,6 +333,20 @@ let editor = new Vue({
 				}
 			}
 		}, method, url, params);
+		
+		self.sortable = new Sortable(sortblox, {
+			animation: 150,
+			onEnd: function (evt) {
+				var params = {
+					'url':			document.getElementById("path").value,
+					'old_index': 	evt.oldIndex,
+					'new_index':	evt.newIndex,
+					'csrf_name': 	document.getElementById("csrf_name").value,
+					'csrf_value':	document.getElementById("csrf_value").value,
+				};
+				self.moveBlock(params);
+			},
+		});		
 	},
 	methods: {
 		setData: function(event, blocktype, body)
@@ -298,6 +354,52 @@ let editor = new Vue({
 			this.blockId = event.currentTarget.dataset.id;
 			this.blockType = blocktype;
 			this.blockMarkdown = this.markdown[this.blockId];
+		},
+		moveBlock: function(params)
+		{
+			publishController.errors.message = false;
+
+			var url = this.root + '/api/v1/moveblock';
+		
+			var self = this;			
+						
+			var method 	= 'PUT';
+			
+			sendJson(function(response, httpStatus)
+			{
+				if(httpStatus == 400)
+				{
+				}
+				if(response)
+				{
+				
+					var result = JSON.parse(response);
+
+					if(result.errors)
+					{
+						publishController.errors.message = result.errors;
+						publishController.publishDisabled = false;
+						return false;
+					}
+					else
+					{
+						var blox = document.getElementsByClassName("blox");
+						var length = blox.length;
+						for (var i = 0; i < length; i++ ) {
+							blox[i].id = "blox-" + i;
+							blox[i].dataset.id = i;
+						}
+
+						self.freeze = false;
+						self.markdown = result.markdown;
+						self.blockMarkdown = '';
+						self.blockType = '';
+
+						publishController.publishDisabled = false;
+						publishController.publishResult = "";
+					}
+				}
+			}, method, url, params);			
 		},
 	}
 });

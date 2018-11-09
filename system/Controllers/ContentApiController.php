@@ -602,26 +602,32 @@ class ContentApiController extends ContentController
 		# if it is a new content-block
 		if($this->params['block_id'] == 99999)
 		{
-			# update the markdown block in the page content
-			$pageMarkdown[] = $blockMarkdown;
-			$id = (count($pageMarkdown)-1);
+			# set the id of the markdown-block (it will be one more than the actual array, so count is perfect) 
+			$id = count($pageMarkdown);
+			
+			# set the id with prefix "blox-"
 			$blockId = 'blox-' . $id;
+			
+			# add the new markdown block to the page content
+			$pageMarkdown[] = $blockMarkdown;			
 		}
 		elseif(!isset($pageMarkdown[$this->params['block_id']]))
 		{
-			# return error
+			# if the block does not exists, return an error
 			return $response->withJson(array('data' => false, 'errors' => 'The ID of the content-block is wrong.'), 404);
 		}
 		elseif($this->params['block_id'] == 0)
 		{
-			# update the markdown block in the page content
+			# if it is the title, then delete the "# " if it exists
 			$blockMarkdown = trim($blockMarkdown, "# ");
 			
+			# store the markdown-headline in a separate variable
 			$blockMarkdownTitle = '# ' . $blockMarkdown;
 			
-			$pageMarkdown[$this->params['block_id']] = $blockMarkdownTitle;
-			$id = $this->params['block_id'];
-			$blockId = $this->params['block_id'];
+			# add the markdown-headline to the page-markdown
+			$pageMarkdown[0] = $blockMarkdownTitle;
+			$id = 0;
+			$blockId = 0;
 		}
 		else
 		{
@@ -635,7 +641,7 @@ class ContentApiController extends ContentController
 		$pageJson = json_encode($pageMarkdown);
 
 		# set path for the file (or folder)
-		$this->setItemPath('txt');		
+		$this->setItemPath('txt');
 	
 		/* update the file */
 		if($this->write->writeFile($this->settings['contentFolder'], $this->path, $pageJson))
@@ -665,6 +671,83 @@ class ContentApiController extends ContentController
 		$blockHTML		= $parsedown->markup($blockArray);
 
 		return $response->withJson(array('content' => $blockHTML, 'markdown' => $blockMarkdown, 'blockId' => $blockId, 'id' => $id, 'errors' => false));
+	}
+	
+	public function moveBlock(Request $request, Response $response, $args)
+	{
+		# get params from call
+		$this->params 	= $request->getParams();
+		$this->uri 		= $request->getUri();
+
+		# validate input 
+		# if(!$this->validateBlockInput()){ return $response->withJson($this->errors,422); }
+		
+		# set structure
+		if(!$this->setStructure($draft = true)){ return $response->withJson(array('data' => false, 'errors' => $this->errors), 404); }
+		
+		# set item 
+		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
+
+		# set the status for published and drafted
+		$this->setPublishStatus();
+
+		# set path
+		$this->setItemPath($this->item->fileType);
+
+		# read content from file
+		if(!$this->setContent()){ return $response->withJson(array('data' => false, 'errors' => $this->errors), 404); }
+
+		# make it more clear which content we have
+		$pageMarkdown = $this->content;
+		
+		if($pageMarkdown == '')
+		{
+			$pageMarkdown = [];
+		}
+
+		# initialize parsedown extension
+		$parsedown = new ParsedownExtension();
+
+		# if content is not an array, then transform it
+		if(!is_array($pageMarkdown))
+		{
+			# turn markdown into an array of markdown-blocks
+			$pageMarkdown = $parsedown->markdownToArrayBlocks($pageMarkdown);
+		}
+
+		$oldIndex = ($this->params['old_index'] + 1);
+		$newIndex = ($this->params['new_index'] + 1);
+		
+		if(!isset($pageMarkdown[$oldIndex]))
+		{
+			# if the block does not exists, return an error
+			return $response->withJson(array('data' => false, 'errors' => 'The ID of the content-block is wrong.'), 404);
+		}
+				
+		$extract = array_splice($pageMarkdown, $oldIndex, 1);
+		array_splice($pageMarkdown, $newIndex, 0, $extract);
+			
+		# encode the content into json
+		$pageJson = json_encode($pageMarkdown);
+
+		# set path for the file (or folder)
+		$this->setItemPath('txt');
+	
+		/* update the file */
+		if($this->write->writeFile($this->settings['contentFolder'], $this->path, $pageJson))
+		{
+			# update the internal structure
+			$this->setStructure($draft = true, $cache = false);
+		}
+		else
+		{
+			return $response->withJson(['errors' => ['message' => 'Could not write to file. Please check if the file is writable']], 404);
+		}
+	
+		# if it is the title, then delete the "# " if it exists
+		$pageMarkdown[0] = trim($pageMarkdown[0], "# ");
+
+		return $response->withJson(array('markdown' => $pageMarkdown, 'errors' => false));
 	}
 
 	public function deleteBlock(Request $request, Response $response, $args)
@@ -713,10 +796,12 @@ class ContentApiController extends ContentController
 		unset($this->content[$this->params['block_id']]);
 		$this->content = array_values($this->content);
 
+		$pageMarkdown = $this->content;
+		
 		# delete markdown from title
-		if(isset($this->content[0]))
+		if(isset($pageMarkdown[0]))
 		{
-			$this->content[0] = trim($this->content[0], "# ");
+			$pageMarkdown[0] = trim($pageMarkdown[0], "# ");
 		}
 		
 		# encode the content into json
@@ -735,6 +820,7 @@ class ContentApiController extends ContentController
 		{
 			return $response->withJson(['errors' => ['message' => 'Could not write to file. Please check if the file is writable']], 404);
 		}
-		return $response->withJson(array('markdown' => $this->content, 'errors' => false));
+				
+		return $response->withJson(array('markdown' => $pageMarkdown, 'errors' => false));
 	}
 }

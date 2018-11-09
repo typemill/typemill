@@ -1394,22 +1394,32 @@ label .help, .label .help{
 	border: 1px solid #e0474c;
 	color: #eee;
 }
-.blox-editor button.delete{
+.blox-editor .sideaction{
 	position: absolute;
-	right: 1px;
-	top: 1px;
-	font-weight: 700;
+	right: -22px;
+	top: 0px;
+}
+.blox-editor button.delete, .blox-editor .icon-resize-full-alt{
+	display: block;
+	font-weight: 300;
+	font-size: 0.9em;
 	background: #fff;
 	color: #fff;
+	width: 20px;
+	height: 20px;
+	line-height: 20px;
+	text-align: center;
+	padding: 0px;
+	margin: 0px 0px 1px;
 	border: 0px;
-	border-radius: 2px;
-	padding: 2px 4px;
+	border-radius: 1px;
 }
 .blox-editor:hover button.delete{
 	background: #e0474c;
 	color: #fff;
 }
 .blox-editor button.delete:hover{
+	cursor: pointer;
 	background: #cc4146;
 }
 .blox-editor button.edit:disabled, .blox-editor button.cancel:disabled{

@@ -164,6 +164,7 @@ $container['view'] = function ($container)
     $view->addExtension(new Slim\Views\TwigExtension($container['router'], $basePath));
 	$view->addExtension(new Twig_Extension_Debug());
     $view->addExtension(new Typemill\Extensions\TwigUserExtension());
+	$view->addExtension(new Typemill\Extensions\TwigMarkdownExtension());	
 	
 	/* use {{ base_url() }} in twig templates */
 	$view['base_url']	 = $container['request']->getUri()->getBaseUrl();
