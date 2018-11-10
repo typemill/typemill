@@ -99,7 +99,7 @@ html{
 }
 body{
 	padding: 20px;
-	font-size: 18px;
+	font-size: 16px;
 }
 .main{
 	display: block;
@@ -739,7 +739,7 @@ img.myClass{
 		overflow: visible;
 	}
 	body{
-		font-size: 20px;
+		font-size: 18px;
 	}
 	header, aside{
 		width: 20%;

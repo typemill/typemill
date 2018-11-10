@@ -44,7 +44,7 @@ class Settings
 			'contentFolder'							=> 'content',
 			'cache'									=> true,
 			'cachePath'								=> $rootPath . 'cache',
-			'version'								=> '1.2.6',
+			'version'								=> '1.2.7',
 			'setup'									=> true,
 			'welcome'								=> true
 		];

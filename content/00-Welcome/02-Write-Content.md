@@ -12,7 +12,7 @@ However, there are some limitations when you try to reorder elements, for exampl
 
 You can create and format your content with the Markdown syntax, that is similar to the markup syntax of wikipedia. If you are not familiar with Markdown, then please read the short [Markdown-tutorial](https://typemill.net/) in the documentation of Typemill. You can learn Markdown in less than 10 minutes and there is no easier and faster way to format your webpage. You will love it!
 
-Typemill provides two edit modes: The **raw mode** and the **visual mode**.  You can switch between the modes in the publish-bar at the bottom of each page. The **raw mode** is the most robust way to create your content, because you write raw markdown into a simple input area. The **visual mode** is experimental right now. It uses blocks and transforms each content block into a html-preview immediately, so that you can directly see the formatted result.
+Typemill provides two edit modes: The **raw mode** and the **visual mode**.  You can switch between the modes in the publish-bar at the bottom of each page. The **raw mode** is the most robust way to create your content, because you write raw markdown into a simple textarea. The **visual mode** is experimental right now. It uses blocks and transforms each content block into a html-preview immediately, so that you can directly see the formatted result.
 
 By default Typemill will use the raw mode. But you can change this behavior in the system settings and use the visual editor as default mode.
 

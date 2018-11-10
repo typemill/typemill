@@ -714,7 +714,6 @@ button[type="button"].theme-button:hover{
 	border:0px;
 	border-top: 0px;
 }
-
 .button{
 	color: #fff;
 	padding: 10px;
@@ -1572,7 +1571,12 @@ label .help, .label .help{
 sup{}
 cite{}
 abbr{}
-hr{}
+hr{
+	background: #ddd;
+	height: 2px;
+	margin: 20px 0;
+	border: 0px;
+}
 .blox ul.TOC,.blox .TOC ul{
 	list-style: none;
 	padding-left: 0px;
