@@ -6,6 +6,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Typemill\Models\Folder;
 use Typemill\Models\Write;
+use Typemill\Models\ProcessImage;
 use Typemill\Extensions\ParsedownExtension;
 
 class ContentApiController extends ContentController
@@ -755,6 +756,7 @@ class ContentApiController extends ContentController
 		/* get params from call */
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri();
+		$errors			= false;
 		
 		# set structure
 		if(!$this->setStructure($draft = true)){ return $response->withJson(array('data' => false, 'errors' => $this->errors), 404); }
@@ -792,6 +794,25 @@ class ContentApiController extends ContentController
 		# check if id exists
 		if(!isset($this->content[$this->params['block_id']])){ return $response->withJson(array('data' => false, 'errors' => 'The ID of the content-block is wrong.'), 404); }
 
+		# check if block is image
+		$contentBlock 		= $this->content[$this->params['block_id']];
+		$contentBlockStart 	= substr($contentBlock, 0, 2);
+		if($contentBlockStart == '[!' OR $contentBlockStart == '![')
+		{
+			# extract image path
+			preg_match("/\((.*?)\)/",$contentBlock,$matches);
+			if(isset($matches[1]))
+			{
+				$imageBaseName	= explode('-', $matches[1]);
+				$imageBaseName	= str_replace('media/live/', '', $imageBaseName[0]);
+				$processImage 	= new ProcessImage();
+				if(!$processImage->deleteImage($imageBaseName))
+				{
+					$errors = 'Could not delete some of the images, please check manually';
+				}
+			}
+		}
+		
 		# delete the block
 		unset($this->content[$this->params['block_id']]);
 		$this->content = array_values($this->content);
@@ -821,6 +842,41 @@ class ContentApiController extends ContentController
 			return $response->withJson(['errors' => ['message' => 'Could not write to file. Please check if the file is writable']], 404);
 		}
 				
-		return $response->withJson(array('markdown' => $pageMarkdown, 'errors' => false));
+		return $response->withJson(array('markdown' => $pageMarkdown, 'errors' => $errors));
+	}
+
+	public function createImage(Request $request, Response $response, $args)
+	{
+		/* get params from call */
+		$this->params 	= $request->getParams();
+		$this->uri 		= $request->getUri();
+		
+		$imageProcessor	= new ProcessImage();
+		
+		if($imageProcessor->createImage($this->params['image'], $this->settings['images'], $name = false))
+		{
+			return $response->withJson(array('errors' => false));		
+		}
+
+		return $response->withJson(array('errors' => 'could not store image to temporary folder'));	
+	}
+	
+	public function publishImage(Request $request, Response $response, $args)
+	{
+		$params 		= $request->getParsedBody();
+						
+		$imageProcessor	= new ProcessImage();
+		
+		$imageUrl 		= $imageProcessor->publishImage($this->settings['images'], $name = false);
+		if($imageUrl)
+		{
+			$params['markdown']	= str_replace('imgplchldr', $imageUrl, $params['markdown']);
+						
+			$request 	= $request->withParsedBody($params);
+			
+			return $this->updateBlock($request, $response, $args);
+		}
+
+		return $response->withJson(array('errors' => 'could not store image to temporary folder'));	
 	}
 }

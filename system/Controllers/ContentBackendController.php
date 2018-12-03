@@ -23,7 +23,7 @@ class ContentBackendController extends ContentController
 		# get params from call
 		$this->uri 		= $request->getUri();
 		$this->params	= isset($args['params']) ? ['url' => $this->uri->getBasePath() . '/' . $args['params']] : ['url' => $this->uri->getBasePath()];
-		
+				
 		# set structure
 		if(!$this->setStructure($draft = true)){ return $this->renderIntern404($response, array( 'navigation' => true, 'content' => $this->errors )); }
 		
@@ -71,7 +71,7 @@ class ContentBackendController extends ContentController
 				$content = trim($contentParts[1]);
 			}
 		}
-
+		
 		return $this->render($response, 'editor/editor-raw.twig', array('navigation' => $this->structure, 'title' => $title, 'content' => $content, 'item' => $this->item, 'settings' => $this->settings ));
 	}
 	
@@ -85,6 +85,7 @@ class ContentBackendController extends ContentController
 	
 	public function showBlox(Request $request, Response $response, $args)
 	{
+		
 		# get params from call
 		$this->uri 		= $request->getUri();
 		$this->params	= isset($args['params']) ? ['url' => $this->uri->getBasePath() . '/' . $args['params']] : ['url' => $this->uri->getBasePath()];
@@ -100,7 +101,7 @@ class ContentBackendController extends ContentController
 		
 		# set the status for published and drafted
 		$this->setPublishStatus();
-
+		
 		# set path
 		$this->setItemPath($this->item->fileType);
 
@@ -133,12 +134,16 @@ class ContentBackendController extends ContentController
 			$contentArray 	= $parsedown->text($block);
 
 			/* parse markdown-content-array to content-string */
-			$content[$key]	= $parsedown->markup($contentArray);			
+			$content[$key]	= $parsedown->markup($contentArray);
 		}
 
 		# extract title and delete from content array, array will start at 1 after that.
-		$title = $content[0];
-		unset($content[0]);
+		$title = '# add title';
+		if(isset($content[0]))
+		{
+			$title = $content[0];
+			unset($content[0]);			
+		}
 
 		return $this->render($response, 'editor/editor-blox.twig', array('navigation' => $this->structure, 'title' => $title, 'content' => $content, 'item' => $this->item, 'settings' => $this->settings ));
 	}

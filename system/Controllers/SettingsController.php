@@ -95,7 +95,7 @@ class SettingsController extends Controller
 				/* store them as default theme data with author, year, default settings and field-definitions */
 				$themedata[$themeName] = $themeSettings;
 			}
-			
+						
 			if(isset($themeSettings['forms']['fields']))
 			{
 				$fields = $this->getFields($userSettings, 'themes', $themeName, $themeSettings);
@@ -271,6 +271,12 @@ class SettingsController extends Controller
 			$themeName		= isset($params['theme']) ? $params['theme'] : false;
 			$userInput		= isset($params[$themeName]) ? $params[$themeName] : false;
 			$validate		= new Validation();
+			$themeSettings 	= \Typemill\Settings::getObjectSettings('themes', $themeName);
+			
+			if(isset($themeSettings['settings']['images']))
+			{	
+				$userSettings 	= ['images' => $themeSettings['settings']['images']];
+			}
 			
 			/* set theme name and delete theme settings from user settings for the case, that the new theme has no settings */
 			$userSettings['theme'] = $themeName;

@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'fontello';
-  src: url('../font/fontello.eot?89525311');
-  src: url('../font/fontello.eot?89525311#iefix') format('embedded-opentype'),
-       url('../font/fontello.woff2?89525311') format('woff2'),
-       url('../font/fontello.woff?89525311') format('woff'),
-       url('../font/fontello.ttf?89525311') format('truetype'),
-       url('../font/fontello.svg?89525311#fontello') format('svg');
+  src: url('../font/fontello.eot?52515879');
+  src: url('../font/fontello.eot?52515879#iefix') format('embedded-opentype'),
+       url('../font/fontello.woff2?52515879') format('woff2'),
+       url('../font/fontello.woff?52515879') format('woff'),
+       url('../font/fontello.ttf?52515879') format('truetype'),
+       url('../font/fontello.svg?52515879#fontello') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -15,7 +15,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'fontello';
-    src: url('../font/fontello.svg?89525311#fontello') format('svg');
+    src: url('../font/fontello.svg?52515879#fontello') format('svg');
   }
 }
 */
@@ -55,15 +55,13 @@
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
  
-.icon-font:before { content: '\e800'; } /* '' */
-.icon-cog:before { content: '\e801'; } /* '' */
-.icon-picture:before { content: '\e802'; } /* '' */
-.icon-off:before { content: '\e803'; } /* '' */
-.icon-home:before { content: '\e804'; } /* '' */
-.icon-plus:before { content: '\e805'; } /* '' */
-.icon-resize-vertical:before { content: '\e806'; } /* '' */
-.icon-cancel:before { content: '\e807'; } /* '' */
-.icon-move:before { content: '\f047'; } /* '' */
+.icon-cancel:before { content: '\e800'; } /* '' */
+.icon-picture:before { content: '\e801'; } /* '' */
+.icon-font:before { content: '\e802'; } /* '' */
+.icon-cog:before { content: '\e803'; } /* '' */
+.icon-off:before { content: '\e804'; } /* '' */
+.icon-home:before { content: '\e805'; } /* '' */
+.icon-plus:before { content: '\e806'; } /* '' */
 .icon-link-ext:before { content: '\f08e'; } /* '' */
 .icon-resize-full-alt:before { content: '\f0b2'; } /* '' */
 .icon-doc-text:before { content: '\f0f6'; } /* '' */

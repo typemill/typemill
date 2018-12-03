@@ -45,7 +45,18 @@ The GitHub-version has no vendor-folder, so you have to update and include all l
 
 If you did not use composer before, please go to the [composer website](http://getcomposer.org) and start to learn.
 
-To run TYPEMILL on a **live** system, simply upload the files to your server.
+To run TYPEMILL on a **live** system, simply upload the files to your server
+
+## Make Folders Writable.
+
+ Make sure that the following folders and all their content are writable (permission 774 recursively):
+
+* cache
+* content
+* media
+* settings
+
+You can use your ftp-software for that.
 
 ## Setup
 

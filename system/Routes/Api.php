@@ -19,3 +19,6 @@ $app->post('/api/v1/basefolder', ContentApiController::class . ':createBaseFolde
 $app->put('/api/v1/block', ContentApiController::class . ':updateBlock')->setName('api.block.update')->add(new RestrictApiAccess($container['router']));
 $app->delete('/api/v1/block', ContentApiController::class . ':deleteBlock')->setName('api.block.delete')->add(new RestrictApiAccess($container['router']));
 $app->put('/api/v1/moveblock', ContentApiController::class . ':moveBlock')->setName('api.block.move')->add(new RestrictApiAccess($container['router']));
+
+$app->post('/api/v1/image', ContentApiController::class . ':createImage')->setName('api.image.create')->add(new RestrictApiAccess($container['router']));
+$app->put('/api/v1/image', ContentApiController::class . ':publishImage')->setName('api.image.publish')->add(new RestrictApiAccess($container['router']));

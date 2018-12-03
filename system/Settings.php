@@ -11,12 +11,13 @@ class Settings
 		
 		if($userSettings)
 		{
-			$settings = array_merge($settings, $userSettings);
-			$settings['setup'] = false;
+			$imgSettings 		= $settings['images'];
+			$settings 			= array_merge($settings, $userSettings);
+			$settings['setup'] 	= false;
 		}
-		
-		$settings['themePath'] = $settings['rootPath'] . $settings['themeFolder'] . DIRECTORY_SEPARATOR . $settings['theme'];
-		
+		$settings['images']		= isset($userSettings['images']) ? array_merge($imgSettings, $userSettings['images']) : $imgSettings;
+		$settings['themePath'] 	= $settings['rootPath'] . $settings['themeFolder'] . DIRECTORY_SEPARATOR . $settings['theme'];
+
 		return array('settings' => $settings);
 	}
 	
@@ -44,9 +45,10 @@ class Settings
 			'contentFolder'							=> 'content',
 			'cache'									=> true,
 			'cachePath'								=> $rootPath . 'cache',
-			'version'								=> '1.2.7',
+			'version'								=> '1.2.8',
 			'setup'									=> true,
-			'welcome'								=> true
+			'welcome'								=> true,
+			'images'								=> ['live' => ['width' => 720], 'mlibrary' => ['width' => 50, 'height' => 50]],
 		];
 	}
 	
@@ -87,7 +89,7 @@ class Settings
 			
 			$yaml 		= new Models\WriteYaml();
 			$settings 	= array_merge($userSettings, $settings);
-
+			
 			/* write settings to yaml */
 			$yaml->updateYaml('settings', 'settings.yaml', $settings);					
 		}

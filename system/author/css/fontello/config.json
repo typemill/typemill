@@ -7,51 +7,57 @@
   "ascent": 850,
   "glyphs": [
     {
+      "uid": "c709da589c923ba3c2ad48d9fc563e93",
+      "css": "cancel",
+      "code": 59392,
+      "src": "entypo"
+    },
+    {
+      "uid": "381da2c2f7fd51f8de877c044d7f439d",
+      "css": "picture",
+      "code": 59393,
+      "src": "fontawesome"
+    },
+    {
       "uid": "f9cbf7508cd04145ade2800169959eef",
       "css": "font",
-      "code": 59392,
+      "code": 59394,
       "src": "fontawesome"
     },
     {
       "uid": "e99461abfef3923546da8d745372c995",
       "css": "cog",
-      "code": 59393,
-      "src": "fontawesome"
-    },
-    {
-      "uid": "381da2c2f7fd51f8de877c044d7f439d",
-      "css": "picture",
-      "code": 59394,
+      "code": 59395,
       "src": "fontawesome"
     },
     {
       "uid": "8b9e6a8dd8f67f7c003ed8e7e5ee0857",
       "css": "off",
-      "code": 59395,
+      "code": 59396,
       "src": "fontawesome"
     },
     {
       "uid": "d7271d490b71df4311e32cdacae8b331",
       "css": "home",
-      "code": 59396,
+      "code": 59397,
       "src": "fontawesome"
     },
     {
       "uid": "44e04715aecbca7f266a17d5a7863c68",
       "css": "plus",
-      "code": 59397,
-      "src": "fontawesome"
-    },
-    {
-      "uid": "e15f0d620a7897e2035c18c80142f6d9",
-      "css": "link-ext",
-      "code": 61582,
+      "code": 59398,
       "src": "fontawesome"
     },
     {
       "uid": "b013f6403e5ab0326614e68d1850fd6b",
       "css": "resize-full-alt",
       "code": 61618,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "e15f0d620a7897e2035c18c80142f6d9",
+      "css": "link-ext",
+      "code": 61582,
       "src": "fontawesome"
     },
     {
@@ -64,24 +70,6 @@
       "uid": "b091a8bd0fdade174951f17d936f51e4",
       "css": "folder-empty",
       "code": 61716,
-      "src": "fontawesome"
-    },
-    {
-      "uid": "d3b3f17bc3eb7cd809a07bbd4d178bee",
-      "css": "resize-vertical",
-      "code": 59398,
-      "src": "fontawesome"
-    },
-    {
-      "uid": "6605ee6441bf499ffa3c63d3c7409471",
-      "css": "move",
-      "code": 61511,
-      "src": "fontawesome"
-    },
-    {
-      "uid": "5211af474d3a9848f67f945e2ccaf143",
-      "css": "cancel",
-      "code": 59399,
       "src": "fontawesome"
     }
   ]

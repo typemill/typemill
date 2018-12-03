@@ -333,12 +333,12 @@ class ParsedownExtension extends \ParsedownExtra
 			}
 			
 			$block = trim($block, "\n");
-			
+						
 			$cleanBlocks[] = $block;
 		}
 		return $cleanBlocks;
 	}
-
+	
 	public function arrayBlocksToMarkdown(array $arrayBlocks)
 	{	
 		$markdown = '';

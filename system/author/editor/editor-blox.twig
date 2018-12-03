@@ -10,24 +10,25 @@
 			<div class="blox-body">
 			
 				<content-block class="title" :body="false">
-					<div class="blox title" @click="setData( $event, 'text-markdown')" data-id="0" id="blox-0">{{ title }}</div>
+					<div class="blox title" @click.prevent="setData( $event )" data-id="0" id="blox-0">{{ title }}</div>
 				</content-block>
 
 				<div id="sortblox">
 				
 					{% for id, block in content %}
 						<content-block :body="true">
-							<div class="blox" @click="setData( $event, 'textarea-markdown' )" data-id="{{ id }}" id="blox-{{id}}">{{block}}</div>
+							<div class="blox" @click.prevent="setData( $event )" data-id="{{ id }}" id="blox-{{id}}">{{block}}</div>
 						</content-block>
 					{% endfor %}
 
-					<content-block :body="true" v-for="newBlock in newBlocks"><div class="blox" @click="setData( $event, 'textarea-markdown' )" :data-id="newBlock.id" :id="newBlock.blockId" v-html="newBlock.content"></div></content-block>
+					<content-block :body="true" v-for="newBlock in newBlocks"><div class="blox" @click.prevent="setData( $event )" :data-id="newBlock.id" :id="newBlock.blockId" v-html="newBlock.content"></div></content-block>
 				
 				</div>
 				
 				<div class="format-bar">
 					<content-block :body="false">
-						<button class="format-item" @click="setData( $event, 'textarea-markdown' )" data-id="99999" id="blox-99999"><i class="icon-font"></i></button>
+						<button class="format-item" @click.prevent="setData( $event, 'markdown-component' )" data-id="99999" id="blox-99999"><i class="icon-font"></i></button>
+						<button class="format-item" @click.prevent="setData( $event, 'image-component' )" data-id="99999" id="blox-99999"><i class="icon-picture"></i></button>
 					</content-block>
 				</div>
 				

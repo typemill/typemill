@@ -345,6 +345,10 @@ h1 .version-number{
 	font-size: 0.5em;
 	font-weight: 300;
 }
+footer{
+	text-align: center;
+	padding: 20px 0;
+}
 
 /********************
 *  	SETUP FORM 	    *
@@ -1250,6 +1254,7 @@ label .help, .label .help{
 	max-width: 900px;
 	background: #fff;
 	box-shadow: 0 0 2px #ddd;
+	z-index: 99;
 }
 .buttonset .message.error{
 	position: absolute;
@@ -1352,11 +1357,49 @@ label .help, .label .help{
 .blox-editor{
 	position: relative;
 }
-.blox-editor:hover{
+.blox:hover{
 	background: #f9f8f6;
 }
 .blox-buttons{
+	position: absolute;
+    bottom: -15px;
+    left: 15px;
+    z-index: 9;
+	left: 15px;
+    width: 200px;
+	z-index: 99;
+}
+.blox-editor button{
+	display: inline-block;
+	box-sizing: border-box;
+	margin: 1px;
+	padding: 3px 6px;
+	width: 80px;
+	text-align: center;
+	border-radius: 2px;
+	font-size: 0.9em;
+}
+.blox-editor button.edit{
 	background: #fff;
+//	background: #f9f8f6;
+	color: #444;
+	border: 1px solid #bbb;
+}
+.blox-editor button.edit:hover{
+	background: #cc4146;
+	color: #eee;
+	border: 1px solid #cc4146;
+}
+.blox-editor button.cancel{
+//	background: #f9f8f6;
+	background: #fff;
+	color: #444;	
+	border: 1px solid #bbb;
+}
+.blox-editor button.cancel:hover{
+	background: #e0474c;
+	border: 1px solid #e0474c;
+	color: #eee;
 }
 .blox-editor textarea{
 	font-family: arial;
@@ -1365,33 +1408,7 @@ label .help, .label .help{
 	padding-left: 20px;
 	padding-right: 20px;
 	box-sizing: border-blox;
-}
-.blox-editor button{
-	display: inline-block;
-	box-sizing: border-box;
-	margin: 2px 2px 10px 0;
-	padding: 6px 12px;
-	border-radius: 2px;
-	font-size: 0.9em;
-}
-.blox-editor button.edit{
-	background: #e0474c;
-	color: #f9f8f6;
-	border: 1px solid #e0474c;
-}
-.blox-editor button.edit:hover{
-	background: #cc4146;
-	border: 1px solid #cc4146;
-}
-.blox-editor button.cancel{
-	background: #fff;
-	border: 1px solid #eee;
-	color: #444;	
-}
-.blox-editor button.cancel:hover{
-	background: #e0474c;
-	border: 1px solid #e0474c;
-	color: #eee;
+	min-height: 40px;
 }
 .blox-editor .sideaction{
 	position: absolute;
@@ -1432,6 +1449,14 @@ label .help, .label .help{
 .hidden{
 	display: none;
 }
+.hidden .blox:hover{
+	background: #fff;
+}
+.component{
+	position: relative;
+	width: 100%;
+	z-index:9;
+}
 .fade-editor-enter-active{
   transition: opacity .5s;
 }
@@ -1441,6 +1466,11 @@ label .help, .label .help{
 .format-bar{
 	padding: 20px;
 	width:100%;
+}
+.format-bar .editactive{
+	position: relative;
+	margin-left: -20px;
+	margin-right: 20px;
 }
 .format-bar .blox-editor{
 	display: inline;
@@ -1565,8 +1595,47 @@ label .help, .label .help{
 .blox blockquote p{
 	margin-left: 50px;
 }
-.blox img{
+.dropbox{
+	min-height: 50px;
+	position: relative;
+	background: #f9f8f6;
+	padding: 20px;
+	box-sizing: border-box;
+	margin-bottom: 10px;
+}
+.dropbox p{
+	cursor: pointer;	
+	border: 2px dashed grey;
+	line-height: 50px;
 	width: 100%;
+	text-align: center;
+	box-sizing:border-box;
+	padding: 0;
+}
+.dropbox input{
+	background: #fff;
+	width: 80%;
+	margin: 2px 0;
+	display: inline-block;
+}
+.dropbox label{
+	width: 20%;
+	display: inline-block;
+}
+.dropbox .imgmeta{
+	margin-top: 20px;
+}
+.input-file{
+    opacity: 0;
+    width: 100%;
+    height: 50px;
+    position: absolute;
+    cursor: pointer;
+}
+.blox img, img.uploadPreview{
+	display: block;
+	margin: auto;
+	max-width: 100%;
 }
 sup{}
 cite{}
@@ -1603,11 +1672,14 @@ hr{
 	font-weight: 400;
 	padding-left: 25px;	
 }
-.blox a, .blox a:link, .blox a:visited{ 
+.blox a, .blox a:link, .blox a:visited,
+footer a, footer a:link, footer a:visited
+{ 
 	text-decoration: none; 
 	color: #e0474c; 
 }
-.blox a:focus, .blox a:hover, .blox a:active{ 
+.blox a:focus, .blox a:hover, .blox a:active,
+footer a:focus, footer a:hover, footer a:active{ 
 	text-decoration: underline;
 }
 .blox .TOC li:before{ color: #bbb; }
@@ -1640,8 +1712,16 @@ hr{
 		font-size: 0.9em;
 	}
 	
+	.blox-editor .loadwrapper{
+		display: block;
+		position: relative;
+		width: 40px;
+		height: 40px;
+		margin: auto;
+		text-align: center;
+	}
 	/* load design editor button */
-	.editor button.load:after,
+	.editor button.load:after, .blox-editor .load:after,
 	.editor button.success:after,
 	.editor button.fail:after
 	{
@@ -1653,7 +1733,7 @@ hr{
 		border-radius: 50%;
 		content: '';
 	}
-	.editor button.load:after{
+	.editor button.load:after, .blox-editor .load:after{
 		border: 8px solid #fff;
 		border-top: 8px solid #ccc;
 		background: #ccc;
