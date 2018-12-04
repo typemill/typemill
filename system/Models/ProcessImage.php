@@ -67,7 +67,10 @@ class ProcessImage
 		$tmpFolder		= $basePath . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
 		$originalFolder	= $basePath . DIRECTORY_SEPARATOR . 'original' . DIRECTORY_SEPARATOR;
 		$liveFolder		= $basePath . DIRECTORY_SEPARATOR . 'live' . DIRECTORY_SEPARATOR;
-		
+
+		if(!file_exists($originalFolder)){ mkdir($originalFolder, 0774, true); }
+		if(!file_exists($liveFolder)){ mkdir($liveFolder, 0774, true); }
+
 		$name 			= uniqid();
 		
 		$files 			= scandir($tmpFolder);
@@ -232,7 +235,7 @@ class ProcessImage
 	}
 	
 	public function saveOriginal($folder, $image, $name, $type)
-	{				
+	{
 		if(!file_exists($folder))
 		{
 			mkdir($folder, 0774, true);
@@ -277,6 +280,13 @@ class ProcessImage
 	public function clearTempFolder()
 	{
 		$folder		= getcwd() . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
+
+		if(!file_exists($folder))
+		{
+			mkdir($folder, 0774, true);
+			return true;
+		}		
+		
 		$files 		= scandir($folder);
 		$result		= true;
 		

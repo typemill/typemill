@@ -1447,15 +1447,21 @@ label .help, .label .help{
 	display: block;
 }
 .hidden{
-	display: none;
+	visibility: hidden;
 }
 .hidden .blox:hover{
 	background: #fff;
 }
 .component{
-	position: relative;
+	position: absolute;
 	width: 100%;
 	z-index:9;
+}
+.format-bar .hidden{
+	display: none;
+}
+.format-bar .component{
+	position: relative;
 }
 .fade-editor-enter-active{
   transition: opacity .5s;
@@ -1475,7 +1481,7 @@ label .help, .label .help{
 .format-bar .blox-editor{
 	display: inline;
 }
-.format-item{
+button.format-item{
 	margin-right: 2px;
 	padding: 5px;
 	background: #70c1b3;
@@ -1487,7 +1493,7 @@ label .help, .label .help{
 	height: 40px;
 	text-align: center;
 }
-.format-item:hover{
+button.format-item:hover{
 	background: #66b0a3;
 	cursor: pointer;
 }

@@ -8,13 +8,15 @@ class Settings
 	{
 		$settings 			= self::getDefaultSettings();
 		$userSettings 		= self::getUserSettings();
+
+		$imgSettings 		= isset($settings['images']) ? $settings['images'] : [];
 		
 		if($userSettings)
 		{
-			$imgSettings 		= $settings['images'];
 			$settings 			= array_merge($settings, $userSettings);
 			$settings['setup'] 	= false;
 		}
+		
 		$settings['images']		= isset($userSettings['images']) ? array_merge($imgSettings, $userSettings['images']) : $imgSettings;
 		$settings['themePath'] 	= $settings['rootPath'] . $settings['themeFolder'] . DIRECTORY_SEPARATOR . $settings['theme'];
 
@@ -48,7 +50,7 @@ class Settings
 			'version'								=> '1.2.8',
 			'setup'									=> true,
 			'welcome'								=> true,
-			'images'								=> ['live' => ['width' => 720], 'mlibrary' => ['width' => 50, 'height' => 50]],
+			'images'								=> ['live' => ['width' => 820], 'mlibrary' => ['width' => 50, 'height' => 50]],
 		];
 	}
 	
