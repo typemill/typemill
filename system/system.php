@@ -2,6 +2,7 @@
 
 use Typemill\Events\OnSettingsLoaded;
 use Typemill\Events\OnPluginsLoaded;
+use Typemill\Events\OnSessionSegmentsLoaded;
 
 /****************************
 * CREATE EVENT DISPATCHER	*
@@ -103,13 +104,18 @@ $container['assets'] = function($c)
 * 	DECIDE FOR SESSION	*
 ************************/
 
-$session_segments = array('setup', 'tm/', 'api/', '/setup', '/tm/', '/api/');
-$path = $container['request']->getUri()->getPath();
-$container['flash'] = false;
-$container['csrf'] = false;
+$session_segments 	= array('setup', 'tm/', 'api/', '/setup', '/tm/', '/api/');
+
+# let plugins add own segments for session, eg. to enable csrf for forms
+$client_segments 	= $dispatcher->dispatch('onSessionSegmentsLoaded', new OnSessionSegmentsLoaded([]))->getData();
+$session_segments	= array_merge($session_segments, $client_segments);
+
+$path 				= $container['request']->getUri()->getPath();
+$container['flash']	= false;
+$container['csrf'] 	= false;
 
 foreach($session_segments as $segment)
-{	
+{
 	if(substr( $path, 0, strlen($segment) ) === $segment)
 	{		
 		// configure session

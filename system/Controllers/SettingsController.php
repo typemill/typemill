@@ -49,8 +49,13 @@ class SettingsController extends Controller
 				);
 				
 				$copyright 					= $this->getCopyright();
-								
+
 				$validate->settings($newSettings, $copyright, 'settings');
+			}
+			else
+			{
+				$this->c->flash->addMessage('error', 'Wrong Input');
+				return $response->withRedirect($this->c->router->pathFor('settings.show'));				
 			}
 			
 			if(isset($_SESSION['errors']))

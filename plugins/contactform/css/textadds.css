@@ -1,0 +1,26 @@
+.contentadd{
+	display: block;
+	position: relative;
+	width: 100%;
+	border-top: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+}
+.contentadd span{
+	position: absolute;
+	right: 10px;
+	top: 20px;
+	text-transform: uppercase;
+	color: #ccc;
+	font-size: 0.6em;
+}
+.contentadd h3{
+	margin-top: 20px;
+	margin-bottom: 0px;
+}
+.contentadd small{
+	margin: 0px;
+}
+.contentadd p{
+	margin-top: 0px;
+	margin-bottom: 20px;
+}

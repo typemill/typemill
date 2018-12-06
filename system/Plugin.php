@@ -6,7 +6,7 @@ use \Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 abstract class Plugin implements EventSubscriberInterface
 {	
-	private $container;
+	protected $container;
 
     /**
      * Constructor
@@ -17,6 +17,16 @@ abstract class Plugin implements EventSubscriberInterface
     {
 		$this->container 	= $container;
     }
+	
+	protected function getSettings()
+	{
+		return $this->container->get('settings');
+	}
+	
+	protected function getPluginSettings($plugin)
+	{
+		return $this->container->get('settings')['plugins'][$plugin];
+	}
 
 	protected function getRoute()
 	{

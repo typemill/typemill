@@ -19,6 +19,7 @@ const contentComponent = Vue.component('content-block', {
 	methods: {
 		switchToEditMode: function()
 		{
+			if(this.edit){ return; }
 			eventBus.$emit('closeComponents');
 			self = this;
 			self.$root.$data.freeze = true; 						/* freeze the data */

@@ -13,6 +13,7 @@ use Typemill\Models\Markdown;
 use Typemill\Events\OnPagetreeLoaded;
 use Typemill\Events\OnBreadcrumbLoaded;
 use Typemill\Events\OnItemLoaded;
+use Typemill\Events\OnOriginalLoaded;
 use Typemill\Events\OnMarkdownLoaded;
 use Typemill\Events\OnContentArrayLoaded;
 use Typemill\Events\OnHtmlLoaded;
@@ -118,6 +119,9 @@ class PageController extends Controller
 			$contentMD 		= isset($filePath) ? file_get_contents($filePath) : false;			
 		}
 		
+		# dispatch the original content without plugin-manipulations for case anyone wants to use it
+		$this->c->dispatcher->dispatch('onOriginalLoaded', new OnOriginalLoaded($contentMD));
+		
 		$contentMD = $this->c->dispatcher->dispatch('onMarkdownLoaded', new OnMarkdownLoaded($contentMD))->getData();
 		
 		/* initialize parsedown */
@@ -136,7 +140,7 @@ class PageController extends Controller
 		/* parse markdown-content-array to content-string */
 		$contentHTML	= $parsedown->markup($contentArray);
 		$contentHTML 	= $this->c->dispatcher->dispatch('onHtmlLoaded', new OnHtmlLoaded($contentHTML))->getData();
-
+		
 		/* extract the h1 headline*/
 		$contentParts	= explode("</h1>", $contentHTML);
 		$title			= isset($contentParts[0]) ? strip_tags($contentParts[0]) : $settings['title'];
@@ -155,7 +159,7 @@ class PageController extends Controller
 			$lastSpace 		= strrpos($description, ' ');
 			$description 	= substr($description, 0, $lastSpace);
 		}
-				
+
 		/* get url and alt-tag for first image, if exists */
 		if($firstImage)
 		{
