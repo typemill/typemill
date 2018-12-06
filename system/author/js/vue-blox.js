@@ -2,7 +2,7 @@ const eventBus = new Vue();
 
 const contentComponent = Vue.component('content-block', {
 	props: ['body'],
-	template: '<div ref="bloxcomponent" class="blox-editor"><div :class="{ editactive: edit }"><div @keyup.enter="submitBlock" @click="getData"><div class="component" ref="component"><transition name="fade-editor"><component :disabled="disabled" :compmarkdown="compmarkdown" @updatedMarkdown="compmarkdown = $event" :is="componentType"></component></transition><div class="blox-buttons" v-if="edit"><button class="edit" :disabled="disabled" @click.prevent="saveBlock">save</button><button class="cancel" :disabled="disabled" @click.prevent="switchToPreviewMode">cancel</button></div></div><div :class="preview" ref="preview"><slot></slot></div></div><div class="sideaction" v-if="body"><button class="delete" :disabled="disabled" title="delete content-block" @click.prevent="deleteBlock($event)"><i class="icon-cancel"></i></button></div></div></div>',	
+	template: '<div ref="bloxcomponent" class="blox-editor"><div :class="{ editactive: edit }"><div @keyup.enter="submitBlock" @click="getData"><div class="component" ref="component"><transition name="fade-editor"><component :disabled="disabled" :compmarkdown="compmarkdown" @updatedMarkdown="updateMarkdown" :is="componentType"></component></transition><div class="blox-buttons" v-if="edit"><button class="edit" :disabled="disabled" @click.prevent="saveBlock">save</button><button class="cancel" :disabled="disabled" @click.prevent="switchToPreviewMode">cancel</button></div></div><div :class="preview" ref="preview"><slot></slot></div></div><div class="sideaction" v-if="body"><button class="delete" :disabled="disabled" title="delete content-block" @click.prevent="deleteBlock($event)"><i class="icon-cancel"></i></button></div></div></div>',	
 	data: function () {
 		return {
 			preview: 'visible',
@@ -17,6 +17,13 @@ const contentComponent = Vue.component('content-block', {
 		eventBus.$on('closeComponents', this.closeComponents);
 	},
 	methods: {
+		updateMarkdown: function($event)
+		{
+			this.compmarkdown = $event;
+			this.$nextTick(function () {
+				this.$refs.preview.style.minHeight = this.$refs.component.offsetHeight + 'px';
+			});			
+		},
 		switchToEditMode: function()
 		{
 			if(this.edit){ return; }
@@ -91,7 +98,9 @@ const contentComponent = Vue.component('content-block', {
 			}
 		},
 		saveBlock: function()
-		{			
+		{	
+			console.log(this.compmarkdown);
+		
 			if(this.compmarkdown == undefined || this.compmarkdown.replace(/(\r\n|\n|\r|\s)/gm,"") == '')
 			{
 				this.switchToPreviewMode();	
