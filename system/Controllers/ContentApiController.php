@@ -668,8 +668,11 @@ class ContentApiController extends ContentController
 			$blockArray 	= $parsedown->text($blockMarkdown);
 		}
 		
+		# needed for ToC links
+		$relurl = '/tm/content/' . $this->settings['editor'] . '/' . $this->item->urlRel;
+		
 		/* parse markdown-content-array to content-string */
-		$blockHTML		= $parsedown->markup($blockArray);
+		$blockHTML		= $parsedown->markup($blockArray, $relurl);
 
 		return $response->withJson(array('content' => $blockHTML, 'markdown' => $blockMarkdown, 'blockId' => $blockId, 'id' => $id, 'errors' => false));
 	}

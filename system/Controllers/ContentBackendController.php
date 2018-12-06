@@ -127,14 +127,17 @@ class ContentBackendController extends ContentController
 			# turn markdown into an array of markdown-blocks
 			$content = $parsedown->markdownToArrayBlocks($content);
 		}
-
+		
+		# needed for ToC links
+		$relurl = '/tm/content/' . $this->settings['editor'] . '/' . $this->item->urlRel;
+		
 		foreach($content as $key => $block)
 		{
 			/* parse markdown-file to content-array */
 			$contentArray 	= $parsedown->text($block);
 
 			/* parse markdown-content-array to content-string */
-			$content[$key]	= $parsedown->markup($contentArray);
+			$content[$key]	= $parsedown->markup($contentArray, $relurl);
 		}
 
 		# extract title and delete from content array, array will start at 1 after that.

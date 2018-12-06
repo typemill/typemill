@@ -132,9 +132,9 @@ class PageController extends Controller
 		
 		/* get the first image from content array */
 		$firstImage		= $this->getFirstImage($contentArray);
-				
+		
 		/* parse markdown-content-array to content-string */
-		$contentHTML	= $parsedown->markup($contentArray);
+		$contentHTML	= $parsedown->markup($contentArray, $item->urlRel);
 		$contentHTML 	= $this->c->dispatcher->dispatch('onHtmlLoaded', new OnHtmlLoaded($contentHTML))->getData();
 
 		/* extract the h1 headline*/

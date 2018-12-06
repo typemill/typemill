@@ -25,7 +25,7 @@ class ParsedownExtension extends \ParsedownExtra
 		return $Elements;
 	}
 	
-	function markup($Elements)
+	function markup($Elements, $relurl)
 	{	
         # convert to markup
         $markup = $this->elements($Elements);
@@ -39,7 +39,7 @@ class ParsedownExtension extends \ParsedownExtra
 		# create table of contents
         if(isset($this->DefinitionData['TableOfContents']))
         {
-			$TOC = $this->buildTOC($this->headlines);
+			$TOC = $this->buildTOC($this->headlines, $relurl);
 			
 			$markup = preg_replace('%(<p[^>]*>\[TOC\]</p>)%i', $TOC, $markup);
         }
@@ -108,9 +108,8 @@ class ParsedownExtension extends \ParsedownExtra
 
 	# build the markup for table of contents 
 	
-	protected function buildTOC($headlines)
+	protected function buildTOC($headlines, $relurl)
 	{
-		
 		$markup = '<ul class="TOC">';
 		
 		foreach($headlines as $key => $headline)
@@ -124,7 +123,7 @@ class ParsedownExtension extends \ParsedownExtra
 				$markup .= '<ul>';
 			}
 			
-			$markup .= '<li class="' . $headline['name'] . '"><a href="#' . $headline['attribute'] . '">' . $headline['text'] . '</a>';
+			$markup .= '<li class="' . $headline['name'] . '"><a href="' . $relurl . '#' . $headline['attribute'] . '">' . $headline['text'] . '</a>';
 			
 			if($thisLevel == $nextLevel)
 			{
