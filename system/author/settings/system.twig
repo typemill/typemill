@@ -1,6 +1,7 @@
 {% extends 'layouts/layout.twig' %}
 {% block title %}Setup{% endblock %}
 {% set startpage = old.settings.startpage ? old.settings.startpage : settings.startpage %}
+{% set export = old.settings.export ? old.settings.export : settings.export %}
 {% set linebreaks = old.settings.linebreaks ? old.settings.linebreaks : settings.linebreaks %}
 {% set year = settings.year ? settings.year : "now"|date("Y") %}
 
@@ -67,7 +68,13 @@
 							<input name="settings[startpage]" type="checkbox" id="startpage"{{ startpage ? ' checked' : '' }}>
 							<span class="checkmark"></span>
 						</label>
-					</div>
+					</div><div class="medium">
+						<span class="label">Export</span>
+						<label class="control-group">Create an HTML export into the subfolder export.
+							<input name="settings[export]" type="checkbox" id="export"{{ export ? ' checked' : '' }}>
+							<span class="checkmark"></span>
+						</label>
+					</div>		
 					<hr>
 					<header class="headline">
 						<h2>Writing</h2>

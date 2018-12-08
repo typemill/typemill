@@ -45,6 +45,7 @@ class SettingsController extends Controller
 					'copyright' 	=> $newSettings['copyright'],
 					'year'			=> $newSettings['year'],
 					'startpage' 	=> isset($newSettings['startpage']) ? true : false,
+					'export' 	=> isset($newSettings['export']) ? true : false,
 					'editor' 		=> $newSettings['editor'], 
 				);
 				

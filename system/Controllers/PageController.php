@@ -5,6 +5,7 @@ namespace Typemill\Controllers;
 use Typemill\Models\Folder;
 use Typemill\Models\WriteCache;
 use Typemill\Models\WriteSitemap;
+use Typemill\Models\WriteExport;
 use Typemill\Models\WriteYaml;
 use \Symfony\Component\Yaml\Yaml;
 use Typemill\Models\VersionCheck;
@@ -73,7 +74,14 @@ class PageController extends Controller
 			exit(1);
 		}
 				
-		/* if the user is on startpage */
+                /* create export in folder /export if export option is set to true in settings */
+		if($settings['export'] === true)
+		{	
+                    $export = new WriteExport();
+                    $export->updateExport('export', 'export.html', 'lastExport.txt', $structure, $uri->getBaseUrl());
+                }
+
+                /* if the user is on startpage */
 		if(empty($args))
 		{	
 			/* check, if there is an index-file in the root of the content folder */

@@ -35,6 +35,7 @@ class Settings
 			'copyright'								=> 'Copyright',
 			'language'								=> 'en',
 			'startpage'								=> true,
+			'export'								=> true,
 			'rootPath'								=> $rootPath,
 			'theme'									=> ($theme = 'typemill'),
 			'themeFolder'							=> ($themeFolder = 'themes'),
