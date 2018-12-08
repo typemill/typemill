@@ -30,12 +30,14 @@ class WriteExport extends Write {
             if ($item->elementType == 'folder')
             {
                 $localhtmlset = $this->addHTMLSet(
-                        $htmlset, $this->basePath .
+                        $htmlset, 
+                        $this->basePath .
                         DIRECTORY_SEPARATOR .
                         'content' .
                         $item->path .
                         DIRECTORY_SEPARATOR .
-                        'index.md'
+                        'index.md',
+                        $item->urlRel
                 );
                 $localhtmlset = $this->clean($localhtmlset, $level, 'folder');
                 $htmlset .= $localhtmlset;
@@ -47,7 +49,8 @@ class WriteExport extends Write {
                         $htmlset, $this->basePath .
                         DIRECTORY_SEPARATOR .
                         'content' .
-                        $item->path
+                        $item->path,
+                        $item->urlRel
                 );
                 $localhtmlset = $this->clean($localhtmlset, $level, 'file');
                 $htmlset .= $localhtmlset;
@@ -57,7 +60,7 @@ class WriteExport extends Write {
         return $htmlset;
     }
 
-    public function addHTMLSet($htmlset, $url) {
+    public function addHTMLSet($htmlset, $url, $urlRel) {
         $contentMD = file_exists($url) ? file_get_contents($url) : NULL;
 
         $parsedown = new ParsedownExtension();
@@ -65,7 +68,7 @@ class WriteExport extends Write {
 
         $contentArray = $parsedown->text($contentMD);
 
-        $contentHTML = $parsedown->markup($contentArray);
+        $contentHTML = $parsedown->markup($contentArray, urlRel);
 
         return $contentHTML;
     }

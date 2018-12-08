@@ -74,7 +74,7 @@ class PageController extends Controller
 			exit(1);
 		}
 				
-                /* create export in folder /export if export option is set to true in settings */
+                /* Create export in folder /export if export option is set to true in settings */
 		if($settings['export'] === true)
 		{	
                     $export = new WriteExport();
