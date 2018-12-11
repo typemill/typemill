@@ -1,5 +1,6 @@
 cache
 plugins/admin
+plugins/contactform
 plugins/demo
 plugins/disqus
 plugins/download

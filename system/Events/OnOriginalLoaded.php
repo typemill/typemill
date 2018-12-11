@@ -24,12 +24,12 @@ class OnOriginalLoaded extends Event
         return $this->data;
     }
 	
-	public function getHTML()
+	public function getHTML($urlrel)
 	{
 		$parsedown 		= new ParsedownExtension();
 		$contentArray 	= $parsedown->text($this->data);
-		$contentHTML 	= $parsedown->markup($contentArray);
-		
+		$contentHTML 	= $parsedown->markup($contentArray, $urlrel);
+
 		return $contentHTML;
 	}
 }

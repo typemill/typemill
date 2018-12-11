@@ -3,7 +3,7 @@
 namespace Typemill\Controllers;
 
 use \Symfony\Component\Yaml\Yaml;
-use Typemill\Models\Field;
+use Typemill\Models\Fields;
 use Typemill\Models\Validation;
 use Typemill\Models\User;
 
@@ -15,7 +15,7 @@ class SettingsController extends Controller
 	
 	public function showSettings($request, $response, $args)
 	{
-		$user		= new User();		
+		$user		= new User();
 		$settings 	= $this->c->get('settings');
 		$copyright	= $this->getCopyright();
 		$languages	= $this->getLanguages();
@@ -81,6 +81,7 @@ class SettingsController extends Controller
 		$userSettings 	= $this->c->get('settings');
 		$themes 		= $this->getThemes();
 		$themedata		= array();
+		$fieldsModel	= new Fields();
 
 		foreach($themes as $themeName)
 		{
@@ -103,8 +104,8 @@ class SettingsController extends Controller
 						
 			if(isset($themeSettings['forms']['fields']))
 			{
-				$fields = $this->getFields($userSettings, 'themes', $themeName, $themeSettings);
-				
+				$fields = $fieldsModel->getFields($userSettings, 'themes', $themeName, $themeSettings);
+								
 				/* overwrite original theme form definitions with enhanced form objects */
 				$themedata[$themeName]['forms']['fields'] = $fields;
 			}
@@ -128,6 +129,7 @@ class SettingsController extends Controller
 	{
 		$userSettings 	= $this->c->get('settings');
 		$plugins		= array();
+		$fieldsModel	= new Fields();
 		$fields 		= array();
 
 		/* iterate through the plugins in the stored user settings */
@@ -170,7 +172,7 @@ class SettingsController extends Controller
 			if(isset($pluginOriginalSettings['forms']['fields']))
 			{
 				/* get all the fields and prefill them with the dafault-data, the user-data or old input data */
-				$fields = $this->getFields($userSettings, 'plugins', $pluginName, $pluginOriginalSettings);
+				$fields = $fieldsModel->getFields($userSettings, 'plugins', $pluginName, $pluginOriginalSettings);
 				
 				/* overwrite original plugin form definitions with enhanced form objects */
 				$plugins[$pluginName]['forms']['fields'] = $fields;
@@ -183,85 +185,6 @@ class SettingsController extends Controller
 		
 		$this->render($response, 'settings/plugins.twig', array('settings' => $userSettings, 'plugins' => $plugins, 'users' => $users, 'route' => $route->getName() ));
 	}
-
-	private function getFields($userSettings, $objectType, $objectName, $objectSettings)
-	{
-		$fields = array();
-
-		/* then iterate through the fields */
-		foreach($objectSettings['forms']['fields'] as $fieldName => $fieldConfigs)
-		{
-			if($fieldConfigs['type'] == 'fieldset')
-			{
-				/* Create an array for the subsettings of the fieldset with the same structure and data as the original settings array */
-				$subSettings 			= $objectSettings;
-				$subSettings['forms']	= $fieldConfigs;
-				
-				$fieldset 				= array();
-				$fieldset['type'] 		= 'fieldset';
-				$fieldset['legend']		= $fieldConfigs['legend'];
-				$fieldset['fields'] 	= $this->getFields($userSettings, $objectType, $objectName, $subSettings);
- 				$fields[] 				= $fieldset;
-			}
-			else
-			{
-				/* and create a new field object with the field name and the field configurations. */
-				$field = new Field($fieldName, $fieldConfigs);
-				
-				/* you have to prefil the value for the field with default settings, user settings or old user-input from form */
-				$userValue = false;
-
-				/* first, add the default values from the original plugin or theme settings. Ignore checkboxes, otherwiese they might be always checked */
-				if(isset($objectSettings['settings'][$fieldName]))
-				{
-					$userValue = $objectSettings['settings'][$fieldName];
-				}
-
-				/* now overwrite them with the local stored user settings */
-				if(isset($userSettings[$objectType][$objectName][$fieldName]))
-				{
-					$userValue = $userSettings[$objectType][$objectName][$fieldName];
-				}
-
-				/* overwrite it with old input in form, if exists */
-				if(isset($_SESSION['old'][$objectName][$fieldName]))
-				{
-					$userValue = $_SESSION['old'][$objectName][$fieldName];
-				}
-			
-				/* now we have set the uservalue for the field. Prepopulate the field object with it now */
-				if($field->getType() == "textarea")
-				{
-					if($userValue)
-					{
-						$field->setContent($userValue);
-					}
-				}
-				elseif($field->getType() == "checkbox")
-				{
-					/* needs special treatment, because field does not exist in settings if unchecked by user */
-					if(isset($userSettings[$objectType][$objectName][$fieldName]))
-					{
-						$field->setAttribute('checked', 'checked');
-					}
-					else
-					{
-						$field->unsetAttribute('checked');
-					}
-				}
-				else
-				{
-					$field->setAttributeValue('value', $userValue);	
-				}
-
-				/* add the field to the field-List with the plugin-name as key */
-				$fields[] = $field;
-
-			}
-		}
-		
-		return $fields;
-	}	
 
 	/*************************************
 	**	SAVE THEME- AND PLUGIN-SETTINGS	**

@@ -3,6 +3,7 @@
 namespace Typemill;
 
 use \Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Typemill\Models\Fields;
 
 abstract class Plugin implements EventSubscriberInterface
 {	
@@ -83,5 +84,21 @@ abstract class Plugin implements EventSubscriberInterface
 	protected function addInlineCSS($CSS)
 	{
 		$this->container->assets->addInlineCSS($CSS);		
+	}
+	
+	protected function generateForm($pluginName)
+	{
+		$fieldsModel = new Fields();
+		
+		$pluginDefinitions = \Typemill\Settings::getObjectSettings('plugins', $pluginName);
+				
+		if(isset($pluginDefinitions['frontend']['fields']))
+		{
+			# get all the fields and prefill them with the dafault-data, the user-data or old input data
+			$fields = $fieldsModel->getFields($userSettings = false, 'plugins', $pluginName, $pluginDefinitions, 'frontend');
+
+			# use the field-objects to generate the html-fields
+			
+		}
 	}
 }

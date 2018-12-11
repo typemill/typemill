@@ -19,6 +19,7 @@ class ContactForm extends Plugin
 		);
     }
 
+	# add the path for session and csrf-protection
 	public function onSessionSegmentsLoaded($segments)
 	{
 		$this->pluginSettings = $this->getPluginSettings('contactform');
@@ -31,12 +32,12 @@ class ContactForm extends Plugin
 		}
 	}
 	
+	# get the original html without manipulations
 	public function onOriginalLoaded($original)
-	{		
+	{
 		if(substr($this->getPath(), 0, strlen($this->pluginSettings['area'])) === $this->pluginSettings['area'])
 		{
-			# get original html without manipulations
-			$this->originalHtml = $original->getHTML();
+			$this->originalHtml = $original->getHTML($urlrel = false);
 		}
 	}
 	
@@ -48,6 +49,11 @@ class ContactForm extends Plugin
 			
 			if($this->getPath() == $this->pluginSettings['page'])
 			{
+				
+				
+				$this->generateForm('contactform');
+				
+				
 				# add css 
 				# $this->addCSS('/textadds/css/textadds.css');
 
