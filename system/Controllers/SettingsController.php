@@ -19,8 +19,7 @@ class SettingsController extends Controller
 		$settings 	= $this->c->get('settings');
 		$copyright	= $this->getCopyright();
 		$languages	= $this->getLanguages();
-		$locale		= explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
-		$locale		= $locale[0];
+		$locale		= isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? substr($_SERVER["HTTP_ACCEPT_LANGUAGE"],0,2) : 'en';
 		$users		= $user->getUsers();
 		$route 		= $request->getAttribute('route');
 		
