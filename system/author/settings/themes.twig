@@ -50,13 +50,13 @@
 											<fieldset class="subfield">
 												<legend>{{ field.legend }}</legend>
 												{% for field in field.fields %}
-													{% include '/partials/forms.twig' with {'itemName' : themeName, 'object' : 'themes' } %}
+													{% include '/partials/fields.twig' with {'itemName' : themeName, 'object' : 'themes' } %}
 												{% endfor %}
 											</fieldset>
 											
 										{% else %}
 										
-											{% include '/partials/forms.twig' with {'itemName' : themeName, 'object' : 'themes' } %}
+											{% include '/partials/fields.twig' with {'itemName' : themeName, 'object' : 'themes' } %}
 								
 										{% endif %}
 								
@@ -70,7 +70,7 @@
 										<button type="button" class="theme-button fc-settings{{ (settings.theme == themeName) ? ' active' : '' }}{{ theme.forms.fields|length > 0 ? ' has-settings' : ' no-settings'}}">{{ theme.forms.fields|length > 0 ? 'Settings <span class="button-arrow"></span>' : 'No Settings'}}</button>
 									</div>
 									<div class="medium">
-										<input type="submit" value="Save Theme" />								
+										<input type="submit" value="Save Theme" />
 									</div>
 								</div>								
 							</div>
@@ -85,8 +85,6 @@
 
 			</section>
 			
-		</form>
-	
 	</div>
 	
 {% endblock %}

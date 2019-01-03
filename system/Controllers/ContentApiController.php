@@ -856,7 +856,7 @@ class ContentApiController extends ContentController
 		
 		$imageProcessor	= new ProcessImage();
 		
-		if($imageProcessor->createImage($this->params['image'], $this->settings['images'], $name = false))
+		if($imageProcessor->createImage($this->params['image'], $this->settings['images']))
 		{
 			return $response->withJson(array('errors' => false));		
 		}
@@ -867,7 +867,7 @@ class ContentApiController extends ContentController
 	public function publishImage(Request $request, Response $response, $args)
 	{
 		$params 		= $request->getParsedBody();
-						
+
 		$imageProcessor	= new ProcessImage();
 		
 		$imageUrl 		= $imageProcessor->publishImage($this->settings['images'], $name = false);
@@ -881,5 +881,73 @@ class ContentApiController extends ContentController
 		}
 
 		return $response->withJson(array('errors' => 'could not store image to temporary folder'));	
+	}
+
+	public function saveVideoImage(Request $request, Response $response, $args)
+	{
+		/* get params from call */
+		$this->params 	= $request->getParams();
+		$this->uri 		= $request->getUri();
+		$class			= false;
+
+		$imageUrl		= $this->params['markdown'];
+		
+		if(strpos($imageUrl, 'https://www.youtube.com/watch?v=') !== false)
+		{
+			$videoID 	= str_replace('https://www.youtube.com/watch?v=', '', $imageUrl);
+			$videoID 	= strpos($videoID, '&') ? substr($videoID, 0, strpos($videoID, '&')) : $videoID;
+			$class		= 'youtube';
+		}
+		if(strpos($imageUrl, 'https://youtu.be/') !== false)
+		{
+			$videoID 	= str_replace('https://youtu.be/', '', $imageUrl);
+			$videoID	= strpos($videoID, '?') ? substr($videoID, 0, strpos($videoID, '?')) : $videoID;
+			$class		= 'youtube';
+		}
+		
+		if($class == 'youtube')
+		{
+			$videoURLmaxres = 'https://i1.ytimg.com/vi/' . $videoID . '/maxresdefault.jpg';
+			$videoURL0 = 'https://i1.ytimg.com/vi/' . $videoID . '/0.jpg';
+		}
+
+		$ctx = stream_context_create(array(
+			'https' => array(
+				'timeout' => 1
+				)
+			)
+		);
+		
+		$imageData		= @file_get_contents($videoURLmaxres, 0, $ctx);
+		if($imageData === false)
+		{
+			$imageData	= @file_get_contents($videoURL0, 0, $ctx);
+			if($imageData === false)
+			{
+				return $response->withJson(array('errors' => 'could not get the video image'));
+			}
+		}
+		
+		$imageData64	= 'data:image/jpeg;base64,' . base64_encode($imageData);
+		$desiredSizes	= ['live' => ['width' => 560, 'height' => 315]];
+		$imageProcessor	= new ProcessImage();
+		$tmpImage		= $imageProcessor->createImage($imageData64, $desiredSizes);
+		
+		if(!$tmpImage)
+		{
+			return $response->withJson(array('errors' => 'could not create temporary image'));			
+		}
+		
+		$imageUrl 		= $imageProcessor->publishImage($desiredSizes, $videoID);
+		if($imageUrl)
+		{
+			$this->params['markdown'] = '![' . $class . '-video](' . $imageUrl . ' "click to load video"){#' . $videoID. ' .' . $class . '}';
+
+			$request 	= $request->withParsedBody($this->params);
+			
+			return $this->updateBlock($request, $response, $args);
+		}
+
+		return $response->withJson(array('errors' => 'could not store the preview image'));	
 	}
 }

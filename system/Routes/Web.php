@@ -1,6 +1,7 @@
 <?php
 
 use Typemill\Controllers\PageController;
+use Typemill\Controllers\FormController;
 use Typemill\Controllers\SetupController;
 use Typemill\Controllers\AuthController;
 use Typemill\Controllers\SettingsController;
@@ -26,6 +27,8 @@ else
 {
 	$app->get('/setup/welcome', AuthController::class . ':redirect')->setName('setup.welcome');	
 }
+
+$app->post('/tm/formpost', FormController::class . ':savePublicForm')->setName('form.save');
 
 $app->get('/tm', AuthController::class . ':redirect');
 $app->get('/tm/login', AuthController::class . ':show')->setName('auth.show')->add(new RedirectIfAuthenticated($container['router']));

@@ -22,7 +22,7 @@ const contentComponent = Vue.component('content-block', {
 			this.compmarkdown = $event;
 			this.$nextTick(function () {
 				this.$refs.preview.style.minHeight = this.$refs.component.offsetHeight + 'px';
-			});			
+			});
 		},
 		switchToEditMode: function()
 		{
@@ -35,9 +35,22 @@ const contentComponent = Vue.component('content-block', {
 			this.edit = true;										/* show the edit-mode */
 			this.compmarkdown = self.$root.$data.blockMarkdown;		/* get markdown data */
 			this.componentType = self.$root.$data.blockType;		/* get block-type of element */
-			this.$nextTick(function () {
-				this.$refs.preview.style.minHeight = this.$refs.component.offsetHeight + 'px';
-			});
+			if(this.componentType == 'image-component')
+			{
+				setTimeout(function(){ 
+					self.$nextTick(function () 
+					{
+						self.$refs.preview.style.minHeight = self.$refs.component.offsetHeight + 'px';
+					});
+				}, 200);				
+			}
+			else
+			{
+				this.$nextTick(function () 
+				{
+					this.$refs.preview.style.minHeight = self.$refs.component.offsetHeight + 'px';
+				});				
+			}
 		},
 		closeComponents: function()
 		{
@@ -80,7 +93,7 @@ const contentComponent = Vue.component('content-block', {
 			if(self.$root.$data.blockType != '')
 			{
 				this.switchToEditMode();
-			}			
+			}
 		},
  		submitBlock: function(){
 			var emptyline = /^\s*$(?:\r\n?|\n)/gm;
@@ -99,8 +112,6 @@ const contentComponent = Vue.component('content-block', {
 		},
 		saveBlock: function()
 		{	
-			console.log(this.compmarkdown);
-		
 			if(this.compmarkdown == undefined || this.compmarkdown.replace(/(\r\n|\n|\r|\s)/gm,"") == '')
 			{
 				this.switchToPreviewMode();	
@@ -115,6 +126,11 @@ const contentComponent = Vue.component('content-block', {
 				{
 					var url = self.$root.$data.root + '/api/v1/image';
 					var method 	= 'PUT';
+				}
+				else if(this.componentType == 'video-component')
+				{
+					var url = self.$root.$data.root + '/api/v1/video';
+					var method = 'POST';
 				}
 				else
 				{
@@ -268,7 +284,20 @@ const titleComponent = Vue.component('title-component', {
 
 const imageComponent = Vue.component('image-component', {
 	props: ['compmarkdown', 'disabled'],
-	template: '<div class="dropbox"><input type="hidden" ref="markdown" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown"><input type="file" name="image" accept="image/*" class="input-file" @change="onFileChange( $event )"><p>drag a picture or click to select</p><img class="uploadPreview" :src="imgpreview" /><div v-if="load" class="loadwrapper"><span class="load"></span></div><div class="imgmeta" v-if="imgmeta"><label for="imgalt">Alt-Text: </label><input name="imgalt" type="text" placeholder="alt" @input="createmarkdown" v-model="imgalt" max="100"/><label for="imgtitle">Title: </label><input name="imgtitle" type="text" placeholder="title" v-model="imgtitle" @input="createmarkdown" max="64" /><label for="imgcaption">Caption: </label><input title="imgcaption" type="text" placeholder="caption" v-model="imgcaption" @input="createmarkdown" max="140" /><label for="imgurl">Link: </label><input title="imgurl" type="url" placeholder="url" v-model="imglink" @input="createmarkdown" /></div></div>',
+	template: '<div class="dropbox">' +
+				'<input type="hidden" ref="markdown" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown" />' +
+				'<input type="file" name="image" accept="image/*" class="input-file" @change="onFileChange( $event )" /> ' +
+				'<p>drag a picture or click to select</p>' +
+				'<img class="uploadPreview" :src="imgpreview" />' +
+				'<div v-if="load" class="loadwrapper"><span class="load"></span></div>' +
+				'<div class="imgmeta" v-if="imgmeta">' +
+				'<label for="imgalt">Alt-Text: </label><input name="imgalt" type="text" placeholder="alt" @input="createmarkdown" v-model="imgalt" max="100" />' +
+				'<label for="imgtitle">Title: </label><input name="imgtitle" type="text" placeholder="title" v-model="imgtitle" @input="createmarkdown" max="64" />' +
+				'<label for="imgcaption">Caption: </label><input title="imgcaption" type="text" placeholder="caption" v-model="imgcaption" @input="createmarkdown" max="140" />' +
+				'<label for="imgurl">Link: </label><input title="imgurl" type="url" placeholder="url" v-model="imglink" @input="createmarkdown" />' +
+				'<label for="imgclass">Class: </label><select title="imgclass" v-model="imgclass" @change="createmarkdown"><option value="center">Center</option><option value="left">Left</option><option value="right">Right</option><option value="youtube">Youtube</option><option value="vimeo">Vimeo</option></select>' +
+				'<input title="imgid" type="hidden" placeholder="id" v-model="imgid" @input="createmarkdown" max="140" />' +
+				'</div></div>',
 	data: function(){
 		return {
 			maxsize: 5, // megabyte
@@ -279,19 +308,21 @@ const imageComponent = Vue.component('image-component', {
 			imgtitle: '',
 			imgcaption: '',
 			imglink: '',
+			imgclass: 'center',
+			imgid: '',
 			imgfile: 'imgplchldr',
 		}
 	},
 	mounted: function(){
-		// autosize(document.querySelector('textarea'));
-		this.$refs.markdown.focus();
 		
+		this.$refs.markdown.focus();
+				
 		if(this.compmarkdown)
-		{			
+		{
 			this.imgmeta = true;
 			
 			var imgmarkdown = this.compmarkdown;
-						
+									
 			var imgcaption = imgmarkdown.match(/\*.*?\*/);
 			if(imgcaption){
 				this.imgcaption = imgcaption[0].slice(1,-1);
@@ -322,6 +353,25 @@ const imageComponent = Vue.component('image-component', {
 			{
 				this.imgalt = imgalt[0].slice(1,-1);
 			}
+
+			var imgattr = imgmarkdown.match(/\{.*?\}/);
+			if(imgattr)
+			{
+				imgattr = imgattr[0].slice(1,-1);
+				imgattr = imgattr.split(' ');
+				for (var i = 0; i < imgattr.length; i++)
+				{
+					if(imgattr[i].charAt(0) == '.')
+					{
+						this.imgclass = imgattr[i].slice(1);
+					}
+					else if(imgattr[i].charAt(0)  == '#')
+					{
+						this.imgid = imgattr[i].slice(1);
+					}
+				}
+			}
+
 			var imgpreview = imgmarkdown.match(/\(.*?\)/);
 			if(imgpreview)
 			{
@@ -331,13 +381,20 @@ const imageComponent = Vue.component('image-component', {
 		}
 	},
 	methods: {
+		isChecked: function(classname)
+		{
+			if(this.imgclass == classname)
+			{
+				return ' checked';
+			}
+		},
 		updatemarkdown: function(event)
 		{
 			this.$emit('updatedMarkdown', event.target.value);
 		},
 		createmarkdown: function()
 		{
-			errors = false;
+			var errors = false;
 			
 			if(this.imgalt.length < 101)
 			{
@@ -365,6 +422,34 @@ const imageComponent = Vue.component('image-component', {
 				imgmarkdown = imgmarkdown + '(' + this.imgfile + ')';		
 			}
 			
+			var imgattr = '';
+			if(this.imgid != '')
+			{
+				if(this.imgid.length < 100)
+				{
+					imgattr = imgattr + '#' + this.imgid + ' '; 
+				}
+				else
+				{
+					errors = 'Maximum size of image id is 100 characters';
+				}
+			}
+			if(this.imgclass != '')
+			{
+				if(this.imgclass.length < 100)
+				{
+					imgattr = imgattr + '.' + this.imgclass; 
+				}
+				else
+				{
+					errors = 'Maximum size of image class is 100 characters';
+				}
+			}
+			if(this.imgid != '' || this.imgclass != '')
+			{
+				imgmarkdown = imgmarkdown + '{' + imgattr + '}';
+			}
+			
 			if(this.imglink != '')
 			{
 				if(this.imglink.length < 101)
@@ -376,7 +461,7 @@ const imageComponent = Vue.component('image-component', {
 					errors = 'Maximum size of image link is 100 characters';
 				}
 			}
-			
+						
 			if(this.imgcaption != '')
 			{
 				if(this.imgcaption.length < 140)
@@ -388,7 +473,7 @@ const imageComponent = Vue.component('image-component', {
 					errors = 'Maximum size of image caption is 140 characters';
 				}
 			}
-			
+						
 			if(errors)
 			{
 				this.$parent.freezePage();
@@ -470,6 +555,20 @@ const imageComponent = Vue.component('image-component', {
 			}
 		}
 	}
+})
+
+const videoComponent = Vue.component('video-component', {
+	props: ['compmarkdown', 'disabled', 'load'],
+	template: '<div class="video dropbox">' +
+				'<label for="video">Link to video: </label><input type="url" ref="markdown" placeholder="https://www.youtube.com/watch?v=" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown">' +
+				'<div v-if="load" class="loadwrapper"><span class="load"></span></div>' +
+				'</div>',
+	methods: {
+		updatemarkdown: function(event)
+		{
+			this.$emit('updatedMarkdown', event.target.value);
+		},
+	},
 })
 
 const tableComponent = Vue.component('table', { 

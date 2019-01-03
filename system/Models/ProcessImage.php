@@ -3,7 +3,7 @@ namespace Typemill\Models;
 
 class ProcessImage
 {
-	public function createImage(string $image, array $desiredSizes, $name)
+	public function createImage(string $image, array $desiredSizes)
 	{
 		# fix error from jpeg-library
 		ini_set ('gd.jpeg_ignore_warning', 1);
@@ -60,7 +60,7 @@ class ProcessImage
 		return false;
 	}
 	
-	public function publishImage(array $desiredSizes)
+	public function publishImage(array $desiredSizes, $name = false)
 	{
 		/* get images from tmp folder */
 		$basePath		= getcwd() . DIRECTORY_SEPARATOR . 'media';
@@ -71,7 +71,7 @@ class ProcessImage
 		if(!file_exists($originalFolder)){ mkdir($originalFolder, 0774, true); }
 		if(!file_exists($liveFolder)){ mkdir($liveFolder, 0774, true); }
 
-		$name 			= uniqid();
+		$name 			= $name ? $name : uniqid();
 		
 		$files 			= scandir($tmpFolder);
 		$success		= true;

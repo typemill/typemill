@@ -121,7 +121,7 @@ class SettingsController extends Controller
 		$user		= new User();
 		$users		= $user->getUsers();
 		$route 		= $request->getAttribute('route');
-	
+		
 		$this->render($response, 'settings/themes.twig', array('settings' => $userSettings, 'themes' => $themedata, 'users' => $users, 'route' => $route->getName() ));
 	}
 	
@@ -241,7 +241,7 @@ class SettingsController extends Controller
 			$pluginSettings	= array();
 			$userInput 		= $request->getParams();
 			$validate		= new Validation();
-
+			
 			/* use the stored user settings and iterate over all original plugin settings, so we do not forget any... */
 			foreach($userSettings['plugins'] as $pluginName => $pluginUserSettings)
 			{
@@ -323,7 +323,7 @@ class SettingsController extends Controller
 				if(!$fieldDefinition && $fieldName != 'active')
 				{
 					$_SESSION['errors'][$objectName][$fieldName] = array('This field is not defined!');
-				}				
+				}
 			}
 		}
 	}

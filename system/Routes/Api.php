@@ -22,3 +22,5 @@ $app->put('/api/v1/moveblock', ContentApiController::class . ':moveBlock')->setN
 
 $app->post('/api/v1/image', ContentApiController::class . ':createImage')->setName('api.image.create')->add(new RestrictApiAccess($container['router']));
 $app->put('/api/v1/image', ContentApiController::class . ':publishImage')->setName('api.image.publish')->add(new RestrictApiAccess($container['router']));
+
+$app->post('/api/v1/video', ContentApiController::class . ':saveVideoImage')->setName('api.video.save')->add(new RestrictApiAccess($container['router']));

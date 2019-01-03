@@ -1,7 +1,11 @@
 <div class="chapter">
 	
-	<div class="chapterNumber">{{ settings.themes.typemill.chapter ? settings.themes.typemill.chapter : 'Chapter'}} {{ item.chapter }}</div>
-
+	{% if settings.themes.typemill.chapter %}
+	
+		<div class="chapterNumber">{{ settings.themes.typemill.chapter }} {{ item.chapter }}</div>
+	
+	{% endif %}
+	
 	{% if content is empty %}
 	
 		<h1>{{ item.name }}</h1>

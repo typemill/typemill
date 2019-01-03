@@ -88,7 +88,6 @@ class Settings
 		
 		if($userSettings)
 		{
-			
 			$yaml 		= new Models\WriteYaml();
 			$settings 	= array_merge($userSettings, $settings);
 			

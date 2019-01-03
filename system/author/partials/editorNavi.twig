@@ -42,7 +42,7 @@
 
 {% verbatim %}
 	<template id="navigation-template">
-		<li class="navi-item" :class="elementtype"><a v-bind:href="getUrl(root, url)" :class="checkActive(active,parent)"><i :class="getIcon(elementtype, filetype)"></i><span :class="getLevel(level)">{{ name }}</span><i class="icon-resize-full-alt"></i></a>
+		<li class="navi-item" :class="elementtype"><a v-bind:href="getUrl(root, url)" :class="checkActive(active,parent)"><i :class="getIcon(elementtype, filetype)"></i><span :class="getLevel(level)">{{ name }}</span><i class="icon-move"></i></a>
 			<draggable v-if="folder" :element="'ul'" class="navi-list" :list="folder" :move="checkMove" @start="onStart" @end="onEnd" :options="{group:{ name:'file'}, animation: 150, 'disabled': freeze }">
 				<navigation ref="draggit" v-for="item in folder" :freeze="freeze" :name="item.name" :active="item.active" :parent="item.activeParent" :level="item.keyPath" :url="item.urlRelWoF" :root="root" v-bind:id="item.keyPath" :key="item.keyPath" :filetype="item.fileType" :elementtype="item.elementType" :folder="item.folderContent"></navigation>
 			</draggable>

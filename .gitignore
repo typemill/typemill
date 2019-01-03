@@ -5,9 +5,12 @@ plugins/demo
 plugins/disqus
 plugins/download
 plugins/finalwords
+plugins/joblistings
+plugins/mail
 plugins/textadds
 plugins/version
 settings/settings.yaml
+settings/formdata.yaml
 settings/users
 system/vendor
 tests

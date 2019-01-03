@@ -4,6 +4,8 @@ namespace Typemill;
 
 use \Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Typemill\Models\Fields;
+use Typemill\Models\WriteYaml;
+use Typemill\Extensions\ParsedownExtension;
 
 abstract class Plugin implements EventSubscriberInterface
 {	
@@ -65,7 +67,7 @@ abstract class Plugin implements EventSubscriberInterface
 		$function = new \Twig_SimpleFunction($name, $function);
 		$this->container->view->getEnvironment()->addFunction($function);
 	}
-	
+		
 	protected function addJS($JS)
 	{
 		$this->container->assets->addJS($JS);
@@ -86,19 +88,63 @@ abstract class Plugin implements EventSubscriberInterface
 		$this->container->assets->addInlineCSS($CSS);		
 	}
 	
+	protected function markdownToHtml($markdown)
+	{
+		$parsedown 		= new ParsedownExtension();
+		
+		$contentArray 	= $parsedown->text($markdown);
+		$html			= $parsedown->markup($contentArray,false);
+		
+		return $html;
+	}
+	
+	protected function getFormData($pluginName)
+	{
+		$flash = $this->container->flash->getMessages();
+		if(isset($flash['formdata']))
+		{
+			$yaml 		= new Models\WriteYaml();
+			$formdata 	= $yaml->getYaml('settings', 'formdata.yaml');
+			$yaml->updateYaml('settings', 'formdata.yaml', '');
+			
+			if($flash['formdata'][0] == $pluginName && isset($formdata[$pluginName]))
+			{
+				return $formdata[$pluginName];
+			}
+		}
+		return false;
+	}
+	
 	protected function generateForm($pluginName)
 	{
 		$fieldsModel = new Fields();
 		
-		$pluginDefinitions = \Typemill\Settings::getObjectSettings('plugins', $pluginName);
-				
-		if(isset($pluginDefinitions['frontend']['fields']))
+		$pluginDefinitions 	= \Typemill\Settings::getObjectSettings('plugins', $pluginName);
+		$settings 			= $this->getSettings();
+		$buttonlabel		= isset($settings['plugins'][$pluginName]['button_label']) ? $settings['plugins'][$pluginName]['button_label'] : false;
+		
+		if(isset($pluginDefinitions['public']['fields']))
 		{
+			# add simple honeypot spam protection
+			$pluginDefinitions['public']['fields']['personal-mail'] = ['type' => 'text', 'class' => 'personal-mail'];
+	
+			/* 
+			# add spam protection questions
+			$spamanswers = ['Albert', 'kalt', 'Gelb'];
+			shuffle($spamanswers);
+			$pluginDefinitions['public']['fields']['spamquestion'] = ['type' => 'checkboxlist', 'label' => 'Der Vorname von Einstein lautet', 'required' => true, 'options' => $spamanswers];
+			*/
+				
 			# get all the fields and prefill them with the dafault-data, the user-data or old input data
-			$fields = $fieldsModel->getFields($userSettings = false, 'plugins', $pluginName, $pluginDefinitions, 'frontend');
+			$fields = $fieldsModel->getFields($settings, 'plugins', $pluginName, $pluginDefinitions, 'public');
 
-			# use the field-objects to generate the html-fields
-			
+			# get Twig Instance
+			$twig 	= $this->getTwig();
+
+			# render each field and add it to the form
+			$form = $twig->fetch('/partials/form.twig', ['fields' => $fields, 'itemName' => $pluginName, 'object' => 'plugins', 'buttonlabel' => $buttonlabel]);
 		}
+		
+		return $form;
 	}
 }

@@ -339,7 +339,44 @@ article img.middle{
 	max-width: 100%;
 	margin: auto;
 }
-
+article img.youtube{
+	position: relative;
+	max-width: 560px;
+}
+article .video-container{
+	position: relative;
+	text-align: center;
+}
+article button.play-video { 
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: -50px;
+	margin-left: -50px;
+	height: 100px;
+	width: 100px;
+	background: #e0474c;
+	color: #FFFFFF;
+	border-radius: 50%;
+	border: 0px;
+	padding: 0;
+	text-align: center;
+}
+article button.play-video:hover {
+	background: #cc4146;
+	cursor: pointer;
+}
+article button.play-video::after {
+	position: absolute;
+	top: 50%;
+	margin: -20px 0 0 -15px;
+	height: 0;
+	width: 0;
+	border-style: solid;
+	border-width: 20px 0 20px 40px;
+	border-color: transparent transparent transparent rgba(255, 255, 255, 0.75);
+	content: ' ';
+}
 
 /************************
 *  	PAGING / BREADCRUMB *
@@ -730,8 +767,8 @@ img.myClass{
 	header p{
 		margin: 20px 0;
 	}
-	.chapterNumber{
-		margin:	40px 0px 0px;
+	.chapter{
+		margin:	60px 0px 0px;
 	}
 	.close{ 
 		display: block;

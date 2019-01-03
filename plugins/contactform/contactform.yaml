@@ -6,91 +6,89 @@ homepage: https://typemill.net
 licence: MIT
 
 settings:
-  page: ''
-  name: 'Name: '
-  email: 'E-Mail: '
-  subject: 'Subject: '
-  message: 'Message: '
-  button: 'Send Message'
+  message_success: "## Thank you!\r\n\r\nWe got your message and will answer as soon as possible."
+  message_error: "## Error\r\n\r\nWe could not send your message. Please send your e-mail manually."
 
 forms:
   fields:
 
-    page:
+    mailto:
+      type: email
+      label: Your e-mail-address
+      required: true
+
+    page_value:
       type: text
-      label: Path to the page where to show the form
+      label: Path to page where to include the form
       placeholder: 'path/to/page'
       required: true
 
-    area:
-      type: text
-      label: Path to the area with original content
-      placeholder: 'path/to/rootpage'
-      required: true
-
-    name:
+    name_label:
       type: text
       label: Label for Name Input Field
-      placeholder: 'Name: '
       required: true
 
-    email:
+    email_label:
       type: text
       label: Label for E-Mail-Field
-      placeholder: 'E-Mail: '
       required: true
 
-    subject:
+    subject_label:
       type: text
       label: Label for Subject-Field
-      placeholder: 'Subject: '
       required: true
 
-    message:
+    message_label:
       type: text
       label: Label for Message
-      placeholder: 'Message: '
       required: true
 
-    button:
+    button_label:
       type: text
       label: Label for Button
       placeholder: 'Send Message'
       required: true
 
-    hint:
+    legalnotice:
       type: textarea
+      rows: 5;
       label: Text below button (use markdown)
       placeholder: 'Add your legal text or other hints here'
 
-frontend:
+    message_success:
+      type: textarea
+      rows: 5;
+      label: Message if mail is send (use markdown)
+      placeholder: 'Add your legal text or other hints here'
+
+    message_error:
+      type: textarea
+      rows: 5;
+      label: Message if mail failed (use markdown)
+      placeholder: 'Add your legal text or other hints here'
+
+public:
   fields:
 
     name:
       type: text
-      label: Label for Name Input Field
-      placeholder: 'Name: '
+      label: name_label
       required: true
 
     email:
-      type: text
-      label: Label for E-Mail-Field
-      placeholder: 'E-Mail: '
+      type: email
+      label: email_label
       required: true
 
     subject:
       type: text
-      label: Label for Subject-Field
-      placeholder: 'Subject: '
+      label: subject_label
       required: true
 
     message:
-      type: text
-      label: Label for Message
-      placeholder: 'Message: '
+      type: textarea
+      label: message_label
       required: true
 
-    hint:
-      type: textarea
-      label: Text below button (use markdown)
-      placeholder: 'Add your legal text or other hints here'
+    legalnotice:
+      type: paragraph

@@ -44,7 +44,8 @@ class Field
 									'url',
 									'week',
 									'textarea',
-									'select'
+									'select',
+									'paragraph'
 								);
 								
 	/* defines all boolean attributes, that are allowed for fields */
@@ -80,20 +81,17 @@ class Field
 	{
 		$this->setName($fieldName);
 		
-		if(isset($fieldConfigs['type']))
-		{
-			$this->setType($fieldConfigs['type']);
-		}
+		$type = isset($fieldConfigs['type']) ? $fieldConfigs['type'] : false;
+		$this->setType($type);
+
+		$label = isset($fieldConfigs['label']) ? $fieldConfigs['label'] : false;
+		$this->setLabel($label);
+
+		$checkboxlabel = isset($fieldConfigs['checkboxlabel']) ? $fieldConfigs['checkboxlabel'] : false;
+		$this->setCheckboxLabel($checkboxlabel);
 		
-		if(isset($fieldConfigs['label']))
-		{
-			$this->setLabel($fieldConfigs['label']);
-		}
-				
-		if(isset($fieldConfigs['options']))
-		{
-			$this->setOptions($fieldConfigs['options']);
-		}
+		$options = isset($fieldConfigs['options']) ? $fieldConfigs['options'] : array();
+		$this->setOptions($options);
 		
 		$this->setAttributes($fieldConfigs);
 		
@@ -125,7 +123,7 @@ class Field
 		return $this->type;
 	}
 	
-	private function setLabel($label)
+	public function setLabel($label)
 	{
 		$this->label = $label;
 	}
@@ -133,6 +131,16 @@ class Field
 	public function getLabel()
 	{
 		return $this->label;
+	}
+
+	public function setCheckboxLabel($label)
+	{
+		$this->checkboxLabel = $label;
+	}
+
+	public function getCheckboxLabel()
+	{
+		return $this->checkboxLabel;
 	}
 	
 	public function setContent($content)
@@ -177,7 +185,7 @@ class Field
 	public function getAttributes()
 	{
 		$string = false;
-		
+				
 		foreach($this->attributes as $key => $attribute)
 		{
 			$string .= ' ' . $key;

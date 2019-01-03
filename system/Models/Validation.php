@@ -312,7 +312,6 @@ class Validation
 	{	
 		$v = new Validator(array($fieldName => $fieldValue));
 
-		
 		if(isset($fieldDefinitions['required']))
 		{
 			$v->rule('required', $fieldName);
@@ -364,11 +363,18 @@ class Validation
 				$v->rule('noHTML', $fieldName);
 				// $v->rule('regex', $fieldName, '/<[^<]+>/');
 				break;
+			case "paragraph":
+				$v->rule('lengthMax', $fieldName, 1000);
+				$v->rule('noHTML', $fieldName);
+				break;
+			case "password":
+				$v->rule('lengthMax', $fieldName, 100);
+				break;
 			default:
 				$v->rule('lengthMax', $fieldName, 1000);
 				$v->rule('regex', $fieldName, '/^[\pL0-9_ \-]*$/u');				
 		}
-		
+
 		return $this->validationResult($v, $objectName);
 	}
 	
