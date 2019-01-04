@@ -170,7 +170,7 @@ class PageController extends Controller
 			{
 				preg_match('#\[(.*?)\]#', $firstImage, $img_alt);
 				
-				$firstImage = array('img_url' => $base_url . $img_url[1], 'img_alt' => $img_alt[1]);
+				$firstImage = array('img_url' => $base_url . '/' . $img_url[1], 'img_alt' => $img_alt[1]);
 			}
 		}
 		
