@@ -31,6 +31,20 @@ class Fields
 			}
 			else
 			{
+				# For label, helptext and description you can use the value of another field. This is useful e.g. to localize the label of public forms via plugin settings.
+				if(isset($fieldConfigurations['label']) && isset($userSettings[$objectType][$objectName][$fieldConfigurations['label']]))
+				{
+					$fieldConfigurations['label'] = $userSettings[$objectType][$objectName][$fieldConfigurations['label']];
+				}
+				if(isset($fieldConfigurations['help']) && isset($userSettings[$objectType][$objectName][$fieldConfigurations['help']]))
+				{
+					$fieldConfigurations['help'] = $userSettings[$objectType][$objectName][$fieldConfigurations['help']];
+				}
+				if(isset($fieldConfigurations['description']) && isset($userSettings[$objectType][$objectName][$fieldConfigurations['description']]))
+				{
+					$fieldConfigurations['description'] = $userSettings[$objectType][$objectName][$fieldConfigurations['description']];
+				}
+
 				# for each field generate a new field object with the field name and the field configurations
 				$field = new Field($fieldName, $fieldConfigurations);
 				
@@ -64,23 +78,22 @@ class Fields
 					}
 				}
 				elseif($field->getType() == "checkbox")
-				{
+				{					
 					# checkboxes need a special treatment, because field does not exist in settings if unchecked by user
-					if(!isset($userSettings[$objectType][$objectName][$fieldName]))
+					if(isset($userSettings[$objectType][$objectName][$fieldName]))
 					{
-						$field->unsetAttribute('checked');						
+						$field->setAttribute('checked', 'true');						
+					}
+					else
+					{
+						$field->unsetAttribute('chhecked');
 					}
 				}
 				else
-				{
+				{					
 					$field->setAttributeValue('value', $userValue);	
 				}
-				
-				if(isset($fieldConfigurations['label']) && isset($userSettings[$objectType][$objectName][$fieldConfigurations['label']]))
-				{
-					$field->setLabel($userSettings[$objectType][$objectName][$fieldConfigurations['label']]);
-				}
-				
+								
 				# add the field to the field-List
 				$fields[] = $field;
 

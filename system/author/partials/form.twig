@@ -1,3 +1,8 @@
+{% if recaptcha_webkey %}
+	
+	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+{% endif %}
 <form method="POST" action="{{ path_for('form.save') }}">
 
 	<fieldset class="card{{ errors[itemName] ? ' errors' : '' }}">
@@ -24,7 +29,11 @@
 		{% endfor %}
 				
 		{{ csrf_field() | raw }}
-
+				
+		{% if recaptcha_webkey %}
+			<p><div class="g-recaptcha" data-sitekey="{{ recaptcha_webkey }}"></div></p>
+		{% endif %}
+		
 		<input type="submit" value="{{ buttonlabel ? buttonlabel : 'send' }}" />
 		
 		<style>.personal-mail{display:none}</style>

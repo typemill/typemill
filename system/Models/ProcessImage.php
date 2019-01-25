@@ -145,14 +145,6 @@ class ProcessImage
 	{
 		$copiedImages			= array();
 		$source_aspect_ratio 	= $imageSize['width'] / $imageSize['height'];
-
-		#check transparency
-		$transparent_index		= false;
-
-		if ($imageType = ("png" || "gif"))
-		{
-			$transparent_index 	= imagecolortransparent($imageData);
-		}
 				
 		foreach($desiredSizes as $key => $desiredSize)
 		{
@@ -172,25 +164,27 @@ class ProcessImage
 				$temp_height 	= ( int ) ($desiredSize['width'] / $source_aspect_ratio);
 				$temp_height 	= round($temp_height, 0);
 			}
-			
+
 			# Create a temporary GD image with desired size
 			$temp_gdim = imagecreatetruecolor( $temp_width, $temp_height );
 
-			if ($transparent_index >= 0 && $imageType == "gif")
-			{  	
+			if ($imageType == "gif")
+			{
+				$transparent_index 	= imagecolortransparent($imageData);
 				imagepalettecopy($imageData, $temp_gdim);
 				imagefill($temp_gdim, 0, 0, $transparent_index);
 				imagecolortransparent($temp_gdim, $transparent_index);
 				imagetruecolortopalette($temp_gdim, true, 256);
 			}
-			elseif($transparent_index >= 0 && $imageType == "png")
+			elseif($imageType == "png")
 			{ 
 				imagealphablending($temp_gdim, false);
-				imagesavealpha($temp_gdim,true);
+				imagesavealpha($temp_gdim, true);
 				$transparent = imagecolorallocatealpha($temp_gdim, 255, 255, 255, 127);
 				imagefilledrectangle($temp_gdim, 0, 0, $temp_width, $temp_height, $transparent);
 			}
 			
+			# resize image
 			imagecopyresampled(
 				$temp_gdim,
 				$imageData,
@@ -200,36 +194,42 @@ class ProcessImage
 				$imageSize['width'], $imageSize['height']
 			);
 
+			$copiedImages[$key]		= $temp_gdim;
+			
+			/*
+			
 			# Copy cropped region from temporary image into the desired GD image
 			$x0 = ( $temp_width - $desiredSize['width'] ) / 2;
 			$y0 = ( $temp_height - $desiredSize['height'] ) / 2;
 
 			$desired_gdim = imagecreatetruecolor( $desiredSize['width'], $desiredSize['height'] );
 
-			if ($transparent_index >= 0 && $imageType == "gif")
-			{  	
-				# GIF
-				imagepalettecopy($imageData, $desired_gdim);
+			if ($imageType == "gif")
+			{
+				imagepalettecopy($temp_gdim, $desired_gdim);
 				imagefill($desired_gdim, 0, 0, $transparent_index);
 				imagecolortransparent($desired_gdim, $transparent_index);
 				imagetruecolortopalette($desired_gdim, true, 256);
 			}
-			if ($transparent_index >= 0 && $imageType == "png")
-			{ 
+			elseif($imageType == "png")
+			{
 				imagealphablending($desired_gdim, false);
 				imagesavealpha($desired_gdim,true);
 				$transparent = imagecolorallocatealpha($desired_gdim, 255, 255, 255, 127);
-				imagefilledrectangle($desired_gdim, 0, 0, $desiredSize['width'], $desiredSize['height'], $transparent);
+				imagefilledrectangle($desired_gdim, 0, 0, $desired_size['with'], $desired_size['height'], $transparent);
 			}
-			
-			imagecopy(
+
+			imagecopyresampled(
 				$desired_gdim,
 				$temp_gdim,
+				0, 0,
 				0, 0,
 				$x0, $y0,
 				$desiredSize['width'], $desiredSize['height']				
 			);
 			$copiedImages[$key]		= $desired_gdim;
+			
+			*/
 		}
 		return $copiedImages;
 	}
@@ -331,5 +331,6 @@ class ProcessImage
 		return $success;
 	}
 }
+
 
 ?>

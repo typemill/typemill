@@ -76,13 +76,13 @@ class Validation
 		
 		Validator::addRule('markdownSecure', function($field, $value, array $params, array $fields)
 		{
-			/* strip out code blocks and blockquotes */			
-			$value = preg_replace('/[````][\s\S]+?[````]/', '', $value);
-			$value = preg_replace('/[```][\s\S]+?[```]/', '', $value);
-			$value = preg_replace('/[``][\s\S]+?[``]/', '', $value);
-			$value = preg_replace('/`[\s\S]+?`/', '', $value);
-			$value = preg_replace('/>[\s\S]+?[\n\r]/', '', $value);
-						
+			/* strip out code blocks and blockquotes */
+			$value = preg_replace('/`{4,}[\s\S]+?`{4,}/', '', $value);
+			$value = preg_replace('/`{3,}[\s\S]+?`{3,}/', '', $value);
+			$value = preg_replace('/`{2,}[\s\S]+?`{2,}/', '', $value);
+			$value = preg_replace('/`{1,}[\s\S]+?`{1,}/', '', $value);
+			$value = preg_replace('/>[\s\S]+?[\n\r]/', '', $value);			
+			
 			if ( $value == strip_tags($value) )
 			{
 				return true;

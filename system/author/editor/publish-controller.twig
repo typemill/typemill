@@ -6,9 +6,10 @@
 			<div class="secondary">
 				<div class="secondary--block">
 					<button @click.prevent="depublishArticle" class="button--secondary button--secondary__hightlight" :disabled="publishStatus"><span class="desktop">${publishLabel}</span><span class="mobile">ON</span></button>
-					<a v-if="visual" href="{{ base_url }}/tm/content/raw{{item.urlRelWoF}}" class="button--secondary">raw mode</a>
-					<a v-if="raw" href="{{ base_url }}/tm/content/visual{{item.urlRelWoF}}" class="button--secondary">visual mode</a>
-					<button @click.prevent="showModal" class="button--secondary"><span class="desktop">delete</span><span class="mobile">X</mobile></button>
+					<a v-if="visual" href="{{ base_url }}/tm/content/raw{{item.urlRelWoF}}" class="button--secondary"><span class="desktop">raw mode</span><span class="mobile">raw</span></a>
+					<a v-if="raw" href="{{ base_url }}/tm/content/visual{{item.urlRelWoF}}" class="button--secondary"><span class="desktop">visual mode</span><span class="mobile">visual</span></a>
+					<button @click.prevent="showModal" class="button--secondary"><span class="desktop">delete</span><span class="mobile">X</span></button>
+					<a target="_blank" class="button--secondary" href="{{ item.urlAbs }}"><i class="icon-link-ext"></i></a>
 				</div>
 			</div>
 			<transition name="fade">

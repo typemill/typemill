@@ -412,7 +412,7 @@ footer{
 **  MODAL	**
 *************/
 
-.modalWindow{
+.modal, .modalWindow{
 	position:fixed;
 	display: block;
 	z-index: 9999;
@@ -426,6 +426,12 @@ footer{
 	right: 0;
 	background: #FFF;
 	background: rgba(255,255,255,0.9);
+}
+.modal{
+	display: none;
+}
+.modal.show{
+	display: block;
 }
 .modalInner{
 	position: relative;
@@ -1303,7 +1309,7 @@ label .help, .label .help{
 }
 .editor button.button--secondary, .editor a.button--secondary{
 	display: inline-block;
-	min-width: 40px;
+	min-width: auto;
 	max-width: 40px;
 	background: #fff;
 	border: 1px solid #eee;
@@ -1381,7 +1387,6 @@ label .help, .label .help{
 }
 .blox-editor button.edit{
 	background: #fff;
-//	background: #f9f8f6;
 	color: #444;
 	border: 1px solid #bbb;
 }
@@ -1391,7 +1396,6 @@ label .help, .label .help{
 	border: 1px solid #cc4146;
 }
 .blox-editor button.cancel{
-//	background: #f9f8f6;
 	background: #fff;
 	color: #444;	
 	border: 1px solid #bbb;
@@ -1407,9 +1411,25 @@ label .help, .label .help{
 	font-size: 16px;
 	padding-left: 20px;
 	padding-right: 20px;
-	box-sizing: border-blox;
+	box-sizing: border-box;
 	min-height: 40px;
 }
+/*
+.blox-editor textarea.mdcontent, .blox-editor input.mdcontent, .blox-editor .video.dropbox, .blox-editor .dropbox p{
+	border-left: 40px solid rgba(255,255,255,0.5);
+}
+*/
+.blox-editor input.mdcontent{
+	font-size: 1.4em;
+	font-weight: 700;
+}
+.blox-editor .contenttype {
+	position: absolute;
+	top: 16px;
+	left: -25px;
+	color: #e0474c;
+}
+
 .blox-editor .sideaction{
 	position: absolute;
 	right: -22px;
@@ -1479,7 +1499,7 @@ label .help, .label .help{
 	margin-right: 20px;
 }
 .format-bar .blox-editor{
-	display: inline;
+/*	display: inline; */
 }
 button.format-item{
 	margin-right: 2px;
@@ -1602,27 +1622,33 @@ button.format-item:hover{
 	margin-left: 50px;
 }
 .dropbox{
-	min-height: 50px;
-	position: relative;
+//	position: relative;
+	min-height: 70px;
 	background: #f9f8f6;
-	padding: 20px;
+	padding: 0px;
 	box-sizing: border-box;
 	margin-bottom: 10px;
+	box-shadow: 0 0 2px #000; 
 }
 .dropbox p{
-	cursor: pointer;	
-	border: 2px dashed grey;
-	line-height: 50px;
+	position: relative;
+	cursor: pointer;
+	line-height: 70px;
 	width: 100%;
 	text-align: center;
 	box-sizing:border-box;
 	padding: 0;
+	margin: 0;
 }
 .dropbox input, .dropbox select{
 	background-color: #fff;
 	width: 80%;
 	margin: 2px 0;
 	display: inline-block;
+}
+.video input{
+	width: 75%;
+	margin: 15px 0;
 }
 .dropbox select{
 	background-image: linear-gradient(45deg, transparent 50%, #444 50%), linear-gradient(135deg, #444 50%, transparent 50%), linear-gradient(to right, #fff, #fff);
@@ -1631,15 +1657,22 @@ button.format-item:hover{
 	width: 20%;
 	display: inline-block;
 }
-.dropbox .imgmeta{
-	margin-top: 20px;
+.video label{
+	text-align: right;
+	padding-right: 10px;
+	box-sizing: border-box;
 }
-.input-file{
+.dropbox .imgmeta{
+	padding: 30px;
+	box-sizing: border-box;	
+}
+.dropbox .input-file{
     opacity: 0;
     width: 100%;
-    height: 50px;
+    height: 70px;
     position: absolute;
     cursor: pointer;
+	z-index: 1;
 }
 .blox img, img.uploadPreview{
 	display: block;
@@ -1764,11 +1797,20 @@ footer a:focus, footer a:hover, footer a:active{
 		margin: auto;
 		text-align: center;
 	}
+	.blox-editor .loadoverlay{
+		display: block;
+		position: absolute;
+		z-index: 999;
+		left: 0px;
+		right: 0px;
+		top: 0px;
+		bottom: 0px;
+		background: rgba(255,255,255,0.4);
+	}
 	/* load design editor button */
 	.editor button.load:after, .blox-editor .load:after,
 	.editor button.success:after,
-	.editor button.fail:after
-	{
+	.editor button.fail:after{
 		position: absolute;
 		right: 8px;
 		top: 6px;
@@ -1782,6 +1824,13 @@ footer a:focus, footer a:hover, footer a:active{
 		border-top: 8px solid #ccc;
 		background: #ccc;
 		animation: spin 2s linear infinite;	
+	}
+	.blox-editor .loadoverlay .load:after{
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		margin-top: -10px;
+		margin-left: -10px;		
 	}
 	@keyframes spin {
 		0% { transform: rotate(0deg); }

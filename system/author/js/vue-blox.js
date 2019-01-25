@@ -1,8 +1,27 @@
 const eventBus = new Vue();
 
 const contentComponent = Vue.component('content-block', {
-	props: ['body'],
-	template: '<div ref="bloxcomponent" class="blox-editor"><div :class="{ editactive: edit }"><div @keyup.enter="submitBlock" @click="getData"><div class="component" ref="component"><transition name="fade-editor"><component :disabled="disabled" :compmarkdown="compmarkdown" @updatedMarkdown="updateMarkdown" :is="componentType"></component></transition><div class="blox-buttons" v-if="edit"><button class="edit" :disabled="disabled" @click.prevent="saveBlock">save</button><button class="cancel" :disabled="disabled" @click.prevent="switchToPreviewMode">cancel</button></div></div><div :class="preview" ref="preview"><slot></slot></div></div><div class="sideaction" v-if="body"><button class="delete" :disabled="disabled" title="delete content-block" @click.prevent="deleteBlock($event)"><i class="icon-cancel"></i></button></div></div></div>',	
+	props: ['body', 'load'],
+	template: '<div ref="bloxcomponent" class="blox-editor">' +
+				'<div :class="{ editactive: edit }">' +
+				 '<div @keyup.enter="submitBlock" @click="getData">' +
+				  '<div class="component" ref="component">' +
+				   '<transition name="fade-editor">' +
+				    '<component :disabled="disabled" :compmarkdown="compmarkdown" @updatedMarkdown="updateMarkdown" :is="componentType"></component>' +
+				   '</transition>' +
+				   '<div class="blox-buttons" v-if="edit">' + 
+				    '<button class="edit" :disabled="disabled" @click.prevent="saveBlock">save</button>' +
+				    '<button class="cancel" :disabled="disabled" @click.prevent="switchToPreviewMode">cancel</button>' +
+				   '</div>' + 
+				  '</div>' + 
+				  '<div :class="preview" ref="preview"><slot></slot></div>' + 
+				 '</div>' +
+				 '<div class="sideaction" v-if="body">' + 
+				  '<button class="delete" :disabled="disabled" title="delete content-block" @click.prevent="deleteBlock($event)"><i class="icon-cancel"></i></button>' +
+				 '</div>' + 
+				'</div>' + 
+				'<div v-if="load" class="loadoverlay"><span class="load"></span></div>' +
+			  '</div>',	
 	data: function () {
 		return {
 			preview: 'visible',
@@ -10,6 +29,7 @@ const contentComponent = Vue.component('content-block', {
 			compmarkdown: '',
 			componentType: '',
 			disabled: false,
+			load: false
 		}
 	},
 	mounted: function()
@@ -22,7 +42,7 @@ const contentComponent = Vue.component('content-block', {
 			this.compmarkdown = $event;
 			this.$nextTick(function () {
 				this.$refs.preview.style.minHeight = this.$refs.component.offsetHeight + 'px';
-			});
+			});			
 		},
 		switchToEditMode: function()
 		{
@@ -77,6 +97,7 @@ const contentComponent = Vue.component('content-block', {
 		freezePage: function()
 		{
 			this.disabled = 'disabled';
+			this.load = true;
 			publishController.errors.message = false;
 			publishController.publishDisabled = true;
 			var self = this;
@@ -85,6 +106,7 @@ const contentComponent = Vue.component('content-block', {
 		activatePage: function()
 		{
 			this.disabled = false;
+			this.load = false;
 			publishController.publishDisabled = false;
 		},
 		getData: function()
@@ -97,7 +119,36 @@ const contentComponent = Vue.component('content-block', {
 		},
  		submitBlock: function(){
 			var emptyline = /^\s*$(?:\r\n?|\n)/gm;
-			if(this.compmarkdown.search(emptyline) > -1)
+			if(this.componentType == "code-component"){ }
+			else if(this.componentType == "ulist-component" || this.componentType == "olist-component")
+			{
+				var listend = (this.componentType == "ulist-component") ? '* \n' : '1. \n';
+				var liststyle = (this.componentType == "ulist-component") ? '* ' : '1. ';
+				
+				if(this.compmarkdown.endsWith(listend))
+				{
+					this.compmarkdown = this.compmarkdown.replace(listend, '');
+					this.saveBlock();
+				}
+				else
+				{
+					var mdtextarea 		= document.getElementsByTagName('textarea');
+					var start 			= mdtextarea[0].selectionStart;
+					var end 			= mdtextarea[0].selectionEnd;
+					
+					this.compmarkdown 	= this.compmarkdown.substr(0, end) + liststyle + this.compmarkdown.substr(end);
+
+					mdtextarea[0].focus();
+					if(mdtextarea[0].setSelectionRange)
+					{
+						setTimeout(function(){
+							var spacer = (this.componentType == "ulist-component") ? 2 : 3;
+							mdtextarea[0].setSelectionRange(end+spacer, end+spacer);
+						}, 1);
+					}
+				}
+			}
+			else if(this.compmarkdown.search(emptyline) > -1)
 			{
 				var checkempty = this.compmarkdown.replace(/(\r\n|\n|\r|\s)/gm,"");
 				if(checkempty == '')
@@ -111,7 +162,7 @@ const contentComponent = Vue.component('content-block', {
 			}
 		},
 		saveBlock: function()
-		{	
+		{
 			if(this.compmarkdown == undefined || this.compmarkdown.replace(/(\r\n|\n|\r|\s)/gm,"") == '')
 			{
 				this.switchToPreviewMode();	
@@ -119,7 +170,7 @@ const contentComponent = Vue.component('content-block', {
 			else
 			{
 				this.freezePage();
-				
+
 				var self = this;
 				
 				if(this.componentType == 'image-component' && self.$root.$data.file)
@@ -138,9 +189,10 @@ const contentComponent = Vue.component('content-block', {
 					var method 	= 'PUT';
 				}
 				
+				var compmarkdown = this.compmarkdown.split('\n\n').join('\n');
 				var params = {
 					'url':				document.getElementById("path").value,
-					'markdown':			this.compmarkdown,
+					'markdown':			compmarkdown,
 					'block_id':			self.$root.$data.blockId,
 					'csrf_name': 		document.getElementById("csrf_name").value,
 					'csrf_value':		document.getElementById("csrf_value").value,
@@ -151,13 +203,14 @@ const contentComponent = Vue.component('content-block', {
 					if(httpStatus == 400)
 					{
 						self.activatePage();
+						publishController.errors.message = "Sorry, something went wrong. Maybe you are logged out? Please login and try again.";
 					}
 					if(response)
 					{
 						self.activatePage();
 						
 						var result = JSON.parse(response);
-											
+																	
 						if(result.errors)
 						{
 							publishController.errors.message = result.errors.markdown[0];
@@ -174,6 +227,7 @@ const contentComponent = Vue.component('content-block', {
 								self.$root.$data.blockMarkdown = '';
 								self.$root.$data.blockType = 'markdown-component';
 								self.getData();
+								document.querySelectorAll('textarea')[0].style.height = "70px";
 							}
 							else
 							{
@@ -252,21 +306,6 @@ const contentComponent = Vue.component('content-block', {
 	},
 })
 
-const markdownComponent = Vue.component('markdown-component', {
-	props: ['compmarkdown', 'disabled'],
-	template: '<div><textarea ref="markdown" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown"></textarea></div>',
-	mounted: function(){
-		this.$refs.markdown.focus();
-		autosize(document.querySelectorAll('textarea'));
-	},
-	methods: {
-		updatemarkdown: function(event)
-		{
-			this.$emit('updatedMarkdown', event.target.value);
-		},
-	},
-})
-
 const titleComponent = Vue.component('title-component', {
 	props: ['compmarkdown', 'disabled'],
 	template: '<div><input type="text" ref="markdown" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown"></div>',
@@ -282,12 +321,195 @@ const titleComponent = Vue.component('title-component', {
 	},
 })
 
+const markdownComponent = Vue.component('markdown-component', {
+	props: ['compmarkdown', 'disabled'],
+	template: '<div>' + 
+				'<div class="contenttype"><i class="icon-paragraph"></i></div>' +
+				'<textarea class="mdcontent" ref="markdown" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown"></textarea>' + 
+				'</div>',
+	mounted: function(){
+		this.$refs.markdown.focus();
+		autosize(document.querySelectorAll('textarea'));
+	},
+	methods: {
+		updatemarkdown: function(event)
+		{
+			this.$emit('updatedMarkdown', event.target.value);
+		},
+	},
+})
+
+const codeComponent = Vue.component('code-component', {
+	props: ['compmarkdown', 'disabled'],
+	template: '<div>' + 
+				'<input type="hidden" ref="markdown" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown" />' +	
+				'<div class="contenttype"><i class="icon-code"></i></div>' +
+				'<textarea class="mdcontent" ref="markdown" v-model="codeblock" :disabled="disabled" @input="createmarkdown"></textarea>' + 
+				'</div>',
+	data: function(){
+		return {
+			codeblock: ''
+		}
+	},
+	mounted: function(){
+		this.$refs.markdown.focus();
+		if(this.compmarkdown)
+		{
+			var codeblock = this.compmarkdown.replace("````\n", "");
+			codeblock = codeblock.replace("```\n", "");
+			codeblock = codeblock.replace("\n````", "");
+			codeblock = codeblock.replace("\n```", "");
+			codeblock = codeblock.replace("\n\n", "\n");
+			this.codeblock = codeblock;
+		}
+		this.$nextTick(function () {
+			autosize(document.querySelectorAll('textarea'));
+		});	
+	},
+	methods: {
+		createmarkdown: function(event)
+		{
+			this.codeblock = event.target.value;
+			var codeblock = '````\n' + event.target.value + '\n````';
+			this.updatemarkdown(codeblock);
+		},
+		updatemarkdown: function(codeblock)
+		{
+			this.$emit('updatedMarkdown', codeblock);
+		},
+	},
+})
+
+const quoteComponent = Vue.component('quote-component', {
+	props: ['compmarkdown', 'disabled'],
+	template: '<div>' + 
+				'<input type="hidden" ref="markdown" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown" />' +	
+				'<div class="contenttype"><i class="icon-quote-left"></i></div>' +
+				'<textarea class="mdcontent" ref="markdown" v-model="quote" :disabled="disabled" @input="createmarkdown"></textarea>' + 
+				'</div>',
+	data: function(){
+		return {
+			quote: ''
+		}
+	},
+	mounted: function(){
+		this.$refs.markdown.focus();
+		if(this.compmarkdown)
+		{
+			var quote = this.compmarkdown.replace("> ", "");
+			quote = this.compmarkdown.replace(">", "");
+			this.quote = quote;
+		}
+		this.$nextTick(function () {
+			autosize(document.querySelectorAll('textarea'));
+		});	
+	},
+	methods: {
+		createmarkdown: function(event)
+		{
+			this.quote = event.target.value;
+			var quote = '> ' + event.target.value;
+			this.updatemarkdown(quote);
+		},
+		updatemarkdown: function(quote)
+		{
+			this.$emit('updatedMarkdown', quote);
+		},
+	},
+})
+
+const ulistComponent = Vue.component('ulist-component', {
+	props: ['compmarkdown', 'disabled'],
+	template: '<div>' + 
+				'<div class="contenttype"><i class="icon-list-bullet"></i></div>' +
+				'<textarea class="mdcontent" ref="markdown" v-model="compmarkdown" :disabled="disabled" @input="updatemarkdown"></textarea>' + 
+				'</div>',
+	mounted: function(){
+		this.$refs.markdown.focus();
+		if(!this.compmarkdown)
+		{
+			this.compmarkdown = '* ';
+		}
+		this.$nextTick(function () {
+			autosize(document.querySelectorAll('textarea'));
+		});	
+	},
+	methods: {
+		updatemarkdown: function(event)
+		{
+			this.$emit('updatedMarkdown', event.target.value);
+		},
+	},
+})
+
+const olistComponent = Vue.component('olist-component', {
+	props: ['compmarkdown', 'disabled'],
+	template: '<div>' + 
+				'<div class="contenttype"><i class="icon-list-numbered"></i></div>' +
+				'<textarea class="mdcontent" ref="markdown" v-model="compmarkdown" :disabled="disabled" @input="updatemarkdown"></textarea>' + 
+				'</div>',
+	mounted: function(){
+		this.$refs.markdown.focus();
+		if(!this.compmarkdown)
+		{
+			this.compmarkdown = '1. ';
+		}
+		this.$nextTick(function () {
+			autosize(document.querySelectorAll('textarea'));
+		});
+	},
+	methods: {
+		updatemarkdown: function(event)
+		{
+			this.$emit('updatedMarkdown', event.target.value);
+		},
+	},
+})
+
+const headlineComponent = Vue.component('headline-component', { 
+	props: ['compmarkdown', 'disabled'],
+	template: '<div>' + 
+				'<div class="contenttype"><i class="icon-header"></i></div>' +
+				'<input class="mdcontent" type="text" ref="markdown" v-model="compmarkdown" :disabled="disabled" @input="updatemarkdown">' +
+				'</div>',
+	mounted: function(){
+		this.$refs.markdown.focus();
+		if(!this.compmarkdown)
+		{
+			this.compmarkdown = '## ';
+		}
+	},
+	methods: {
+		updatemarkdown: function(event)
+		{
+			this.$emit('updatedMarkdown', event.target.value);
+		},
+	},
+})
+
+
+const videoComponent = Vue.component('video-component', {
+	props: ['compmarkdown', 'disabled', 'load'],
+	template: '<div class="video dropbox">' +
+				'<div class="contenttype"><i class="icon-youtube-play"></i></div>' +
+				'<label for="video">Link to video: </label><input type="url" ref="markdown" placeholder="https://www.youtube.com/watch?v=" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown">' +
+				'<div v-if="load" class="loadwrapper"><span class="load"></span></div>' +
+				'</div>',
+	methods: {
+		updatemarkdown: function(event)
+		{
+			this.$emit('updatedMarkdown', event.target.value);
+		},
+	},
+})
+
 const imageComponent = Vue.component('image-component', {
 	props: ['compmarkdown', 'disabled'],
 	template: '<div class="dropbox">' +
 				'<input type="hidden" ref="markdown" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown" />' +
 				'<input type="file" name="image" accept="image/*" class="input-file" @change="onFileChange( $event )" /> ' +
 				'<p>drag a picture or click to select</p>' +
+				'<div class="contenttype"><i class="icon-picture"></i></div>' +	
 				'<img class="uploadPreview" :src="imgpreview" />' +
 				'<div v-if="load" class="loadwrapper"><span class="load"></span></div>' +
 				'<div class="imgmeta" v-if="imgmeta">' +
@@ -316,7 +538,7 @@ const imageComponent = Vue.component('image-component', {
 	mounted: function(){
 		
 		this.$refs.markdown.focus();
-				
+
 		if(this.compmarkdown)
 		{
 			this.imgmeta = true;
@@ -557,24 +779,6 @@ const imageComponent = Vue.component('image-component', {
 	}
 })
 
-const videoComponent = Vue.component('video-component', {
-	props: ['compmarkdown', 'disabled', 'load'],
-	template: '<div class="video dropbox">' +
-				'<label for="video">Link to video: </label><input type="url" ref="markdown" placeholder="https://www.youtube.com/watch?v=" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown">' +
-				'<div v-if="load" class="loadwrapper"><span class="load"></span></div>' +
-				'</div>',
-	methods: {
-		updatemarkdown: function(event)
-		{
-			this.$emit('updatedMarkdown', event.target.value);
-		},
-	},
-})
-
-const tableComponent = Vue.component('table', { 
-	template: '<div>table component</div>', 
-})
-
 let editor = new Vue({
     delimiters: ['${', '}'],
 	el: '#blox',
@@ -582,7 +786,12 @@ let editor = new Vue({
 		'content-component': contentComponent,
 		'markdown-component': markdownComponent,
 		'title-component': titleComponent,
-		'image-component': imageComponent,		
+		'headline-component': headlineComponent,
+		'image-component': imageComponent,
+		'code-component': codeComponent,
+		'quote-component': quoteComponent,
+		'ulist-component': ulistComponent,
+		'olist-component': olistComponent,
 	},
 	data: {
 		root: document.getElementById("main").dataset.url,
@@ -666,18 +875,34 @@ let editor = new Vue({
 		},
 		determineBlockType: function(block)
 		{
+			if(block.match(/^\d+\./)){ return "olist-component" }
+			
 			var firstChar = block[0];
 			var secondChar = block[1];
 			var thirdChar = block[2];
 			
 			switch(firstChar){
+				case ">":
+					return "quote-component";
+					break;
+				case "#":
+					return "headline-component";
+					break;
 				case "!":
 					if(secondChar == "[") { return "image-component" }
 					break;
 				case "[":
 					if(secondChar == "!" && thirdChar == "[") { return "image-component" } else { return "markdown-component" }
 					break;
-				default: 
+				case "`":
+					if(secondChar == "`" && thirdChar == "`") { return "code-component" } else { return "markdown-component" }
+					break;
+				case "*":
+					if(secondChar == " "){ return "ulist-component" } else { return "markdown-component" }
+					break;
+				case Number.isInteger(firstChar):
+					if(secondChar == "." ){ return "olist-component" } else { return "markdown-component" }
+				default:
 					return 'markdown-component';
 			}
 		},

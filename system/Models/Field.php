@@ -262,7 +262,7 @@ class Field
 	}
 
 	
-	private function setHelpers($fieldConfigs)
+	public function setHelpers($fieldConfigs)
 	{
 		foreach($fieldConfigs as $key => $config)
 		{
@@ -277,7 +277,7 @@ class Field
 	{
 		if(isset($this->$helperName))
 		{
-			return $this->helperName;
+			return $this->$helperName;
 		}
 		return false;
 	}	

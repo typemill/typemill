@@ -60,10 +60,13 @@ let publishController = new Vue({
 					{
 						self.publishDisabled = false;
 						self.publishResult = "fail";
-
+						self.errors.message = result.errors.content[0];
+						
+						/*
 						if(result.errors.title){ self.errors.title = result.errors.title[0] };
 						if(result.errors.content){ self.errors.content = result.errors.content[0] };
 						if(result.errors.message){ self.errors.message = result.errors.message };
+						*/
 					}
 					else
 					{
@@ -91,17 +94,26 @@ let publishController = new Vue({
 			
 			sendJson(function(response, httpStatus)
 			{
+				if(httpStatus == 400)
+				{
+					self.publishDisabled 	= false;
+					self.publishResult 		= "fail";
+					self.errors.message 	= "You are probably logged out. Please backup your changes, login and then try again."
+				}
 				if(response)
-				{					
+				{	
 					var result = JSON.parse(response);
 					
 					if(result.errors)
 					{
 						self.draftDisabled = false;
 						self.draftResult = 'fail';
+						self.errors.message = result.errors.content[0];
+						/*
 						if(result.errors.title){ self.errors.title = result.errors.title[0] };
-						if(result.errors.content){ self.errors.content = result.errors.content[0] };
+						if(result.errors.content){ self.errors.message = result.errors.content[0] };
 						if(result.errors.message){ self.errors.message = result.errors.message };
+						*/
 					}
 					else
 					{

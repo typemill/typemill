@@ -30,6 +30,17 @@ class SettingsController extends Controller
 	{
 		if($request->isPost())
 		{
+			$referer		= $request->getHeader('HTTP_REFERER');
+			$uri 			= $request->getUri();
+			$base_url		= $uri->getBaseUrl();
+
+			# security, users should not be able to fake post with settings from other typemill pages.
+			if(!isset($referer[0]) OR $referer[0] !== $base_url . '/tm/settings' )
+			{
+				$this->c->flash->addMessage('error', 'illegal referer');
+				return $response->withRedirect($this->c->router->pathFor('settings.show'));				
+			}
+			
 			$settings 		= \Typemill\Settings::getUserSettings();
 			$params 		= $request->getParams();
 			$newSettings	= isset($params['settings']) ? $params['settings'] : false;
@@ -47,16 +58,16 @@ class SettingsController extends Controller
 					'editor' 		=> $newSettings['editor'], 
 				);
 				
-				$copyright 					= $this->getCopyright();
+				$copyright 			= $this->getCopyright();
 
 				$validate->settings($newSettings, $copyright, 'settings');
 			}
 			else
 			{
 				$this->c->flash->addMessage('error', 'Wrong Input');
-				return $response->withRedirect($this->c->router->pathFor('settings.show'));				
+				return $response->withRedirect($this->c->router->pathFor('settings.show'));
 			}
-			
+
 			if(isset($_SESSION['errors']))
 			{
 				$this->c->flash->addMessage('error', 'Please correct the errors');
@@ -133,7 +144,7 @@ class SettingsController extends Controller
 
 		/* iterate through the plugins in the stored user settings */
 		foreach($userSettings['plugins'] as $pluginName => $pluginUserSettings)
-		{		
+		{
 			/* add plugin to plugin Data, if active, set it first */
 			/* if plugin is active, list it first */
 			if($userSettings['plugins'][$pluginName]['active'] == true)
@@ -170,11 +181,19 @@ class SettingsController extends Controller
 			/* if the plugin defines forms and fields, so that the user can edit the plugin settings in the frontend */
 			if(isset($pluginOriginalSettings['forms']['fields']))
 			{
+				# if the plugin defines frontend fields
+				if(isset($pluginOriginalSettings['public']))
+				{
+					$pluginOriginalSettings['forms']['fields']['recaptcha'] = ['type' => 'checkbox', 'label' => 'Google Recaptcha', 'checkboxlabel' => 'Activate Recaptcha' ];
+					$pluginOriginalSettings['forms']['fields']['recaptcha_webkey'] = ['type' => 'text', 'label' => 'Recaptcha Website Key', 'help' => 'Add the recaptcha website key here. You can get the key from the recaptcha website.', 'description' => 'The website key is mandatory if you activate the recaptcha field'];
+					$pluginOriginalSettings['forms']['fields']['recaptcha_secretkey'] = ['type' => 'text', 'label' => 'Recaptcha Secret Key', 'help' => 'Add the recaptcha secret key here. You can get the key from the recaptcha website.', 'description' => 'The secret key is mandatory if you activate the recaptcha field'];
+				}
+				
 				/* get all the fields and prefill them with the dafault-data, the user-data or old input data */
 				$fields = $fieldsModel->getFields($userSettings, 'plugins', $pluginName, $pluginOriginalSettings);
 				
 				/* overwrite original plugin form definitions with enhanced form objects */
-				$plugins[$pluginName]['forms']['fields'] = $fields;
+				$plugins[$pluginName]['forms']['fields'] = $fields;				
 			}
 		}
 		
@@ -192,7 +211,18 @@ class SettingsController extends Controller
 	public function saveThemes($request, $response, $args)
 	{
 		if($request->isPost())
-		{	
+		{
+			$referer		= $request->getHeader('HTTP_REFERER');
+			$uri 			= $request->getUri();
+			$base_url		= $uri->getBaseUrl();
+
+			# security, users should not be able to fake post with settings from other typemill pages.
+			if(!isset($referer[0]) OR $referer[0] !== $base_url . '/tm/themes' )
+			{
+				$this->c->flash->addMessage('error', 'illegal referer');
+				return $response->withRedirect($this->c->router->pathFor('themes.show'));
+			}
+	
 			$userSettings 	= \Typemill\Settings::getUserSettings();
 			$params 		= $request->getParams();
 			$themeName		= isset($params['theme']) ? $params['theme'] : false;
@@ -231,11 +261,22 @@ class SettingsController extends Controller
 			return $response->withRedirect($this->c->router->pathFor('themes.show'));
 		}
 	}
-		
+
 	public function savePlugins($request, $response, $args)
 	{
 		if($request->isPost())
 		{
+			$referer		= $request->getHeader('HTTP_REFERER');
+			$uri 			= $request->getUri();
+			$base_url		= $uri->getBaseUrl();
+
+			# security, users should not be able to fake post with settings from other typemill pages.
+			if(!isset($referer[0]) OR $referer[0] !== $base_url . '/tm/plugins' )
+			{
+				$this->c->flash->addMessage('error', 'illegal referer');
+				return $response->withRedirect($this->c->router->pathFor('plugins.show'));
+			}
+			
 			$userSettings 	= \Typemill\Settings::getUserSettings();
 			$pluginSettings	= array();
 			$userInput 		= $request->getParams();
@@ -306,6 +347,14 @@ class SettingsController extends Controller
 				{
 					$originalFields[$fieldName] = $fieldValue;
 				}
+			}
+			
+			# if the plugin defines frontend fields
+			if(isset($originalSettings['public']))
+			{
+				$originalFields['recaptcha'] = ['type' => 'checkbox', 'label' => 'Google Recaptcha', 'checkboxlabel' => 'Activate Recaptcha' ];
+				$originalFields['recaptcha_webkey'] = ['type' => 'text', 'label' => 'Recaptcha Website Key', 'help' => 'Add the recaptcha website key here. You can get the key from the recaptcha website.', 'description' => 'The website key is mandatory if you activate the recaptcha field'];
+				$originalFields['recaptcha_secretkey'] = ['type' => 'text', 'label' => 'Recaptcha Secret Key', 'help' => 'Add the recaptcha secret key here. You can get the key from the recaptcha website.', 'description' => 'The secret key is mandatory if you activate the recaptcha field'];
 			}
 
 			/* take the user input data and iterate over all fields and values */
@@ -386,6 +435,17 @@ class SettingsController extends Controller
 	{
 		if($request->isPost())
 		{
+			$referer		= $request->getHeader('HTTP_REFERER');
+			$uri 			= $request->getUri();
+			$base_url		= $uri->getBaseUrl();
+
+			# security, users should not be able to fake post with settings from other typemill pages.
+			if(!isset($referer[0]) OR $referer[0] !== $base_url . '/tm/user/new' )
+			{
+				$this->c->flash->addMessage('error', 'illegal referer');
+				return $response->withRedirect($this->c->router->pathFor('user.new'));
+			}
+			
 			$params 		= $request->getParams();
 			$user 			= new User();
 			$userroles		= $user->getUserroles();
@@ -409,7 +469,18 @@ class SettingsController extends Controller
 	public function updateUser($request, $response, $args)
 	{
 		if($request->isPost())
-		{			
+		{
+			$referer		= $request->getHeader('HTTP_REFERER');
+			$uri 			= $request->getUri();
+			$base_url		= $uri->getBaseUrl();
+
+			# security, users should not be able to fake post with settings from other typemill pages.
+			if(!isset($referer[0]) OR strpos($referer[0], $base_url . '/tm/user/') === false )
+			{
+				$this->c->flash->addMessage('error', 'illegal referer');
+				return $response->withRedirect($this->c->router->pathFor('user.list'));
+			}
+			
 			$params 		= $request->getParams();
 			$user 			= new User();
 			$userroles		= $user->getUserroles();
@@ -456,6 +527,17 @@ class SettingsController extends Controller
 	{
 		if($request->isPost())
 		{
+			$referer		= $request->getHeader('HTTP_REFERER');
+			$uri 			= $request->getUri();
+			$base_url		= $uri->getBaseUrl();
+
+			# security, users should not be able to fake post with settings from other typemill pages.
+			if(!isset($referer[0]) OR strpos($referer[0], $base_url . '/tm/user/') === false )
+			{
+				$this->c->flash->addMessage('error', 'illegal referer');
+				return $response->withRedirect($this->c->router->pathFor('user.list'));
+			}
+			
 			$params 		= $request->getParams();
 			$validate		= new Validation();
 			$user			= new User();

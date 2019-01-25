@@ -18,15 +18,19 @@ class ParsedownExtension extends \ParsedownExtra
         array_unshift($this->BlockTypes['['], 'TableOfContents');
     }
 		
-	function text($text)
+	public function text($text)
 	{
         $Elements = $this->textElements($text);
 		
 		return $Elements;
 	}
 	
-	function markup($Elements, $relurl)
-	{	
+	public function markup($Elements, $relurl)
+	{
+
+		# make relurl available for other functions
+		$this->relurl = $relurl;
+		
         # convert to markup
         $markup = $this->elements($Elements);
 
@@ -39,7 +43,7 @@ class ParsedownExtension extends \ParsedownExtra
 		# create table of contents
         if(isset($this->DefinitionData['TableOfContents']))
         {
-			$TOC = $this->buildTOC($this->headlines, $relurl);
+			$TOC = $this->buildTOC($this->headlines);
 			
 			$markup = preg_replace('%(<p[^>]*>\[TOC\]</p>)%i', $TOC, $markup);
         }
@@ -105,10 +109,10 @@ class ParsedownExtension extends \ParsedownExtra
             return $Block;
         }
     }
-
+	
 	# build the markup for table of contents 
 	
-	protected function buildTOC($headlines, $relurl)
+	protected function buildTOC($headlines)
 	{
 		$markup = '<ul class="TOC">';
 		
@@ -123,7 +127,7 @@ class ParsedownExtension extends \ParsedownExtra
 				$markup .= '<ul>';
 			}
 			
-			$markup .= '<li class="' . $headline['name'] . '"><a href="' . $relurl . '#' . $headline['attribute'] . '">' . $headline['text'] . '</a>';
+			$markup .= '<li class="' . $headline['name'] . '"><a href="' . $this->relurl . '#' . $headline['attribute'] . '">' . $headline['text'] . '</a>';
 			
 			if($thisLevel == $nextLevel)
 			{
@@ -143,6 +147,139 @@ class ParsedownExtension extends \ParsedownExtra
 		
 		return $markup;
 	}
+
+    #
+    # Footnote Marker
+
+    protected function inlineFootnoteMarker($Excerpt)
+    {
+        if (preg_match('/^\[\^(.+?)\]/', $Excerpt['text'], $matches))
+        {
+            $name = $matches[1];
+
+            if ( ! isset($this->DefinitionData['Footnote'][$name]))
+            {
+                return;
+            }
+
+            $this->DefinitionData['Footnote'][$name]['count'] ++;
+
+            if ( ! isset($this->DefinitionData['Footnote'][$name]['number']))
+            {
+                $this->DefinitionData['Footnote'][$name]['number'] = ++ $this->footnoteCount; # » &
+            }
+
+            $Element = array(
+                'name' => 'sup',
+                'attributes' => array('id' => 'fnref'.$this->DefinitionData['Footnote'][$name]['count'].':'.$name),
+                'element' => array(
+                    'name' => 'a',
+                    'attributes' => array('href' => $this->relurl . '#fn:' . $name, 'class' => 'footnote-ref'),
+                    'text' => $this->DefinitionData['Footnote'][$name]['number'],
+                ),
+            );
+
+            return array(
+                'extent' => strlen($matches[0]),
+                'element' => $Element,
+            );
+        }
+    }
+	
+	public $footnoteCount = 0;
+	
+    protected function buildFootnoteElement()
+    {
+        $Element = array(
+            'name' => 'div',
+            'attributes' => array('class' => 'footnotes'),
+            'elements' => array(
+                array('name' => 'hr'),
+                array(
+                    'name' => 'ol',
+                    'elements' => array(),
+                ),
+            ),
+        );
+
+        uasort($this->DefinitionData['Footnote'], 'self::sortFootnotes');
+
+        foreach ($this->DefinitionData['Footnote'] as $definitionId => $DefinitionData)
+        {
+            if ( ! isset($DefinitionData['number']))
+            {
+                continue;
+            }
+
+            $text = $DefinitionData['text'];
+
+            $textElements = parent::textElements($text);
+
+            $numbers = range(1, $DefinitionData['count']);
+
+            $backLinkElements = array();
+
+            foreach ($numbers as $number)
+            {
+                $backLinkElements[] = array('text' => ' ');
+                $backLinkElements[] = array(
+                    'name' => 'a',
+                    'attributes' => array(
+                        'href' => $this->relurl . "#fnref$number:$definitionId",
+                        'rev' => 'footnote',
+                        'class' => 'footnote-backref',
+                    ),
+                    'rawHtml' => '&#8617;',
+                    'allowRawHtmlInSafeMode' => true,
+                    'autobreak' => false,
+                );
+            }
+
+            unset($backLinkElements[0]);
+
+            $n = count($textElements) -1;
+
+            if ($textElements[$n]['name'] === 'p')
+            {
+                $backLinkElements = array_merge(
+                    array(
+                        array(
+                            'rawHtml' => '&#160;',
+                            'allowRawHtmlInSafeMode' => true,
+                        ),
+                    ),
+                    $backLinkElements
+                );
+
+                unset($textElements[$n]['name']);
+
+                $textElements[$n] = array(
+                    'name' => 'p',
+                    'elements' => array_merge(
+                        array($textElements[$n]),
+                        $backLinkElements
+                    ),
+                );
+            }
+            else
+            {
+                $textElements[] = array(
+                    'name' => 'p',
+                    'elements' => $backLinkElements
+                );
+            }
+
+            $Element['elements'][1]['elements'] []= array(
+                'name' => 'li',
+                'attributes' => array('id' => 'fn:'.$definitionId),
+                'elements' => array_merge(
+                    $textElements
+                ),
+            );
+        }
+
+        return $Element;
+    }
 	
 	# math support. Check https://github.com/aidantwoods/parsedown/blob/mathjaxlatex/ParsedownExtensionMathJaxLaTeX.php
 
@@ -265,7 +402,61 @@ class ParsedownExtension extends \ParsedownExtra
         $Block['element']['text'] = "\$\$\n" . $text . "\n\$\$";
         return $Block;
     }
-		
+	
+	# advanced attribute data, check parsedown extra plugin: https://github.com/tovic/parsedown-extra-plugin
+    protected function parseAttributeData($text) {
+        // Allow compact attributes ...
+        $text = str_replace(array('#', '.'), array(' #', ' .'), $text);
+        if (strpos($text, '="') !== false || strpos($text, '=\'') !== false) {
+            $text = preg_replace_callback('#([-\w]+=)(["\'])([^\n]*?)\2#', function($m) {
+                $s = str_replace(array(
+                    ' #',
+                    ' .',
+                    ' '
+                ), array(
+                    '#',
+                    '.',
+                    "\x1A"
+                ), $m[3]);
+                return $m[1] . $m[2] . $s . $m[2];
+            }, $text);
+        }
+        $attrs = array();
+        foreach (explode(' ', $text) as $v) {
+            if (!$v) continue;
+            // `{#foo}`
+            if ($v[0] === '#' && isset($v[1])) {
+                $attrs['id'] = substr($v, 1);
+            // `{.foo}`
+            } else if ($v[0] === '.' && isset($v[1])) {
+                $attrs['class'][] = substr($v, 1);
+            // ~
+            } else if (strpos($v, '=') !== false) {
+                $vv = explode('=', $v, 2);
+                // `{foo=}`
+                if ($vv[1] === "") {
+                    $attrs[$vv[0]] = "";
+                // `{foo="bar baz"}`
+                // `{foo='bar baz'}`
+                } else if ($vv[1][0] === '"' && substr($vv[1], -1) === '"' || $vv[1][0] === "'" && substr($vv[1], -1) === "'") {
+                    $attrs[$vv[0]] = str_replace("\x1A", ' ', substr(substr($vv[1], 1), 0, -1));
+                // `{foo=bar}`
+                } else {
+                    $attrs[$vv[0]] = $vv[1];
+                }
+            // `{foo}`
+            } else {
+                $attrs[$v] = $v;
+            }
+        }
+        if (isset($attrs['class'])) {
+            $attrs['class'] = implode(' ', $attrs['class']);
+        }
+        return $attrs;
+    }
+
+    protected $regexAttribute = '(?:[#.][-\w:\\\]+[ ]*|[-\w:\\\]+(?:=(?:["\'][^\n]*?["\']|[^\s]+)?)?[ ]*)';
+
 	# turn markdown into an array of markdown blocks for typemill edit mode	
 	function markdownToArrayBlocks($markdown)
 	{

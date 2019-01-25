@@ -101,6 +101,7 @@ abstract class Plugin implements EventSubscriberInterface
 	protected function getFormData($pluginName)
 	{
 		$flash = $this->container->flash->getMessages();
+		
 		if(isset($flash['formdata']))
 		{
 			$yaml 		= new Models\WriteYaml();
@@ -112,6 +113,10 @@ abstract class Plugin implements EventSubscriberInterface
 				return $formdata[$pluginName];
 			}
 		}
+		elseif(isset($flash['publicform']) && $flash['publicform'][0] == 'bot')
+		{
+			return 'bot';
+		}
 		return false;
 	}
 	
@@ -122,19 +127,13 @@ abstract class Plugin implements EventSubscriberInterface
 		$pluginDefinitions 	= \Typemill\Settings::getObjectSettings('plugins', $pluginName);
 		$settings 			= $this->getSettings();
 		$buttonlabel		= isset($settings['plugins'][$pluginName]['button_label']) ? $settings['plugins'][$pluginName]['button_label'] : false;
+		$recaptcha			= isset($settings['plugins'][$pluginName]['recaptcha']) ? $settings['plugins'][$pluginName]['recaptcha_webkey'] : false;
 		
 		if(isset($pluginDefinitions['public']['fields']))
 		{
 			# add simple honeypot spam protection
 			$pluginDefinitions['public']['fields']['personal-mail'] = ['type' => 'text', 'class' => 'personal-mail'];
-	
-			/* 
-			# add spam protection questions
-			$spamanswers = ['Albert', 'kalt', 'Gelb'];
-			shuffle($spamanswers);
-			$pluginDefinitions['public']['fields']['spamquestion'] = ['type' => 'checkboxlist', 'label' => 'Der Vorname von Einstein lautet', 'required' => true, 'options' => $spamanswers];
-			*/
-				
+			
 			# get all the fields and prefill them with the dafault-data, the user-data or old input data
 			$fields = $fieldsModel->getFields($settings, 'plugins', $pluginName, $pluginDefinitions, 'public');
 
@@ -142,7 +141,7 @@ abstract class Plugin implements EventSubscriberInterface
 			$twig 	= $this->getTwig();
 
 			# render each field and add it to the form
-			$form = $twig->fetch('/partials/form.twig', ['fields' => $fields, 'itemName' => $pluginName, 'object' => 'plugins', 'buttonlabel' => $buttonlabel]);
+			$form = $twig->fetch('/partials/form.twig', ['fields' => $fields, 'itemName' => $pluginName, 'object' => 'plugins', 'recaptcha_webkey' => $recaptcha, 'buttonlabel' => $buttonlabel]);
 		}
 		
 		return $form;
