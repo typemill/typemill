@@ -137,17 +137,17 @@ Or you can use a shortcut like http://typemill.net.
 ````
 The same rules as with links, but with a !
 ![alt-text](media/markdown.png)
-![alt-text](media/markdown.png "my title")
-![alt-text](media/markdown.png "my title"){#myid .myclass width=100px}
+![alt-text](media/markdown.png "my title"){#myid .imgClass}
+![alt-text](media/markdown.png "my title"){#myid .otherclass width=150px}
 ````
 
 The same rules as with links, but with a !
 
-![alt-text](media/markdown.png){.imgClass}
+![alt-text](media/markdown.png)
 
-![alt-text](media/markdown.png "my title"){.imgClass}
+![alt-text](media/markdown.png "my title"){#myid .imgClass}
 
-![alt-text](media/markdown.png "my title"){#myid .myclass width=100px}
+![alt-text](media/markdown.png "my title"){#myid .otherclass width=150px}
 
 ## Linked Images
 
@@ -171,11 +171,11 @@ You can controll the image position with the classes .left, .right and .middle l
 
 ![image float left](media/markdown.png){.left}
 
-The first image should float on the left side of this paragraph. This might not work with all themes. If you are a theme developer, please ensure that you support the image classes "left", "right" and "middle".
+The first image should float on the left side of this paragraph. This might not work with all themes. If you are a theme developer, please ensure that you support the image classes "left", "right" and "middle". You can add these classes manually in the raw mode or you can assign them in the visual mode when you edit a picture (double click on it to open the dialog.)
 
 ![image float right](media/markdown.png){.right}
 
-The second image should float on the right side of this paragraph. This might not work with all themes. If you are a theme developer, please ensure that you support the image classes "left", "right" and "middle".
+The second image should float on the right side of this paragraph. This might not work with all themes. If you are a theme developer, please ensure that you support the image classes "left", "right" and "middle". You can add these classes manually in the raw mode or you can assign them in the visual mode when you edit a picture (double click on it to open the dialog.)
 
 ![image middle](media/markdown.png){.middle}
 
@@ -205,6 +205,8 @@ Add the footnote text at the bottom of the page like this:
 You can write footnotes[^1] with markdown. 
 
 Scroll down to the end of the page[^2] and look for the footnotes. 
+
+Footnotes won't work with the visual editor right now, so please use the raw mode for them.
 
 ## Abbreviations
 
@@ -288,3 +290,5 @@ x = \int_{0^1}^1(-b \pm \sqrt{b^2-4ac})/(2a)
 x = \int_{0^1}^1(-b \pm \sqrt{b^2-4ac})/(2a)
 ​````
 
+[^1]: Thank you for scrolling.
+[^2]: This is the end of the page.

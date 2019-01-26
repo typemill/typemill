@@ -1,27 +1,27 @@
  # About TYPEMILL
 
-TYPEMILL is a small flat file cms created for editors and writers. It generates websites based on markdown files and can be used for manuals, documentations, web-books and similar publications. The website http://typemill.net itself is an example-website for TYPEMILL.
+TYPEMILL is a small flat file cms created for editors and writers. It provides a author-friendly dashboard and a visual-block-editor for markdown based on vue.js. Use TYPEMILL for manuals, documentations, web-books and similar publications. The website http://typemill.net itself is an example-website for TYPEMILL.
 
-![TYPEMILL Screenshot](https://typemill.net/media/demo-2.gif)
+![TYPEMILL Screenshot](https://typemill.net/media/demo-3.gif)
 
 ## Features
 
 * Creates a website based on markdown files.
-* Ships with a fully responsive standard theme.
-* Works with a natural folder and file structure (like on your file-system).
-* Creates a navigation, a breadcrumb and a pagination based on your file structure.
-* Creates chapter numbers.
-* Creates SEO-friendly urls.
-* Supports configurable themes and plugins.
-* Provides an author panel to configure the system, the themes and the plugins.
-* Creates and manages users.
-* Provides a pure markdown editor.
-* Provides a visual markdown editing mode (experimental).
+* Provides a author-friendly visual markdown editor (experimental, based on VUE.js).
+* Provides a pure markdown editing mode.
 * Markdown supports table of contents (TOC), tables, footnotes, abbreviations and definition lists.
-* Supports MathJax and KaTeX (plugin).
-* Supports code highlighting (plugin).
-* Supports Matomo/Piwik and Google Analytics (plugin).
-* Supports Cookie Consent (plugin).
+* Create and sort pages with drag & drop in the navigation.
+* Configure the system, the themes and the plugins in the dashboard.
+* Create and manage users.
+* Develop configurable plugins with the Symfony Event Dispatcher.
+* Develop configurable themes with TWIG.
+* Allows super easy backend and frontend forms with simple YAML-definitions.
+* Ships with a fully responsive standard theme
+* Ships with plugins for 
+  * MathJax and KaTeX, c.
+  * code highlighting.
+  * Matomo/Piwik and Google Analytics.
+  * Cookie Consent.
 
 ## Requirements
 
@@ -35,7 +35,7 @@ If you run a linux system, then please double check that mod_rewrite and htacces
 
 Download TYPEMILL from the [TYPEMILL website](http://typemill.net), unzip the files and you are done.
 
-If you are a developer, you can also clone this repository. To do so, open your git command line (e.g. gitbash), go to your project folder (e.g. htdocs) and type:
+If you are a developer, you can also clone this repository. To do so, open your command line, go to your project folder (e.g. htdocs) and type:
 
     git clone git://github.com/trendschau/typemill.git
 
@@ -77,17 +77,19 @@ Typemill is still in an early stage and contributions are highly welcome. Here a
 * Find bugs and errors (open a new issue on github for it).
 * Improve the documentation.
 * Describe some missing features and explain, why they are important for other users.
+* Write a blog post about typemill.
 
 Some ideas for devs (please fork this repository make your changes and create a pull request):
 
 * Fix a bug.
 * Create a nice theme.
 * Create a new plugin.
-* Improve the CSS-code with BEM and make it modular.
-* Rebuild the theme with css-grid.
-* Improve accessibility of html and css.
+* Improve the CSS-code with BEM or utility-css (e.g. Tailwind) and make it modular.
+* Rebuild the theme with the new css-grid feature.
+* Improve the accessibility of html and css.
 * Help to establish autotests with selenium or cypress.
 * Write unit-tests.
+* Write an auto-update functionality.
 
 For hints, questions, problems and support, please open up a new issue on GitHub.
 

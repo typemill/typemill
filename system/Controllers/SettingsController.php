@@ -395,10 +395,11 @@ class SettingsController extends Controller
 			$users		= $user->getUsers();
 			$userrole	= $user->getUserroles();
 			$userdata 	= $user->getUser($args['username']);
+			$settings 	= $this->c->get('settings');
 			
 			if($userdata)
 			{				
-				return $this->render($response, 'settings/user.twig', array('users' => $users, 'userdata' => $userdata, 'userrole' => $userrole, 'username' => $args['username'] ));
+				return $this->render($response, 'settings/user.twig', array('settings' => $settings, 'users' => $users, 'userdata' => $userdata, 'userrole' => $userrole, 'username' => $args['username'] ));
 			}
 		}
 		
@@ -412,13 +413,14 @@ class SettingsController extends Controller
 		$users		= $user->getUsers();
 		$userdata 	= array();
 		$route 		= $request->getAttribute('route');
+		$settings 	= $this->c->get('settings');
 		
 		foreach($users as $username)
 		{
 			$userdata[] = $user->getUser($username);
 		}
 		
-		$this->render($response, 'settings/userlist.twig', array('users' => $users, 'userdata' => $userdata, 'route' => $route->getName() ));		
+		$this->render($response, 'settings/userlist.twig', array('settings' => $settings, 'users' => $users, 'userdata' => $userdata, 'route' => $route->getName() ));		
 	}
 	
 	public function newUser($request, $response, $args)
@@ -427,8 +429,9 @@ class SettingsController extends Controller
 		$users		= $user->getUsers();
 		$userrole	= $user->getUserroles();
 		$route 		= $request->getAttribute('route');
+		$settings 	= $this->c->get('settings');
 
-		$this->render($response, 'settings/usernew.twig', array('users' => $users, 'userrole' => $userrole, 'route' => $route->getName() ));
+		$this->render($response, 'settings/usernew.twig', array('settings' => $settings, 'users' => $users, 'userrole' => $userrole, 'route' => $route->getName() ));
 	}
 		
 	public function createUser($request, $response, $args)

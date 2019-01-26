@@ -319,7 +319,7 @@ article{
 	line-height: 1.35em;
 }
 article img{
-	width: 100%;
+	max-width: 100%;
 }
 article img.left{
 	width: auto;
