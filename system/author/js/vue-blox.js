@@ -162,7 +162,7 @@ const contentComponent = Vue.component('content-block', {
 			}
 		},
 		saveBlock: function()
-		{
+		{			
 			if(this.compmarkdown == undefined || this.compmarkdown.replace(/(\r\n|\n|\r|\s)/gm,"") == '')
 			{
 				this.switchToPreviewMode();	
@@ -203,17 +203,17 @@ const contentComponent = Vue.component('content-block', {
 					if(httpStatus == 400)
 					{
 						self.activatePage();
-						publishController.errors.message = "Sorry, something went wrong. Maybe you are logged out? Please login and try again.";
+						publishController.errors.message = "Looks like you are logged out. Please login and try again.";
 					}
-					if(response)
+					else if(response)					
 					{
 						self.activatePage();
-						
+
 						var result = JSON.parse(response);
-																	
+										
 						if(result.errors)
 						{
-							publishController.errors.message = result.errors.markdown[0];
+							publishController.errors.message = result.errors.message;
 						}
 						else
 						{
@@ -227,7 +227,8 @@ const contentComponent = Vue.component('content-block', {
 								self.$root.$data.blockMarkdown = '';
 								self.$root.$data.blockType = 'markdown-component';
 								self.getData();
-								document.querySelectorAll('textarea')[0].style.height = "70px";
+								var textbox = document.querySelectorAll('textarea')[0];
+								if(textbox){ textbox.style.height = "70px"; }
 							}
 							else
 							{
@@ -241,6 +242,11 @@ const contentComponent = Vue.component('content-block', {
 							}
 						}
 					}
+					else if(httpStatus != 200)
+					{
+						self.activatePage();
+						publishController.errors.message = "Sorry, something went wrong. Please refresh the page and try again.";
+					}					
 				}, method, url, params);
 			}
 		},
@@ -430,6 +436,28 @@ const ulistComponent = Vue.component('ulist-component', {
 		{
 			this.compmarkdown = '* ';
 		}
+		else
+		{
+			var lines = this.compmarkdown.split("\n");
+			var length = lines.length
+			var md = '';
+
+			for(i = 0; i < length; i++)
+			{
+				var clean = lines[i];
+				clean = clean.replace(/^- /, '* ');
+				clean = clean.replace(/^\+ /, '* ');
+				if(i == length-1)
+				{
+					md += clean;
+				}
+				else
+				{
+					md += clean + '\n';
+				}
+			}
+			this.compmarkdown = md;
+		}
 		this.$nextTick(function () {
 			autosize(document.querySelectorAll('textarea'));
 		});	
@@ -487,6 +515,219 @@ const headlineComponent = Vue.component('headline-component', {
 	},
 })
 
+const tableComponent = Vue.component('table-component', { 
+	props: ['compmarkdown', 'disabled'],
+	data: function(){
+		return {
+			table: [
+				['0', '1', '2'],
+				['1', 'Head', 'Head'],
+				['2', 'cell', 'cell'],
+				['3', 'cell', 'cell'],
+			],
+			editable: 'editable',
+			noteditable: 'noteditable',
+			cellcontent: '',
+			columnbar: false,
+			rowbar: false,
+			tablekey: 1,
+		}
+	},
+	template: '<div ref="table" :key="tablekey">' + 
+				'<div class="contenttype"><i class="icon-table"></i></div>' +
+				'<table ref="markdown">' +
+					'<colgroup>' +
+						'<col v-for="col in table[0]">' +
+					'</colgroup>' +
+					'<tbody>' +
+						'<tr v-for="(row, rowindex) in table">' +
+							'<td v-if="rowindex === 0" v-for="(value,colindex) in row" contenteditable="false" class="noteditable" @click="switchcolumnbar(value)">{{value}} ' +
+							  '<div v-if="columnbar === value" class="columnaction">' + 
+							     '<div class="actionline" @click="addrightcolumn(value)">add right column</div>' +
+								 '<div class="actionline" @click="addleftcolumn(value)">add left column</div>' +
+								 '<div class="actionline" @click="deletecolumn(value)">delete column</div>' +
+							  '</div>' +
+							'</td>' +
+							'<th v-if="rowindex === 1" v-for="(value,colindex) in row" :contenteditable="colindex !== 0 ? true : false" @click="switchrowbar(value)" @blur="updatedata($event,colindex,rowindex)" :class="colindex !== 0 ? editable : noteditable">' + 
+							 '<div v-if="colindex === 0 && rowbar === value" class="rowaction">' + 
+							     '<div class="actionline" @click="addaboverow(value)">add row above</div>' +
+								 '<div class="actionline" @click="addbelowrow(value)">add row below</div>' +
+								 '<div class="actionline" @click="deleterow(value)">delete row</div>' +
+							  '</div>' + 
+							'{{value}}</th>' +
+							'<td v-if="rowindex > 1" v-for="(value,colindex) in row" :contenteditable="colindex !== 0 ? true : false" @click="switchrowbar(value)" @blur="updatedata($event,colindex,rowindex)" :class="colindex !== 0 ? editable : noteditable">' + 
+							 '<div v-if="colindex === 0 && rowbar === value" class="rowaction">' + 
+							     '<div class="actionline" @click="addaboverow(value)">add row above</div>' +
+								 '<div class="actionline" @click="addbelowrow(value)">add row below</div>' +
+								 '<div class="actionline" @click="deleterow(value)">delete row</div>' +
+							  '</div>' +
+							'{{ value }}</td>' +
+						'</tr>' +
+					'</tbody>' +
+				'</table>' +
+				'</div>',
+	mounted: function(){
+		this.$refs.markdown.focus();
+		if(this.compmarkdown)
+		{
+			var table = [];
+			var lines = this.compmarkdown.split("\n");
+			var length = lines.length
+			var c = 1;
+			
+			for(i = 0; i < length; i++)
+			{
+				if(i == 1){ continue }
+				
+				var line = lines[i].trim();
+				var row = line.split("|").map(function(cell){
+					return cell.trim();
+				});
+				if(row[0] == ''){ row.shift() }
+				if(row[row.length-1] == ''){ row.pop() }
+				if(i == 0)
+				{
+					var rlength = row.length;
+					var row0 = [];
+					for(y = 0; y <= rlength; y++) { row0.push(y) }
+					table.push(row0);
+				}
+				row.splice(0,0,c);
+				c++;
+				table.push(row);
+			}
+			this.table = table;
+		}
+	},
+	methods: {
+		updatedata: function(event,col,row)
+		{
+			this.table[row][col] = event.target.innerText;			
+			this.markdowntable();
+		},
+		switchcolumnbar(value)
+		{
+			this.rowbar = false;
+			(this.columnbar == value || value == 0) ? this.columnbar = false : this.columnbar = value;
+		},
+		switchrowbar(value)
+		{
+			this.columnbar = false;
+			(this.rowbar == value || value == 0 || value == 1 )? this.rowbar = false : this.rowbar = value;
+		},
+		addaboverow: function(index)
+		{
+			var row = [];
+			var cols = this.table[0].length;
+			for(var i = 0; i < cols; i++){ row.push("new"); }
+			this.table.splice(index,0,row);
+			this.reindexrows();
+		},
+		addbelowrow: function(index)
+		{
+			var row = [];
+			var cols = this.table[0].length;
+			for(var i = 0; i < cols; i++){ row.push("new"); }
+			this.table.splice(index+1,0,row);
+			this.reindexrows();
+		},
+		deleterow: function(index)
+		{
+			this.table.splice(index,1);
+			this.reindexrows();
+		},
+		addrightcolumn: function(index)
+		{
+			var tableLength = this.table.length;
+			for (var i = 0; i < tableLength; i++)
+			{
+				this.table[i].splice(index+1,0,"new");
+			}
+			this.reindexcolumns();
+		},
+		addleftcolumn: function(index)
+		{
+			var tableLength = this.table.length;
+			for (var i = 0; i < tableLength; i++)
+			{
+				this.table[i].splice(index,0,"new");
+			}
+			this.reindexcolumns();
+		},
+		deletecolumn: function(index)
+		{
+			var tableLength = this.table.length;
+			for (var i = 0; i < tableLength; i++)
+			{
+				this.table[i].splice(index,1);
+			}
+			this.reindexcolumns();
+		},
+		reindexrows: function()
+		{
+			var tableRows = this.table.length;
+			for (var i = 0; i < tableRows; i++)
+			{
+				Vue.set(this.table[i], 0, i);
+			}
+			this.tablekey +=1;
+			this.markdowntable();
+		},
+		reindexcolumns: function()
+		{
+			var tableColumns = this.table[0].length;
+			for (var i = 0; i < tableColumns; i++)
+			{
+				Vue.set(this.table[0], i, i);
+			}
+			this.tablekey +=1;
+			this.markdowntable();
+		},
+		markdowntable: function()
+		{
+			var markdown = '';
+			var separator = '\n|';
+			var rows = this.table.length;
+			var cols = this.table[0].length;
+			
+			for(var i = 0; i < cols; i++)
+			{
+				if(i == 0){ continue; }
+				separator += '---|';
+			}
+			
+			for(var i = 0; i < rows; i++)
+			{
+				var row = this.table[i];
+
+				if(i == 0){ continue; }
+				
+				for(var y = 0; y < cols; y++)
+				{					
+					if(y == 0){ continue; }
+					
+					var value = row[y].trim();
+					
+					if(y == 1)
+					{
+						markdown += '\n| ' + value + ' | ';
+					}
+					else
+					{
+						markdown += value + ' | ';
+					}
+				}
+				if(i == 1) { markdown = markdown + separator; }
+			}
+			this.$emit('updatedMarkdown', markdown);
+		},
+		updatemarkdown: function(event)
+		{
+			/* generate markdown here ??? */
+			this.$emit('updatedMarkdown', event.target.value);
+		},
+	},
+})
 
 const videoComponent = Vue.component('video-component', {
 	props: ['compmarkdown', 'disabled', 'load'],
@@ -792,6 +1033,7 @@ let editor = new Vue({
 		'quote-component': quoteComponent,
 		'ulist-component': ulistComponent,
 		'olist-component': olistComponent,
+		'table-component': tableComponent,
 	},
 	data: {
 		root: document.getElementById("main").dataset.url,
@@ -877,6 +1119,12 @@ let editor = new Vue({
 		{
 			if(block.match(/^\d+\./)){ return "olist-component" }
 			
+			var lines = block.split("\n");
+			if(lines.length > 2 && lines[0].indexOf('|') != -1 && /[\-\|: ]{3,}$/.test(lines[1]))
+			{
+				return "table-component";
+			}
+			
 			var firstChar = block[0];
 			var secondChar = block[1];
 			var thirdChar = block[2];
@@ -898,10 +1146,10 @@ let editor = new Vue({
 					if(secondChar == "`" && thirdChar == "`") { return "code-component" } else { return "markdown-component" }
 					break;
 				case "*":
+				case "-":
+				case "+":
 					if(secondChar == " "){ return "ulist-component" } else { return "markdown-component" }
 					break;
-				case Number.isInteger(firstChar):
-					if(secondChar == "." ){ return "olist-component" } else { return "markdown-component" }
 				default:
 					return 'markdown-component';
 			}

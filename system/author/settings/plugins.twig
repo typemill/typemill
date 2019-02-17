@@ -43,7 +43,20 @@
 						
 							{% for field in plugin.forms.fields %}
 								
-								{% include '/partials/fields.twig' with {'itemName' : pluginName, 'object' : 'plugins' } %}
+								{% if field.type == 'fieldset' %}
+											
+									<fieldset class="subfield">
+										<legend>{{ field.legend }}</legend>
+											{% for field in field.fields %}
+												{% include '/partials/fields.twig' with {'itemName' : pluginName, 'object' : 'plugins' } %}
+											{% endfor %}
+										</fieldset>
+											
+								{% else %}
+								
+									{% include '/partials/fields.twig' with {'itemName' : pluginName, 'object' : 'plugins' } %}
+								
+								{% endif %}
 								
 							{% endfor %}
 							

@@ -114,9 +114,9 @@ const navcomponent = Vue.component('navigation', {
 		{
 			publishController.errors.message = false;
 
-			if(this.$root.$data.format.test(this.newItem) || !this.newItem || this.newItem.length > 20)
-			{ 
-				publishController.errors.message = 'Special Characters are not allowed. Length between 1 and 20.';
+			if(this.$root.$data.format.test(this.newItem) || !this.newItem || this.newItem.length > 40)
+			{
+				publishController.errors.message = 'Special Characters are not allowed. Length between 1 and 40.';
 				return;
 			}
 			

@@ -114,7 +114,7 @@ class SettingsController extends Controller
 						
 			if(isset($themeSettings['forms']['fields']))
 			{
-				$fields = $fieldsModel->getFields($userSettings, 'themes', $themeName, $themeSettings);
+				$fields = $fieldsModel->getFields($userSettings, 'themes', $themeName, $themeSettings);				
 								
 				/* overwrite original theme form definitions with enhanced form objects */
 				$themedata[$themeName]['forms']['fields'] = $fields;
@@ -193,7 +193,7 @@ class SettingsController extends Controller
 				$fields = $fieldsModel->getFields($userSettings, 'plugins', $pluginName, $pluginOriginalSettings);
 				
 				/* overwrite original plugin form definitions with enhanced form objects */
-				$plugins[$pluginName]['forms']['fields'] = $fields;				
+				$plugins[$pluginName]['forms']['fields'] = $fields;			
 			}
 		}
 		

@@ -11,8 +11,6 @@ let publishController = new Vue({
 			csrf_value:	document.getElementById("csrf_value").value,
 		},
 		errors:{
-			title: false,
-			content: false,
 			message: false,
 		},
 		modalWindow: false,
@@ -30,7 +28,8 @@ let publishController = new Vue({
 	methods: {
 		publishDraft: function(e){
 			var self = this;
-			self.errors = {title: false, content: false, message: false};
+			self.errors.message = false;
+			editor.errors = {title: false, content: false};
 			
 			self.publishResult = "load";
 			self.publishDisabled = "disabled";
@@ -52,7 +51,7 @@ let publishController = new Vue({
 					self.publishResult 		= "fail";
 					self.errors.message 	= "You are probably logged out. Please backup your changes, login and then try again."
 				}
-				if(response)
+				else if(response)
 				{					
 					var result = JSON.parse(response);
 					
@@ -60,13 +59,10 @@ let publishController = new Vue({
 					{
 						self.publishDisabled = false;
 						self.publishResult = "fail";
-						self.errors.message = result.errors.content[0];
 						
-						/*
-						if(result.errors.title){ self.errors.title = result.errors.title[0] };
-						if(result.errors.content){ self.errors.content = result.errors.content[0] };
+						if(result.errors.title){ editor.errors.title = result.errors.title[0] };
+						if(result.errors.content){ editor.errors.content = result.errors.content[0] };
 						if(result.errors.message){ self.errors.message = result.errors.message };
-						*/
 					}
 					else
 					{
@@ -76,12 +72,19 @@ let publishController = new Vue({
 						self.publishLabel = "online";
 					}
 				}
-			}, method, url, this.form );			
+				else if(httpStatus != 200)
+				{
+					self.publishDisabled 	= false;
+					self.publishResult 		= "fail";
+					self.errors.message 	= "Something went wrong, please refresh the page and try again."					
+				}				
+			}, method, url, this.form );
 		},
 		saveDraft: function(e){
 		
 			var self = this;
-			self.errors = {title: false, content: false, message: false};
+			self.errors.message = false;
+			editor.errors = {title: false, content: false};
 			
 			self.draftDisabled = "disabled";
 			self.draftResult = "load";
@@ -100,7 +103,7 @@ let publishController = new Vue({
 					self.publishResult 		= "fail";
 					self.errors.message 	= "You are probably logged out. Please backup your changes, login and then try again."
 				}
-				if(response)
+				else if(response)
 				{	
 					var result = JSON.parse(response);
 					
@@ -108,17 +111,21 @@ let publishController = new Vue({
 					{
 						self.draftDisabled = false;
 						self.draftResult = 'fail';
-						self.errors.message = result.errors.content[0];
-						/*
-						if(result.errors.title){ self.errors.title = result.errors.title[0] };
-						if(result.errors.content){ self.errors.message = result.errors.content[0] };
-						if(result.errors.message){ self.errors.message = result.errors.message };
-						*/
+
+						if(result.errors.title){ editor.errors.title = result.errors.title[0]; };
+						if(result.errors.content){ editor.errors.content = result.errors.content[0] };
+						if(result.errors.message){ self.errors.message = result.errors.message; };
 					}
 					else
 					{
 						self.draftResult = 'success';
 					}
+				}
+				else if(httpStatus != 200)
+				{
+					self.publishDisabled 	= false;
+					self.publishResult 		= "fail";
+					self.errors.message 	= "Something went wrong, please refresh the page and try again."					
 				}
 			}, method, url, this.form );
 		},
@@ -131,7 +138,8 @@ let publishController = new Vue({
 			}
 			
 			var self = this;
-			self.errors = {title: false, content: false, message: false};
+			self.errors.message = false;
+			editor.errors = {title: false, content: false};
 
 			self.publishStatus = "disabled";
 		
@@ -140,7 +148,19 @@ let publishController = new Vue({
 			
 			sendJson(function(response, httpStatus)
 			{
-				if(response)
+				if(httpStatus == 400)
+				{
+					self.publishDisabled 	= false;
+					self.publishResult 		= "fail";
+					self.errors.message 	= "You are probably logged out. Please backup your changes, login and then try again."
+				}
+				else if(httpStatus != 200)
+				{
+					self.publishDisabled 	= false;
+					self.publishResult 		= "fail";
+					self.errors.message 	= "Something went wrong, please refresh the page and try again."					
+				}
+				else if(response)
 				{
 					var result = JSON.parse(response);
 					
@@ -160,7 +180,8 @@ let publishController = new Vue({
 		},
 		deleteArticle: function(e){
 			var self = this;
-			self.errors = {title: false, content: false, message: false};
+			self.errors.message = false;
+			editor.errors = {title: false, content: false};
 
 			self.deleteDisabled = "disabled";
 			self.deleteResult = "load";
@@ -170,7 +191,19 @@ let publishController = new Vue({
 
 			sendJson(function(response, httpStatus)
 			{
-				if(response)
+				if(httpStatus == 400)
+				{
+					self.publishDisabled 	= false;
+					self.publishResult 		= "fail";
+					self.errors.message 	= "You are probably logged out. Please backup your changes, login and then try again."
+				}
+				else if(httpStatus != 200)
+				{
+					self.publishDisabled 	= false;
+					self.publishResult 		= "fail";
+					self.errors.message 	= "Something went wrong, please refresh the page and try again."					
+				}
+				else if(response)
 				{
 					var result = JSON.parse(response);
 					

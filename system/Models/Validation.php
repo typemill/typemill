@@ -285,7 +285,7 @@ class Validation
 		$v->rule('required', ['folder_id', 'item_name', 'type', 'url']);
 		$v->rule('regex', 'folder_id', '/^[0-9.]+$/i');
 		$v->rule('noSpecialChars', 'item_name');
-		$v->rule('lengthBetween', 'item_name', 1, 20);
+		$v->rule('lengthBetween', 'item_name', 1, 40);
 		$v->rule('in', 'type', ['file', 'folder']);
 		
 		if($v->validate()) 

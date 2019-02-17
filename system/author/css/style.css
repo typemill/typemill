@@ -1567,11 +1567,54 @@ button.format-item:hover{
 	font-weight: 700;
 }
 .blox tbody{}
-.blox tr{}
-.blox tr:nth-child(odd){ }
+.blox th{ padding: 10px 0;}
+.blox tr,.blox-editor tr{}
+.blox tr:nth-child{ }
 .blox tr:nth-child(even){ background-color:#f9f8f6; }
 .blox td{ padding: 5px;}
-.blox th{ padding: 10px 0;}
+
+.blox-editor table{ 
+	display: inline-table;
+	width: 100%;  
+	border-collapse: collapse; 
+	margin-bottom: 20px;
+}
+.blox-editor thead{}
+.blox-editor tbody{}
+.blox-editor tr{}
+.blox-editor th{ border: 1px solid #ccc; padding: 5px; }
+.blox-editor td{ border: 1px solid #ccc; padding: 5px; }
+.blox-editor td.noteditable, .blox-editor th.noteditable{ 
+	border: 1px solid #ccc; 
+	text-align:center; 
+	color: #ccc; 
+	background: #f9f8f6; 
+	font-weight: 300;
+	padding: 0;
+}
+.blox-editor .columnaction, .blox-editor .rowaction{
+	position: absolute;
+	background: #fff;
+	width: 150px;
+	font-size: 0.9em;
+	color: #000;
+	text-align: left;
+	box-shadow: 0 0 2px #000;
+	margin: 5px;
+	z-index:999999;
+}
+.blox-editor .rowaction{
+	margin-left: 53px;
+	margin-top: -3px;
+}
+.blox-editor .actionline{
+	padding: 5px 10px;
+	cursor: pointer;
+}
+.blox-editor .actionline:hover{
+	background: #70c1b3;
+	color: #fff;
+}
 .blox dl{
 	border-top: 1px solid #e0474c;
 	border-bottom: 1px solid #e0474c;

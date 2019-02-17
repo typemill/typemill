@@ -24,7 +24,7 @@ class Write
 			}
 			else
 			{
-				throw new \Exception("The folder '{$folder}' is missing and we could not create it. Please create the folder manually on your server.");
+#				throw new \Exception("The folder '{$folder}' is missing and we could not create it. Please create the folder manually on your server.");
 				return false;				
 			}
 		}
@@ -35,7 +35,7 @@ class Write
 		}
 		else
 		{
-			throw new \Exception("Please make the folder '{$folder}' writable.");
+#			throw new \Exception("Please make the folder '{$folder}' writable.");
 			return false;
 		}
 		return true;

@@ -2,7 +2,10 @@ let editor = new Vue({
     delimiters: ['${', '}'],
 	el: '#editor',
 	data: {
-		errors: false,
+		errors: {
+			title: false,
+			content: false,
+		},
 		form: {
 			title: document.getElementById("title").value,
 			content: document.getElementById("content").value,

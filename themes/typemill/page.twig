@@ -6,7 +6,7 @@
 
 <h1>{{ title }}</h1>
 
-{% if (settings.themes.typemill.socialPosition.top or settings.themes.typemill.modifiedPosition.top or settings.themes.typemill.authorPosition.top) %}	
+{% if (settings.themes.typemill.socialPosition.top or settings.themes.typemill.modifiedPosition.top or settings.themes.typemill.authorPosition.top or settings.themes.typemill.gitPosition.top) %}	
 	<div class="meta-info">
 		{% if settings.themes.typemill.authorPosition.top %}
 			<small>{{ settings.themes.typemill.authorIntro }}: {{ settings.author }}</small>
@@ -22,13 +22,16 @@
 				</div>
 			</div>
 		{% endif %}
+		{% if settings.themes.typemill.gitPosition.top %} 
+			<div class="gitlink"><a title="edit on git" href="{{ settings.themes.typemill.gitlink }}/{{ item.urlRel }}">edit <i class="icon-github-circled"></i></a></div>
+		{% endif %}
 	</div>
 {% endif %}
 
 {{ content }}
 
 
-{% if (settings.themes.typemill.socialPosition.bottom or settings.themes.typemill.modifiedPosition.bottom or settings.themes.typemill.authorPosition.bottom) %}	
+{% if (settings.themes.typemill.socialPosition.bottom or settings.themes.typemill.modifiedPosition.bottom or settings.themes.typemill.authorPosition.bottom or settings.themes.typemill.gitPosition.bottom) %}	
 	<div class="meta-info">
 		{% if settings.themes.typemill.authorPosition.bottom %}
 			<small>{{ settings.themes.typemill.authorIntro }}: {{ settings.author }}</small>
@@ -44,9 +47,11 @@
 				</div>
 			</div>
 		{% endif %}
+		{% if settings.themes.typemill.gitPosition.bottom %} 
+			<div class="gitlink"><a title="edit on git" href="{{ settings.themes.typemill.gitlink }}/{{ item.urlRel }}">edit <i class="icon-github-circled"></i></a></div>
+		{% endif %}		
 	</div>
 {% endif %}
-
 
 
 {% if item.prevItem or item.nextItem %}

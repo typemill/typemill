@@ -1,5 +1,5 @@
 ﻿name: Typemill Theme
-version: 1.1.3
+version: 1.1.4
 description: The standard theme for Typemill. Responsive, minimal and without any dependencies. It uses the system fonts Calibri and Helvetica. No JavaScript is used. 
 author: Sebastian Schürmanns
 homepage: https://typemill.net
@@ -29,6 +29,11 @@ forms:
       label: Label For Start Button
       placeholder: Add Label for Start-Button
       required: true
+
+    chapnum:
+      type: checkbox
+      label: Chapter Numbers
+      checkboxlabel: Count chapters in navigation?
 
     fieldset0:
       type: fieldset
@@ -91,3 +96,20 @@ forms:
             linkedin: Linkedin
             whatsapp: WhatsApp
             mail: Mail
+
+    fieldset3:
+      type: fieldset
+      legend: GitHub
+      fields:
+        gitPosition:
+          type: checkboxlist
+          label: Position of Git Edit Link
+          options:
+            top: Top
+            bottom: Bottom
+
+        gitlink:
+          type: text
+          label: Link to git repository
+          placeholder: https://github.com/typemill/documentation
+          help: Please add the base url to the text repository e.g. on github.

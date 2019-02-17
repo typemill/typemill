@@ -92,8 +92,10 @@ abstract class ContentController
 		$vResult = $validate->editorInput($this->params);
 		
 		if(is_array($vResult))
-		{ 
+		{
+			$message = reset($vResult);
 			$this->errors = ['errors' => $vResult];
+			if(isset($message[0])){ $this->errors['errors']['message'] = $message[0]; }
 			return false;
 		}
 		return true;
@@ -106,7 +108,9 @@ abstract class ContentController
 		
 		if(is_array($vResult))
 		{ 
+			$message = reset($vResult);
 			$this->errors = ['errors' => $vResult];
+			if(isset($message[0])){ $this->errors['errors']['message'] = $message[0]; }
 			return false;
 		}
 		return true;
@@ -119,7 +123,9 @@ abstract class ContentController
 		
 		if(is_array($vResult))
 		{
+			$message = reset($vResult);
 			$this->errors = ['errors' => $vResult];
+			if(isset($message[0])){ $this->errors['errors']['message'] = $message[0]; }
 			return false;
 		}
 		return true;
@@ -132,7 +138,9 @@ abstract class ContentController
 		
 		if(is_array($vResult))
 		{
+			$message = reset($vResult);
 			$this->errors = ['errors' => $vResult];
+			if(isset($message[0])){ $this->errors['errors']['message'] = $message[0]; }
 			return false;
 		}
 		return true;

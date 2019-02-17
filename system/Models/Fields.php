@@ -13,7 +13,7 @@ class Fields
 
 		# formtype are backend forms or public forms, only relevant for plugins for now
 		$formType = $formType ? $formType : 'forms';
-
+		
 		# iterate through all fields of the objectSetting (theme or plugin)
 		foreach($objectSettings[$formType]['fields'] as $fieldName => $fieldConfigurations)
 		{
