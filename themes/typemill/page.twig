@@ -23,7 +23,7 @@
 			</div>
 		{% endif %}
 		{% if settings.themes.typemill.gitPosition.top %} 
-			<div class="gitlink"><a title="edit on git" href="{{ settings.themes.typemill.gitlink }}/{{ item.urlRel }}">edit <i class="icon-github-circled"></i></a></div>
+			<div class="gitlink"><a title="edit on git" href="{{ settings.themes.typemill.gitlink }}{{ item.urlRel }}">edit <i class="icon-github-circled"></i></a></div>
 		{% endif %}
 	</div>
 {% endif %}
@@ -48,7 +48,7 @@
 			</div>
 		{% endif %}
 		{% if settings.themes.typemill.gitPosition.bottom %} 
-			<div class="gitlink"><a title="edit on git" href="{{ settings.themes.typemill.gitlink }}/{{ item.urlRel }}">edit <i class="icon-github-circled"></i></a></div>
+			<div class="gitlink"><a title="edit on git" href="{{ settings.themes.typemill.gitlink }}{{ item.urlRel }}">edit <i class="icon-github-circled"></i></a></div>
 		{% endif %}		
 	</div>
 {% endif %}

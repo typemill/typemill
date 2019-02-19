@@ -8,7 +8,7 @@ class Settings
 	{
 		$settings 			= self::getDefaultSettings();
 		$userSettings 		= self::getUserSettings();
-
+						
 		$imgSettings 		= isset($settings['images']) ? $settings['images'] : [];
 		
 		if($userSettings)
@@ -47,7 +47,7 @@ class Settings
 			'contentFolder'							=> 'content',
 			'cache'									=> true,
 			'cachePath'								=> $rootPath . 'cache',
-			'version'								=> '1.2.10',
+			'version'								=> '1.2.11',
 			'setup'									=> true,
 			'welcome'								=> true,
 			'images'								=> ['live' => ['width' => 820], 'mlibrary' => ['width' => 50, 'height' => 50]],
@@ -75,11 +75,15 @@ class Settings
 	}
 	
 	public static function createSettings($settings)
-	{
+	{		
 		$yaml = new Models\WriteYaml();
 		
 		/* write settings to yaml */
-		$yaml->updateYaml('settings', 'settings.yaml', $settings);
+		if($yaml->updateYaml('settings', 'settings.yaml', $settings))
+		{ 
+			return true; 
+		}
+		return false;
 	}
 	
 	public static function updateSettings($settings)
@@ -96,6 +100,7 @@ class Settings
 		}
 	}
 	
+	/*
 	public static function removePluginSettings($pluginName)
 	{
 		$userSettings 	= self::getUserSettings();
@@ -104,10 +109,10 @@ class Settings
 		{
 			$yaml = new Models\WriteYaml();
 			
-			/* delete the plugin from settings */
+			# delete the plugin from settings
 			unset($userSettings['plugins'][$pluginName]);
 			
-			/* write settings to yaml */
+			# write settings to yaml
 			$yaml->updateYaml('settings', 'settings.yaml', $userSettings);			
 		}
 		
@@ -130,11 +135,12 @@ class Settings
 			
 			$userSettings['plugins'][$pluginName]['active'] = false;
 			
-			/* write settings to yaml */
+			# write settings to yaml
 			$yaml->updateYaml('settings', 'settings.yaml', $userSettings);
 
 			return $userSettings;
 		}
 		return false;
 	}
+	*/
 }

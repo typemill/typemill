@@ -29,43 +29,38 @@ $app = new \Slim\App($settings);
 $container = $app->getContainer();
 
 /************************
-* LOAD PLUGINS 			*
+* LOAD & UPDATE PLUGINS *
 ************************/
 
 $plugins 					= new Typemill\Plugins();
 $pluginNames				= $plugins->load();
-$pluginSettings['plugins'] 	= array();
-
-$routes = $middleware 		= array();
+$pluginSettings = $routes = $middleware	= array();
 
 foreach($pluginNames as $pluginName)
 {
 	$className			= $pluginName['className'];
 	$name				= $pluginName['name'];
-	
-	/* if plugin is not in user settings yet */
-	if(!isset($settings['settings']['plugins'][$name]))
-	{
-		/* then read the plugin default settings and write them to the users setting.yaml */
-		$updateSettingsYaml = Typemill\settings::addPluginSettings($name);
 		
-		/* if default settings are written successfully to user settings, update the pluginSettings */
-		if($updateSettingsYaml)
-		{
-			$pluginSettings['plugins'][$name] = $updateSettingsYaml;
-		}
-		/* if not, then settingsYaml does not exist, so set plugin to false for further use */
-		else
-		{
-			$pluginSettings['plugins'][$name] = false;			
-		}
-		/* get settings from di-container and update them with the new plugin Settings */
-		$DIsettings = $container->get('settings');
-		$DIsettings->replace($pluginSettings);		
+	# check if plugin is in the settings already
+	if(isset($settings['settings']['plugins'][$name]))
+	{
+		# if so, add the settings to temporary plugin settings
+		$pluginSettings[$name] = $settings['settings']['plugins'][$name];
+		
+		# and delete them from original settings
+		unset($settings['settings']['plugins'][$name]);
 	}
-
-	/* if the plugin is activated, add routes/middleware and add plugin as event subscriber */
-	if(isset($settings['settings']['plugins'][$name]['active']) && $settings['settings']['plugins'][$name]['active'] != false)
+	else
+	{
+		# if not, it is a new plugin. Add it and set active to false
+		$pluginSettings[$name] = ['active' => false];
+		
+		# and set flag to refresh the settings
+		$refreshSettings = true;
+	}
+	
+	# if the plugin is activated, add routes/middleware and add plugin as event subscriber
+	if($pluginSettings[$name]['active'])
 	{
 		$routes 			= $plugins->getNewRoutes($className, $routes);
 		$middleware			= $plugins->getNewMiddleware($className, $middleware);
@@ -74,12 +69,28 @@ foreach($pluginNames as $pluginName)
 	}
 }
 
-/* dispatch the event onPluginsLoaded */
+# if plugins in settings are not empty, then a plugin has been removed
+if(!empty($settings['settings']['plugins'])){ $refreshSettings = true; }
+
+# update the settings in all cases
+$settings['settings']['plugins'] = $pluginSettings;
+
+# if plugins have been added or removed
+if(isset($refreshSettings))
+{
+	# update the settings in the container
+	$container->get('settings')->replace($settings['settings']);
+	
+	# update stored settings file
+	$refreshSettings = Typemill\settings::updateSettings($settings['settings']);
+}
+
+# dispatch the event onPluginsLoaded
 $dispatcher->dispatch('onPluginsLoaded', new OnPluginsLoaded($pluginNames));
 
-/* dispatch settings event and get all setting-updates from plugins */
-/* TODO, how to update the settings with a plugin? You cannot replace the full settings in the container, so you have to add settings in the container directly */
+# dispatch settings event and get all setting-updates from plugins
 $dispatcher->dispatch('onSettingsLoaded', new OnSettingsLoaded($settings))->getData();
+
 
 /******************************
 * ADD DISPATCHER TO CONTAINER *
@@ -89,6 +100,7 @@ $container['dispatcher'] = function($container) use ($dispatcher)
 {
 	return $dispatcher;
 };
+
 
 /********************************
 * ADD ASSET-FUNCTION FOR TWIG	*

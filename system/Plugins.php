@@ -3,7 +3,7 @@
 namespace Typemill;
 
 class Plugins
-{	
+{
 	public function load()
 	{
 		$pluginFolder = $this->scanPluginFolder();
