@@ -129,9 +129,9 @@ $container['csrf'] 	= false;
 foreach($session_segments as $segment)
 {
 	if(substr( $path, 0, strlen($segment) ) === $segment)
-	{		
+	{	
 		// configure session
-		ini_set( 'session.cookie_httponly', 1 );
+		ini_set('session.cookie_httponly', 1 );
 		ini_set('session.use_strict_mode', 1);
 		if($container['request']->getUri()->getScheme() == 'https')
 		{

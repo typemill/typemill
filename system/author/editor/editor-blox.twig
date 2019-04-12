@@ -9,22 +9,41 @@
 			
 			<div class="blox-body">
 			
-				<content-block class="title" :body="false">
-					<div class="blox title" @click.prevent="setData( $event )" data-id="0" id="blox-0">{{ title }}</div>
-				</content-block>
-
-				<div id="sortblox">
+				<transition name="fade">
+					<div v-if="bloxOverlay" class="blox-overlay"></div>
+				</transition>
 				
-					{% for id, block in content %}
-						<content-block :body="true">
-							<div class="blox" @click.prevent="setData( $event )" data-id="{{ id }}" id="blox-{{id}}">{{block}}</div>
-						</content-block>
+				<div id="initial-content">
+				
+					<div class="blox title">{{title}}</div>
+					
+					{% for block in content %}
+							<div class="blox" >{{block}}</div>
 					{% endfor %}
-
-					<content-block :body="true" v-for="newBlock in newBlocks"><div class="blox" @click.prevent="setData( $event )" :data-id="newBlock.id" :id="newBlock.blockId" v-html="newBlock.content"></div></content-block>
 				
 				</div>
 				
+				<content-block class="title" :body="false">
+					<div class="blox title" @click.prevent="setData( $event )" data-id="0" id="blox-0" v-if="title" v-html="title"></div>
+				</content-block>
+				
+				<div id="sortblox" v-cloak>
+					<content-block :body="true" v-for="(block,index) in html" v-if="index !== 0">
+						<div v-if="block" class="blox" @click.prevent="setData( $event )" :data-id="index" :id="'blox-' + index" v-html="block"></div>
+						<div v-else class="format-bar blox" @click.prevent="clearData( $event )" :data-id="index" :id="'blox-' + index">
+							<button class="format-item" @click.prevent="setData( $event, 'markdown-component' )" :data-id="index" :id="'blox-' + index"><i class="icon-paragraph"></i></button>
+							<button class="format-item" @click.prevent="setData( $event, 'headline-component' )" :data-id="index" :id="'blox-' + index"><i class="icon-header"></i></button>
+							<button class="format-item" @click.prevent="setData( $event, 'ulist-component' )" :data-id="index" :id="'blox-' + index"><i class="icon-list-bullet"></i></button>
+							<button class="format-item" @click.prevent="setData( $event, 'olist-component' )" :data-id="index" :id="'blox-' + index"><i class="icon-list-numbered"></i></button>
+							<button class="format-item" @click.prevent="setData( $event, 'image-component' )" :data-id="index" :id="'blox-' + index"><i class="icon-picture"></i></button>
+							<button class="format-item" @click.prevent="setData( $event, 'video-component' )" :data-id="index" :id="'blox-' + index"><i class="icon-youtube-play"></i></button>
+							<button class="format-item" @click.prevent="setData( $event, 'table-component' )" :data-id="index" :id="'blox-' + index"><i class="icon-table"></i></button>
+							<button class="format-item" @click.prevent="setData( $event, 'quote-component' )" :data-id="index" :id="'blox-' + index"><i class="icon-quote-left"></i></button>
+							<button class="format-item" @click.prevent="setData( $event, 'code-component' )" :data-id="index" :id="'blox-' + index"><i class="icon-code"></i></button>
+						</div>
+					</content-block>
+				</div>
+	
 				<div class="format-bar">
 					<content-block :body="false">
 						<button class="format-item" @click.prevent="setData( $event, 'markdown-component' )" data-id="99999" id="blox-99999"><i class="icon-paragraph"></i></button>
@@ -36,7 +55,7 @@
 						<button class="format-item" @click.prevent="setData( $event, 'table-component' )" data-id="99999" id="blox-99999"><i class="icon-table"></i></button>
 						<button class="format-item" @click.prevent="setData( $event, 'quote-component' )" data-id="99999" id="blox-99999"><i class="icon-quote-left"></i></button>
 						<button class="format-item" @click.prevent="setData( $event, 'code-component' )" data-id="99999" id="blox-99999"><i class="icon-code"></i></button>
-				<!--	<button class="format-item" @click.prevent="setData( $event, 'code-component' )" data-id="99999" id="blox-99999"><i class="icon-math"></i></button>  -->
+				<!--	<button class="format-item" @click.prevent="setData( $event, 'math-component' )" data-id="99999" id="blox-99999"><i class="icon-math"></i></button>  -->
 					</content-block>
 				</div>
 				

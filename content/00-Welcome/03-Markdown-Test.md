@@ -6,7 +6,7 @@ Developers love markdown, because it is much cleaner and saver than HTML. And th
 
 If you develop a theme for TYPEMILL, please take care that all elements on this page are designed properly.
 
-##Table of Contents
+## Table of Contents
 
 To create a table of contents, simply write `[TOC]` in a separate line. It will be replaced with a table of contents like this automatically.
 
@@ -292,3 +292,4 @@ x = \int_{0^1}^1(-b \pm \sqrt{b^2-4ac})/(2a)
 
 [^1]: Thank you for scrolling.
 [^2]: This is the end of the page.
+

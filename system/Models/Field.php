@@ -67,6 +67,8 @@ class Field
 									'size',
 									'rows',
 									'cols',
+									'min',
+									'max',
 									'class',
 									'pattern'
 								);

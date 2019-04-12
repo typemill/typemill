@@ -1323,8 +1323,8 @@ label .help, .label .help{
 }
 .editor button.button--secondary[disabled],
 .editor button.button--secondary:disabled{
-	border: 1px solid #eee; 
-	background: #eee;
+	border: 1px solid #f9f8f6; 
+	background: #f9f8f6;
 	color: #444;
 	cursor: default;
 }
@@ -1349,7 +1349,20 @@ label .help, .label .help{
 ****************/
 
 .blox-body{
+	position: relative;
 	padding: 18px 20px			
+}
+.blox-overlay{
+	position:absolute;
+	display: block;
+	z-index: 10;
+	box-sizing: border-box;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: #FFF;
+	background: rgba(255,255,255,0.8);	
 }
 .blox{
 	padding: 1px 20px;
@@ -1360,82 +1373,55 @@ label .help, .label .help{
 	margin-top: 12px;
 	margin-bottom: 12px;
 }
-.blox-editor{
-	position: relative;
-}
 .blox:hover{
 	background: #f9f8f6;
+}
+.blox-editor{
+	position: relative;
 }
 .blox-buttons{
 	position: absolute;
     bottom: -15px;
-    left: 15px;
-    z-index: 9;
-	left: 15px;
+	text-align: right;
+    right: 25px;
     width: 200px;
 	z-index: 99;
 }
-.blox-editor button{
+.blox-buttons button{
 	display: inline-block;
 	box-sizing: border-box;
-	margin: 1px;
+	margin: 2px;
 	padding: 3px 6px;
 	width: 80px;
 	text-align: center;
+	color: #444;
+	background: #f9f8f6;
+	border: 2px solid #fff;
 	border-radius: 2px;
 	font-size: 0.9em;
 }
-.blox-editor button.edit{
-	background: #fff;
-	color: #444;
-	border: 1px solid #bbb;
-}
-.blox-editor button.edit:hover{
-	background: #cc4146;
+.blox-buttons button.edit:hover{
+	background: #70c1b3;
 	color: #eee;
-	border: 1px solid #cc4146;
 }
-.blox-editor button.cancel{
-	background: #fff;
-	color: #444;	
-	border: 1px solid #bbb;
-}
-.blox-editor button.cancel:hover{
+.blox-buttons button.cancel:hover{
 	background: #e0474c;
-	border: 1px solid #e0474c;
 	color: #eee;
 }
-.blox-editor textarea{
-	font-family: arial;
-	line-height: 1.5em;
-	font-size: 16px;
-	padding-left: 20px;
-	padding-right: 20px;
-	box-sizing: border-box;
-	min-height: 40px;
-}
-/*
-.blox-editor textarea.mdcontent, .blox-editor input.mdcontent, .blox-editor .video.dropbox, .blox-editor .dropbox p{
-	border-left: 40px solid rgba(255,255,255,0.5);
-}
-*/
-.blox-editor input.mdcontent{
-	font-size: 1.4em;
-	font-weight: 700;
-}
-.blox-editor .contenttype {
-	position: absolute;
-	top: 16px;
-	left: -25px;
-	color: #e0474c;
+.blox-buttons button.edit:disabled, .blox-buttons button.cancel:disabled{
+	background: #eee;
+	color: #444;
+	border: 1px solid #eee;
 }
 
-.blox-editor .sideaction{
+
+.sideaction{
 	position: absolute;
-	right: -22px;
 	top: 0px;
+	font-size: 0.8em;
+	right: -22px;
 }
-.blox-editor button.delete, .blox-editor .icon-resize-full-alt{
+.sideaction button{
 	display: block;
 	font-weight: 300;
 	font-size: 0.9em;
@@ -1446,22 +1432,54 @@ label .help, .label .help{
 	line-height: 20px;
 	text-align: center;
 	padding: 0px;
-	margin: 0px 0px 1px;
+	margin: 1px;
 	border: 0px;
 	border-radius: 1px;
 }
-.blox-editor:hover button.delete{
+.blox-wrapper{
+	position: relative;
+}
+.editactive .sideaction button, 
+.blox-wrapper:hover button{
+	background-color: #f9f8f6;
+	color: #666;
+}
+.sideaction:hover ~ .background-helper {
+    background-color: #f9f8f6;
+}
+.blox-wrapper button.add:hover{
+	background: #66b0a3;
+	color: #fff;
+}
+.blox-wrapper button.delete:hover{
 	background: #e0474c;
 	color: #fff;
 }
-.blox-editor button.delete:hover{
-	cursor: pointer;
-	background: #cc4146;
+
+
+
+.blox-editor textarea{
+	font-family: arial;
+	line-height: 1.5em;
+	font-size: 16px;
+	padding-left: 20px;
+	padding-right: 20px;
+	box-sizing: border-box;
+	min-height: 40px;
 }
-.blox-editor button.edit:disabled, .blox-editor button.cancel:disabled{
-	background: #eee;
-	color: #444;
-	border: 1px solid #eee;
+.blox-editor textarea:focus, .blox-editor input:focus{
+	box-shadow: none;
+	outline: none;
+}
+.blox-editor input.mdcontent{
+	font-size: 1.4em;
+	font-weight: 700;
+}
+.blox-editor .contenttype {
+	position: absolute;
+	top: 15px;
+	left: -25px;
+	color: #666;
 }
 .visible{
 	display: block;
@@ -1477,17 +1495,14 @@ label .help, .label .help{
 	width: 100%;
 	z-index:9;
 }
+
+
+/* .format-bar at the bottom of the page */
 .format-bar .hidden{
 	display: none;
 }
 .format-bar .component{
 	position: relative;
-}
-.fade-editor-enter-active{
-  transition: opacity .5s;
-}
-.fade-editor-enter{
-  opacity: 0.3;
 }
 .format-bar{
 	padding: 20px;
@@ -1498,16 +1513,57 @@ label .help, .label .help{
 	margin-left: -20px;
 	margin-right: 20px;
 }
-.format-bar .blox-editor{
-/*	display: inline; */
+.format-bar.blox{
+	width: auto;
+	background: #f9f8f6;
+}
+.newblock{
+	z-index: 20;
+}
+.newblock .sideaction{
+	display: none;
+}
+.newblock-info{
+	padding: 0 0 0 20px;
+	font-size: 0.9em;
+	line-height: 30px;
+    background: #66b0a1;
+    margin-bottom: 2px;
+    color: #fff;
+}
+.newblock-close{
+	line-height: 30px;
+	border: 0px;
+	color: #fff;
+	background: #e0474c;
+	float: right;
+}
+/* format line for each block */
+.formatbuttons{
+	margin: 5px 0px 2px;
+	font-size: 0.7em;
+	text-align: center;
+}
+.formatbuttons.hidden{
+	display: none;
+}
+.formatbuttons button.format-item {
+	width: 30px;
+	height: 30px;
+}
+.fade-editor-enter-active{
+  transition: opacity .5s;
+}
+.fade-editor-enter{
+  opacity: 0.3;
 }
 button.format-item{
 	margin-right: 2px;
 	padding: 5px;
-	background: #70c1b3;
-	color: #fff;
+	background: #f9f8f6;
+	border: 1px solid #eee;
+	color: #444;
 	display: inline;
-	border: 0px;
 	border-radius: 2px;
 	width: 40px;
 	height: 40px;
@@ -1515,7 +1571,22 @@ button.format-item{
 }
 button.format-item:hover{
 	background: #66b0a3;
+	border: 1px solid #66b0a3;
+	color: #fff;
 	cursor: pointer;
+}
+button.format-item.disabled, button.format-item.close{
+	width: 90px;
+}
+button.format-item.disabled{
+	background: #f9f8f6;
+	color: #444;
+	border: 1px solid #eee;
+	cursor: initial;
+}
+button.format-item.close:hover{
+	background: #cc4146;
+	border: 1px solid #cc4146;
 }
 
 /************************
@@ -1525,7 +1596,7 @@ button.format-item:hover{
 .blox h1, .blox h2, .blox h3, .blox h4, .blox h5, .blox h6{ font-weight: 700; line-height: 1em; }
 .blox h1{ font-size: 2.2em; margin: 0.6em 0 0.6em; }
 .blox h2{ font-size: 1.6em; margin: 1.3em 0 0.6em; }
-.blox h3{ font-size: 1.3em; margin: 1.2em 0 0.6em; }
+.blox h3{ font-size: 1.3em; text-transform: none; margin: 1.2em 0 0.6em; }
 .blox h4{ font-size: 1.1em; margin: 1.2em 0 0.6em; }
 .blox h5{ font-size: 1em; margin: 1.2em 0 0.6em; }
 .blox h6{ font-size: 1em; font-style: italic; font-weight:300; margin: 1em 0 0.6em; }

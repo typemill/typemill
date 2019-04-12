@@ -23,7 +23,7 @@ class SettingsController extends Controller
 		$users		= $user->getUsers();
 		$route 		= $request->getAttribute('route');
 		
-		$this->render($response, 'settings/system.twig', array('settings' => $settings, 'copyright' => $copyright, 'languages' => $languages, 'locale' => $locale, 'users' => $users, 'route' => $route->getName() ));
+		return $this->render($response, 'settings/system.twig', array('settings' => $settings, 'copyright' => $copyright, 'languages' => $languages, 'locale' => $locale, 'users' => $users, 'route' => $route->getName() ));
 	}
 	
 	public function saveSettings($request, $response, $args)
@@ -132,7 +132,7 @@ class SettingsController extends Controller
 		$users		= $user->getUsers();
 		$route 		= $request->getAttribute('route');
 		
-		$this->render($response, 'settings/themes.twig', array('settings' => $userSettings, 'themes' => $themedata, 'users' => $users, 'route' => $route->getName() ));
+		return $this->render($response, 'settings/themes.twig', array('settings' => $userSettings, 'themes' => $themedata, 'users' => $users, 'route' => $route->getName() ));
 	}
 	
 	public function showPlugins($request, $response, $args)
@@ -201,7 +201,7 @@ class SettingsController extends Controller
 		$users 	= $user->getUsers();
 		$route 	= $request->getAttribute('route');
 		
-		$this->render($response, 'settings/plugins.twig', array('settings' => $userSettings, 'plugins' => $plugins, 'users' => $users, 'route' => $route->getName() ));
+		return $this->render($response, 'settings/plugins.twig', array('settings' => $userSettings, 'plugins' => $plugins, 'users' => $users, 'route' => $route->getName() ));
 	}
 
 	/*************************************
@@ -420,7 +420,7 @@ class SettingsController extends Controller
 			$userdata[] = $user->getUser($username);
 		}
 		
-		$this->render($response, 'settings/userlist.twig', array('settings' => $settings, 'users' => $users, 'userdata' => $userdata, 'route' => $route->getName() ));		
+		return $this->render($response, 'settings/userlist.twig', array('settings' => $settings, 'users' => $users, 'userdata' => $userdata, 'route' => $route->getName() ));		
 	}
 	
 	public function newUser($request, $response, $args)
@@ -431,7 +431,7 @@ class SettingsController extends Controller
 		$route 		= $request->getAttribute('route');
 		$settings 	= $this->c->get('settings');
 
-		$this->render($response, 'settings/usernew.twig', array('settings' => $settings, 'users' => $users, 'userrole' => $userrole, 'route' => $route->getName() ));
+		return $this->render($response, 'settings/usernew.twig', array('settings' => $settings, 'users' => $users, 'userrole' => $userrole, 'route' => $route->getName() ));
 	}
 		
 	public function createUser($request, $response, $args)

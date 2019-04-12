@@ -2,14 +2,9 @@ const eventBus = new Vue();
 
 const contentComponent = Vue.component('content-block', {
 	props: ['body', 'load'],
-	template: '<div ref="bloxcomponent" class="blox-editor" :class="newblock">' +
-				'<div v-if="newblock" class="newblock-info">Choose a content-type <button class="newblock-close" @click.prevent="closeNewBlock($event)">close</button></div>' +	
-				'<div class="blox-wrapper" :class="{ editactive: edit }">' +
-				 '<div class="sideaction" v-if="body">' + 
-				  '<button class="add" :disabled="disabled" title="add content-block" @click.prevent="addNewBlock($event)"><i class="icon-plus"></i></button>' +
-				  '<button class="delete" :disabled="disabled" title="delete content-block" @click.prevent="deleteBlock($event)"><i class="icon-cancel"></i></button>' +
-				 '</div>' + 
-				 '<div class="background-helper" @keyup.enter="submitBlock" @click="getData">' +
+	template: '<div ref="bloxcomponent" class="blox-editor">' +
+				'<div :class="{ editactive: edit }">' +
+				 '<div @keyup.enter="submitBlock" @click="getData">' +
 				  '<div class="component" ref="component">' +
 				   '<transition name="fade-editor">' +
 				    '<component :disabled="disabled" :compmarkdown="compmarkdown" @updatedMarkdown="updateMarkdown" :is="componentType"></component>' +
@@ -19,11 +14,17 @@ const contentComponent = Vue.component('content-block', {
 				    '<button class="cancel" :disabled="disabled" @click.prevent="switchToPreviewMode">cancel</button>' +
 				   '</div>' +
 				  '</div>' +
-				  '<div :class="preview" ref="preview"><slot><format-component></format-component></slot></div>' +
+				  '<div :class="preview" ref="preview"><slot></slot></div>' + 
 				 '</div>' +
-				'</div>' +
+				 '<div class="sideadd" v-if="body">' + 
+				  '<button class="add" :disabled="disabled" title="add content-block" @click.prevent="addBlock($event)"><i class="icon-plus"></i></button>' +
+				 '</div>' + 
+				 '<div class="sideaction" v-if="body">' + 
+				  '<button class="delete" :disabled="disabled" title="delete content-block" @click.prevent="deleteBlock($event)"><i class="icon-cancel"></i></button>' +
+				 '</div>' + 
+				'</div>' + 
 				'<div v-if="load" class="loadoverlay"><span class="load"></span></div>' +
-			  '</div>',
+			  '</div>',	
 	data: function () {
 		return {
 			preview: 'visible',
@@ -31,8 +32,7 @@ const contentComponent = Vue.component('content-block', {
 			compmarkdown: '',
 			componentType: '',
 			disabled: false,
-			load: false,
-			newblock: false,
+			load: false
 		}
 	},
 	mounted: function()
@@ -40,38 +40,26 @@ const contentComponent = Vue.component('content-block', {
 		eventBus.$on('closeComponents', this.closeComponents);
 	},
 	methods: {
-		addNewBlock: function(event)
+		addBlock: function($event)
 		{
-			/* we have to get from dom because block-data might not be set when user clicked on add button before opened the component */
-			var bloxeditor = event.target.closest('.blox-editor');
-			var bloxid = bloxeditor.getElementsByClassName('blox')[0].dataset.id;
-		
-			this.switchToPreviewMode();
-		
-			/* add new empty data */
-			this.$root.$data.html.splice(bloxid,0, false);
-			this.$root.$data.markdown.splice(bloxid,0, '');
+			self = this;
+			console.info($event);
+			var result = {content: '<p>asf</p>', markdown: 'asf', blockId: 'blox-new', id: 'new', errors: 'false'};
+			self.$root.$data.markdown.push(result.markdown);
+			self.$root.$data.newBlocks.push(result);
 			
-			/* show overlay and bring newblock to front, so that user cannot change any other data (ids not synchronized with stored data now) */
-			this.$root.$data.bloxOverlay = true;
-			this.$root.$data.newblock = true;
-			this.newblock = 'newblock';
-			self.$root.sortable.option("disabled", true);
-		},
-		closeNewBlock: function($event)
-		{
-			var bloxeditor = event.target.closest('.blox-editor');			
-			var bloxid = bloxeditor.getElementsByClassName('blox')[0].dataset.id;
-
-			this.switchToPreviewMode();
-			
-			this.$root.$data.bloxOverlay = false;
-			this.$root.$data.newblock = false;
-			this.newblock = false;
-			self.$root.sortable.option("disabled", false);
-
-			this.$root.$data.html.splice(bloxid,1);
-			this.$root.$data.markdown.splice(bloxid,1);			
+			this.$nextTick(function () {
+				var newcontent = document.getElementById("blox-new");
+				var newblock = newcontent.closest('.blox-editor');
+				console.info(newblock);
+			});
+			/*
+			self.$root.$data.blockMarkdown = '';
+			self.$root.$data.blockType = 'markdown-component';
+			// self.getData();
+			var textbox = document.querySelectorAll('textarea')[0];
+			if(textbox){ textbox.style.height = "70px"; }
+			*/
 		},
 		updateMarkdown: function($event)
 		{
@@ -113,10 +101,7 @@ const contentComponent = Vue.component('content-block', {
 			this.preview = 'visible';
 			this.edit = false;
 			this.componentType = false;
-			if(this.$refs.preview)
-			{
-				this.$refs.preview.style.minHeight = "auto";
-			}
+			this.$refs.preview.style.minHeight = "auto";			
 		},
 		switchToPreviewMode: function()
 		{
@@ -212,15 +197,6 @@ const contentComponent = Vue.component('content-block', {
 
 				var self = this;
 				
-				var compmarkdown = this.compmarkdown.split('\n\n').join('\n');
-				var params = {
-					'url':				document.getElementById("path").value,
-					'markdown':			compmarkdown,
-					'block_id':			self.$root.$data.blockId,
-					'csrf_name': 		document.getElementById("csrf_name").value,
-					'csrf_value':		document.getElementById("csrf_value").value,
-				};
-
 				if(this.componentType == 'image-component' && self.$root.$data.file)
 				{
 					var url = self.$root.$data.root + '/api/v1/image';
@@ -231,17 +207,21 @@ const contentComponent = Vue.component('content-block', {
 					var url = self.$root.$data.root + '/api/v1/video';
 					var method = 'POST';
 				}
-				else if(self.$root.$data.newblock || self.$root.$data.blockId == 99999)
-				{
-					var url = self.$root.$data.root + '/api/v1/block';
-					var method = 'POST';
-				}
 				else
 				{
 					var url = self.$root.$data.root + '/api/v1/block';
 					var method 	= 'PUT';
 				}
 				
+				var compmarkdown = this.compmarkdown.split('\n\n').join('\n');
+				var params = {
+					'url':				document.getElementById("path").value,
+					'markdown':			compmarkdown,
+					'block_id':			self.$root.$data.blockId,
+					'csrf_name': 		document.getElementById("csrf_name").value,
+					'csrf_value':		document.getElementById("csrf_value").value,
+				};
+
 				sendJson(function(response, httpStatus)
 				{
 					if(httpStatus == 400)
@@ -254,7 +234,7 @@ const contentComponent = Vue.component('content-block', {
 						self.activatePage();
 
 						var result = JSON.parse(response);
-									
+										
 						if(result.errors)
 						{
 							publishController.errors.message = result.errors.message;
@@ -266,7 +246,7 @@ const contentComponent = Vue.component('content-block', {
 							if(self.$root.$data.blockId == 99999)
 							{
 								self.$root.$data.markdown.push(result.markdown);
-								self.$root.$data.html.push(result.content);
+								self.$root.$data.newBlocks.push(result);
 								
 								self.$root.$data.blockMarkdown = '';
 								self.$root.$data.blockType = 'markdown-component';
@@ -274,24 +254,13 @@ const contentComponent = Vue.component('content-block', {
 								var textbox = document.querySelectorAll('textarea')[0];
 								if(textbox){ textbox.style.height = "70px"; }
 							}
-							else if(self.$root.$data.newblock)
-							{
-								self.$root.$data.html[result.id] = result.content;
-								self.$root.$data.markdown[result.id] = result.markdown;								
-
-								self.$root.$data.blockMarkdown = '';
-								self.$root.$data.blockType = '';
-								self.$root.$data.bloxOverlay = false;
-								self.$root.$data.newblock = false;
-								self.newblock = false;
-							}
 							else
 							{
-								self.$root.$data.markdown[result.id] = result.markdown;
-
-								self.$root.$data.html[result.id] = result.content;
-								document.getElementById('blox-'+result.id).innerHTML = result.content;
+								var htmlid = "blox-" + self.$root.$data.blockId;
+								var html = document.getElementById(htmlid);
+								html.innerHTML = result.content;
 								
+								self.$root.$data.markdown[self.$root.$data.blockId] = result.markdown;
 								self.$root.$data.blockMarkdown = '';
 								self.$root.$data.blockType = '';
 							}
@@ -312,21 +281,21 @@ const contentComponent = Vue.component('content-block', {
 			var bloxeditor = event.target.closest('.blox-editor');
 			
 			var bloxid = bloxeditor.getElementsByClassName('blox')[0].dataset.id;
-			/* bloxeditor.firstChild.id = "delete-"+bloxid; */
-							
+			bloxeditor.firstChild.id = "delete-"+bloxid;
+
 			var self = this;
-				
+			
 			var url = self.$root.$data.root + '/api/v1/block';
-				
+			
 			var params = {
 				'url':				document.getElementById("path").value,
 				'block_id':			bloxid,
 				'csrf_name': 		document.getElementById("csrf_name").value,
 				'csrf_value':		document.getElementById("csrf_value").value,
 			};
-				
+			
 			var method 	= 'DELETE';
-				
+			
 			sendJson(function(response, httpStatus)
 			{
 				if(httpStatus == 400)
@@ -338,7 +307,7 @@ const contentComponent = Vue.component('content-block', {
 					self.activatePage();
 					
 					var result = JSON.parse(response);
-	
+
 					if(result.errors)
 					{
 						publishController.errors.message = result.errors;
@@ -346,14 +315,23 @@ const contentComponent = Vue.component('content-block', {
 					else
 					{	
 						self.switchToPreviewMode();
-							
-						self.$root.$data.html.splice(bloxid,1);
-						self.$root.$data.markdown.splice(bloxid,1);
+						
+						var deleteblock = document.getElementById("delete-"+bloxid);
+						deleteblock.parentElement.remove(deleteblock);
+						
+						var blox = document.getElementsByClassName("blox");
+						var length = blox.length;
+						for (var i = 0; i < length; i++ ) {
+							blox[i].id = "blox-" + i;
+							blox[i].dataset.id = i;
+						}
+
+						self.$root.$data.markdown = result.markdown;						
 						self.$root.$data.blockMarkdown = '';
 						self.$root.$data.blockType = '';
 					}
 				}
-			}, method, url, params);				
+			}, method, url, params);
 		},
 	},
 })
@@ -769,6 +747,7 @@ const tableComponent = Vue.component('table-component', {
 		},
 		updatemarkdown: function(event)
 		{
+			/* generate markdown here ??? */
 			this.$emit('updatedMarkdown', event.target.value);
 		},
 	},
@@ -886,8 +865,6 @@ const imageComponent = Vue.component('image-component', {
 				this.imgpreview = imgpreview[0].slice(1,-1);
 				this.imgfile = this.imgpreview;
 			}
-			console.info(this.imgpreview);
-			console.info(this.imgfile);
 		}
 	},
 	methods: {
@@ -1084,26 +1061,21 @@ let editor = new Vue({
 	},
 	data: {
 		root: document.getElementById("main").dataset.url,
-		html: false,
-		title: false,
 		markdown: false,
 		blockId: false,
 		blockType: false,
-		blockMarkdown: false,
+		blockMarkdown: '',
 		file: false,
 		freeze: false,
 		newBlocks: [],
-		addblock: false,
 		draftDisabled: true,
-		bloxOverlay: false,
 	},
 	mounted: function(){
 
+		console.info(publishController);
 		publishController.visual = true;
-
-		var self = this;		
 		
-		var url = this.root + '/api/v1/article/html';
+		var url = this.root + '/api/v1/article/markdown';
 		
 		var params = {
 			'url':				document.getElementById("path").value,
@@ -1113,31 +1085,7 @@ let editor = new Vue({
 		
 		var method 	= 'POST';
 
-		sendJson(function(response, httpStatus)
-		{
-			if(httpStatus == 400)
-			{
-			}
-			if(response)
-			{
-				var result = JSON.parse(response);
-				
-				if(result.errors)
-				{
-					self.errors.title = result.errors;
-				}
-				else
-				{
-					var contenthtml = result.data;
-					self.title = contenthtml[0];
-					self.html = contenthtml;
-					var initialcontent = document.getElementById("initial-content");
-					initialcontent.parentNode.removeChild(initialcontent);
-				}
-			}
-		}, method, url, params);
-		
-		var url = this.root + '/api/v1/article/markdown';
+		var self = this;		
 		
 		sendJson(function(response, httpStatus)
 		{
@@ -1179,7 +1127,6 @@ let editor = new Vue({
 			this.blockId = event.currentTarget.dataset.id;
 			/* this.blockType = blocktype; */
 			this.blockMarkdown = this.markdown[this.blockId];
-			console.info(this.blockId);
 			if(blocktype)
 			{
 				this.blockType = blocktype;
@@ -1187,23 +1134,14 @@ let editor = new Vue({
 			else if(this.blockId == 0)
 			{ 
 				this.blockType = "title-component"
-			}
+			} 
 			else 
 			{
 				this.blockType = this.determineBlockType(this.blockMarkdown);
 			}
 		},
-		clearData: function(event)
-		{
-			this.blockId = event.currentTarget.dataset.id;
-			this.blockMarkdown = this.markdown[this.blockId];
-		},
-		hideModal: function()
-		{
-			this.addblock = false;
-		},
 		determineBlockType: function(block)
-		{			
+		{
 			if(block.match(/^\d+\./)){ return "olist-component" }
 			
 			var lines = block.split("\n");

@@ -2,11 +2,10 @@ const eventBus = new Vue();
 
 const contentComponent = Vue.component('content-block', {
 	props: ['body', 'load'],
-	template: '<div ref="bloxcomponent" class="blox-editor" :class="newblock">' +
-				'<div v-if="newblock" class="newblock-info">Choose a content-type <button class="newblock-close" @click.prevent="closeNewBlock($event)">close</button></div>' +	
+	template: '<div ref="bloxcomponent" class="blox-editor">' +
 				'<div class="blox-wrapper" :class="{ editactive: edit }">' +
 				 '<div class="sideaction" v-if="body">' + 
-				  '<button class="add" :disabled="disabled" title="add content-block" @click.prevent="addNewBlock($event)"><i class="icon-plus"></i></button>' +
+				  '<button class="add" :disabled="disabled" title="add content-block" @click.prevent="showFormats($event)"><i class="icon-plus"></i></button>' +
 				  '<button class="delete" :disabled="disabled" title="delete content-block" @click.prevent="deleteBlock($event)"><i class="icon-cancel"></i></button>' +
 				 '</div>' + 
 				 '<div class="background-helper" @keyup.enter="submitBlock" @click="getData">' +
@@ -17,13 +16,13 @@ const contentComponent = Vue.component('content-block', {
 				   '<div class="blox-buttons" v-if="edit">' + 
 				    '<button class="edit" :disabled="disabled" @click.prevent="saveBlock">save</button>' +
 				    '<button class="cancel" :disabled="disabled" @click.prevent="switchToPreviewMode">cancel</button>' +
-				   '</div>' +
-				  '</div>' +
-				  '<div :class="preview" ref="preview"><slot><format-component></format-component></slot></div>' +
+				   '</div>' + 
+				  '</div>' + 
+				  '<div :class="preview" ref="preview"><slot name="default"></slot></div>' + 
 				 '</div>' +
-				'</div>' +
+				'</div>' + 
 				'<div v-if="load" class="loadoverlay"><span class="load"></span></div>' +
-			  '</div>',
+			  '</div>',	
 	data: function () {
 		return {
 			preview: 'visible',
@@ -32,7 +31,7 @@ const contentComponent = Vue.component('content-block', {
 			componentType: '',
 			disabled: false,
 			load: false,
-			newblock: false,
+			showformat: false,
 		}
 	},
 	mounted: function()
@@ -40,38 +39,41 @@ const contentComponent = Vue.component('content-block', {
 		eventBus.$on('closeComponents', this.closeComponents);
 	},
 	methods: {
-		addNewBlock: function(event)
+		showFormats: function(event)
 		{
+			this.switchToPreviewMode();
+			this.showformat = true;
+		},
+		hideFormats: function(event)
+		{
+			this.showformat = false;
+		},
+		addBlock: function(event,blocktype)
+		{
+			this.showformat = false;
+						
 			/* we have to get from dom because block-data might not be set when user clicked on add button before opened the component */
 			var bloxeditor = event.target.closest('.blox-editor');
 			var bloxid = bloxeditor.getElementsByClassName('blox')[0].dataset.id;
-		
-			this.switchToPreviewMode();
-		
-			/* add new empty data */
-			this.$root.$data.html.splice(bloxid,0, false);
-			this.$root.$data.markdown.splice(bloxid,0, '');
 			
-			/* show overlay and bring newblock to front, so that user cannot change any other data (ids not synchronized with stored data now) */
-			this.$root.$data.bloxOverlay = true;
+			/* add kind of content you like */
+			var defaults = {
+				'paragraph': 'New paragraph',
+				'headline': '## New headline',
+				'ulist': '* New list',
+				'olist': '1. New list',
+				'image': '![Alternative Text]()',
+				'video': 'New video',
+				'table': '|head|head|\n|---|---|\n|cell|cell|',
+				'quote': '> New quote',
+				'code': '````\b New code\b````'
+			};
+						
+			/* store the content with id here */
+			this.compmarkdown = defaults[blocktype];
+			this.$root.$data.blockId = bloxid;
 			this.$root.$data.newblock = true;
-			this.newblock = 'newblock';
-			self.$root.sortable.option("disabled", true);
-		},
-		closeNewBlock: function($event)
-		{
-			var bloxeditor = event.target.closest('.blox-editor');			
-			var bloxid = bloxeditor.getElementsByClassName('blox')[0].dataset.id;
-
-			this.switchToPreviewMode();
-			
-			this.$root.$data.bloxOverlay = false;
-			this.$root.$data.newblock = false;
-			this.newblock = false;
-			self.$root.sortable.option("disabled", false);
-
-			this.$root.$data.html.splice(bloxid,1);
-			this.$root.$data.markdown.splice(bloxid,1);			
+			this.saveBlock();
 		},
 		updateMarkdown: function($event)
 		{
@@ -276,14 +278,12 @@ const contentComponent = Vue.component('content-block', {
 							}
 							else if(self.$root.$data.newblock)
 							{
-								self.$root.$data.html[result.id] = result.content;
-								self.$root.$data.markdown[result.id] = result.markdown;								
-
-								self.$root.$data.blockMarkdown = '';
-								self.$root.$data.blockType = '';
-								self.$root.$data.bloxOverlay = false;
+								self.$root.$data.html.splice(result.id,0,result.content);
+								self.$root.$data.markdown.splice(result.id,0,result.markdown);								
+								
 								self.$root.$data.newblock = false;
-								self.newblock = false;
+								self.$root.$data.blockMarkdown = '';
+								self.$root.$data.blockType = '';								
 							}
 							else
 							{
@@ -312,21 +312,21 @@ const contentComponent = Vue.component('content-block', {
 			var bloxeditor = event.target.closest('.blox-editor');
 			
 			var bloxid = bloxeditor.getElementsByClassName('blox')[0].dataset.id;
-			/* bloxeditor.firstChild.id = "delete-"+bloxid; */
-							
+			// bloxeditor.firstChild.id = "delete-"+bloxid;
+
 			var self = this;
-				
+			
 			var url = self.$root.$data.root + '/api/v1/block';
-				
+			
 			var params = {
 				'url':				document.getElementById("path").value,
 				'block_id':			bloxid,
 				'csrf_name': 		document.getElementById("csrf_name").value,
 				'csrf_value':		document.getElementById("csrf_value").value,
 			};
-				
+			
 			var method 	= 'DELETE';
-				
+			
 			sendJson(function(response, httpStatus)
 			{
 				if(httpStatus == 400)
@@ -338,7 +338,7 @@ const contentComponent = Vue.component('content-block', {
 					self.activatePage();
 					
 					var result = JSON.parse(response);
-	
+
 					if(result.errors)
 					{
 						publishController.errors.message = result.errors;
@@ -346,14 +346,43 @@ const contentComponent = Vue.component('content-block', {
 					else
 					{	
 						self.switchToPreviewMode();
-							
+						
 						self.$root.$data.html.splice(bloxid,1);
-						self.$root.$data.markdown.splice(bloxid,1);
+						self.$root.$data.markdown.splice(bloxid,1);						
 						self.$root.$data.blockMarkdown = '';
 						self.$root.$data.blockType = '';
 					}
 				}
-			}, method, url, params);				
+			}, method, url, params);
+		},
+	},
+})
+
+const formatComponent = Vue.component('format-component', {
+	props: ['compmarkdown', 'disabled'],
+	template: '<transition name="fade">' +
+			      '<div class="formatbuttons" v-if="showformat">' +
+					'<button class="format-item disabled" disabled>add new block:</button>' +
+					'<button class="format-item" @click.prevent="addBlock($event, \'paragraph\')" ><i class="icon-paragraph"></i></button>' +
+					'<button class="format-item" @click.prevent="addBlock($event, \'headline\')"><i class="icon-header"></i></button>' +
+					'<button class="format-item" @click.prevent="addBlock($event, \'ulist\')"><i class="icon-list-bullet"></i></button>' +
+					'<button class="format-item" @click.prevent="addBlock($event, \'olist\')"><i class="icon-list-numbered"></i></button>' +
+					'<button class="format-item" @click.prevent="addBlock($event, \'image\')"><i class="icon-picture"></i></button>' +
+					'<button class="format-item" @click.prevent="addBlock($event, \'video\')"><i class="icon-youtube-play"></i></button>' +
+					'<button class="format-item" @click.prevent="addBlock($event, \'table\')"><i class="icon-table"></i></button>' +
+					'<button class="format-item" @click.prevent="addBlock($event, \'quote\')"><i class="icon-quote-left"></i></button>' +
+					'<button class="format-item" @click.prevent="addBlock($event, \'code\')"><i class="icon-code"></i></button>' +
+					'<button class="format-item close" @click.prevent="hideFormats()">close</button>' +
+			      '</div>' +
+				'</transition>',
+	mounted: function(){
+		this.$refs.markdown.focus();
+		autosize(document.querySelectorAll('textarea'));
+	},
+	methods: {
+		updatemarkdown: function(event)
+		{
+			this.$emit('updatedMarkdown', event.target.value);
 		},
 	},
 })
@@ -1095,7 +1124,6 @@ let editor = new Vue({
 		newBlocks: [],
 		addblock: false,
 		draftDisabled: true,
-		bloxOverlay: false,
 	},
 	mounted: function(){
 
@@ -1179,7 +1207,6 @@ let editor = new Vue({
 			this.blockId = event.currentTarget.dataset.id;
 			/* this.blockType = blocktype; */
 			this.blockMarkdown = this.markdown[this.blockId];
-			console.info(this.blockId);
 			if(blocktype)
 			{
 				this.blockType = blocktype;
@@ -1192,11 +1219,6 @@ let editor = new Vue({
 			{
 				this.blockType = this.determineBlockType(this.blockMarkdown);
 			}
-		},
-		clearData: function(event)
-		{
-			this.blockId = event.currentTarget.dataset.id;
-			this.blockMarkdown = this.markdown[this.blockId];
 		},
 		hideModal: function()
 		{

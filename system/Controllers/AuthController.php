@@ -63,7 +63,7 @@ class AuthController extends Controller
 			}
 		}
 
-		$this->render($response, '/auth/login.twig', $data);
+		return $this->render($response, '/auth/login.twig', $data);
 	}
 	
 	/**

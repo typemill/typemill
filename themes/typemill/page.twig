@@ -18,12 +18,12 @@
 			<div id="share-icons" class="share-icons hide">
 				{% include 'partials/share.twig' with {'share' : settings.themes.typemill.socialButtons } %}
 				<div class="share-button" id="share-button">
-					<i class="icon-share-1"></i>
+					<i class="icon-share"></i>
 				</div>
 			</div>
 		{% endif %}
 		{% if settings.themes.typemill.gitPosition.top %} 
-			<div class="gitlink"><a title="edit on git" href="{{ settings.themes.typemill.gitlink }}{{ item.urlRel }}">edit <i class="icon-github-circled"></i></a></div>
+			<div class="gitlink"><a title="edit on github" href="{{ settings.themes.typemill.gitlink }}{{ item.path }}">edit <i class="icon-github-circled"></i></a></div>
 		{% endif %}
 	</div>
 {% endif %}
@@ -43,12 +43,12 @@
 			<div id="share-icons-bottom" class="share-icons hide">
 				{% include 'partials/share.twig' with {'share' : settings.themes.typemill.socialButtons } %}
 				<div id="share-button-bottom" class="share-button">
-					<i class="icon-share-1"></i>
+					<i class="icon-share"></i>
 				</div>
 			</div>
 		{% endif %}
 		{% if settings.themes.typemill.gitPosition.bottom %} 
-			<div class="gitlink"><a title="edit on git" href="{{ settings.themes.typemill.gitlink }}{{ item.urlRel }}">edit <i class="icon-github-circled"></i></a></div>
+			<div class="gitlink"><a title="edit on github" href="{{ settings.themes.typemill.gitlink }}{{ item.path }}">edit <i class="icon-github-circled"></i></a></div>
 		{% endif %}		
 	</div>
 {% endif %}

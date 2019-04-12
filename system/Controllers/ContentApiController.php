@@ -550,7 +550,60 @@ class ContentApiController extends ContentController
 		return $response->withJson(array('data' => $content, 'errors' => false));
 	}
 	
-	public function updateBlock(Request $request, Response $response, $args)
+	public function getArticleHtml(Request $request, Response $response, $args)
+	{
+		/* get params from call */
+		$this->params 	= $request->getParams();
+		$this->uri 		= $request->getUri();
+		
+		# set structure
+		if(!$this->setStructure($draft = true)){ return $response->withJson(array('data' => false, 'errors' => $this->errors), 404); }
+		
+		/* set item */
+		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
+		
+		# set the status for published and drafted
+		$this->setPublishStatus();
+
+		# set path
+		$this->setItemPath($this->item->fileType);
+		
+		# read content from file
+		if(!$this->setContent()){ return $response->withJson(array('data' => false, 'errors' => $this->errors), 404); }
+
+		$content = $this->content;
+
+		if($content == '')
+		{
+			$content = [];
+		}
+		
+		# initialize parsedown extension
+		$parsedown = new ParsedownExtension();
+		
+		# if content is not an array, then transform it
+		if(!is_array($content))
+		{
+			# turn markdown into an array of markdown-blocks
+			$content = $parsedown->markdownToArrayBlocks($content);
+		}
+				
+		# needed for ToC links
+		$relurl = '/tm/content/' . $this->settings['editor'] . '/' . $this->item->urlRel;
+		
+		foreach($content as $key => $block)
+		{
+			/* parse markdown-file to content-array */
+			$contentArray 	= $parsedown->text($block);
+
+			/* parse markdown-content-array to content-string */
+			$content[$key]	= $parsedown->markup($contentArray, $relurl);
+		}
+				
+		return $response->withJson(array('data' => $content, 'errors' => false));
+	}
+
+	public function addBlock(Request $request, Response $response, $args)
 	{
 		/* get params from call */
 		$this->params 	= $request->getParams();
@@ -605,14 +658,105 @@ class ContentApiController extends ContentController
 		{
 			# set the id of the markdown-block (it will be one more than the actual array, so count is perfect) 
 			$id = count($pageMarkdown);
-			
-			# set the id with prefix "blox-"
-			$blockId = 'blox-' . $id;
-			
+						
 			# add the new markdown block to the page content
 			$pageMarkdown[] = $blockMarkdown;			
 		}
-		elseif(!isset($pageMarkdown[$this->params['block_id']]))
+		elseif(($this->params['block_id'] == 0) OR !isset($pageMarkdown[$this->params['block_id']]))
+		{
+			# if the block does not exists, return an error
+			return $response->withJson(array('data' => false, 'errors' => 'The ID of the content-block is wrong.'), 404);
+		}
+		else
+		{
+			# insert new markdown block
+			array_splice( $pageMarkdown, $this->params['block_id'], 0, $blockMarkdown );			
+			$id = $this->params['block_id'];
+		}
+	
+		# encode the content into json
+		$pageJson = json_encode($pageMarkdown);
+
+		# set path for the file (or folder)
+		$this->setItemPath('txt');
+	
+		/* update the file */
+		if($this->write->writeFile($this->settings['contentFolder'], $this->path, $pageJson))
+		{
+			# update the internal structure
+			$this->setStructure($draft = true, $cache = false);
+		}
+		else
+		{
+			return $response->withJson(['errors' => ['message' => 'Could not write to file. Please check if the file is writable']], 404);
+		}
+	
+		/* set safe mode to escape javascript and html in markdown */
+		$parsedown->setSafeMode(true);
+
+		/* parse markdown-file to content-array */
+		$blockArray 	= $parsedown->text($blockMarkdown);
+		
+		# needed for ToC links
+		$relurl 		= '/tm/content/' . $this->settings['editor'] . '/' . $this->item->urlRel;
+		
+		/* parse markdown-content-array to content-string */
+		$blockHTML		= $parsedown->markup($blockArray, $relurl);
+
+		return $response->withJson(array('content' => $blockHTML, 'markdown' => $blockMarkdown, 'id' => $id, 'errors' => false));
+	}
+	
+	public function updateBlock(Request $request, Response $response, $args)
+	{
+		/* get params from call */
+		$this->params 	= $request->getParams();
+		$this->uri 		= $request->getUri();
+
+		/* validate input */
+		if(!$this->validateBlockInput()){ return $response->withJson($this->errors,422); }
+		
+		# set structure
+		if(!$this->setStructure($draft = true)){ return $response->withJson(array('data' => false, 'errors' => $this->errors), 404); }
+		
+		/* set item */
+		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
+
+		# set the status for published and drafted
+		$this->setPublishStatus();
+
+		# set path
+		$this->setItemPath($this->item->fileType);
+
+		# read content from file
+		if(!$this->setContent()){ return $response->withJson(array('data' => false, 'errors' => $this->errors), 404); }
+
+		# make it more clear which content we have
+		$pageMarkdown = $this->content;
+
+		$blockMarkdown = $this->params['markdown'];
+
+        # standardize line breaks
+        $blockMarkdown = str_replace(array("\r\n", "\r"), "\n", $blockMarkdown);
+
+        # remove surrounding line breaks
+        $blockMarkdown = trim($blockMarkdown, "\n");		
+		
+		if($pageMarkdown == '')
+		{
+			$pageMarkdown = [];
+		}
+
+		# initialize parsedown extension
+		$parsedown = new ParsedownExtension();
+
+		# if content is not an array, then transform it
+		if(!is_array($pageMarkdown))
+		{
+			# turn markdown into an array of markdown-blocks
+			$pageMarkdown = $parsedown->markdownToArrayBlocks($pageMarkdown);
+		}
+
+		if(!isset($pageMarkdown[$this->params['block_id']]))
 		{
 			# if the block does not exists, return an error
 			return $response->withJson(array('data' => false, 'errors' => 'The ID of the content-block is wrong.'), 404);
@@ -628,14 +772,12 @@ class ContentApiController extends ContentController
 			# add the markdown-headline to the page-markdown
 			$pageMarkdown[0] = $blockMarkdownTitle;
 			$id = 0;
-			$blockId = 0;
 		}
 		else
 		{
 			# update the markdown block in the page content
 			$pageMarkdown[$this->params['block_id']] = $blockMarkdown;
 			$id = $this->params['block_id'];
-			$blockId = $this->params['block_id'];
 		}
 	
 		# encode the content into json
@@ -674,7 +816,7 @@ class ContentApiController extends ContentController
 		/* parse markdown-content-array to content-string */
 		$blockHTML		= $parsedown->markup($blockArray, $relurl);
 
-		return $response->withJson(array('content' => $blockHTML, 'markdown' => $blockMarkdown, 'blockId' => $blockId, 'id' => $id, 'errors' => false));
+		return $response->withJson(array('content' => $blockHTML, 'markdown' => $blockMarkdown, 'id' => $id, 'errors' => false));
 	}
 	
 	public function moveBlock(Request $request, Response $response, $args)
@@ -877,10 +1019,10 @@ class ContentApiController extends ContentController
 						
 			$request 	= $request->withParsedBody($params);
 			
-			return $this->updateBlock($request, $response, $args);
+			return $this->addBlock($request, $response, $args);
 		}
 
-		return $response->withJson(array('errors' => 'could not store image to temporary folder'));	
+		return $response->withJson(array('errors' => 'could not store image to media folder'));	
 	}
 
 	public function saveVideoImage(Request $request, Response $response, $args)
@@ -945,9 +1087,9 @@ class ContentApiController extends ContentController
 
 			$request 	= $request->withParsedBody($this->params);
 			
-			return $this->updateBlock($request, $response, $args);
+			return $this->addBlock($request, $response, $args);
 		}
-
+		
 		return $response->withJson(array('errors' => 'could not store the preview image'));	
 	}
 }
