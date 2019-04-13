@@ -68,7 +68,7 @@ const contentComponent = Vue.component('content-block', {
 			this.$root.$data.bloxOverlay = false;
 			this.$root.$data.newblock = false;
 			this.newblock = false;
-			self.$root.sortable.option("disabled", false);
+			self.$root.sortable.option("disabled", false); 
 
 			this.$root.$data.html.splice(bloxid,1);
 			this.$root.$data.markdown.splice(bloxid,1);			
