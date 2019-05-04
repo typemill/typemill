@@ -597,9 +597,9 @@ class ContentApiController extends ContentController
 			$contentArray 	= $parsedown->text($block);
 
 			/* parse markdown-content-array to content-string */
-			$content[$key]	= $parsedown->markup($contentArray, $relurl);
+			$content[$key]	= ['id' => $key, 'html' => $parsedown->markup($contentArray, $relurl)];
 		}
-				
+
 		return $response->withJson(array('data' => $content, 'errors' => false));
 	}
 
@@ -658,7 +658,7 @@ class ContentApiController extends ContentController
 		{
 			# set the id of the markdown-block (it will be one more than the actual array, so count is perfect) 
 			$id = count($pageMarkdown);
-						
+
 			# add the new markdown block to the page content
 			$pageMarkdown[] = $blockMarkdown;			
 		}
@@ -703,7 +703,7 @@ class ContentApiController extends ContentController
 		/* parse markdown-content-array to content-string */
 		$blockHTML		= $parsedown->markup($blockArray, $relurl);
 
-		return $response->withJson(array('content' => $blockHTML, 'markdown' => $blockMarkdown, 'id' => $id, 'errors' => false));
+		return $response->withJson(array('content' => [ 'id' => $id, 'html' => $blockHTML ] , 'markdown' => $blockMarkdown, 'id' => $id, 'errors' => false));
 	}
 	
 	public function updateBlock(Request $request, Response $response, $args)
@@ -739,8 +739,8 @@ class ContentApiController extends ContentController
         $blockMarkdown = str_replace(array("\r\n", "\r"), "\n", $blockMarkdown);
 
         # remove surrounding line breaks
-        $blockMarkdown = trim($blockMarkdown, "\n");		
-		
+        $blockMarkdown = trim($blockMarkdown, "\n");
+
 		if($pageMarkdown == '')
 		{
 			$pageMarkdown = [];
@@ -779,7 +779,7 @@ class ContentApiController extends ContentController
 			$pageMarkdown[$this->params['block_id']] = $blockMarkdown;
 			$id = $this->params['block_id'];
 		}
-	
+
 		# encode the content into json
 		$pageJson = json_encode($pageMarkdown);
 
@@ -816,7 +816,7 @@ class ContentApiController extends ContentController
 		/* parse markdown-content-array to content-string */
 		$blockHTML		= $parsedown->markup($blockArray, $relurl);
 
-		return $response->withJson(array('content' => $blockHTML, 'markdown' => $blockMarkdown, 'id' => $id, 'errors' => false));
+		return $response->withJson(array('content' => ['id' => $id, 'html' => $blockHTML], 'markdown' => $blockMarkdown, 'id' => $id, 'errors' => false));
 	}
 	
 	public function moveBlock(Request $request, Response $response, $args)
@@ -889,11 +889,25 @@ class ContentApiController extends ContentController
 		{
 			return $response->withJson(['errors' => ['message' => 'Could not write to file. Please check if the file is writable']], 404);
 		}
-	
+
+		# needed for ToC links
+		$relurl = '/tm/content/' . $this->settings['editor'] . '/' . $this->item->urlRel;
+
+		# generate html array
+		$pageHTML = [];
+		foreach($pageMarkdown as $key => $markdownBlock)
+		{
+			/* parse markdown-file to content-array */
+			$contentArray 	= $parsedown->text($markdownBlock);
+
+			/* parse markdown-content-array to content-string */
+			$pageHTML[$key]	= ['id' => $key, 'html' => $parsedown->markup($contentArray, $relurl)];
+		}
+
 		# if it is the title, then delete the "# " if it exists
 		$pageMarkdown[0] = trim($pageMarkdown[0], "# ");
 
-		return $response->withJson(array('markdown' => $pageMarkdown, 'errors' => false));
+		return $response->withJson(array('markdown' => $pageMarkdown,  'html' => $pageHTML, 'errors' => false));
 	}
 
 	public function deleteBlock(Request $request, Response $response, $args)

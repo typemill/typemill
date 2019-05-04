@@ -479,39 +479,45 @@ class ParsedownExtension extends \ParsedownExtra
 		
 		# flag if codeblock is on or off.
 		$codeBlockOn = false;
-		
+        
+        # holds the content of a definition list
+        $definitionList = "";
+
+        # flag if definition-list is on or off.
+        $definitionListOn = false;
+
 		foreach($blocks as $block)
 		{
-			// remove empty lines
+			# remove empty lines
 			if (chop($block) === '') continue;
 			
-			// if the block starts with a fenced code
+			# if the block starts with a fenced code
 			if(substr($block,0,2) == '``')
 			{
-				// and if we are in an open code-block
+				# and if we are in an open code-block
 				if($codeBlockOn)
 				{
-					// it must be the end of the codeblock, so add it to the codeblock
+					# it must be the end of the codeblock, so add it to the codeblock
 					$block = $codeBlock . "\n" . $block;
 					
-					// reset codeblock-value and close the codeblock.
+					# reset codeblock-value and close the codeblock.
 					$codeBlock = '';
 					$codeBlockOn = false;
 				}
 				else
 				{
-					// it must be the start of the codeblock.
+					# it must be the start of the codeblock.
 					$codeBlockOn = true;
 				}
 			}
 			if($codeBlockOn)
 			{
-				// if the codeblock is complete
+				# if the codeblock is complete
 				if($this->isComplete($block))
 				{
 					$block = $codeBlock . "\n" . $block;
 
-					// reset codeblock-value and close the codeblock.
+					# reset codeblock-value and close the codeblock.
 					$codeBlock = '';
 					$codeBlockOn = false;
 				}
@@ -520,8 +526,23 @@ class ParsedownExtension extends \ParsedownExtra
 					$codeBlock .= "\n" . $block;
 					continue;
 				}
-			}
-			
+            }
+            
+            # handle definition lists
+            $checkDL = preg_split('/\r\n|\r|\n/',$block);
+            if(isset($checkDL[1]) && substr($checkDL[1],0,2) == ': ')
+            {
+                $definitionList .= $block . "\n\n";
+                $definitionListOn = true;
+                continue; 
+            }
+            elseif($definitionListOn)
+            {
+                $cleanBlocks[] = $definitionList;
+                $definitionList = "";
+                $definitionListOn = false;
+            }
+            
 			$block = trim($block, "\n");
 						
 			$cleanBlocks[] = $block;

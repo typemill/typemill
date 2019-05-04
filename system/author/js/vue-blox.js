@@ -56,7 +56,7 @@ const contentComponent = Vue.component('content-block', {
 			this.$root.$data.bloxOverlay = true;
 			this.$root.$data.newblock = true;
 			this.newblock = 'newblock';
-			self.$root.sortable.option("disabled", true);
+			self.$root.$data.sortdisabled = true;
 		},
 		closeNewBlock: function($event)
 		{
@@ -68,10 +68,10 @@ const contentComponent = Vue.component('content-block', {
 			this.$root.$data.bloxOverlay = false;
 			this.$root.$data.newblock = false;
 			this.newblock = false;
-			self.$root.sortable.option("disabled", false); 
+			self.$root.$data.sortdisabled = false; 
 
 			this.$root.$data.html.splice(bloxid,1);
-			this.$root.$data.markdown.splice(bloxid,1);			
+			this.$root.$data.markdown.splice(bloxid,1);
 		},
 		updateMarkdown: function($event)
 		{
@@ -86,7 +86,7 @@ const contentComponent = Vue.component('content-block', {
 			eventBus.$emit('closeComponents');
 			self = this;
 			self.$root.$data.freeze = true; 						/* freeze the data */
-			self.$root.sortable.option("disabled",true);			/* disable sorting */
+		  self.$root.$data.sortdisabled = true;			/* disable sorting */
 			this.preview = 'hidden'; 								/* hide the html-preview */
 			this.edit = true;										/* show the edit-mode */
 			this.compmarkdown = self.$root.$data.blockMarkdown;		/* get markdown data */
@@ -98,7 +98,7 @@ const contentComponent = Vue.component('content-block', {
 					{
 						self.$refs.preview.style.minHeight = self.$refs.component.offsetHeight + 'px';
 					});
-				}, 200);				
+				}, 200);
 			}
 			else
 			{
@@ -122,7 +122,7 @@ const contentComponent = Vue.component('content-block', {
 		{
 			self = this;
 			self.$root.$data.freeze = false;						/* activate the data again */
-			self.$root.sortable.option("disabled",false);			/* activate sorting again */
+			self.$root.sortdisabled = false;			/* activate sorting again */
 			this.preview = 'visible';								/* show the html-preview */
 			this.edit = false;										/* hide the edit mode */
 			this.compmarkdown = '';									/* clear markdown content */
@@ -201,7 +201,7 @@ const contentComponent = Vue.component('content-block', {
 			}
 		},
 		saveBlock: function()
-		{			
+		{
 			if(this.compmarkdown == undefined || this.compmarkdown.replace(/(\r\n|\n|\r|\s)/gm,"") == '')
 			{
 				this.switchToPreviewMode();	
@@ -212,7 +212,12 @@ const contentComponent = Vue.component('content-block', {
 
 				var self = this;
 				
-				var compmarkdown = this.compmarkdown.split('\n\n').join('\n');
+/*				if(this.componentType != 'definition-component')
+				{
+					var compmarkdown = this.compmarkdown.split('\n\n').join('\n');
+				}
+*/				var compmarkdown = this.compmarkdown;
+
 				var params = {
 					'url':				document.getElementById("path").value,
 					'markdown':			compmarkdown,
@@ -276,7 +281,7 @@ const contentComponent = Vue.component('content-block', {
 							}
 							else if(self.$root.$data.newblock)
 							{
-								self.$root.$data.html[result.id] = result.content;
+								self.$root.$data.html.splice(result.id,1,result.content);
 								self.$root.$data.markdown[result.id] = result.markdown;								
 
 								self.$root.$data.blockMarkdown = '';
@@ -288,9 +293,11 @@ const contentComponent = Vue.component('content-block', {
 							else
 							{
 								self.$root.$data.markdown[result.id] = result.markdown;
+								self.$root.$data.html.splice(result.id,1,result.content);
 
-								self.$root.$data.html[result.id] = result.content;
-								document.getElementById('blox-'+result.id).innerHTML = result.content;
+								if(result.id == 0){ self.$root.$data.title = result.content; }
+								
+								// document.getElementById('blox-'+result.id).innerHTML = result.content;
 								
 								self.$root.$data.blockMarkdown = '';
 								self.$root.$data.blockType = '';
@@ -306,14 +313,13 @@ const contentComponent = Vue.component('content-block', {
 			}
 		},
 		deleteBlock: function(event)
-		{	
+		{
 			this.freezePage();
 			
 			var bloxeditor = event.target.closest('.blox-editor');
 			
 			var bloxid = bloxeditor.getElementsByClassName('blox')[0].dataset.id;
-			/* bloxeditor.firstChild.id = "delete-"+bloxid; */
-							
+	
 			var self = this;
 				
 			var url = self.$root.$data.root + '/api/v1/block';
@@ -346,14 +352,13 @@ const contentComponent = Vue.component('content-block', {
 					else
 					{	
 						self.switchToPreviewMode();
-							
 						self.$root.$data.html.splice(bloxid,1);
 						self.$root.$data.markdown.splice(bloxid,1);
 						self.$root.$data.blockMarkdown = '';
 						self.$root.$data.blockType = '';
 					}
 				}
-			}, method, url, params);				
+			}, method, url, params);
 		},
 	},
 })
@@ -382,6 +387,25 @@ const markdownComponent = Vue.component('markdown-component', {
 	mounted: function(){
 		this.$refs.markdown.focus();
 		autosize(document.querySelectorAll('textarea'));
+	},
+	methods: {
+		updatemarkdown: function(event)
+		{
+			this.$emit('updatedMarkdown', event.target.value);
+		},
+	},
+})
+
+const hrComponent = Vue.component('hr-component', {
+	props: ['compmarkdown', 'disabled'],
+	template: '<div>' + 
+				'<div class="contenttype"><i class="icon-paragraph"></i></div>' +
+				'<textarea class="mdcontent" ref="markdown" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown">---</textarea>' +
+				'</div>',
+	mounted: function(){
+		this.$refs.markdown.focus();
+		autosize(document.querySelectorAll('textarea'));
+		this.$emit('updatedMarkdown', '---');
 	},
 	methods: {
 		updatemarkdown: function(event)
@@ -544,19 +568,74 @@ const headlineComponent = Vue.component('headline-component', {
 	props: ['compmarkdown', 'disabled'],
 	template: '<div>' + 
 				'<div class="contenttype"><i class="icon-header"></i></div>' +
-				'<input class="mdcontent" type="text" ref="markdown" v-model="compmarkdown" :disabled="disabled" @input="updatemarkdown">' +
+				'<button class="hdown" @click.prevent="headlinedown" v-html="level"></button>' +
+				'<input class="mdcontent" :class="hlevel" type="text" ref="markdown" v-model="compmarkdown" :disabled="disabled" @input="updatemarkdown">' +
 				'</div>',
+	data: function(){
+			return {
+				level: '',
+				hlevel: '',
+			}
+		},
 	mounted: function(){
 		this.$refs.markdown.focus();
 		if(!this.compmarkdown)
 		{
 			this.compmarkdown = '## ';
+			this.level = '2';
+			this.hlevel = 'h2';
+		}
+		else
+		{
+			this.level = this.getHeadlineLevel(this.compmarkdown);
+			this.hlevel = 'h' + this.level;
 		}
 	},
 	methods: {
 		updatemarkdown: function(event)
 		{
-			this.$emit('updatedMarkdown', event.target.value);
+			var headline = event.target.value;
+			this.level = this.getHeadlineLevel(headline);
+			if(this.level > 6)
+			{
+				headline = '######' + headline.substr(this.level);
+				this.level = 6;
+				this.compmarkdown = headline;
+			}
+			else if(this.level < 2)
+			{
+				headline = '##' + headline.substr(this.level);
+				this.level = 2;
+				this.compmarkdown = headline;
+			}
+			this.hlevel = 'h' + this.level;
+			this.$emit('updatedMarkdown', headline);
+		},
+		headlinedown: function()
+		{
+			this.level = this.getHeadlineLevel(this.compmarkdown);
+			if(this.level < 6)
+			{
+				this.compmarkdown = this.compmarkdown.substr(0, this.level) + '#' + this.compmarkdown.substr(this.level);
+				this.level = this.level+1;
+				this.hlevel = 'h' + this.level;	
+			}
+			else
+			{
+				this.compmarkdown = '##' + this.compmarkdown.substr(this.level);
+				this.level = 2;
+				this.hlevel = 'h2';				
+			}
+			this.$emit('updatedMarkdown', this.compmarkdown);
+		},
+		getHeadlineLevel: function(str)
+		{
+			var count = 0;
+			for(var i = 0; i < str.length; i++){
+				if(str[i] != '#'){ return count }
+				count++;
+			}
+		  return count;
 		},
 	},
 })
@@ -774,6 +853,90 @@ const tableComponent = Vue.component('table-component', {
 	},
 })
 
+const definitionComponent = Vue.component('definition-component', {
+	props: ['compmarkdown', 'disabled', 'load'],
+	data: function(){
+		return {
+			definitionList: [],
+		}
+	},
+	template: '<div class="definitionList">' +
+				'<div class="contenttype"><i class="icon-colon"></i></div>' +
+				'<draggable v-model="definitionList" :animation="150" @end="moveDefinition">' +
+  			  '<div class="definitionRow" v-for="(definition, dindex) in definitionList" :key="definition.id">' +
+						'<i class="icon-resize-vertical"></i>' +
+						'<input type="text" class="definitionTerm" placeholder="term" :value="definition.term" :disabled="disabled" @input="updateterm($event,dindex)" @blur="updateMarkdown">' +
+		  		  '<i class="icon-colon"></i>' + 
+	  			  '<textarea class="definitionDescription" placeholder="description" v-html="definition.description" :disabled="disabled" @input="updatedescription($event, dindex)" @blur="updateMarkdown"></textarea>' +
+					  '<button class="delDL" @click.prevent="deleteDefinition(dindex)"><i class="icon-minus"></i></button>' +
+				  '</div>' +
+				'</draggable>' +
+				'<button class="addDL" @click.prevent="addDefinition()"><i class="icon-plus"></i> add definition</button>' +
+				'<div v-if="load" class="loadwrapper"><span class="load"></span></div>' +
+				'</div>',
+	mounted: function(){
+		if(this.compmarkdown)
+		{
+			var definitionList = this.compmarkdown.replace("\r\n", "\n");
+			definitionList = definitionList.replace("\r", "\n");
+			definitionList = definitionList.split("\n\n");
+
+			for(var i=0; i < definitionList.length; i++)
+			{
+				var definition = definitionList[i].split("\n");
+				
+				var term = definition[0];
+				var description = definition[1];
+				var id = i;
+
+				if(description && description.substring(0, 2) == ": ")
+				{
+					this.definitionList.push({'term': term ,'description': description.substring(2), 'id': id});
+				}
+			}
+		}
+		else
+		{
+			this.definitionList.push({'term': '', 'description': '', 'id': 0});
+		}
+	},
+	methods: {
+		updateterm: function(event, dindex)
+		{
+			this.definitionList[dindex].term = event.target.value;
+		},
+		updatedescription: function(event, dindex)
+		{
+			this.definitionList[dindex].description = event.target.value;
+		},
+		addDefinition: function()
+		{
+			var id = this.definitionList.length;
+			this.definitionList.push({'term': '', 'description': '', 'id': id});
+			this.updateMarkdown();
+		},
+		deleteDefinition: function(dindex)
+		{
+			this.definitionList.splice(dindex,1);
+			this.updateMarkdown();
+		},
+		moveDefinition: function(evt)
+		{
+			this.updateMarkdown();
+		},
+		updateMarkdown: function()
+		{
+			var length = this.definitionList.length;
+			var markdown = '';
+			for(i = 0; i < length; i++)
+			{
+				markdown = markdown + this.definitionList[i].term + "\n: " + this.definitionList[i].description + "\n\n";
+			}
+			this.$emit('updatedMarkdown', markdown);
+		},
+	},
+})
+
 const videoComponent = Vue.component('video-component', {
 	props: ['compmarkdown', 'disabled', 'load'],
 	template: '<div class="video dropbox">' +
@@ -886,8 +1049,6 @@ const imageComponent = Vue.component('image-component', {
 				this.imgpreview = imgpreview[0].slice(1,-1);
 				this.imgfile = this.imgpreview;
 			}
-			console.info(this.imgpreview);
-			console.info(this.imgfile);
 		}
 	},
 	methods: {
@@ -1073,6 +1234,7 @@ let editor = new Vue({
 	components: {
 		'content-component': contentComponent,
 		'markdown-component': markdownComponent,
+		'hr-component': hrComponent,
 		'title-component': titleComponent,
 		'headline-component': headlineComponent,
 		'image-component': imageComponent,
@@ -1081,6 +1243,7 @@ let editor = new Vue({
 		'ulist-component': ulistComponent,
 		'olist-component': olistComponent,
 		'table-component': tableComponent,
+		'definition-component': definitionComponent,
 	},
 	data: {
 		root: document.getElementById("main").dataset.url,
@@ -1096,6 +1259,7 @@ let editor = new Vue({
 		addblock: false,
 		draftDisabled: true,
 		bloxOverlay: false,
+		sortdisabled: false,
 	},
 	mounted: function(){
 
@@ -1146,6 +1310,7 @@ let editor = new Vue({
 			}
 			if(response)
 			{
+
 				var result = JSON.parse(response);
 				
 				if(result.errors)
@@ -1158,28 +1323,62 @@ let editor = new Vue({
 				}
 			}
 		}, method, url, params);
-		
-		self.sortable = new Sortable(sortblox, {
-			animation: 150,
-			onEnd: function (evt) {
-				var params = {
-					'url':			document.getElementById("path").value,
-					'old_index': 	evt.oldIndex,
-					'new_index':	evt.newIndex,
-					'csrf_name': 	document.getElementById("csrf_name").value,
-					'csrf_value':	document.getElementById("csrf_value").value,
-				};
-				self.moveBlock(params);
-			},
-		});
 	},
 	methods: {
+		onStart: function(evt)
+		{
+		},
+		moveBlock: function(evt)
+		{
+			var params = {
+				'url':			document.getElementById("path").value,
+				'old_index': 	evt.oldIndex,
+				'new_index':	evt.newIndex,
+				'csrf_name': 	document.getElementById("csrf_name").value,
+				'csrf_value':	document.getElementById("csrf_value").value,
+			};
+			publishController.errors.message = false;
+
+			var url = this.root + '/api/v1/moveblock';
+			var self = this;
+			
+			var method 	= 'PUT';
+			
+			sendJson(function(response, httpStatus)
+			{
+				if(httpStatus == 400)
+				{
+				}
+				if(response)
+				{
+				
+					var result = JSON.parse(response);
+
+					if(result.errors)
+					{
+						publishController.errors.message = result.errors;
+						publishController.publishDisabled = false;
+					}
+					else
+					{
+
+						self.freeze = false;
+
+						self.markdown = result.markdown;
+						self.blockMarkdown = '';
+						self.blockType = '';
+
+						publishController.publishDisabled = false;
+						publishController.publishResult = "";
+					}
+				}
+			}, method, url, params);
+		},
 		setData: function(event, blocktype, body)
 		{
+			// change this, not needed anymore.
 			this.blockId = event.currentTarget.dataset.id;
-			/* this.blockType = blocktype; */
 			this.blockMarkdown = this.markdown[this.blockId];
-			console.info(this.blockId);
 			if(blocktype)
 			{
 				this.blockType = blocktype;
@@ -1207,7 +1406,11 @@ let editor = new Vue({
 			if(block.match(/^\d+\./)){ return "olist-component" }
 			
 			var lines = block.split("\n");
-			if(lines.length > 2 && lines[0].indexOf('|') != -1 && /[\-\|: ]{3,}$/.test(lines[1]))
+			if(lines.length > 1 && lines[1].substr(0,2) == ': ')
+			{
+				return "definition-component";
+			}
+			else if(lines.length > 2 && lines[0].indexOf('|') != -1 && /[\-\|: ]{3,}$/.test(lines[1]))
 			{
 				return "table-component";
 			}
@@ -1240,51 +1443,6 @@ let editor = new Vue({
 				default:
 					return 'markdown-component';
 			}
-		},
-		moveBlock: function(params)
-		{
-			publishController.errors.message = false;
-
-			var url = this.root + '/api/v1/moveblock';
-		
-			var self = this;			
-			
-			var method 	= 'PUT';
-			
-			sendJson(function(response, httpStatus)
-			{
-				if(httpStatus == 400)
-				{
-				}
-				if(response)
-				{
-				
-					var result = JSON.parse(response);
-
-					if(result.errors)
-					{
-						publishController.errors.message = result.errors;
-						publishController.publishDisabled = false;
-					}
-					else
-					{
-						var blox = document.getElementsByClassName("blox");
-						var length = blox.length;
-						for (var i = 0; i < length; i++ ) {
-							blox[i].id = "blox-" + i;
-							blox[i].dataset.id = i;
-						}
-
-						self.freeze = false;
-						self.markdown = result.markdown;
-						self.blockMarkdown = '';
-						self.blockType = '';
-
-						publishController.publishDisabled = false;
-						publishController.publishResult = "";
-					}
-				}
-			}, method, url, params);			
 		},
 	}
 });

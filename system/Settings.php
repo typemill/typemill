@@ -6,20 +6,20 @@ class Settings
 {	
 	public static function loadSettings()
 	{
-		$settings 			= self::getDefaultSettings();
+		$defaultSettings 	= self::getDefaultSettings();
 		$userSettings 		= self::getUserSettings();
-						
-		$imgSettings 		= isset($settings['images']) ? $settings['images'] : [];
 		
+		$settings 			= array_merge($defaultSettings, $userSettings);
+
 		if($userSettings)
-		{
-			$settings 			= array_merge($settings, $userSettings);
-			$settings['setup'] 	= false;
+		{ 
+			$settings['setup'] 	= false; 
 		}
 		
-		$settings['images']		= isset($userSettings['images']) ? array_merge($imgSettings, $userSettings['images']) : $imgSettings;
+		$settings['images']		= isset($userSettings['images']) ? array_merge($defaultSettings['images'], $userSettings['images']) : $defaultSettings['images'];
 		$settings['themePath'] 	= $settings['rootPath'] . $settings['themeFolder'] . DIRECTORY_SEPARATOR . $settings['theme'];
-
+		$settings['version']	= $defaultSettings['version'];
+		
 		return array('settings' => $settings);
 	}
 	
@@ -99,48 +99,4 @@ class Settings
 			$yaml->updateYaml('settings', 'settings.yaml', $settings);					
 		}
 	}
-	
-	/*
-	public static function removePluginSettings($pluginName)
-	{
-		$userSettings 	= self::getUserSettings();
-		
-		if($userSettings && isset($userSettings['plugins'][$pluginName]))
-		{
-			$yaml = new Models\WriteYaml();
-			
-			# delete the plugin from settings
-			unset($userSettings['plugins'][$pluginName]);
-			
-			# write settings to yaml
-			$yaml->updateYaml('settings', 'settings.yaml', $userSettings);			
-		}
-		
-		return $userSettings;
-	}
-	
-	public static function addPluginSettings($pluginName)
-	{
-		$userSettings 	= self::getUserSettings();
-		
-		if($userSettings)
-		{
-			$yaml = new Models\WriteYaml();
-			
-			$pluginSettings = self::getObjectSettings('plugins', $pluginName);
-			if(isset($pluginSettings['settings']))
-			{
-				$userSettings['plugins'][$pluginName] = $pluginSettings['settings'];
-			}
-			
-			$userSettings['plugins'][$pluginName]['active'] = false;
-			
-			# write settings to yaml
-			$yaml->updateYaml('settings', 'settings.yaml', $userSettings);
-
-			return $userSettings;
-		}
-		return false;
-	}
-	*/
 }

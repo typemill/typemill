@@ -6,6 +6,7 @@ plugins/disqus
 plugins/download
 plugins/finalwords
 plugins/joblistings
+plugins/landingpage
 plugins/mail
 plugins/textadds
 plugins/version

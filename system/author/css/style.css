@@ -1440,12 +1440,16 @@ label .help, .label .help{
 	position: relative;
 }
 .editactive .sideaction button, 
-.blox-wrapper:hover button{
+.blox-wrapper:hover button.add,
+.blox-wrapper:hover button.delete{
 	background-color: #f9f8f6;
 	color: #666;
 }
 .sideaction:hover ~ .background-helper {
     background-color: #f9f8f6;
+}
+.editactive .background-helper{
+	background-color: transparent!important;
 }
 .blox-wrapper button.add:hover{
 	background: #66b0a3;
@@ -1471,10 +1475,48 @@ label .help, .label .help{
 	box-shadow: none;
 	outline: none;
 }
-.blox-editor input.mdcontent{
-	font-size: 1.4em;
+.blox-editor input.mdcontent.h2,.blox-editor input.mdcontent.h3,.blox-editor input.mdcontent.h4,.blox-editor input.mdcontent.h5,.blox-editor input.mdcontent.h6{
+	padding-left: 35px;
+}
+.blox-editor input.mdcontent.h2{
+	font-size: 1.6em;
 	font-weight: 700;
 }
+.blox-editor input.mdcontent.h3{
+	font-size: 1.3em;
+	font-weight: 700;
+}
+.blox-editor input.mdcontent.h4{
+	font-size: 1.1em;
+	font-weight: 700;
+}
+.blox-editor input.mdcontent.h5{
+	font-size: 1em;
+	font-weight: 700;
+}
+.blox-editor input.mdcontent.h6{
+	font-size: 1em;
+	font-weight: 300;
+	font-style: italic;
+}
+button.hdown{
+	position: absolute;
+	padding: 8px;
+	top: 1px;
+	bottom: 1px;
+	left: 0px;
+	font-size: 1em;
+	font-weight: 700;
+	background: #f9f8f6;
+	border: 0px solid #fff;
+	border-right: 1px solid #fff;
+	color: #66b0a3;
+}
+button.hdown:hover,button.hdown:focus,button.hdown:active{
+	color: #f9f8f6;
+	background: #66b0a3; 
+}
+
 .blox-editor .contenttype {
 	position: absolute;
 	top: 15px;
@@ -1707,7 +1749,71 @@ button.format-item.close:hover{
 	content: ":";
 }
 .blox dd{
-	width: 80%
+	padding-left: 40px;
+}
+.definitionList{
+	background: #f9f8f6;
+}
+.definitionRow{
+	width: 100%;
+	display: block;
+	padding: 20px 20px 0 20px;
+	box-sizing: border-box;
+}
+.definitionRow .icon-colon{
+	display: inline-block;
+	margin-top: 15px;
+}
+input.definitionTerm{
+	width: 29%;
+	display: inline-block;
+	vertical-align: top;
+	background: #fff;
+}
+textarea.definitionDescription{
+	width: 60%;
+	display: inline-block;
+	vertical-align: top;
+	background: #fff;
+}
+button.addDL,
+button.delDL{
+	display: inline-block;
+	vertical-align: top;
+	font-weight: 300;
+	font-size: 0.8em;
+	height: 20px;
+	line-height: 20px;
+	border: 0px;
+	background: transparent;
+}
+button.addDL i,
+button.delDL i{
+	width: 20px;
+	border-radius: 1px;
+	text-align: center;
+	color:#f9f8f6;
+	padding: 2px 0 0;
+	line-height: 20px;
+	height: 20px;
+}
+button.addDL{
+	margin: 20px;
+}
+button.addDL i{
+	background: #70c1b3;
+}
+button.addDL i:hover{
+	background:#66b0a3;
+}
+button.delDL i{
+	background: #e0474c;
+}
+button.delDL i:hover{
+	background: #cc4146;
+}
+i.icon-resize-vertical{
+	color: #ddd;
 }
 .blox ul, .blox ol{ 
 	padding-left: 0px;
@@ -1736,13 +1842,11 @@ button.format-item.close:hover{
 	margin-left: 50px;
 }
 .dropbox{
-//	position: relative;
 	min-height: 70px;
 	background: #f9f8f6;
 	padding: 0px;
 	box-sizing: border-box;
-	margin-bottom: 10px;
-	box-shadow: 0 0 2px #000; 
+	margin-bottom: 10px; 
 }
 .dropbox p{
 	position: relative;
