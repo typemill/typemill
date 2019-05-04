@@ -9,10 +9,11 @@ class Settings
 		$defaultSettings 	= self::getDefaultSettings();
 		$userSettings 		= self::getUserSettings();
 		
-		$settings 			= array_merge($defaultSettings, $userSettings);
+		$settings 			= $defaultSettings;
 
 		if($userSettings)
-		{ 
+		{
+			$settings 			= array_merge($defaultSettings, $userSettings);
 			$settings['setup'] 	= false; 
 		}
 		
@@ -47,7 +48,7 @@ class Settings
 			'contentFolder'							=> 'content',
 			'cache'									=> true,
 			'cachePath'								=> $rootPath . 'cache',
-			'version'								=> '1.2.12',
+			'version'								=> '1.2.13',
 			'setup'									=> true,
 			'welcome'								=> true,
 			'images'								=> ['live' => ['width' => 820], 'mlibrary' => ['width' => 50, 'height' => 50]],
