@@ -8,6 +8,7 @@ plugins/finalwords
 plugins/joblistings
 plugins/landingpage
 plugins/mail
+plugins/newsletter
 plugins/textadds
 plugins/version
 settings/settings.yaml
@@ -17,4 +18,4 @@ system/vendor
 tests
 themes/monograf
 zips
-zip.php
+build.php

@@ -272,7 +272,7 @@ const contentComponent = Vue.component('content-block', {
 							{
 								self.$root.$data.markdown.push(result.markdown);
 								self.$root.$data.html.push(result.content);
-								
+
 								self.$root.$data.blockMarkdown = '';
 								self.$root.$data.blockType = 'markdown-component';
 								self.getData();
@@ -282,6 +282,7 @@ const contentComponent = Vue.component('content-block', {
 							else if(self.$root.$data.newblock)
 							{
 								self.$root.$data.html.splice(result.id,1,result.content);
+								self.$root.$data.html.splice(result.toc.id,1,result.toc);
 								self.$root.$data.markdown[result.id] = result.markdown;								
 
 								self.$root.$data.blockMarkdown = '';
@@ -296,11 +297,15 @@ const contentComponent = Vue.component('content-block', {
 								self.$root.$data.html.splice(result.id,1,result.content);
 
 								if(result.id == 0){ self.$root.$data.title = result.content; }
-								
-								// document.getElementById('blox-'+result.id).innerHTML = result.content;
-								
+
 								self.$root.$data.blockMarkdown = '';
 								self.$root.$data.blockType = '';
+							}
+
+							/* update the table of content if in result */
+							if(result.toc)
+							{
+								self.$root.$data.html.splice(result.toc.id, 1, result.toc);
 							}
 						}
 					}
@@ -356,6 +361,12 @@ const contentComponent = Vue.component('content-block', {
 						self.$root.$data.markdown.splice(bloxid,1);
 						self.$root.$data.blockMarkdown = '';
 						self.$root.$data.blockType = '';
+
+						/* update the table of content if in result */
+						if(result.toc)
+						{
+							self.$root.$data.html.splice(result.toc.id, 1, result.toc);
+						}
 					}
 				}
 			}, method, url, params);
@@ -406,6 +417,25 @@ const hrComponent = Vue.component('hr-component', {
 		this.$refs.markdown.focus();
 		autosize(document.querySelectorAll('textarea'));
 		this.$emit('updatedMarkdown', '---');
+	},
+	methods: {
+		updatemarkdown: function(event)
+		{
+			this.$emit('updatedMarkdown', event.target.value);
+		},
+	},
+})
+
+const tocComponent = Vue.component('toc-component', {
+	props: ['compmarkdown', 'disabled'],
+	template: '<div>' + 
+				'<div class="contenttype"><i class="icon-paragraph"></i></div>' +
+				'<textarea class="mdcontent" ref="markdown" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown">---</textarea>' +
+				'</div>',
+	mounted: function(){
+		this.$refs.markdown.focus();
+		autosize(document.querySelectorAll('textarea'));
+		this.$emit('updatedMarkdown', '[TOC]');
 	},
 	methods: {
 		updatemarkdown: function(event)
@@ -1235,6 +1265,7 @@ let editor = new Vue({
 		'content-component': contentComponent,
 		'markdown-component': markdownComponent,
 		'hr-component': hrComponent,
+		'toc-component': tocComponent,
 		'title-component': titleComponent,
 		'headline-component': headlineComponent,
 		'image-component': imageComponent,
@@ -1361,13 +1392,17 @@ let editor = new Vue({
 					}
 					else
 					{
-
 						self.freeze = false;
 
 						self.markdown = result.markdown;
 						self.blockMarkdown = '';
 						self.blockType = '';
 
+						if(result.toc)
+						{
+							self.html.splice(result.toc.id, 1, result.toc);
+						}
+						
 						publishController.publishDisabled = false;
 						publishController.publishResult = "";
 					}

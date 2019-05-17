@@ -18,6 +18,7 @@
 .icon-math:before { content: '\f01a'; } /* '' */
 .icon-move:before { content: '\f047'; } /* '' */
 .icon-link-ext:before { content: '\f08e'; } /* '' */
+.icon-bookmark-empty:before { content: '\f097'; } /* '' */
 .icon-list-bullet:before { content: '\f0ca'; } /* '' */
 .icon-list-numbered:before { content: '\f0cb'; } /* '' */
 .icon-underline:before { content: '\f0cd'; } /* '' */

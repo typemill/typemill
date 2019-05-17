@@ -32,17 +32,18 @@
 						<content-block :body="true" v-for="(block, index) in html" v-if="index !== 0">
 							<div v-if="block" class="blox" :key="block.id" @click.prevent="setData( $event )" :data-id="index" :id="'blox-' + index" v-html="block.html"></div>
 							<div v-else class="format-bar blox" @click.prevent="clearData( $event )" :data-id="index" :id="'blox-' + index">
-								<button class="format-item" @click.prevent="setData( $event, 'markdown-component' )" :data-id="index" :id="'blox-' + index"><i class="icon-paragraph"></i></button>
-								<button class="format-item" @click.prevent="setData( $event, 'headline-component' )" :data-id="index" :id="'blox-' + index"><i class="icon-header"></i></button>
-								<button class="format-item" @click.prevent="setData( $event, 'ulist-component' )" :data-id="index" :id="'blox-' + index"><i class="icon-list-bullet"></i></button>
-								<button class="format-item" @click.prevent="setData( $event, 'olist-component' )" :data-id="index" :id="'blox-' + index"><i class="icon-list-numbered"></i></button>
-								<button class="format-item" @click.prevent="setData( $event, 'image-component' )" :data-id="index" :id="'blox-' + index"><i class="icon-picture"></i></button>
-								<button class="format-item" @click.prevent="setData( $event, 'video-component' )" :data-id="index" :id="'blox-' + index"><i class="icon-youtube-play"></i></button>
-								<button class="format-item" @click.prevent="setData( $event, 'table-component' )" :data-id="index" :id="'blox-' + index"><i class="icon-table"></i></button>
-								<button class="format-item" @click.prevent="setData( $event, 'quote-component' )" :data-id="index" :id="'blox-' + index"><i class="icon-quote-left"></i></button>
-								<button class="format-item" @click.prevent="setData( $event, 'definition-component' )" :data-id="index" :id="'blox-' + index"><i class="icon-colon"></i></button>
-								<button class="format-item" @click.prevent="setData( $event, 'hr-component' )" :data-id="index" :id="'blox-' + index"><i class="icon-minus"></i></button>
-								<button class="format-item" @click.prevent="setData( $event, 'code-component' )" :data-id="index" :id="'blox-' + index"><i class="icon-code"></i></button>
+								<button class="format-item" @click.prevent="setData( $event, 'markdown-component' )" :data-id="index" :id="'blox-' + index" title="paragraph"><i class="icon-paragraph"></i></button>
+								<button class="format-item" @click.prevent="setData( $event, 'headline-component' )" :data-id="index" :id="'blox-' + index" title="headline"><i class="icon-header"></i></button>
+								<button class="format-item" @click.prevent="setData( $event, 'ulist-component' )" :data-id="index" :id="'blox-' + index" title="bullet list"><i class="icon-list-bullet"></i></button>
+								<button class="format-item" @click.prevent="setData( $event, 'olist-component' )" :data-id="index" :id="'blox-' + index" title="numbered list"><i class="icon-list-numbered"></i></button>
+								<button class="format-item" @click.prevent="setData( $event, 'image-component' )" :data-id="index" :id="'blox-' + index" title="image"><i class="icon-picture"></i></button>
+								<button class="format-item" @click.prevent="setData( $event, 'video-component' )" :data-id="index" :id="'blox-' + index" title="youtube"><i class="icon-youtube-play"></i></button>
+								<button class="format-item" @click.prevent="setData( $event, 'table-component' )" :data-id="index" :id="'blox-' + index" title="table"><i class="icon-table"></i></button>
+								<button class="format-item" @click.prevent="setData( $event, 'quote-component' )" :data-id="index" :id="'blox-' + index" title="quote"><i class="icon-quote-left"></i></button>
+								<button class="format-item" @click.prevent="setData( $event, 'definition-component' )" :data-id="index" :id="'blox-' + index" title="definition list"><i class="icon-colon"></i></button>
+								<button class="format-item" @click.prevent="setData( $event, 'toc-component' )" :data-id="index" :id="'blox-' + index" title="table of contents"><i class="icon-list-alt"></i></button>
+								<button class="format-item" @click.prevent="setData( $event, 'hr-component' )" :data-id="index" :id="'blox-' + index" title="horizontal line"><i class="icon-minus"></i></button>
+								<button class="format-item" @click.prevent="setData( $event, 'code-component' )" :data-id="index" :id="'blox-' + index" title="code block"><i class="icon-code"></i></button>
 							</div>
 						</content-block>
 					</draggable>
@@ -50,18 +51,19 @@
 	
 				<div class="format-bar">
 					<content-block :body="false">
-						<button class="format-item" @click.prevent="setData( $event, 'markdown-component' )" data-id="99999" id="blox-99999"><i class="icon-paragraph"></i></button>
-						<button class="format-item" @click.prevent="setData( $event, 'headline-component' )" data-id="99999" id="blox-99999"><i class="icon-header"></i></button>
-						<button class="format-item" @click.prevent="setData( $event, 'ulist-component' )" data-id="99999" id="blox-99999"><i class="icon-list-bullet"></i></button>
-						<button class="format-item" @click.prevent="setData( $event, 'olist-component' )" data-id="99999" id="blox-99999"><i class="icon-list-numbered"></i></button>
-						<button class="format-item" @click.prevent="setData( $event, 'image-component' )" data-id="99999" id="blox-99999"><i class="icon-picture"></i></button>
-						<button class="format-item" @click.prevent="setData( $event, 'video-component' )" data-id="99999" id="blox-99999"><i class="icon-youtube-play"></i></button>
-						<button class="format-item" @click.prevent="setData( $event, 'table-component' )" data-id="99999" id="blox-99999"><i class="icon-table"></i></button>
-						<button class="format-item" @click.prevent="setData( $event, 'quote-component' )" data-id="99999" id="blox-99999"><i class="icon-quote-left"></i></button>
-						<button class="format-item" @click.prevent="setData( $event, 'definition-component' )" data-id="99999" id="blox-99999"><i class="icon-colon"></i></button>
-						<button class="format-item" @click.prevent="setData( $event, 'hr-component' )" data-id="99999" id="blox-99999"><i class="icon-minus"></i></button>
-						<button class="format-item" @click.prevent="setData( $event, 'code-component' )" data-id="99999" id="blox-99999"><i class="icon-code"></i></button>
-				<!--	<button class="format-item" @click.prevent="setData( $event, 'math-component' )" data-id="99999" id="blox-99999"><i class="icon-math"></i></button>  -->
+						<button class="format-item" @click.prevent="setData( $event, 'markdown-component' )" data-id="99999" id="blox-99999" title="paragraph"><i class="icon-paragraph"></i></button>
+						<button class="format-item" @click.prevent="setData( $event, 'headline-component' )" data-id="99999" id="blox-99999" title="headline"><i class="icon-header"></i></button>
+						<button class="format-item" @click.prevent="setData( $event, 'ulist-component' )" data-id="99999" id="blox-99999" title="bullet list"><i class="icon-list-bullet"></i></button>
+						<button class="format-item" @click.prevent="setData( $event, 'olist-component' )" data-id="99999" id="blox-99999" title="numbered list"><i class="icon-list-numbered"></i></button>
+						<button class="format-item" @click.prevent="setData( $event, 'image-component' )" data-id="99999" id="blox-99999" title="image"><i class="icon-picture"></i></button>
+						<button class="format-item" @click.prevent="setData( $event, 'video-component' )" data-id="99999" id="blox-99999" title="youtube"><i class="icon-youtube-play"></i></button>
+						<button class="format-item" @click.prevent="setData( $event, 'table-component' )" data-id="99999" id="blox-99999" title="table"><i class="icon-table"></i></button>
+						<button class="format-item" @click.prevent="setData( $event, 'quote-component' )" data-id="99999" id="blox-99999" title="quote"><i class="icon-quote-left"></i></button>
+						<button class="format-item" @click.prevent="setData( $event, 'definition-component' )" data-id="99999" id="blox-99999" title="definition list"><i class="icon-colon"></i></button>
+						<button class="format-item" @click.prevent="setData( $event, 'toc-component' )" data-id="99999" id="blox-99999" title="table of contents"><i class="icon-list-alt"></i></button>
+						<button class="format-item" @click.prevent="setData( $event, 'hr-component' )" data-id="99999" id="blox-99999" title="horizontal line"><i class="icon-minus"></i></button>
+						<button class="format-item" @click.prevent="setData( $event, 'code-component' )" data-id="99999" id="blox-99999" title="code block"><i class="icon-code"></i></button>
+				<!--	<button class="format-item" @click.prevent="setData( $event, 'math-component' )" data-id="99999" id="blox-99999" title="math"><i class="icon-math"></i></button>  -->
 					</content-block>
 				</div>
 				

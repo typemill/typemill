@@ -22,6 +22,7 @@ let publishController = new Vue({
 		deleteResult: "",
 		publishStatus: document.getElementById("publishController").dataset.published ? false : true,
 		publishLabel: document.getElementById("publishController").dataset.published ? "online" : "offline",
+		publishLabelMobile: document.getElementById("publishController").dataset.published ? "ON" : "OFF",
 		raw: false,
 		visual: false,
 	},
@@ -70,6 +71,7 @@ let publishController = new Vue({
 						self.publishResult = "success";
 						self.publishStatus = false;
 						self.publishLabel = "online";
+						self.publishLabelMobile = "ON";
 					}
 				}
 				else if(httpStatus != 200)
@@ -173,6 +175,7 @@ let publishController = new Vue({
 					{
 						self.publishResult = "";
 						self.publishLabel = "offline";
+						self.publishLabelMobile = "OFF";
 						self.publishDisabled = false;
 					}
 				}

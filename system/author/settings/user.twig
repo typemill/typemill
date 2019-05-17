@@ -65,7 +65,7 @@
 				</fieldset>
 
 			</section>
-			<input type="submit" value="Save User" />
+			<input type="submit" value="Update User" />
 
 			{{ csrf_field() | raw }}
 			<div class="actionLink">
@@ -81,7 +81,7 @@
 				<h2>Delete {{ userdata.username }}</h2>
 				<p>Do you really want to delete the user {{userdata.username}}? Please confirm.</p>
 				<input type="hidden" name="username" value="{{userdata.username}}">
-				<input type="submit" value="Delete user">
+				<input type="submit" class="danger" value="Delete user">
 				{{ csrf_field() | raw }}
 			</form>
 		</div>

@@ -2,7 +2,6 @@
 	<div id="data-navi" data-navi='{{ navigation|json_encode() }}' data-editormode="{{settings.editor}}"></div>
 	<div id="mobile-menu" class="menu-action">Menu <span class="button-arrow"></span></div>
 	<div id="navi" class="content-navi" v-model="freeze" v-cloak>
-		<div class="infoline">Reorder navi with drag&drop<div class="help"  @click="showModal">?</div></div>
 		<div class="navi-list">
 			<div class="navi-item folder">
 				<a href="{{ base_url }}/tm/content/{{ settings.editor }}"><i class="icon-home"></i><span class="level-1">Homepage</span></a>
@@ -20,29 +19,14 @@
 				</div>
 			</li>
 		</ul>
-		<transition name="fade">
-			<div v-if="modalWindow" id="modalWindow" class="modalWindow">
-				<div class="modalInner wide">
-					<div @click="hideModal" id="closeModal" class="closeModal">X</div>
-					<h2>Reorder The Navigation</h2>
-					<p>You can reorder the navigation with simple drag&drop. However, there are some rules and limitations:</p>
-					<ul>
-						<li>You can move <strong>files</strong> to any other <strong>folder</strong>.</li>
-						<li>Only <strong>folders</strong> are allowed at the <strong>first level</strong>.</li>
-						<li><strong>Folders</strong> can be reordered within the <strong>same level</strong>.</li>
-						<li>But a <strong>folder</strong> can not be moved to another folder or <strong>another level</strong>.</li>
-					</ul>
-					<p>Here is the reason for the last restriction: If you move a folder to another folder, then the adress (url) will change for the whole folder and all its content (pages). It is a nightmare for your readers and for google.</p>
-					<p>If you really want to move the whole folder content, then create a new folder in the desired place and move all files manually to the new folder.</p>
-				</div>
-			</div>
-		</transition>
 	</div>
 </nav>
 
 {% verbatim %}
 	<template id="navigation-template">
-		<li class="navi-item" :class="elementtype"><a v-bind:href="getUrl(root, url)" :class="checkActive(active,parent)"><i :class="getIcon(elementtype, filetype)"></i><span :class="getLevel(level)">{{ name }}</span><i class="icon-move"></i></a>
+		<li class="navi-item" :class="elementtype">
+			<div class="status" :class="filetype"></div>
+			<a v-bind:href="getUrl(root, url)" :class="checkActive(active,parent)"><i :class="getIcon(elementtype, filetype)"></i><span :class="getLevel(level)">{{ name }}</span><i class="icon-move"></i></a>
 			<draggable v-if="folder" :element="'ul'" class="navi-list" :list="folder" :move="checkMove" @start="onStart" @end="onEnd" :options="{group:{ name:'file'}, animation: 150, 'disabled': freeze }">
 				<navigation ref="draggit" v-for="item in folder" :freeze="freeze" :name="item.name" :active="item.active" :parent="item.activeParent" :level="item.keyPath" :url="item.urlRelWoF" :root="root" v-bind:id="item.keyPath" :key="item.keyPath" :filetype="item.fileType" :elementtype="item.elementType" :folder="item.folderContent"></navigation>
 			</draggable>

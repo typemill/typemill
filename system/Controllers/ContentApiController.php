@@ -244,7 +244,7 @@ class ContentApiController extends ContentController
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri();
 		
-		# url is only needed, if an active page is moved
+		# url is only needed, if an active page is moved to another folder, so user has to be redirected to the new url
 		$url 			= false;
 		
 		# set structure
@@ -292,8 +292,8 @@ class ContentApiController extends ContentController
 		}
 		elseif($this->params['active'] == 'active')
 		{
-			# an active file has been moved to another folder
-			$url = $this->uri->getBaseUrl() . '/tm/content' . $newFolder->urlRelWoF . '/' . $item->slug;
+			# an active file has been moved to another folder, so send new url with response
+			$url = $this->uri->getBaseUrl() . '/tm/content/' . $this->settings['editor'] . $newFolder->urlRelWoF . '/' . $item->slug;
 		}
 		
 		# add item to newFolder
@@ -305,7 +305,7 @@ class ContentApiController extends ContentController
 		# initialise write object
 		$write = new Write();
 
-		# iterate through the whole content of the new folder
+		# iterate through the whole content of the new folder to rename the files
 		$writeError = false;
 		foreach($folderContent as $folderItem)
 		{
@@ -591,15 +591,37 @@ class ContentApiController extends ContentController
 		# needed for ToC links
 		$relurl = '/tm/content/' . $this->settings['editor'] . '/' . $this->item->urlRel;
 		
+		# flag for TOC
+		$toc = false;
+
+		# loop through mardkown-array and create html-blocks
 		foreach($content as $key => $block)
 		{
-			/* parse markdown-file to content-array */
+			# parse markdown-file to content-array
 			$contentArray 	= $parsedown->text($block);
 
-			/* parse markdown-content-array to content-string */
+			if($block == '[TOC]')
+			{
+				$toc = $key;
+			}
+
+			# parse markdown-content-array to content-string
 			$content[$key]	= ['id' => $key, 'html' => $parsedown->markup($contentArray, $relurl)];
 		}
 
+		if($toc)
+		{
+			$tocMarkup = $parsedown->buildTOC($parsedown->headlines);
+			$content[$toc] = ['id' => $toc, 'html' => $tocMarkup];
+		}
+
+		/*
+		$footnotes = $parsedown->getFootnotes();
+
+		print_r($footnotes);
+		die();
+		*/
+		
 		return $response->withJson(array('data' => $content, 'errors' => false));
 	}
 
@@ -685,6 +707,7 @@ class ContentApiController extends ContentController
 		{
 			# update the internal structure
 			$this->setStructure($draft = true, $cache = false);
+			$this->content = $pageMarkdown;
 		}
 		else
 		{
@@ -695,17 +718,93 @@ class ContentApiController extends ContentController
 		$parsedown->setSafeMode(true);
 
 		/* parse markdown-file to content-array */
-		$blockArray 	= $parsedown->text($blockMarkdown);
+		$blockArray = $parsedown->text($blockMarkdown);
+		
+		# we assume that toc is not relevant
+		$toc = false;
+
+		# needed for ToC links
+		$relurl = '/tm/content/' . $this->settings['editor'] . '/' . $this->item->urlRel;
+		
+		if($blockMarkdown == '[TOC]')
+		{
+			# if block is table of content itself, then generate the table of content
+			$tableofcontent = $this->generateToc();
+
+			# and only use the html-markup
+			$blockHTML = $tableofcontent['html'];
+		}
+		else
+		{
+			# parse markdown-content-array to content-string
+			$blockHTML = $parsedown->markup($blockArray, $relurl);
+			
+			# if it is a headline
+			if($blockMarkdown[0] == '#')
+			{
+				# then the TOC holds either false (if no toc used in the page) or it holds an object with the id and toc-markup
+				$toc = $this->generateToc();
+			}
+		}
+
+		return $response->withJson(array('content' => [ 'id' => $id, 'html' => $blockHTML ] , 'markdown' => $blockMarkdown, 'id' => $id, 'toc' => $toc, 'errors' => false));
+	}
+
+	protected function generateToc()
+	{
+		# we assume that page has no table of content
+		$toc = false;
+
+		# make sure $this->content is updated
+		$content = $this->content;
+
+		if($content == '')
+		{
+			$content = [];
+		}
+		
+		# initialize parsedown extension
+		$parsedown = new ParsedownExtension();
+		
+		# if content is not an array, then transform it
+		if(!is_array($content))
+		{
+			# turn markdown into an array of markdown-blocks
+			$content = $parsedown->markdownToArrayBlocks($content);
+		}
 		
 		# needed for ToC links
-		$relurl 		= '/tm/content/' . $this->settings['editor'] . '/' . $this->item->urlRel;
+		$relurl = '/tm/content/' . $this->settings['editor'] . '/' . $this->item->urlRel;
 		
-		/* parse markdown-content-array to content-string */
-		$blockHTML		= $parsedown->markup($blockArray, $relurl);
+		# loop through mardkown-array and create html-blocks
+		foreach($content as $key => $block)
+		{
+			# parse markdown-file to content-array
+			$contentArray 	= $parsedown->text($block);
+			
+			if($block == '[TOC]')
+			{
+				# toc is true and holds the key of the table of content now
+				$toc = $key;
+			}
 
-		return $response->withJson(array('content' => [ 'id' => $id, 'html' => $blockHTML ] , 'markdown' => $blockMarkdown, 'id' => $id, 'errors' => false));
+			# parse markdown-content-array to content-string
+			$content[$key]	= ['id' => $key, 'html' => $parsedown->markup($contentArray, $relurl)];
+		}
+
+		# if page has a table of content
+		if($toc)
+		{
+			# generate the toc markup
+			$tocMarkup = $parsedown->buildTOC($parsedown->headlines);
+
+			# toc holds the id of the table of content and the html-markup now
+			$toc = ['id' => $toc, 'html' => $tocMarkup];
+		}
+
+		return $toc;
 	}
-	
+
 	public function updateBlock(Request $request, Response $response, $args)
 	{
 		/* get params from call */
@@ -791,6 +890,9 @@ class ContentApiController extends ContentController
 		{
 			# update the internal structure
 			$this->setStructure($draft = true, $cache = false);
+
+			# updated the content variable
+			$this->content = $pageMarkdown;
 		}
 		else
 		{
@@ -810,13 +912,34 @@ class ContentApiController extends ContentController
 			$blockArray 	= $parsedown->text($blockMarkdown);
 		}
 		
+		# we assume that toc is not relevant
+		$toc = false;
+
 		# needed for ToC links
 		$relurl = '/tm/content/' . $this->settings['editor'] . '/' . $this->item->urlRel;
 		
-		/* parse markdown-content-array to content-string */
-		$blockHTML		= $parsedown->markup($blockArray, $relurl);
+		if($blockMarkdown == '[TOC]')
+		{
+			# if block is table of content itself, then generate the table of content
+			$tableofcontent = $this->generateToc();
 
-		return $response->withJson(array('content' => ['id' => $id, 'html' => $blockHTML], 'markdown' => $blockMarkdown, 'id' => $id, 'errors' => false));
+			# and only use the html-markup
+			$blockHTML = $tableofcontent['html'];
+		}
+		else
+		{
+			# parse markdown-content-array to content-string
+			$blockHTML = $parsedown->markup($blockArray, $relurl);
+			
+			# if it is a headline
+			if($blockMarkdown[0] == '#')
+			{
+				# then the TOC holds either false (if no toc used in the page) or it holds an object with the id and toc-markup
+				$toc = $this->generateToc();
+			}
+		}
+
+		return $response->withJson(array('content' => [ 'id' => $id, 'html' => $blockHTML ] , 'markdown' => $blockMarkdown, 'id' => $id, 'toc' => $toc, 'errors' => false));
 	}
 	
 	public function moveBlock(Request $request, Response $response, $args)
@@ -869,10 +992,10 @@ class ContentApiController extends ContentController
 			# if the block does not exists, return an error
 			return $response->withJson(array('data' => false, 'errors' => 'The ID of the content-block is wrong.'), 404);
 		}
-				
+
 		$extract = array_splice($pageMarkdown, $oldIndex, 1);
 		array_splice($pageMarkdown, $newIndex, 0, $extract);
-			
+	
 		# encode the content into json
 		$pageJson = json_encode($pageMarkdown);
 
@@ -884,30 +1007,31 @@ class ContentApiController extends ContentController
 		{
 			# update the internal structure
 			$this->setStructure($draft = true, $cache = false);
+
+			# update this content
+			$this->content = $pageMarkdown;
 		}
 		else
 		{
 			return $response->withJson(['errors' => ['message' => 'Could not write to file. Please check if the file is writable']], 404);
 		}
 
+		# we assume that toc is not relevant
+		$toc = false;
+
 		# needed for ToC links
 		$relurl = '/tm/content/' . $this->settings['editor'] . '/' . $this->item->urlRel;
 
-		# generate html array
-		$pageHTML = [];
-		foreach($pageMarkdown as $key => $markdownBlock)
+		# if the moved item is a headline
+		if($extract[0][0] == '#')
 		{
-			/* parse markdown-file to content-array */
-			$contentArray 	= $parsedown->text($markdownBlock);
-
-			/* parse markdown-content-array to content-string */
-			$pageHTML[$key]	= ['id' => $key, 'html' => $parsedown->markup($contentArray, $relurl)];
+			$toc = $this->generateToc();
 		}
 
 		# if it is the title, then delete the "# " if it exists
 		$pageMarkdown[0] = trim($pageMarkdown[0], "# ");
 
-		return $response->withJson(array('markdown' => $pageMarkdown,  'html' => $pageHTML, 'errors' => false));
+		return $response->withJson(array('markdown' => $pageMarkdown, 'toc' => $toc, 'errors' => false));
 	}
 
 	public function deleteBlock(Request $request, Response $response, $args)
@@ -1000,8 +1124,15 @@ class ContentApiController extends ContentController
 		{
 			return $response->withJson(['errors' => ['message' => 'Could not write to file. Please check if the file is writable']], 404);
 		}
-				
-		return $response->withJson(array('markdown' => $pageMarkdown, 'errors' => $errors));
+		
+		$toc = false;
+
+		if($contentBlock[0] == '#')
+		{
+			$toc = $this->generateToc();
+		}
+
+		return $response->withJson(array('markdown' => $pageMarkdown, 'toc' => $toc, 'errors' => $errors));
 	}
 
 	public function createImage(Request $request, Response $response, $args)

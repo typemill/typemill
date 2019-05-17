@@ -4,39 +4,44 @@
 {% block content %}
 
 	<div class="setupWrapper">
-
-		<form method="POST" action="{{ path_for("auth.login") }}" autocomplete="off">
 		
-			<fieldset class="auth">
-				<div class="formElement{{ errors.username ? ' errors' : '' }}">
-					<label for="username">Username <abbr title="required">*</abbr></label>
-					<input type="text" name="username" value="{{ old.username }}" required>
-					{% if errors.signup_username %}
-						<span class="error">{{ errors.username | first }}</span>
-					{% endif %}
-				</div>
-				<div class="formElement{{ errors.password ? ' errors' : '' }}">
-					<label for="password">Password <abbr title="required">*</abbr></label>
-					<input type="password" name="password" required autoomplete="off">
-					{% if errors.password %}
-						<span class="error">{{ errors.password | first }}</span>
-					{% endif %}
-				</div>
-			</fieldset>			
+		<div class="setupContent">
+			<p><i class="icon-bookmark-empty"></i>Remember to bookmark this page</p>
+		</div>
+		<div class="authformWrapper">
+			<form method="POST" action="{{ path_for("auth.login") }}" autocomplete="off">
+			
+				<fieldset class="auth">
+					<div class="formElement{{ errors.username ? ' errors' : '' }}">
+						<label for="username">Username <abbr title="required">*</abbr></label>
+						<input type="text" name="username" value="{{ old.username }}" required>
+						{% if errors.signup_username %}
+							<span class="error">{{ errors.username | first }}</span>
+						{% endif %}
+					</div>
+					<div class="formElement{{ errors.password ? ' errors' : '' }}">
+						<label for="password">Password <abbr title="required">*</abbr></label>
+						<input type="password" name="password" required autoomplete="off">
+						{% if errors.password %}
+							<span class="error">{{ errors.password | first }}</span>
+						{% endif %}
+					</div>
+				</fieldset>
 
-			<div class="loginarea" id="loginarea">			
-				<input type="submit" value="Login" id="loginbutton" class="loginbutton" />
-				{{ csrf_field() | raw }}
-				
-				{% if messages.time %}
-					<div id="counter" class="counter">wait <span id="wait">{{ messages.time }}</span> sec</div>
-					<div class="forgotpw"><a href="https://typemill.net/writers/forgot-password" target="_blank">Forgot password?</a></div>
-				{% endif %}			
-			</div>
-		</form>		
-		
+				<div class="loginarea" id="loginarea">			
+					<input type="submit" value="Login" id="loginbutton" class="loginbutton" />
+					{{ csrf_field() | raw }}
+					
+					{% if messages.time %}
+						<div id="counter" class="counter">wait <span id="wait">{{ messages.time }}</span> sec</div>
+						<div class="forgotpw"><a href="https://typemill.net/writers/forgot-password" target="_blank">Forgot password?</a></div>
+					{% endif %}			
+				</div>
+			</form>		
+		</div>
+		<div class="setupContent">
+			<p><a href="{{ base_url() }}">back to startpage</a></p>
+		</div>
 	</div>
-	<footer>
-		<a href="{{ base_url() }}">back to startpage</a>
-	</footer>
+	<footer></footer>
 {% endblock %}

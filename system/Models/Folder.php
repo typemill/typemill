@@ -100,9 +100,20 @@ class Folder
 			{
 				$nameParts = self::getStringParts($key);
 				
+				$fileType = false; 
+				if(array_search('index.md', $name))
+				{
+					$fileType = 'md';
+				}
+				elseif(array_search('index.txt', $name))
+				{
+					$fileType = 'txt';
+				}
+
 				$item->originalName 	= $key;
 				$item->elementType		= 'folder';
-				$item->index			= array_search('index.md', $name) === false ? false : true;
+				$item->index			= $fileType;
+				$item->fileType			= $fileType;
 				$item->order 			= count($nameParts) > 1 ? array_shift($nameParts) : NULL;
 				$item->name 			= implode(" ",$nameParts);
 				$item->name				= iconv(mb_detect_encoding($item->name, mb_detect_order(), true), "UTF-8", $item->name);
@@ -161,6 +172,7 @@ class Folder
 		{
 			if($item->urlRel === $url)
 			{
+				# set item active, needed for move item in navigation
 				$item->active = true;
 				$result = $item;
 			}
@@ -314,7 +326,6 @@ class Folder
 		return array('structure' => $structure, 'item' => $item);
 	}
 	
-				
 	/* get breadcrumb as copied array, set elements active in original and mark parent element in original */
 	public static function getBreadcrumb($content, $searchArray, $i = NULL, $breadcrumb = NULL)
 	{
@@ -323,11 +334,22 @@ class Folder
 		while($i < count($searchArray))
 		{
 			$item = $content[$searchArray[$i]];
+
+			if($i == count($searchArray)-1)
+			{
+				$item->active = true;
+			}
+			else
+			{
+				$item->activeParent = true;
+			}
+			/*
 			$item->active = true;
 			if($i == count($searchArray)-2)
 			{
 				$item->activeParent = true; 
 			}
+			*/
 
 			$copy = clone($item);
 			if($copy->elementType == 'folder')

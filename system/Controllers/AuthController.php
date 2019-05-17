@@ -113,11 +113,11 @@ class AuthController extends Controller
 		{
 			$user = new User();
 			$userdata = $user->getUser($params['username']);
-			
+
 			if($userdata && password_verify($params['password'], $userdata['password']))
 			{
 				$user->login($userdata['username']);
-				
+
 				/* clear the user login attemps */
 				if($userLogins)
 				{

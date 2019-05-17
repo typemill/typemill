@@ -57,7 +57,21 @@ class ParsedownExtension extends \ParsedownExtra
         }
 		
 		return $markup;
-	}
+    }
+    
+
+    public function getFootnotes()
+    {
+        # add footnotes
+        if (isset($this->DefinitionData['Footnote']))
+        {
+            $Element = $this->buildFootnoteElement();
+
+            $footnotes = "\n" . $this->element($Element);
+        }
+
+        return $footnotes;
+    }
 			
     # TableOfContents
 
@@ -71,28 +85,29 @@ class ParsedownExtension extends \ParsedownExtra
 
     # Header
 	
-	private $headlines = array();
+	public $headlines = array();
 	
     protected function blockHeader($Line)
     {
         if (isset($Line['text'][1]))
         {
-            $level = 1;
-
-            while (isset($Line['text'][$level]) and $Line['text'][$level] === '#')
-            {
-                $level ++;
-            }
+            $level = strspn($Line['text'], '#');
 
             if ($level > 6)
             {
                 return;
             }
 
-            $text = trim($Line['text'], '# ');
-
+            $text = trim($Line['text'], '#');
 			$headline = URLify::filter($Line['text']);
-						
+
+            if ($this->strictMode and isset($text[0]) and $text[0] !== ' ')
+            {
+                return;
+            }
+    
+            $text = trim($text, ' ');
+    						
 			$Block = array(
 				'element' => array(
 					'name' => 'h' . min(6, $level),
@@ -112,7 +127,7 @@ class ParsedownExtension extends \ParsedownExtra
 	
 	# build the markup for table of contents 
 	
-	protected function buildTOC($headlines)
+	public function buildTOC($headlines)
 	{
 		$markup = '<ul class="TOC">';
 		
@@ -140,7 +155,7 @@ class ParsedownExtension extends \ParsedownExtra
 					$markup .= '</li></ul>';
 					$thisLevel--;
 				}
-			}			
+			}
 		}
 		
 		$markup .= '</ul>';
@@ -188,7 +203,7 @@ class ParsedownExtension extends \ParsedownExtra
 	
 	public $footnoteCount = 0;
 	
-    protected function buildFootnoteElement()
+    public function buildFootnoteElement()
     {
         $Element = array(
             'name' => 'div',

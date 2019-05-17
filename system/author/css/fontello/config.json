@@ -191,6 +191,12 @@
       "css": "resize-vertical",
       "code": 59407,
       "src": "fontawesome"
+    },
+    {
+      "uid": "2f5ef6f6b7aaebc56458ab4e865beff5",
+      "css": "bookmark-empty",
+      "code": 61591,
+      "src": "fontawesome"
     }
   ]
 }

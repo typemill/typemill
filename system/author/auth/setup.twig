@@ -4,38 +4,38 @@
 {% block content %}
 
 	<div class="setupWrapper">
+		<div class="authformWrapper">
+			<form method="POST" action="{{ path_for('setup.create') }}" autocomplete="off">
+			
+				<fieldset class="auth">
+					<div class="formElement{{ errors.username ? ' errors' : '' }}">
+						<label for="username">Username <abbr title="required">*</abbr></label>
+						<input type="text" name="username" value="{{ old.username }}" required>
+						{% if errors.username %}
+							<span class="error">{{ errors.username | first }}</span>
+						{% endif %}
+					</div>
+					<div class="formElement{{ errors.email ? ' errors' : '' }}">
+						<label for="email">E-Mail <abbr title="required">*</abbr></label>
+						<input type="text" name="email" value="{{ old.email }}" required>
+						{% if errors.email %}
+							<span class="error">{{ errors.email | first }}</span>
+						{% endif %}
+					</div>
+					<div class="formElement{{ errors.password ? ' errors' : '' }}">
+						<label for="password">Password <abbr title="required">*</abbr></label>
+						<input type="password" name="password" required autocomplete="off">
+						{% if errors.password %}
+							<span class="error">{{ errors.password | first }}</span>
+						{% endif %}
+					</div>
+				</fieldset>
 
-		<form method="POST" action="{{ path_for('setup.create') }}" autocomplete="off">
-		
-			<fieldset class="auth">
-				<div class="formElement{{ errors.username ? ' errors' : '' }}">
-					<label for="username">Username <abbr title="required">*</abbr></label>
-					<input type="text" name="username" value="{{ old.username }}" required>
-					{% if errors.username %}
-						<span class="error">{{ errors.username | first }}</span>
-					{% endif %}
-				</div>
-				<div class="formElement{{ errors.email ? ' errors' : '' }}">
-					<label for="email">E-Mail <abbr title="required">*</abbr></label>
-					<input type="text" name="email" value="{{ old.email }}" required>
-					{% if errors.email %}
-						<span class="error">{{ errors.email | first }}</span>
-					{% endif %}
-				</div>
-				<div class="formElement{{ errors.password ? ' errors' : '' }}">
-					<label for="password">Password <abbr title="required">*</abbr></label>
-					<input type="password" name="password" required autocomplete="off">
-					{% if errors.password %}
-						<span class="error">{{ errors.password | first }}</span>
-					{% endif %}
-				</div>
-			</fieldset>
-
-			<input type="submit" value="Create User" />
-			{{ csrf_field() | raw }}
-					
-		</form>
-		
+				<input type="submit" value="Create User" />
+				{{ csrf_field() | raw }}
+						
+			</form>
+		</div>		
 	</div>
 	
 {% endblock %}

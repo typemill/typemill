@@ -5,6 +5,14 @@ use Typemill\Events\OnPluginsLoaded;
 use Typemill\Events\OnSessionSegmentsLoaded;
 
 /****************************
+* HIDE ERRORS BY DEFAULT	  *
+****************************/
+
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
+error_reporting(E_ALL);
+
+/****************************
 * CREATE EVENT DISPATCHER	*
 ****************************/
 
@@ -15,6 +23,16 @@ $dispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
 ************************/
 
 $settings = Typemill\Settings::loadSettings();
+
+/****************************
+* HANDLE DISPLAY ERRORS 	  *
+****************************/
+
+if($settings['settings']['displayErrorDetails'])
+{
+	ini_set('display_errors', 1);
+	ini_set('display_startup_errors', 1);	
+}
 
 /************************
 * INITIATE SLIM 		*

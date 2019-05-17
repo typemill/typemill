@@ -78,11 +78,16 @@ class User extends WriteYaml
 	public function login($username)
 	{
 		$user = $this->getUser($username);
+
 		if($user)
 		{
+			$user['lastlogin'] = time();
+			unset($user['password']);
+			$this->updateUser($user);
+
 			$_SESSION['user'] 	= $user['username'];
 			$_SESSION['role'] 	= $user['userrole'];
-			$_SESSION['login'] 	= true;
+			$_SESSION['login'] 	= $user['lastlogin'];
 		}
 	}
 	

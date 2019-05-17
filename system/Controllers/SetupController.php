@@ -20,6 +20,7 @@ class SetupController extends Controller
 		try{ $checkFolder->checkPath('settings/users'); }catch(\Exception $e){ $systemcheck['error'][] = $e->getMessage(); }
 		try{ $checkFolder->checkPath('content'); }catch(\Exception $e){ $systemcheck['error'][] = $e->getMessage(); }
 		try{ $checkFolder->checkPath('cache'); }catch(\Exception $e){ $systemcheck['error'][] = $e->getMessage(); }
+		try{ $checkFolder->checkPath('media'); }catch(\Exception $e){ $systemcheck['error'][] = $e->getMessage(); }
 
 		$systemcheck = empty($systemcheck) ? false : $systemcheck;
 

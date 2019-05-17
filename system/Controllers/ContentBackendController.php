@@ -71,7 +71,7 @@ class ContentBackendController extends ContentController
 				$content = trim($contentParts[1]);
 			}
 		}
-		
+
 		return $this->render($response, 'editor/editor-raw.twig', array('navigation' => $this->structure, 'title' => $title, 'content' => $content, 'item' => $this->item, 'settings' => $this->settings ));
 	}
 	

@@ -33,7 +33,7 @@ const navcomponent = Vue.component('navigation', {
 				'parent_id_to': 	evt.to.parentNode.id, 
 				'index_old': 		evt.oldIndex,
 				'index_new': 		evt.newIndex,
-				'active':			evt.item.firstChild.className,
+				'active':			evt.item.getElementsByTagName('a')[0].className,
 				'url':				document.getElementById("path").value,
 				'csrf_name': 		document.getElementById("csrf_name").value,
 				'csrf_value':		document.getElementById("csrf_value").value,				
