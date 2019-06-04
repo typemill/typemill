@@ -50,13 +50,13 @@ $container = $app->getContainer();
 * LOAD & UPDATE PLUGINS *
 ************************/
 
-$plugins 					= new Typemill\Plugins();
-$pluginNames				= $plugins->load();
+$plugins 				= new Typemill\Plugins();
+$pluginNames		= $plugins->load();
 $pluginSettings = $routes = $middleware	= array();
 
 foreach($pluginNames as $pluginName)
 {
-	$className			= $pluginName['className'];
+	$className	= $pluginName['className'];
 	$name				= $pluginName['name'];
 		
 	# check if plugin is in the settings already
@@ -81,13 +81,13 @@ foreach($pluginNames as $pluginName)
 	if($pluginSettings[$name]['active'])
 	{
 		$routes 			= $plugins->getNewRoutes($className, $routes);
-		$middleware			= $plugins->getNewMiddleware($className, $middleware);
+		$middleware		= $plugins->getNewMiddleware($className, $middleware);
 		
 		$dispatcher->addSubscriber(new $className($container));
 	}
 }
 
-# if plugins in settings are not empty, then a plugin has been removed
+# if plugins in original settings are not empty now, then a plugin has been removed
 if(!empty($settings['settings']['plugins'])){ $refreshSettings = true; }
 
 # update the settings in all cases

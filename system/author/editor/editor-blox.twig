@@ -44,6 +44,7 @@
 								<button class="format-item" @click.prevent="setData( $event, 'toc-component' )" :data-id="index" :id="'blox-' + index" title="table of contents"><i class="icon-list-alt"></i></button>
 								<button class="format-item" @click.prevent="setData( $event, 'hr-component' )" :data-id="index" :id="'blox-' + index" title="horizontal line"><i class="icon-minus"></i></button>
 								<button class="format-item" @click.prevent="setData( $event, 'code-component' )" :data-id="index" :id="'blox-' + index" title="code block"><i class="icon-code"></i></button>
+								<button class="format-item" @click.prevent="setData( $event, 'math-component' )" :data-id="index" :id="'blox-' + index" title="math block"><i class="icon-math"></i></button>
 							</div>
 						</content-block>
 					</draggable>
@@ -63,7 +64,7 @@
 						<button class="format-item" @click.prevent="setData( $event, 'toc-component' )" data-id="99999" id="blox-99999" title="table of contents"><i class="icon-list-alt"></i></button>
 						<button class="format-item" @click.prevent="setData( $event, 'hr-component' )" data-id="99999" id="blox-99999" title="horizontal line"><i class="icon-minus"></i></button>
 						<button class="format-item" @click.prevent="setData( $event, 'code-component' )" data-id="99999" id="blox-99999" title="code block"><i class="icon-code"></i></button>
-				<!--	<button class="format-item" @click.prevent="setData( $event, 'math-component' )" data-id="99999" id="blox-99999" title="math"><i class="icon-math"></i></button>  -->
+						<button class="format-item" @click.prevent="setData( $event, 'math-component' )" data-id="99999" id="blox-99999" title="math"><i class="icon-math"></i></button>
 					</content-block>
 				</div>
 				

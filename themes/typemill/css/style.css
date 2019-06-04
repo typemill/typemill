@@ -494,7 +494,9 @@ pre{
 	max-width: 100%;
 	overflow-x: auto;
 }
-
+.math{
+	white-space: pre;
+}
 table{
 	width: 100%;
 	border-collapse: collapse;

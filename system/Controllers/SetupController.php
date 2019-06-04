@@ -54,8 +54,8 @@ class SetupController extends Controller
 					/* login user */
 					$user->login($username);
 
-					/* store updated settings */
-					\Typemill\Settings::createSettings(array('setup' => false));
+					# create initial settings file
+					\Typemill\Settings::createSettings();
 					
 					return $response->withRedirect($this->c->router->pathFor('setup.welcome'));
 				}

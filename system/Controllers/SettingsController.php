@@ -216,7 +216,7 @@ class SettingsController extends Controller
 			$uri 			= $request->getUri();
 			$base_url		= $uri->getBaseUrl();
 
-			# security, users should not be able to fake post with settings from other typemill pages.
+			# users should not be able to fake post with settings from other typemill pages.
 			if(!isset($referer[0]) OR $referer[0] !== $base_url . '/tm/themes' )
 			{
 				$this->c->flash->addMessage('error', 'illegal referer');
@@ -232,7 +232,11 @@ class SettingsController extends Controller
 			
 			if(isset($themeSettings['settings']['images']))
 			{	
-				$userSettings 	= ['images' => $themeSettings['settings']['images']];
+				# get the default settings
+				$defaultSettings = \Typemill\Settings::getDefaultSettings();
+				
+				# merge the default image settings with the theme image settings, delete all others (image settings from old theme)
+				$userSettings['images'] = array_merge($defaultSettings['images'], $themeSettings['settings']['images']);
 			}
 			
 			/* set theme name and delete theme settings from user settings for the case, that the new theme has no settings */

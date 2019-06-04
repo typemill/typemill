@@ -158,7 +158,7 @@ const contentComponent = Vue.component('content-block', {
 		},
  		submitBlock: function(){
 			var emptyline = /^\s*$(?:\r\n?|\n)/gm;
-			if(this.componentType == "code-component"){ }
+			if(this.componentType == "code-component" || this.componentType == "math-component"){ }
 			else if(this.componentType == "ulist-component" || this.componentType == "olist-component")
 			{
 				var listend = (this.componentType == "ulist-component") ? '* \n' : '1. \n';
@@ -266,6 +266,8 @@ const contentComponent = Vue.component('content-block', {
 						}
 						else
 						{
+							var thisBlockType = self.$root.$data.blockType;
+
 							self.switchToPreviewMode();
 							
 							if(self.$root.$data.blockId == 99999)
@@ -307,13 +309,26 @@ const contentComponent = Vue.component('content-block', {
 							{
 								self.$root.$data.html.splice(result.toc.id, 1, result.toc);
 							}
+
+							/* check math here */
+							self.$root.checkMath(result.id);
+
+							/* check youtube here */
+							if(thisBlockType == "video-component" || thisBlockType == "image-component")
+							{
+								self.$root.checkVideo(result.id);
+							}
+
+							/* update the navigation and mark navigation item as modified */
+							navi.getNavi();
+
 						}
 					}
 					else if(httpStatus != 200)
 					{
 						self.activatePage();
 						publishController.errors.message = "Sorry, something went wrong. Please refresh the page and try again.";
-					}					
+					}	
 				}, method, url, params);
 			}
 		},
@@ -367,6 +382,9 @@ const contentComponent = Vue.component('content-block', {
 						{
 							self.$root.$data.html.splice(result.toc.id, 1, result.toc);
 						}
+						
+						/* update the navigation and mark navigation item as modified */
+						navi.getNavi();
 					}
 				}
 			}, method, url, params);
@@ -967,6 +985,49 @@ const definitionComponent = Vue.component('definition-component', {
 	},
 })
 
+const mathComponent = Vue.component('math-component', {
+	props: ['compmarkdown', 'disabled'],
+	template: '<div>' + 
+				'<input type="hidden" ref="markdown" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown" />' +	
+				'<div class="contenttype"><i class="icon-math"></i></div>' +
+				'<textarea class="mdcontent" ref="markdown" v-model="mathblock" :disabled="disabled" @input="createmarkdown"></textarea>' + 
+				'</div>',
+	data: function(){
+		return {
+			mathblock: ''
+		}
+	},
+	mounted: function(){
+		this.$refs.markdown.focus();
+		if(this.compmarkdown)
+		{
+			var dollarMath = new RegExp(/^\$\$[\S\s]+\$\$$/m);
+			var bracketMath = new RegExp(/^\\\[[\S\s]+\\\]$/m);
+
+			if(dollarMath.test(this.compmarkdown) || bracketMath.test(this.compmarkdown))
+			{
+				var mathExpression = this.compmarkdown.substring(2,this.compmarkdown.length-2);
+				this.mathblock = mathExpression.trim(); 
+			}
+		}
+		this.$nextTick(function () {
+			autosize(document.querySelectorAll('textarea'));
+		});
+	},
+	methods: {
+		createmarkdown: function(event)
+		{
+			this.codeblock = event.target.value;
+			var codeblock = '$$\n' + event.target.value + '\n$$';
+			this.updatemarkdown(codeblock);
+		},
+		updatemarkdown: function(codeblock)
+		{
+			this.$emit('updatedMarkdown', codeblock);
+		},
+	},
+})
+
 const videoComponent = Vue.component('video-component', {
 	props: ['compmarkdown', 'disabled', 'load'],
 	template: '<div class="video dropbox">' +
@@ -1275,6 +1336,7 @@ let editor = new Vue({
 		'olist-component': olistComponent,
 		'table-component': tableComponent,
 		'definition-component': definitionComponent,
+		'math-component': mathComponent,
 	},
 	data: {
 		root: document.getElementById("main").dataset.url,
@@ -1351,6 +1413,24 @@ let editor = new Vue({
 				else
 				{
 					self.markdown = result.data;
+					
+					/* make math plugin working */
+					if (typeof renderMathInElement === "function") { 
+						self.$nextTick(function () {
+							renderMathInElement(document.body);
+						});		
+					}
+
+					/* check for youtube videos */
+					if (typeof typemillUtilities !== "undefined")
+					{
+						setTimeout(function(){ 
+							self.$nextTick(function () 
+							{
+								typemillUtilities.start();
+							});
+						}, 200);
+					}
 				}
 			}
 		}, method, url, params);
@@ -1405,6 +1485,12 @@ let editor = new Vue({
 						
 						publishController.publishDisabled = false;
 						publishController.publishResult = "";
+
+						/* update the navigation and mark navigation item as modified */
+						navi.getNavi();
+
+						/* update the math if plugin is there */
+						self.checkMath(params.new_index+1);
 					}
 				}
 			}, method, url, params);
@@ -1467,7 +1553,13 @@ let editor = new Vue({
 				case "[":
 					if(secondChar == "!" && thirdChar == "[") { return "image-component" } else { return "markdown-component" }
 					break;
-				case "`":
+				case "\\":
+					if(secondChar == "["){ return "math-component" } else { return "markdown-component"; }
+					break;
+				case "$":
+						if(secondChar == "$"){ return "math-component" } else { return "markdown-component"; }
+						break;
+					case "`":
 					if(secondChar == "`" && thirdChar == "`") { return "code-component" } else { return "markdown-component" }
 					break;
 				case "*":
@@ -1479,5 +1571,48 @@ let editor = new Vue({
 					return 'markdown-component';
 			}
 		},
+		checkMath(elementid)
+		{
+				/* make math plugin working */
+				if (typeof renderMathInElement === "function")
+				{
+					self.$nextTick(function () {
+						renderMathInElement(document.getElementById("blox-"+elementid));
+					});
+				}
+				if (typeof MathJax !== false) { 
+					self.$nextTick(function () {
+						MathJax.Hub.Queue(["Typeset",MathJax.Hub,"blox-"+elementid]);
+					});
+				}
+		},
+		initiateVideo()
+		{
+			/* check for youtube videos */
+			if (typeof typemillUtilities !== "undefined")
+			{
+				this.$nextTick(function () {
+						typemillUtilities.start();
+				});
+			}
+		},
+		checkVideo(elementid)
+		{
+			/* check for youtube videos */
+			var element = document.getElementById("blox-"+elementid);
+			if(element && typeof typemillUtilities !== "undefined")
+			{
+				imageElement = element.getElementsByClassName("youtube");
+				if(imageElement[0])
+				{
+					setTimeout(function(){ 
+						self.$nextTick(function () 
+						{
+								typemillUtilities.addYoutubePlayButton(imageElement[0]);
+						});
+					}, 300);
+				}
+			}
+		}
 	}
 });

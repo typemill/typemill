@@ -36,6 +36,9 @@ abstract class ContentController
 	# holds the name of the structure-file without drafts for live site 
 	protected $structureLiveName;
 	
+	# holds informations about the homepage
+	protected $homepage;
+
 	# hold the page-item as an object
 	protected $item;
 	
@@ -186,6 +189,34 @@ abstract class ContentController
 				
 		$this->structure = $structure;
 		return true;
+	}
+
+	protected function setHomepage()
+	{
+		$contentFolder = Folder::scanFolderFlat($this->settings['rootPath'] . $this->settings['contentFolder']);
+
+		if(array_search('index.md', $contentFolder))
+		{
+			$md = true;
+			$status = 'published';
+		}
+		if(array_search('index.txt', $contentFolder))
+		{
+			$txt = true;
+			$status = 'unpublished';
+		}
+		if(isset($txt) && isset($md))
+		{
+			$status = 'modified';
+		}
+
+		$active = false;
+		if($this->params['url'] == '/' || $this->params['url'] == $this->uri->getBasePath() )
+		{
+			$active = 'active';
+		}
+
+		$this->homepage = ['status' => $status, 'active' => $active];
 	}
 
 	protected function setItem()

@@ -103,7 +103,7 @@ class PageController extends Controller
 			$item = $this->c->dispatcher->dispatch('onItemLoaded', new OnItemLoaded($item))->getData();
 			
 			/* check if url is a folder. If so, check if there is an index-file in that folder */
-			if($item->elementType == 'folder' && $item->index)
+			if($item->elementType == 'folder')
 			{
 				$filePath = $pathToContent . $item->path . DIRECTORY_SEPARATOR . 'index.md';
 			}
@@ -126,7 +126,7 @@ class PageController extends Controller
 		
 		/* initialize parsedown */
 		$parsedown 		= new ParsedownExtension();
-
+		
 		/* set safe mode to escape javascript and html in markdown */
 		$parsedown->setSafeMode(true);
 
@@ -136,7 +136,7 @@ class PageController extends Controller
 		
 		/* get the first image from content array */
 		$firstImage		= $this->getFirstImage($contentArray);
-		
+
 		$itemUrl 		= isset($item->urlRel) ? $item->urlRel : false;
 		
 		/* parse markdown-content-array to content-string */
@@ -175,7 +175,7 @@ class PageController extends Controller
 		}
 		
 		$route = empty($args) && $settings['startpage'] ? '/cover.twig' : '/index.twig';
-		
+
 		return $this->render($response, $route, array('navigation' => $structure, 'content' => $contentHTML, 'item' => $item, 'breadcrumb' => $breadcrumb, 'settings' => $settings, 'title' => $title, 'description' => $description, 'base_url' => $base_url, 'image' => $firstImage ));
 	}
 

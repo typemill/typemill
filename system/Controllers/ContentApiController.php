@@ -502,7 +502,28 @@ class ContentApiController extends ContentController
 
 		return $response->withJson(array('data' => $this->structure, 'errors' => false, 'url' => $url));
 	}
-	
+
+	public function getNavigation(Request $request, Response $response, $args)
+	{
+		# get params from call
+		$this->params 	= $request->getParams();
+		$this->uri 		= $request->getUri();
+
+		# set structure
+		if(!$this->setStructure($draft = true, $cache = false)){ return $response->withJson(array('data' => false, 'errors' => $this->errors, 'url' => $url), 404); }
+
+		# set information for homepage
+		$this->setHomepage();
+
+		# get item for url and set it active again
+		if(isset($this->params['url']))
+		{
+			$activeItem = Folder::getItemForUrl($this->structure, $this->params['url']);
+		}
+
+		return $response->withJson(array('data' => $this->structure, 'homepage' => $this->homepage, 'errors' => false));
+	}
+
 	public function getArticleMarkdown(Request $request, Response $response, $args)
 	{
 		/* get params from call */

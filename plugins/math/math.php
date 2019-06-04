@@ -37,8 +37,11 @@ class Math extends Plugin
 			$this->addJS('/math/public/auto-render.min.js');
 			$this->addCSS('/math/public/katex.min.css');
 
-			/* initialize autorendering of page */
-			$this->addInlineJs('renderMathInElement(document.body);');
-		}		
+			/* initialize autorendering of page only in frontend */
+			if (strpos($this->getPath(), 'tm/content') === false) 
+			{
+				$this->addInlineJs('renderMathInElement(document.body);');
+			}
+		}
 	}
 }

@@ -72,6 +72,7 @@ let publishController = new Vue({
 						self.publishStatus = false;
 						self.publishLabel = "online";
 						self.publishLabelMobile = "ON";
+						navi.getNavi();
 					}
 				}
 				else if(httpStatus != 200)
@@ -121,6 +122,7 @@ let publishController = new Vue({
 					else
 					{
 						self.draftResult = 'success';
+						navi.getNavi();
 					}
 				}
 				else if(httpStatus != 200)
@@ -177,6 +179,7 @@ let publishController = new Vue({
 						self.publishLabel = "offline";
 						self.publishLabelMobile = "OFF";
 						self.publishDisabled = false;
+						navi.getNavi();
 					}
 				}
 			}, method, url, this.form );

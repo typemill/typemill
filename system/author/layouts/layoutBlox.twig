@@ -21,6 +21,9 @@
 		<link rel="stylesheet" href="{{ base_url }}/system/author/css/normalize.css" />
 		<link rel="stylesheet" href="{{ base_url }}/system/author/css/style.css?20190517" />
 		<link rel="stylesheet" href="{{ base_url }}/system/author/css/color-picker.min.css" />
+
+		{{ assets.renderCSS() }}
+
 	</head>
 	<body>	
 		<header class="main-header">
@@ -45,5 +48,8 @@
 		<script src="{{ base_url }}/system/author/js/vue-blox.js?20190517"></script>
 		<script src="{{ base_url }}/system/author/js/vue-navi.js?20190517"></script>
 		<script src="{{ base_url }}/system/author/js/lazy-video.js?20190517"></script>
+
+		{{ assets.renderJS() }}
+
 	</body>
 </html>

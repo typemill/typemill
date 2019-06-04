@@ -263,7 +263,7 @@ Let us create some `<?php inlineCode(); ?>` and now let us check, if a codeblock
 
 ````
 Use four apostroph like this:  
-\`​```
+\````
 <?php
 	$welcome = 'Hello World!';
 	echo $welcome;
@@ -276,21 +276,30 @@ Use four apostroph like this:
 Please activate the math-plugin to use mathematical expressions with LaTeX syntax. You can choose between MathJax or the newer KaTeX library. MathJax is included from a CDN, KaTeX is included in the plugin. So if you don't want to fetch code from a CDN, use KaTeX instead. The markdown syntax in TYPEMILL is the same for both libraries.
 
 ````
-Use inline LaTeX  ``x = \int_{0^1}^1(-b \pm \sqrt{b^2-4ac})/(2a)`` with two backtipps like this.
+Write inline math with \(...\) or $...$ syntax.
+inline $x = \int_{0^1}^1(-b \pm \sqrt{b^2-4ac})/(2a)$ math
+inline \(x = \int_{0^1}^1(-b \pm \sqrt{b^2-4ac})/(2a)\) math
 ````
 
-Use inline LaTeX ``x = \int_{0^1}^1(-b \pm \sqrt{b^2-4ac})/(2a)`` like this. 
+inline $x = \int_{0^1}^1(-b \pm \sqrt{b^2-4ac})/(2a)$ math
+
+inline \(x = \int_{0^1}^1(-b \pm \sqrt{b^2-4ac})/(2a)\) math
 
 ````
-Or specify latex sytnax for a code-block like this:  
-​````latex
+Write display math with $$...$$ or \[...\] syntax.  
+$$
 x = \int_{0^1}^1(-b \pm \sqrt{b^2-4ac})/(2a)
-​````  
+$$
+\[
+x = \int_{0^1}^1(-b \pm \sqrt{b^2-4ac})/(2a)
+\]
 ````
 
-​````latex
+$$
 x = \int_{0^1}^1(-b \pm \sqrt{b^2-4ac})/(2a)
-​````
+$$
+
+Das war es dann aber auch.
 
 [^1]: Thank you for scrolling.
 [^2]: This is the end of the page.

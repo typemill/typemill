@@ -14,17 +14,12 @@ class Settings
 		if($userSettings)
 		{
 			$settings 			= array_merge($defaultSettings, $userSettings);
-			$settings['setup'] 	= false; 
 		}
-		
-		$settings['images']		= isset($userSettings['images']) ? array_merge($defaultSettings['images'], $userSettings['images']) : $defaultSettings['images'];
-		$settings['themePath'] 	= $settings['rootPath'] . $settings['themeFolder'] . DIRECTORY_SEPARATOR . $settings['theme'];
-		$settings['version']	= $defaultSettings['version'];
-		
+				
 		return array('settings' => $settings);
 	}
 	
-	private static function getDefaultSettings()
+	public static function getDefaultSettings()
 	{
 		$rootPath = __DIR__ . DIRECTORY_SEPARATOR .  '..' . DIRECTORY_SEPARATOR;
 		
@@ -75,28 +70,54 @@ class Settings
 		return $objectSettings;
 	}
 	
-	public static function createSettings($settings)
-	{		
+	public static function createSettings()
+	{
 		$yaml = new Models\WriteYaml();
 		
-		/* write settings to yaml */
-		if($yaml->updateYaml('settings', 'settings.yaml', $settings))
-		{ 
+		# create initial settings file with only setup false
+		if($yaml->updateYaml('settings', 'settings.yaml', array('setup' => false)))
+		{
 			return true; 
 		}
 		return false;
 	}
-	
+
 	public static function updateSettings($settings)
 	{
+		# only allow if usersettings already exists (setup has been done)
 		$userSettings 	= self::getUserSettings();
 		
 		if($userSettings)
 		{
-			$yaml 		= new Models\WriteYaml();
-			$settings 	= array_merge($userSettings, $settings);
+			# whitelist settings that can be stored in usersettings (values are not relevant here, only keys)			
+			$allowedUserSettings = ['displayErrorDetails' => false,
+									'title' => false,
+									'copyright' => false,
+									'language' => false,
+									'startpage' => false,
+									'author' => false,
+									'year' => false,
+									'theme' => false,
+									'editor' => false,
+									'setup' => false,
+									'welcome' => false,
+									'images' => false,
+									'plugins' => false,
+									'themes' => false,
+									'latestVersion' => false 
+								];
+
+			# cleanup the existing usersettings
+			$userSettings = array_intersect_key($userSettings, $allowedUserSettings);
+
+			# cleanup the new settings passed as an argument
+			$settings 	= array_intersect_key($settings, $allowedUserSettings);
 			
+			# merge usersettings with new settings
+			$settings 	= array_merge($userSettings, $settings);
+
 			/* write settings to yaml */
+			$yaml = new Models\WriteYaml();
 			$yaml->updateYaml('settings', 'settings.yaml', $settings);					
 		}
 	}

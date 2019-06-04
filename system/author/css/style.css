@@ -223,14 +223,19 @@ li.menu-item{
 	position: absolute;
 	width: 4px;
 	height: 100%;
+	max-height: 32px;
 	left: -10px;
 	border-top: 1px solid #f9f8f6; 
 	border-bottom: 1px solid #f9f8f6;
 }
-.status.md{
+.status.published{
 	background:#66b0a3;
 }
-.status.txt{
+.status.modified{
+/*	background: #FFD700; */
+	background: #FFA500;
+}
+.status.unpublished{
 	background:#cc4146;
 }
 .navi-item i.icon-resize-full-alt,
@@ -283,15 +288,17 @@ span.level-5{ padding-left: 70px; }
 	height: 0px;
 	overflow: hidden;
 }
-a.addNaviLink, a.addNaviLink:link, a.addNaviLink:visited{
+.addNaviItem a, .addNaviItem a:link, .addNaviItem a:visited{
 	padding: 3px 0;
 	margin: 0;
 	width: auto;
 	background: transparent;
 	color: #e0474c;
 }
-a.addNaviLink:focus, a.addNaviLink:hover, a.addNaviLink:active{
+.addNaviItem a:focus,.addNaviItem a:hover,.addNaviItem a:active{
 	text-decoration: underline;
+	background: transparent;
+	color: #e0474c;	
 }
 .addNaviForm input{
 	min-height: 0px;
@@ -357,7 +364,9 @@ footer{
 	text-align: center;
 	padding: 20px 0;
 }
-
+.math{
+	white-space: pre;
+}
 /********************
 *  	SETUP FORM 	    *
 ********************/
@@ -1988,17 +1997,24 @@ hr{
 	padding-left: 25px;	
 }
 .blox a, .blox a:link, .blox a:visited,
-footer a, footer a:link, footer a:visited,
-.setupContent a, .setupContent a:link, .setupContent a:visited
+footer a, footer a:link, footer a:visited
 { 
 	text-decoration: none; 
 	color: #e0474c; 
 }
 .blox a:focus, .blox a:hover, .blox a:active,
-footer a:focus, footer a:hover, footer a:active,
-.setupContent a:focus, .setupContent a:hover, .setupContent a:active
+footer a:focus, footer a:hover, footer a:active
 { 
 	text-decoration: underline;
+}
+.setupContent a, .setupContent a:link, .setupContent a:visited
+{
+	text-decoration: none;
+	color: #444;
+}
+.setupContent a:focus, .setupContent a:hover, .setupContent a:active
+{
+	color: #e0474c; 
 }
 .blox .TOC li:before{ color: #bbb; }
 
@@ -2253,7 +2269,11 @@ footer a:focus, footer a:hover, footer a:active,
 	.menu-item a:hover:before, .menu-item a:focus:before, .menu-item a:active:before, .menu-item a.active:before{
 		border-left-color: #e0474c;
 	}
-	
+	.addNaviItem a:focus,.addNaviItem a:hover,.addNaviItem a:active{
+		text-decoration: underline;
+		background: transparent;
+		color: #e0474c;	
+	}	
 	.card .medium{
 		padding: 0px 20px;
 	}

@@ -1,6 +1,6 @@
 const navcomponent = Vue.component('navigation', {
 	template: '#navigation-template',
-	props: ['name', 'newItem', 'parent', 'active', 'filetype', 'elementtype', 'element', 'folder', 'level', 'url', 'root', 'freeze'],
+	props: ['homepage', 'name', 'newItem', 'parent', 'active', 'filetype', 'status', 'elementtype', 'element', 'folder', 'level', 'url', 'root', 'freeze'],
 	data: function () {
 		return {
 			showForm: false,
@@ -175,6 +175,7 @@ let navi = new Vue({
 		return {
 			title: "Navigation",
 			items: JSON.parse(document.getElementById("data-navi").dataset.navi),
+			homepage: JSON.parse(document.getElementById("data-navi").dataset.homepage),
 			editormode: document.getElementById("data-navi").dataset.editormode,
 			root: document.getElementById("main").dataset.url,
 			freeze: false,
@@ -242,6 +243,38 @@ let navi = new Vue({
 					}
 				}
 			}, method, url, newFolder );
+		},
+		getNavi: function()
+		{
+			publishController.errors.message = false;
+
+			var self = this;
+			
+			self.freeze = true;
+			self.errors = {title: false, content: false, message: false};
+
+			var activeItem = document.getElementById("path").value;
+			var url = this.root + '/api/v1/navigation?url=' + activeItem;
+			var method 	= 'GET';
+
+			sendJson(function(response, httpStatus)
+			{
+				if(response)
+				{
+					self.freeze = false;
+					var result = JSON.parse(response);
+					
+					if(result.errors)
+					{
+						publishController.errors.message = result.errors;
+					}
+					if(result.data)
+					{
+						self.items = result.data;
+						self.homepage = result.homepage;						
+					}
+				}
+			}, method, url, activeItem );
 		}
 	}
 })

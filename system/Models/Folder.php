@@ -43,16 +43,18 @@ class Folder
 	{
 		$folderItems 	= scandir($folderPath);
 		$folderContent 	= array();
-		
+
+		# if it is the live version and if it is a folder that is not published, then do not show the folder and its content.
+		if(!$draft && !in_array('index.md', $folderItems)){ return false; }
+
 		foreach ($folderItems as $key => $item)
 		{
 			if (!in_array($item, array(".","..")))
 			{
 				if (is_dir($folderPath . DIRECTORY_SEPARATOR . $item))
 				{
-					/* TODO: if folder is empty or folder has only txt files, continue */
 					$subFolder 					= $item;
-					$folderContent[$subFolder] 	= self::scanFolder($folderPath . DIRECTORY_SEPARATOR . $subFolder, $draft);					
+					$folderContent[$subFolder] 	= self::scanFolder($folderPath . DIRECTORY_SEPARATOR . $subFolder, $draft);
 				}
 				else
 				{
@@ -69,6 +71,7 @@ class Folder
 						if(isset($last) && ($last == implode($nameParts)) )
 						{
 							array_pop($folderContent);
+							$item = $item . 'md';
 						}
 						$folderContent[] = $item;
 					}
@@ -91,7 +94,7 @@ class Folder
 		$contentDetails 	= [];
 		$iteration 			= 0;
 		$chapternr 			= 1;
-		
+
 		foreach($folderContent as $key => $name)
 		{
 			$item = new \stdClass();
@@ -100,19 +103,26 @@ class Folder
 			{
 				$nameParts = self::getStringParts($key);
 				
-				$fileType = false; 
-				if(array_search('index.md', $name))
+				$fileType = '';
+				if(in_array('index.md', $name))
 				{
 					$fileType = 'md';
+					$status = 'published';
 				}
-				elseif(array_search('index.txt', $name))
+				if(in_array('index.txt', $name))
 				{
 					$fileType = 'txt';
+					$status = 'unpublished';
+				}
+				if(in_array('index.txtmd', $name))
+				{
+					$fileType = 'txt';
+					$status = 'modified';
 				}
 
 				$item->originalName 	= $key;
 				$item->elementType		= 'folder';
-				$item->index			= $fileType;
+				$item->status			= $status;
 				$item->fileType			= $fileType;
 				$item->order 			= count($nameParts) > 1 ? array_shift($nameParts) : NULL;
 				$item->name 			= implode(" ",$nameParts);
@@ -134,14 +144,32 @@ class Folder
 			}
 			else
 			{
+				# do not use files in base folder (only folders are allowed)
+				if(!isset($keyPath)) continue;
+
+				# do not use index files
+				if($name == 'index.md' || $name == 'index.txt' || $name == 'index.txtmd' ) continue;
+
 				$nameParts 				= self::getStringParts($name);
 				$fileType 				= array_pop($nameParts);
 				
-				# if($name == 'index.md' || $fileType !== 'md' ) continue;
-				if($name == 'index.md' || $name == 'index.txt' ) continue;
-													
+				if($fileType == 'md')
+				{
+					$status = 'published';
+				}
+				elseif($fileType == 'txt')
+				{
+					$status = 'unpublished';
+				}
+				else
+				{
+					$fileType = 'txt';
+					$status = 'modified';
+				}
+
 				$item->originalName 	= $name;
 				$item->elementType		= 'file';
+				$item->status 			= $status;
 				$item->fileType			= $fileType;
 				$item->order 			= count($nameParts) > 1 ? array_shift($nameParts) : NULL;
 				$item->name 			= implode(" ",$nameParts);

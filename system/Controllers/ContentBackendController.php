@@ -23,10 +23,13 @@ class ContentBackendController extends ContentController
 		# get params from call
 		$this->uri 		= $request->getUri();
 		$this->params	= isset($args['params']) ? ['url' => $this->uri->getBasePath() . '/' . $args['params']] : ['url' => $this->uri->getBasePath()];
-				
+		
 		# set structure
 		if(!$this->setStructure($draft = true)){ return $this->renderIntern404($response, array( 'navigation' => true, 'content' => $this->errors )); }
 		
+		# set information for homepage
+		$this->setHomepage();
+
 		# set item
 		if(!$this->setItem()){ return $this->renderIntern404($response, array( 'navigation' => $this->structure, 'settings' => $this->settings, 'content' => $this->errors )); }
 		
@@ -72,11 +75,11 @@ class ContentBackendController extends ContentController
 			}
 		}
 
-		return $this->render($response, 'editor/editor-raw.twig', array('navigation' => $this->structure, 'title' => $title, 'content' => $content, 'item' => $this->item, 'settings' => $this->settings ));
+		return $this->render($response, 'editor/editor-raw.twig', array('navigation' => $this->structure, 'homepage' => $this->homepage, 'title' => $title, 'content' => $content, 'item' => $this->item, 'settings' => $this->settings ));
 	}
 	
 	/**
-	* Show Content for raw editor
+	* Show Content for blox editor
 	* 
 	* @param obj $request the slim request object
 	* @param obj $response the slim response object
@@ -85,20 +88,19 @@ class ContentBackendController extends ContentController
 	
 	public function showBlox(Request $request, Response $response, $args)
 	{
-		
 		# get params from call
 		$this->uri 		= $request->getUri();
 		$this->params	= isset($args['params']) ? ['url' => $this->uri->getBasePath() . '/' . $args['params']] : ['url' => $this->uri->getBasePath()];
-		
+
 		# set structure
 		if(!$this->setStructure($draft = true)){ return $this->renderIntern404($response, array( 'navigation' => true, 'content' => $this->errors )); }
-		
+
+		# set information for homepage
+		$this->setHomepage();
+
 		# set item
 		if(!$this->setItem()){ return $this->renderIntern404($response, array( 'navigation' => $this->structure, 'settings' => $this->settings, 'content' => $this->errors )); }
-		
-		# get the breadcrumb (here we need it only to mark the actual item active in navigation)
-		$breadcrumb = isset($this->item->keyPathArray) ? Folder::getBreadcrumb($this->structure, $this->item->keyPathArray) : false;
-		
+
 		# set the status for published and drafted
 		$this->setPublishStatus();
 		
@@ -148,7 +150,7 @@ class ContentBackendController extends ContentController
 			unset($content[0]);			
 		}
 
-		return $this->render($response, 'editor/editor-blox.twig', array('navigation' => $this->structure, 'title' => $title, 'content' => $content, 'item' => $this->item, 'settings' => $this->settings ));
+		return $this->render($response, 'editor/editor-blox.twig', array('navigation' => $this->structure, 'homepage' => $this->homepage, 'title' => $title, 'content' => $content, 'item' => $this->item, 'settings' => $this->settings ));
 	}
 	
 	public function showEmpty(Request $request, Response $response, $args)

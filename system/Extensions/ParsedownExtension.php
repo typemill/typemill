@@ -10,14 +10,19 @@ class ParsedownExtension extends \ParsedownExtra
     {
 		parent::__construct();
 
-		# mathjax support
-        $this->InlineTypes['`'][] = 'MathJaxLaTeX';
-        $this->BlockTypes['`'][] = 'FencedMathJaxLaTeX';
-		
+        # math support
+        $this->BlockTypes['\\'][] = 'Math';
+        $this->BlockTypes['$'][] = 'Math';
+        
+        $this->InlineTypes['\\'][] = 'Math';
+        $this->InlineTypes['$'][] = 'Math';
+        $this->inlineMarkerList .= '\\';
+        $this->inlineMarkerList .= '$';
+
 		# table of content support
         array_unshift($this->BlockTypes['['], 'TableOfContents');
     }
-		
+	
 	public function text($text)
 	{
         $Elements = $this->textElements($text);
@@ -72,7 +77,7 @@ class ParsedownExtension extends \ParsedownExtra
 
         return $footnotes;
     }
-			
+
     # TableOfContents
 
     protected function blockTableOfContents($line, $block)
@@ -125,8 +130,8 @@ class ParsedownExtension extends \ParsedownExtra
         }
     }
 	
-	# build the markup for table of contents 
-	
+    # build the markup for table of contents 
+    
 	public function buildTOC($headlines)
 	{
 		$markup = '<ul class="TOC">';
@@ -165,40 +170,23 @@ class ParsedownExtension extends \ParsedownExtra
 
     #
     # Footnote Marker
+    # add absolute url
 
     protected function inlineFootnoteMarker($Excerpt)
     {
-        if (preg_match('/^\[\^(.+?)\]/', $Excerpt['text'], $matches))
+
+        $element = parent::inlineFootnoteMarker($Excerpt);
+
+        if ( ! isset($element))
         {
-            $name = $matches[1];
-
-            if ( ! isset($this->DefinitionData['Footnote'][$name]))
-            {
-                return;
-            }
-
-            $this->DefinitionData['Footnote'][$name]['count'] ++;
-
-            if ( ! isset($this->DefinitionData['Footnote'][$name]['number']))
-            {
-                $this->DefinitionData['Footnote'][$name]['number'] = ++ $this->footnoteCount; # » &
-            }
-
-            $Element = array(
-                'name' => 'sup',
-                'attributes' => array('id' => 'fnref'.$this->DefinitionData['Footnote'][$name]['count'].':'.$name),
-                'element' => array(
-                    'name' => 'a',
-                    'attributes' => array('href' => $this->relurl . '#fn:' . $name, 'class' => 'footnote-ref'),
-                    'text' => $this->DefinitionData['Footnote'][$name]['number'],
-                ),
-            );
-
-            return array(
-                'extent' => strlen($matches[0]),
-                'element' => $Element,
-            );
+            return null;
         }
+   
+        $href = $element['element']['element']['attributes']['href'];
+
+        $element['element']['element']['attributes']['href'] = $this->relurl . $href;
+
+        return $element;
     }
 	
 	public $footnoteCount = 0;
@@ -295,129 +283,112 @@ class ParsedownExtension extends \ParsedownExtra
 
         return $Element;
     }
-	
-	# math support. Check https://github.com/aidantwoods/parsedown/blob/mathjaxlatex/ParsedownExtensionMathJaxLaTeX.php
+    
+    # Inline Math
+    # check https://github.com/BenjaminHoegh/ParsedownMath
+    # check https://github.com/cben/mathdown/wiki/math-in-markdown
 
-    protected function inlineCode($Excerpt)
+    protected function inlineMath($Excerpt)
     {
-        $marker = $Excerpt['text'][0];
-        if (preg_match('/^('.$marker.')[ ]*(.+?)[ ]*(?<!'.$marker.')\1(?!'.$marker.')/s', $Excerpt['text'], $matches))
+        if(preg_match('/^(?<!\\\\)(?<!\\\\\()\\\\\((.*?)(?<!\\\\\()\\\\\)(?!\\\\\))/s', $Excerpt['text'], $matches) OR preg_match('/\$(?!\$)([^ ][^\$\n]+)(?<! )\$(?![1-9])/s', $Excerpt['text'], $matches))
         {
-            $text = $matches[2];
-            $text = preg_replace("/[ ]*\n/", ' ', $text);
             return array(
                 'extent' => strlen($matches[0]),
                 'element' => array(
-                    'name' => 'code',
-                    'text' => $text,
+                    'text' => '\(' . $matches[1] . '\)',
                 ),
-            );
+            );        
         }
-    }	
-	
-    protected function inlineMathJaxLaTeX($Excerpt)
+    }
+    
+    protected $specialCharacters = array(
+        '\\', '`', '*', '_', '{', '}', '[', ']', '(', ')', '<', '>', '#', '+', '-', '.', '!', '|', '~', '^', '='
+    );
+
+    //
+    // Inline Escape
+    // -------------------------------------------------------------------------
+    protected function inlineEscapeSequence($Excerpt)
     {
-        $marker = $Excerpt['text'][0];
-        if (preg_match('/^('.$marker.'{2,})[ ]*(.+?)[ ]*(?<!'.$marker.')\1(?!'.$marker.')/s', $Excerpt['text'], $matches))
-        {
-            $text = $matches[2];
-            $text = htmlspecialchars($text, ENT_NOQUOTES, 'UTF-8');
-            $text = preg_replace("/[ ]*\n/", ' ', $text);
+        if (isset($Excerpt['text'][1]) 
+            && in_array($Excerpt['text'][1], $this->specialCharacters) 
+            && !preg_match('/(?<!\\\\)((?<!\\\\\()\\\\\((?!\\\\\())(.*?)(?<!\\\\)(?<!\\\\\()((?<!\\\\\))\\\\\)(?!\\\\\)))(?!\\\\\()/s', $Excerpt['text'])
+            && !preg_match('/\$(?!\$)([^ ][^\$\n]+)(?<! )\$(?![1-9])/s', $Excerpt['text'])
+        ){
             return array(
-                'extent' => strlen($matches[0]),
                 'element' => array(
-                    'name' => 'span',
-                    'text' => '\('.$text.'\)',
+                    'rawHtml' => $Excerpt['text'][1],
                 ),
+                'extent' => 2,
             );
         }
     }
-	
-    #
-    # Fenced Code
-    protected function blockFencedCode($Line)
+
+    # Block Math
+    protected function blockMath($Line)
     {
-        if (preg_match('/^(['.$Line['text'][0].']{3,})[ ]*([\w-]+)?[ ]*$/', $Line['text'], $matches))
-        {
-            $Element = array(
-                'name' => 'code',
+        $Block = array(
+            'element' => array(
                 'text' => '',
-            );
-			
-            if (isset($matches[2]))
-            {
-                if (strtolower($matches[2]) === 'latex')
-                {
-                    return;
-                }
-                $class = 'language-'.$matches[2];
-                $Element['attributes'] = array(
-                    'class' => $class,
-                );
-            }
-            $Block = array(
-                'char' => $Line['text'][0],
-                'openerLength' => mb_strlen($matches[1]),
-                'element' => array(
-                    'name' => 'pre',
-                    'element' => $Element,
-                ),
-            );
-			
-            return $Block;
-        }
-    }
-
-    #
-    # Fenced MathJax
-    protected function blockFencedMathJaxLaTeX($Line)
-    {
-        if (preg_match('/^['.$Line['text'][0].']{3,}[ ]*([\w-]+)?[ ]*$/', $Line['text'], $matches))
+            ),
+        );
+        if (preg_match('/^(?<!\\\\)(\\\\\[)(?!.)$/', $Line['text'])) 
         {
-            if ( ! isset($matches[1]) or strtolower($matches[1]) !== 'latex')
-            {
-                return;
-            }
-            $Block = array(
-                'char' => $Line['text'][0],
-                'element' => array(
-                    'name' => 'span',
-                    'text' => '',
-                ),
-            );
+            $Block['end'] = '\]';
+            return $Block;
+        } 
+        elseif (preg_match('/^(?<!\\\\)(\$\$)(?!.)$/', $Line['text']))
+        {
+            $Block['end'] = '$$';
             return $Block;
         }
     }
-	
-    protected function blockFencedMathJaxLaTeXContinue($Line, $Block)
+   
+    // ~
+    protected function blockMathContinue($Line, $Block)
     {
-
-		if (isset($Block['complete']))
+        if (isset($Block['complete'])) 
         {
             return;
         }
-        if (isset($Block['interrupted']))
+        if (isset($Block['interrupted'])) 
         {
-            $Block['element']['text'] .= "\n";
+            $Block['element']['text'] .= str_repeat("\n", $Block['interrupted']);
             unset($Block['interrupted']);
         }
-        if (preg_match('/^'.$Block['char'].'{3,}[ ]*$/', $Line['text']))
+        if ($Block['end'] === '\]' && preg_match('/^(?<!\\\\)(\\\\\])$/', $Line['text']))
         {
-            $Block['element']['text'] = substr($Block['element']['text'], 1);
             $Block['complete'] = true;
+            $Block['latex'] = true;
+            $Block['element']['name'] = 'div';
+            $Block['element']['text'] = "\\[".$Block['element']['text']."\n\\]";
+            $Block['element']['attributes'] = array('class' => 'math');
+
+            return $Block;
+        } 
+        elseif ($Block['end'] === '$$' && preg_match('/^(?<!\\\\)(\$\$)$/', $Line['text'])) 
+        {
+            $Block['complete'] = true;
+            $Block['latex'] = true;
+            $Block['element']['name'] = 'div';
+            $Block['element']['text'] = "$$".$Block['element']['text']."\n$$";
+            $Block['element']['attributes'] = array('class' => 'math');
+
             return $Block;
         }
-        $Block['element']['text'] .= "\n".$Line['body'];;
+
+        $Block['element']['text'] .= "\n" . $Line['body'];
+        
+        // ~
         return $Block;
     }
-	
-    protected function blockFencedMathJaxLaTeXComplete($Block)
+
+    // ~
+    protected function blockMathComplete($Block)
     {
-        $text = $Block['element']['text'];
-        $Block['element']['text'] = "\$\$\n" . $text . "\n\$\$";
         return $Block;
     }
-	
+        
 	# advanced attribute data, check parsedown extra plugin: https://github.com/tovic/parsedown-extra-plugin
     protected function parseAttributeData($text) {
         // Allow compact attributes ...
