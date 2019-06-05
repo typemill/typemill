@@ -1,13 +1,13 @@
  # About TYPEMILL
 
-TYPEMILL is a small flat file cms created for editors and writers. It provides a author-friendly dashboard and a visual-block-editor for markdown based on vue.js. Use TYPEMILL for manuals, documentations, web-books and similar publications. The website http://typemill.net itself is an example-website for TYPEMILL.
+TYPEMILL is a small flat file cms created for editors and writers. It provides a author-friendly dashboard and a visual-block-editor for markdown based on vue.js. Use TYPEMILL for manuals, documentations, web-books and similar publications. The website http://typemill.net itself is an example for TYPEMILL.
 
-![TYPEMILL Screenshot](https://typemill.net/media/demo-3.gif)
+![TYPEMILL Screenshot](https://typemill.net/media/tm-toc.gif)
 
 ## Features
 
 * Creates a website based on markdown files.
-* Provides a author-friendly visual markdown editor (experimental, based on VUE.js).
+* Provides an author-friendly visual markdown editor (work in progress, based on VUE.js).
 * Provides a pure markdown editing mode.
 * Markdown supports table of contents (TOC), tables, footnotes, abbreviations and definition lists.
 * Create and sort pages with drag & drop in the navigation.
@@ -15,11 +15,11 @@ TYPEMILL is a small flat file cms created for editors and writers. It provides a
 * Create and manage users.
 * Develop configurable plugins with the Symfony Event Dispatcher.
 * Develop configurable themes with TWIG.
-* Allows super easy backend and frontend forms with simple YAML-definitions.
+* Allows super easy backend and frontend forms with simple YAML-files.
 * Ships with a fully responsive standard theme
 * Ships with plugins for 
-  * MathJax and KaTeX, c.
-  * code highlighting.
+  * MathJax and KaTeX.
+  * Code highlighting.
   * Matomo/Piwik and Google Analytics.
   * Cookie Consent.
 
@@ -49,7 +49,7 @@ To run TYPEMILL on a **live** system, simply upload the files to your server
 
 ## Make Folders Writable.
 
- Make sure that the following folders and all their content are writable (permission 774 recursively):
+Make sure that the following folders and all their files are writable (permission 774 recursively):
 
 * cache
 * content
@@ -69,6 +69,12 @@ You can find your login screen under `/tm/login` or simply go to `/setup` and yo
 ## Documentation
 
 You can read the full documentation for writers, for theme developers and for plugin developers on the [TYPEMILL website](http://typemill.net).
+
+## Support
+
+This is an open source project. I love it and I spend about 20 hours a week on it (starting in 2017). There is no business model right now, but you can hire me for implementation or simply support this project if you like.
+
+Donate: https://www.paypal.me/typemill
 
 ## Contribute
 

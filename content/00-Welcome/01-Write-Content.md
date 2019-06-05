@@ -1,6 +1,6 @@
 # Write Content
 
-Typemill is a simple Flat File Content Management System (CMS). We work hard to provide the best author experience with easy and intuitive authoring tools. But Typemill is still in early development and it is likely that not everything will work perfectly out of the box. If you miss something or if you have ideas for improvement, then let me know via mail (trendschau@gmail.com) or via [GitHub](https://github.com/trendschau/typemill/issues).
+Typemill is a simple Flat File Content Management System (CMS). We work hard to provide the best author experience with easy and intuitive authoring tools. But Typemill is still in early development and it is likely that not everything will work perfectly out of the box. If you miss something or if you have ideas for improvement, then let me know via [GitHub](https://github.com/typemill/typemill/issues).
 
 ## The Navigation
 

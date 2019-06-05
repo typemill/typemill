@@ -42,7 +42,7 @@ class PageController extends Controller
 			{
 				$structure	= $this->getCachedStructure($cache);
 			}
-			else
+			if(!isset($structure) OR !$structure) 
 			{
 				/* if not, get a fresh structure of the content folder */
 				$structure 	= $this->getFreshStructure($pathToContent, $cache, $uri);

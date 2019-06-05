@@ -195,12 +195,12 @@ abstract class ContentController
 	{
 		$contentFolder = Folder::scanFolderFlat($this->settings['rootPath'] . $this->settings['contentFolder']);
 
-		if(array_search('index.md', $contentFolder))
+		if(in_array('index.md', $contentFolder))
 		{
 			$md = true;
 			$status = 'published';
 		}
-		if(array_search('index.txt', $contentFolder))
+		if(in_array('index.txt', $contentFolder))
 		{
 			$txt = true;
 			$status = 'unpublished';
