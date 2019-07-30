@@ -14,10 +14,12 @@
 			<li class="{{ element.elementType }} level-{{ depth }}">
 		{% endif %}
             {% if (element.elementType == 'folder') %}
-				<a href="{{ element.urlAbs }}">{% if chapnum %}{{ element.chapter }}. {% endif %}{{ element.name }}</a>		
+				<a href="{{ element.urlAbs }}">{% if chapnum %}{{ element.chapter }}. {% endif %}{{ element.name }}</a>
+		{% if (element.folderContent|length > 0) %}	
                 <ul>
                     {{ macros.loop_over(element.folderContent,chapnum) }}
                 </ul>
+		{% endif %}
             {% else %}
 				<a href="{{ element.urlAbs }}">{% if chapnum %}{{ element.chapter }} {% endif %}{{ element.name }}</a>
             {% endif %}
