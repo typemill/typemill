@@ -1,4 +1,4 @@
-{% macro loop_over(navigation) %}
+{% macro loop_over(navigation,chapnum) %}
 
     {% import _self as macros %}
 
@@ -11,12 +11,12 @@
 			<li class="{{ element.elementType }} level-{{ element.keyPathArray|length }}">
 		{% endif %}
             {% if element.elementType == 'folder' and element.keyPathArray|length == 1 %}
-				<a href="{{ element.urlAbs }}">{{ element.name }}</a>		
+				<a href="{{ element.urlAbs }}">{% if chapnum %}{{ element.chapter }}. {% endif %}{{ element.name }}</a>		
                 <ul>
-                    {{ macros.loop_over(element.folderContent) }}
+                    {{ macros.loop_over(element.folderContent,chapnum) }}
                 </ul>
             {% else %}
-				<a href="{{ element.urlAbs }}">{{ element.name }}</a>
+				<a href="{{ element.urlAbs }}">{% if chapnum %}{{ element.chapter }} {% endif %}{{ element.name }}</a>
             {% endif %}
         </li>
     {% endfor %}
@@ -25,5 +25,5 @@
 {% import _self as macros %}
 
 <ul>
-    {{ macros.loop_over(navigation) }}
+    {{ macros.loop_over(navigation,settings.themes.typemill.chapnum) }}
 </ul>

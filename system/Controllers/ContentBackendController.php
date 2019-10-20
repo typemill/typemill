@@ -122,7 +122,10 @@ class ContentBackendController extends ContentController
 		
 		# initialize parsedown extension
 		$parsedown = new ParsedownExtension();
-		
+
+		# to fix footnote-logic in parsedown, set visual mode to true
+		$parsedown->setVisualMode();
+
 		# if content is not an array, then transform it
 		if(!is_array($content))
 		{

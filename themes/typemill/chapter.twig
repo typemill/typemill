@@ -1,5 +1,4 @@
-<div class="chapter">
-	
+
 	{% if settings.themes.typemill.chapter %}
 	
 		<div class="chapterNumber">{{ settings.themes.typemill.chapter }} {{ item.chapter }}</div>
@@ -16,16 +15,15 @@
 	
 	{{ content }}
 
-</div>
 
-<div class="toc-nav">
-	
-	<ul>
-		{% for element in item.folderContent %}
-
-			<li class="level-2"><a href="{{ element.urlAbs }}">{{ element.name }}</a></li>
+	<div class="toc-nav">
 		
-		{% endfor %}
-	</ul>
-	
-</div>
+		<ul>
+			{% for element in item.folderContent %}
+
+				<li class="level-2"><a href="{{ element.urlAbs }}">{% if settings.themes.typemill.chapnum %}{{ element.chapter }} {% endif %}{{ element.name }}</a></li>
+			
+			{% endfor %}
+		</ul>
+		
+	</div>

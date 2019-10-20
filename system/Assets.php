@@ -44,7 +44,37 @@ class Assets
 	{
 		$this->inlineJS[] = '<script>' . $JS . '</script>';
 	}
+
+	public function activateVue()
+	{
+		$vueUrl = '<script src="' . $this->baseUrl . '/system/author/js/vue.min.js"></script>';
+		if(!in_array($vueUrl, $this->JS))
+		{
+			$this->JS[] = $vueUrl;
+		}
+	}
+
+	public function activateAxios()
+	{
+		$axiosUrl = '<script src="' . $this->baseUrl . '/system/author/js/axios.min.js"></script>';
+		if(!in_array($axiosUrl, $this->JS))
+		{
+			$this->JS[] = $axiosUrl;
+
+			$axios = '<script>const myaxios = axios.create({ baseURL: \'' . $this->baseUrl . '\' });</script>';
+			$this->JS[] = $axios;
+		}
+	}
 	
+	public function activateTachyons()
+	{
+		$tachyonsUrl = '<link rel="stylesheet" href="' . $this->baseUrl . '/system/author/css/tachyons.min.css" />';
+		if(!in_array($tachyonsUrl, $this->CSS))
+		{
+			$this->CSS[] = $tachyonsUrl;
+		}
+	}
+
 	public function renderCSS()
 	{
 		return implode('', $this->CSS) . implode('', $this->inlineCSS);

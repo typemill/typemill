@@ -19,10 +19,17 @@ class ParsedownExtension extends \ParsedownExtra
         $this->inlineMarkerList .= '\\';
         $this->inlineMarkerList .= '$';
 
+        $this->visualMode = false;
+
 		# table of content support
         array_unshift($this->BlockTypes['['], 'TableOfContents');
     }
 	
+    public function setVisualMode()
+    {
+        $this->visualMode = true;
+    }
+
 	public function text($text)
 	{
         $Elements = $this->textElements($text);
@@ -57,7 +64,7 @@ class ParsedownExtension extends \ParsedownExtra
         if (isset($this->DefinitionData['Footnote']))
         {
             $Element = $this->buildFootnoteElement();
-
+            
             $markup .= "\n" . $this->element($Element);
         }
 		
@@ -211,7 +218,16 @@ class ParsedownExtension extends \ParsedownExtra
         {
             if ( ! isset($DefinitionData['number']))
             {
-                continue;
+                # fix the footnote logic in visual mode, this might break for more complex footnotes.
+                if($this->visualMode)
+                {
+                    $DefinitionData['number'] = $definitionId;
+                    $DefinitionData['count'] = 1;
+                }
+                else
+                {
+                    continue;
+                }
             }
 
             $text = $DefinitionData['text'];
@@ -561,5 +577,5 @@ class ParsedownExtension extends \ParsedownExtra
 			return false;
 		}
 		return false;
-	}	
+	}
 }

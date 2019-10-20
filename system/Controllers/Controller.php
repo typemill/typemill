@@ -20,7 +20,8 @@ abstract class Controller
 	
 	protected function render($response, $route, $data)
 	{
-		// $data = $this->c->dispatcher->dispatch('onPageReady', new OnPageReady($data))->getData();
+		# why commented this out??
+		$data = $this->c->dispatcher->dispatch('onPageReady', new OnPageReady($data))->getData();
 		
 		if(isset($_SESSION['old']))
 		{
@@ -39,7 +40,7 @@ abstract class Controller
 		$response = $response->withAddedHeader('X-Frame-Options', 'SAMEORIGIN');
 		$response = $response->withAddedHeader('X-XSS-Protection', '1;mode=block');
 		$response = $response->withAddedHeader('Referrer-Policy', 'no-referrer-when-downgrade');
-		
+
 		return $this->c->view->render($response, $route, $data);
 	}
 	

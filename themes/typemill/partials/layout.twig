@@ -43,9 +43,18 @@
 			<header>
 				<p><a href="{{ base_url }}">{{ settings.title }}</a></p>
 			</header>
-			<article>
+			
+			<article class="{{ item.elementType == 'file' ? 'page' : 'chapter' }}">
 				{% block content %}{% endblock %}
 			</article>
+
+			{% if widgets %}
+				{% for index,widget in widgets %}
+					<aside id="{{ index }}">
+						{{ widget }}					
+					</aside>
+				{% endfor %}
+			{% endif %}
 			<aside id="navigation" class="close">
 				<nav class="main-menu">
 					{% include 'partials/navigation.twig' %}

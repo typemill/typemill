@@ -73,7 +73,7 @@ class PageController extends Controller
 			echo $e->getMessage();
 			exit(1);
 		}
-				
+		
 		/* if the user is on startpage */
 		if(empty($args))
 		{	

@@ -20,6 +20,36 @@ abstract class Plugin implements EventSubscriberInterface
     {
 		$this->container 	= $container;
     }
+
+    protected function isXhr()
+    {
+    	if($this->container['request']->isXhr())
+    	{
+			return true;
+		}
+		return false;
+    }
+
+    protected function getParams()
+    {
+    	return $this->container['request']->getParams();
+    }
+
+    protected function returnJson($data)
+    {
+        return $this->container['response']
+            ->withHeader("Content-Type", "application/json")
+            ->withStatus(200)
+            ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+    }
+
+    protected function returnJsonError($data)
+    {
+        return $this->container['response']
+            ->withHeader("Content-Type", "application/json")
+            ->withStatus(400)
+            ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+    }    
 	
 	protected function getSettings()
 	{
@@ -87,7 +117,22 @@ abstract class Plugin implements EventSubscriberInterface
 	{
 		$this->container->assets->addInlineCSS($CSS);		
 	}
+
+	protected function activateAxios()
+	{
+		$this->container->assets->activateAxios();		
+	}
 	
+	protected function activateVue()
+	{
+		$this->container->assets->activateVue();		
+	}
+
+	protected function activateTachyons()
+	{
+		$this->container->assets->activateTachyons();		
+	}	
+
 	protected function markdownToHtml($markdown)
 	{
 		$parsedown 		= new ParsedownExtension();
