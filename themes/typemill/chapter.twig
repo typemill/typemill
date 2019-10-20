@@ -21,7 +21,7 @@
 		<ul>
 			{% for element in item.folderContent %}
 
-				<li class="level-2"><a href="{{ element.urlAbs }}">{{ element.name }}</a></li>
+				<li class="level-2"><a href="{{ element.urlAbs }}">{% if settings.themes.typemill.chapnum %}{{ element.chapter }} {% endif %}{{ element.name }}</a></li>
 			
 			{% endfor %}
 		</ul>
