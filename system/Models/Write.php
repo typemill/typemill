@@ -50,6 +50,15 @@ class Write
 		return true;
 	}
 
+	protected function checkFileWithPath($filepath)
+	{
+		if(!file_exists($this->basePath . $filepath))
+		{
+			return false;
+		}
+		return true;
+	}
+
 	public function writeFile($folder, $file, $data)
 	{
 		if($this->checkPath($folder))
@@ -77,6 +86,26 @@ class Write
 		{
 			$fileContent = file_get_contents($folderName . DIRECTORY_SEPARATOR . $fileName);
 			return $fileContent;
+		}
+		return false;
+	}
+
+	public function getFileWithPath($filepath)
+	{
+		if($this->checkFileWithPath($filepath))
+		{
+			$fileContent = file_get_contents($filepath);
+			return $fileContent;
+		}
+		return false;
+	}
+
+	public function deleteFileWithPath($filepath)
+	{
+		if($this->checkFileWithPath($filepath))
+		{
+			unlink($this->basePath . $filepath);
+			return true;
 		}
 		return false;
 	}

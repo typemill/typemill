@@ -1,0 +1,44 @@
+﻿name: HYER SPACE
+version: 1.0.0
+description: Integrate HYER Text-Adds into typemill.
+author: Sebastian Schürmanns
+homepage: https://typemill.net
+licence: MIT
+
+forms:
+  fields:
+
+    apikey:
+      type: text
+      label: API KEY
+      placeholder:
+      required: true
+
+    siteid:
+      type: text
+      label: Site ID
+      placeholder:
+      required: true
+
+    urlmap:
+      type: textarea
+      label: URL Map
+      placeholder: '180 characters'
+      required: true
+
+    directory:
+      type: text
+      label: Path to directory
+      placeholder: 'path/to/directory'
+
+    headline:
+      type: text
+      label: Headline before ad-block on review page
+
+    teaser:
+      type: textarea
+      label: Teaser before ad-block on review page
+
+    position:
+      type: number
+      label: Position for the ad-block (before xyz h2 headlines)

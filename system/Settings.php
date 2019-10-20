@@ -7,7 +7,7 @@ class Settings
 	public static function loadSettings()
 	{
 		$defaultSettings 	= self::getDefaultSettings();
-		$userSettings 		= self::getUserSettings();
+		$userSettings 		= self::getUserSettings();		
 		
 		$settings 			= $defaultSettings;
 

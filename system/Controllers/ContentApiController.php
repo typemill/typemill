@@ -8,6 +8,10 @@ use Typemill\Models\Folder;
 use Typemill\Models\Write;
 use Typemill\Models\ProcessImage;
 use Typemill\Extensions\ParsedownExtension;
+use Typemill\Events\OnPagePublished;
+use Typemill\Events\OnPageUnpublished;
+use Typemill\Events\OnPageDeleted;
+use Typemill\Events\OnPageSorted;
 
 class ContentApiController extends ContentController
 {
@@ -71,6 +75,9 @@ class ContentApiController extends ContentController
 			# update the public structure
 			$this->setStructure($draft = false, $cache = false);
 
+			# dispatch event
+			$this->c->dispatcher->dispatch('onPagePublished', new OnPagePublished($this->item));
+
 			return $response->withJson(['success'], 200);
 		}
 		else
@@ -132,6 +139,9 @@ class ContentApiController extends ContentController
 			
 			# update the live structure
 			$this->setStructure($draft = false, $cache = false);
+
+			# dispatch event
+			$this->c->dispatcher->dispatch('onPageUnpublished', new OnPageUnpublished($this->item));
 			
 			return $response->withJson(['success'], 200);
 		}
@@ -182,9 +192,12 @@ class ContentApiController extends ContentController
 			
 			# update the live structure
 			$this->setStructure($draft = false, $cache = false);
-				
+
 			#update the backend structure
 			$this->setStructure($draft = true, $cache = false);
+
+			# dispatch event
+			$this->c->dispatcher->dispatch('onPageDeleted', new OnPageDeleted($this->item));
 			
 			return $response->withJson(array('data' => $this->structure, 'errors' => false, 'url' => $url), 200);
 		}
@@ -332,6 +345,9 @@ class ContentApiController extends ContentController
 		# update the structure for website
 		$this->setStructure($draft = false, $cache = false);
 		
+		# dispatch event
+		$this->c->dispatcher->dispatch('onPageSorted', new OnPageSorted($this->params));
+
 		return $response->withJson(array('data' => $internalStructure, 'errors' => false, 'url' => $url));
 	}
 	
@@ -601,7 +617,10 @@ class ContentApiController extends ContentController
 		
 		# initialize parsedown extension
 		$parsedown = new ParsedownExtension();
-		
+
+		# fix footnotes in parsedown, might break with complicated footnotes
+		$parsedown->setVisualMode();
+
 		# if content is not an array, then transform it
 		if(!is_array($content))
 		{
@@ -636,13 +655,6 @@ class ContentApiController extends ContentController
 			$content[$toc] = ['id' => $toc, 'html' => $tocMarkup];
 		}
 
-		/*
-		$footnotes = $parsedown->getFootnotes();
-
-		print_r($footnotes);
-		die();
-		*/
-		
 		return $response->withJson(array('data' => $content, 'errors' => false));
 	}
 
@@ -868,6 +880,7 @@ class ContentApiController extends ContentController
 
 		# initialize parsedown extension
 		$parsedown = new ParsedownExtension();
+		$parsedown->setVisualMode();
 
 		# if content is not an array, then transform it
 		if(!is_array($pageMarkdown))

@@ -125,6 +125,7 @@ aside{
 }
 article{
 	width: 100%;
+	position: relative;
 }
 .cover{
 	display: block;

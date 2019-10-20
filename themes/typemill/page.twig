@@ -1,68 +1,68 @@
-{% if content is empty %}
+	{% if content is empty %}
 
-	<h1>{{ item.name }}</h1>
+		<h1>{{ item.name }}</h1>
 
-{% endif %}
+	{% endif %}
 
-<h1>{{ title }}</h1>
+	<h1>{{ title }}</h1>
 
-{% if (settings.themes.typemill.socialPosition.top or settings.themes.typemill.modifiedPosition.top or settings.themes.typemill.authorPosition.top or settings.themes.typemill.gitPosition.top) %}	
-	<div class="meta-info">
-		{% if settings.themes.typemill.authorPosition.top %}
-			<small>{{ settings.themes.typemill.authorIntro }}: {{ settings.author }}</small>
-		{% endif %}
-		{% if settings.themes.typemill.modifiedPosition.top %}
-			<small>{{ settings.themes.typemill.modifiedText }}: {{ item.modified|date(settings.themes.typemill.modifiedFormat) }}</small>
-		{% endif %}
-		{% if settings.themes.typemill.socialPosition.top %}
-			<div id="share-icons" class="share-icons hide">
-				{% include 'partials/share.twig' with {'share' : settings.themes.typemill.socialButtons } %}
-				<div class="share-button" id="share-button">
-					<i class="icon-share"></i>
+	{% if (settings.themes.typemill.socialPosition.top or settings.themes.typemill.modifiedPosition.top or settings.themes.typemill.authorPosition.top or settings.themes.typemill.gitPosition.top) %}	
+		<div class="meta-info">
+			{% if settings.themes.typemill.authorPosition.top %}
+				<small>{{ settings.themes.typemill.authorIntro }}: {{ settings.author }}</small>
+			{% endif %}
+			{% if settings.themes.typemill.modifiedPosition.top %}
+				<small>{{ settings.themes.typemill.modifiedText }}: {{ item.modified|date(settings.themes.typemill.modifiedFormat) }}</small>
+			{% endif %}
+			{% if settings.themes.typemill.socialPosition.top %}
+				<div id="share-icons" class="share-icons hide">
+					{% include 'partials/share.twig' with {'share' : settings.themes.typemill.socialButtons } %}
+					<div class="share-button" id="share-button">
+						<i class="icon-share"></i>
+					</div>
 				</div>
-			</div>
-		{% endif %}
-		{% if settings.themes.typemill.gitPosition.top %} 
-			<div class="gitlink"><a title="edit on github" href="{{ settings.themes.typemill.gitlink }}{{ item.path }}">edit <i class="icon-github-circled"></i></a></div>
-		{% endif %}
-	</div>
-{% endif %}
+			{% endif %}
+			{% if settings.themes.typemill.gitPosition.top %} 
+				<div class="gitlink"><a title="edit on github" href="{{ settings.themes.typemill.gitlink }}{{ item.path }}">edit <i class="icon-github-circled"></i></a></div>
+			{% endif %}
+		</div>
+	{% endif %}
 
-{{ content }}
+	{{ content }}
 
 
-{% if (settings.themes.typemill.socialPosition.bottom or settings.themes.typemill.modifiedPosition.bottom or settings.themes.typemill.authorPosition.bottom or settings.themes.typemill.gitPosition.bottom) %}	
-	<div class="meta-info">
-		{% if settings.themes.typemill.authorPosition.bottom %}
-			<small>{{ settings.themes.typemill.authorIntro }}: {{ settings.author }}</small>
-		{% endif %}
-		{% if settings.themes.typemill.modifiedPosition.bottom %}
-			<small>{{ settings.themes.typemill.modifiedText }}: {{ item.modified|date(settings.themes.typemill.modifiedFormat) }}</small>
-		{% endif %}
-		{% if settings.themes.typemill.socialPosition.bottom %}
-			<div id="share-icons-bottom" class="share-icons hide">
-				{% include 'partials/share.twig' with {'share' : settings.themes.typemill.socialButtons } %}
-				<div id="share-button-bottom" class="share-button">
-					<i class="icon-share"></i>
+	{% if (settings.themes.typemill.socialPosition.bottom or settings.themes.typemill.modifiedPosition.bottom or settings.themes.typemill.authorPosition.bottom or settings.themes.typemill.gitPosition.bottom) %}	
+		<div class="meta-info">
+			{% if settings.themes.typemill.authorPosition.bottom %}
+				<small>{{ settings.themes.typemill.authorIntro }}: {{ settings.author }}</small>
+			{% endif %}
+			{% if settings.themes.typemill.modifiedPosition.bottom %}
+				<small>{{ settings.themes.typemill.modifiedText }}: {{ item.modified|date(settings.themes.typemill.modifiedFormat) }}</small>
+			{% endif %}
+			{% if settings.themes.typemill.socialPosition.bottom %}
+				<div id="share-icons-bottom" class="share-icons hide">
+					{% include 'partials/share.twig' with {'share' : settings.themes.typemill.socialButtons } %}
+					<div id="share-button-bottom" class="share-button">
+						<i class="icon-share"></i>
+					</div>
 				</div>
-			</div>
-		{% endif %}
-		{% if settings.themes.typemill.gitPosition.bottom %} 
-			<div class="gitlink"><a title="edit on github" href="{{ settings.themes.typemill.gitlink }}{{ item.path }}">edit <i class="icon-github-circled"></i></a></div>
-		{% endif %}		
-	</div>
-{% endif %}
+			{% endif %}
+			{% if settings.themes.typemill.gitPosition.bottom %} 
+				<div class="gitlink"><a title="edit on github" href="{{ settings.themes.typemill.gitlink }}{{ item.path }}">edit <i class="icon-github-circled"></i></a></div>
+			{% endif %}		
+		</div>
+	{% endif %}
 
 
-{% if item.prevItem or item.nextItem %}
+	{% if item.prevItem or item.nextItem %}
 
-	<div class="paging">
-		{% if item.prevItem %}
-			<span class="prev"><a href="{{ item.prevItem.urlRel }}"><i class="icon-left-open-big"></i> {{ item.prevItem.name }}</a></span>
-		{% endif %}
-		{% if item.nextItem %}
-			<span class="next"><a href="{{ item.nextItem.urlRel }}">{{ item.nextItem.name }} <i class="icon-right-open-big"></i></a></span>
-		{% endif %}
-	</div>
+		<div class="paging">
+			{% if item.prevItem %}
+				<span class="prev"><a href="{{ item.prevItem.urlRel }}"><i class="icon-left-open-big"></i> {{ item.prevItem.name }}</a></span>
+			{% endif %}
+			{% if item.nextItem %}
+				<span class="next"><a href="{{ item.nextItem.urlRel }}">{{ item.nextItem.name }} <i class="icon-right-open-big"></i></a></span>
+			{% endif %}
+		</div>
 
-{% endif %}
+	{% endif %}
