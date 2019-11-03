@@ -1,9 +1,9 @@
 {
-    "name": "trendschau/typemill",
+    "name": "typemill/typemill",
     "type": "project",
     "description": "A crazy simple tool to create web-documentations and online manuals with markdown files.",
     "keywords": ["documentations","manuals","flat-file","Markdown","php"],
-    "homepage": "http://typemill.net",
+    "homepage": "https://typemill.net",
     "license": "MIT",
     "config": {
         "vendor-dir": "system/vendor"

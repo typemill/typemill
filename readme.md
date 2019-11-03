@@ -18,6 +18,7 @@ TYPEMILL is a small flat file cms created for editors and writers. It provides a
 * Allows super easy backend and frontend forms with simple YAML-files.
 * Ships with a fully responsive standard theme
 * Ships with plugins for 
+  * Search
   * MathJax and KaTeX.
   * Code highlighting.
   * Matomo/Piwik and Google Analytics.
@@ -60,7 +61,7 @@ You can use your ftp-software for that.
 
 ## Setup
 
-Please go to `your-typemill-website.com/setup`, create an initial user and then setup your system in the author panel. 
+Please go to `your-typemill-website.com/setup`, create an initial user and configure your system in the author panel. 
 
 ## Login
 
@@ -88,17 +89,20 @@ Typemill is still in an early stage and contributions are highly welcome. Here a
 Some ideas for devs (please fork this repository make your changes and create a pull request):
 
 * Fix a bug.
-* Create a nice theme.
-* Create a new plugin.
-* Improve the CSS-code with BEM or utility-css (e.g. Tailwind) and make it modular.
-* Rebuild the theme with the new css-grid feature.
+* Create a theme.
+* Create a plugin.
+* Auto-update functionality for core system plugins and themes.
+* Create a plugin and theme download page.
 * Improve the accessibility of html and css.
-* Help to establish autotests with selenium or cypress.
-* Write unit-tests.
-* Write an auto-update functionality.
+* Implement an ACL for user roles and rights.
 
 For hints, questions, problems and support, please open up a new issue on GitHub.
 
 ## Licence
 
 TYPEMILL is published under MIT licence. Please check the licence of the included libraries, too.
+
+## Community & Supporters
+
+* [Eziquel Bruni](https://github.com/EzequielBruni) edits the typemill documentation.
+* [vodaris](https://www.vodaris.de) sponsored the development of the search plugin.

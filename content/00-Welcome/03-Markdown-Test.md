@@ -299,8 +299,6 @@ $$
 x = \int_{0^1}^1(-b \pm \sqrt{b^2-4ac})/(2a)
 $$
 
-Das war es dann aber auch.
-
 [^1]: Thank you for scrolling.
 [^2]: This is the end of the page.
 
