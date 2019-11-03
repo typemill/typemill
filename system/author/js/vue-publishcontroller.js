@@ -203,24 +203,24 @@ let publishController = new Vue({
 					self.publishResult 		= "fail";
 					self.errors.message 	= "You are probably logged out. Please backup your changes, login and then try again."
 				}
-				else if(httpStatus != 200)
-				{
-					self.publishDisabled 	= false;
-					self.publishResult 		= "fail";
-					self.errors.message 	= "Something went wrong, please refresh the page and try again."					
-				}
 				else if(response)
 				{
 					var result = JSON.parse(response);
 					
+					self.modalWindow = false;
+
+					if(httpStatus != 200)
+					{
+						self.publishDisabled 	= false;
+						self.publishResult 		= "fail";
+						self.errors.message 	= "Something went wrong, please refresh the page and try again.";
+					}
 					if(result.errors)
 					{
-						self.modalWindow = "modal";
 						if(result.errors.message){ self.errors.message = result.errors.message };
 					}
 					else if(result.url)
 					{
-						self.modalWindow = "modal";
 						window.location.replace(result.url);
 					}
 				}

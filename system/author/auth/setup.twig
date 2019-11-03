@@ -4,9 +4,19 @@
 {% block content %}
 
 	<div class="setupWrapper">
+
+		{% if systemcheck %}
+			<h2>Missing Requirements</h2>
+			<ul style="color:red;padding: 0 14px">
+				{% for systemerror in systemcheck %}
+					<li style="margin: 5px 0">{{ systemerror }}</li>
+				{% endfor %}
+			</ul>
+		{% endif %}
+
 		<div class="authformWrapper">
 			<form method="POST" action="{{ path_for('setup.create') }}" autocomplete="off">
-			
+
 				<fieldset class="auth">
 					<div class="formElement{{ errors.username ? ' errors' : '' }}">
 						<label for="username">Username <abbr title="required">*</abbr></label>

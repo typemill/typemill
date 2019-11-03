@@ -87,7 +87,7 @@ class ContentApiController extends ContentController
 	}
 
 	public function unpublishArticle(Request $request, Response $response, $args)
-	{		
+	{
 		# get params from call 
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri();
@@ -129,6 +129,19 @@ class ContentApiController extends ContentController
 			}
 		}
 		
+		# check if it is a folder and if the folder has published pages.
+		$message = false;
+		if($this->item->elementType == 'folder')
+		{
+			foreach($this->item->folderContent as $folderContent)
+			{
+				if($folderContent->status == 'published')
+				{
+					$message = 'There are published pages within this folder. The pages are not visible on your website anymore.';
+				}
+			}
+		}
+
 		# update the file
 		$delete = $this->deleteContentFiles(['md']);
 		
@@ -143,7 +156,7 @@ class ContentApiController extends ContentController
 			# dispatch event
 			$this->c->dispatcher->dispatch('onPageUnpublished', new OnPageUnpublished($this->item));
 			
-			return $response->withJson(['success'], 200);
+			return $response->withJson(['success' => ['message' => $message]], 200);
 		}
 		else
 		{

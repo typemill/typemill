@@ -15,16 +15,36 @@ class SetupController extends Controller
 		$checkFolder = new Write();
 		
 		$systemcheck = array();
-		
+
+		# check folders and create them if possible		
 		try{ $checkFolder->checkPath('settings'); }catch(\Exception $e){ $systemcheck['error'][] = $e->getMessage(); }
 		try{ $checkFolder->checkPath('settings/users'); }catch(\Exception $e){ $systemcheck['error'][] = $e->getMessage(); }
 		try{ $checkFolder->checkPath('content'); }catch(\Exception $e){ $systemcheck['error'][] = $e->getMessage(); }
 		try{ $checkFolder->checkPath('cache'); }catch(\Exception $e){ $systemcheck['error'][] = $e->getMessage(); }
 		try{ $checkFolder->checkPath('media'); }catch(\Exception $e){ $systemcheck['error'][] = $e->getMessage(); }
 
+
+		# check php-version
+		if (version_compare(phpversion(), '7.0.0', '<')) {
+				$systemcheck['error'][] = 'The PHP-version of your server is ' . phpversion() . ' and Typemill needs at least 7.0.0';
+		}
+
+		# check if mod rewrite is enabled
+		$modules = apache_get_modules();
+		if(!in_array('mod_rewrite', $modules))
+		{
+			$systemcheck['error'][] = 'The apache module "mod_rewrite" is not enabled.';
+		}
+
+		# check if GD  extension is enabled
+		if(!extension_loaded('gd')){
+			$systemcheck['error'][] = 'The php-extension GD for image manipulation is not enabled.';
+		}
+
+		$setuperrors = empty($systemcheck) ? false : 'Some system requirements for Typemill are missing.';
 		$systemcheck = empty($systemcheck) ? false : $systemcheck;
 
-		return $this->render($response, 'auth/setup.twig', array( 'messages' => $systemcheck ));
+		return $this->render($response, 'auth/setup.twig', array( 'messages' => $setuperror, 'systemcheck' => $systemcheck ));
 	}
 
 	public function create($request, $response, $args)
