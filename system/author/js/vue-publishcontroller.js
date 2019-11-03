@@ -19,6 +19,7 @@ let publishController = new Vue({
 		deleteDisabled: false,
 		draftResult: "",
 		publishResult: "",
+		discardResult: "",
 		deleteResult: "",
 		publishStatus: document.getElementById("publishController").dataset.published ? false : true,
 		publishLabel: document.getElementById("publishController").dataset.published ? "online" : "offline",
@@ -83,6 +84,53 @@ let publishController = new Vue({
 				}				
 			}, method, url, this.form );
 		},
+		discardDraft: function(e) {
+			var self = this;
+
+			self.errors.message = false;
+			editor.errors = {title: false, content: false};
+			
+			self.discardResult = "load";
+			self.publishDisabled = "disabled";
+
+			var url = self.root + '/api/v1/article/discard';
+			var method 	= 'DELETE';
+
+			sendJson(function(response, httpStatus)
+			{
+				if(httpStatus == 400)
+				{
+					self.publishDisabled = false;
+					self.discardResult   = "fail";
+					self.errors.message  = "You are probably logged out. Please backup your changes, login and then try again."
+				}
+				else if(response)
+				{
+					var result = JSON.parse(response);
+
+					if(result.errors)
+					{
+						self.publishDisabled = false;
+						self.discardResult   = "fail";
+						
+						if(result.errors.title){ editor.errors.title = result.errors.title[0] }
+						if(result.errors.content){ editor.errors.content = result.errors.content[0] }
+						if(result.errors.message){ self.errors.message = result.errors.message }
+					}
+					else
+					{
+						window.location.replace(result.url);
+					}
+				}
+				else if(httpStatus != 200)
+				{
+					self.publishDisabled = false;
+					self.discardResult   = "fail";
+					self.errors.message  = "Something went wrong, please refresh the page and try again."					
+				}
+
+			}, method, url, this.form);
+		},
 		saveDraft: function(e){
 		
 			var self = this;
@@ -93,7 +141,7 @@ let publishController = new Vue({
 			self.draftResult = "load";
 		
 			var url = this.root + '/api/v1/article';
-			var method 	= 'PUT';
+			var method = 'PUT';
 			
 			this.form.title = editor.form.title;
 			this.form.content = editor.form.content;
@@ -107,7 +155,7 @@ let publishController = new Vue({
 					self.errors.message 	= "You are probably logged out. Please backup your changes, login and then try again."
 				}
 				else if(response)
-				{	
+				{
 					var result = JSON.parse(response);
 					
 					if(result.errors)

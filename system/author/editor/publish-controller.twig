@@ -1,6 +1,7 @@
 <div class="editor buttonset" id="publishController" data-published="{{ item.published }}" data-drafted="{{ item.drafted }}" v-cloak>
 	<div v-if="errors.message" class="message error">${ errors.message }</div>
 	<button v-if="raw" @click.prevent="saveDraft" id="draft" :class="draftResult" :disabled="draftDisabled"><span class="desktop">Save&nbsp;</span>Draft</button><button @click.prevent="publishDraft" id="publish" :class="publishResult" :disabled="publishDisabled">Publish</button>
+	<button @click.prevent="discardDraft" v-if="visual && !publishStatus" id="discard" :class="discardResult" :disabled="publishDisabled">Discard</button>
 	<div class="secondary">
 		<button @click.prevent="depublishArticle" class="button--secondary" :disabled="publishStatus"><span class="desktop">${publishLabel}</span><span class="mobile">${publishLabelMobile}</span></button>
 		<button @click.prevent="showModal" class="button--secondary danger"><span class="desktop">delete</span><span class="mobile">X</span></button>

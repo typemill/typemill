@@ -164,6 +164,37 @@ class ContentApiController extends ContentController
 		}
 	}
 
+	public function discardArticleChanges(Request $request, Response $response, $args)
+	{
+		# get params from call 
+		$this->params 	= $request->getParams();
+		$this->uri 		= $request->getUri();
+		
+		# set structure
+		if(!$this->setStructure($draft = true)){ return $response->withJson($this->errors, 404); }
+
+		# set item
+		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
+		
+		# set redirect url to edit page
+		$url = $this->uri->getBaseUrl() . '/tm/content/' . $this->settings['editor'] . $this->item->urlRel;
+
+		# remove the unpublished changes
+		$delete = $this->deleteContentFiles(['txt']);
+
+		if($delete)
+		{
+			# update the backend structure
+			$this->setStructure($draft = true, $cache = false);
+			
+			return $response->withJson(['data' => $this->structure, 'errors' => false, 'url' => $url], 200);
+		}
+		else
+		{
+			return $response->withJson(['data' => $this->structure, 'errors' => $this->errors], 404); 
+		}
+	}
+
 	public function deleteArticle(Request $request, Response $response, $args)
 	{
 		# get params from call 

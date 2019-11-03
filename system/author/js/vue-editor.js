@@ -21,6 +21,7 @@ let editor = new Vue({
 			publishController.publishDisabled = false;
 			publishController.draftResult = "";
 			publishController.publishResult = "";
+			publishController.discardResult = "";
 		},
 	}
 });
