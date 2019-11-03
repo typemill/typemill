@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "90ca8c01f77b4f6cff7e68e20e9097f3",
+    "content-hash": "328aaaddc688305607b91d9aacb0eddb",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -655,16 +655,16 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "v3.4.32",
+            "version": "v3.4.33",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "3e922c4c3430b9de624e8a285dada5e61e230959"
+                "reference": "f9031c22ec127d4a2450760f81a8677fe8a10177"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/3e922c4c3430b9de624e8a285dada5e61e230959",
-                "reference": "3e922c4c3430b9de624e8a285dada5e61e230959",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/f9031c22ec127d4a2450760f81a8677fe8a10177",
+                "reference": "f9031c22ec127d4a2450760f81a8677fe8a10177",
                 "shasum": ""
             },
             "require": {
@@ -714,7 +714,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2019-08-23T08:05:57+00:00"
+            "time": "2019-10-24T15:33:53+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -896,12 +896,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/vlucas/valitron.git",
-                "reference": "849d7e7dfb04628917cbbda87f95f5cdd772e26f"
+                "reference": "d0134c33d23eb2c7deb9f65928bc40c9ee04ced2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vlucas/valitron/zipball/849d7e7dfb04628917cbbda87f95f5cdd772e26f",
-                "reference": "849d7e7dfb04628917cbbda87f95f5cdd772e26f",
+                "url": "https://api.github.com/repos/vlucas/valitron/zipball/d0134c33d23eb2c7deb9f65928bc40c9ee04ced2",
+                "reference": "d0134c33d23eb2c7deb9f65928bc40c9ee04ced2",
                 "shasum": ""
             },
             "require": {
@@ -937,7 +937,7 @@
                 "validation",
                 "validator"
             ],
-            "time": "2019-08-29T21:21:26+00:00"
+            "time": "2019-10-24T14:46:33+00:00"
         }
     ],
     "packages-dev": [],
