@@ -14,7 +14,7 @@
 				
 				{% for themeName, theme in themes %}
 				
-					<form method="POST" action="{{ path_for('themes.save') }}">
+					<form method="POST" id="theme-{{ themeName }}" action="{{ path_for('themes.save') }}">
 					
 						<fieldset class="card{{ errors[themeName] ? ' errors' : '' }}">
 						
@@ -67,10 +67,10 @@
 									<input type="hidden" name="theme" value="{{ themeName }}">
 										
 									<div class="medium">
-										<button type="button" class="theme-button fc-settings{{ (settings.theme == themeName) ? ' active' : '' }}{{ theme.forms.fields|length > 0 ? ' has-settings' : ' no-settings'}}">{{ theme.forms.fields|length > 0 ? 'Settings <span class="button-arrow"></span>' : 'No Settings'}}</button>
+										<button type="button" id="{{themeName}}-toggle" class="theme-button fc-settings{{ (settings.theme == themeName) ? ' active' : '' }}{{ theme.forms.fields|length > 0 ? ' has-settings' : ' no-settings'}}">{{ theme.forms.fields|length > 0 ? 'Settings <span class="button-arrow"></span>' : 'No Settings'}}</button>
 									</div>
 									<div class="medium">
-										<input type="submit" value="Save Theme" />
+										<input type="submit" id="{{themeName}}-submit" value="Save Theme" />
 									</div>
 								</div>								
 							</div>

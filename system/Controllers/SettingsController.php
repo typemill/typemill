@@ -45,7 +45,7 @@ class SettingsController extends Controller
 			$params 		= $request->getParams();
 			$newSettings	= isset($params['settings']) ? $params['settings'] : false;
 			$validate		= new Validation();
-		
+
 			if($newSettings)
 			{
 				/* make sure only allowed fields are stored */
@@ -54,6 +54,7 @@ class SettingsController extends Controller
 					'author' 		=> $newSettings['author'],
 					'copyright' 	=> $newSettings['copyright'],
 					'year'			=> $newSettings['year'],
+					'language'		=> $newSettings['language'],
 					'startpage' 	=> isset($newSettings['startpage']) ? true : false,
 					'editor' 		=> $newSettings['editor'], 
 				);
@@ -562,6 +563,13 @@ class SettingsController extends Controller
 			if($validate->username($params['username']))
 			{
 				$user->deleteUser($params['username']);
+
+				# if user deleted his own account
+				if($_SESSION['user'] == $params['username'])
+				{
+					session_destroy();		
+					return $response->withRedirect($this->c->router->pathFor('auth.show'));
+				}
 				
 				$this->c->flash->addMessage('info', 'Say goodbye, the user is gone!');
 				return $response->withRedirect($this->c->router->pathFor('user.list'));			

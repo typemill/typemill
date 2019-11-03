@@ -3,6 +3,8 @@
 {% set startpage = old.settings.startpage ? old.settings.startpage : settings.startpage %}
 {% set linebreaks = old.settings.linebreaks ? old.settings.linebreaks : settings.linebreaks %}
 {% set year = settings.year ? settings.year : "now"|date("Y") %}
+{% set mylang = settings.language ? settings.language : locale %}
+{% set mycopy = settings.copyright ? settings.copyright : "@" %}
 
 {% block content %}
 	
@@ -36,7 +38,7 @@
 						<label for="settings[copyright]">Copyright/Licence</label>
 						<select name="settings[copyright]" id="copyright">
 							{% for copy in copyright %}
-								<option value="{{ copy }}"{% if copy == old.settings.copyright %} selected{% endif %}>{{ copy }}</option>
+								<option value="{{ copy }}"{% if copy == old.settings.copyright or copy == mycopy %} selected{% endif %}>{{ copy }}</option>
 							{% endfor %}
 						</select>
 						{% if errors.settings.copyright %}
@@ -52,7 +54,7 @@
 						<label for="settings[language]">Language</label>
 						<select name="settings[language]" id="language">
 							{% for key,lang in languages %}
-								<option value="{{ key }}"{% if (key == old.settings.language or key == locale) %} selected{% endif %}>{{ lang }}</option>
+								<option value="{{ key }}"{% if (key == old.settings.language or key == mylang) %} selected{% endif %}>{{ lang }}</option>
 							{% endfor %}
 						</select>
 						{% if errors.settings.language %}

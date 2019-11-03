@@ -78,7 +78,7 @@ const contentComponent = Vue.component('content-block', {
 			this.compmarkdown = $event;
 			this.$nextTick(function () {
 				this.$refs.preview.style.minHeight = this.$refs.component.offsetHeight + 'px';
-			});			
+			});
 		},
 		switchToEditMode: function()
 		{
@@ -86,7 +86,7 @@ const contentComponent = Vue.component('content-block', {
 			eventBus.$emit('closeComponents');
 			self = this;
 			self.$root.$data.freeze = true; 						/* freeze the data */
-		  self.$root.$data.sortdisabled = true;			/* disable sorting */
+		  	self.$root.$data.sortdisabled = true;			/* disable sorting */
 			this.preview = 'hidden'; 								/* hide the html-preview */
 			this.edit = true;										/* show the edit-mode */
 			this.compmarkdown = self.$root.$data.blockMarkdown;		/* get markdown data */
@@ -392,6 +392,123 @@ const contentComponent = Vue.component('content-block', {
 	},
 })
 
+const inlineFormatsComponent = Vue.component('inline-formats', {
+	template: '<div><div :style="{ left: `${x}px`, top: `${y}px` }" @mousedown.prevent="" v-show="showInlineFormat" id="formatBar" class="inlineFormatBar">' + 
+				  '<span class="inlineFormatItem" @mousedown.prevent="formatBold"><i class="icon-bold"></i></span>' + 
+				  '<span class="inlineFormatItem" @mousedown.prevent="formatItalic"><i class="icon-italic"></i></span>' + 
+				  '<span class="inlineFormatItem" @mousedown.prevent="formatCode"><i class="icon-code"></i></span>' + 
+				'</div><slot></slot></div>',
+	data: function(){
+		return {
+			formatBar: false,
+			startX: 0,
+			startY: 0,
+     		x: 0,
+     		y: 0,
+     		textComponent: '',
+     		selectedText: '',
+     		startPos: false,
+     		endPos: false,
+     		showInlineFormat: false,
+     	}
+	},
+	mounted: function() {
+		this.formatBar = document.getElementById('formatBar');
+		window.addEventListener('mouseup', this.onMouseup),
+		window.addEventListener('mousedown', this.onMousedown)
+	},
+	beforeDestroy: function() {
+		window.removeEventListener('mouseup', this.onMouseup),
+		window.removeEventListener('mousedown', this.onMousedown)
+	},
+	computed: {
+		highlightableEl () {    
+			return this.$slots.default[0].elm  
+		}
+	},
+	methods: {
+		onMousedown: function(event) {
+			this.startX = event.offsetX;
+			this.startY = event.offsetY;
+		},
+		onMouseup: function(event) {
+
+			/* if click is on format popup */
+			if(this.formatBar.contains(event.target))
+			{
+				return;
+			}
+
+			/* if click is outside the textarea */
+			if(!this.highlightableEl.contains(event.target))
+			{
+		  		this.showInlineFormat = false;
+		  		return;
+			}
+
+			this.textComponent = document.getElementsByClassName("mdcontent")[0];
+
+			/* grab the selected text */
+			if (document.selection != undefined)
+			{
+		    	this.textComponent.focus();
+		    	var sel = document.selection.createRange();
+		    	selectedText = sel.text;
+		  	}
+		  	/* Mozilla version */
+		  	else if (this.textComponent.selectionStart != undefined)
+		  	{
+		    	this.startPos = this.textComponent.selectionStart;
+		    	this.endPos = this.textComponent.selectionEnd;
+		    	selectedText = this.textComponent.value.substring(this.startPos, this.endPos)
+		  	}
+
+		  	var trimmedSelection = selectedText.replace(/\s/g, '');
+
+		  	if(trimmedSelection.length == 0)
+		  	{
+		  		this.showInlineFormat = false;
+		  		return;
+		  	}
+
+		  	/* determine the width of selection to position the format bar */
+		  	if(event.offsetX > this.startX)
+		  	{
+		  		var width = event.offsetX - this.startX;
+		  		this.x = event.offsetX - (width/2);
+		  	}
+		  	else
+		  	{
+		  		var width = this.startX - event.offsetX;
+		  		this.x = event.offsetX + (width/2);
+		  	}
+
+		  	this.y = event.offsetY - 15;
+
+			this.showInlineFormat = true;
+			this.selectedText = selectedText;
+		},
+		formatBold()
+		{
+			content = this.textComponent.value;
+			content = content.substring(0, this.startPos) + '**' + this.selectedText + '**' + content.substring(this.endPos, content.length);
+			this.$parent.updatemarkdown(content);
+		},
+		formatItalic()
+		{
+			content = this.textComponent.value;
+			content = content.substring(0, this.startPos) + '_' + this.selectedText + '_' + content.substring(this.endPos, content.length);
+			this.$parent.updatemarkdown(content);
+		},
+		formatCode()
+		{
+			content = this.textComponent.value;
+			content = content.substring(0, this.startPos) + '`' + this.selectedText + '`' + content.substring(this.endPos, content.length);
+			this.$parent.updatemarkdown(content);			
+		}
+	}
+})
+
 const titleComponent = Vue.component('title-component', {
 	props: ['compmarkdown', 'disabled'],
 	template: '<div><input type="text" ref="markdown" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown"></div>',
@@ -411,16 +528,18 @@ const markdownComponent = Vue.component('markdown-component', {
 	props: ['compmarkdown', 'disabled'],
 	template: '<div>' + 
 				'<div class="contenttype"><i class="icon-paragraph"></i></div>' +
-				'<textarea class="mdcontent" ref="markdown" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown"></textarea>' + 
-				'</div>',
+				'<inline-formats>' +
+					'<textarea id="activeEdit" class="mdcontent" ref="markdown" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown(event.target.value)"></textarea>' + 
+			  	'</inline-formats>' +
+			  '</div>',
 	mounted: function(){
 		this.$refs.markdown.focus();
 		autosize(document.querySelectorAll('textarea'));
 	},
 	methods: {
-		updatemarkdown: function(event)
+		updatemarkdown: function(value)
 		{
-			this.$emit('updatedMarkdown', event.target.value);
+			this.$emit('updatedMarkdown', value);
 		},
 	},
 })
@@ -509,8 +628,10 @@ const quoteComponent = Vue.component('quote-component', {
 	template: '<div>' + 
 				'<input type="hidden" ref="markdown" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown" />' +	
 				'<div class="contenttype"><i class="icon-quote-left"></i></div>' +
-				'<textarea class="mdcontent" ref="markdown" v-model="quote" :disabled="disabled" @input="createmarkdown"></textarea>' + 
-				'</div>',
+				'<inline-formats>' +
+					'<textarea class="mdcontent" ref="markdown" v-model="quote" :disabled="disabled" @input="updatemarkdown(event.target.value)"></textarea>' + 
+				'</inline-formats>' +
+			'</div>',
 	data: function(){
 		return {
 			quote: ''
@@ -521,7 +642,7 @@ const quoteComponent = Vue.component('quote-component', {
 		if(this.compmarkdown)
 		{
 			var quote = this.compmarkdown.replace("> ", "");
-			quote = this.compmarkdown.replace(">", "");
+			quote = this.compmarkdown.replace(">", "").trim();
 			this.quote = quote;
 		}
 		this.$nextTick(function () {
@@ -529,14 +650,10 @@ const quoteComponent = Vue.component('quote-component', {
 		});	
 	},
 	methods: {
-		createmarkdown: function(event)
+		updatemarkdown: function(value)
 		{
-			this.quote = event.target.value;
-			var quote = '> ' + event.target.value;
-			this.updatemarkdown(quote);
-		},
-		updatemarkdown: function(quote)
-		{
+			this.quote = value;
+			var quote = '> ' + value;
 			this.$emit('updatedMarkdown', quote);
 		},
 	},
@@ -546,7 +663,9 @@ const ulistComponent = Vue.component('ulist-component', {
 	props: ['compmarkdown', 'disabled'],
 	template: '<div>' + 
 				'<div class="contenttype"><i class="icon-list-bullet"></i></div>' +
-				'<textarea class="mdcontent" ref="markdown" v-model="compmarkdown" :disabled="disabled" @input="updatemarkdown"></textarea>' + 
+				'<inline-formats>' +
+					'<textarea class="mdcontent" ref="markdown" v-model="compmarkdown" :disabled="disabled" @input="updatemarkdown(event.target.value)"></textarea>' + 
+				'</inline-formats>' +
 				'</div>',
 	mounted: function(){
 		this.$refs.markdown.focus();
@@ -581,9 +700,9 @@ const ulistComponent = Vue.component('ulist-component', {
 		});	
 	},
 	methods: {
-		updatemarkdown: function(event)
+		updatemarkdown: function(value)
 		{
-			this.$emit('updatedMarkdown', event.target.value);
+			this.$emit('updatedMarkdown', value);
 		},
 	},
 })
@@ -592,7 +711,9 @@ const olistComponent = Vue.component('olist-component', {
 	props: ['compmarkdown', 'disabled'],
 	template: '<div>' + 
 				'<div class="contenttype"><i class="icon-list-numbered"></i></div>' +
-				'<textarea class="mdcontent" ref="markdown" v-model="compmarkdown" :disabled="disabled" @input="updatemarkdown"></textarea>' + 
+				'<inline-formats>' +
+					'<textarea class="mdcontent" ref="markdown" v-model="compmarkdown" :disabled="disabled" @input="updatemarkdown(event.target.value)"></textarea>' + 
+				'</inline-formats>' +
 				'</div>',
 	mounted: function(){
 		this.$refs.markdown.focus();
@@ -605,9 +726,9 @@ const olistComponent = Vue.component('olist-component', {
 		});
 	},
 	methods: {
-		updatemarkdown: function(event)
+		updatemarkdown: function(value)
 		{
-			this.$emit('updatedMarkdown', event.target.value);
+			this.$emit('updatedMarkdown', value);
 		},
 	},
 })
@@ -911,7 +1032,7 @@ const definitionComponent = Vue.component('definition-component', {
 	template: '<div class="definitionList">' +
 				'<div class="contenttype"><i class="icon-colon"></i></div>' +
 				'<draggable v-model="definitionList" :animation="150" @end="moveDefinition">' +
-  			  '<div class="definitionRow" v-for="(definition, dindex) in definitionList" :key="definition.id">' +
+  			    '<div class="definitionRow" v-for="(definition, dindex) in definitionList" :key="definition.id">' +
 						'<i class="icon-resize-vertical"></i>' +
 						'<input type="text" class="definitionTerm" placeholder="term" :value="definition.term" :disabled="disabled" @input="updateterm($event,dindex)" @blur="updateMarkdown">' +
 		  		  '<i class="icon-colon"></i>' + 
@@ -1337,6 +1458,7 @@ let editor = new Vue({
 		'table-component': tableComponent,
 		'definition-component': definitionComponent,
 		'math-component': mathComponent,
+		'inline-formats' : inlineFormatsComponent,
 	},
 	data: {
 		root: document.getElementById("main").dataset.url,
@@ -1580,7 +1702,7 @@ let editor = new Vue({
 						renderMathInElement(document.getElementById("blox-"+elementid));
 					});
 				}
-				if (typeof MathJax !== false) { 
+				if (typeof MathJax !== 'undefined') {
 					self.$nextTick(function () {
 						MathJax.Hub.Queue(["Typeset",MathJax.Hub,"blox-"+elementid]);
 					});

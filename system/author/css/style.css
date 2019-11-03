@@ -1661,6 +1661,49 @@ button.format-item.close:hover{
 }
 
 /************************
+** INLINE FORMATG BAR  **
+************************/
+
+/* format menu */
+.inlineFormatBar {  
+	height: 30px;  
+	padding: 5px 10px;  
+	background: #333;  
+	border-radius: 3px;  
+	position: absolute;  
+	top: 0;  
+	left: 0;  
+	transform: translate(-50%, -100%);  
+	transition: 0.2s all;  
+	display: flex;  
+	justify-content: center;  
+	align-items: center;
+}
+/* Triangle below format popup */
+.inlineFormatBar:after {  
+	content: '';  
+	position: absolute;  
+	left: 50%;  
+	bottom: -5px;  
+	transform: translateX(-50%);  
+	width: 0;  
+	height: 0;  
+	border-left: 6px solid transparent;  
+	border-right: 6px solid transparent;  
+	border-top: 6px solid #333;
+}
+.inlineFormatItem {  
+	color: #FFF;  
+	cursor: pointer;
+}
+.inlineFormatItem:hover {  
+	color: #1199ff;
+}
+.inlineFormatItem + .inlineFormatItem {  
+	margin-left: 10px;
+}
+
+/************************
 ** BLOX EDITOR CONTENT **
 ************************/
 
