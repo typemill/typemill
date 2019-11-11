@@ -7,7 +7,7 @@ const contentComponent = Vue.component('content-block', {
 				'<div class="blox-wrapper" :class="{ editactive: edit }">' +
 				 '<div class="sideaction" v-if="body">' + 
 				  '<button class="add" :disabled="disabled" title="add content-block" @click.prevent="addNewBlock($event)"><i class="icon-plus"></i></button>' +
-				  '<button class="delete" :disabled="disabled" title="delete content-block" @click.prevent="deleteBlock($event)"><i class="icon-cancel"></i></button>' +
+				  '<button class="delete" :disabled="disabled" title="delete content-block" @click.prevent="deleteBlock($event)"><i class="icon-cancel-1"></i></button>' +
 				 '</div>' + 
 				 '<div class="background-helper" @keyup.enter="submitBlock" @click="getData">' +
 				  '<div class="component" ref="component">' +
@@ -394,9 +394,18 @@ const contentComponent = Vue.component('content-block', {
 
 const inlineFormatsComponent = Vue.component('inline-formats', {
 	template: '<div><div :style="{ left: `${x}px`, top: `${y}px` }" @mousedown.prevent="" v-show="showInlineFormat" id="formatBar" class="inlineFormatBar">' + 
-				  '<span class="inlineFormatItem" @mousedown.prevent="formatBold"><i class="icon-bold"></i></span>' + 
-				  '<span class="inlineFormatItem" @mousedown.prevent="formatItalic"><i class="icon-italic"></i></span>' + 
-				  '<span class="inlineFormatItem" @mousedown.prevent="formatCode"><i class="icon-code"></i></span>' + 
+				  '<div  v-if="link">' + 
+				      '<input v-model="url" @keyup.13="formatLink" ref="urlinput" class="urlinput" type="text" placeholder="insert url">' + 
+					  '<span class="inlineFormatItem inlineFormatLink" @mousedown.prevent="formatLink"><i class="icon-check"></i></span>' + 
+					  '<span class="inlineFormatItem inlineFormatLink" @mousedown.prevent="closeLink"><i class="icon-cancel"></i></span>' + 
+				  '</div>' +
+				  '<div v-else>' +
+					  '<span class="inlineFormatItem" @mousedown.prevent="formatBold"><i class="icon-bold"></i></span>' + 
+					  '<span class="inlineFormatItem" @mousedown.prevent="formatItalic"><i class="icon-italic"></i></span>' + 
+					  '<span class="inlineFormatItem" @mousedown.prevent="openLink"><i class="icon-link"></i></span>' + 
+					  '<span class="inlineFormatItem" @mousedown.prevent="formatCode"><i class="icon-code"></i></span>' + 
+					  '<span class="inlineFormatItem" @mousedown.prevent="formatMath"><i class="icon-pi"></i></span>' +
+				   '</div>' + 
 				'</div><slot></slot></div>',
 	data: function(){
 		return {
@@ -410,6 +419,8 @@ const inlineFormatsComponent = Vue.component('inline-formats', {
      		startPos: false,
      		endPos: false,
      		showInlineFormat: false,
+     		link: false,
+     		url: ''
      	}
 	},
 	mounted: function() {
@@ -443,6 +454,7 @@ const inlineFormatsComponent = Vue.component('inline-formats', {
 			if(!this.highlightableEl.contains(event.target))
 			{
 		  		this.showInlineFormat = false;
+		  		this.link = false;
 		  		return;
 			}
 
@@ -468,6 +480,7 @@ const inlineFormatsComponent = Vue.component('inline-formats', {
 		  	if(trimmedSelection.length == 0)
 		  	{
 		  		this.showInlineFormat = false;
+		  		this.link = false;
 		  		return;
 		  	}
 
@@ -505,6 +518,34 @@ const inlineFormatsComponent = Vue.component('inline-formats', {
 			content = this.textComponent.value;
 			content = content.substring(0, this.startPos) + '`' + this.selectedText + '`' + content.substring(this.endPos, content.length);
 			this.$parent.updatemarkdown(content);			
+		},
+		formatMath()
+		{
+			content = this.textComponent.value;
+			content = content.substring(0, this.startPos) + '$' + this.selectedText + '$' + content.substring(this.endPos, content.length);
+			this.$parent.updatemarkdown(content);
+		},
+		formatLink()
+		{
+			if(this.url == "")
+			{
+				this.link = false; 
+				return;
+			}
+			content = this.textComponent.value;
+			content = content.substring(0, this.startPos) + '[' + this.selectedText + '](' + this.url + ')' + content.substring(this.endPos, content.length);
+			this.$parent.updatemarkdown(content);
+		  	this.showInlineFormat = false;
+		  	this.link = false;
+		},
+		openLink()
+		{
+			this.link = true;
+			this.$nextTick(() => this.$refs.urlinput.focus());
+		},
+		closeLink()
+		{
+			this.link = false;
 		}
 	}
 })
@@ -1440,10 +1481,8 @@ const imageComponent = Vue.component('image-component', {
 	}
 })
 
-let editor = new Vue({
-    delimiters: ['${', '}'],
-	el: '#blox',
-	components: {
+/*
+let componentList = {
 		'content-component': contentComponent,
 		'markdown-component': markdownComponent,
 		'hr-component': hrComponent,
@@ -1457,9 +1496,82 @@ let editor = new Vue({
 		'olist-component': olistComponent,
 		'table-component': tableComponent,
 		'definition-component': definitionComponent,
-		'math-component': mathComponent,
-		'inline-formats' : inlineFormatsComponent,
+		'math-component': mathComponent
+}
+*/
+
+
+let determiner = {
+
+	olist: function(block,lines,firstChar,secondChar,thirdChar){
+		if(block.match(/^\d+\./))
+		{ 
+			return "olist-component";
+		}
+		return false;
 	},
+	definition: function(block,lines,firstChar,secondChar,thirdChar){
+		if(lines.length > 1 && lines[1].substr(0,2) == ': ')
+		{
+			return "definition-component";
+		}
+		return false;
+	},
+	table: function(block,lines,firstChar,secondChar,thirdChar){
+		if(lines.length > 2 && lines[0].indexOf('|') != -1 && /[\-\|: ]{3,}$/.test(lines[1]))
+		{
+			return "table-component";
+		}
+		return false;
+	},
+	quote: function(block,lines,firstChar,secondChar,thirdChar){
+		if(firstChar == '>')
+		{
+			return "quote-component";
+		}
+		return false;
+	},
+	headline: function(block,lines,firstChar,secondChar,thirdChar){
+		if(firstChar == '#')
+		{
+			return "headline-component";
+		}
+		return false;
+	},
+	image: function(block,lines,firstChar,secondChar,thirdChar){
+		if( (firstChar == '!' && secondChar == '[') || (firstChar == '[' && secondChar == '!' && thirdChar == '[') )
+		{
+			return "image-component";
+		}
+		return false;
+	},
+	math: function(block,lines,firstChar,secondChar,thirdChar){
+		if( (firstChar == '\\' && secondChar == '[') || ( firstChar == '$' && secondChar == '$$' ) )
+		{
+			return "math-component";
+		}
+		return false;
+	},
+	code: function(block,lines,firstChar,secondChar,thirdChar){
+		if( firstChar == '`' && secondChar == '`' && thirdChar == '`')
+		{
+			return "code-component";
+		}
+		return false;
+	},
+	ulist: function(block,lines,firstChar,secondChar,thirdChar){
+		if( (firstChar == '*' || firstChar == '-' || firstChar == '+') && secondChar == ' ')
+		{
+			return "ulist-component";
+		}
+		return false;
+	}
+}
+
+let editor = new Vue({
+    delimiters: ['${', '}'],
+	el: '#blox',
+//	components: componentList,
 	data: {
 		root: document.getElementById("main").dataset.url,
 		html: false,
@@ -1645,53 +1757,18 @@ let editor = new Vue({
 			this.addblock = false;
 		},
 		determineBlockType: function(block)
-		{			
-			if(block.match(/^\d+\./)){ return "olist-component" }
-			
-			var lines = block.split("\n");
-			if(lines.length > 1 && lines[1].substr(0,2) == ': ')
-			{
-				return "definition-component";
+		{
+			var result 		= false;
+			var lines 		= block.split("\n");
+			var firstChar 	= block[0];
+			var secondChar 	= block[1];
+			var thirdChar 	= block[2];
+
+			for (var method in determiner) {
+				result = determiner[method](block,lines,firstChar,secondChar,thirdChar);
+				if(result !== false){ return result; }
 			}
-			else if(lines.length > 2 && lines[0].indexOf('|') != -1 && /[\-\|: ]{3,}$/.test(lines[1]))
-			{
-				return "table-component";
-			}
-			
-			var firstChar = block[0];
-			var secondChar = block[1];
-			var thirdChar = block[2];
-			
-			switch(firstChar){
-				case ">":
-					return "quote-component";
-					break;
-				case "#":
-					return "headline-component";
-					break;
-				case "!":
-					if(secondChar == "[") { return "image-component" }
-					break;
-				case "[":
-					if(secondChar == "!" && thirdChar == "[") { return "image-component" } else { return "markdown-component" }
-					break;
-				case "\\":
-					if(secondChar == "["){ return "math-component" } else { return "markdown-component"; }
-					break;
-				case "$":
-						if(secondChar == "$"){ return "math-component" } else { return "markdown-component"; }
-						break;
-					case "`":
-					if(secondChar == "`" && thirdChar == "`") { return "code-component" } else { return "markdown-component" }
-					break;
-				case "*":
-				case "-":
-				case "+":
-					if(secondChar == " "){ return "ulist-component" } else { return "markdown-component" }
-					break;
-				default:
-					return 'markdown-component';
-			}
+			return 'markdown-component';
 		},
 		checkMath(elementid)
 		{

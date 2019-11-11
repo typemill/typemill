@@ -637,6 +637,9 @@ header.headline
 	box-sizing:border-box;
 	vertical-align: top;
 }
+.fullwidth{
+	width: 100%;
+}
 form .large, form .medium, form .small{
 	width: 100%;
 	display: block;
@@ -1325,6 +1328,17 @@ label .help, .label .help{
 	display: inline-block;
 	float: right;
 }
+.editor button.alert:enabled{
+	border: 1px solid #e0474c;
+	background: #e0474c;
+	color: #fff;
+}
+.editor button.alert:enabled:focus,
+.editor button.alert:enabled:hover,
+.editor button.alert:enabled:active{
+	border: 1px solid #e0474c;
+	background: #cc4146;
+}
 .editor button.danger:enabled,
 .editor button.danger[enabled],
 .editor a.button--secondary,
@@ -1702,7 +1716,23 @@ button.format-item.close:hover{
 .inlineFormatItem + .inlineFormatItem {  
 	margin-left: 10px;
 }
-
+.inlineFormatItem.inlineFormatLink
+{
+	margin-left: 2px;
+	margin-right: 2px;
+}
+.urlinput{
+	width: 80%;
+	min-height: auto;
+	background: #555;
+	color: #fff;
+	border: 0px;
+	padding: 5px;
+}
+.urlinput:focus{
+	outline: 0px;
+	border: 0px;
+}
 /************************
 ** BLOX EDITOR CONTENT **
 ************************/

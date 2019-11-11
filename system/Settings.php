@@ -43,7 +43,7 @@ class Settings
 			'contentFolder'							=> 'content',
 			'cache'									=> true,
 			'cachePath'								=> $rootPath . 'cache',
-			'version'								=> '1.2.17',
+			'version'								=> '1.2.18',
 			'setup'									=> true,
 			'welcome'								=> true,
 			'images'								=> ['live' => ['width' => 820], 'mlibrary' => ['width' => 50, 'height' => 50]],
