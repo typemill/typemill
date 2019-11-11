@@ -14,6 +14,7 @@ let publishController = new Vue({
 			message: false,
 		},
 		modalWindow: false,
+		modalType: false,
 		draftDisabled: true,
 		publishDisabled: document.getElementById("publishController").dataset.drafted ? false : true,
 		deleteDisabled: false,
@@ -274,11 +275,13 @@ let publishController = new Vue({
 				}
 			}, method, url, this.form );
 		},
-		showModal: function(e){
+		showModal: function(type){
+			this.modalType = type;
 			this.modalWindow = true;
 		},
-		hideModal: function(e){
+		hideModal: function(type){
 			this.modalWindow = false;
+			this.modalType = false;
 		},
 	}
 });

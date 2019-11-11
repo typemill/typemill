@@ -2,7 +2,7 @@
 
 TYPEMILL is a small flat file cms created for editors and writers. It provides a author-friendly dashboard and a visual-block-editor for markdown based on vue.js. Use TYPEMILL for manuals, documentations, web-books and similar publications. The website http://typemill.net itself is an example for TYPEMILL.
 
-![TYPEMILL Screenshot](https://typemill.net/media/tm-toc.gif)
+![TYPEMILL Screenshot](https://typemill.net/media/tm-demo.gif)
 
 ## Features
 
@@ -71,13 +71,17 @@ You can find your login screen under `/tm/login` or simply go to `/setup` and yo
 
 You can read the full documentation for writers, for theme developers and for plugin developers on the [TYPEMILL website](http://typemill.net).
 
-## Support
+## Licence
 
-This is an open source project. I love it and I spend about 20 hours a week on it (starting in 2017). There is no business model right now, but you can hire me for implementation or simply support this project if you like.
+TYPEMILL is published under MIT licence. Please check the licence of the included libraries, too.
 
-Donate: https://www.paypal.me/typemill
+## Contributors & Supporters
 
-## Contribute
+* [Eziquel Bruni](https://github.com/EzequielBruni) edits the typemill documentation.
+* [Ricky](https://github.com/rbertram90) developed the discard functionality.
+* [vodaris](https://www.vodaris.de) sponsored the development of the search plugin.
+
+## How to Contribute
 
 Typemill is still in an early stage and contributions are highly welcome. Here are some ideas for non-coder:
 
@@ -91,18 +95,15 @@ Some ideas for devs (please fork this repository make your changes and create a 
 * Fix a bug.
 * Create a theme.
 * Create a plugin.
-* Auto-update functionality for core system plugins and themes.
+* Auto-update functionality for core system, plugins and themes.
 * Create a plugin and theme download page.
 * Improve the accessibility of html and css.
 * Implement an ACL for user roles and rights.
 
 For hints, questions, problems and support, please open up a new issue on GitHub.
 
-## Licence
+## Support
 
-TYPEMILL is published under MIT licence. Please check the licence of the included libraries, too.
+This is an open source project. I love it and I spend about 20 hours a week on it (starting in 2017). There is no business model right now, but you can support this project with a donation or simply hire me for implementations.
 
-## Community & Supporters
-
-* [Eziquel Bruni](https://github.com/EzequielBruni) edits the typemill documentation.
-* [vodaris](https://www.vodaris.de) sponsored the development of the search plugin.
+Donate: https://www.paypal.me/typemill

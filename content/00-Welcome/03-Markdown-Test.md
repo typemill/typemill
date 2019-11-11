@@ -24,7 +24,7 @@ Headlines are simply done with hash chars like this:
 ###### Sixth Level Headline
 ```
 
-### Third Level Headline {.myclass}
+### Third Level Headline
 
 A third headline is more decent and lower prioritized than a second level headline.
 

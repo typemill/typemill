@@ -176,12 +176,15 @@ class ContentApiController extends ContentController
 		# set item
 		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
 		
-		# set redirect url to edit page
-		$url = $this->uri->getBaseUrl() . '/tm/content/' . $this->settings['editor'] . $this->item->urlRel;
-
 		# remove the unpublished changes
 		$delete = $this->deleteContentFiles(['txt']);
 
+		# set redirect url to edit page
+		$url = $this->uri->getBaseUrl() . '/tm/content/' . $this->settings['editor'] . $this->item->urlRelWoF;
+
+		# remove the unpublished changes
+		$delete = $this->deleteContentFiles(['txt']);
+		
 		if($delete)
 		{
 			# update the backend structure

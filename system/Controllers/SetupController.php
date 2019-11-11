@@ -29,12 +29,13 @@ class SetupController extends Controller
 				$systemcheck['error'][] = 'The PHP-version of your server is ' . phpversion() . ' and Typemill needs at least 7.0.0';
 		}
 
-		# check if mod rewrite is enabled
+		/* check if mod rewrite is enabled, does not work with PHP-fpm or NGINX
 		$modules = apache_get_modules();
 		if(!in_array('mod_rewrite', $modules))
 		{
 			$systemcheck['error'][] = 'The apache module "mod_rewrite" is not enabled.';
 		}
+		*/
 
 		# check if GD  extension is enabled
 		if(!extension_loaded('gd')){
