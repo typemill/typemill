@@ -15,15 +15,16 @@ class SettingsController extends Controller
 	
 	public function showSettings($request, $response, $args)
 	{
-		$user		= new User();
-		$settings 	= $this->c->get('settings');
-		$copyright	= $this->getCopyright();
-		$languages	= $this->getLanguages();
-		$locale		= isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? substr($_SERVER["HTTP_ACCEPT_LANGUAGE"],0,2) : 'en';
-		$users		= $user->getUsers();
-		$route 		= $request->getAttribute('route');
+		$user				= new User();
+		$settings 			= $this->c->get('settings');
+		$defaultSettings	= \Typemill\Settings::getDefaultSettings();
+		$copyright			= $this->getCopyright();
+		$languages			= $this->getLanguages();
+		$locale				= isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? substr($_SERVER["HTTP_ACCEPT_LANGUAGE"],0,2) : 'en';
+		$users				= $user->getUsers();
+		$route 				= $request->getAttribute('route');
 		
-		return $this->render($response, 'settings/system.twig', array('settings' => $settings, 'copyright' => $copyright, 'languages' => $languages, 'locale' => $locale, 'users' => $users, 'route' => $route->getName() ));
+		return $this->render($response, 'settings/system.twig', array('settings' => $settings, 'copyright' => $copyright, 'languages' => $languages, 'locale' => $locale, 'formats' => $defaultSettings['formats'] ,'users' => $users, 'route' => $route->getName() ));
 	}
 	
 	public function saveSettings($request, $response, $args)
@@ -41,10 +42,11 @@ class SettingsController extends Controller
 				return $response->withRedirect($this->c->router->pathFor('settings.show'));				
 			}
 			
-			$settings 		= \Typemill\Settings::getUserSettings();
-			$params 		= $request->getParams();
-			$newSettings	= isset($params['settings']) ? $params['settings'] : false;
-			$validate		= new Validation();
+			$settings 			= \Typemill\Settings::getUserSettings();
+			$defaultSettings	= \Typemill\Settings::getDefaultSettings();
+			$params 			= $request->getParams();
+			$newSettings		= isset($params['settings']) ? $params['settings'] : false;
+			$validate			= new Validation();
 
 			if($newSettings)
 			{
@@ -55,13 +57,13 @@ class SettingsController extends Controller
 					'copyright' 	=> $newSettings['copyright'],
 					'year'			=> $newSettings['year'],
 					'language'		=> $newSettings['language'],
-					'startpage' 	=> isset($newSettings['startpage']) ? true : false,
 					'editor' 		=> $newSettings['editor'], 
+					'formats'		=> $newSettings['formats'],
 				);
 				
 				$copyright 			= $this->getCopyright();
 
-				$validate->settings($newSettings, $copyright, 'settings');
+				$validate->settings($newSettings, $copyright, $defaultSettings['formats'], 'settings');
 			}
 			else
 			{

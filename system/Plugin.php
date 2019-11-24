@@ -15,7 +15,7 @@ abstract class Plugin implements EventSubscriberInterface
      * Constructor
      *
      */
-	 
+	
     public function __construct($container)
     {
 		$this->container 	= $container;
@@ -97,15 +97,30 @@ abstract class Plugin implements EventSubscriberInterface
 		$function = new \Twig_SimpleFunction($name, $function);
 		$this->container->view->getEnvironment()->addFunction($function);
 	}
-		
+
 	protected function addJS($JS)
 	{
 		$this->container->assets->addJS($JS);
 	}
 
+	protected function addEditorJS($JS)
+	{
+		$this->container->assets->addEditorJS($JS);
+	}
+
 	protected function addInlineJS($JS)
 	{
 		$this->container->assets->addInlineJS($JS);
+	}
+
+	protected function addSvgSymbol($symbol)
+	{
+		$this->container->assets->addSvgSymbol($symbol);
+	}
+
+	protected function addEditorInlineJS($JS)
+	{
+		$this->container->assets->addEditorInlineJS($JS);
 	}
 	
 	protected function addCSS($CSS)

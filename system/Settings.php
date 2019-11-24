@@ -15,7 +15,17 @@ class Settings
 		{
 			$settings 			= array_merge($defaultSettings, $userSettings);
 		}
-				
+
+		# We know the used theme now so create the theme path 
+		$settings['themePath'] = $settings['rootPath'] . $settings['themeFolder'] . DIRECTORY_SEPARATOR . $settings['theme'];
+
+		# if there are no theme settings yet (e.g. no setup yet) use default theme settings
+		if(!isset($settings['themes']))
+		{
+			$themeSettings = self::getObjectSettings('themes', $settings['theme']);
+			$settings['themes'][$settings['theme']] = isset($themeSettings['settings']) ? $themeSettings['settings'] : false;
+		}		
+
 		return array('settings' => $settings);
 	}
 	
@@ -32,14 +42,15 @@ class Settings
 			'language'								=> 'en',
 			'startpage'								=> true,
 			'rootPath'								=> $rootPath,
-			'theme'									=> ($theme = 'typemill'),
-			'themeFolder'							=> ($themeFolder = 'themes'),
+			'theme'									=> 'typemill',
+			'themeFolder'							=> 'themes',
 			'themeBasePath'							=> $rootPath,
-			'themePath'								=> $rootPath . $themeFolder . DIRECTORY_SEPARATOR . $theme,
+			'themePath'								=> '',
 			'settingsPath'							=> $rootPath . 'settings',
 			'userPath'								=> $rootPath . 'settings' . DIRECTORY_SEPARATOR . 'users',
 			'authorPath'							=> __DIR__ . DIRECTORY_SEPARATOR . 'author' . DIRECTORY_SEPARATOR,
-			'editor'								=> 'raw',
+			'editor'								=> 'visual',
+			'formats'								=> ['markdown', 'headline', 'ulist', 'olist', 'table', 'quote', 'image', 'video', 'toc', 'hr', 'definition', 'code'],
 			'contentFolder'							=> 'content',
 			'cache'									=> true,
 			'cachePath'								=> $rootPath . 'cache',
@@ -99,6 +110,7 @@ class Settings
 									'year' => false,
 									'theme' => false,
 									'editor' => false,
+									'formats' => false,
 									'setup' => false,
 									'welcome' => false,
 									'images' => false,

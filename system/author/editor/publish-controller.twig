@@ -7,7 +7,7 @@
 		<button @click.prevent="showModal('delete')" class="button--secondary danger"><span class="desktop">delete</span><span class="mobile">X</span></button>
 		<a v-if="visual" href="{{ base_url }}/tm/content/raw{{item.urlRelWoF}}" class="button--secondary"><span class="desktop">raw mode</span><span class="mobile">raw</span></a>
 		<a v-if="raw" href="{{ base_url }}/tm/content/visual{{item.urlRelWoF}}" class="button--secondary"><span class="desktop">visual mode</span><span class="mobile">visual</span></a>
-		<a target="_blank" class="button--secondary" href="{{ item.urlAbs }}"><i class="icon-link-ext"></i></a>
+		<a target="_blank" class="button--secondary" href="{{ item.urlAbs }}"><svg class="icon baseline icon-external-link"><use xlink:href="#icon-external-link"></use></svg></a>
 	</div>
 	<transition name="fade">
 		<div v-if="modalWindow" id="modalWindow" class="modalWindow">
@@ -21,7 +21,7 @@
 				<div v-if="modalType == 'discard'">
 					<h2>Discard Changes</h2>
 					<p>Do you want to discard your changes and set the content back to the live version?</p>
-					<button @click.prevent="discardDraft" class="large fullwidth" :class="discardResult" :disabled="publishDisabled">Discard Changes</button>				
+					<button @click.prevent="discardDraft" class="large fullwidth" :class="discardResult" :disabled="publishDisabled">Discard Changes</button>
 				</div>
 			</div>
 		</div>

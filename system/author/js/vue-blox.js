@@ -6,8 +6,8 @@ const contentComponent = Vue.component('content-block', {
 				'<div v-if="newblock" class="newblock-info">Choose a content-type <button class="newblock-close" @click.prevent="closeNewBlock($event)">close</button></div>' +	
 				'<div class="blox-wrapper" :class="{ editactive: edit }">' +
 				 '<div class="sideaction" v-if="body">' + 
-				  '<button class="add" :disabled="disabled" title="add content-block" @click.prevent="addNewBlock($event)"><i class="icon-plus"></i></button>' +
-				  '<button class="delete" :disabled="disabled" title="delete content-block" @click.prevent="deleteBlock($event)"><i class="icon-cancel-1"></i></button>' +
+				  '<button class="add" :disabled="disabled" title="add content-block" @click.prevent="addNewBlock($event)"><svg class="icon icon-plus"><use xlink:href="#icon-plus"></use></svg></button>' +
+				  '<button class="delete" :disabled="disabled" title="delete content-block" @click.prevent="deleteBlock($event)"><svg class="icon icon-close"><use xlink:href="#icon-close"></use></svg></button>' +
 				 '</div>' + 
 				 '<div class="background-helper" @keyup.enter="submitBlock" @click="getData">' +
 				  '<div class="component" ref="component">' +
@@ -396,15 +396,15 @@ const inlineFormatsComponent = Vue.component('inline-formats', {
 	template: '<div><div :style="{ left: `${x}px`, top: `${y}px` }" @mousedown.prevent="" v-show="showInlineFormat" id="formatBar" class="inlineFormatBar">' + 
 				  '<div  v-if="link">' + 
 				      '<input v-model="url" @keyup.13="formatLink" ref="urlinput" class="urlinput" type="text" placeholder="insert url">' + 
-					  '<span class="inlineFormatItem inlineFormatLink" @mousedown.prevent="formatLink"><i class="icon-check"></i></span>' + 
-					  '<span class="inlineFormatItem inlineFormatLink" @mousedown.prevent="closeLink"><i class="icon-cancel"></i></span>' + 
+					  '<span class="inlineFormatItem inlineFormatLink" @mousedown.prevent="formatLink"><svg class="icon icon-check"><use xlink:href="#icon-check"></use></svg></span>' + 
+					  '<span class="inlineFormatItem inlineFormatLink" @mousedown.prevent="closeLink"><svg class="icon icon-cross"><use xlink:href="#icon-cross"></use></svg></i></span>' + 
 				  '</div>' +
 				  '<div v-else>' +
-					  '<span class="inlineFormatItem" @mousedown.prevent="formatBold"><i class="icon-bold"></i></span>' + 
-					  '<span class="inlineFormatItem" @mousedown.prevent="formatItalic"><i class="icon-italic"></i></span>' + 
-					  '<span class="inlineFormatItem" @mousedown.prevent="openLink"><i class="icon-link"></i></span>' + 
-					  '<span class="inlineFormatItem" @mousedown.prevent="formatCode"><i class="icon-code"></i></span>' + 
-					  '<span class="inlineFormatItem" @mousedown.prevent="formatMath"><i class="icon-pi"></i></span>' +
+					  '<span class="inlineFormatItem" @mousedown.prevent="formatBold"><svg class="icon icon-bold"><use xlink:href="#icon-bold"></use></svg></span>' + 
+					  '<span class="inlineFormatItem" @mousedown.prevent="formatItalic"><svg class="icon icon-italic"><use xlink:href="#icon-italic"></use></svg></span>' + 
+					  '<span class="inlineFormatItem" @mousedown.prevent="openLink"><svg class="icon icon-link"><use xlink:href="#icon-link"></use></svg></span>' + 
+					  '<span v-if="code" class="inlineFormatItem" @mousedown.prevent="formatCode"><svg class="icon icon-embed"><use xlink:href="#icon-embed"></use></svg></span>' + 
+					  '<span v-if="math" class="inlineFormatItem" @mousedown.prevent="formatMath"><svg class="icon icon-omega"><use xlink:href="#icon-omega"></use></svg></span>' +
 				   '</div>' + 
 				'</div><slot></slot></div>',
 	data: function(){
@@ -420,7 +420,9 @@ const inlineFormatsComponent = Vue.component('inline-formats', {
      		endPos: false,
      		showInlineFormat: false,
      		link: false,
-     		url: ''
+     		url: '',
+     		code: (formatConfig.indexOf("code") > -1) ? true : false,
+     		math: (formatConfig.indexOf("math") > -1) ? true : false,
      	}
 	},
 	mounted: function() {
@@ -433,7 +435,7 @@ const inlineFormatsComponent = Vue.component('inline-formats', {
 		window.removeEventListener('mousedown', this.onMousedown)
 	},
 	computed: {
-		highlightableEl () {    
+		highlightableEl: function () {    
 			return this.$slots.default[0].elm  
 		}
 	},
@@ -568,7 +570,7 @@ const titleComponent = Vue.component('title-component', {
 const markdownComponent = Vue.component('markdown-component', {
 	props: ['compmarkdown', 'disabled'],
 	template: '<div>' + 
-				'<div class="contenttype"><i class="icon-paragraph"></i></div>' +
+				'<div class="contenttype"><svg class="icon icon-pilcrow"><use xlink:href="#icon-pilcrow"></use></svg></div>' +
 				'<inline-formats>' +
 					'<textarea id="activeEdit" class="mdcontent" ref="markdown" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown(event.target.value)"></textarea>' + 
 			  	'</inline-formats>' +
@@ -588,7 +590,7 @@ const markdownComponent = Vue.component('markdown-component', {
 const hrComponent = Vue.component('hr-component', {
 	props: ['compmarkdown', 'disabled'],
 	template: '<div>' + 
-				'<div class="contenttype"><i class="icon-paragraph"></i></div>' +
+				'<div class="contenttype"><svg class="icon icon-pilcrow"><use xlink:href="#icon-pilcrow"></use></svg></div>' +
 				'<textarea class="mdcontent" ref="markdown" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown">---</textarea>' +
 				'</div>',
 	mounted: function(){
@@ -607,7 +609,7 @@ const hrComponent = Vue.component('hr-component', {
 const tocComponent = Vue.component('toc-component', {
 	props: ['compmarkdown', 'disabled'],
 	template: '<div>' + 
-				'<div class="contenttype"><i class="icon-paragraph"></i></div>' +
+				'<div class="contenttype"><svg class="icon icon-list-alt"><use xlink:href="#icon-list-alt"></use></svg></div>' +
 				'<textarea class="mdcontent" ref="markdown" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown">---</textarea>' +
 				'</div>',
 	mounted: function(){
@@ -627,7 +629,7 @@ const codeComponent = Vue.component('code-component', {
 	props: ['compmarkdown', 'disabled'],
 	template: '<div>' + 
 				'<input type="hidden" ref="markdown" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown" />' +	
-				'<div class="contenttype"><i class="icon-code"></i></div>' +
+				'<div class="contenttype"><svg class="icon icon-embed"><use xlink:href="#icon-embed"></use></svg></div>' +
 				'<textarea class="mdcontent" ref="markdown" v-model="codeblock" :disabled="disabled" @input="createmarkdown"></textarea>' + 
 				'</div>',
 	data: function(){
@@ -668,7 +670,7 @@ const quoteComponent = Vue.component('quote-component', {
 	props: ['compmarkdown', 'disabled'],
 	template: '<div>' + 
 				'<input type="hidden" ref="markdown" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown" />' +	
-				'<div class="contenttype"><i class="icon-quote-left"></i></div>' +
+				'<div class="contenttype"><svg class="icon icon-quotes-left"><use xlink:href="#icon-quotes-left"></use></svg></div>' +
 				'<inline-formats>' +
 					'<textarea class="mdcontent" ref="markdown" v-model="quote" :disabled="disabled" @input="updatemarkdown(event.target.value)"></textarea>' + 
 				'</inline-formats>' +
@@ -703,7 +705,7 @@ const quoteComponent = Vue.component('quote-component', {
 const ulistComponent = Vue.component('ulist-component', {
 	props: ['compmarkdown', 'disabled'],
 	template: '<div>' + 
-				'<div class="contenttype"><i class="icon-list-bullet"></i></div>' +
+				'<div class="contenttype"><svg class="icon icon-list2"><use xlink:href="#icon-list2"></use></svg></div>' +
 				'<inline-formats>' +
 					'<textarea class="mdcontent" ref="markdown" v-model="compmarkdown" :disabled="disabled" @input="updatemarkdown(event.target.value)"></textarea>' + 
 				'</inline-formats>' +
@@ -751,7 +753,7 @@ const ulistComponent = Vue.component('ulist-component', {
 const olistComponent = Vue.component('olist-component', {
 	props: ['compmarkdown', 'disabled'],
 	template: '<div>' + 
-				'<div class="contenttype"><i class="icon-list-numbered"></i></div>' +
+				'<div class="contenttype"><svg class="icon icon-list-numbered"><use xlink:href="#icon-list-numbered"></use></svg></div>' +
 				'<inline-formats>' +
 					'<textarea class="mdcontent" ref="markdown" v-model="compmarkdown" :disabled="disabled" @input="updatemarkdown(event.target.value)"></textarea>' + 
 				'</inline-formats>' +
@@ -777,7 +779,7 @@ const olistComponent = Vue.component('olist-component', {
 const headlineComponent = Vue.component('headline-component', { 
 	props: ['compmarkdown', 'disabled'],
 	template: '<div>' + 
-				'<div class="contenttype"><i class="icon-header"></i></div>' +
+				'<div class="contenttype"><svg class="icon icon-header"><use xlink:href="#icon-header"></use></svg></div>' +
 				'<button class="hdown" @click.prevent="headlinedown" v-html="level"></button>' +
 				'<input class="mdcontent" :class="hlevel" type="text" ref="markdown" v-model="compmarkdown" :disabled="disabled" @input="updatemarkdown">' +
 				'</div>',
@@ -869,7 +871,7 @@ const tableComponent = Vue.component('table-component', {
 		}
 	},
 	template: '<div ref="table" :key="tablekey">' + 
-				'<div class="contenttype"><i class="icon-table"></i></div>' +
+				'<div class="contenttype"><svg class="icon icon-table2"><use xlink:href="#icon-table2"></use></svg></div>' +
 				'<table ref="markdown">' +
 					'<colgroup>' +
 						'<col v-for="col in table[0]">' +
@@ -1071,17 +1073,17 @@ const definitionComponent = Vue.component('definition-component', {
 		}
 	},
 	template: '<div class="definitionList">' +
-				'<div class="contenttype"><i class="icon-colon"></i></div>' +
+				'<div class="contenttype"><svg class="icon icon-dots-two-vertical"><use xlink:href="#icon-dots-two-vertical"></use></svg></div>' +
 				'<draggable v-model="definitionList" :animation="150" @end="moveDefinition">' +
   			    '<div class="definitionRow" v-for="(definition, dindex) in definitionList" :key="definition.id">' +
-						'<i class="icon-resize-vertical"></i>' +
+						'<svg class="icon icon-arrows-v"><use xlink:href="#icon-arrows-v"></use></svg>' +
 						'<input type="text" class="definitionTerm" placeholder="term" :value="definition.term" :disabled="disabled" @input="updateterm($event,dindex)" @blur="updateMarkdown">' +
-		  		  '<i class="icon-colon"></i>' + 
+		  		  '<svg class="icon icon-dots-two-vertical"><use xlink:href="#icon-dots-two-vertical"></use></svg>' + 
 	  			  '<textarea class="definitionDescription" placeholder="description" v-html="definition.description" :disabled="disabled" @input="updatedescription($event, dindex)" @blur="updateMarkdown"></textarea>' +
-					  '<button class="delDL" @click.prevent="deleteDefinition(dindex)"><i class="icon-minus"></i></button>' +
+					  '<button class="delDL" @click.prevent="deleteDefinition(dindex)"><svg class="icon icon-minus"><use xlink:href="#icon-minus"></use></svg></button>' +
 				  '</div>' +
 				'</draggable>' +
-				'<button class="addDL" @click.prevent="addDefinition()"><i class="icon-plus"></i> add definition</button>' +
+				'<button class="addDL" @click.prevent="addDefinition()"><svg class="icon icon-plus"><use xlink:href="#icon-plus"></use></svg> add definition</button>' +
 				'<div v-if="load" class="loadwrapper"><span class="load"></span></div>' +
 				'</div>',
 	mounted: function(){
@@ -1147,53 +1149,11 @@ const definitionComponent = Vue.component('definition-component', {
 	},
 })
 
-const mathComponent = Vue.component('math-component', {
-	props: ['compmarkdown', 'disabled'],
-	template: '<div>' + 
-				'<input type="hidden" ref="markdown" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown" />' +	
-				'<div class="contenttype"><i class="icon-math"></i></div>' +
-				'<textarea class="mdcontent" ref="markdown" v-model="mathblock" :disabled="disabled" @input="createmarkdown"></textarea>' + 
-				'</div>',
-	data: function(){
-		return {
-			mathblock: ''
-		}
-	},
-	mounted: function(){
-		this.$refs.markdown.focus();
-		if(this.compmarkdown)
-		{
-			var dollarMath = new RegExp(/^\$\$[\S\s]+\$\$$/m);
-			var bracketMath = new RegExp(/^\\\[[\S\s]+\\\]$/m);
-
-			if(dollarMath.test(this.compmarkdown) || bracketMath.test(this.compmarkdown))
-			{
-				var mathExpression = this.compmarkdown.substring(2,this.compmarkdown.length-2);
-				this.mathblock = mathExpression.trim(); 
-			}
-		}
-		this.$nextTick(function () {
-			autosize(document.querySelectorAll('textarea'));
-		});
-	},
-	methods: {
-		createmarkdown: function(event)
-		{
-			this.codeblock = event.target.value;
-			var codeblock = '$$\n' + event.target.value + '\n$$';
-			this.updatemarkdown(codeblock);
-		},
-		updatemarkdown: function(codeblock)
-		{
-			this.$emit('updatedMarkdown', codeblock);
-		},
-	},
-})
 
 const videoComponent = Vue.component('video-component', {
 	props: ['compmarkdown', 'disabled', 'load'],
 	template: '<div class="video dropbox">' +
-				'<div class="contenttype"><i class="icon-youtube-play"></i></div>' +
+				'<div class="contenttype"><svg class="icon icon-play"><use xlink:href="#icon-play"></use></svg></div>' +
 				'<label for="video">Link to video: </label><input type="url" ref="markdown" placeholder="https://www.youtube.com/watch?v=" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown">' +
 				'<div v-if="load" class="loadwrapper"><span class="load"></span></div>' +
 				'</div>',
@@ -1211,7 +1171,7 @@ const imageComponent = Vue.component('image-component', {
 				'<input type="hidden" ref="markdown" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown" />' +
 				'<input type="file" name="image" accept="image/*" class="input-file" @change="onFileChange( $event )" /> ' +
 				'<p>drag a picture or click to select</p>' +
-				'<div class="contenttype"><i class="icon-picture"></i></div>' +	
+				'<div class="contenttype"><svg class="icon icon-image"><use xlink:href="#icon-image"></use></svg></div>' +	
 				'<img class="uploadPreview" :src="imgpreview" />' +
 				'<div v-if="load" class="loadwrapper"><span class="load"></span></div>' +
 				'<div class="imgmeta" v-if="imgmeta">' +
@@ -1500,78 +1460,20 @@ let componentList = {
 }
 */
 
+let activeFormats = [];
 
-let determiner = {
-
-	olist: function(block,lines,firstChar,secondChar,thirdChar){
-		if(block.match(/^\d+\./))
-		{ 
-			return "olist-component";
-		}
-		return false;
-	},
-	definition: function(block,lines,firstChar,secondChar,thirdChar){
-		if(lines.length > 1 && lines[1].substr(0,2) == ': ')
-		{
-			return "definition-component";
-		}
-		return false;
-	},
-	table: function(block,lines,firstChar,secondChar,thirdChar){
-		if(lines.length > 2 && lines[0].indexOf('|') != -1 && /[\-\|: ]{3,}$/.test(lines[1]))
-		{
-			return "table-component";
-		}
-		return false;
-	},
-	quote: function(block,lines,firstChar,secondChar,thirdChar){
-		if(firstChar == '>')
-		{
-			return "quote-component";
-		}
-		return false;
-	},
-	headline: function(block,lines,firstChar,secondChar,thirdChar){
-		if(firstChar == '#')
-		{
-			return "headline-component";
-		}
-		return false;
-	},
-	image: function(block,lines,firstChar,secondChar,thirdChar){
-		if( (firstChar == '!' && secondChar == '[') || (firstChar == '[' && secondChar == '!' && thirdChar == '[') )
-		{
-			return "image-component";
-		}
-		return false;
-	},
-	math: function(block,lines,firstChar,secondChar,thirdChar){
-		if( (firstChar == '\\' && secondChar == '[') || ( firstChar == '$' && secondChar == '$$' ) )
-		{
-			return "math-component";
-		}
-		return false;
-	},
-	code: function(block,lines,firstChar,secondChar,thirdChar){
-		if( firstChar == '`' && secondChar == '`' && thirdChar == '`')
-		{
-			return "code-component";
-		}
-		return false;
-	},
-	ulist: function(block,lines,firstChar,secondChar,thirdChar){
-		if( (firstChar == '*' || firstChar == '-' || firstChar == '+') && secondChar == ' ')
-		{
-			return "ulist-component";
-		}
-		return false;
+for(var i = 0; i < formatConfig.length; i++)
+{
+	if(bloxFormats[formatConfig[i]] !== undefined)
+	{
+		activeFormats.push(bloxFormats[formatConfig[i]]);
 	}
 }
 
 let editor = new Vue({
     delimiters: ['${', '}'],
 	el: '#blox',
-//	components: componentList,
+/*	components: componentList, */
 	data: {
 		root: document.getElementById("main").dataset.url,
 		html: false,
@@ -1587,6 +1489,7 @@ let editor = new Vue({
 		draftDisabled: true,
 		bloxOverlay: false,
 		sortdisabled: false,
+		formats: activeFormats
 	},
 	mounted: function(){
 
@@ -1649,10 +1552,11 @@ let editor = new Vue({
 					self.markdown = result.data;
 					
 					/* make math plugin working */
+					
 					if (typeof renderMathInElement === "function") { 
 						self.$nextTick(function () {
-							renderMathInElement(document.body);
-						});		
+							renderMathInElement(document.getElementById("blox"));
+						});
 					}
 
 					/* check for youtube videos */

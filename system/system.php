@@ -50,14 +50,14 @@ $container = $app->getContainer();
 * LOAD & UPDATE PLUGINS *
 ************************/
 
-$plugins 				= new Typemill\Plugins();
-$pluginNames		= $plugins->load();
+$plugins 		= new Typemill\Plugins();
+$pluginNames	= $plugins->load();
 $pluginSettings = $routes = $middleware	= array();
 
 foreach($pluginNames as $pluginName)
 {
 	$className	= $pluginName['className'];
-	$name				= $pluginName['name'];
+	$name		= $pluginName['name'];
 		
 	# check if plugin is in the settings already
 	if(isset($settings['settings']['plugins'][$name]))
@@ -80,7 +80,7 @@ foreach($pluginNames as $pluginName)
 	# if the plugin is activated, add routes/middleware and add plugin as event subscriber
 	if($pluginSettings[$name]['active'])
 	{
-		$routes 			= $plugins->getNewRoutes($className, $routes);
+		$routes 		= $plugins->getNewRoutes($className, $routes);
 		$middleware		= $plugins->getNewMiddleware($className, $middleware);
 		
 		$dispatcher->addSubscriber(new $className($container));
