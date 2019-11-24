@@ -31,8 +31,8 @@ else
 $app->post('/tm/formpost', FormController::class . ':savePublicForm')->setName('form.save');
 
 $app->get('/tm', AuthController::class . ':redirect');
-$app->get('/tm/login', AuthController::class . ':show')->setName('auth.show')->add(new RedirectIfAuthenticated($container['router']));
-$app->post('/tm/login', AuthController::class . ':login')->setName('auth.login')->add(new RedirectIfAuthenticated($container['router']));
+$app->get('/tm/login', AuthController::class . ':show')->setName('auth.show')->add(new RedirectIfAuthenticated($container['router'], $container['settings']));
+$app->post('/tm/login', AuthController::class . ':login')->setName('auth.login')->add(new RedirectIfAuthenticated($container['router'], $container['settings']));
 $app->get('/tm/logout', AuthController::class . ':logout')->setName('auth.logout')->add(new RedirectIfUnauthenticated($container['router'], $container['flash']));
 
 $app->get('/tm/settings', SettingsController::class . ':showSettings')->setName('settings.show')->add(new RedirectIfNoAdmin($container['router'], $container['flash']));

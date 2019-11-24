@@ -479,17 +479,16 @@ footer p{
 *  	CONTENT ELEMENTS	*
 ************************/
 
-pre,code{
-	white-space: pre;
-}
 code{
 	display: inline-block;
 	padding: 0 0.5em;
 	font-size: 0.8em; 
 	line-height: 1.4em;	
 	border-radius: 3px;	
+	word-break: break-all;
 }
 pre{
+	white-space: pre;
 	padding: 10px;
 	display: block;	
 	max-width: 100%;

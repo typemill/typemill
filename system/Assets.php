@@ -8,11 +8,14 @@ class Assets
 	
 	public function __construct($baseUrl)
 	{
-		$this->baseUrl		= $baseUrl;
-		$this->JS 			= array();
-		$this->CSS 			= array();
-		$this->inlineJS		= array();
-		$this->inlineCSS	= array();
+		$this->baseUrl			= $baseUrl;
+		$this->JS 				= array();
+		$this->CSS 				= array();
+		$this->inlineJS			= array();
+		$this->inlineCSS		= array();
+		$this->editorJS 		= array();
+		$this->editorInlineJS 	= array();
+		$this->svgSymbols		= array();
 	}
 	
 	public function addCSS($CSS)
@@ -75,6 +78,11 @@ class Assets
 		}
 	}
 
+	public function addSvgSymbol($symbol)
+	{
+		$this->svgSymbols[] = $symbol;
+	}
+
 	public function renderCSS()
 	{
 		return implode('', $this->CSS) . implode('', $this->inlineCSS);
@@ -83,6 +91,32 @@ class Assets
 	public function renderJS()
 	{
 		return implode('', $this->JS) . implode('', $this->inlineJS);
+	}
+
+	public function renderSvg()
+	{
+		return implode('', $this->svgSymbols);
+	}
+
+	# add JS to enhance the blox-editor in author area
+	public function addEditorJS($JS)
+	{
+		$JSfile = $this->getFileUrl($JS);
+		
+		if($JSfile)
+		{
+			$this->editorJS[] = '<script src="' . $JSfile . '"></script>';
+		}
+	}
+
+	public function addEditorInlineJS($JS)
+	{
+		$this->editorInlineJS[] = '<script>' . $JS . '</script>';
+	}
+
+	public function renderEditorJS()
+	{
+		return implode('', $this->editorJS) . implode('', $this->editorInlineJS);
 	}
 
 	/**

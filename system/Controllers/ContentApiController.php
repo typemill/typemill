@@ -180,7 +180,12 @@ class ContentApiController extends ContentController
 		$delete = $this->deleteContentFiles(['txt']);
 
 		# set redirect url to edit page
-		$url = $this->uri->getBaseUrl() . '/tm/content/' . $this->settings['editor'] . $this->item->urlRelWoF;
+
+		$url = $this->uri->getBaseUrl() . '/tm/content/' . $this->settings['editor'];
+		if(isset($this->item->urlRelWoF))
+		{
+			$url = $url . $this->item->urlRelWoF;
+		}
 
 		# remove the unpublished changes
 		$delete = $this->deleteContentFiles(['txt']);

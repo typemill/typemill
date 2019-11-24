@@ -174,9 +174,22 @@ class PageController extends Controller
 			}
 		}
 		
-		$route = empty($args) && $settings['startpage'] ? '/cover.twig' : '/index.twig';
 
-		return $this->render($response, $route, array('navigation' => $structure, 'content' => $contentHTML, 'item' => $item, 'breadcrumb' => $breadcrumb, 'settings' => $settings, 'title' => $title, 'description' => $description, 'base_url' => $base_url, 'image' => $firstImage ));
+		$home = empty($args) ? true : false;
+		$theme = $settings['theme'];
+		$route = empty($args) && isset($settings['themes'][$theme]['cover']) ? '/cover.twig' : '/index.twig';
+
+		return $this->render($response, $route, [
+			'home'			=> $home,
+			'navigation' 	=> $structure, 
+			'content' 		=> $contentHTML, 
+			'item' 			=> $item, 
+			'breadcrumb' 	=> $breadcrumb, 
+			'settings' 		=> $settings, 
+			'title' 		=> $title, 
+			'description' 	=> $description, 
+			'base_url' 		=> $base_url, 
+			'image' 		=> $firstImage ]);
 	}
 
 	protected function getCachedStructure($cache)

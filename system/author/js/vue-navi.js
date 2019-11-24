@@ -21,7 +21,7 @@ const navcomponent = Vue.component('navigation', {
 			return true;
 		},
 		onStart : function(evt)
-		{
+		{		
 			/* delete error messages if exist */
 			publishController.errors.message = false;
 		},
@@ -38,7 +38,7 @@ const navcomponent = Vue.component('navigation', {
 				'csrf_name': 		document.getElementById("csrf_name").value,
 				'csrf_value':		document.getElementById("csrf_value").value,				
 			};
-						
+
 			if(locator.parent_id_from == locator.parent_id_to && locator.index_old == locator.index_new)
 			{
 				return
@@ -91,13 +91,24 @@ const navcomponent = Vue.component('navigation', {
 		{
 			if(elementtype == 'file')
 			{
-				return 'icon-doc-text ' + filetype
+				return '#icon-file-text-o';
 			}
 			if(elementtype == 'folder')
 			{
-				return 'icon-folder-empty ' + filetype
+				return '#icon-folder-o';
 			}
 		},
+		getIconClass : function(elementtype, filetype)
+		{
+			if(elementtype == 'file')
+			{
+				return 'icon-file-text-o ' + filetype;
+			}
+			if(elementtype == 'folder')
+			{
+				return 'icon-folder-o ' + filetype;
+			}
+		},		
 		checkActive : function(active,parent)
 		{
 			if(active && !parent)

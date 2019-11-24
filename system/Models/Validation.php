@@ -20,6 +20,13 @@ class Validation
 		Validator::langDir(__DIR__.'/../vendor/vlucas/valitron/lang'); // always set langDir before lang.
 		Validator::lang('en');
 
+		Validator::addRule('values_allowed', function($field, $value, array $params, array $fields) use ($user)
+		{
+			$badvalues = array_diff($value, $params[0]);
+			if(empty($badvalues)){ return true; }
+			return false;
+		}, 'invalid values');
+
 		Validator::addRule('userAvailable', function($field, $value, array $params, array $fields) use ($user)
 		{
 			$userdata = $user->getUser($value);
@@ -41,20 +48,6 @@ class Validation
 			return false;
 		}, 'wrong password');
 		
-		Validator::addRule('emailAvailable', function($field, $value, array $params, array $fields)
-		{
-			$email = 'testmail@gmail.com';
-			if($email){ return false; }
-			return true;
-		}, 'taken');
-
-		Validator::addRule('emailKnown', function($field, $value, array $params, array $fields)
-		{
-			$email = 'testmail@gmail.com';
-			if(!$email){ return false; }
-			return true;
-		}, 'unknown');
-
 		Validator::addRule('noSpecialChars', function($field, $value, array $params, array $fields)
 		{
 			$format = '/[!@#$%^&*()_+=\[\]{};\':"\\|,.<>\/?]/';
@@ -183,7 +176,7 @@ class Validation
 	* @return obj $v the validation object passed to a result method.
 	*/
 
-	public function settings(array $params, array $copyright, $name = false)
+	public function settings(array $params, array $copyright, array $formats, $name = false)
 	{
 		$v = new Validator($params);
 		
@@ -195,8 +188,9 @@ class Validation
 		$v->rule('integer', 'year');
 		$v->rule('length', 'year', 4);
 		$v->rule('in', 'editor', ['raw', 'visual']);
+		$v->rule('values_allowed', 'formats', $formats);
 		$v->rule('in', 'copyright', $copyright);
-		
+
 		return $this->validationResult($v, $name);
 	}
 

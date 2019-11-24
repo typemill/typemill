@@ -1,4 +1,4 @@
- # About TYPEMILL
+# About TYPEMILL
 
 TYPEMILL is a small flat file cms created for editors and writers. It provides a author-friendly dashboard and a visual-block-editor for markdown based on vue.js. Use TYPEMILL for manuals, documentations, web-books and similar publications. The website http://typemill.net itself is an example for TYPEMILL.
 
@@ -83,7 +83,11 @@ TYPEMILL is published under MIT licence. Please check the licence of the include
 
 ## How to Contribute
 
-Typemill is still in an early stage and contributions are highly welcome. Here are some ideas for non-coder:
+Typemill is still in an early stage and contributions are highly welcome. 
+
+You can check the [roadmap for Typemill](https://github.com/typemill/typemill/issues/35) and scroll through the issues. I will mark issues in future that are easy to start with or where help is highly appreciated.
+
+Here are some contribution-ideas for non-coder:
 
 * Find bugs and errors (open a new issue on github for it).
 * Improve the documentation.
@@ -93,12 +97,11 @@ Typemill is still in an early stage and contributions are highly welcome. Here a
 Some ideas for devs (please fork this repository make your changes and create a pull request):
 
 * Fix a bug.
-* Create a theme.
-* Create a plugin.
-* Auto-update functionality for core system, plugins and themes.
-* Create a plugin and theme download page.
+* Create or port a theme, especially for documentations, knowlegde bases or web-books.
+* Create a fancy plugin.
+* An auto-update functionality for core system, plugins and themes is highly needed.
 * Improve the accessibility of html and css.
-* Implement an ACL for user roles and rights.
+* Implement user roles and rights with RBAC or ACL.
 
 For hints, questions, problems and support, please open up a new issue on GitHub.
 
@@ -107,3 +110,7 @@ For hints, questions, problems and support, please open up a new issue on GitHub
 This is an open source project. I love it and I spend about 20 hours a week on it (starting in 2017). There is no business model right now, but you can support this project with a donation or simply hire me for implementations.
 
 Donate: https://www.paypal.me/typemill
+
+## Follow
+
+Twitter: https://twitter.com/typemill

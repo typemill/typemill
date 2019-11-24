@@ -11,7 +11,7 @@ use Typemill\Models\WriteYaml;
 
 class AuthController extends Controller
 {
-	
+	# redirect if visit /setup route
 	public function redirect(Request $request, Response $response)
 	{
 		if(isset($_SESSION['login']))
@@ -23,6 +23,7 @@ class AuthController extends Controller
 			return $response->withRedirect($this->c->router->pathFor('auth.show'));			
 		}
 	}
+
 	
 	/**
 	* show login form
@@ -125,7 +126,10 @@ class AuthController extends Controller
 					$yaml->updateYaml('settings/users', '.logins', $logins);					
 				}
 
-				return $response->withRedirect($this->c->router->pathFor('content.raw'));
+				$settings = $this->c->get('settings');
+				$editor = (isset($settings['editor']) && $settings['editor'] == 'visual') ? 'visual' : 'raw';
+				
+				return $response->withRedirect($this->c->router->pathFor('content.' . $editor));
 			}
 		}
 
