@@ -1,6 +1,8 @@
-# Setup the System
+# Setup
 
-Typemil is a flat file cms that runs out of the box without a complicated installation process. You can create a user account with the [simple setup page](/setup) and then login to the author panel. In the author panel, you can configure your website, use plugins, choose a theme and edit your content.
+Congratulations! If you see this page, then the setup of the system has worked successfully!! You can now setup and configure your system, your themes and your plugins in the [settings-area](/tm/settings).
+
+Anyway, if you read this file in the source code and if you did not manage to setup the system successfully, then try the following.
 
 ## If it does not work
 
