@@ -17,7 +17,7 @@ class Assets
 		$this->editorInlineJS 	= array();
 		$this->svgSymbols		= array();
 	}
-	
+
 	public function addCSS($CSS)
 	{
 		$CSSfile = $this->getFileUrl($CSS);

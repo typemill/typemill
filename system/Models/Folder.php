@@ -106,18 +106,18 @@ class Folder
 				$fileType = '';
 				if(in_array('index.md', $name))
 				{
-					$fileType = 'md';
-					$status = 'published';
+					$fileType 		= 'md';
+					$status 		= 'published';
 				}
 				if(in_array('index.txt', $name))
 				{
-					$fileType = 'txt';
-					$status = 'unpublished';
+					$fileType 		= 'txt';
+					$status 		= 'unpublished';
 				}
 				if(in_array('index.txtmd', $name))
 				{
-					$fileType = 'txt';
-					$status = 'modified';
+					$fileType 		= 'txt';
+					$status 		= 'modified';
 				}
 
 				$item->originalName 	= $key;
@@ -130,6 +130,7 @@ class Folder
 				$item->slug				= implode("-",$nameParts);
 				$item->slug				= URLify::filter(iconv(mb_detect_encoding($item->slug, mb_detect_order(), true), "UTF-8", $item->slug));				
 				$item->path				= $fullPath . DIRECTORY_SEPARATOR . $key;
+				$item->pathWithoutType	= $fullPath . DIRECTORY_SEPARATOR . $key . DIRECTORY_SEPARATOR . 'index';
 				$item->urlRelWoF		= $fullSlugWithoutFolder . '/' . $item->slug;
 				$item->urlRel			= $fullSlugWithFolder . '/' . $item->slug;
 				$item->urlAbs			= $baseUrl . $fullSlugWithoutFolder . '/' . $item->slug;
@@ -139,20 +140,21 @@ class Folder
 				$item->chapter			= $chapter ? $chapter . '.' . $chapternr : $chapternr;
 				$item->active			= false;
 				$item->activeParent		= false;
-				
+
 				$item->folderContent 	= self::getFolderContentDetails($name, $baseUrl, $item->urlRel, $item->urlRelWoF, $item->path, $item->keyPath, $item->chapter);
 			}
 			else
 			{
 				# do not use files in base folder (only folders are allowed)
-				if(!isset($keyPath)) continue;
+				# if(!isset($keyPath)) continue;
 
 				# do not use index files
 				if($name == 'index.md' || $name == 'index.txt' || $name == 'index.txtmd' ) continue;
 
 				$nameParts 				= self::getStringParts($name);
 				$fileType 				= array_pop($nameParts);
-				
+				$nameWithoutType		= self::getNameWithoutType($name);
+
 				if($fileType == 'md')
 				{
 					$status = 'published';
@@ -177,8 +179,9 @@ class Folder
 				$item->slug				= implode("-",$nameParts);
 				$item->slug				= URLify::filter(iconv(mb_detect_encoding($item->slug, mb_detect_order(), true), "UTF-8", $item->slug));				
 				$item->path				= $fullPath . DIRECTORY_SEPARATOR . $name;
+				$item->pathWithoutType	= $fullPath . DIRECTORY_SEPARATOR . $nameWithoutType;
 				$item->key				= $iteration;
-				$item->keyPath			= $keyPath . '.' . $iteration;
+				$item->keyPath			= isset($keyPath) ? $keyPath . '.' . $iteration : $iteration;
 				$item->keyPathArray		= explode('.',$item->keyPath);
 				$item->chapter			= $chapter . '.' . $chapternr;
 				$item->urlRelWoF		= $fullSlugWithoutFolder . '/' . $item->slug;
@@ -187,6 +190,7 @@ class Folder
 				$item->active			= false;
 				$item->activeParent		= false;
 			}
+
 			$iteration++;
 			$chapternr++;
 			$contentDetails[]		= $item;
@@ -194,8 +198,22 @@ class Folder
 		return $contentDetails;	
 	}
 
-	public static function getItemForUrl($folderContentDetails, $url, $result = NULL)
+	public static function getItemForUrl($folderContentDetails, $url, $baseUrl, $result = NULL)
 	{
+
+		# if we are on the homepage
+		if($url == '/' OR $url == $baseUrl)
+		{
+			# return a standard item-object
+			$item 					= new \stdClass;
+			$item->elementType 		= 'folder';
+			$item->path				= '';
+			$item->urlRel			= '/';
+			$item->pathWithoutType	= DIRECTORY_SEPARATOR . 'index';
+
+			return $item;
+		}
+
 		foreach($folderContentDetails as $key => $item)
 		{
 			if($item->urlRel === $url)
@@ -206,7 +224,7 @@ class Folder
 			}
 			elseif($item->elementType === "folder")
 			{
-				$result = self::getItemForUrl($item->folderContent, $url, $result);
+				$result = self::getItemForUrl($item->folderContent, $url, $baseUrl, $result);
 			}
 		}
 		return $result;
@@ -357,6 +375,7 @@ class Folder
 	/* get breadcrumb as copied array, set elements active in original and mark parent element in original */
 	public static function getBreadcrumb($content, $searchArray, $i = NULL, $breadcrumb = NULL)
 	{
+		# if it is the first round, create an empty array
 		if(!$i){ $i = 0; $breadcrumb = array();}
 		
 		while($i < count($searchArray))
@@ -431,4 +450,10 @@ class Folder
 		$parts = preg_split('/\./',$fileName);
 		return $parts;
 	}
+	public static function getNameWithoutType($fileName)
+	{
+		$parts = preg_split('/\./',$fileName);
+		return $parts[0];
+	}
+
 }

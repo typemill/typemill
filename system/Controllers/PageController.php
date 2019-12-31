@@ -14,6 +14,7 @@ use Typemill\Events\OnPagetreeLoaded;
 use Typemill\Events\OnBreadcrumbLoaded;
 use Typemill\Events\OnItemLoaded;
 use Typemill\Events\OnOriginalLoaded;
+use Typemill\Events\OnMetaLoaded;
 use Typemill\Events\OnMarkdownLoaded;
 use Typemill\Events\OnContentArrayLoaded;
 use Typemill\Events\OnHtmlLoaded;
@@ -27,6 +28,7 @@ class PageController extends Controller
 		$structure		= false;
 		$contentHTML	= false;
 		$item			= false;
+		$home			= false;
 		$breadcrumb 	= false;
 		$description	= '';
 		$settings		= $this->c->get('settings');
@@ -34,7 +36,7 @@ class PageController extends Controller
 		$cache 			= new WriteCache();
 		$uri 			= $request->getUri();
 		$base_url		= $uri->getBaseUrl();
-		
+
 		try
 		{
 			/* if the cached structure is still valid, use it */
@@ -74,56 +76,68 @@ class PageController extends Controller
 			exit(1);
 		}
 		
-		/* if the user is on startpage */
+		# if the user is on startpage
 		if(empty($args))
-		{	
-			/* check, if there is an index-file in the root of the content folder */
-			$contentMD = file_exists($pathToContent . DIRECTORY_SEPARATOR . 'index.md') ? file_get_contents($pathToContent . DIRECTORY_SEPARATOR . 'index.md') : NULL;
+		{
+			$home = true;
+			$item = Folder::getItemForUrl($structure, $uri->getBasePath(), $uri->getBasePath());
 		}
 		else
 		{
 			/* get the request url */
-			$urlRel = $uri->getBasePath() . '/' . $args['params'];			
+			$urlRel = $uri->getBasePath() . '/' . $args['params'];
 			
 			/* find the url in the content-item-tree and return the item-object for the file */
-			$item = Folder::getItemForUrl($structure, $urlRel);
-						
+			$item = Folder::getItemForUrl($structure, $urlRel, $uri->getBasePath());
+
 			/* if there is still no item, return a 404-page */
 			if(!$item)
 			{
 				return $this->render404($response, array( 'navigation' => $structure, 'settings' => $settings,  'base_url' => $base_url )); 
 			}
-			
+
 			/* get breadcrumb for page */
 			$breadcrumb = Folder::getBreadcrumb($structure, $item->keyPathArray);
 			$breadcrumb = $this->c->dispatcher->dispatch('onBreadcrumbLoaded', new OnBreadcrumbLoaded($breadcrumb))->getData();
 			
 			/* add the paging to the item */
 			$item = Folder::getPagingForItem($structure, $item);
-			$item = $this->c->dispatcher->dispatch('onItemLoaded', new OnItemLoaded($item))->getData();
-			
-			/* check if url is a folder. If so, check if there is an index-file in that folder */
-			if($item->elementType == 'folder')
-			{
-				$filePath = $pathToContent . $item->path . DIRECTORY_SEPARATOR . 'index.md';
-			}
-			elseif($item->elementType == 'file')
-			{
-				$filePath = $pathToContent . $item->path;
-			}
-			
-			/* add the modified date for the file */
-			$item->modified	= isset($filePath) ? filemtime($filePath) : false;
-						
-			/* read the content of the file */
-			$contentMD 		= isset($filePath) ? file_get_contents($filePath) : false;			
 		}
+
+		# dispatch the item
+		$item 			= $this->c->dispatcher->dispatch('onItemLoaded', new OnItemLoaded($item))->getData();	
+
+		# set the filepath
+		$filePath 	= $pathToContent . $item->path;
 		
+		# check if url is a folder and add index.md 
+		if($item->elementType == 'folder')
+		{
+			$filePath 	= $filePath . DIRECTORY_SEPARATOR . 'index.md';
+		}
+
+		# read the content of the file
+		$contentMD 		= file_exists($filePath) ? file_get_contents($filePath) : false;
+
 		# dispatch the original content without plugin-manipulations for case anyone wants to use it
 		$this->c->dispatcher->dispatch('onOriginalLoaded', new OnOriginalLoaded($contentMD));
 		
-		$contentMD = $this->c->dispatcher->dispatch('onMarkdownLoaded', new OnMarkdownLoaded($contentMD))->getData();
-		
+		# get meta-Information
+		$writeYaml 		= new WriteYaml();
+
+		$metatabs 		= $writeYaml->getPageMeta($settings, $item);
+
+		if(!$metatabs)
+		{
+			$metatabs 	= $writeYaml->getPageMetaDefaults($contentMD, $settings, $item);
+		}
+
+		# dispatch meta 
+		$metatabs 		= $this->c->dispatcher->dispatch('onMetaLoaded', new OnMetaLoaded($metatabs))->getData();
+
+		# dispatch content
+		$contentMD 		= $this->c->dispatcher->dispatch('onMarkdownLoaded', new OnMarkdownLoaded($contentMD))->getData();
+
 		/* initialize parsedown */
 		$parsedown 		= new ParsedownExtension();
 		
@@ -148,18 +162,23 @@ class PageController extends Controller
 		$title			= isset($contentParts[0]) ? strip_tags($contentParts[0]) : $settings['title'];
 		
 		$contentHTML	=  isset($contentParts[1]) ? $contentParts[1] : $contentHTML;
-		
-		/* create excerpt from content */
-		$excerpt		= substr($contentHTML,0,500);
-		
-		/* create description from excerpt */
-		$description	= isset($excerpt) ? strip_tags($excerpt) : false;
-		if($description)
+
+		# if there is not meta description 
+		if(!isset($metatabs['meta']['description']) or !$metatabs['meta']['description'])
 		{
-			$description 	= trim(preg_replace('/\s+/', ' ', $description));
-			$description	= substr($description, 0, 300);		
-			$lastSpace 		= strrpos($description, ' ');
-			$description 	= substr($description, 0, $lastSpace);
+			# create excerpt from html
+			$excerpt		= substr($contentHTML,0,500);
+			
+			# create description from excerpt
+			$description	= isset($excerpt) ? strip_tags($excerpt) : false;
+			if($description)
+			{
+				$description 	= trim(preg_replace('/\s+/', ' ', $description));
+				$description	= substr($description, 0, 300);		
+				$lastSpace 		= strrpos($description, ' ');
+
+				$metatabs['meta']['description'] 	= substr($description, 0, $lastSpace);
+			}
 		}
 
 		/* get url and alt-tag for first image, if exists */
@@ -174,20 +193,18 @@ class PageController extends Controller
 			}
 		}
 		
-
-		$home = empty($args) ? true : false;
 		$theme = $settings['theme'];
 		$route = empty($args) && isset($settings['themes'][$theme]['cover']) ? '/cover.twig' : '/index.twig';
 
 		return $this->render($response, $route, [
 			'home'			=> $home,
 			'navigation' 	=> $structure, 
+			'title' 		=> $title,			
 			'content' 		=> $contentHTML, 
 			'item' 			=> $item, 
 			'breadcrumb' 	=> $breadcrumb, 
-			'settings' 		=> $settings, 
-			'title' 		=> $title, 
-			'description' 	=> $description, 
+			'settings' 		=> $settings,
+			'metatabs'		=> $metatabs,
 			'base_url' 		=> $base_url, 
 			'image' 		=> $firstImage ]);
 	}

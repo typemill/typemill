@@ -154,7 +154,7 @@
 				pluginList += value[i].id + ',';
 			}
 			
-			url += pluginList;
+			url = 'https://plugins.typemill.net/api/v1/checkversion?' + pluginList;
 		}
 
 		if(name == 'theme')
@@ -165,7 +165,7 @@
 				themeList += value[i].id + ',';
 			}
 			
-			url += themeList;
+			url = 'https://themes.typemill.net/api/v1/checkversion?' + themeList;
 		}
 
 		sendJson(function(response)
@@ -176,15 +176,15 @@
 				
 				if(name == 'system' && versions.system)
 				{
-					updateVersions(versions.system);
+					updateVersions(versions.system, 'system');
 				}
 				if(name == 'plugins' && versions.plugins)
 				{
-					updateVersions(versions.plugins);
+					updateVersions(versions.plugins, 'plugins');
 				}
 				if(name == 'theme' && versions.themes)
 				{
-					updateVersions(versions.themes);					
+					updateVersions(versions.themes, 'themes');					
 				}
 			}
 			else
@@ -194,7 +194,7 @@
 		}, getPost, url, false, true);
 	}
 	
-	function updateVersions(elementVersions)
+	function updateVersions(elementVersions,type)
 	{
 		for (var key in elementVersions)
 		{
@@ -204,7 +204,20 @@
 				
 				if(elementVersions[key] && singleElement && cmpVersions(elementVersions[key], singleElement.innerHTML) > 0)
 				{
-					singleElement.innerHTML = "<span>update<br/>to " + elementVersions[key] + "</span>";
+					if(type == 'themes')
+					{
+						var html = '<a href="https://themes.typemill.net/' + key + '" target="blank"><span>update<br/>to '  + elementVersions[key] + '</span></a>';
+					}
+					else if (type == 'plugins')
+					{
+						var html = '<a href="https://plugins.typemill.net/' + key + '" target="blank"><span>update<br/>to '  + elementVersions[key] + '</span></a>';
+					}
+					else
+					{
+						var html = '<a href="https://typemill.net" target="blank"><span>update<br/>to '  + elementVersions[key] + '</span></a>';
+					}
+
+					singleElement.innerHTML = html;
 					singleElement.classList.add("show-banner");
 				}
 			}
@@ -262,60 +275,64 @@
 	
     var target = document.querySelectorAll('input[type=color]');
     // set hooks for each target element
-    for (var i = 0, len = target.length; i < len; ++i)
-	{
-		var thisTarget = target[i];
-		
-		(function(thisTarget){
+
+    if(target)
+    {
+	    for (var i = 0, len = target.length; i < len; ++i)
+		{
+			var thisTarget = target[i];
 			
-			/* hide the input field and show color box instead */
-			var box = document.createElement('div');
+			(function(thisTarget){
+				
+				/* hide the input field and show color box instead */
+				var box = document.createElement('div');
 
-			box.className = 'color-box';
-			box.style.backgroundColor = thisTarget.value;
-			box.setAttribute('data-color', thisTarget.value);
-			thisTarget.parentNode.insertBefore(box, thisTarget);
-			thisTarget.type = 'hidden';
+				box.className = 'color-box';
+				box.style.backgroundColor = thisTarget.value;
+				box.setAttribute('data-color', thisTarget.value);
+				thisTarget.parentNode.insertBefore(box, thisTarget);
+				thisTarget.type = 'hidden';
 
-			var picker = new CP(box),
-				code = document.createElement('input');
-						
-			picker.target.onclick = function(e)
-			{
-				e.preventDefault();
-			};
-			
-			code.className = 'color-code';
-			code.pattern = '^#[A-Fa-f0-9]{6}$';
-			code.type = 'text';
-			
-			picker.on("enter", function() {
-				code.value = '#' + CP._HSV2HEX(this.get());
-			});	
+				var picker = new CP(box),
+					code = document.createElement('input');
+
+				picker.target.onclick = function(e)
+				{
+					e.preventDefault();
+				};
+				
+				code.className = 'color-code';
+				code.pattern = '^#[A-Fa-f0-9]{6}$';
+				code.type = 'text';
+				
+				picker.on("enter", function() {
+					code.value = '#' + CP._HSV2HEX(this.get());
+				});	
 
 
-			picker.on("change", function(color) {
-				thisTarget.value = '#' + color;
-				this.target.style.backgroundColor = '#' + color;
-				code.value = '#' + color;
-			});
-			
-			picker.picker.firstChild.appendChild(code);
+				picker.on("change", function(color) {
+					thisTarget.value = '#' + color;
+					this.target.style.backgroundColor = '#' + color;
+					code.value = '#' + color;
+				});
+				
+				picker.picker.firstChild.appendChild(code);
 
-			function update() {
-				if (this.value.length) {
-					picker.set(this.value);
-					picker.trigger("change", [this.value.slice(1)]);
+				function update() {
+					if (this.value.length) {
+						picker.set(this.value);
+						picker.trigger("change", [this.value.slice(1)]);
+					}
 				}
-			}
 
-			code.oncut = update;
-			code.onpaste = update;
-			code.onkeyup = update;
-			code.oninput = update;
-			
-			
-		})(thisTarget);		
+				code.oncut = update;
+				code.onpaste = update;
+				code.onkeyup = update;
+				code.oninput = update;
+				
+				
+			})(thisTarget);		
+	    }
     }
 	
 	/**

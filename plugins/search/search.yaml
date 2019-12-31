@@ -1,6 +1,0 @@
-﻿name: Search
-version: 1.0.0
-description: Adds a search to typemill with lunr.js.
-author: Sebastian Schürmanns
-homepage: https://typemill.net
-licence: MIT

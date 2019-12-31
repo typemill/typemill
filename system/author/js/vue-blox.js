@@ -1441,25 +1441,6 @@ const imageComponent = Vue.component('image-component', {
 	}
 })
 
-/*
-let componentList = {
-		'content-component': contentComponent,
-		'markdown-component': markdownComponent,
-		'hr-component': hrComponent,
-		'toc-component': tocComponent,
-		'title-component': titleComponent,
-		'headline-component': headlineComponent,
-		'image-component': imageComponent,
-		'code-component': codeComponent,
-		'quote-component': quoteComponent,
-		'ulist-component': ulistComponent,
-		'olist-component': olistComponent,
-		'table-component': tableComponent,
-		'definition-component': definitionComponent,
-		'math-component': mathComponent
-}
-*/
-
 let activeFormats = [];
 
 for(var i = 0; i < formatConfig.length; i++)
@@ -1489,6 +1470,7 @@ let editor = new Vue({
 		draftDisabled: true,
 		bloxOverlay: false,
 		sortdisabled: false,
+		showBlox: 'show',
 		formats: activeFormats
 	},
 	mounted: function(){

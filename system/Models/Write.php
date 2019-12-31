@@ -112,7 +112,7 @@ class Write
 	
 	public function moveElement($item, $folderPath, $index)
 	{
-		$filetypes			= array('md', 'txt');
+		$filetypes			= array('md', 'txt', 'yaml');
 		
 		# set new order as string
 		$newOrder			= ($index < 10) ? '0' . $index : $index;

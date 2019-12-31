@@ -291,6 +291,25 @@ class Validation
 			return $v->errors();
 		}
 	}	
+
+	public function navigationBaseItem(array $params)
+	{
+		$v = new Validator($params);
+						
+		$v->rule('required', ['item_name', 'type', 'url']);
+		$v->rule('noSpecialChars', 'item_name');
+		$v->rule('lengthBetween', 'item_name', 1, 40);
+		$v->rule('in', 'type', ['file', 'folder']);
+		
+		if($v->validate()) 
+		{
+			return true;
+		} 
+		else
+		{
+			return $v->errors();
+		}
+	}	
 	
 	/**
 	* validation for dynamic fields ( settings for themes and plugins)
@@ -387,7 +406,11 @@ class Validation
 		}
 		else
 		{
-			if($name)
+			if($name == 'meta')
+			{
+				return $v->errors();
+			}
+			elseif($name)
 			{
 				if(isset($_SESSION['errors'][$name]))
 				{
