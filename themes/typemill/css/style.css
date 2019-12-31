@@ -193,11 +193,17 @@ header p{
 .main-menu li.folder.level-1{
 	padding-left: 15px;
 }
+.main-menu li.file.level-1{
+	padding-left: 20px;
+}
 .main-menu > ul > li
+{
+	font-size: 0.8em;
+}
+.main-menu > ul > li.folder
 {
 	text-transform: uppercase;
 	margin: 15px 0 5px;
-	font-size: 0.8em;
 	font-weight: 700;
 }
 

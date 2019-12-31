@@ -1,9 +1,10 @@
 const navcomponent = Vue.component('navigation', {
 	template: '#navigation-template',
-	props: ['homepage', 'name', 'newItem', 'parent', 'active', 'filetype', 'status', 'elementtype', 'element', 'folder', 'level', 'url', 'root', 'freeze'],
+	props: ['homepage', 'showForm', 'name', 'newItem', 'parent', 'active', 'filetype', 'status', 'elementtype', 'element', 'folder', 'level', 'url', 'root', 'freeze'],
 	data: function () {
 		return {
 			showForm: false,
+			revert: false,
 		}
 	},
 	methods: {
@@ -11,7 +12,7 @@ const navcomponent = Vue.component('navigation', {
 		{
 			if(evt.dragged.classList.contains('folder') && evt.from.parentNode.id != evt.to.parentNode.id)
 			{
-				return false;				
+				return false;
 			}
 			if(evt.dragged.firstChild.className == 'active' && !editor.draftDisabled)
 			{
@@ -21,7 +22,7 @@ const navcomponent = Vue.component('navigation', {
 			return true;
 		},
 		onStart : function(evt)
-		{		
+		{
 			/* delete error messages if exist */
 			publishController.errors.message = false;
 		},
@@ -29,14 +30,14 @@ const navcomponent = Vue.component('navigation', {
 		{
 			var locator = {
 				'item_id': 			evt.item.id,
-				'parent_id_from': 	evt.from.parentNode.id, 
-				'parent_id_to': 	evt.to.parentNode.id, 
+				'parent_id_from': 	evt.from.parentNode.id,
+				'parent_id_to': 	evt.to.parentNode.id,
 				'index_old': 		evt.oldIndex,
 				'index_new': 		evt.newIndex,
 				'active':			evt.item.getElementsByTagName('a')[0].className,
 				'url':				document.getElementById("path").value,
 				'csrf_name': 		document.getElementById("csrf_name").value,
-				'csrf_value':		document.getElementById("csrf_value").value,				
+				'csrf_value':		document.getElementById("csrf_value").value,
 			};
 
 			if(locator.parent_id_from == locator.parent_id_to && locator.index_old == locator.index_new)
@@ -193,11 +194,26 @@ let navi = new Vue({
 			modalWindow: false,
 			format: /[!@#$%^&*()_+=\[\]{};':"\\|,.<>\/?]/,
 			folderName: '',
+			showForm: false,
+			newItem: '',
 		}
 	},
 	methods:{
+		checkMove: function(evt){
+/*			this.$refs.draggit[0].checkMove(evt);		*/
+			if(evt.dragged.classList.contains('folder') && evt.from.parentNode.id != evt.to.parentNode.id)
+			{
+				return false;
+			}
+			if(evt.dragged.firstChild.className == 'active' && !editor.draftDisabled)
+			{
+				publishController.errors.message = "Please save your changes before you move the file";
+				return false;
+			}
+			return true;
+		},
 		onStart: function(evt){
-			this.$refs.draggit[0].onStart(evt);			
+			this.$refs.draggit[0].onStart(evt);		
 		},
 		onEnd: function(evt){
 			this.$refs.draggit[0].onEnd(evt);
@@ -208,29 +224,34 @@ let navi = new Vue({
 		hideModal: function(e){
 			this.modalWindow = false;
 		},
-		addFolder: function()
+		toggleForm : function()
+		{
+			this.showForm = !this.showForm;
+		},
+		addFile : function(type)
 		{
 			publishController.errors.message = false;
 
-			if(this.format.test(this.folderName) || this.folderName < 1 || this.folderName.length > 20)
-			{ 
-				publishController.errors.message = 'Special Characters are not allowed. Length between 1 and 20.';
+			if(this.format.test(this.newItem) || !this.newItem || this.newItem.length > 40)
+			{
+				publishController.errors.message = 'Special Characters are not allowed. Length between 1 and 40.';
 				return;
 			}
 			
-			var newFolder = {
-				'item_name': 		this.folderName,
+			var newItem = {
+				'item_name': 		this.newItem,
+				'type':				type,
 				'url':				document.getElementById("path").value,
 				'csrf_name': 		document.getElementById("csrf_name").value,
 				'csrf_value':		document.getElementById("csrf_value").value,
 			};
-
+			
 			var self = this;
 			
 			self.freeze = true;
 			self.errors = {title: false, content: false, message: false};
 			
-			var url = this.root + '/api/v1/basefolder';
+			var url = this.root + '/api/v1/baseitem';
 			var method 	= 'POST';
 
 			sendJson(function(response, httpStatus)
@@ -251,9 +272,10 @@ let navi = new Vue({
 					if(result.data)
 					{
 						self.items = result.data;						
+						self.showForm = false;
 					}
 				}
-			}, method, url, newFolder );
+			}, method, url, newItem );
 		},
 		getNavi: function()
 		{

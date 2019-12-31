@@ -92,6 +92,11 @@ abstract class ContentController
 		return $this->c->view->render($response->withStatus(404), '/intern404.twig', $data);
 	}	
 
+	protected function getValidator()
+	{
+		return new Validation();
+	}
+
 	protected function validateEditorInput()
 	{
 		$validate = new Validation();
@@ -141,6 +146,21 @@ abstract class ContentController
 	{
 		$validate = new Validation();
 		$vResult = $validate->navigationItem($this->params);
+		
+		if(is_array($vResult))
+		{
+			$message = reset($vResult);
+			$this->errors = ['errors' => $vResult];
+			if(isset($message[0])){ $this->errors['errors']['message'] = $message[0]; }
+			return false;
+		}
+		return true;
+	}
+
+	protected function validateBaseNaviItem()
+	{
+		$validate = new Validation();
+		$vResult = $validate->navigationBaseItem($this->params);
 		
 		if(is_array($vResult))
 		{
@@ -221,35 +241,11 @@ abstract class ContentController
 
 	protected function setItem()
 	{
-		# if it is the homepage
-		if($this->params['url'] == $this->uri->getBasePath() OR $this->params['url'] == '/')
-		{
-			$item 					= new \stdClass;
-			$item->elementType 		= 'folder';
-			$item->path				= '';
-			$item->urlRel			= '/';
-		}
-		else
-		{
-			# search for the url in the structure
-			$item = Folder::getItemForUrl($this->structure, $this->params['url']);
-		}
+		# search for the url in the structure
+		$item = Folder::getItemForUrl($this->structure, $this->params['url'], $this->uri->getBasePath());
 
 		if($item)
 		{
-			if($item->elementType == 'file')
-			{
-				$pathParts 					= explode('.', $item->path);
-				$fileType 					= array_pop($pathParts);
-				$pathWithoutType 			= implode('.', $pathParts);
-				$item->pathWithoutType		= $pathWithoutType;
-			}
-			elseif($item->elementType == 'folder')
-			{
-				$item->pathWithoutItem		= $item->path;
-				$item->path 				= $item->path . DIRECTORY_SEPARATOR . 'index';
-				$item->pathWithoutType		= $item->path;
-			}
 			$this->item = $item;
 			return true;
 		}
@@ -315,7 +311,7 @@ abstract class ContentController
 	protected function deleteContentFolder()
 	{
 		$basePath = $this->settings['rootPath'] . $this->settings['contentFolder'];
-		$path = $basePath . $this->item->pathWithoutItem;
+		$path = $basePath . $this->item->path;
 
 		if(file_exists($path))
 		{

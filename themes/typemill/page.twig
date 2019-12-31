@@ -12,7 +12,7 @@
 				<small>{{ settings.themes.typemill.authorIntro }}: {{ settings.author }}</small>
 			{% endif %}
 			{% if settings.themes.typemill.modifiedPosition.top %}
-				<small>{{ settings.themes.typemill.modifiedText }}: {{ item.modified|date(settings.themes.typemill.modifiedFormat) }}</small>
+				<small>{{ settings.themes.typemill.modifiedText }}: {{ metatabs.meta.modified|date(settings.themes.typemill.modifiedFormat) }}</small>
 			{% endif %}
 			{% if settings.themes.typemill.socialPosition.top %}
 				<div id="share-icons" class="share-icons hide">
@@ -37,7 +37,7 @@
 				<small>{{ settings.themes.typemill.authorIntro }}: {{ settings.author }}</small>
 			{% endif %}
 			{% if settings.themes.typemill.modifiedPosition.bottom %}
-				<small>{{ settings.themes.typemill.modifiedText }}: {{ item.modified|date(settings.themes.typemill.modifiedFormat) }}</small>
+				<small>{{ settings.themes.typemill.modifiedText }}: {{ metatabs.meta.modified|date(settings.themes.typemill.modifiedFormat) }}</small>
 			{% endif %}
 			{% if settings.themes.typemill.socialPosition.bottom %}
 				<div id="share-icons-bottom" class="share-icons hide">

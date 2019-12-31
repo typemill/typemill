@@ -51,7 +51,7 @@
 							<span class="error">{{ errors.settings.year | first }}</span>
 						{% endif %}
 					</div><div class="medium{{ errors.settings.language ? ' error' : '' }}">
-						<label for="settings[language]">Language</label>
+						<label for="settings[language]">Language-Attribute <small>(HTML)</small></label>
 						<select name="settings[language]" id="language">
 							{% for key,lang in languages %}
 								<option value="{{ key }}"{% if (key == old.settings.language or key == mylang) %} selected{% endif %}>{{ lang }}</option>

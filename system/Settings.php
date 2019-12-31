@@ -80,7 +80,7 @@ class Settings
 
 		return $objectSettings;
 	}
-	
+
 	public static function createSettings()
 	{
 		$yaml = new Models\WriteYaml();

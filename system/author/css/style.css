@@ -2,7 +2,7 @@
 *  		TRANSITION	  *
 **********************/
 
-a, a:link, a:visited, a:focus, a:hover, a:active, button, .button, input, .control-group, .sidebar-menu, .sidebar-menu--content, .menu-action, .button-arrow{
+a, a:link, a:visited, a:focus, a:hover, a:active, button, .button, .tab-button, input, .control-group, .sidebar-menu, .sidebar-menu--content, .menu-action, .button-arrow{
 	-webkit-transition: color 0.2s ease;
 	-moz-transition: color 0.2s ease;
 	-o-transition: color 0.2s ease;
@@ -283,6 +283,9 @@ span.level-3{ padding-left: 50px; }
 span.level-4{ padding-left: 60px; }
 span.level-5{ padding-left: 70px; }
 
+.addBaseItem{
+	margin-left: -10px;
+}
 .addNaviItem{
 	padding: 5px;
 	display: block;
@@ -630,7 +633,41 @@ header.headline
 {
 	padding: 0px 0px;
 }
+header a.button{
+	float: right;
+	margin: 1.5em 0.5em 0 0;	
+}
 
+/********************
+*	Meta-Tabs 		*
+********************/
+
+.metanav{
+	position: absolute;
+	width: 100%;
+	margin-top: -35px;
+	z-index: 1;	
+}
+.tab-button{
+	font-size: 0.9em;
+	background: transparent;
+	padding: 10px 10px;
+	margin: 0px 5px 0px 0px;
+	min-width: 120px;
+	border: 0px;
+}
+.tab-button:focus,
+.tab-button:hover,
+.tab-button:active,
+.tab-button.active{
+	background: #fff;
+	box-shadow: -2px -2px 4px #eee;
+	outline: none;
+}
+section.tab{
+	z-index: -1;
+	padding: 40px;
+}
 /********************
 *		Forms 		*
 ********************/
@@ -972,7 +1009,7 @@ ul.cardInfo{
 .error p{
 	color: #e0474c; 
 }
-.errors .cardHead header{			
+.errors .cardHead header{
 	background: #e0474c; 
 	color: #fff; 
 }
@@ -984,6 +1021,25 @@ span.error{
 	display: block;	
 	margin-top: -8px;
 	margin-bottom: 8px;	
+}
+.metaLarge{
+	box-sizing: border-box;
+	width: 100%;
+	padding: 18px 20px 0px;	
+}
+.metaErrors,.metaSuccess{
+	width: 100%;
+	padding: 4px 18px;
+	color: #fff;
+	border-radius: 1px;
+	text-align:center;
+	box-sizing: border-box;
+}
+.metaErrors{
+	background: #e0474c; 
+}
+.metaSuccess{
+	background: #70c1b3;
 }
 
 

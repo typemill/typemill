@@ -1,0 +1,21 @@
+meta:
+  fields:
+    title:
+      type: text
+      label: Meta title
+      size: 60
+      class: large
+    description:
+      type: textarea
+      label: Meta description
+      size: 160
+      class: large
+    author:
+      type: text
+      label: author
+      class: large
+    modified:
+      type: date
+      label: Last modified at (readonly)
+      readonly: readonly
+      class: large

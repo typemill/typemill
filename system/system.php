@@ -201,6 +201,7 @@ $container['view'] = function ($container)
 	$view->addExtension(new Twig_Extension_Debug());
     $view->addExtension(new Typemill\Extensions\TwigUserExtension());
 	$view->addExtension(new Typemill\Extensions\TwigMarkdownExtension());	
+	$view->addExtension(new Typemill\Extensions\TwigMetaExtension());	
 	
 	/* use {{ base_url() }} in twig templates */
 	$view['base_url']	 = $container['request']->getUri()->getBaseUrl();

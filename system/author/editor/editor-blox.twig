@@ -5,8 +5,29 @@
 
 	<div class="formWrapper">
 
-		<section id="blox">
-			
+		<div id="metanav" class="metanav" v-cloak>
+		  
+		  <button
+		    v-for="tab in tabs"
+		    v-bind:key="tab"
+		    v-bind:class="['tab-button', { active: currentTab === tab }]"
+		    v-on:click="currentTab = tab"
+		  >${tab}</button>
+
+		  <component 
+		  	class="tab" 
+		  	v-bind:is="currentTabComponent" 
+		  	:saved="saved"
+		  	:errors="formErrors[currentTab]" 
+		  	:schema="formDefinitions[currentTab]"
+		  	:formdata="formData[currentTab]"
+		  	v-on:saveform="saveForm">
+		  </component>
+
+		</div>
+
+		<section id="blox" :class="showBlox">
+
 			<div class="blox-body">
 			
 				<transition name="fade" v-cloak>
@@ -55,7 +76,7 @@
 		</section>
 
 		{% include 'editor/publish-controller.twig' %}
-				
+
 		<input id="path" type="hidden" value="{{ item.urlRel }}" required readonly />
 		{{ csrf_field() | raw }}
 		

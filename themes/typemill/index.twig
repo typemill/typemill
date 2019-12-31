@@ -1,6 +1,6 @@
 {% extends '/partials/layout.twig' %}
 
-{% block title %}{{ title }} | {{ settings.title }}{% endblock %}
+{% block title %}{{ metatabs.meta.title | default(title) }} | {{ settings.title }}{% endblock %}
 
 {% block content %}
 

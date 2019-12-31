@@ -6,6 +6,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Typemill\Models\Folder;
 use Typemill\Models\Write;
+use Typemill\Models\WriteYaml;
 use Typemill\Models\ProcessImage;
 use Typemill\Extensions\ParsedownExtension;
 use Typemill\Events\OnPagePublished;
@@ -220,7 +221,7 @@ class ContentApiController extends ContentController
 		
 		if($this->item->elementType == 'file')
 		{
-			$delete = $this->deleteContentFiles(['md','txt']);
+			$delete = $this->deleteContentFiles(['md','txt', 'yaml']);
 		}
 		elseif($this->item->elementType == 'folder')
 		{
@@ -323,13 +324,19 @@ class ContentApiController extends ContentController
 		$parentKeyFrom	= explode('.', $this->params['parent_id_from']);
 		$parentKeyTo	= explode('.', $this->params['parent_id_to']);
 		
+/*
+		echo '<pre>';
+		print_r(array($itemKeyPath 0,$parentKeyFrom navi,$parentKeyTo 2));
+		die();
+*/
+
 		# get the item from structure
 		$item 			= Folder::getItemWithKeyPath($this->structure, $itemKeyPath);
 
 		if(!$item){ return $response->withJson(array('data' => $this->structure, 'errors' => 'We could not find this page. Please refresh and try again.', 'url' => $url), 404); }
 		
-		# if a folder is moved on the first level
-		if($this->params['parent_id_from'] == 'navi')
+		# if an item is moved to the first level
+		if($this->params['parent_id_to'] == 'navi')
 		{
 			# create empty and default values so that the logic below still works
 			$newFolder 			=  new \stdClass();
@@ -388,7 +395,7 @@ class ContentApiController extends ContentController
 		# get item for url and set it active again
 		if(isset($this->params['url']))
 		{
-			$activeItem = Folder::getItemForUrl($this->structure, $this->params['url']);
+			$activeItem = Folder::getItemForUrl($this->structure, $this->params['url'], $this->uri->getBaseUrl());
 		}
 		
 		# keep the internal structure for response
@@ -434,7 +441,7 @@ class ContentApiController extends ContentController
 		$nameParts 	= Folder::getStringParts($this->params['item_name']);		
 		$name 		= implode("-", $nameParts);
 		$slug		= $name;
-				
+
 		# initialize index
 		$index = 0;
 		
@@ -465,8 +472,10 @@ class ContentApiController extends ContentController
 		$namePath 	= $index > 9 ? $index . '-' . $name : '0' . $index . '-' . $name;
 		$folderPath	= 'content' . $folder->path;
 		
+		$title = implode(" ", $nameParts); 
+
 		# create default content
-		$content = json_encode(['# Add Title', 'Add Content']);
+		$content = json_encode(['# ' . $title, 'Content']);
 		
 		if($this->params['type'] == 'file')
 		{
@@ -490,7 +499,7 @@ class ContentApiController extends ContentController
 		# get item for url and set it active again
 		if(isset($this->params['url']))
 		{
-			$activeItem = Folder::getItemForUrl($this->structure, $this->params['url']);
+			$activeItem = Folder::getItemForUrl($this->structure, $this->params['url'], $this->uri->getBaseUrl());
 		}
 
 		# activate this if you want to redirect after creating the page...
@@ -499,7 +508,7 @@ class ContentApiController extends ContentController
 		return $response->withJson(array('data' => $this->structure, 'errors' => false, 'url' => $url));
 	}
 
-	public function createBaseFolder(Request $request, Response $response, $args)
+	public function createBaseItem(Request $request, Response $response, $args)
 	{
 		# get params from call
 		$this->params 	= $request->getParams();
@@ -512,7 +521,7 @@ class ContentApiController extends ContentController
 		if(!$this->setStructure($draft = true)){ return $response->withJson(array('data' => false, 'errors' => $this->errors, 'url' => $url), 404); }
 		
 		# validate input
-		#if(!$this->validateBaseFolder()){ return $response->withJson(array('data' => $this->structure, 'errors' => 'Special Characters not allowed. Length between 1 and 20 chars.', 'url' => $url), 422); }
+		if(!$this->validateBaseNaviItem()){ return $response->withJson(array('data' => $this->structure, 'errors' => 'Special Characters not allowed. Length between 1 and 20 chars.', 'url' => $url), 422); }
 				
 		# create the name for the new item
 		$nameParts 	= Folder::getStringParts($this->params['item_name']);		
@@ -527,16 +536,16 @@ class ContentApiController extends ContentController
 
 		# iterate through the whole content of the new folder
 		$writeError = false;
-		
-		foreach($this->structure as $folder)
+
+		foreach($this->structure as $item)
 		{
 			# check, if the same name as new item, then return an error
-			if($folder->slug == $slug)
+			if($item->slug == $slug)
 			{
 				return $response->withJson(array('data' => $this->structure, 'errors' => 'There is already a page with this name. Please choose another name.', 'url' => $url), 404);
 			}
 			
-			if(!$write->moveElement($folder, '', $index))
+			if(!$write->moveElement($item, '', $index))
 			{
 				$writeError = true;
 			}
@@ -549,23 +558,32 @@ class ContentApiController extends ContentController
 		$namePath 	= $index > 9 ? $index . '-' . $name : '0' . $index . '-' . $name;
 		$folderPath	= 'content';
 		
-		if(!$write->checkPath($folderPath . DIRECTORY_SEPARATOR . $namePath))
-		{
-			return $response->withJson(array('data' => $this->structure, 'errors' => 'We could not create the folder. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404);
-		}
-
 		# create default content
 		$content = json_encode(['# Add Title', 'Add Content']);
 		
-		$write->writeFile($folderPath . DIRECTORY_SEPARATOR . $namePath, 'index.txt', $content);
-		
+		if($this->params['type'] == 'file')
+		{
+			if(!$write->writeFile($folderPath, $namePath . '.txt', $content))
+			{
+				return $response->withJson(array('data' => $this->structure, 'errors' => 'We could not create the file. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404);
+			}
+		}
+		elseif($this->params['type'] == 'folder')
+		{
+			if(!$write->checkPath($folderPath . DIRECTORY_SEPARATOR . $namePath))
+			{
+				return $response->withJson(array('data' => $this->structure, 'errors' => 'We could not create the folder. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404);
+			}
+			$write->writeFile($folderPath . DIRECTORY_SEPARATOR . $namePath, 'index.txt', $content);
+		}
+
 		# update the structure for editor
 		$this->setStructure($draft = true, $cache = false);
 
 		# get item for url and set it active again
 		if(isset($this->params['url']))
 		{
-			$activeItem = Folder::getItemForUrl($this->structure, $this->params['url']);
+			$activeItem = Folder::getItemForUrl($this->structure, $this->params['url'], $this->uri->getBaseUrl());
 		}
 
 		return $response->withJson(array('data' => $this->structure, 'errors' => false, 'url' => $url));
@@ -586,7 +604,7 @@ class ContentApiController extends ContentController
 		# get item for url and set it active again
 		if(isset($this->params['url']))
 		{
-			$activeItem = Folder::getItemForUrl($this->structure, $this->params['url']);
+			$activeItem = Folder::getItemForUrl($this->structure, $this->params['url'], $this->uri->getBaseUrl());
 		}
 
 		return $response->withJson(array('data' => $this->structure, 'homepage' => $this->homepage, 'errors' => false));
