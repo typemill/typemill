@@ -6,7 +6,7 @@ namespace Typemill\Controllers;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Views\Twig;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Typemill\Events\OnPageReady;
 
 abstract class Controller

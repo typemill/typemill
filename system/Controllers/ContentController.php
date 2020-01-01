@@ -4,7 +4,7 @@ namespace Typemill\Controllers;
 
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Typemill\Models\Validation;
 use Typemill\Models\Folder;
 use Typemill\Models\Write;
