@@ -19,7 +19,9 @@
 		"erusev/parsedown": "~1.4",
 		"erusev/parsedown-extra": "dev-master",
 		"jbroadway/urlify": "1.1.3",
-		"vlucas/valitron": "dev-master"
+		"vlucas/valitron": "dev-master",
+        "symfony/translation": "2.7.3",
+        "symfony/twig-bridge": "2.7.3"
     },
 	"autoload": {
 		"psr-4": {

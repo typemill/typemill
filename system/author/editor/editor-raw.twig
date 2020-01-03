@@ -12,12 +12,12 @@
 				
 					<fieldset>
 						<div class="large" :class="{'error' : errors.title}">
-							<label for="title">Title*</label>
+							<label for="title">{{ 'TITLE'|trans }}*</label>
 							<input @input="changeContent" id="title" name="title" type="text" v-model="form.title" value="{{title}}" required />
 							<span class="error" v-if="errors.title">${ errors.title }</span>
 						</div>
 						<div class="large" :class="{'error' : errors.content}">
-							<label for="content">Content*</label>
+							<label for="content">{{ 'CONTENT'|trans }}*</label>
 								<textarea id="content" v-model="form.content" @input="changeContent" required>{{ content }}</textarea>
 							<span class="error" v-if="errors.content">${ errors.content }</span>
 						</div>
@@ -31,6 +31,7 @@
 		
 		{% include 'editor/publish-controller.twig' %}
 
+    <input id="language" type="hidden" value="{{ settings.language }}"/>
 		{{ csrf_field() | raw }}
 		
 	</div>

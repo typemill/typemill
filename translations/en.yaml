@@ -1,0 +1,125 @@
+# /themes/typemill/cover.twig
+SETUP: Setup
+START: Start
+
+# /system/author/auth/login.twig
+BACK_TO_STARTPAGE: back to startpage
+FORGOT_PASSWORD: Forgot password
+LOGIN: Login
+REMEMBER_TO_BOOKMARK_THIS_PAGE: Remember to bookmark this page
+WAIT: wait
+
+# /system/author/auth/setup.twig
+CREATE_USER: Create User
+E_MAIL: E-Mail
+MISSING_REQUIREMENTS: Missing Requirements
+PASSWORD: Password
+REQUIRED: Required
+USERNAME: Username
+
+# /system/author/editor/editor-blox.twig
+VISUAL_CONTENT_EDITOR: Visual Content Editor
+
+# /system/author/editor/editor-raw.twig
+CONTENT: Content
+TITLE: Title
+
+# /system/author/editor/publish-controller.twig
+DELETE: delete
+DELETE_PAGE: Delete page
+DISCARD_CHANGES: Discard Changes
+DISCARD: Discard
+DO_YOU_REALLY_WANT_TO_DELETE_THIS_PAGE: Do you really want to delete this page?
+DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES: Do you want to discard your changes and set the content back to the live version?
+DRAFT: Draft
+PLEASE_CONFIRM: Please confirm.
+PUBLISH: Publish
+RAW_MODE: raw mode
+RAW: raw
+SAVE: Save
+VISUAL_MODE: visual mode
+VISUAL: visual
+
+# /system/author/partials/aside.twig
+ALL_USERS: All users
+MENU: Menu
+PLUGINS: Plugins
+SYSTEM: System
+THEMES: Themes
+USERS: Users
+
+# /system/author/partials/editorNavi.twig
+ADD_FILE: add file
+ADD_FOLDER: add folder
+ADD_FOLDER_TO_BASE_LEVEL: add folder to base level
+ADD_ITEM: add item
+HOMEPAGE: Homepage
+
+# /system/author/partials/navi.twig
+ACCOUNT: Account
+CONTENT: Content
+LOGOUT: Logout
+SETTINGS: Settings
+VIEW_SITE: View Site
+
+# /system/author/settings/plugins.twig
+ACTIVE: Active
+NO_DESCRIPTION: No description
+PLUGIN_STORE: Plugin Store
+
+# /system/author/settings/system.twig
+AUTHOR: Author
+COPYRIGHT_LICENCE: Copyright/Licence
+E_G: e.g.
+LANGUAGE: Language
+ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: Only the following special characters are allowed:
+RAW_MARKDOWN_EDITOR: Raw Markdown Editor
+READONLY: Readonly
+SAVE_ALL_SETTINGS: Save All Settings
+STANDARD_EDITOR_MODE: Standard Editor Mode
+USE_2_TO_40_CHARACTERS: Use 2 to 40 characters.
+USE_A_VALID_YEAR: Use a valid year,
+VISUAL_EDITOR_THE_FORMAT_BUTTONS: Visual Editor: The Format Buttons
+VISUAL_MARKDOWN_EDITOR: Visual Markdown Editor
+WEBSITE_TITLE: Website Title
+WRITING: Writing
+YEAR: Year
+
+# /system/author/settings/system.twig - /settings/settings.yaml
+CODE: code
+DEFINITION: definition
+HEADLINE: headline
+HR: hr
+IMAGE: image
+MARKDOWN: markdown
+OLIST: olist
+QUOTE: quote
+TABLE: table
+TOC: toc
+ULIST: ulist
+VIDEO: video
+
+# /system/author/settings/themes.twig
+BY: by
+NO_PREVIEW: No Preview
+NO_SETTINGS: No Settings
+SAVE_THEME: Save Theme
+THEME_STORE: Theme Store
+UNKNOWN: Unknown
+WEB: Web
+
+# /system/author/settings/user.twig
+ACTUAL_PASSWORD: Actual Password
+DELETE_USER: Delete User
+DO_YOU_REALLY_WANT_TO_DELETE_THE_USER: Do you really want to delete the user
+EDIT_USER: Edit User
+NEW_PASSWORD: New Password
+NOT_EDITABLE: not editable
+ROLE: Role
+UPDATE_USER: Update User
+USER: User
+
+# /system/author/settings/userlist.twig
+ALL_USERS: All Users
+CREATE_NEW_USER: Create New User
+EDIT: edit

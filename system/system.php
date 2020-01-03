@@ -4,6 +4,16 @@ use Typemill\Events\OnSettingsLoaded;
 use Typemill\Events\OnPluginsLoaded;
 use Typemill\Events\OnSessionSegmentsLoaded;
 
+
+// i18n
+use Symfony\Bridge\Twig\Extension\TranslationExtension;
+use Symfony\Component\Translation\Loader\YamlFileLoader;
+use Symfony\Component\Translation\Translator;
+use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\Parser as YamlParser;
+use Symfony\Component\Yaml\Yaml;
+
+
 /****************************
 * HIDE ERRORS BY DEFAULT	  *
 ****************************/
@@ -194,7 +204,22 @@ $container['view'] = function ($container)
 		'autoescape' => false,
 		'debug' => true
     ]);
+
+
+    // i18n
+    // get language from setting, but in case of setup, detecting browser language
+    $language = ( $container->get('settings')['setup'] ? substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2) : $container->get('settings')['language']);
     
+    $fallbackLanguage = 'en'; // language used if the definition is not present in the requested language
+    $translator = new Translator( $language ); // constructor
+    $translator->setFallbackLocales([ $fallbackLanguage ]); // set the fallback
+
+    // loading messages with the yaml file loaders
+    $translator->addLoader('yaml', new YamlFileLoader());
+    $translator->addResource('yaml', './translations/en.yaml', 'en');
+    if( $fallbackLanguage != $language ) $translator->addResource('yaml', './translations/'.$language.'.yaml', $language);
+
+
     // Instantiate and add Slim specific extension
     $basePath = rtrim(str_ireplace('index.php', '', $container['request']->getUri()->getBasePath()), '/');
     $view->addExtension(new Slim\Views\TwigExtension($container['router'], $basePath));
@@ -203,6 +228,12 @@ $container['view'] = function ($container)
 	$view->addExtension(new Typemill\Extensions\TwigMarkdownExtension());	
 	$view->addExtension(new Typemill\Extensions\TwigMetaExtension());	
 	
+
+
+  // i18n
+  $view->addExtension(new TranslationExtension($translator));
+  
+
 	/* use {{ base_url() }} in twig templates */
 	$view['base_url']	 = $container['request']->getUri()->getBaseUrl();
 	$view['current_url'] = $container['request']->getUri()->getPath();

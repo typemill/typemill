@@ -1,5 +1,5 @@
 {% extends 'layouts/layout.twig' %}
-{% block title %}Setup{% endblock %}
+{% block title %}{{ 'SETUP'|trans }}{% endblock %}
 {% set startpage = old.settings.startpage ? old.settings.startpage : settings.startpage %}
 {% set linebreaks = old.settings.linebreaks ? old.settings.linebreaks : settings.linebreaks %}
 {% set year = settings.year ? settings.year : "now"|date("Y") %}
@@ -15,7 +15,7 @@
 			<section id="system" class="settings">
 
 				<header class="headline">
-					<h1>System <span class="version-number">v. {{settings.version}}</span></h1>
+					<h1>{{ 'SYSTEM'|trans }} <span class="version-number">v. {{settings.version}}</span></h1>
 				</header>
 				
 				<div id="typemill" class="fc-system-version update-banner">{{ settings.version ? settings.version : 'Unknown' }}</div>
@@ -23,19 +23,19 @@
 				<fieldset>
 				
 					<div class="medium{{ errors.settings.title ? ' error' : '' }}">
-						<label for="settings[title]">Website Title *</label>
+						<label for="settings[title]">{{ 'WEBSITE_TITLE'|trans }} *</label>
 						<input type="text" name="settings[title]" id="title" pattern=".{2,20}" required title="Use 2 to 20 characters." value="{{ old.settings.title ? old.settings.title : settings.title }}" />
 						{% if errors.settings.title %}
 							<span class="error">{{ errors.settings.title | first }}</span>
 						{% endif %}
 					</div><div class="medium{{ errors.settings.author ? ' error' : '' }}">
-						<label for="settings[author]">Author</label>
-						<input type="text" name="settings[author]" id="author" pattern="[^()/><\]\{\}\?\$@#!*%§=[\\\x22;:|]{2,40}" value="{{ old.settings.author ? old.settings.author : settings.author }}" title="Use 2 to 40 characters. Only the following special characters are allowed: a,b a.b a-b a_b a&b a+b" />
+						<label for="settings[author]">{{ 'AUTHOR'|trans }}</label>
+						<input type="text" name="settings[author]" id="author" pattern="[^()/><\]\{\}\?\$@#!*%§=[\\\x22;:|]{2,40}" value="{{ old.settings.author ? old.settings.author : settings.author }}" title="{{ 'USE_2_TO_40_CHARACTERS'|trans }} {{ 'ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED'|trans }} a,b a.b a-b a_b a&b a+b" />
 						{% if errors.settings.author %}
 							<span class="error">{{ errors.settings.author | first }}</span>
 						{% endif %}
 					</div><div class="medium{{ errors.settings.copyright ? ' error' : '' }}">
-						<label for="settings[copyright]">Copyright/Licence</label>
+						<label for="settings[copyright]">{{ 'COPYRIGHT_LICENCE'|trans }}</label>
 						<select name="settings[copyright]" id="copyright">
 							{% for copy in copyright %}
 								<option value="{{ copy }}"{% if copy == old.settings.copyright or copy == mycopy %} selected{% endif %}>{{ copy }}</option>
@@ -45,13 +45,13 @@
 							<span class="error">{{ errors.settings.copyright | first }}</span>
 						{% endif %}
 					</div><div class="medium{{ errors.settings.year ? ' error' : '' }}">
-						<label for="settings[year]">Year *</label>
-						<input type="text" name="settings[year]" id="year" value="{{ old.settings.year ? old.settings.year : year }}" pattern="[0-9]{4}" required title="Use a valid year, e.g. 2017" />
+						<label for="settings[year]">{{ 'YEAR'|trans }} *</label>
+						<input type="text" name="settings[year]" id="year" value="{{ old.settings.year ? old.settings.year : year }}" pattern="[0-9]{4}" required title="{{ 'USE_A_VALID_YEAR'|trans }} {{ 'E_G'|trans }} 2017" />
 						{% if errors.settings.year %}
 							<span class="error">{{ errors.settings.year | first }}</span>
 						{% endif %}
 					</div><div class="medium{{ errors.settings.language ? ' error' : '' }}">
-						<label for="settings[language]">Language-Attribute <small>(HTML)</small></label>
+						<label for="settings[language]">{{ 'LANGUAGE'|trans }}</label>
 						<select name="settings[language]" id="language">
 							{% for key,lang in languages %}
 								<option value="{{ key }}"{% if (key == old.settings.language or key == mylang) %} selected{% endif %}>{{ lang }}</option>
@@ -61,20 +61,20 @@
 							<span class="error">{{ errors.settings.language | first }}</span>
 						{% endif %}
 					</div><div class="medium">
-						<label for="settings[sitemap]">Google Sitemap <small>(Readonly)</small></label>
+						<label for="settings[sitemap]">Google Sitemap <small>({{ 'READONLY'|trans }})</small></label>
 						<input type="text" name="settings[sitemap]" id="sitemap" readonly value="{{ base_url }}/cache/sitemap.xml" />
 					</div>
 					<hr>
 					<header class="headline">
-						<h2>Writing</h2>
+						<h2>{{ 'WRITING'|trans }}</h2>
 					</header>
 					<div class="medium{{ errors.settings.editor ? ' error' : '' }}">
-						<label for="settings[editor]">Standard Editor Mode *</label>
-						<label class="control-group">Visual Markdown Editor
+						<label for="settings[editor]">{{ 'STANDARD_EDITOR_MODE'|trans }} *</label>
+						<label class="control-group">{{ 'VISUAL_MARKDOWN_EDITOR'|trans }}
 							<input name="settings[editor]" value="visual" type="radio" {% if (old.settings.editor == "visual") or (settings.editor == "visual") %} checked {% endif %}>
 							<span class="radiomark"></span>
 						</label>
-						<label class="control-group">Raw Markdown Editor
+						<label class="control-group">{{ 'RAW_MARKDOWN_EDITOR'|trans }}
 							<input name="settings[editor]" value="raw" type="radio" {% if (old.settings.editor == "raw") or (settings.editor == "raw") %} checked {% endif %}>
 							<span class="radiomark"></span>
 						</label>
@@ -83,10 +83,10 @@
 						{% endif %}
 					</div>
 					<div class="medium{{ errors.settings.editor ? ' error' : '' }}">
-						<label>Visual Editor: The Format Buttons</label>
+						<label>{{ 'VISUAL_EDITOR_THE_FORMAT_BUTTONS'|trans }}</label>
 						{% for format in formats %}
 
-							<label class="control-group">{{ format }}
+							<label class="control-group">{{ (format)|upper|trans }}
 								<input name="settings[formats][]" value="{{ format }}" type="checkbox" {% if format in settings.formats %} checked {% endif %}>
 								<span class="checkmark"></span>
 							</label>
@@ -95,7 +95,7 @@
 					</div>					
 				</fieldset>
 			</section>
-			<input type="submit" value="Save All Settings" />
+			<input type="submit" value="{{ 'SAVE_ALL_SETTINGS'|trans }}" />
 
 			{{ csrf_field() | raw }}
 			

@@ -1,5 +1,5 @@
 {% extends 'layouts/layout.twig' %}
-{% block title %}User{% endblock %}
+{% block title %}{{ 'USER'|trans }}{% endblock %}
 
 {% block content %}
 	
@@ -8,7 +8,7 @@
 		<section id="users" class="settings">
 
 			<header class="headline">
-				<h1>All Users</h1>
+				<h1>{{ 'ALL_USERS'|trans }}</h1>
 			</header>
 			
 			<ul class="userlist">
@@ -19,7 +19,7 @@
 							<li class="col username">{{ user.username }}
 							</li><li class="col userrole">{{ user.userrole }}
 							</li><li class="col email">{{ user.email }}
-							</li><li class="col edit"><a href="{{ path_for('user.show', {'username' : user.username }) }}">edit</a></li>
+							</li><li class="col edit"><a href="{{ path_for('user.show', {'username' : user.username }) }}">{{ 'EDIT'|trans }}</a></li>
 						</ul>
 					</li>
 				
@@ -27,7 +27,7 @@
 			</ul>
 			
 			<div class="medium">
-				<a class="button" href="{{ path_for('user.new') }}">Create New User</a>
+				<a class="button" href="{{ path_for('user.new') }}">{{ 'CREATE_NEW_USER'|trans }}</a>
 			</div>
 		</section>
 		

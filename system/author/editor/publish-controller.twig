@@ -1,12 +1,12 @@
 <div class="editor buttonset" id="publishController" data-published="{{ item.published }}" data-drafted="{{ item.drafted }}" v-cloak>
 	<div v-if="errors.message" class="message error">${ errors.message }</div>
-	<button v-if="raw" @click.prevent="saveDraft" id="draft" :class="draftResult" :disabled="draftDisabled"><span class="desktop">Save&nbsp;</span>Draft</button><button @click.prevent="publishDraft" id="publish" :class="publishResult" :disabled="publishDisabled">Publish</button>
-	<button @click.prevent="showModal('discard')" v-if="visual && !publishStatus" id="discard" :class="discardResult" :disabled="publishDisabled">Discard</button>
+	<button v-if="raw" @click.prevent="saveDraft" id="draft" :class="draftResult" :disabled="draftDisabled"><span class="desktop">{{ 'SAVE'|trans }}&nbsp;</span>{{ 'DRAFT'|trans }}</button><button @click.prevent="publishDraft" id="publish" :class="publishResult" :disabled="publishDisabled">{{ 'PUBLISH'|trans }}</button>
+	<button @click.prevent="showModal('discard')" v-if="visual && !publishStatus" id="discard" :class="discardResult" :disabled="publishDisabled">{{ 'DISCARD'|trans}}</button>
 	<div class="secondary">
 		<button @click.prevent="depublishArticle" class="button--secondary" :disabled="publishStatus"><span class="desktop">${publishLabel}</span><span class="mobile">${publishLabelMobile}</span></button>
-		<button @click.prevent="showModal('delete')" class="button--secondary danger"><span class="desktop">delete</span><span class="mobile">X</span></button>
-		<a v-if="visual" href="{{ base_url }}/tm/content/raw{{item.urlRelWoF}}" class="button--secondary"><span class="desktop">raw mode</span><span class="mobile">raw</span></a>
-		<a v-if="raw" href="{{ base_url }}/tm/content/visual{{item.urlRelWoF}}" class="button--secondary"><span class="desktop">visual mode</span><span class="mobile">visual</span></a>
+		<button @click.prevent="showModal('delete')" class="button--secondary danger"><span class="desktop">{{ 'DELETE'|trans }}</span><span class="mobile">X</span></button>
+		<a v-if="visual" href="{{ base_url }}/tm/content/raw{{item.urlRelWoF}}" class="button--secondary"><span class="desktop">{{ 'RAW_MODE'|trans }}</span><span class="mobile">{{ 'RAW'|trans }}</span></a>
+		<a v-if="raw" href="{{ base_url }}/tm/content/visual{{item.urlRelWoF}}" class="button--secondary"><span class="desktop">{{ 'VISUAL_MODE'|trans }}</span><span class="mobile">{{ 'VISUAL'|trans }}</span></a>
 		<a target="_blank" class="button--secondary" href="{{ item.urlAbs }}"><svg class="icon baseline icon-external-link"><use xlink:href="#icon-external-link"></use></svg></a>
 	</div>
 	<transition name="fade">
@@ -14,14 +14,14 @@
 			<div class="modalInner">
 				<div @click="hideModal" id="closeModal" class="closeModal">X</div>
 				<div v-if="modalType == 'delete'">
-					<h2>Delete page</h2>
-					<p>Do you really want to delete this page? Please confirm.</p>
-					<button @click.prevent="deleteArticle" class="large alert" :class="deleteResult" :disabled="deleteDisabled">Delete Page</button>
+					<h2>{{ 'DELETE_PAGE'|trans }}</h2>
+					<p>{{ 'DO_YOU_REALLY_WANT_TO_DELETE_THIS_PAGE'|trans }} {{ 'PLEASE_CONFIRM'|trans }}</p>
+					<button @click.prevent="deleteArticle" class="large alert" :class="deleteResult" :disabled="deleteDisabled">{{ 'DELETE_PAGE'|trans }}</button>
 				</div>
 				<div v-if="modalType == 'discard'">
-					<h2>Discard Changes</h2>
-					<p>Do you want to discard your changes and set the content back to the live version?</p>
-					<button @click.prevent="discardDraft" class="large fullwidth" :class="discardResult" :disabled="publishDisabled">Discard Changes</button>
+					<h2>{{ 'DISCARD_CHANGES'|trans }}</h2>
+					<p>{{ 'DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES'|trans }}</p>
+					<button @click.prevent="discardDraft" class="large fullwidth" :class="discardResult" :disabled="publishDisabled">{{ 'DISCARD_CHANGES'|trans }}</button>
 				</div>
 			</div>
 		</div>

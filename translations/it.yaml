@@ -1,0 +1,125 @@
+# /themes/typemill/cover.twig
+SETUP: Configurazione
+START: Comincia
+
+# /system/author/auth/login.twig
+BACK_TO_STARTPAGE: torna alla pagina iniziale
+FORGOT_PASSWORD: Parola d'ordine dimenticata
+LOGIN: Accesso
+REMEMBER_TO_BOOKMARK_THIS_PAGE: Ricorda di aggiungere questa pagina ai segnalibri
+WAIT: aspetta
+
+# /system/author/auth/setup.twig
+CREATE_USER: Crea utente
+E_MAIL: Posta elettronica
+MISSING_REQUIREMENTS: Requisiti mancanti
+PASSWORD: Parola d'ordine
+REQUIRED: Richiesto
+USERNAME: Nome utente
+
+# /system/author/editor/editor-blox.twig
+VISUAL_CONTENT_EDITOR: Editore contenuto visivo
+
+# /system/author/editor/editor-raw.twig
+CONTENT: Contenuto
+TITLE: Titolo
+
+# /system/author/editor/publish-controller.twig
+DELETE: elimina
+DELETE_PAGE: Elimina pagina
+DISCARD_CHANGES: Non salvare le modifiche
+DISCARD: Scarta
+DO_YOU_REALLY_WANT_TO_DELETE_THIS_PAGE: Vuoi veramente cancellare questa pagina?
+DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES: Vuoi annullare le modifiche e ripristinare i contenuti alla versione precedente?
+DRAFT: Bozza
+PLEASE_CONFIRM: Per favore conferma.
+PUBLISH: Pubblica
+RAW: grezzo
+RAW_MODE: modo grezzo
+SAVE: Salva
+VISUAL_MODE: modo visivo
+VISUAL: visivo
+
+# /system/author/partials/aside.twig
+ALL_USERS: Tutti gli utenti
+MENU: Menu
+PLUGINS: Plugin
+SYSTEM: Sistema
+THEMES: Temi
+USERS: Utenti
+
+# /system/author/partials/editorNavi.twig
+ADD_FILE: aggiungi file
+ADD_FOLDER: aggiungi cartella
+ADD_FOLDER_TO_BASE_LEVEL: aggiungi cartella al livello base
+ADD_ITEM: aggiungi articolo
+HOMEPAGE: Homepage
+
+# /system/author/partials/navi.twig
+ACCOUNT: Utenza
+CONTENT: Contenuto
+LOGOUT: Disconnessione
+SETTINGS: Impostazioni
+VIEW_SITE: Mostra sito
+
+# /system/author/settings/plugins.twig
+ACTIVE: Attivo
+NO_DESCRIPTION: Nessuna descrizione
+PLUGIN_STORE: Deposito plugin
+
+# /system/author/settings/system.twig
+AUTHOR: Autore
+COPYRIGHT_LICENCE: Diritti d'autore/Licenza
+E_G: per es.:
+LANGUAGE: Lingua
+ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: Sono ammessi solo i seguenti caratteri speciali:
+RAW_MARKDOWN_EDITOR: Editore grezzo Markdown
+READONLY: Sola lettura
+SAVE_ALL_SETTINGS: Salva tutte le impostazioni
+STANDARD_EDITOR_MODE: Modalità editore standard
+USE_2_TO_40_CHARACTERS: Usa da 2 a 40 caratteri.
+USE_A_VALID_YEAR: Usa un anno valido,
+VISUAL_EDITOR_THE_FORMAT_BUTTONS: Editore visivo: pulsanti di formattazione
+VISUAL_MARKDOWN_EDITOR: Editore visivo Markdown
+WEBSITE_TITLE: Titolo del sito
+WRITING: Scrittura
+YEAR: Anno
+
+# /system/author/settings/system.twig - /settings/settings.yaml
+CODE: codice
+DEFINITION: elenco di definizioni
+HEADLINE: titolo
+HR: linea orizzontale
+IMAGE: immagine
+MARKDOWN: markdown
+OLIST: elenchi ordinati
+QUOTE: citazione
+TABLE: tabella
+TOC: sommario
+ULIST: elenchi non ordinati
+VIDEO: video
+
+# /system/author/settings/themes.twig
+BY: di
+NO_PREVIEW: Nessuna anteprima
+NO_SETTINGS: Nessuna impostazione
+SAVE_THEME: Salva tema
+THEME_STORE: Deposito temi
+UNKNOWN: Ignoto
+WEB: Sito
+
+# /system/author/settings/user.twig
+ACTUAL_PASSWORD: Parola d'ordine corrente
+DELETE_USER: Elimina utente
+DO_YOU_REALLY_WANT_TO_DELETE_THE_USER: Vuoi veramente eliminare l'utente
+EDIT_USER: Modifica utente
+NEW_PASSWORD: Nuova parola d'ordine
+NOT_EDITABLE: non modificabile
+ROLE: Ruolo
+UPDATE_USER: Aggiorna utente
+USER: Utente
+
+# /system/author/settings/userlist.twig
+ALL_USERS: Tutti gli utenti
+CREATE_NEW_USER: Crea nuovo utente
+EDIT: modifica

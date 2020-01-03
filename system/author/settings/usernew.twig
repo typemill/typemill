@@ -1,5 +1,5 @@
 {% extends 'layouts/layout.twig' %}
-{% block title %}User{% endblock %}
+{% block title %}{{ 'USER'|trans }}{% endblock %}
 
 {% block content %}
 	
@@ -10,13 +10,13 @@
 			<section id="new-user" class="settings">
 
 				<header class="headline">
-					<h1>Create New User</h1>
+					<h1>{{ 'CREATE_NEW_USER'|trans }}</h1>
 				</header>
 				
 				<fieldset class="auth">
 
 					<div class="large{{ errors.username ? ' errors' : '' }}">
-						<label for="username">Username <abbr title="required">*</abbr></label>
+						<label for="username">{{ 'USERNAME'|trans }} <abbr title="{{ 'REQUIRED'|trans }}">*</abbr></label>
 						<input type="text" name="username" value="{{ old.username ? old.username : '' }}" required>
 						{% if errors.username %}
 							<span class="error">{{ errors.username | first }}</span>
@@ -24,7 +24,7 @@
 					</div>
 					
 					<div class="large{{ errors.email ? ' errors' : '' }}">
-						<label for="email">E-Mail <abbr title="required">*</abbr></label>
+						<label for="email">{{ 'E_MAIL'|trans }} <abbr title="{{ 'REQUIRED'|trans }}">*</abbr></label>
 						<input type="text" name="email" value="{{ old.email ? old.email : '' }}" required>
 						{% if errors.email %}
 							<span class="error">{{ errors.email | first }}</span>
@@ -44,7 +44,7 @@
 					</div>					
 					
 					<div class="large{{ errors.password ? ' errors' : '' }}">
-						<label for="password">Password <abbr title="required">*</abbr></label>
+						<label for="password">{{ 'PASSWORD'|trans }} <abbr title="{{ 'REQUIRED'|trans }}">*</abbr></label>
 						<input type="password" name="password" required>
 						{% if errors.password %}
 							<span class="error">{{ errors.password | first }}</span>
@@ -54,7 +54,7 @@
 				</fieldset>
 
 			</section>
-			<input type="submit" value="Create User" />
+			<input type="submit" value="{{ 'CREATE_USER'|trans }}" />
 
 			{{ csrf_field() | raw }}
 		</form>		

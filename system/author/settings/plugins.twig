@@ -11,8 +11,8 @@
 			<section id="plugins" class="plugins">
 			
 				<header class="headline">
-					<h1>Plugins</h1>
-					<a class="button" target="_blank" href="https://plugins.typemill.net">Plugin Store</a>
+					<h1>{{ 'PLUGINS'|trans }}</h1>
+					<a class="button" target="_blank" href="https://plugins.typemill.net">{{ 'PLUGIN_STORE'|trans }}</a>
 				</header>
 				
 				{% for pluginName,plugin in plugins %}
@@ -22,22 +22,22 @@
 							<header>
 								<legend>{{ pluginName }}</legend>							
 								<div class="cardActive">
-									<label class="control-group">Active
+									<label class="control-group">{{ 'ACTIVE'|trans }}
 										<input type="checkbox" class="fc-active" name="{{pluginName}}[active]"{% if settings.plugins[pluginName].active %} checked {% endif %}>
 										<span class="checkmark"></span>
 									</label>
 								</div>
 							</header>
-							<div id="{{ pluginName }}" class="fc-plugin-version update-banner">{{ plugin.version ? plugin.version : 'Unknown' }}</div>
+							<div id="{{ pluginName }}" class="fc-plugin-version update-banner">{{ plugin.version ? plugin.version : 'Unknown'|upper|trans }}</div>
 							
 							<div class="cardDescPlugin">
-								<p>{{ plugin.description ? plugin.description : 'No description' }}</p>
+								<p>{{ plugin.description ? plugin.description|trans : 'NO_DESCRIPTION'|trans }}</p>
 								
 								<ul class="cardInfo">
-									<li>{{ plugin.version ? plugin.version : 'Unknown' }}</li><li>
-									{{ plugin.licence ? plugin.licence : 'Unkown' }}</li><li>
-									by {{ plugin.author ? plugin.author : 'Unknown' }}</li>{% if plugin.homepage %}<li>
-									<a href="{{ plugin.homepage}}" target="blank">Web</a></li>{% endif %}
+									<li>{{ plugin.version ? plugin.version : 'Unknown'|upper|trans }}</li><li>
+									{{ plugin.licence ? plugin.licence : 'Unkown'|upper|trans }}</li><li>
+									{{ 'BY'|trans }} {{ plugin.author ? plugin.author : 'Unknown'|upper|trans }}</li>{% if plugin.homepage %}<li>
+									<a href="{{ plugin.homepage}}" target="blank">{{ 'WEB'|trans }}</a></li>{% endif %}
 								</ul>
 							</div>
 						<div class="cardInner cardFields{{ errors[pluginName] ? ' open' : '' }}">
@@ -62,7 +62,7 @@
 							{% endfor %}
 							
 						</div>
-							<button type="button" class="plugin-button fc-settings{{ settings.plugins[pluginName].active ? ' active' : '' }}{{ plugin.forms.fields|length > 0 ? ' has-settings' : ' no-settings'}}">{{ plugin.forms.fields|length > 0 ? 'Settings <span class="button-arrow"></span>' : '&nbsp;'}}</button>
+							<button type="button" class="plugin-button fc-settings{{ settings.plugins[pluginName].active ? ' active' : '' }}{{ plugin.forms.fields|length > 0 ? ' has-settings' : ' no-settings'}}">{{ plugin.forms.fields|length > 0 ? 'Settings'|upper|trans ~ ' <span class="button-arrow"></span>' : '&nbsp;'}}</button>
 						</div>
 						
 					</fieldset>
@@ -71,7 +71,7 @@
 			
 			</section>
 			
-			<input type="submit" value="Save All Settings" />
+			<input type="submit" value="{{ 'SAVE_ALL_SETTINGS'|trans }}" />
 
 			{{ csrf_field() | raw }}
 			

@@ -1,16 +1,16 @@
 <nav id="sidebar-menu" class="sidebar-menu">
 	{% if is_role('administrator') %}
-		<div id="mobile-menu" class="menu-action">Menu <span class="button-arrow"></span></div>
-		<h3>Settings</h3>
+		<div id="mobile-menu" class="menu-action">{{ 'MENU'|trans }} <span class="button-arrow"></span></div>
+		<h3>{{ 'SETTINGS'|trans }}</h3>
 		<ul class="menu-list margin-bottom">
-			<li class="menu-item"><a href="{{ path_for('settings.show') }}"{{ (route == 'settings.show') ? ' class="active"' : '' }}>System</a></li>
-			<li class="menu-item"><a href="{{ path_for('themes.show') }}"{{ (route == 'themes.show') ? ' class="active"' : '' }}>Themes</a></li>
-			<li class="menu-item"><a href="{{ path_for('plugins.show') }}"{{ (route == 'plugins.show') ? ' class="active"' : '' }}>Plugins</a></li>
+			<li class="menu-item"><a href="{{ path_for('settings.show') }}"{{ (route == 'settings.show') ? ' class="active"' : '' }}>{{ 'SYSTEM'|trans }}</a></li>
+			<li class="menu-item"><a href="{{ path_for('themes.show') }}"{{ (route == 'themes.show') ? ' class="active"' : '' }}>{{ 'THEMES'|trans }}</a></li>
+			<li class="menu-item"><a href="{{ path_for('plugins.show') }}"{{ (route == 'plugins.show') ? ' class="active"' : '' }}>{{ 'PLUGINS'|trans }}</a></li>
 		</ul>
-		<h3>Users</h3>
+		<h3>{{ 'USERS'|trans }}</h3>
 		<ul class="menu-list">
-			<li class="menu-item"><a href="{{ path_for('user.list') }}"{{ (route == 'user.list') ? ' class="active"' : '' }}>All users</a></li>
-			<li class="menu-item"><a href="{{ path_for('user.new') }}"{{  (route == 'user.new') ? ' class="active"' : '' }}>Create user</a></li>
+			<li class="menu-item"><a href="{{ path_for('user.list') }}"{{ (route == 'user.list') ? ' class="active"' : '' }}>{{ 'ALL_USERS'|trans }}</a></li>
+			<li class="menu-item"><a href="{{ path_for('user.new') }}"{{  (route == 'user.new') ? ' class="active"' : '' }}>{{ 'CREATE_USER'|trans }}</a></li>
 			{% for user in users %}
 				<li class="menu-item"><a href="{{ path_for('user.show', {'username' : user }) }}"{{ (username == user) ? ' class="active"' : '' }}>{{ user }}</a></li>
 			{% endfor %}
