@@ -1,26 +1,21 @@
 const FormBus = new Vue();
 
 Vue.component('component-text', {
-	props: ['class', 'placeholder', 'label', 'name', 'type', 'size', 'value', 'errors'],
+	props: ['class', 'id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
 	template: '<div class="large">' +
 				'<label>{{ label }}</label>' +
-				'<input type="text" :name="name" :placeholder="placeholder" :value="value"  @input="update($event, name)">' +
+				'<input type="text"' + 
+					' :id="id"' +
+					' :maxlength="maxlength"' +
+					' :readonly="readonly"' +
+					' :required="required"' +
+					' :disabled="disabled"' +
+					' :name="name"' +
+					' :placeholder="placeholder"' +
+					' :value="value"' +
+					'@input="update($event, name)">' +
 			  	'<span v-if="errors[name]" class="error">{{ errors[name] }}</span>' +
-			  '</div>',
-	methods: {
-		update: function($event, name)
-		{
-			FormBus.$emit('forminput', {'name': name, 'value' : $event.target.value});
-		},
-	},
-})
-
-Vue.component('component-date', {
-	props: ['class', 'placeholder', 'readonly', 'label', 'name', 'type', 'size', 'value', 'errors'],
-	template: '<div class="large">' +
-				'<label>{{ label }}</label>' +
-				'<input type="date" :readonly="readonly" :name="name" :placeholder="placeholder" :value="value"  @input="update($event, name)">' +
-			  	'<span v-if="errors[name]" class="error">{{ errors[name] }}</span>' +
+			  	'<span v-else class="fielddescription"><small>{{ description }}</small></span>' +
 			  '</div>',
 	methods: {
 		update: function($event, name)
@@ -31,11 +26,195 @@ Vue.component('component-date', {
 })
 
 Vue.component('component-textarea', {
-	props: ['class', 'placeholder', 'label', 'name', 'type', 'size', 'value', 'errors'],
+	props: ['class', 'id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
 	template: '<div class="large">' +
-				'<label>{{label}}</label>' +
-				'<textarea :name="name" v-model="value" @input="update($event, name)"></textarea>' +
+				'<label>{{ label }}</label>' +
+				'<textarea ' +
+					' :id="id"' +
+					' :readonly="readonly"' +
+					' :required="required"' +  
+					' :disabled="disabled"' +  
+					' :name="name"' +
+					' :placeholder="placeholder"' +
+					' :value="value"' +
+					' @input="update($event, name)"></textarea>' +
 			  	'<span v-if="errors[name]" class="error">{{ errors[name] }}</span>' +
+			  	'<span v-else class="fielddescription"><small>{{ description }}</small></span>' +
+			  '</div>',
+	methods: {
+		update: function($event, name)
+		{
+			FormBus.$emit('forminput', {'name': name, 'value' : $event.target.value});
+		},
+	},
+})
+
+Vue.component('component-url', {
+	props: ['class', 'id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
+	template: '<div class="large">' +
+				'<label>{{ label }}</label>' +
+				'<input type="url"' + 
+					' :id="id"' +
+					' :maxlength="maxlength"' +
+					' :readonly="readonly"' +
+					' :required="required"' +
+					' :disabled="disabled"' +
+					' :name="name"' +
+					' :placeholder="placeholder"' +
+					' :value="value"' +
+					'@input="update($event, name)">' +
+			  	'<span v-if="errors[name]" class="error">{{ errors[name] }}</span>' +
+			  	'<span v-else class="fielddescription"><small>{{ description }}</small></span>' +			  	
+			  '</div>',
+	methods: {
+		update: function($event, name)
+		{
+			FormBus.$emit('forminput', {'name': name, 'value' : $event.target.value});
+		},
+	},
+})
+
+Vue.component('component-number', {
+	props: ['class', 'id', 'description', 'min', 'max', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
+	template: '<div class="large">' +
+				'<label>{{ label }}</label>' +
+				'<input type="number"' + 
+					' :id="id"' +
+					' :min="min"' +
+					' :min="max"' +
+					' :maxlength="maxlength"' +
+					' :readonly="readonly"' +
+					' :required="required"' +
+					' :disabled="disabled"' +
+					' :name="name"' +
+					' :placeholder="placeholder"' +
+					' :value="value"' +
+					'@input="update($event, name)">' +
+			  	'<span v-if="errors[name]" class="error">{{ errors[name] }}</span>' +
+			  	'<span v-else class="fielddescription"><small>{{ description }}</small></span>' +
+			  '</div>',
+	methods: {
+		update: function($event, name)
+		{
+			FormBus.$emit('forminput', {'name': name, 'value' : $event.target.value});
+		},
+	},
+})
+
+Vue.component('component-email', {
+	props: ['class', 'id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
+	template: '<div class="large">' +
+				'<label>{{ label }}</label>' +
+				'<input type="email"' + 
+					' :id="id"' +
+					' :maxlength="maxlength"' +
+					' :readonly="readonly"' +
+					' :required="required"' +
+					' :disabled="disabled"' +
+					' :name="name"' +
+					' :placeholder="placeholder"' +
+					' :value="value"' +
+					'@input="update($event, name)">' +
+			  	'<span v-if="errors[name]" class="error">{{ errors[name] }}</span>' +
+			  	'<span v-else class="fielddescription"><small>{{ description }}</small></span>' +
+			  '</div>',
+	methods: {
+		update: function($event, name)
+		{
+			FormBus.$emit('forminput', {'name': name, 'value' : $event.target.value});
+		},
+	},
+})
+
+Vue.component('component-tel', {
+	props: ['class', 'id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
+	template: '<div class="large">' +
+				'<label>{{ label }}</label>' +
+				'<input type="tel"' + 
+					' :id="id"' +
+					' :maxlength="maxlength"' +
+					' :readonly="readonly"' +
+					' :required="required"' +
+					' :disabled="disabled"' +
+					' :name="name"' +
+					' :placeholder="placeholder"' +
+					' :value="value"' +
+					'@input="update($event, name)">' +
+			  	'<span v-if="errors[name]" class="error">{{ errors[name] }}</span>' +
+			  	'<span v-else class="fielddescription"><small>{{ description }}</small></span>' +
+			  '</div>',
+	methods: {
+		update: function($event, name)
+		{
+			FormBus.$emit('forminput', {'name': name, 'value' : $event.target.value});
+		},
+	},
+})
+
+Vue.component('component-password', {
+	props: ['class', 'id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
+	template: '<div class="large">' +
+				'<label>{{ label }}</label>' +
+				'<input type="password"' + 
+					' :id="id"' +
+					' :maxlength="maxlength"' +
+					' :readonly="readonly"' +
+					' :required="required"' +
+					' :disabled="disabled"' +
+					' :name="name"' +
+					' :placeholder="placeholder"' +
+					' :value="value"' +
+					'@input="update($event, name)">' +
+			  	'<span v-if="errors[name]" class="error">{{ errors[name] }}</span>' +
+			  	'<span v-else class="fielddescription"><small>{{ description }}</small></span>' +
+			  '</div>',
+	methods: {
+		update: function($event, name)
+		{
+			FormBus.$emit('forminput', {'name': name, 'value' : $event.target.value});
+		},
+	},
+})
+
+Vue.component('component-date', {
+	props: ['class', 'id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
+	template: '<div class="large">' +
+				'<label>{{ label }}</label>' +
+				'<input type="date" ' +
+					' :id="id"' +
+					' :readonly="readonly"' +
+					' :required="required"' +  
+					' :disabled="disabled"' +  
+					' :name="name"' +
+					' :placeholder="placeholder"' +
+					' :value="value"' +
+					' @input="update($event, name)">' +
+			  	'<span v-if="errors[name]" class="error">{{ errors[name] }}</span>' +
+			  	'<span v-else class="fielddescription"><small>{{ description }}</small></span>' +
+			  '</div>',
+	methods: {
+		update: function($event, name)
+		{
+			FormBus.$emit('forminput', {'name': name, 'value' : $event.target.value});
+		},
+	},
+})
+
+Vue.component('component-color', {
+	props: ['class', 'id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
+	template: '<div class="large">' +
+				'<label>{{ label }}</label>' +
+				'<input type="color" ' +
+					' :id="id"' +
+					' :readonly="readonly"' +
+					' :required="required"' +  
+					' :disabled="disabled"' +  
+					' :name="name"' +
+					' :placeholder="placeholder"' +
+					' :value="value"' +
+					' @input="update($event, name)">' +
+			  	'<span v-if="errors[name]" class="error">{{ errors[name] }}</span>' +
+			  	'<span v-else class="fielddescription"><small>{{ description }}</small></span>' +
 			  '</div>',
 	methods: {
 		update: function($event, name)
@@ -46,13 +225,20 @@ Vue.component('component-textarea', {
 })
 
 Vue.component('component-select', {
-	props: ['class', 'placeholder', 'label', 'name', 'type', 'size', 'options', 'value', 'errors'],
+	props: ['class', 'id', 'description', 'readonly', 'required', 'disabled', 'label', 'name', 'type', 'options', 'value', 'errors'],
 	template: '<div class="large">' +
 				'<label>{{label}}</label>' +
-			    '<select v-model="value" @change="update($event,name)">' +
-			      '<option v-for="option,optionkey in options" v-bind:value="optionkey">{{option}}</option>' +
+			    '<select' + 
+					' :id="id"' +
+					' :name="name"' +
+					' :required="required"' +  
+					' :disabled="disabled"' +
+					' v-model="value"' + 
+			    	' @change="update($event,name)">' +
+			      	'<option v-for="option,optionkey in options" v-bind:value="optionkey">{{option}}</option>' +
 			    '</select>' +
-			  	'<span v-if="errors[name]" class="error">{{ errors[name] }}</span>' +  
+			  	'<span v-if="errors[name]" class="error">{{ errors[name] }}</span>' +
+			  	'<span v-else class="fielddescription"><small>{{ description }}</small></span>' +
 			  '</div>',
 	methods: {
 		update: function($event, name)
@@ -63,13 +249,21 @@ Vue.component('component-select', {
 })
 
 Vue.component('component-checkbox', {
-	props: ['class', 'label', 'checkboxlabel', 'name', 'type', 'value', 'errors'],
+	props: ['class', 'id', 'description', 'readonly', 'required', 'disabled', 'label', 'checkboxlabel', 'name', 'type', 'value', 'errors'],
 	template: '<div class="large">' +
 				'<label>{{ label }}</label>' +
 				'<label class="control-group">{{ checkboxlabel }}' +
-				  '<input type="checkbox" :name="name" v-model="value" @change="update($event, value, name)">' +				
+				  '<input type="checkbox"' + 
+					' :id="id"' +
+					' :readonly="readonly"' +
+					' :required="required"' +  
+					' :disabled="disabled"' +
+				    ' :name="name"' + 
+				    ' v-model="value"' +
+				    ' @change="update($event, value, name)">' +				
 			  	  '<span class="checkmark"></span>' +
 			  	  '<span v-if="errors[name]" class="error">{{ errors[name] }}</span>' +
+				  '<span v-else class="fielddescription"><small>{{ description }}</small></span>' +
 			  	'</label>' +  
 			  '</div>',
 	methods: {
@@ -80,14 +274,50 @@ Vue.component('component-checkbox', {
 	},
 })
 
+Vue.component('component-checkboxlist', {
+	props: ['class', 'description', 'readonly', 'required', 'disabled', 'label', 'checkboxlabel', 'options', 'name', 'type', 'value', 'errors'],
+	template: '<div class="large">' +
+				'<label>{{ label }}</label>' +
+				'<label v-for="option, optionvalue in options" class="control-group">{{ option }}' +
+				  '<input type="checkbox"' + 
+					' :id="optionvalue"' +
+				  	' :value="optionvalue"' + 
+				  	' v-model="value" ' + 
+				  	' @change="update($event, value, optionvalue, name)">' +
+			  	  '<span class="checkmark"></span>' +
+			  	  '<span v-if="errors[name]" class="error">{{ errors[name] }}</span>' +
+			  	  '<span v-else class="fielddescription"><small>{{ description }}</small></span>' +
+			  '</div>',
+	methods: {
+		update: function($event, value, optionvalue, name)
+		{
+			/* if value (array) for checkboxlist is not initialized yet */
+			if(value === true || value === false)
+			{
+				value = [optionvalue];
+			}
+			FormBus.$emit('forminput', {'name': name, 'value' : value});
+		},
+	},
+})
+
 Vue.component('component-radio', {
-	props: ['label', 'options', 'name', 'type', 'value', 'errors'],
-	template: '<div class="medium">' +
+	props: ['class', 'id', 'description', 'readonly', 'required', 'disabled', 'options', 'label', 'name', 'type', 'value', 'errors'],
+	template: '<div class="large">' +
 				'<label>{{ label }}</label>' +
 				'<label v-for="option,optionvalue in options" class="control-group">{{ option }}' +
-				  '<input type="radio" :name="name" :value="optionvalue" v-model="value" @change="update($event, value, name)">' +				
+				  '<input type="radio"' + 
+					' :id="id"' +
+					' :readonly="readonly"' +
+					' :required="required"' +  
+					' :disabled="disabled"' +
+				  	' :name="name"' +
+				  	' :value="optionvalue"' + 
+				  	' v-model="value" ' + 
+				  	' @change="update($event, value, name)">' +				
 			  	  '<span class="radiomark"></span>' +
 			  	  '<span v-if="errors[name]" class="error">{{ errors[name] }}</span>' +
+				  '<span v-else class="fielddescription"><small>{{ description }}</small></span>' +
 			  	'</label>' +  
 			  '</div>',
 	methods: {
@@ -167,12 +397,14 @@ let meta = new Vue({
         .then(function (response) {
 
         	var formdefinitions = response.data.metadefinitions;
+        	
         	for (var key in formdefinitions) {
 				if (formdefinitions.hasOwnProperty(key)) {
 					self.tabs.push(key);
 					self.formErrors[key] = false;
 				}
 			}
+
 			self.formErrorsReset = self.formErrors;
 			self.formDefinitions = formdefinitions;
 

@@ -463,7 +463,7 @@ class SettingsController extends Controller
 
 			if($validate->newUser($params, $userroles))
 			{
-				$userdata	= array('username' => $params['username'], 'email' => $params['email'], 'userrole' => $params['userrole'], 'password' => $params['password']);
+				$userdata	= array('username' => $params['username'], 'firstname' => $params['firstname'], 'lastname' => $params['lastname'], 'email' => $params['email'], 'userrole' => $params['userrole'], 'password' => $params['password']);
 				
 				$user->createUser($userdata);
 
@@ -511,7 +511,7 @@ class SettingsController extends Controller
 	
 			if($validate->existingUser($params, $userroles))
 			{
-				$userdata	= array('username' => $params['username'], 'email' => $params['email'], 'userrole' => $params['userrole']);
+				$userdata	= array('username' => $params['username'], 'firstname' => $params['firstname'], 'lastname' => $params['lastname'], 'email' => $params['email'], 'userrole' => $params['userrole']);
 				
 				if(empty($params['password']) AND empty($params['newpassword']))
 				{

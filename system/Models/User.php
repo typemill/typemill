@@ -38,6 +38,15 @@ class User extends WriteYaml
 						'password'	=> $this->generatePassword($params['password']),
 						'userrole' 	=> $params['userrole']
 					);
+
+		if(isset($params['firstname']))
+		{
+			$userdata['firstname'] = $params['firstname'];
+		}
+		if(isset($params['lastname']))
+		{
+			$userdata['lastname'] = $params['lastname'];
+		}
 	
 		if($this->updateYaml('settings/users', $userdata['username'] . '.yaml', $userdata))
 		{
@@ -58,8 +67,20 @@ class User extends WriteYaml
 		$update = array_merge($userdata, $params);
 		
 		$this->updateYaml('settings/users', $userdata['username'] . '.yaml', $update);
+
+		$_SESSION['user'] 	= $update['username'];
+		$_SESSION['role'] 	= $update['userrole'];
+
+		if(isset($update['firstname']))
+		{
+			$_SESSION['firstname'] = $update['firstname'];
+		}
+		if(isset($update['lastname']))
+		{
+			$_SESSION['lastname'] = $update['lastname'];
+		}
 		
-		return $userdata['username'];		
+		return $userdata['username'];
 	}
 	
 	public function deleteUser($username)
@@ -88,6 +109,15 @@ class User extends WriteYaml
 			$_SESSION['user'] 	= $user['username'];
 			$_SESSION['role'] 	= $user['userrole'];
 			$_SESSION['login'] 	= $user['lastlogin'];
+
+			if(isset($user['firstname']))
+			{
+				$_SESSION['firstname'] = $user['firstname'];
+			}
+			if(isset($user['lastname']))
+			{
+				$_SESSION['lastname'] = $user['lastname'];
+			}
 		}
 	}
 	

@@ -124,6 +124,10 @@ class Validation
 		$v->rule('lengthBetween', 'password', 5, 20)->message("Length between 5 - 20");
 		$v->rule('lengthBetween', 'username', 3, 20)->message("Length between 3 - 20"); 
 		$v->rule('userAvailable', 'username')->message("User already exists");
+		$v->rule('noHTML', 'firstname')->message(" contains HTML");
+		$v->rule('lengthBetween', 'firstname', 2, 40);
+		$v->rule('noHTML', 'lastname')->message(" contains HTML");
+		$v->rule('lengthBetween', 'lastname', 2, 40);
 		$v->rule('email', 'email')->message("e-mail is invalid");
 		$v->rule('in', 'userrole', $userroles);
 		
@@ -137,10 +141,14 @@ class Validation
 		$v->rule('alphaNum', 'username')->message("invalid");
 		$v->rule('lengthBetween', 'username', 3, 20)->message("Length between 3 - 20"); 
 		$v->rule('userExists', 'username')->message("user does not exist");
+		$v->rule('noHTML', 'firstname')->message(" contains HTML");
+		$v->rule('lengthBetween', 'firstname', 2, 40);
+		$v->rule('noHTML', 'lastname')->message(" contains HTML");
+		$v->rule('lengthBetween', 'lastname', 2, 40);		
 		$v->rule('email', 'email')->message("e-mail is invalid");
 		$v->rule('in', 'userrole', $userroles);
 
-		return $this->validationResult($v);		
+		return $this->validationResult($v);
 	}
 	
 	public function username($username)
@@ -329,7 +337,23 @@ class Validation
 		{
 			$v->rule('required', $fieldName);
 		}
-		
+		if(isset($fieldDefinitions['maxlength']))
+		{
+			$v->rule('lengthMax', $fieldName, $fieldDefinitions['maxlength']);
+		}
+		if(isset($fieldDefinitions['max']))
+		{
+			$v->rule('max', $fieldName, $fieldDefinitions['max']);
+		}
+		if(isset($fieldDefinitions['min']))
+		{
+			$v->rule('min', $fieldName, $fieldDefinitions['min']);
+		}
+		if(isset($fieldDefinitions['pattern']))
+		{
+			$v->rule('regex', $fieldName, '/^' . $fieldDefinitions['pattern'] . '$/');
+		}
+
 		switch($fieldDefinitions['type'])
 		{
 			case "select":
@@ -350,7 +374,7 @@ class Validation
 				{
 					$v->rule('in', $key, $options);
 				}
-				break;				
+				break;
 			case "color":
 				$v->rule('regex', $fieldName, '/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/');
 				break;
@@ -361,33 +385,35 @@ class Validation
 				$v->rule('date', $fieldName);
 				break;
 			case "checkbox":
-				$v->rule('accepted', $fieldName);
+				if(isset($fieldDefinitions['required']))
+				{
+				 	$v->rule('accepted', $fieldName);
+				}
 				break;
 			case "url":
-				$v->rule('lengthMax', $fieldName, 200);
 				$v->rule('url', $fieldName);
+				$v->rule('lengthMax', $fieldName, 200);
 				break;
 			case "text":
-				$v->rule('lengthMax', $fieldName, 200);
+				$v->rule('noHTML', $fieldName);
+				$v->rule('lengthMax', $fieldName, 500);
 				$v->rule('regex', $fieldName, '/^[\pL0-9_ \-\.\?\!\/\:]*$/u');
 				break;
 			case "textarea":
-				$v->rule('lengthMax', $fieldName, 1000);
 				$v->rule('noHTML', $fieldName);
-				// $v->rule('regex', $fieldName, '/<[^<]+>/');
+				$v->rule('lengthMax', $fieldName, 1000);
 				break;
 			case "paragraph":
-				$v->rule('lengthMax', $fieldName, 1000);
 				$v->rule('noHTML', $fieldName);
+				$v->rule('lengthMax', $fieldName, 1000);
 				break;
 			case "password":
 				$v->rule('lengthMax', $fieldName, 100);
 				break;
 			default:
 				$v->rule('lengthMax', $fieldName, 1000);
-				$v->rule('regex', $fieldName, '/^[\pL0-9_ \-]*$/u');				
+				$v->rule('regex', $fieldName, '/^[\pL0-9_ \-]*$/u');		
 		}
-
 		return $this->validationResult($v, $objectName);
 	}
 	

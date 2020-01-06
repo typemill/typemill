@@ -64,6 +64,7 @@ class Field
 									'id',
 									'autocomplete',
 									'placeholder',
+									'maxlength',
 									'size',
 									'rows',
 									'cols',

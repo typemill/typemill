@@ -3,19 +3,30 @@ meta:
     title:
       type: text
       label: Meta title
-      size: 60
+      maxlength: 60
       class: large
     description:
       type: textarea
       label: Meta description
       size: 160
       class: large
+      description: If not filled, the description is extracted from content.
     author:
       type: text
       label: author
       class: large
+      description: Taken from your user account if set.
+    manualdate:
+      type: date
+      label: Manual date
     modified:
       type: date
-      label: Last modified at (readonly)
+      label: Last modified live (readonly)
       readonly: readonly
-      class: large
+      class: medium
+      description: Used as fallback when no manual date is set.
+    created:
+      type: date
+      label: Created at (readonly)
+      readonly: readonly
+      class: medium

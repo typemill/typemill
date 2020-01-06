@@ -23,6 +23,22 @@
 							<span class="error">{{ errors.username | first }}</span>
 						{% endif %}
 					</div>
+
+					<div class="large{{ errors.firstname ? ' errors' : '' }}">
+						<label for="firstname">First Name</label>
+						<input type="text" name="firstname" value="{{ old.firstname ? old.firstname : userdata.firstname }}">
+						{% if errors.firstname %}
+							<span class="error">{{ errors.firstname | first }}</span>
+						{% endif %}
+					</div>
+
+					<div class="large{{ errors.lastname ? ' errors' : '' }}">
+						<label for="lastname">Last Name</label>
+						<input type="text" name="lastname" value="{{ old.lastname ? old.lastname : userdata.lastname }}">
+						{% if errors.lastname %}
+							<span class="error">{{ errors.lastname | first }}</span>
+						{% endif %}
+					</div>
 					
 					<div class="large{{ errors.email ? ' errors' : '' }}">
 						<label for="email">E-Mail <abbr title="required">*</abbr></label>
@@ -48,7 +64,7 @@
 					
 					<div class="large{{ errors.password ? ' errors' : '' }}">
 						<label for="password">Actual Password</label>
-						<input type="password" name="password">
+						<input type="password" name="password" autocomplete="off">
 						{% if errors.password %}
 							<span class="error">{{ errors.password | first }}</span>
 						{% endif %}
@@ -56,7 +72,7 @@
 
 					<div class="large{{ errors.newpassword ? ' errors' : '' }}">
 						<label for="newpassword">New Password</label>
-						<input type="password" name="newpassword">
+						<input type="password" name="newpassword" autocomplete="off">
 						{% if errors.newpassword %}
 							<span class="error">{{ errors.newpassword | first }}</span>
 						{% endif %}
