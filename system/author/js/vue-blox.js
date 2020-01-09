@@ -393,7 +393,7 @@ const contentComponent = Vue.component('content-block', {
 })
 
 const inlineFormatsComponent = Vue.component('inline-formats', {
-	template: '<div><div :style="{ left: `${x}px`, top: `${y}px` }" @mousedown.prevent="" v-show="showInlineFormat" id="formatBar" class="inlineFormatBar">' + 
+	template: '<div><div :style="{ left: `${x}px`, top: `${y}px`, width: `${z}px` }" @mousedown.prevent="" v-show="showInlineFormat" id="formatBar" class="inlineFormatBar">' + 
 				  '<div  v-if="link">' + 
 				      '<input v-model="url" @keyup.13="formatLink" ref="urlinput" class="urlinput" type="text" placeholder="insert url">' + 
 					  '<span class="inlineFormatItem inlineFormatLink" @mousedown.prevent="formatLink"><svg class="icon icon-check"><use xlink:href="#icon-check"></use></svg></span>' + 
@@ -410,10 +410,12 @@ const inlineFormatsComponent = Vue.component('inline-formats', {
 	data: function(){
 		return {
 			formatBar: false,
+			formatElements: 0,
 			startX: 0,
 			startY: 0,
      		x: 0,
      		y: 0,
+     		z: 150,
      		textComponent: '',
      		selectedText: '',
      		startPos: false,
@@ -500,6 +502,10 @@ const inlineFormatsComponent = Vue.component('inline-formats', {
 
 		  	this.y = event.offsetY - 15;
 
+		  	/* calculate the width of the format bar */
+			this.formatElements = document.getElementsByClassName('inlineFormatItem').length;
+			this.z = this.formatElements * 30;
+
 			this.showInlineFormat = true;
 			this.selectedText = selectedText;
 		},
@@ -508,30 +514,35 @@ const inlineFormatsComponent = Vue.component('inline-formats', {
 			content = this.textComponent.value;
 			content = content.substring(0, this.startPos) + '**' + this.selectedText + '**' + content.substring(this.endPos, content.length);
 			this.$parent.updatemarkdown(content);
+		  	this.showInlineFormat = false;			
 		},
 		formatItalic()
 		{
 			content = this.textComponent.value;
 			content = content.substring(0, this.startPos) + '_' + this.selectedText + '_' + content.substring(this.endPos, content.length);
 			this.$parent.updatemarkdown(content);
+		  	this.showInlineFormat = false;			
 		},
 		formatCode()
 		{
 			content = this.textComponent.value;
 			content = content.substring(0, this.startPos) + '`' + this.selectedText + '`' + content.substring(this.endPos, content.length);
-			this.$parent.updatemarkdown(content);			
+			this.$parent.updatemarkdown(content);
+		  	this.showInlineFormat = false;						
 		},
 		formatMath()
 		{
 			content = this.textComponent.value;
 			content = content.substring(0, this.startPos) + '$' + this.selectedText + '$' + content.substring(this.endPos, content.length);
 			this.$parent.updatemarkdown(content);
+		  	this.showInlineFormat = false;			
 		},
 		formatLink()
 		{
 			if(this.url == "")
 			{
-				this.link = false; 
+				this.link = false;
+			  	this.showInlineFormat = false;
 				return;
 			}
 			content = this.textComponent.value;
@@ -543,11 +554,15 @@ const inlineFormatsComponent = Vue.component('inline-formats', {
 		openLink()
 		{
 			this.link = true;
+			this.url = '';
+			this.z = 200;
 			this.$nextTick(() => this.$refs.urlinput.focus());
 		},
 		closeLink()
 		{
 			this.link = false;
+			this.url = '';
+		  	this.showInlineFormat = false;
 		}
 	}
 })

@@ -86,12 +86,27 @@ class WriteYaml extends Write
 			$description 	= substr($description, 0, $lastSpace);
 		}
 
+		$author = $settings['author'];
+
+		if(isset($_SESSION))
+		{
+			if(isset($_SESSION['firstname']) && $_SESSION['firstname'] !='' && isset($_SESSION['lastname']) && $_SESSION['lastname'] != '')
+			{
+				$author = $_SESSION['firstname'] . ' ' . $_SESSION['lastname'];
+			}
+			elseif(isset($_SESSION['user']))
+			{
+				$author = $_SESSION['user'];
+			}
+		}
+
 		# create new meta-file
 		$meta = [
 			'meta' => [
 				'title' 		=> $title,
 				'description' 	=> $description,
-				'author' 		=> $settings['author'], # change to session, extend userdata
+				'author' 		=> $author,
+				'created'		=> date("Y-m-d"),
 			]
 		];
 

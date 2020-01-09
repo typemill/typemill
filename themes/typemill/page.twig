@@ -1,3 +1,5 @@
+{% set published = metatabs.meta.manualdate ? metatabs.meta.manualdate : metatabs.meta.modified %}
+
 	{% if content is empty %}
 
 		<h1>{{ item.name }}</h1>
@@ -9,10 +11,10 @@
 	{% if (settings.themes.typemill.socialPosition.top or settings.themes.typemill.modifiedPosition.top or settings.themes.typemill.authorPosition.top or settings.themes.typemill.gitPosition.top) %}	
 		<div class="meta-info">
 			{% if settings.themes.typemill.authorPosition.top %}
-				<small>{{ settings.themes.typemill.authorIntro }}: {{ settings.author }}</small>
+				<small>{{ settings.themes.typemill.authorIntro }}: {{ metatabs.meta.author|default(settings.author) }}</small>
 			{% endif %}
 			{% if settings.themes.typemill.modifiedPosition.top %}
-				<small>{{ settings.themes.typemill.modifiedText }}: {{ metatabs.meta.modified|date(settings.themes.typemill.modifiedFormat) }}</small>
+				<small>{{ settings.themes.typemill.modifiedText }}: {{ published|date(settings.themes.typemill.modifiedFormat)  }}</small>
 			{% endif %}
 			{% if settings.themes.typemill.socialPosition.top %}
 				<div id="share-icons" class="share-icons hide">
@@ -34,10 +36,10 @@
 	{% if (settings.themes.typemill.socialPosition.bottom or settings.themes.typemill.modifiedPosition.bottom or settings.themes.typemill.authorPosition.bottom or settings.themes.typemill.gitPosition.bottom) %}	
 		<div class="meta-info">
 			{% if settings.themes.typemill.authorPosition.bottom %}
-				<small>{{ settings.themes.typemill.authorIntro }}: {{ settings.author }}</small>
+				<small>{{ settings.themes.typemill.authorIntro }}: {{ metatabs.meta.author|default(settings.author) }}</small>
 			{% endif %}
 			{% if settings.themes.typemill.modifiedPosition.bottom %}
-				<small>{{ settings.themes.typemill.modifiedText }}: {{ metatabs.meta.modified|date(settings.themes.typemill.modifiedFormat) }}</small>
+				<small>{{ settings.themes.typemill.modifiedText }}: {{ published|date(settings.themes.typemill.modifiedFormat)  }}</small>
 			{% endif %}
 			{% if settings.themes.typemill.socialPosition.bottom %}
 				<div id="share-icons-bottom" class="share-icons hide">
