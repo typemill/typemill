@@ -4,6 +4,8 @@ description: The standard theme for Typemill. Responsive, minimal and without an
 author: Sebastian Schürmanns
 homepage: https://typemill.net
 licence: MIT
+paypal: https://paypal.me/typemill
+amount: 10
 
 settings:
   chapter: Chapter
