@@ -301,7 +301,7 @@ class SettingsController extends Controller
 				{
 					/* validate the user-input */
 					$this->validateInput('plugins', $pluginName, $userInput[$pluginName], $validate);
-										
+
 					/* use the input data */
 					$pluginSettings[$pluginName] = $userInput[$pluginName];
 				}
@@ -364,6 +364,13 @@ class SettingsController extends Controller
 				$originalFields['recaptcha_secretkey'] = ['type' => 'text', 'label' => 'Recaptcha Secret Key', 'help' => 'Add the recaptcha secret key here. You can get the key from the recaptcha website.', 'description' => 'The secret key is mandatory if you activate the recaptcha field'];
 			}
 
+			# if plugin is not active, then skip required
+			$skiprequired = false;
+			if($objectType == 'plugins' && !isset($userInput['active']))
+			{
+				$skiprequired = true;
+			}
+			
 			/* take the user input data and iterate over all fields and values */
 			foreach($userInput as $fieldName => $fieldValue)
 			{
@@ -373,7 +380,7 @@ class SettingsController extends Controller
 				if($fieldDefinition)
 				{
 					/* validate user input for this field */
-					$validate->objectField($fieldName, $fieldValue, $objectName, $fieldDefinition);
+					$validate->objectField($fieldName, $fieldValue, $objectName, $fieldDefinition, $skiprequired);
 				}
 				if(!$fieldDefinition && $fieldName != 'active')
 				{

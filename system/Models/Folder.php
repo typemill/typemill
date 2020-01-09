@@ -53,8 +53,15 @@ class Folder
 			{
 				if (is_dir($folderPath . DIRECTORY_SEPARATOR . $item))
 				{
-					$subFolder 					= $item;
-					$folderContent[$subFolder] 	= self::scanFolder($folderPath . DIRECTORY_SEPARATOR . $subFolder, $draft);
+
+					$subFolder 		 	= $item;
+					$folderPublished 	= file_exists($folderPath . DIRECTORY_SEPARATOR . $item . DIRECTORY_SEPARATOR . 'index.md');
+
+					# scan that folder only if it is a draft or if the folder is published (contains index.md)
+					if($draft OR $folderPublished)
+					{
+						$folderContent[$subFolder] 	= self::scanFolder($folderPath . DIRECTORY_SEPARATOR . $subFolder, $draft);
+					}
 				}
 				else
 				{

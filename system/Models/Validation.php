@@ -329,11 +329,11 @@ class Validation
 	* @return obj $v the validation object passed to a result method.
 	*/
 	
-	public function objectField($fieldName, $fieldValue, $objectName, $fieldDefinitions)
+	public function objectField($fieldName, $fieldValue, $objectName, $fieldDefinitions, $skiprequired = NULL)
 	{	
 		$v = new Validator(array($fieldName => $fieldValue));
-
-		if(isset($fieldDefinitions['required']))
+		
+		if(isset($fieldDefinitions['required']) && !$skiprequired)
 		{
 			$v->rule('required', $fieldName);
 		}
