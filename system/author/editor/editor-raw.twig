@@ -5,6 +5,27 @@
 	
 	<div class="formWrapper">
 
+		<div id="metanav" class="metanav" v-cloak>
+		  
+		  <button
+		    v-for="tab in tabs"
+		    v-bind:key="tab"
+		    v-bind:class="['tab-button', { active: currentTab === tab }]"
+		    v-on:click="currentTab = tab"
+		  >${tab}</button>
+
+		  <component 
+		  	class="tab" 
+		  	v-bind:is="currentTabComponent" 
+		  	:saved="saved"
+		  	:errors="formErrors[currentTab]" 
+		  	:schema="formDefinitions[currentTab]"
+		  	:formdata="formData[currentTab]"
+		  	v-on:saveform="saveForm">
+		  </component>
+
+		</div>
+
 		<div id="editor" class="editor">
 			<form action="#" v-cloak>
 			

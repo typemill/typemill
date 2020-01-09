@@ -30,10 +30,13 @@ class MetaApiController extends ContentController
 		# loop through all plugins
 		foreach($this->settings['plugins'] as $name => $plugin)
 		{
-			$pluginSettings = \Typemill\Settings::getObjectSettings('plugins', $name);
-			if($pluginSettings && isset($pluginSettings['metatabs']))
+			if($plugin['active'])
 			{
-				$metatabs = array_merge_recursive($metatabs, $pluginSettings['metatabs']);
+				$pluginSettings = \Typemill\Settings::getObjectSettings('plugins', $name);
+				if($pluginSettings && isset($pluginSettings['metatabs']))
+				{
+					$metatabs = array_merge_recursive($metatabs, $pluginSettings['metatabs']);
+				}
 			}
 		}
 
@@ -156,3 +159,5 @@ class MetaApiController extends ContentController
 		return $response->withJson(array('metadata' => $metaData, 'errors' => false));
 	}
 }
+
+# check models -> writeYaml for getPageMeta and getPageMetaDefaults.

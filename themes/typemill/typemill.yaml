@@ -1,9 +1,11 @@
 ﻿name: Typemill Theme
-version: 1.2.0
+version: 1.2.1
 description: The standard theme for Typemill. Responsive, minimal and without any dependencies. It uses the system fonts Calibri and Helvetica. No JavaScript is used. 
 author: Sebastian Schürmanns
 homepage: https://typemill.net
 licence: MIT
+paypal: https://paypal.me/typemill
+amount: 10
 
 settings:
   chapter: Chapter
