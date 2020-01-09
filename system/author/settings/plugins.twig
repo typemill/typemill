@@ -1,5 +1,5 @@
 {% extends 'layouts/layout.twig' %}
-{% block title %}Setup{% endblock %}
+{% block title %}{{ __('Setup') }}{% endblock %}
 {% set startpage = old.settings.startpage ? old.settings.startpage : settings.startpage %}
 
 {% block content %}
@@ -11,8 +11,8 @@
 			<section id="plugins" class="plugins">
 			
 				<header class="headline">
-					<h1>Plugins</h1>
-					<a class="button" target="_blank" href="https://plugins.typemill.net">Plugin Store</a>
+					<h1>{{ __('Plugins') }}</h1>
+					<a class="button" target="_blank" href="https://plugins.typemill.net">{{ __('Plugin Store') }}</a>
 				</header>
 				
 				{% for pluginName,plugin in plugins %}
@@ -22,22 +22,22 @@
 							<header>
 								<legend>{{ pluginName }}</legend>							
 								<div class="cardActive">
-									<label class="control-group">Active
+									<label class="control-group">{{ __('Active') }}
 										<input type="checkbox" class="fc-active" name="{{pluginName}}[active]"{% if settings.plugins[pluginName].active %} checked {% endif %}>
 										<span class="checkmark"></span>
 									</label>
 								</div>
 							</header>
-							<div id="{{ pluginName }}" class="fc-plugin-version update-banner">{{ plugin.version ? plugin.version : 'Unknown' }}</div>
+							<div id="{{ pluginName }}" class="fc-plugin-version update-banner">{{ plugin.version ? plugin.version : __('Unknown') }}</div>
 							
 							<div class="cardDescPlugin">
-								<p>{{ plugin.description ? plugin.description : 'No description' }}</p>
+								<p>{{ plugin.description ? plugin.description : __('No description') }}</p>
 								
 								<ul class="cardInfo">
-									<li>{{ plugin.version ? plugin.version : 'Unknown' }}</li><li>
-									{{ plugin.licence ? plugin.licence : 'Unkown' }}</li><li>
-									by {{ plugin.author ? plugin.author : 'Unknown' }}</li>{% if plugin.homepage %}<li>
-									<a href="{{ plugin.homepage}}" target="blank">Web</a></li>{% endif %}
+									<li>{{ plugin.version ? plugin.version : __('Unknown') }}</li><li>
+									{{ plugin.licence ? plugin.licence : __('Unkown') }}</li><li>
+									by {{ plugin.author ? plugin.author : __('Unknown') }}</li>{% if plugin.homepage %}<li>
+									<a href="{{ plugin.homepage}}" target="blank">{{ __('Web') }}</a></li>{% endif %}
 								</ul>
 							</div>
 						<div class="cardInner cardFields{{ errors[pluginName] ? ' open' : '' }}">
@@ -62,7 +62,7 @@
 							{% endfor %}
 							
 						</div>
-							<button type="button" class="plugin-button fc-settings{{ settings.plugins[pluginName].active ? ' active' : '' }}{{ plugin.forms.fields|length > 0 ? ' has-settings' : ' no-settings'}}">{{ plugin.forms.fields|length > 0 ? 'Settings <span class="button-arrow"></span>' : '&nbsp;'}}</button>
+							<button type="button" class="plugin-button fc-settings{{ settings.plugins[pluginName].active ? ' active' : '' }}{{ plugin.forms.fields|length > 0 ? ' has-settings' : ' no-settings'}}">{{ plugin.forms.fields|length > 0 ? __('Settings') ~ ' <span class="button-arrow"></span>' : '&nbsp;'}}</button>
 						</div>
 						
 					</fieldset>
@@ -71,7 +71,7 @@
 			
 			</section>
 			
-			<input type="submit" value="Save All Settings" />
+			<input type="submit" value="{{ __('Save All Settings') }}" />
 
 			{{ csrf_field() | raw }}
 			

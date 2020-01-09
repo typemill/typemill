@@ -16,6 +16,12 @@ class Settings
 			$settings 			= array_merge($defaultSettings, $userSettings);
 		}
 
+    // i18n
+    // load the strings of the set language
+    $language = $settings['language'];
+    $settings['labels'] = self::getLanguageLabels($language);
+    
+
 		# We know the used theme now so create the theme path 
 		$settings['themePath'] = $settings['rootPath'] . $settings['themeFolder'] . DIRECTORY_SEPARATOR . $settings['theme'];
 
@@ -69,6 +75,23 @@ class Settings
 		
 		return $userSettings;
 	}
+
+
+    // i18n
+  public static function getLanguageLabels($language)
+	{
+    // if not present, set the English language
+    if( empty($language) ){
+      $language = 'en';
+    }
+
+    // load the strings of the set language
+		$yaml = new Models\WriteYaml();
+		$labels = $yaml->getYaml('settings/languages', $language.'.yaml');
+		
+		return $labels;
+	}
+
 
 	public static function getObjectSettings($objectType, $objectName)
 	{
