@@ -202,7 +202,10 @@ $container['view'] = function ($container)
     $view->addExtension(new Typemill\Extensions\TwigUserExtension());
 	$view->addExtension(new Typemill\Extensions\TwigMarkdownExtension());	
 	$view->addExtension(new Typemill\Extensions\TwigMetaExtension());	
-	
+
+        // i18n
+	$view->addExtension(new Typemill\Extensions\TwigLanguageExtension( $container->get('settings')['labels'] ));
+
 	/* use {{ base_url() }} in twig templates */
 	$view['base_url']	 = $container['request']->getUri()->getBaseUrl();
 	$view['current_url'] = $container['request']->getUri()->getPath();
