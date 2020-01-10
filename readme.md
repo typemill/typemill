@@ -77,6 +77,7 @@ TYPEMILL is published under MIT licence. Please check the licence of the include
 
 ## Contributors & Supporters
 
+* [Severo Juliano](https://github.com/iusvar) did the internationalization i18n.
 * [Eziquel Bruni](https://github.com/EzequielBruni) edits the typemill documentation.
 * [Ricky](https://github.com/rbertram90) developed the discard functionality.
 * [vodaris](https://www.vodaris.de) sponsored the development of the search plugin.

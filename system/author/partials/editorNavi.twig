@@ -1,11 +1,11 @@
 <nav id="sidebar-menu" class="sidebar-menu--content">
 	<div id="data-navi" data-navi='{{ navigation|json_encode() }}' data-homepage='{{ homepage|json_encode() }}' data-editormode="{{settings.editor}}"></div>
-	<div id="mobile-menu" class="menu-action">Menu <span class="button-arrow"></span></div>
+	<div id="mobile-menu" class="menu-action">{{ __('Menu') }} <span class="button-arrow"></span></div>
 	<div id="navi" class="content-navi" v-model="freeze" v-cloak>
 		<div class="navi-list">
 			<div class="navi-item folder">
 				<div class="status" :class="homepage.status"></div>
-				<a href="{{ base_url }}/tm/content/{{ settings.editor }}" :class="homepage.active"><span><span class="iconwrapper"><svg class="icon icon-home"><use xlink:href="#icon-home"></use></svg></span><span class="level-1">Homepage</span></a>
+				<a href="{{ base_url }}/tm/content/{{ settings.editor }}" :class="homepage.active"><span><span class="iconwrapper"><svg class="icon icon-home"><use xlink:href="#icon-home"></use></svg></span><span class="level-1">{{ __('Homepage') }}</span></a>
 			</div>
 		</div>
 		<draggable class="navi-list" tag="ul" 
@@ -40,12 +40,12 @@
 					<svg class="icon icon-plus"><use xlink:href="#icon-plus"></use></svg>
 				</span>
 				<span class="addNaviItem">
-					<a class="addNaviLink" href="#" @click.prevent="toggleForm">add item</a>
+					<a class="addNaviLink" href="#" @click.prevent="toggleForm">{{ __('add item') }}</a>
 				</span>
 				<transition name="fade">
 					<div v-if="showForm" class="addNaviForm">
 						<input v-model="newItem">
-						<button class="b-left" @click="addFile('file')">add file</button><button class="b-right" @click="addFile('folder')">add folder</button>
+						<button class="b-left" @click="addFile('file')">{{ __('add file') }}</button><button class="b-right" @click="addFile('folder')">{{ __('add folder') }}</button>
 					</div>
 				</transition>
 			</li>
@@ -90,12 +90,12 @@
 						<svg class="icon icon-plus"><use xlink:href="#icon-plus"></use></svg>
 					</span>
 					<span :class="getLevel(level + '.0')" class="addNaviItem">
-						<a class="addNaviLink" href="#" @click.prevent="toggleForm">add item</a>
+						<a class="addNaviLink" href="#" @click.prevent="toggleForm">{% endverbatim %}{{ __('add item') }}{% verbatim %}</a>
 					</span>
 					<transition name="fade">
 						<div v-if="showForm" class="addNaviForm">
 							<input v-model="newItem">
-							<button class="b-left" @click="addFile('file')">add file</button><button class="b-right" @click="addFile('folder')">add folder</button>
+							<button class="b-left" @click="addFile('file')">{% endverbatim %}{{ __('add file') }}{% verbatim %}</button><button class="b-right" @click="addFile('folder')">{% endverbatim %}{{ __('add folder') }}{% verbatim %}</button>
 						</div>
 					</transition>
 				</li>
