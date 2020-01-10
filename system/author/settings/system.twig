@@ -87,7 +87,7 @@
 						{% for format in formats %}
 
 							<label class="control-group">{{ __(format) }}
-								<input name="settings[formats][]" value="{{ __('format') }}" type="checkbox" {% if format in settings.formats %} checked {% endif %}>
+								<input name="settings[formats][]" value="{{ format }}" type="checkbox" {% if format in settings.formats %} checked {% endif %}>
 								<span class="checkmark"></span>
 							</label>
 
