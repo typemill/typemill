@@ -101,7 +101,6 @@ class Settings
     
     // load the strings of the set language
 		$yaml = new Models\WriteYaml();
-		//$labels = $yaml->getYaml('settings/languages', 'vue-blox.yaml');
     $labels = $yaml->getYaml('settings/languages', 'vuejs-'.$language.'.yaml');//temp
 		
 		return $labels;
