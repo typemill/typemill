@@ -1,56 +1,53 @@
 # English
 en:
   add content-block: add content-block
-  cancel: cancel
-  delete content-block: delete content-block
-  save: save
-  Paragraph: Paragraph
-  Headline: Headline
-  Bullet List: Bullet List
-  Numbered List: Numbered List
-  Table: Table
-  Quote: Quote
-  Image: Image
-  Video: Video
-  table of contents: Table of Contents
-  Horizontal Line: Horizontal Line
-  Definition List: Definition List
-  Code: Code
-  drag a picture or click to select: drag a picture or click to select
-  Alt-Text: Alt-Text
-  Title: Title
-  Caption: Caption
-  Link: Link
-  Class: Class
-  Center: Center
-  Left: Left
-  Right: Right
-  Link to video: Link to video
-  add right column: add right column
+  add definition: add definition
   add left column: add left column
-  delete column: delete column
+  add right column: add right column
   add row above: add row above
   add row below: add row below
-  delete row: delete row
-  Head: Head
-  cell: cell
-  term: term
-  description: description
-  add definition: add definition
-  
-  # metatabs.yaml
-  Meta title: Meta title
-  Meta description: Meta description
+  Alt-Text: Alt-Text
   author: author
-  Manual date: Manual date
-  Last modified live (readonly): Last modified live (readonly)
-  Created at (readonly): Created at (readonly)
-  If not filled, the description is extracted from content.: If not filled, the description is extracted from content.
-  Taken from your user account if set.: Taken from your user account if set.
-  Used as fallback when no manual date is set.: Used as fallback when no manual date is set.
-  save: save
-
+  Bullet List: Bullet List
+  cancel: cancel
+  Caption: Caption
+  cell: cell
+  Center: Center
+  Class: Class
+  Code: Code
   Content: Content
+  Created at (readonly): Created at (readonly)
+  Definition List: Definition List
+  delete column: delete column
+  delete content-block: delete content-block
+  delete row: delete row
+  description: description
+  drag a picture or click to select: drag a picture or click to select
+  Head: Head
+  Headline: Headline
+  Horizontal Line: Horizontal Line
+  If not filled, the description is extracted from content.: If not filled, the description is extracted from content.
+  Image: Image
+  Last modified live (readonly): Last modified live (readonly)
+  Left: Left
+  Link: Link
+  Link to video: Link to video
+  Manual date: Manual date
+  Meta description: Meta description
   meta: meta
-  Saved successfully: Saved successfully
+  Meta title: Meta title
+  Numbered List: Numbered List
+  Paragraph: Paragraph
   Please correct the errors above: Please correct the errors above
+  Quote: Quote
+  Right: Right
+  Saved successfully: Saved successfully
+  save: save
+  save: save
+  table of contents: Table of Contents
+  Table: Table
+  Taken from your user account if set.: Taken from your user account if set.
+  term: term
+  Title: Title
+  Used as fallback when no manual date is set.: Used as fallback when no manual date is set.
+  Video: Video

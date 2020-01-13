@@ -1,56 +1,53 @@
 # Italiano
 it:
   add content-block: aggiungi blocco contenuto
-  cancel: Annulla
-  delete content-block: elimina blocco contenuto
-  save: Salva
-  Paragraph: Paragrafo
-  Headline: Titolo
-  Bullet List: Elenco puntato
-  Numbered List: Elenco numerato
-  Table: Tabella
-  Quote: Citazione
-  Image: Immagine
-  Video: Video
-  table of contents: Sommario
-  Horizontal Line: Linea orizzontale
-  Definition List: Elenco delle definizioni
-  Code: Codice
-  drag a picture or click to select: trascina un'immagine o fai clic per selezionare
-  Alt-Text: Testo alternativo
-  Title: Titolo
-  Caption: Didascalia
-  Link: Collegamento
-  Class: Classe
-  Center: Centro
-  Left: Sinistra
-  Right: Destra
-  Link to video: Collega al video
-  add right column: aggiungi colonna a destra
+  add definition: aggiungi definizione
   add left column: aggiungi colonna a sinistra
-  delete column: elimina colonna
+  add right column: aggiungi colonna a destra
   add row above: aggiungi la riga sopra
   add row below: aggiungi la riga sotto
-  delete row: elimina riga
-  Head: Intestazione
-  cell: cella
-  term: termine
-  description: descrizione
-  add definition: aggiungi definizione
-
-  # metatabs.yaml
-  Meta title: Titolo
-  Meta description: Descrizione
+  Alt-Text: Testo alternativo
   author: autore
-  Manual date: Data manuale
-  Last modified live (readonly): Ultima modifica (sola lettura)
-  Created at (readonly): Creato il (sola lettura)
-  If not filled, the description is extracted from content.: Se non compilato, la descrizione viene estratta dal contenuto.
-  Taken from your user account if set.: Tratto dalla tua utenza, se impostata.
-  Used as fallback when no manual date is set.: Utilizzato come ripiego quando non è impostata alcuna data manuale.
-  save: salva
-
+  Bullet List: Elenco puntato
+  cancel: Annulla
+  Caption: Didascalia
+  cell: cella
+  Center: Centro
+  Class: Classe
+  Code: Codice
   Content: Contenuto
+  Created at (readonly): Creato il (sola lettura)
+  Definition List: Elenco delle definizioni
+  delete column: elimina colonna
+  delete content-block: elimina blocco contenuto
+  delete row: elimina riga
+  description: descrizione
+  drag a picture or click to select: trascina un'immagine o fai clic per selezionare
+  Head: Intestazione
+  Headline: Titolo
+  Horizontal Line: Linea orizzontale
+  If not filled, the description is extracted from content.: Se non compilato, la descrizione viene estratta dal contenuto.
+  Image: Immagine
+  Last modified live (readonly): Ultima modifica (sola lettura)
+  Left: Sinistra
+  Link: Collegamento
+  Link to video: Collega al video
+  Manual date: Data manuale
+  Meta description: Descrizione
   meta: Metadati
-  Saved successfully: Salvato con successo
+  Meta title: Titolo
+  Numbered List: Elenco numerato
+  Paragraph: Paragrafo
   Please correct the errors above: Si prega di correggere gli errori sopra
+  Quote: Citazione
+  Right: Destra
+  Saved successfully: Salvato con successo
+  save: salva
+  save: Salva
+  table of contents: Sommario
+  Table: Tabella
+  Taken from your user account if set.: Tratto dalla tua utenza, se impostata.
+  term: termine
+  Title: Titolo
+  Used as fallback when no manual date is set.: Utilizzato come ripiego quando non è impostata alcuna data manuale.
+  Video: Video
