@@ -92,16 +92,15 @@ class Settings
 		return $labels;
 	}
 
-  //public static function getVuejsLabels()
   public static function getVuejsLabels($language)
 	{
-    if( empty($language) ){//temp
-      $language = 'en';//temp
-    }//temp
+    if( empty($language) ){
+      $language = 'en';
+    }
     
     // load the strings of the set language
 		$yaml = new Models\WriteYaml();
-    $labels = $yaml->getYaml('settings/languages', 'vuejs-'.$language.'.yaml');//temp
+    $labels = $yaml->getYaml('settings/languages', 'vuejs-'.$language.'.yaml');
 		
 		return $labels;
 	}
