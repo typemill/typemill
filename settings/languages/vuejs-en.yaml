@@ -1,0 +1,56 @@
+# English
+en:
+  add content-block: add content-block
+  cancel: cancel
+  delete content-block: delete content-block
+  save: save
+  Paragraph: Paragraph
+  Headline: Headline
+  Bullet List: Bullet List
+  Numbered List: Numbered List
+  Table: Table
+  Quote: Quote
+  Image: Image
+  Video: Video
+  table of contents: Table of Contents
+  Horizontal Line: Horizontal Line
+  Definition List: Definition List
+  Code: Code
+  drag a picture or click to select: drag a picture or click to select
+  Alt-Text: Alt-Text
+  Title: Title
+  Caption: Caption
+  Link: Link
+  Class: Class
+  Center: Center
+  Left: Left
+  Right: Right
+  Link to video: Link to video
+  add right column: add right column
+  add left column: add left column
+  delete column: delete column
+  add row above: add row above
+  add row below: add row below
+  delete row: delete row
+  Head: Head
+  cell: cell
+  term: term
+  description: description
+  add definition: add definition
+  
+  # metatabs.yaml
+  Meta title: Meta title
+  Meta description: Meta description
+  author: author
+  Manual date: Manual date
+  Last modified live (readonly): Last modified live (readonly)
+  Created at (readonly): Created at (readonly)
+  If not filled, the description is extracted from content.: If not filled, the description is extracted from content.
+  Taken from your user account if set.: Taken from your user account if set.
+  Used as fallback when no manual date is set.: Used as fallback when no manual date is set.
+  save: save
+
+  Content: Content
+  meta: meta
+  Saved successfully: Saved successfully
+  Please correct the errors above: Please correct the errors above

@@ -20,7 +20,7 @@ class Settings
     // load the strings of the set language
     $language = $settings['language'];
     $settings['labels'] = self::getLanguageLabels($language);
-    
+    $settings['vuejsLabels'] = self::getVuejsLabels($language);
 
 		# We know the used theme now so create the theme path 
 		$settings['themePath'] = $settings['rootPath'] . $settings['themeFolder'] . DIRECTORY_SEPARATOR . $settings['theme'];
@@ -88,6 +88,21 @@ class Settings
     // load the strings of the set language
 		$yaml = new Models\WriteYaml();
 		$labels = $yaml->getYaml('settings/languages', $language.'.yaml');
+		
+		return $labels;
+	}
+
+  //public static function getVuejsLabels()
+  public static function getVuejsLabels($language)
+	{
+    if( empty($language) ){//temp
+      $language = 'en';//temp
+    }//temp
+    
+    // load the strings of the set language
+		$yaml = new Models\WriteYaml();
+		//$labels = $yaml->getYaml('settings/languages', 'vue-blox.yaml');
+    $labels = $yaml->getYaml('settings/languages', 'vuejs-'.$language.'.yaml');//temp
 		
 		return $labels;
 	}
