@@ -6,8 +6,8 @@ const contentComponent = Vue.component('content-block', {
 				'<div v-if="newblock" class="newblock-info">Choose a content-type <button class="newblock-close" @click.prevent="closeNewBlock($event)">close</button></div>' +	
 				'<div class="blox-wrapper" :class="{ editactive: edit }">' +
 				 '<div class="sideaction" v-if="body">' + 
-				  '<button class="add" :disabled="disabled" title="add content-block" @click.prevent="addNewBlock($event)"><svg class="icon icon-plus"><use xlink:href="#icon-plus"></use></svg></button>' +
-				  '<button class="delete" :disabled="disabled" title="delete content-block" @click.prevent="deleteBlock($event)"><svg class="icon icon-close"><use xlink:href="#icon-close"></use></svg></button>' +
+				  '<button class="add" :disabled="disabled" :title="$t(\'add content-block\')" @click.prevent="addNewBlock($event)"><svg class="icon icon-plus"><use xlink:href="#icon-plus"></use></svg></button>' +
+				  '<button class="delete" :disabled="disabled" :title="$t(\'delete content-block\')" @click.prevent="deleteBlock($event)"><svg class="icon icon-close"><use xlink:href="#icon-close"></use></svg></button>' +
 				 '</div>' + 
 				 '<div class="background-helper" @keyup.enter="submitBlock" @click="getData">' +
 				  '<div class="component" ref="component">' +
@@ -15,8 +15,8 @@ const contentComponent = Vue.component('content-block', {
 				    '<component :disabled="disabled" :compmarkdown="compmarkdown" @updatedMarkdown="updateMarkdown" :is="componentType"></component>' +
 				   '</transition>' +
 				   '<div class="blox-buttons" v-if="edit">' + 
-				    '<button class="edit" :disabled="disabled" @click.prevent="saveBlock">save</button>' +
-				    '<button class="cancel" :disabled="disabled" @click.prevent="switchToPreviewMode">cancel</button>' +
+				    '<button class="edit" :disabled="disabled" @click.prevent="saveBlock">{{ $t(\'save\') }}</button>' +
+				    '<button class="cancel" :disabled="disabled" @click.prevent="switchToPreviewMode">{{ $t(\'cancel\') }}</button>' +
 				   '</div>' +
 				  '</div>' +
 				  '<div :class="preview" ref="preview"><slot><format-component></format-component></slot></div>' +
@@ -895,25 +895,25 @@ const tableComponent = Vue.component('table-component', {
 						'<tr v-for="(row, rowindex) in table">' +
 							'<td v-if="rowindex === 0" v-for="(value,colindex) in row" contenteditable="false" class="noteditable" @click="switchcolumnbar(value)">{{value}} ' +
 							  '<div v-if="columnbar === value" class="columnaction">' + 
-							     '<div class="actionline" @click="addrightcolumn(value)">add right column</div>' +
-								 '<div class="actionline" @click="addleftcolumn(value)">add left column</div>' +
-								 '<div class="actionline" @click="deletecolumn(value)">delete column</div>' +
+							     '<div class="actionline" @click="addrightcolumn(value)">{{ $t(\'add right column\') }}</div>' +
+								 '<div class="actionline" @click="addleftcolumn(value)">{{ $t(\'add left column\') }}</div>' +
+								 '<div class="actionline" @click="deletecolumn(value)">{{ $t(\'delete column\') }}</div>' +
 							  '</div>' +
 							'</td>' +
 							'<th v-if="rowindex === 1" v-for="(value,colindex) in row" :contenteditable="colindex !== 0 ? true : false" @click="switchrowbar(value)" @blur="updatedata($event,colindex,rowindex)" :class="colindex !== 0 ? editable : noteditable">' + 
 							 '<div v-if="colindex === 0 && rowbar === value" class="rowaction">' + 
-							     '<div class="actionline" @click="addaboverow(value)">add row above</div>' +
-								 '<div class="actionline" @click="addbelowrow(value)">add row below</div>' +
-								 '<div class="actionline" @click="deleterow(value)">delete row</div>' +
+							     '<div class="actionline" @click="addaboverow(value)">{{ $t(\'add row above\') }}</div>' +
+								 '<div class="actionline" @click="addbelowrow(value)">{{ $t(\'add row below\') }}</div>' +
+								 '<div class="actionline" @click="deleterow(value)">{{ $t(\'delete row\') }}</div>' +
 							  '</div>' + 
-							'{{value}}</th>' +
+							'{{ $t(value) }}</th>' +
 							'<td v-if="rowindex > 1" v-for="(value,colindex) in row" :contenteditable="colindex !== 0 ? true : false" @click="switchrowbar(value)" @blur="updatedata($event,colindex,rowindex)" :class="colindex !== 0 ? editable : noteditable">' + 
 							 '<div v-if="colindex === 0 && rowbar === value" class="rowaction">' + 
-							     '<div class="actionline" @click="addaboverow(value)">add row above</div>' +
-								 '<div class="actionline" @click="addbelowrow(value)">add row below</div>' +
-								 '<div class="actionline" @click="deleterow(value)">delete row</div>' +
+							     '<div class="actionline" @click="addaboverow(value)">{{ $t(\'add row above\') }}</div>' +
+								 '<div class="actionline" @click="addbelowrow(value)">{{ $t(\'add row below\') }}</div>' +
+								 '<div class="actionline" @click="deleterow(value)">{{ $t(\'delete row\') }}</div>' +
 							  '</div>' +
-							'{{ value }}</td>' +
+							'{{ $t(value) }}</td>' +
 						'</tr>' +
 					'</tbody>' +
 				'</table>' +
@@ -1092,13 +1092,13 @@ const definitionComponent = Vue.component('definition-component', {
 				'<draggable v-model="definitionList" :animation="150" @end="moveDefinition">' +
   			    '<div class="definitionRow" v-for="(definition, dindex) in definitionList" :key="definition.id">' +
 						'<svg class="icon icon-arrows-v"><use xlink:href="#icon-arrows-v"></use></svg>' +
-						'<input type="text" class="definitionTerm" placeholder="term" :value="definition.term" :disabled="disabled" @input="updateterm($event,dindex)" @blur="updateMarkdown">' +
+						'<input type="text" class="definitionTerm" v-bind:placeholder="$t(\'term\')" :value="definition.term" :disabled="disabled" @input="updateterm($event,dindex)" @blur="updateMarkdown">' +
 		  		  '<svg class="icon icon-dots-two-vertical"><use xlink:href="#icon-dots-two-vertical"></use></svg>' + 
-	  			  '<textarea class="definitionDescription" placeholder="description" v-html="definition.description" :disabled="disabled" @input="updatedescription($event, dindex)" @blur="updateMarkdown"></textarea>' +
+	  			  '<textarea class="definitionDescription" v-bind:placeholder="$t(\'description\')" v-html="definition.description" :disabled="disabled" @input="updatedescription($event, dindex)" @blur="updateMarkdown"></textarea>' +
 					  '<button class="delDL" @click.prevent="deleteDefinition(dindex)"><svg class="icon icon-minus"><use xlink:href="#icon-minus"></use></svg></button>' +
 				  '</div>' +
 				'</draggable>' +
-				'<button class="addDL" @click.prevent="addDefinition()"><svg class="icon icon-plus"><use xlink:href="#icon-plus"></use></svg> add definition</button>' +
+				'<button class="addDL" @click.prevent="addDefinition()"><svg class="icon icon-plus"><use xlink:href="#icon-plus"></use></svg> {{ $t(\'add definition\') }}</button>' +
 				'<div v-if="load" class="loadwrapper"><span class="load"></span></div>' +
 				'</div>',
 	mounted: function(){
@@ -1169,7 +1169,7 @@ const videoComponent = Vue.component('video-component', {
 	props: ['compmarkdown', 'disabled', 'load'],
 	template: '<div class="video dropbox">' +
 				'<div class="contenttype"><svg class="icon icon-play"><use xlink:href="#icon-play"></use></svg></div>' +
-				'<label for="video">Link to video: </label><input type="url" ref="markdown" placeholder="https://www.youtube.com/watch?v=" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown">' +
+				'<label for="video">{{ $t(\'Link to video\') }}: </label><input type="url" ref="markdown" placeholder="https://www.youtube.com/watch?v=" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown">' +
 				'<div v-if="load" class="loadwrapper"><span class="load"></span></div>' +
 				'</div>',
 	methods: {
@@ -1185,16 +1185,16 @@ const imageComponent = Vue.component('image-component', {
 	template: '<div class="dropbox">' +
 				'<input type="hidden" ref="markdown" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown" />' +
 				'<input type="file" name="image" accept="image/*" class="input-file" @change="onFileChange( $event )" /> ' +
-				'<p>drag a picture or click to select</p>' +
+				'<p>{{ $t(\'drag a picture or click to select\') }}</p>' +
 				'<div class="contenttype"><svg class="icon icon-image"><use xlink:href="#icon-image"></use></svg></div>' +	
 				'<img class="uploadPreview" :src="imgpreview" />' +
 				'<div v-if="load" class="loadwrapper"><span class="load"></span></div>' +
 				'<div class="imgmeta" v-if="imgmeta">' +
-				'<label for="imgalt">Alt-Text: </label><input name="imgalt" type="text" placeholder="alt" @input="createmarkdown" v-model="imgalt" max="100" />' +
-				'<label for="imgtitle">Title: </label><input name="imgtitle" type="text" placeholder="title" v-model="imgtitle" @input="createmarkdown" max="64" />' +
-				'<label for="imgcaption">Caption: </label><input title="imgcaption" type="text" placeholder="caption" v-model="imgcaption" @input="createmarkdown" max="140" />' +
-				'<label for="imgurl">Link: </label><input title="imgurl" type="url" placeholder="url" v-model="imglink" @input="createmarkdown" />' +
-				'<label for="imgclass">Class: </label><select title="imgclass" v-model="imgclass" @change="createmarkdown"><option value="center">Center</option><option value="left">Left</option><option value="right">Right</option><option value="youtube">Youtube</option><option value="vimeo">Vimeo</option></select>' +
+				'<label for="imgalt">{{ $t(\'Alt-Text\') }}: </label><input name="imgalt" type="text" placeholder="alt" @input="createmarkdown" v-model="imgalt" max="100" />' +
+				'<label for="imgtitle">{{ $t(\'Title\') }}: </label><input name="imgtitle" type="text" placeholder="title" v-model="imgtitle" @input="createmarkdown" max="64" />' +
+				'<label for="imgcaption">{{ $t(\'Caption\') }}: </label><input title="imgcaption" type="text" placeholder="caption" v-model="imgcaption" @input="createmarkdown" max="140" />' +
+				'<label for="imgurl">{{ $t(\'Link\') }}: </label><input title="imgurl" type="url" placeholder="url" v-model="imglink" @input="createmarkdown" />' +
+				'<label for="imgclass">{{ $t(\'Class\') }}: </label><select title="imgclass" v-model="imgclass" @change="createmarkdown"><option value="center">{{ $t(\'Center\') }}</option><option value="left">{{ $t(\'Left\') }}</option><option value="right">{{ $t(\'Right\') }}</option><option value="youtube">Youtube</option><option value="vimeo">Vimeo</option></select>' +
 				'<input title="imgid" type="hidden" placeholder="id" v-model="imgid" @input="createmarkdown" max="140" />' +
 				'</div></div>',
 	data: function(){
@@ -1467,6 +1467,11 @@ for(var i = 0; i < formatConfig.length; i++)
 }
 
 let editor = new Vue({
+  i18n: new VueI18n({
+    locale: language,
+    messages: vuejsLabels
+  }),
+  
     delimiters: ['${', '}'],
 	el: '#blox',
 /*	components: componentList, */
