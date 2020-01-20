@@ -32,11 +32,11 @@
 									
 									<div class="cardDescription">
 										<h2>{{ themeName }}</h2>
-										<p>{{ theme.description }}</p>
+										<p>{{ __('TYPEMILL_DESCRIPTION') }}</p>
 										<ul class="cardInfo">
 											<li>{{ theme.version ? theme.version : __('Unknown') }}</li><li>
 											{{ theme.licence ? theme.licence : __('Unkown') }}</li><li>
-											by {{ theme.author ? theme.author : __('Unknown') }}</li>{% if theme.homepage %}<li>
+											{{ __('by') }} {{ theme.author ? theme.author : __('Unknown') }}</li>{% if theme.homepage %}<li>
 											<a href="{{ theme.homepage}}" target="blank">{{ __('Web') }}</a></li>{% endif %}
 										</ul>
 									</div>
@@ -49,7 +49,7 @@
 										{% if field.type == 'fieldset' %}
 											
 											<fieldset class="subfield">
-												<legend>{{ field.legend }}</legend>
+												<legend>{{ __( field.legend ) }}</legend>
 												{% for field in field.fields %}
 													{% include '/partials/fields.twig' with {'itemName' : themeName, 'object' : 'themes' } %}
 												{% endfor %}
