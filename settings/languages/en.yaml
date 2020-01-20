@@ -1,4 +1,65 @@
 # English
+
+# themes/typemill/typemill.yaml
+ACTIVATE_SPECIAL_STARTPAGE_DESIGN: Activate Special Startpage-Design
+AUTHOR_INTRO: Author Intro
+BOTTOM: Bottom
+BY: by
+COUNT_CHAPTERS_IN_NAVIGATION?: Count chapters in navigation?
+DIFFERENT_DESIGN_FOR_STARTPAGE: Different Design for Startpage
+FACEBOOK: Facebook
+FORMAT: Format
+GITHUB: GitHub
+LABEL_FOR_CHAPTER: Label for Chapter
+LABEL_FOR_START_BUTTON: Label for Start Button
+LAST_MODIFIED_FORMAT: Last Modified Format
+LAST_MODIFIED: Last Modified
+LAST_MODIFIED_TEXT: Last Modified Text
+LINKEDIN: Linkedin
+LINK_TO_GIT_REPOSITORY: Link to git repository
+MAIL: Mail
+POSITION_OF_AUTHOR: Position of Author
+POSITION_OF_GIT_EDIT_LINK: Position of Git Edit Link
+POSITION_OF_MODIFIED_TEXT: Position of Modified Text
+POSITION_OF_SHARE_BUTTONS: Position of Share-Buttons
+SELECT_SHARE_BUTTONS: Select Share Buttons
+SHARE: Share
+SHOW_CHAPTER_NUMBERS: Show Chapter Numbers
+TOP: Top
+TWITTER: Twitter
+TYPEMILL_DESCRIPTION: The standard theme for Typemill. Responsive, minimal and without any dependencies. It uses the system fonts Calibri and Helvetica. No JavaScript is used.
+WHATSAPP: WhatsApp
+XING: Xing
+
+# system/author/layouts/layoutBlox.twig
+ADD: add
+BOLD: bold
+BULLET_LIST: Bullet List
+CHECK: check
+CODE: Code
+COG: cog
+CROSS: cross
+DEFINITION: Definition List
+DELETE_CLOSE: delete/close
+DELETE: delete
+EXTERNAL_LINK: external-link
+FOLDER: folder
+HEADLINE: Headline
+HOME: home
+HORIZONTAL_LINE: Horizontal Line
+IMAGE: Image
+ITALIC: italic
+LINK: link
+MOVE_VERTICAL: move vertical
+NUMBERED_LIST: Numbered List
+PARAGRAPH: Paragraph
+POWER_OFF: power-off
+QUOTES: Quote
+TABLE_OF_CONTENTS: Table of Contents
+TABLE: Table
+TEXT_FILE: text-file
+VIDEO: Video
+
 ACCOUNT: Account
 ACTIVE: Active
 ACTUAL_PASSWORD: Actual Password
