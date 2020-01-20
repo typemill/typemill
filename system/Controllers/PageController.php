@@ -40,7 +40,7 @@ class PageController extends Controller
 		try
 		{
 			/* if the cached structure is still valid, use it */
-			if($cache->validate('cache', 'lastCache.txt',600))
+			if($cache->validate('cache', 'lastCache.txt', 600))
 			{
 				$structure	= $this->getCachedStructure($cache);
 			}
@@ -75,7 +75,15 @@ class PageController extends Controller
 			echo $e->getMessage();
 			exit(1);
 		}
-		
+
+		# get the cached navigation here (structure without hidden files )
+		$navigation = $cache->getCache('cache', 'navigation.txt');
+		if(!$navigation)
+		{
+			# use the structure as navigation if there is no difference
+			$navigation = $structure;
+		}
+
 		# if the user is on startpage
 		if(empty($args))
 		{
@@ -93,7 +101,7 @@ class PageController extends Controller
 			/* if there is still no item, return a 404-page */
 			if(!$item)
 			{
-				return $this->render404($response, array( 'navigation' => $structure, 'settings' => $settings,  'base_url' => $base_url )); 
+				return $this->render404($response, array( 'navigation' => $navigation, 'settings' => $settings,  'base_url' => $base_url )); 
 			}
 
 			/* get breadcrumb for page */
@@ -124,7 +132,6 @@ class PageController extends Controller
 		
 		# get meta-Information
 		$writeYaml 		= new WriteYaml();
-
 		$metatabs 		= $writeYaml->getPageMeta($settings, $item);
 
 		if(!$metatabs)
@@ -196,12 +203,19 @@ class PageController extends Controller
 		$theme = $settings['theme'];
 		$route = empty($args) && isset($settings['themes'][$theme]['cover']) ? '/cover.twig' : '/index.twig';
 
+		# check if there is a custom theme css
+		$customcss = $writeYaml->checkFile('cache', $theme . '-custom.css');
+		if($customcss)
+		{
+			$this->c->assets->addCSS($base_url . '/cache/' . $theme . '-custom.css');
+		}
+
 		return $this->render($response, $route, [
 			'home'			=> $home,
-			'navigation' 	=> $structure, 
-			'title' 		=> $title,			
+			'navigation' 	=> $navigation, 
+			'title' 		=> $title,
 			'content' 		=> $contentHTML, 
-			'item' 			=> $item, 
+			'item' 			=> $item,
 			'breadcrumb' 	=> $breadcrumb, 
 			'settings' 		=> $settings,
 			'metatabs'		=> $metatabs,
@@ -225,15 +239,62 @@ class PageController extends Controller
 			return false;
 		}
 
-		/* create an array of object with the whole content of the folder */
-		$structure = Folder::getFolderContentDetails($structure, $uri->getBaseUrl(), $uri->getBasePath());		
+		# get the extended structure files with changes like navigation title or hidden pages
+		$yaml = new writeYaml();
+		$extended = $yaml->getYaml('cache', 'structure-extended.yaml');
 
-		/* cache navigation */
+		/* create an array of object with the whole content of the folder */
+		$structure = Folder::getFolderContentDetails($structure, $extended, $uri->getBaseUrl(), $uri->getBasePath());
+
+		/* cache structure */
 		$cache->updateCache('cache', 'structure.txt', 'lastCache.txt', $structure);
+
+		if($this->containsHiddenPages($extended))
+		{
+			# generate the navigation (delete empty pages)
+			$navigation = $this->createNavigationFromStructure($structure);
+
+			# cache navigation
+			$cache->updateCache('cache', 'navigation.txt', false, $navigation);
+		}
+		else
+		{
+			# make sure no separate navigation file is set
+			$cache->deleteFileWithPath('cache' . DIRECTORY_SEPARATOR . 'navigation.txt');
+		}
 		
 		return $structure;
 	}
 	
+	protected function containsHiddenPages($extended)
+	{
+		foreach($extended as $element)
+		{
+			if(isset($element['hide']) && $element['hide'] === true)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	protected function createNavigationFromStructure($navigation)
+	{
+		foreach ($navigation as $key => $element)
+		{
+			if($element->hide === true)
+			{
+				unset($navigation[$key]);
+			}
+			elseif(isset($element->folderContent))
+			{
+				$navigation[$key]->folderContent = $this->createNavigationFromStructure($element->folderContent);
+			}
+		}
+		
+		return $navigation;
+	}
+
 	protected function updateVersion($baseUrl)
 	{
 		/* check the latest public typemill version */

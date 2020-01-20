@@ -16,11 +16,10 @@ class Settings
 			$settings 			= array_merge($defaultSettings, $userSettings);
 		}
 
-    // i18n
-    // load the strings of the set language
-    $language = $settings['language'];
-    $settings['labels'] = self::getLanguageLabels($language);
-    
+	    # i18n
+    	# load the strings of the set language
+    	$language = $settings['language'];
+    	$settings['labels'] = self::getLanguageLabels($language);
 
 		# We know the used theme now so create the theme path 
 		$settings['themePath'] = $settings['rootPath'] . $settings['themeFolder'] . DIRECTORY_SEPARATOR . $settings['theme'];
@@ -77,15 +76,16 @@ class Settings
 	}
 
 
-    // i18n
-  public static function getLanguageLabels($language)
+    # i18n
+ 	public static function getLanguageLabels($language)
 	{
-    // if not present, set the English language
-    if( empty($language) ){
-      $language = 'en';
-    }
+    	# if not present, set the English language
+    	if( empty($language) )
+    	{
+      		$language = 'en';
+    	}
 
-    // load the strings of the set language
+    	# load the strings of the set language
 		$yaml = new Models\WriteYaml();
 		$labels = $yaml->getYaml('settings/languages', $language.'.yaml');
 		
@@ -124,7 +124,7 @@ class Settings
 		if($userSettings)
 		{
 			# whitelist settings that can be stored in usersettings (values are not relevant here, only keys)			
-			$allowedUserSettings = ['displayErrorDetails' => false,
+			$allowedUserSettings = ['displayErrorDetails' => true,
 									'title' => false,
 									'copyright' => false,
 									'language' => false,
@@ -151,7 +151,7 @@ class Settings
 			# merge usersettings with new settings
 			$settings 	= array_merge($userSettings, $settings);
 
-			/* write settings to yaml */
+			# write settings to yaml
 			$yaml = new Models\WriteYaml();
 			$yaml->updateYaml('settings', 'settings.yaml', $settings);					
 		}

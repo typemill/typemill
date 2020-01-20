@@ -10,7 +10,7 @@ class WriteCache extends Write
 	 * @return boolean for an invalid cache (false) and for a valid cache (true).
 	 */
 	public function validate($folderName, $fileName, $duration)
-	{		
+	{
 		if(isset($_SERVER['HTTP_CACHE_CONTROL']) && $_SERVER['HTTP_CACHE_CONTROL'] == 'max-age=0')
 		{
 			return false;
@@ -28,7 +28,7 @@ class WriteCache extends Write
 		}
 		
 		$lastRefresh = file_get_contents($folderName . DIRECTORY_SEPARATOR . $fileName);
-		
+
 		if(time() - $lastRefresh > $duration)
 		{
 			return false;

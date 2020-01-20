@@ -41,7 +41,7 @@ class Write
 		return true;
 	}
 	
-	protected function checkFile($folder, $file)
+	public function checkFile($folder, $file)
 	{
 		if(!file_exists($this->basePath . $folder . DIRECTORY_SEPARATOR . $file))
 		{
@@ -50,7 +50,7 @@ class Write
 		return true;
 	}
 
-	protected function checkFileWithPath($filepath)
+	public function checkFileWithPath($filepath)
 	{
 		if(!file_exists($this->basePath . $filepath))
 		{
@@ -62,7 +62,7 @@ class Write
 	public function writeFile($folder, $file, $data)
 	{
 		if($this->checkPath($folder))
-		{
+		{			
 			$filePath 	= $this->basePath . $folder . DIRECTORY_SEPARATOR . $file;
 			
 			$openFile 	= @fopen($filePath, "w");
@@ -70,11 +70,11 @@ class Write
 			if(!$openFile)
 			{
 				return false;
-			}
+			}			
 			
 			fwrite($openFile, $data);
 			fclose($openFile);
-			
+
 			return true;
 		}
 		return false;
@@ -118,8 +118,10 @@ class Write
 		$newOrder			= ($index < 10) ? '0' . $index : $index;
 
 		# create new path with foldername or filename but without file-type
-		$newPath 			= $this->basePath . 'content' . $folderPath . DIRECTORY_SEPARATOR . $newOrder . '-' . str_replace(" ", "-", $item->name);
+		# $newPath 			= $this->basePath . 'content' . $folderPath . DIRECTORY_SEPARATOR . $newOrder . '-' . str_replace(" ", "-", $item->name);
 		
+		$newPath 			= $this->basePath . 'content' . $folderPath . DIRECTORY_SEPARATOR . $newOrder . '-' . $item->slug;
+
 		if($item->elementType == 'folder')
 		{
 			$oldPath = $this->basePath . 'content' . $item->path;

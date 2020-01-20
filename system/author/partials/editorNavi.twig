@@ -20,11 +20,12 @@
 				v-for="item in items" 
 				ref="draggit" 
 				:freeze="freeze" 
-				:name="item.name" 
+				:name="item.name"
+				:hide="item.hide"
 				:active="item.active" 
 				:parent="item.activeParent" 
-				:level="item.keyPath" 
-				:root="root" 
+				:level="item.keyPath"
+				:root="root"
 				:url="item.urlRelWoF" 
 				:id="item.keyPath" 
 				:key="item.keyPath" 
@@ -57,7 +58,7 @@
 	<template id="navigation-template">
 		<li class="navi-item" :class="elementtype">
 			<div class="status" :class="status"></div>
-			<a v-bind:href="getUrl(root, url)" :class="checkActive(active,parent)"><span class="iconwrapper"><svg class="icon" :class="getIconClass(elementtype, filetype)"><use :xlink:href="getIcon(elementtype, filetype)"></use></svg></span><span :class="getLevel(level)">{{ name }}</span><span class="movewrapper"><span class="movewrapper"><svg class="icon icon-arrows-v"><use xlink:href="#icon-arrows-v"></use></svg></span></a>
+			<a v-bind:href="getUrl(root, url)" :class="checkActive(active,parent)"><span class="iconwrapper"><svg class="icon" :class="getIconClass(elementtype, filetype, hide)"><use :xlink:href="getIcon(elementtype, filetype, hide)"></use></svg></span><span :class="getLevel(level)">{{ name }}</span><span class="movewrapper"><span class="movewrapper"><svg class="icon icon-arrows-v"><use xlink:href="#icon-arrows-v"></use></svg></span></a>
 			<draggable v-if="folder" class="navi-list" tag="ul" 
 				@start="onStart" 
 				@end="onEnd" 
@@ -71,6 +72,7 @@
 					ref="draggit" 
 					:freeze="freeze" 
 					:name="item.name" 
+					:hide="item.hide"
 					:active="item.active" 
 					:parent="item.activeParent" 
 					:level="item.keyPath" 

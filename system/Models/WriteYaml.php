@@ -48,6 +48,14 @@ class WriteYaml extends Write
 			return false;
 		}
 
+		# compare with meta that are in use right now (e.g. changed theme, disabled plugin)
+		$metascheme = $this->getYaml('cache', 'metatabs.yaml');
+
+		if($metascheme)
+		{
+			$meta = $this->whitelistMeta($meta,$metascheme);
+		}
+
 		$meta = $this->addFileTimeToMeta($meta, $item, $settings);
 
 		return $meta;
@@ -114,6 +122,27 @@ class WriteYaml extends Write
 		
 		$meta = $this->addFileTimeToMeta($meta, $item, $settings);
 
+		return $meta;
+	}
+
+
+	private function whitelistMeta($meta, $metascheme)
+	{
+		# we have only 2 dimensions, so no recursive needed
+		foreach($meta as $tab => $values)
+		{
+			if(!isset($metascheme[$tab]))
+			{
+				unset($meta[$tab]);
+			}
+			foreach($values as $key => $value)
+			{
+				if(!isset($metascheme[$tab][$key]))
+				{
+					unset($meta[$tab][$key]);
+				}
+			}
+		}
 		return $meta;
 	}
 

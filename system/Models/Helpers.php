@@ -23,6 +23,5 @@ class Helpers{
 		}
 		$table .= '</table></body></html>';
 		echo $table;
-		exit;
 	}
 }

@@ -439,6 +439,10 @@ let meta = new Vue({
 	        .then(function (response) {
 	        	self.saved = true;
 	        	self.formErrors = self.formErrorsReset;
+	        	if(response.data.structure)
+	        	{
+	        		navi.items = response.data.structure;
+	        	}
 	        })
 	        .catch(function (error)
 	        {

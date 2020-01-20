@@ -3,6 +3,7 @@
 namespace Typemill\Controllers;
 
 use \Symfony\Component\Yaml\Yaml;
+use Typemill\Models\Write;
 use Typemill\Models\Fields;
 use Typemill\Models\Validation;
 use Typemill\Models\User;
@@ -91,7 +92,7 @@ class SettingsController extends Controller
 	
 	public function showThemes($request, $response, $args)
 	{
-		$userSettings 	= $this->c->get('settings');
+		$userSettings 	= $this->c->get('settings');		
 		$themes 		= $this->getThemes();
 		$themedata		= array();
 		$fieldsModel	= new Fields();
@@ -109,24 +110,40 @@ class SettingsController extends Controller
 			}
 
 			$themeSettings = \Typemill\Settings::getObjectSettings('themes', $themeName);
+
+			# add standard-textarea for custom css
+			$themeSettings['forms']['fields']['customcss'] = ['type' => 'textarea', 'label' => 'Custom CSS', 'rows' => 10, 'class' => 'codearea', 'description' => 'You can overwrite the theme-css with your own css here.'];
+
+			# load custom css-file
+			$write = new write();
+			$customcss = $write->getFile('cache', $themeName . '-custom.css');
+			$themeSettings['settings']['customcss'] = $customcss;
+
+
 			if($themeSettings)
 			{
 				/* store them as default theme data with author, year, default settings and field-definitions */
 				$themedata[$themeName] = $themeSettings;
 			}
-						
+			
 			if(isset($themeSettings['forms']['fields']))
 			{
-				$fields = $fieldsModel->getFields($userSettings, 'themes', $themeName, $themeSettings);				
-								
+				$fields = $fieldsModel->getFields($userSettings, 'themes', $themeName, $themeSettings);
+
 				/* overwrite original theme form definitions with enhanced form objects */
 				$themedata[$themeName]['forms']['fields'] = $fields;
 			}
 			
 			/* add the preview image */
-			$img = getcwd() . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $themeName . DIRECTORY_SEPARATOR . $themeName . '.jpg';
-			$img = file_exists($img) ? $img : false;
-				
+			$img = getcwd() . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $themeName . DIRECTORY_SEPARATOR . $themeName;
+			$jpg = $img . '.jpg';
+			$png = $img . '.png';
+			$img = file_exists($jpg) ? $jpg : false;
+			if(!$img)
+			{
+				$img = file_exists($png) ? $png : false;
+			}
+
 			$themedata[$themeName]['img'] = $img;
 		}
 		
@@ -134,7 +151,7 @@ class SettingsController extends Controller
 		$user		= new User();
 		$users		= $user->getUsers();
 		$route 		= $request->getAttribute('route');
-		
+
 		return $this->render($response, 'settings/themes.twig', array('settings' => $userSettings, 'themes' => $themedata, 'users' => $users, 'route' => $route->getName() ));
 	}
 	
@@ -244,6 +261,34 @@ class SettingsController extends Controller
 			
 			/* set theme name and delete theme settings from user settings for the case, that the new theme has no settings */
 			$userSettings['theme'] = $themeName;
+
+			# extract the custom css from user input
+			$customcss = isset($userInput['customcss']) ? $userInput['customcss'] : false;
+
+			# delete custom css from userinput
+			unset($userInput['customcss']);
+
+			$write = new write();
+
+			# make sure no file is set if there is no custom css
+			if(!$customcss OR $customcss == '')
+			{
+				# delete the css file if exists
+				$write->deleteFileWithPath('cache' . DIRECTORY_SEPARATOR . $themeName . '-custom.css');
+			}
+			else
+			{
+				if ( $customcss != strip_tags($customcss) )
+				{
+					$_SESSION['errors'][$themeName]['customcss'][] = 'custom css contains html';
+				}
+				else
+				{
+					# store css
+					$write = new write();
+					$write->writeFile('cache', $themeName . '-custom.css', $customcss);
+				}
+			}
 
 			if($userInput)
 			{

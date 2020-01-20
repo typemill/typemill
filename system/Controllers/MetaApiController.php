@@ -5,6 +5,7 @@ namespace Typemill\Controllers;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Typemill\Models\WriteYaml;
+use Typemill\Models\Folder;
 
 class MetaApiController extends ContentController
 {
@@ -23,10 +24,6 @@ class MetaApiController extends ContentController
 
 		$metatabs = $writeYaml->getYaml('system' . DIRECTORY_SEPARATOR . 'author', 'metatabs.yaml');
 
-		# load cached metadefinitions
-		# check if valid
-		# if not, refresh cache
-
 		# loop through all plugins
 		foreach($this->settings['plugins'] as $name => $plugin)
 		{
@@ -38,6 +35,14 @@ class MetaApiController extends ContentController
 					$metatabs = array_merge_recursive($metatabs, $pluginSettings['metatabs']);
 				}
 			}
+		}
+		
+		# add the meta from theme settings here
+		$themeSettings = \Typemill\Settings::getObjectSettings('themes', $this->settings['theme']);
+		
+		if($themeSettings && isset($themeSettings['metatabs']))
+		{
+			$metatabs = array_merge_recursive($metatabs, $themeSettings['metatabs']);
 		}
 
 		return $metatabs;
@@ -77,32 +82,37 @@ class MetaApiController extends ContentController
 		$metadefinitions = $this->aggregateMetaDefinitions();
 		
 		$metadata = [];
+		$metascheme = [];
 
 		foreach($metadefinitions as $tabname => $tab )
 		{
-			$metadata[$tabname] = [];
+			$metadata[$tabname] 	= [];
 
 			foreach($tab['fields'] as $fieldname => $fielddefinitions)
 			{
+				$metascheme[$tabname][$fieldname] = true;
 				$metadata[$tabname][$fieldname] = isset($pagemeta[$tabname][$fieldname]) ? $pagemeta[$tabname][$fieldname] : null;
 			}
 		}
+
+		# store the metascheme in cache for frontend
+		$writeYaml->updateYaml('cache', 'metatabs.yaml', $metascheme);
 
 		return $response->withJson(array('metadata' => $metadata, 'metadefinitions' => $metadefinitions, 'errors' => false));
 	}
 
 	public function updateArticleMeta(Request $request, Response $response, $args)
 	{
-		/* get params from call */
+		# get params from call
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri();
 
 		$tab 			= isset($this->params['tab']) ? $this->params['tab'] : false;
-		$metaData		= isset($this->params['data']) ? $this->params['data'] : false ;
+		$metaInput		= isset($this->params['data']) ? $this->params['data'] : false ;
 		$objectName		= 'meta';
 		$errors 		= false;
 
-		if(!$tab or !$metaData)
+		if(!$tab or !$metaInput)
 		{
 			return $response->withJson($this->errors, 404);
 		}
@@ -114,7 +124,7 @@ class MetaApiController extends ContentController
 		$validate 		= $this->getValidator();
 
 		# take the user input data and iterate over all fields and values
-		foreach($metaData as $fieldName => $fieldValue)
+		foreach($metaInput as $fieldName => $fieldValue)
 		{
 			# get the corresponding field definition from original plugin settings */
 			$fieldDefinition = isset($metaDefinitions[$tab]['fields'][$fieldName]) ? $metaDefinitions[$tab]['fields'][$fieldName] : false;
@@ -147,16 +157,66 @@ class MetaApiController extends ContentController
 		$writeYaml = new writeYaml();
 
 		# get existing metadata for page
-		$meta = $writeYaml->getYaml($this->settings['contentFolder'], $this->item->pathWithoutType . '.yaml');
+		$metaPage = $writeYaml->getYaml($this->settings['contentFolder'], $this->item->pathWithoutType . '.yaml');
+		
+		# get extended structure
+		$extended = $writeYaml->getYaml('cache', 'structure-extended.yaml');
+
+		# flag for changed structure
+		$structure = false;
+
+		if($tab == 'meta')
+		{
+			# normalize the meta-input
+			$metaInput['navtitle'] 	= (isset($metaInput['navtitle']) && $metaInput['navtitle'] !== null )? $metaInput['navtitle'] : '';
+			$metaInput['hide'] 		= (isset($metaInput['hide']) && $metaInput['hide'] !== null) ? $metaInput['hide'] : false;
+
+			# input values are empty but entry in structure exists
+			if(!$metaInput['hide'] && $metaInput['navtitle'] == "" && isset($extended[$this->item->urlRelWoF]))
+			{
+				# delete the entry in the structure
+				unset($extended[$this->item->urlRelWoF]);
+
+				$structure = true;
+			}
+
+			# check if navtitle or hide-value has been changed
+			elseif(
+				($metaPage['meta']['navtitle'] != $metaInput['navtitle']) 
+				OR 
+				($metaPage['meta']['hide'] != $metaInput['hide'])
+			)
+			{
+				# add new file data. Also makes sure that the value is set.
+				$extended[$this->item->urlRelWoF] = ['hide' => $metaInput['hide'], 'navtitle' => $metaInput['navtitle']];
+
+				$structure = true;
+			}
+
+			if($structure)
+			{
+				# store the file
+				$writeYaml->updateYaml('cache', 'structure-extended.yaml', $extended);
+
+				# recreate the draft structure
+				$this->setStructure($draft = true, $cache = false);
+
+				# set item in navigation active again
+				$activeItem = Folder::getItemForUrl($this->structure, $this->item->urlRel, $this->uri->getBaseUrl());
+
+				# send new structure to frontend
+				$structure = $this->structure;
+			}
+		}
 
 		# add the new/edited metadata
-		$meta[$tab] = $metaData;
+		$meta[$tab] = $metaInput;
 
 		# store the metadata
 		$writeYaml->updateYaml($this->settings['contentFolder'], $this->item->pathWithoutType . '.yaml', $meta);
 
 		# return with the new metadata
-		return $response->withJson(array('metadata' => $metaData, 'errors' => false));
+		return $response->withJson(array('metadata' => $metaInput, 'structure' => $structure, 'errors' => false));
 	}
 }
 

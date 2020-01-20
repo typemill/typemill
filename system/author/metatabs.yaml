@@ -30,3 +30,32 @@ meta:
       label: Created at (readonly)
       readonly: readonly
       class: medium
+    navtitle:
+      type: text
+      label: Navigation Title
+      class: medium
+      maxlength: 60
+    hide:
+      type: checkbox
+      label: Hide
+      checkboxlabel: Hide page from navigation
+      class: medium
+#    roles:
+#      type: select
+#      label: Show page to
+#      class: medium
+#      options:
+#        null: null
+#        public: Public (standard)
+#        members: Members only (logged in)
+#        customers: Customers only (paying)
+#    list:
+#      type: select
+#      label: List sub-pages 
+#      class: medium
+#      options:
+#        null: null
+#        standard: Standard order
+#        revert: Reverse order
+#        asc: Date ascending
+#        desc: Date descending

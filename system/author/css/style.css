@@ -411,7 +411,6 @@ footer{
 	margin: 0 0 20px 0;
 }
 
-
 /************************
 *  	OPEN-CLOSE BUTTON	*
 ************************/
@@ -972,6 +971,15 @@ ul.cardInfo{
 .cardField input, .cardField select, .cardField textarea{
 	background-color: #FFF;
 }
+textarea.codearea, .cardField textarea.codearea{
+    font-family: monospace;
+    background: #333;
+    color: #fff;
+}
+textarea.codearea:focus, .cardField textarea.codearea:focus{
+	border: 1px solid #333;
+}
+
 .cardFields fieldset.subfield{
 	padding: 20px;
 	border: 1px solid #ddd;
@@ -1018,7 +1026,7 @@ span.error{
 	line-height: 1em;
 }
 .cardInner span.error{
-	display: block;	
+	display: inline-block;	
 	margin-top: -8px;
 	margin-bottom: 8px;	
 }

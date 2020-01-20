@@ -1,6 +1,6 @@
 const navcomponent = Vue.component('navigation', {
 	template: '#navigation-template',
-	props: ['homepage', 'showForm', 'name', 'newItem', 'parent', 'active', 'filetype', 'status', 'elementtype', 'element', 'folder', 'level', 'url', 'root', 'freeze'],
+	props: ['homepage', 'showForm', 'name', 'hide', 'newItem', 'parent', 'active', 'filetype', 'status', 'elementtype', 'element', 'folder', 'level', 'url', 'root', 'freeze'],
 	data: function () {
 		return {
 			showForm: false,
@@ -88,8 +88,12 @@ const navcomponent = Vue.component('navigation', {
 			level = level.split('.').length;
 			return 'level-' + level;
 		},
-		getIcon : function(elementtype, filetype)
+		getIcon : function(elementtype, filetype, hide)
 		{
+			if(hide)
+			{
+				return '#icon-eye-blocked';
+			}
 			if(elementtype == 'file')
 			{
 				return '#icon-file-text-o';
@@ -99,8 +103,12 @@ const navcomponent = Vue.component('navigation', {
 				return '#icon-folder-o';
 			}
 		},
-		getIconClass : function(elementtype, filetype)
+		getIconClass : function(elementtype, filetype, hide)
 		{
+			if(hide)
+			{
+				return 'icon-eye-blocked ' + filetype;
+			}
 			if(elementtype == 'file')
 			{
 				return 'icon-file-text-o ' + filetype;

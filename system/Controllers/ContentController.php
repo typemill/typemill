@@ -9,6 +9,7 @@ use Typemill\Models\Validation;
 use Typemill\Models\Folder;
 use Typemill\Models\Write;
 use Typemill\Models\WriteCache;
+use Typemill\Models\WriteYaml;
 
 abstract class ContentController
 {
@@ -182,7 +183,7 @@ abstract class ContentController
 		
 		# set variables and objects
 		$this->write = new writeCache();
-				
+
 		# check, if cached structure is still valid 
 		if($cache && $this->write->validate('cache', 'lastCache.txt', 600))
 		{
@@ -199,16 +200,74 @@ abstract class ContentController
 			# if there is content, then get the content details
 			if(count($structure) > 0)
 			{
-				# create an array of object with the whole content of the folder
-				$structure = Folder::getFolderContentDetails($structure, $this->uri->getBaseUrl(), $this->uri->getBasePath());
+				# get the extended structure files with changes like navigation title or hidden pages
+				$yaml = new writeYaml();
+				$extended = $yaml->getYaml('cache', 'structure-extended.yaml');
+
+				# create an array of object with the whole content of the folder and changes from extended file
+				$structure = Folder::getFolderContentDetails($structure, $extended, $this->uri->getBaseUrl(), $this->uri->getBasePath());
 			}
 			
 			# cache navigation
 			$this->write->updateCache('cache', $filename, 'lastCache.txt', $structure);
 		}
-				
+		
 		$this->structure = $structure;
 		return true;
+	}
+
+	protected function renameExtended($item, $newFolder)
+	{
+		# get the extended structure files with changes like navigation title or hidden pages
+		$yaml = new writeYaml();
+		$extended = $yaml->getYaml('cache', 'structure-extended.yaml');
+
+		if(isset($extended[$item->urlRelWoF]))
+		{
+			$newUrl = $newFolder->urlRelWoF . '/' . $item->slug;
+
+			$entry = $extended[$item->urlRelWoF];
+			
+			unset($extended[$item->urlRelWoF]);
+			
+			$extended[$newUrl] = $entry;
+			$yaml->updateYaml('cache', 'structure-extended.yaml', $extended);
+		}
+
+		return true;
+	}
+
+	protected function deleteFromExtended()
+	{
+		# get the extended structure files with changes like navigation title or hidden pages
+		$yaml = new writeYaml();
+		$extended = $yaml->getYaml('cache', 'structure-extended.yaml');
+
+		if($this->item->elementType == "file" && isset($extended[$this->item->urlRelWoF]))
+		{
+			unset($extended[$this->item->urlRelWoF]);
+			$yaml->updateYaml('cache', 'structure-extended.yaml', $extended);
+		}
+
+		if($this->item->elementType == "folder")
+		{
+			$changed = false;
+
+			# delete all entries with that folder url
+			foreach($extended as $url => $entries)
+			{
+				if( strpos($url, $this->item->urlRelWoF) !== false )
+				{
+					$changed = true;
+					unset($extended[$url]);
+				}
+			}
+
+			if($changed)
+			{
+				$yaml->updateYaml('cache', 'structure-extended.yaml', $extended);
+			}
+		}
 	}
 
 	protected function setHomepage()
@@ -251,6 +310,7 @@ abstract class ContentController
 		}
 
 		$this->errors = ['errors' => ['message' => 'requested page-url not found']];
+
 		return false;
 	}
 	
@@ -334,6 +394,9 @@ abstract class ContentController
 				}
 				return rmdir($path);
 			}
+
+			# delete all files from the extended file
+			$this->deleteFromExtended();
 		}
 		return false;
 	}

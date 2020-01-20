@@ -16,7 +16,7 @@ class Folder
 	{
 		$folderItems 	= scandir($folderPath);
 		$folderContent 	= array();
-		
+
 		foreach ($folderItems as $key => $item)
 		{
 			if (!in_array($item, array(".","..")))
@@ -96,8 +96,8 @@ class Folder
 	* vars: multidimensional array with folder- and file-names
 	* returns: array of objects. Each object contains information about an item (file or folder).
 	*/	
-	public static function getFolderContentDetails(array $folderContent, $baseUrl, $fullSlugWithFolder = NULL, $fullSlugWithoutFolder = NULL, $fullPath = NULL, $keyPath = NULL, $chapter = NULL)
-	{	
+	public static function getFolderContentDetails(array $folderContent, $extended, $baseUrl, $fullSlugWithFolder = NULL, $fullSlugWithoutFolder = NULL, $fullPath = NULL, $keyPath = NULL, $chapter = NULL)
+	{
 		$contentDetails 	= [];
 		$iteration 			= 0;
 		$chapternr 			= 1;
@@ -147,8 +147,16 @@ class Folder
 				$item->chapter			= $chapter ? $chapter . '.' . $chapternr : $chapternr;
 				$item->active			= false;
 				$item->activeParent		= false;
+				$item->hide 			= false;
 
-				$item->folderContent 	= self::getFolderContentDetails($name, $baseUrl, $item->urlRel, $item->urlRelWoF, $item->path, $item->keyPath, $item->chapter);
+				# check if there are extended information
+				if($extended && isset($extended[$item->urlRelWoF]))
+				{
+					$item->name = ($extended[$item->urlRelWoF]['navtitle'] != '') ? $extended[$item->urlRelWoF]['navtitle'] : $item->name;
+					$item->hide = ($extended[$item->urlRelWoF]['hide'] === true) ? true : false;
+				}
+
+				$item->folderContent = self::getFolderContentDetails($name, $extended, $baseUrl, $item->urlRel, $item->urlRelWoF, $item->path, $item->keyPath, $item->chapter);
 			}
 			else
 			{
@@ -196,6 +204,14 @@ class Folder
 				$item->urlAbs			= $baseUrl . $fullSlugWithoutFolder . '/' . $item->slug;
 				$item->active			= false;
 				$item->activeParent		= false;
+				$item->hide 			= false;
+
+				# check if there are extended information
+				if($extended && isset($extended[$item->urlRelWoF]))
+				{
+					$item->name = ($extended[$item->urlRelWoF]['navtitle'] != '') ? $extended[$item->urlRelWoF]['navtitle'] : $item->name;
+					$item->hide = ($extended[$item->urlRelWoF]['hide'] === true) ? true : false;
+				}
 			}
 
 			$iteration++;
@@ -223,9 +239,9 @@ class Folder
 
 		foreach($folderContentDetails as $key => $item)
 		{
+			# set item active, needed to move item in navigation
 			if($item->urlRel === $url)
 			{
-				# set item active, needed for move item in navigation
 				$item->active = true;
 				$result = $item;
 			}
@@ -234,6 +250,7 @@ class Folder
 				$result = self::getItemForUrl($item->folderContent, $url, $baseUrl, $result);
 			}
 		}
+
 		return $result;
 	}
 
@@ -377,6 +394,30 @@ class Folder
 		unset($result[$last]);
 		
 		return array('structure' => $structure, 'item' => $item);
+	}
+
+	# NOT IN USE
+	public static function deleteItemWithKeyPath($structure, array $keys)
+	{
+		$result = &$structure;
+		$last = array_pop($keys);
+
+		foreach ($keys as $key)
+		{
+			if(isset($result[$key]->folderContent))
+			{
+				$result = &$result[$key]->folderContent;
+			}
+			else
+			{
+				$result = &$result[$key];
+			}
+		}
+
+		$item = $result[$last];
+		unset($result[$last]);
+		
+		return $structure;
 	}
 	
 	/* get breadcrumb as copied array, set elements active in original and mark parent element in original */

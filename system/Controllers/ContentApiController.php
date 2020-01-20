@@ -246,8 +246,11 @@ class ContentApiController extends ContentController
 			# update the live structure
 			$this->setStructure($draft = false, $cache = false);
 
-			#update the backend structure
+			# update the backend structure
 			$this->setStructure($draft = true, $cache = false);
+
+			# check if page is in extended structure and delete it
+			$this->deleteFromExtended();
 
 			# dispatch event
 			$this->c->dispatcher->dispatch('onPageDeleted', new OnPageDeleted($this->item));
@@ -324,12 +327,6 @@ class ContentApiController extends ContentController
 		$parentKeyFrom	= explode('.', $this->params['parent_id_from']);
 		$parentKeyTo	= explode('.', $this->params['parent_id_to']);
 		
-/*
-		echo '<pre>';
-		print_r(array($itemKeyPath 0,$parentKeyFrom navi,$parentKeyTo 2));
-		die();
-*/
-
 		# get the item from structure
 		$item 			= Folder::getItemWithKeyPath($this->structure, $itemKeyPath);
 
@@ -362,10 +359,16 @@ class ContentApiController extends ContentController
 			# delete item from folderContent
 			unset($folderContent[$itemKey]);
 		}
-		elseif($this->params['active'] == 'active')
+		else
 		{
+			# rename links in extended file
+			$this->renameExtended($item, $newFolder);
+
 			# an active file has been moved to another folder, so send new url with response
-			$url = $this->uri->getBaseUrl() . '/tm/content/' . $this->settings['editor'] . $newFolder->urlRelWoF . '/' . $item->slug;
+			if($this->params['active'] == 'active')
+			{
+				$url = $this->uri->getBaseUrl() . '/tm/content/' . $this->settings['editor'] . $newFolder->urlRelWoF . '/' . $item->slug;
+			}
 		}
 		
 		# add item to newFolder
