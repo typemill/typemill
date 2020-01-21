@@ -1,4 +1,11 @@
-cache
+cache/lastCache.txt
+cache/lastSitemap.txt
+cache/metatabs.yaml
+cache/navigation.txt
+cache/sitemap.xml
+cache/structure-draft.txt
+cache/structure-extended.yaml
+cache/structure.txt
 content/index.yaml
 content/00-Welcome/index.yaml
 content/00-Welcome/00-Setup.yaml
