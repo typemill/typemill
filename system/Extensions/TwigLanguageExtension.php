@@ -38,7 +38,7 @@ class TwigLanguageExtension extends \Twig_Extension
     $string = strtoupper( $string );
 
     //translates the string
-    $translated_label = $this->labels[$string];
+    $translated_label = isset($this->labels[$string]) ? $this->labels[$string] : null;
 
     // if the string is not present, set the original string
     if( empty($translated_label) ){

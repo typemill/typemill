@@ -13,6 +13,8 @@ use Typemill\Events\OnPagePublished;
 use Typemill\Events\OnPageUnpublished;
 use Typemill\Events\OnPageDeleted;
 use Typemill\Events\OnPageSorted;
+use \URLify;
+
 
 class ContentApiController extends ContentController
 {
@@ -412,13 +414,14 @@ class ContentApiController extends ContentController
 
 		return $response->withJson(array('data' => $internalStructure, 'errors' => false, 'url' => $url));
 	}
-	
-	public function createArticle(Request $request, Response $response, $args)
+
+
+	public function createPost(Request $request, Response $response, $args)
 	{
 		# get params from call
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri();
-		
+
 		# url is only needed, if an active page is moved
 		$url 			= false;
 		
@@ -426,7 +429,76 @@ class ContentApiController extends ContentController
 		if(!$this->setStructure($draft = true)){ return $response->withJson(array('data' => false, 'errors' => $this->errors, 'url' => $url), 404); }
 		
 		# validate input
-		if(!$this->validateNaviItem()){ return $response->withJson(array('data' => $this->structure, 'errors' => 'Special Characters not allowed. Length between 1 and 20 chars.', 'url' => $url), 422); }
+		if(!$this->validateNaviItem()){ return $response->withJson(array('data' => $this->structure, 'errors' => 'Special Characters not allowed. Length between 1 and 60 chars.', 'url' => $url), 422); }
+		
+		# get the ids (key path) for item, old folder and new folder
+		$folderKeyPath 	= explode('.', $this->params['folder_id']);
+		
+		# get the item from structure
+		$folder			= Folder::getItemWithKeyPath($this->structure, $folderKeyPath);
+
+		if(!$folder){ return $response->withJson(array('data' => $this->structure, 'errors' => 'We could not find this page. Please refresh and try again.', 'url' => $url), 404); }
+				
+		$name 		= $this->params['item_name'];
+		$slug 		= URLify::filter(iconv(mb_detect_encoding($this->params['item_name'], mb_detect_order(), true), "UTF-8", $this->params['item_name']));
+		$namePath 	= date("YmdHi") . '-' . $slug;
+		$folderPath	= 'content' . $folder->path;
+		$content 	= json_encode(['# ' . $name, 'Content']);
+
+		# initialise write object
+		$write 		= new WriteYaml();
+		
+		# check, if name exists
+		if($write->checkFile($folderPath, $namePath . '.txt') OR $write->checkFile($folderPath, $namePath . '.md'))
+		{
+			return $response->withJson(array('data' => $this->structure, 'errors' => 'There is already a page with this name. Please choose another name.', 'url' => $url), 404);
+		}
+		
+		if(!$write->writeFile($folderPath, $namePath . '.txt', $content))
+		{
+			return $response->withJson(array('data' => $this->structure, 'errors' => 'We could not create the file. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404);
+		}
+
+
+		# get extended structure
+		$extended 	= $write->getYaml('cache', 'structure-extended.yaml');
+
+		# create the url for the item
+		$urlWoF 	= $folder->urlRelWoF . '/' . $slug;
+
+		# add the navigation name to the item htmlspecialchars needed for frensh language
+		$extended[$urlWoF] = ['hide' => false, 'navtitle' => $name];
+
+		# store the extended structure
+		$write->updateYaml('cache', 'structure-extended.yaml', $extended);
+
+
+		# update the structure for editor
+		$this->setStructure($draft = true, $cache = false);
+
+		$folder	= Folder::getItemWithKeyPath($this->structure, $folderKeyPath);
+
+		# activate this if you want to redirect after creating the page...
+		# $url = $this->uri->getBaseUrl() . '/tm/content/' . $this->settings['editor'] . $folder->urlRelWoF . '/' . $slug;
+		
+		return $response->withJson(array('posts' => $folder, $this->structure, 'errors' => false, 'url' => $url));
+	}
+
+	
+	public function createArticle(Request $request, Response $response, $args)
+	{
+		# get params from call
+		$this->params 	= $request->getParams();
+		$this->uri 		= $request->getUri();
+
+		# url is only needed, if an active page is moved
+		$url 			= false;
+		
+		# set structure
+		if(!$this->setStructure($draft = true)){ return $response->withJson(array('data' => false, 'errors' => $this->errors, 'url' => $url), 404); }
+		
+		# validate input
+		if(!$this->validateNaviItem()){ return $response->withJson(array('data' => $this->structure, 'errors' => 'Special Characters not allowed. Length between 1 and 60 chars.', 'url' => $url), 422); }
 		
 		# get the ids (key path) for item, old folder and new folder
 		$folderKeyPath 	= explode('.', $this->params['folder_id']);
@@ -440,16 +512,19 @@ class ContentApiController extends ContentController
 		# get the content of the target folder
 		$folderContent	= $folder->folderContent;
 		
+		$name 		= $this->params['item_name'];
+		$slug 		= URLify::filter(iconv(mb_detect_encoding($this->params['item_name'], mb_detect_order(), true), "UTF-8", $this->params['item_name']));
+
 		# create the name for the new item
-		$nameParts 	= Folder::getStringParts($this->params['item_name']);		
-		$name 		= implode("-", $nameParts);
-		$slug		= $name;
+		# $nameParts 	= Folder::getStringParts($this->params['item_name']);
+		# $name 		= implode("-", $nameParts);
+		# $slug		= $name;
 
 		# initialize index
 		$index = 0;
 		
 		# initialise write object
-		$write = new Write();
+		$write = new WriteYaml();
 
 		# iterate through the whole content of the new folder
 		$writeError = false;
@@ -472,13 +547,15 @@ class ContentApiController extends ContentController
 		if($writeError){ return $response->withJson(array('data' => $this->structure, 'errors' => 'Something went wrong. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404); }
 
 		# add prefix number to the name
-		$namePath 	= $index > 9 ? $index . '-' . $name : '0' . $index . '-' . $name;
+#		$namePath 	= $index > 9 ? $index . '-' . $name : '0' . $index . '-' . $name;
+		$namePath 	= $index > 9 ? $index . '-' . $slug : '0' . $index . '-' . $slug;
 		$folderPath	= 'content' . $folder->path;
 		
-		$title = implode(" ", $nameParts); 
+#		$title = implode(" ", $nameParts); 
 
 		# create default content
-		$content = json_encode(['# ' . $title, 'Content']);
+#		$content = json_encode(['# ' . $title, 'Content']);
+		$content = json_encode(['# ' . $name, 'Content']);
 		
 		if($this->params['type'] == 'file')
 		{
@@ -494,8 +571,27 @@ class ContentApiController extends ContentController
 				return $response->withJson(array('data' => $this->structure, 'errors' => 'We could not create the folder. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404);
 			}
 			$write->writeFile($folderPath . DIRECTORY_SEPARATOR . $namePath, 'index.txt', $content);
+
+			# always redirect to a folder
+			$url = $this->uri->getBaseUrl() . '/tm/content/' . $this->settings['editor'] . $folder->urlRelWoF . '/' . $slug;
+
 		}
 		
+
+		# get extended structure
+		$extended = $write->getYaml('cache', 'structure-extended.yaml');
+
+		# create the url for the item
+		$urlWoF = $folder->urlRelWoF . '/' . $slug;
+
+		# add the navigation name to the item htmlspecialchars needed for frensh language
+		$extended[$urlWoF] = ['hide' => false, 'navtitle' => $name];
+
+		# store the extended structure
+		$write->updateYaml('cache', 'structure-extended.yaml', $extended);
+
+
+
 		# update the structure for editor
 		$this->setStructure($draft = true, $cache = false);
 
@@ -506,7 +602,7 @@ class ContentApiController extends ContentController
 		}
 
 		# activate this if you want to redirect after creating the page...
-		# $url = $this->uri->getBaseUrl() . '/tm/content' . $folder->urlRelWoF . '/' . $name;
+		# $url = $this->uri->getBaseUrl() . '/tm/content/' . $this->settings['editor'] . $folder->urlRelWoF . '/' . $slug;
 		
 		return $response->withJson(array('data' => $this->structure, 'errors' => false, 'url' => $url));
 	}
@@ -527,15 +623,18 @@ class ContentApiController extends ContentController
 		if(!$this->validateBaseNaviItem()){ return $response->withJson(array('data' => $this->structure, 'errors' => 'Special Characters not allowed. Length between 1 and 20 chars.', 'url' => $url), 422); }
 				
 		# create the name for the new item
-		$nameParts 	= Folder::getStringParts($this->params['item_name']);		
-		$name 		= implode("-", $nameParts);
-		$slug		= $name;
+#		$nameParts 	= Folder::getStringParts($this->params['item_name']);		
+#		$name 		= implode("-", $nameParts);
+#		$slug		= $name;
+
+		$name 		= $this->params['item_name'];
+		$slug 		= URLify::filter(iconv(mb_detect_encoding($this->params['item_name'], mb_detect_order(), true), "UTF-8", $this->params['item_name']));
 
 		# initialize index
 		$index = 0;		
 		
 		# initialise write object
-		$write = new Write();
+		$write = new WriteYaml();
 
 		# iterate through the whole content of the new folder
 		$writeError = false;
@@ -558,11 +657,12 @@ class ContentApiController extends ContentController
 		if($writeError){ return $response->withJson(array('data' => $this->structure, 'errors' => 'Something went wrong. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404); }
 
 		# add prefix number to the name
-		$namePath 	= $index > 9 ? $index . '-' . $name : '0' . $index . '-' . $name;
+		$namePath 	= $index > 9 ? $index . '-' . $slug : '0' . $index . '-' . $slug;
 		$folderPath	= 'content';
 		
 		# create default content
-		$content = json_encode(['# Add Title', 'Add Content']);
+#		$content = json_encode(['# Add Title', 'Add Content']);
+		$content = json_encode(['# ' . $name, 'Content']);
 		
 		if($this->params['type'] == 'file')
 		{
@@ -578,7 +678,24 @@ class ContentApiController extends ContentController
 				return $response->withJson(array('data' => $this->structure, 'errors' => 'We could not create the folder. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404);
 			}
 			$write->writeFile($folderPath . DIRECTORY_SEPARATOR . $namePath, 'index.txt', $content);
+
+			# activate this if you want to redirect after creating the page...
+			$url = $this->uri->getBaseUrl() . '/tm/content/' . $this->settings['editor'] . '/' . $slug;			
 		}
+
+
+		# get extended structure
+		$extended = $write->getYaml('cache', 'structure-extended.yaml');
+
+		# create the url for the item
+		$urlWoF = '/' . $slug;
+
+		# add the navigation name to the item htmlspecialchars needed for frensh language
+		$extended[$urlWoF] = ['hide' => false, 'navtitle' => $name];
+
+		# store the extended structure
+		$write->updateYaml('cache', 'structure-extended.yaml', $extended);
+
 
 		# update the structure for editor
 		$this->setStructure($draft = true, $cache = false);
@@ -1006,8 +1123,6 @@ class ContentApiController extends ContentController
 			return $response->withJson(['errors' => ['message' => 'Could not write to file. Please check if the file is writable']], 404);
 		}
 	
-		/* set safe mode to escape javascript and html in markdown */
-		$parsedown->setSafeMode(true);
 
 		/* parse markdown-file to content-array, if title parse title. */
 		if($this->params['block_id'] == 0)
@@ -1016,6 +1131,9 @@ class ContentApiController extends ContentController
 		}
 		else
 		{
+			/* set safe mode to escape javascript and html in markdown */
+			$parsedown->setSafeMode(true);
+
 			$blockArray 	= $parsedown->text($blockMarkdown);
 		}
 		

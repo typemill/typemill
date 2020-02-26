@@ -77,7 +77,8 @@ class Field
 	/* defines additional data, that are allowed for fields */
 	private $helpers			= array(
 									'help',
-									'description'
+									'description',
+									'fieldsize'
 								);
 		
 	public function __construct($fieldName, array $fieldConfigs)
