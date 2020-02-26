@@ -136,15 +136,18 @@ class SettingsController extends Controller
 			
 			/* add the preview image */
 			$img = getcwd() . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $themeName . DIRECTORY_SEPARATOR . $themeName;
-			$jpg = $img . '.jpg';
-			$png = $img . '.png';
-			$img = file_exists($jpg) ? $jpg : false;
-			if(!$img)
+
+			$image = false;
+			if(file_exists($img . '.jpg'))
 			{
-				$img = file_exists($png) ? $png : false;
+				$image = $themeName . '.jpg';
+			}
+			if(file_exists($img . '.png'))
+			{
+				$image = $themeName . '.png';
 			}
 
-			$themedata[$themeName]['img'] = $img;
+			$themedata[$themeName]['img'] = $image;
 		}
 		
 		/* add the users for navigation */

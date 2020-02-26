@@ -129,7 +129,6 @@ $container['assets'] = function($c)
 	return new \Typemill\Assets($c['request']->getUri()->getBaseUrl());
 };
 
-
 /************************
 * 	DECIDE FOR SESSION	*
 ************************/

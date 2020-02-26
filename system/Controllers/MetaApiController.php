@@ -18,11 +18,21 @@ class MetaApiController extends ContentController
 	}
 
 	# get the standard meta-definitions and the meta-definitions from plugins (same for all sites)
-	public function aggregateMetaDefinitions()
+	public function aggregateMetaDefinitions($folder = null)
 	{
 		$writeYaml = new writeYaml();
 
 		$metatabs = $writeYaml->getYaml('system' . DIRECTORY_SEPARATOR . 'author', 'metatabs.yaml');
+
+		if($folder)
+		{
+			$metatabs['meta']['fields']['contains'] = [
+				'type' 		=> 'radio',
+				'label'		=> 'This folder contains:',
+				'options' 	=> ['pages' => 'PAGES (sort in navigation with drag & drop)', 'posts' => 'POSTS (sorted by publish date, for news or blogs)'],
+				'class'		=> 'medium'
+			];
+		}
 
 		# loop through all plugins
 		foreach($this->settings['plugins'] as $name => $plugin)
@@ -78,8 +88,20 @@ class MetaApiController extends ContentController
 			$pagemeta = $writeYaml->getPageMetaDefaults($this->content, $this->settings, $this->item);
 		}
 
-		# get global metadefinitions
-		$metadefinitions = $this->aggregateMetaDefinitions();
+		# if item is a folder
+		if($this->item->elementType == "folder" && isset($this->item->contains))
+		{
+
+			$pagemeta['meta']['contains'] = isset($pagemeta['meta']['contains']) ? $pagemeta['meta']['contains'] : $this->item->contains;
+
+			# get global metadefinitions
+			$metadefinitions = $this->aggregateMetaDefinitions($folder = true);
+		}
+		else
+		{
+			# get global metadefinitions
+			$metadefinitions = $this->aggregateMetaDefinitions();
+		}
 		
 		$metadata = [];
 		$metascheme = [];
@@ -98,7 +120,7 @@ class MetaApiController extends ContentController
 		# store the metascheme in cache for frontend
 		$writeYaml->updateYaml('cache', 'metatabs.yaml', $metascheme);
 
-		return $response->withJson(array('metadata' => $metadata, 'metadefinitions' => $metadefinitions, 'errors' => false));
+		return $response->withJson(array('metadata' => $metadata, 'metadefinitions' => $metadefinitions, 'item' => $this->item, 'errors' => false));
 	}
 
 	public function updateArticleMeta(Request $request, Response $response, $args)
@@ -117,8 +139,25 @@ class MetaApiController extends ContentController
 			return $response->withJson($this->errors, 404);
 		}
 
-		# load metadefinitions
-		$metaDefinitions = $this->aggregateMetaDefinitions();
+		# set structure
+		if(!$this->setStructure($draft = true)){ return $response->withJson($this->errors, 404); }
+
+		# set item 
+		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
+
+		# if item is a folder
+		if($this->item->elementType == "folder")
+		{
+			$pagemeta['meta']['contains'] = isset($pagemeta['meta']['contains']) ? $pagemeta['meta']['contains'] : $this->item->contains;
+
+			# get global metadefinitions
+			$metaDefinitions = $this->aggregateMetaDefinitions($folder = true);
+		}
+		else
+		{
+			# get global metadefinitions
+			$metaDefinitions = $this->aggregateMetaDefinitions();
+		}
 
 		# create validation object
 		$validate 		= $this->getValidator();
@@ -147,12 +186,6 @@ class MetaApiController extends ContentController
 
 		# return validation errors
 		if($errors){ return $response->withJson(array('errors' => $errors),422); }
-
-		# set structure
-		if(!$this->setStructure($draft = true)){ return $response->withJson($this->errors, 404); }
-
-		# set item 
-		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
 		
 		$writeYaml = new writeYaml();
 
@@ -167,6 +200,50 @@ class MetaApiController extends ContentController
 
 		if($tab == 'meta')
 		{
+
+			# if manual date has been modified
+			if(isset($metaInput['manualdate']) && !isset($metaPage['meta']['manualdate']) OR ($metaInput['manualdate'] != $metaPage['meta']['manualdate']))
+			{
+				# update the time
+				$metaInput['time'] = date('H-i-s', time());
+
+				# if it is a post, then rename the post
+				if($this->item->elementType == "file" && strlen($this->item->order) == 12)
+				{
+					# create file-prefix with date
+					$datetime 	= $metaInput['manualdate'] . '-' . $metaInput['time'];
+					$datetime 	= implode(explode('-', $datetime));
+					$datetime	= substr($datetime,0,12);
+
+					# create the new filename
+					$pathWithoutFile 	= str_replace($this->item->originalName, "", $this->item->path);
+					$newPathWithoutType	= $pathWithoutFile . $datetime . '-' . $this->item->slug;
+
+					$writeYaml->renamePost($this->item->pathWithoutType, $newPathWithoutType);
+
+					# recreate the draft structure
+					$this->setStructure($draft = true, $cache = false);
+
+					# update item
+					$this->setItem();
+				}
+			}
+
+			# if folder has changed and contains pages instead of posts or posts instead of pages
+			if($this->item->elementType == "folder" && ($metaPage['meta']['contains'] !== $metaInput['contains']))
+			{
+				$structure = true;
+
+				if($metaInput['contains'] == "posts")
+				{
+					$writeYaml->transformPagesToPosts($this->item);
+				}
+				if($metaInput['contains'] == "pages")
+				{
+					$writeYaml->transformPostsToPages($this->item);
+				}
+			}
+
 			# normalize the meta-input
 			$metaInput['navtitle'] 	= (isset($metaInput['navtitle']) && $metaInput['navtitle'] !== null )? $metaInput['navtitle'] : '';
 			$metaInput['hide'] 		= (isset($metaInput['hide']) && $metaInput['hide'] !== null) ? $metaInput['hide'] : false;
@@ -179,9 +256,8 @@ class MetaApiController extends ContentController
 
 				$structure = true;
 			}
-
-			# check if navtitle or hide-value has been changed
 			elseif(
+				# check if navtitle or hide-value has been changed
 				($metaPage['meta']['navtitle'] != $metaInput['navtitle']) 
 				OR 
 				($metaPage['meta']['hide'] != $metaInput['hide'])
@@ -192,21 +268,6 @@ class MetaApiController extends ContentController
 
 				$structure = true;
 			}
-
-			if($structure)
-			{
-				# store the file
-				$writeYaml->updateYaml('cache', 'structure-extended.yaml', $extended);
-
-				# recreate the draft structure
-				$this->setStructure($draft = true, $cache = false);
-
-				# set item in navigation active again
-				$activeItem = Folder::getItemForUrl($this->structure, $this->item->urlRel, $this->uri->getBaseUrl());
-
-				# send new structure to frontend
-				$structure = $this->structure;
-			}
 		}
 
 		# add the new/edited metadata
@@ -215,8 +276,26 @@ class MetaApiController extends ContentController
 		# store the metadata
 		$writeYaml->updateYaml($this->settings['contentFolder'], $this->item->pathWithoutType . '.yaml', $meta);
 
+		if($structure)
+		{
+			# store the extended file
+			$writeYaml->updateYaml('cache', 'structure-extended.yaml', $extended);
+
+			# recreate the draft structure
+			$this->setStructure($draft = true, $cache = false);
+
+			# update item
+			$this->setItem();
+
+			# set item in navigation active again
+			$activeItem = Folder::getItemForUrl($this->structure, $this->item->urlRel, $this->uri->getBaseUrl());
+
+			# send new structure to frontend
+			$structure = $this->structure;
+		}
+
 		# return with the new metadata
-		return $response->withJson(array('metadata' => $metaInput, 'structure' => $structure, 'errors' => false));
+		return $response->withJson(array('metadata' => $metaInput, 'structure' => $structure, 'item' => $this->item, 'errors' => false));
 	}
 }
 

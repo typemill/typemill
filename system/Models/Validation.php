@@ -48,6 +48,16 @@ class Validation
 			return false;
 		}, 'wrong password');
 		
+		Validator::addRule('navigation', function($field, $value, array $params, array $fields)
+		{
+			$format = '/[@#^*()=\[\]{};:"\\|,.<>\/]/';
+			if ( preg_match($format, $value))
+			{
+				return false;
+			}
+			return true;
+		}, 'contains special characters');
+
 		Validator::addRule('noSpecialChars', function($field, $value, array $params, array $fields)
 		{
 			$format = '/[!@#$%^&*()_+=\[\]{};\':"\\|,.<>\/?]/';
@@ -283,11 +293,12 @@ class Validation
 	public function navigationItem(array $params)
 	{
 		$v = new Validator($params);
-						
+
 		$v->rule('required', ['folder_id', 'item_name', 'type', 'url']);
 		$v->rule('regex', 'folder_id', '/^[0-9.]+$/i');
-		$v->rule('noSpecialChars', 'item_name');
-		$v->rule('lengthBetween', 'item_name', 1, 40);
+#		$v->rule('noSpecialChars', 'item_name');
+		$v->rule('navigation', 'item_name');
+		$v->rule('lengthBetween', 'item_name', 1, 60);
 		$v->rule('in', 'type', ['file', 'folder']);
 		
 		if($v->validate()) 
@@ -305,7 +316,8 @@ class Validation
 		$v = new Validator($params);
 						
 		$v->rule('required', ['item_name', 'type', 'url']);
-		$v->rule('noSpecialChars', 'item_name');
+#		$v->rule('noSpecialChars', 'item_name');
+		$v->rule('navigation', 'item_name');
 		$v->rule('lengthBetween', 'item_name', 1, 40);
 		$v->rule('in', 'type', ['file', 'folder']);
 		
@@ -397,7 +409,7 @@ class Validation
 			case "text":
 				$v->rule('noHTML', $fieldName);
 				$v->rule('lengthMax', $fieldName, 500);
-				$v->rule('regex', $fieldName, '/^[\pL0-9_ \-\.\?\!\/\:]*$/u');
+#				$v->rule('regex', $fieldName, '/^[\pL0-9_ \-\.\?\!\/\:]*$/u');
 				break;
 			case "textarea":
 				$v->rule('noHTML', $fieldName);

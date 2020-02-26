@@ -75,6 +75,24 @@
 			
 		</section>
 
+		{% if item.elementType == "folder" %}
+
+			<section id="posts" v-if="posts">
+				<div class="posts formWrapper">
+					<input v-model="posttitle" type="text" maxlength="60" name="title" placeholder="add a short title">
+					<button type="button" @click.prevent="createPost()" class="post-button">create new post</button>
+				</div>
+				<div>
+					<single-post
+					  v-for="post in posts"
+					  v-bind:key="post.keyPath"
+					  v-bind:post="post"
+					></single-post>
+				</div>
+			</section>
+
+		{% endif %}
+
 		{% include 'editor/publish-controller.twig' %}
 
 		<input id="path" type="hidden" value="{{ item.urlRel }}" required readonly />

@@ -1,6 +1,6 @@
 const navcomponent = Vue.component('navigation', {
 	template: '#navigation-template',
-	props: ['homepage', 'showForm', 'name', 'hide', 'newItem', 'parent', 'active', 'filetype', 'status', 'elementtype', 'element', 'folder', 'level', 'url', 'root', 'freeze'],
+	props: ['homepage', 'showForm', 'name', 'hide', 'newItem', 'parent', 'active', 'filetype', 'status', 'elementtype', 'contains', 'element', 'folder', 'level', 'url', 'root', 'freeze'],
 	data: function () {
 		return {
 			showForm: false,
@@ -134,9 +134,9 @@ const navcomponent = Vue.component('navigation', {
 		{
 			publishController.errors.message = false;
 
-			if(this.$root.$data.format.test(this.newItem) || !this.newItem || this.newItem.length > 40)
+			if(this.$root.$data.format.test(this.newItem) || !this.newItem || this.newItem.length > 60)
 			{
-				publishController.errors.message = 'Special Characters are not allowed. Length between 1 and 40.';
+				publishController.errors.message = 'Special Characters are not allowed. Length between 1 and 60.';
 				return;
 			}
 			
@@ -194,13 +194,13 @@ let navi = new Vue({
 	data: function () {
 		return {
 			title: "Navigation",
-			items: JSON.parse(document.getElementById("data-navi").dataset.navi),
+			items: navigation, 
 			homepage: JSON.parse(document.getElementById("data-navi").dataset.homepage),
 			editormode: document.getElementById("data-navi").dataset.editormode,
 			root: document.getElementById("main").dataset.url,
 			freeze: false,
 			modalWindow: false,
-			format: /[!@#$%^&*()_+=\[\]{};':"\\|,.<>\/?]/,
+			format: /[@#*()=\[\]{};:"\\|,.<>\/]/,
 			folderName: '',
 			showForm: false,
 			newItem: '',

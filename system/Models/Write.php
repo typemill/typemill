@@ -110,7 +110,7 @@ class Write
 		return false;
 	}
 	
-	public function moveElement($item, $folderPath, $index)
+	public function moveElement($item, $folderPath, $index, $date = null)
 	{
 		$filetypes			= array('md', 'txt', 'yaml');
 		
@@ -159,4 +159,35 @@ class Write
 
 		return $result;		
 	}
+
+	public function renamePost($oldPathWithoutType, $newPathWithoutType)
+	{
+		$filetypes			= array('md', 'txt', 'yaml');
+				
+		$oldPath 			= $this->basePath . 'content' . $oldPathWithoutType;
+		$newPath 			= $this->basePath . 'content' . $newPathWithoutType;
+						
+		$result 		= true;
+		
+		foreach($filetypes as $filetype)
+		{
+			$oldFilePath = $oldPath . '.' . $filetype;
+			$newFilePath = $newPath . '.' . $filetype;
+			
+			#check if file with filetype exists and rename
+			if($oldFilePath != $newFilePath && file_exists($oldFilePath))
+			{
+				if(@rename($oldFilePath, $newFilePath))
+				{
+					$result = $result;
+				}
+				else
+				{
+					$result = false;
+				}
+			}
+		}
+
+		return $result;
+	}	
 }

@@ -13,6 +13,7 @@ $app->post('/api/v1/article/html', ContentApiController::class . ':getArticleHtm
 $app->post('/api/v1/article/publish', ContentApiController::class . ':publishArticle')->setName('api.article.publish')->add(new RestrictApiAccess($container['router']));
 $app->delete('/api/v1/article/unpublish', ContentApiController::class . ':unpublishArticle')->setName('api.article.unpublish')->add(new RestrictApiAccess($container['router']));
 $app->delete('/api/v1/article/discard', ContentApiController::class . ':discardArticleChanges')->setName('api.article.discard')->add(new RestrictApiAccess($container['router']));
+$app->post('/api/v1/post', ContentApiController::class . ':createPost')->setName('api.post.create')->add(new RestrictApiAccess($container['router']));
 $app->post('/api/v1/article', ContentApiController::class . ':createArticle')->setName('api.article.create')->add(new RestrictApiAccess($container['router']));
 $app->put('/api/v1/article', ContentApiController::class . ':updateArticle')->setName('api.article.update')->add(new RestrictApiAccess($container['router']));
 $app->delete('/api/v1/article', ContentApiController::class . ':deleteArticle')->setName('api.article.delete')->add(new RestrictApiAccess($container['router']));

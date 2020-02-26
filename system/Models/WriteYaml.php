@@ -115,6 +115,7 @@ class WriteYaml extends Write
 				'description' 	=> $description,
 				'author' 		=> $author,
 				'created'		=> date("Y-m-d"),
+				'time'			=> date("H-i-s"),
 			]
 		];
 
@@ -161,5 +162,110 @@ class WriteYaml extends Write
 		$meta['meta']['modified'] = file_exists($filePath) ? date("Y-m-d",filemtime($filePath)) : false;
 
 		return $meta;
+	}
+
+
+	public function transformPagesToPosts($folder){
+
+		$filetypes			= array('md', 'txt', 'yaml');
+
+		foreach($folder->folderContent as $page)
+		{
+			# create old filename without filetype
+			$oldFile 	= $this->basePath . 'content' . $page->pathWithoutType;
+
+			# set default date
+			$date 		= date('Y-m-d', time());
+			$time		= date('H-i', time());
+
+			$meta 		= $this->getYaml('content', $page->pathWithoutType . '.yaml');
+
+			if($meta)
+			{
+				# get dates from meta
+				if(isset($meta['meta']['manualdate'])){ $date = $meta['meta']['manualdate']; }
+				elseif(isset($meta['meta']['created'])){ $date = $meta['meta']['created']; }
+				elseif(isset($meta['meta']['modified'])){ $date = $meta['meta']['modified']; }
+
+				# set time
+				if(isset($meta['meta']['time']))
+				{
+					$time = $meta['meta']['time'];
+				}
+			}
+
+			$datetime 	= $date . '-' . $time;
+			$datetime 	= implode(explode('-', $datetime));
+			$datetime	= substr($datetime,0,12);
+
+			# create new file-name without filetype
+			$newFile 	= $this->basePath . 'content' . $folder->path . DIRECTORY_SEPARATOR . $datetime . '-' . $page->slug;
+
+			$result 	= true;
+
+			foreach($filetypes as $filetype)
+			{
+				$oldFilePath = $oldFile . '.' . $filetype;
+				$newFilePath = $newFile . '.' . $filetype;
+				
+				#check if file with filetype exists and rename
+				if($oldFilePath != $newFilePath && file_exists($oldFilePath))
+				{
+					if(@rename($oldFilePath, $newFilePath))
+					{
+						$result = $result;
+					}
+					else
+					{
+						$result = false;
+					}
+				}
+			}
+		}
+	}
+
+	public function transformPostsToPages($folder){
+
+		$filetypes			= array('md', 'txt', 'yaml');
+		$index				= 0;
+
+		foreach($folder->folderContent as $page)
+		{
+			# create old filename without filetype
+			$oldFile 	= $this->basePath . 'content' . $page->pathWithoutType;
+
+			$order 		= $index;
+
+			if($index < 10)
+			{
+				$order = '0' . $index;
+			}
+
+			# create new file-name without filetype
+			$newFile 	= $this->basePath . 'content' . $folder->path . DIRECTORY_SEPARATOR . $order . '-' . $page->slug;
+
+			$result 	= true;
+
+			foreach($filetypes as $filetype)
+			{
+				$oldFilePath = $oldFile . '.' . $filetype;
+				$newFilePath = $newFile . '.' . $filetype;
+				
+				#check if file with filetype exists and rename
+				if($oldFilePath != $newFilePath && file_exists($oldFilePath))
+				{
+					if(@rename($oldFilePath, $newFilePath))
+					{
+						$result = $result;
+					}
+					else
+					{
+						$result = false;
+					}
+				}
+			}
+
+			$index++;
+		}
 	}
 }

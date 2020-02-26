@@ -1,13 +1,14 @@
 const FormBus = new Vue();
 
 Vue.component('component-text', {
-	props: ['class', 'id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
+	props: ['class', 'id', 'description', 'maxlength', 'hidden', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
 	template: '<div class="large">' +
 				'<label>{{ $t(label) }}</label>' +
 				'<input type="text"' + 
 					' :id="id"' +
 					' :maxlength="maxlength"' +
 					' :readonly="readonly"' +
+					' :hidden="hidden"' +
 					' :required="required"' +
 					' :disabled="disabled"' +
 					' :name="name"' +
@@ -357,11 +358,10 @@ Vue.component('tab-meta', {
 
 let meta = new Vue({
 
-  i18n: new VueI18n({
-    locale: language,
-    messages: vuejsLabels
-  }),
-  
+  	i18n: new VueI18n({
+    	locale: language,
+    	messages: vuejsLabels
+  	}),
     delimiters: ['${', '}'],
 	el: '#metanav',	
 	data: function () {
@@ -416,6 +416,16 @@ let meta = new Vue({
 
         	self.formData = response.data.metadata;
 
+        	var item = response.data.item;
+        	if(item.elementType == "folder" && item.contains == "posts")
+        	{
+        		posts.posts = item.folderContent;
+	        	posts.folderid = item.keyPath;
+        	}
+        	else
+        	{
+        		posts.posts = false;
+        	}
         })
         .catch(function (error)
         {
@@ -448,6 +458,17 @@ let meta = new Vue({
 	        	if(response.data.structure)
 	        	{
 	        		navi.items = response.data.structure;
+	        	}
+
+	        	var item = response.data.item;
+	        	if(item.elementType == "folder" && item.contains == "posts")
+	        	{
+	        		posts.posts = item.folderContent;
+	        		posts.folderid = item.keyPath;
+	        	}
+	        	else
+	        	{
+	        		posts.posts = false;
 	        	}
 	        })
 	        .catch(function (error)

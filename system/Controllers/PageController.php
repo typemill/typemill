@@ -63,7 +63,8 @@ class PageController extends Controller
 					$sitemap->updateSitemap('cache', 'sitemap.xml', 'lastSitemap.txt', $structure, $uri->getBaseUrl());
 
 					/* check and update the typemill-version in the user settings */
-					$this->updateVersion($uri->getBaseUrl());					
+					# this version check is not needed 
+					# $this->updateVersion($uri->getBaseUrl());
 				}
 			}
 			
@@ -249,7 +250,7 @@ class PageController extends Controller
 		/* cache structure */
 		$cache->updateCache('cache', 'structure.txt', 'lastCache.txt', $structure);
 
-		if($this->containsHiddenPages($extended))
+		if($extended && $this->containsHiddenPages($extended))
 		{
 			# generate the navigation (delete empty pages)
 			$navigation = $this->createNavigationFromStructure($structure);
@@ -295,6 +296,7 @@ class PageController extends Controller
 		return $navigation;
 	}
 
+	# not in use, stored the latest version in user settings, but that does not make sense because checkd on the fly with api in admin
 	protected function updateVersion($baseUrl)
 	{
 		/* check the latest public typemill version */

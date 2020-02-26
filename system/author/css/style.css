@@ -683,6 +683,9 @@ form .large, form .medium, form .small{
 	width: 100%;
 	display: block;
 }
+form .hidden{
+	display: none;
+}
 .large img{
 	width: 100%;
 }
@@ -932,7 +935,7 @@ ul.cardInfo{
 	border: 0px;
 }
 .cardFields.open{
-	max-height: 2800px;
+	max-height: 5000px;
 	transition: max-height 0.5s ease-in;
 	overflow: hidden;
 	border: 1px;
@@ -956,6 +959,19 @@ ul.cardInfo{
 	width: 100%;
 	display: inline-block;
 	margin: 10px 0;
+}
+.cardField.full{
+	width: 100%;
+}
+.cardField.half{
+	width: 49.5%;
+	float: left;
+	margin-right:0.5%;
+}
+.cardField.third{
+	width: 32%;
+	float:left;
+	margin-right: 1%;
 }
 .cardField label{
 	width: 100%;
@@ -1647,6 +1663,65 @@ button.hdown:hover,button.hdown:focus,button.hdown:active{
 	position: absolute;
 	width: 100%;
 	z-index:9;
+}
+
+
+.blog-post{
+
+}
+.blog-post svg{
+	color: #ccc;
+	margin-right: 5px;
+}
+.blog-post a,
+.blog-post a:link,
+.blog-post a:visited{
+	color: #444;
+	text-decoration: none;
+	display: inline-block;
+	width: 100%;
+	padding: 0px 15px;
+	margin: 5px 0;
+	border-left: 3px solid;
+	box-sizing: border-box;
+	background-color: #f9f8f6;
+}
+.blog-post a:focus,
+.blog-post a:hover,
+.blog-post a:active{
+	background-color: #f6f5f3;
+}
+.blog-post a.unpublished{
+	border-color: #cc4146;
+}
+.blog-post a.published{
+	border-color: #66b0a3;
+}
+.blog-post a.modified{
+	border-color: #FFA500;
+}
+.blog-post .post-date{
+	float: right;
+	font-size: 0.8em;
+	font-weight: 300;
+	color: #444;
+}
+.posts.formWrapper{
+	margin: 20px 0;
+}
+.posts input{
+	width: 80%;
+	float: left;
+}
+button.post-button{
+	color: #f9f8f6;
+	background: #66b0a3;
+	border: 0px;
+	width: 20%;
+	text-align: center;
+}
+button.post-button:hover{
+	background: #4D978A;
 }
 
 

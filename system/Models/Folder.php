@@ -91,11 +91,13 @@ class Folder
 		return $folderContent;
 	}
 	
+
 	/*
 	* Transforms array of folder item into an array of item-objects with additional information for each item
 	* vars: multidimensional array with folder- and file-names
 	* returns: array of objects. Each object contains information about an item (file or folder).
-	*/	
+	*/
+
 	public static function getFolderContentDetails(array $folderContent, $extended, $baseUrl, $fullSlugWithFolder = NULL, $fullSlugWithoutFolder = NULL, $fullPath = NULL, $keyPath = NULL, $chapter = NULL)
 	{
 		$contentDetails 	= [];
@@ -129,13 +131,14 @@ class Folder
 
 				$item->originalName 	= $key;
 				$item->elementType		= 'folder';
+				$item->contains			= self::getFolderContentType($name, $fullPath . DIRECTORY_SEPARATOR . $key . DIRECTORY_SEPARATOR . 'index.yaml');				
 				$item->status			= $status;
 				$item->fileType			= $fileType;
 				$item->order 			= count($nameParts) > 1 ? array_shift($nameParts) : NULL;
 				$item->name 			= implode(" ",$nameParts);
 				$item->name				= iconv(mb_detect_encoding($item->name, mb_detect_order(), true), "UTF-8", $item->name);
 				$item->slug				= implode("-",$nameParts);
-				$item->slug				= URLify::filter(iconv(mb_detect_encoding($item->slug, mb_detect_order(), true), "UTF-8", $item->slug));				
+				$item->slug				= URLify::filter(iconv(mb_detect_encoding($item->slug, mb_detect_order(), true), "UTF-8", $item->slug));
 				$item->path				= $fullPath . DIRECTORY_SEPARATOR . $key;
 				$item->pathWithoutType	= $fullPath . DIRECTORY_SEPARATOR . $key . DIRECTORY_SEPARATOR . 'index';
 				$item->urlRelWoF		= $fullSlugWithoutFolder . '/' . $item->slug;
@@ -154,6 +157,12 @@ class Folder
 				{
 					$item->name = ($extended[$item->urlRelWoF]['navtitle'] != '') ? $extended[$item->urlRelWoF]['navtitle'] : $item->name;
 					$item->hide = ($extended[$item->urlRelWoF]['hide'] === true) ? true : false;
+				}
+
+				# sort posts in descending order
+				if($item->contains == "posts")
+				{
+					rsort($name);
 				}
 
 				$item->folderContent = self::getFolderContentDetails($name, $extended, $baseUrl, $item->urlRel, $item->urlRelWoF, $item->path, $item->keyPath, $item->chapter);
@@ -192,7 +201,7 @@ class Folder
 				$item->name 			= implode(" ",$nameParts);
 				$item->name				= iconv(mb_detect_encoding($item->name, mb_detect_order(), true), "UTF-8", $item->name);				
 				$item->slug				= implode("-",$nameParts);
-				$item->slug				= URLify::filter(iconv(mb_detect_encoding($item->slug, mb_detect_order(), true), "UTF-8", $item->slug));				
+				$item->slug				= URLify::filter(iconv(mb_detect_encoding($item->slug, mb_detect_order(), true), "UTF-8", $item->slug));
 				$item->path				= $fullPath . DIRECTORY_SEPARATOR . $name;
 				$item->pathWithoutType	= $fullPath . DIRECTORY_SEPARATOR . $nameWithoutType;
 				$item->key				= $iteration;
@@ -219,6 +228,44 @@ class Folder
 			$contentDetails[]		= $item;
 		}
 		return $contentDetails;	
+	}
+
+	public static function getFolderContentType($folder, $yamlpath)
+	{
+		# check if folder is empty or has only index.yaml-file. This is a rare case so make it quick and dirty
+		if(count($folder) == 1)
+		{
+			# check if in folder yaml file contains "posts", then return posts
+			$folderyamlpath = getcwd() . DIRECTORY_SEPARATOR . 'content' . DIRECTORY_SEPARATOR . $yamlpath;
+			
+			$fileContent = false;
+			if(file_exists($folderyamlpath))
+			{
+				$fileContent = file_get_contents($folderyamlpath);
+			}
+
+			if($fileContent && strpos($fileContent, 'contains: posts') !== false)
+			{
+				return 'posts';
+			}
+			return 'pages';
+		}
+		else
+		{
+			$file 			= $folder[0];
+			$nameParts 		= self::getStringParts($file);
+			$order 			= count($nameParts) > 1 ? array_shift($nameParts) : NULL;
+			$order 			= substr($order, 0, 7);
+			
+			if(\DateTime::createFromFormat('Ymd', $order) !== FALSE)
+			{
+				return "posts";
+			}
+			else
+			{
+				return "pages";
+			}
+		}
 	}
 
 	public static function getItemForUrl($folderContentDetails, $url, $baseUrl, $result = NULL)

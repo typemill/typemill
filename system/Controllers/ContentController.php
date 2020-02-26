@@ -377,12 +377,17 @@ abstract class ContentController
 		{
 			$files = array_diff(scandir($path), array('.', '..'));
 			
-			# check if there are folders first, then stop the operation
+			# check if there are published pages or folders inside, then stop the operation
 			foreach ($files as $file)
 			{
 				if(is_dir(realpath($path) . DIRECTORY_SEPARATOR . $file))
 				{
 					$this->errors = ['message' => 'Please delete the sub-folder first.'];
+				}
+
+				if(substr($file, -3) == '.md' )
+				{
+					$this->errors = ['message' => 'Please unpublish all pages in the folder first.'];					
 				}
 			}
 
