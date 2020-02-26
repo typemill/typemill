@@ -22,7 +22,7 @@
 							<div class="cardInner cardHead">
 								
 								{% if theme.img %}
-									<img src="{{ base_url() }}/themes/{{themeName}}/{{themeName}}.jpg" />
+									<img src="{{ base_url() }}/themes/{{themeName}}/{{ theme.img }}" />
 								{% else %}
 									<div class="no-preview">{{ __('No Preview') }}</div>
 								{% endif %}
@@ -32,7 +32,7 @@
 									
 									<div class="cardDescription">
 										<h2>{{ themeName }}</h2>
-										<p>{{ __('TYPEMILL_DESCRIPTION') }}</p>
+										<p>{{ theme.description }}</p>
 										<ul class="cardInfo">
 											<li>{{ theme.version ? theme.version : __('Unknown') }}</li><li>
 											{{ theme.licence ? theme.licence : __('Unkown') }}</li><li>

@@ -1,4 +1,4 @@
-<div class="cardField{{ errors[itemName][field.name] ? ' error' : '' }}">
+<div class="cardField{{ errors[itemName][field.name] ? ' error' : '' }}{{field.fieldsize ? ' ' ~ field.fieldsize : ''}}">
 				
 	<label for="{{ itemName }}[{{ field.name }}]">{{ __( field.getLabel() ) }}
 		{% if field.getAttribute('required') %}<strong><abbr title="{{ __('required') }}">*</abbr></strong>{% endif %}

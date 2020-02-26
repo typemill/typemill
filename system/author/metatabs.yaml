@@ -27,9 +27,15 @@ meta:
       description: Used as fallback when no manual date is set.
     created:
       type: date
-      label: Created at (readonly)
+      label: Created at (read only)
       readonly: readonly
       class: medium
+    time:
+      type: text
+      readonly: readonly
+      hidden: true
+      class: hidden
+      pattern: '[0-9][0-9]-[0-9][0-9]-[0-9][0-9]'
     navtitle:
       type: text
       label: Navigation Title
@@ -45,17 +51,6 @@ meta:
 #      label: Show page to
 #      class: medium
 #      options:
-#        null: null
 #        public: Public (standard)
 #        members: Members only (logged in)
 #        customers: Customers only (paying)
-#    list:
-#      type: select
-#      label: List sub-pages 
-#      class: medium
-#      options:
-#        null: null
-#        standard: Standard order
-#        revert: Reverse order
-#        asc: Date ascending
-#        desc: Date descending

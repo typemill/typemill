@@ -18,7 +18,6 @@ let typemillUtilities = {
 
 	addYoutubePlayButton: function(element)
 	{
-		console.info(element.parentNode);
 		element.parentNode.classList.add("video-container");
 		
 		var youtubePlaybutton = document.createElement("button");
@@ -26,12 +25,6 @@ let typemillUtilities = {
 		youtubePlaybutton.value = "Play";
 
 		element.parentNode.appendChild(youtubePlaybutton);	
-	},
-
-	start: function(){
-		this.setYoutubeItems();
-		this.addYoutubePlayButtons();
-		this.listenToYoutube();
 	},
 
 	listenToYoutube: function(){
@@ -58,4 +51,10 @@ let typemillUtilities = {
 			}
 		}, true);	
 	},
+
+	start: function(){
+		this.setYoutubeItems();
+		this.addYoutubePlayButtons();
+		this.listenToYoutube();
+	},	
 };
