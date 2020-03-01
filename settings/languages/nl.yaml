@@ -1,11 +1,72 @@
 # Dutch
+
+# themes/typemill/typemill.yaml
+ACTIVATE_SPECIAL_STARTPAGE_DESIGN: Activeer speciaal startpagina-ontwerp
+AUTHOR_INTRO: Auteur Intro
+BOTTOM: bodem
+BY: door
+COUNT_CHAPTERS_IN_NAVIGATION?: Hoofdstukken tellen in navigatie?
+DIFFERENT_DESIGN_FOR_STARTPAGE: ander ontwerp voor startpagina
+FACEBOOK: Facebook
+FORMAT: Formaat
+GITHUB: GitHub
+LABEL_FOR_CHAPTER: Label voor hoofdstuk
+LABEL_FOR_START_BUTTON: label voor startknop
+LAST_MODIFIED_FORMAT: Laatst gewijzigd formaat
+LAST_MODIFIED: Laatst gewijzigd
+LAST_MODIFIED_TEXT: Laatst gewijzigde tekst
+LINKEDIN: Linkedin
+LINK_TO_GIT_REPOSITORY: Link naar git repository
+MAIL: Mail
+POSITION_OF_AUTHOR: Positie van auteur
+POSITION_OF_GIT_EDIT_LINK: Positie van Git Link bewerken
+POSITION_OF_MODIFIED_TEXT: Positie van gemodificeerde tekst
+POSITION_OF_SHARE_BUTTONS: Positie van Share-knoppen
+SELECT_SHARE_BUTTONS: Selecteer Share-knoppen
+SHARE: deel
+SHOW_CHAPTER_NUMBERS: hoofdstuknummers tonen
+TOP: Top
+TWITTER: Twitter
+TYPEMILL_DESCRIPTION: Het standaardthema voor typemill. Responsief, minimaal en zonder afhankelijkheden. Het gebruikt de systeemlettertypen Calibri en Helvetica. Er is geen JavaScript gebruikt.
+WHATSAPP: Whatsapp
+XING: Xing
+
+# system/author/layouts/layoutBlox.twig
+ADD: toevoegen
+BOLD: vetgedrukt
+BULLET_LIST: Bullet List
+CHECK: check
+CODE: Code
+COG: tandwiel
+CROSS: kruis
+DEFINITION: Definitielijst
+DELETE_CLOSE: verwijderen / sluiten
+DELETE: verwijderen
+EXTERNAL_LINK: externe link
+FOLDER: map
+HEADLINE: Kop
+HOME: home
+HORIZONTAL_LINE: Horizontale lijn
+IMAGE: Afbeelding
+ITALIC: cursief
+LINK: link
+MOVE_VERTICAL: verplaats verticaal
+NUMBERED_LIST: Genummerde lijst
+PARAGRAPH: Paragraaf
+POWER_OFF: power-off
+QUOTES: Citeren
+TABLE_OF_CONTENTS: Inhoudsopgave
+TABLE: tabel
+TEXT_FILE: tekstbestand
+VIDEO: Video
+
 ACCOUNT: Account
 ACTIVE: Actief
 ACTUAL_PASSWORD: Actueel wachtwoord
-ADD_FILE: bestand toevoegen
-ADD_FOLDER: map toevoegen
+ADD_FILE: Bestand toevoegen
+ADD_FOLDER: Map toevoegen
 ADD_FOLDER_TO_BASE_LEVEL: map toevoegen op basisniveau
-ADD_ITEM: item toevoegen
+ADD_ITEM: Item toevoegen
 ALL_USERS: Alle gebruikers
 AUTHOR: Auteur
 BACK_TO_STARTPAGE: terug naar startpagina
@@ -19,16 +80,16 @@ DEFINITION: definitie
 DELETE: verwijderen
 DELETE_PAGE: pagina verwijderen
 DELETE_USER: Gebruiker verwijderen
-DISCARD_CHANGES: wijzigingen annuleren
+DISCARD_CHANGES: Wijzigingen negeren
 DISCARD: weggooien
 DO_YOU_REALLY_WANT_TO_DELETE_THE_USER: Wilt u de gebruiker echt verwijderen
 DO_YOU_REALLY_WANT_TO_DELETE_THIS_PAGE: Wilt u deze pagina echt verwijderen?
 DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES_AND_SET_THE_CONTENT_BACK_TO_THE_LIVE_VERSION: Wilt u uw wijzigingen annuleren en de inhoud terugzetten naar de live versie?
-DRAFT: Concept
+DRAFT: Ontwerp
 EDIT: bewerken
 EDIT_USER: Gebruiker bewerken
 E_G_: bijv.
-E_MAIL: E-mail
+E_MAIL: e-mail
 FIRST_NAME: Voornaam
 FORGOT_PASSWORD: Wachtwoord vergeten
 HEADLINE: kop
@@ -56,12 +117,12 @@ PLEASE_CONFIRM: bevestig alstublieft
 PLUGINS: plug-ins
 PLUGIN_STORE: Plugin Store
 PUBLISH: Publiceren
-QUOTE: citeer
+QUOTE: quote
 RAW_CONTENT_EDITOR: Raw Content Editor
 RAW_MARKDOWN_EDITOR: Raw Markdown Editor
 RAW_MODE: onbewerkte modus
-RAW: raw
-READONLY: alleen lezen
+RAW: rauw
+READONLY: Alleen lezen
 REMEMBER_TO_BOOKMARK_THIS_PAGE: vergeet deze pagina niet te bookmarken
 REQUIRED: verplicht
 ROLE: rol
@@ -69,13 +130,13 @@ SAVE_ALL_SETTINGS: sla alle instellingen op
 SAVE: Opslaan
 SAVE_THEME: Thema opslaan
 SETTINGS: Instellingen
-SETUP: Installatie
+SETUP: Setup
 STANDARD_EDITOR_MODE: Standaardeditormodus
 START: Start
 SYSTEM: Systeem
 TABLE: tabel
 THE_FORMAT_BUTTONS: De opmaakknoppen
-THEMES: Thema's
+THEMAS: Thema's
 THEME_STORE: Theme Store
 TITLE: Titel
 TOC: toc
@@ -93,9 +154,9 @@ VISUAL_CONTENT_EDITOR: Visual Content Editor
 VISUAL_EDITOR: visuele editor
 VISUAL_MARKDOWN_EDITOR: Visual Markdown Editor
 VISUAL_MODE: visuele modus
-VISUAL: visueel
+VISUEEL: visueel
 WAIT: wacht
-WEBSITE_TITLE: Titel van website
+WEBSITE_TITLE: Titel van de website
 WEB: Web
 WRITING: schrijven
 YEAR: Jaar
