@@ -10,7 +10,7 @@
 	
 	<div class="formWrapper">
 
-		<form method="POST" action="{{ path_for('settings.save') }}">
+		<form method="POST" action="{{ path_for('settings.save') }}" enctype="multipart/form-data">
 		
 			<section id="system" class="settings">
 
@@ -63,6 +63,34 @@
 					</div><div class="medium">
 						<label for="settings[sitemap]">Google Sitemap <small>({{ __('Readonly') }})</small></label>
 						<input type="text" name="settings[sitemap]" id="sitemap" readonly value="{{ base_url }}/cache/sitemap.xml" />
+					</div><div class="medium{{ errors.settings.logo ? ' error' : '' }}">
+						<label for="settings[logo]">Logo <small>(jpg,jpeg,png,svg)</small></label>
+						<div class="flex fileinput">
+							<button class="deletefilebutton w-10 bg-tm-gray bn hover-bg-tm-red hover-white">x</button>
+							<input class="deletefileinput" name="settings[deletelogo]" type="hidden" value="NULL" />
+							<input class="visiblefilename w-60" type="text" disabled="disabled" value="{{ old.settings.logo ? old.settings.logo : settings.logo }}" placeholder="{{ __('CHOOSE_FILE') }}" />
+							<div class="relative w-30 pv3 tc bg-tm-green white dim pointer">
+	    						<span class="f7">{{ __('BROWSE') }}</span>
+								<input class="upload hiddenfile" type="file" name="settings[logo]" value="{{ old.settings.logo ? old.settings.logo : settings.logo }}" />
+							</div>
+						</div>
+						{% if errors.settings.logo %}
+							<span class="error">{{ errors.settings.logo | first }}</span>
+						{% endif %}
+					</div><div class="medium{{ errors.settings.favicon ? ' error' : '' }}">
+						<label for="settings[favicon]">Favicon <small>(png)</small></label>
+						<div class="flex fileinput">
+							<button class="deletefilebutton w-10 bg-tm-gray bn hover-bg-tm-red hover-white">x</button>
+							<input class="deletefileinput" name="settings[deletefav]" type="hidden" value="NULL" />
+							<input class="visiblefilename w-60" type="text" disabled="disabled" value="{{ old.settings.favicon ? old.settings.favicon : settings.favicon }}" placeholder="{{ __('CHOOSE_FILE') }}" />
+							<div class="relative w-30 pv3 tc bg-tm-green white dim pointer">
+	    						<span class="f7">{{ __('BROWSE') }}</span>
+								<input class="upload hiddenfile" type="file" name="settings[favicon]" value="{{ old.settings.favicon ? old.settings.favicon : settings.favicon }}" />
+							</div>
+						</div>
+						{% if errors.settings.favicon %}
+							<span class="error">{{ errors.settings.favicon | first }}</span>
+						{% endif %}
 					</div>
 					<hr>
 					<header class="headline">
@@ -102,5 +130,4 @@
 		</form>
 	
 	</div>
-	
 {% endblock %}

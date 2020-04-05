@@ -200,9 +200,8 @@ class MetaApiController extends ContentController
 
 		if($tab == 'meta')
 		{
-
 			# if manual date has been modified
-			if(isset($metaInput['manualdate']) && !isset($metaPage['meta']['manualdate']) OR ($metaInput['manualdate'] != $metaPage['meta']['manualdate']))
+			if( $this->hasChanged($metaInput, $metaPage['meta'], 'manualdate'))
 			{
 				# update the time
 				$metaInput['time'] = date('H-i-s', time());
@@ -230,7 +229,7 @@ class MetaApiController extends ContentController
 			}
 
 			# if folder has changed and contains pages instead of posts or posts instead of pages
-			if($this->item->elementType == "folder" && ($metaPage['meta']['contains'] !== $metaInput['contains']))
+			if($this->item->elementType == "folder" && isset($metaInput['contains']) && $this->hasChanged($metaInput, $metaPage['meta'], 'contains'))
 			{
 				$structure = true;
 
@@ -258,9 +257,9 @@ class MetaApiController extends ContentController
 			}
 			elseif(
 				# check if navtitle or hide-value has been changed
-				($metaPage['meta']['navtitle'] != $metaInput['navtitle']) 
+				($this->hasChanged($metaInput, $metaPage['meta'], 'navtitle'))
 				OR 
-				($metaPage['meta']['hide'] != $metaInput['hide'])
+				($this->hasChanged($metaInput, $metaPage['meta'], 'hide'))
 			)
 			{
 				# add new file data. Also makes sure that the value is set.
@@ -296,6 +295,19 @@ class MetaApiController extends ContentController
 
 		# return with the new metadata
 		return $response->withJson(array('metadata' => $metaInput, 'structure' => $structure, 'item' => $this->item, 'errors' => false));
+	}
+
+	protected function hasChanged($input, $page, $field)
+	{
+		if(isset($input[$field]) && isset($page[$field]) && $input[$field] == $page[$field])
+		{
+			return false;
+		}
+		if(!isset($input[$field]) && !isset($input[$field]))
+		{
+			return false;
+		}
+		return true;
 	}
 }
 

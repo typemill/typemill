@@ -108,13 +108,16 @@ class PageController extends Controller
 			/* get breadcrumb for page */
 			$breadcrumb = Folder::getBreadcrumb($structure, $item->keyPathArray);
 			$breadcrumb = $this->c->dispatcher->dispatch('onBreadcrumbLoaded', new OnBreadcrumbLoaded($breadcrumb))->getData();
+
+			# set pages active for navigation again
+			Folder::getBreadcrumb($navigation, $item->keyPathArray);
 			
 			/* add the paging to the item */
 			$item = Folder::getPagingForItem($structure, $item);
 		}
 
 		# dispatch the item
-		$item 			= $this->c->dispatcher->dispatch('onItemLoaded', new OnItemLoaded($item))->getData();	
+		$item 			= $this->c->dispatcher->dispatch('onItemLoaded', new OnItemLoaded($item))->getData();
 
 		# set the filepath
 		$filePath 	= $pathToContent . $item->path;
@@ -211,6 +214,18 @@ class PageController extends Controller
 			$this->c->assets->addCSS($base_url . '/cache/' . $theme . '-custom.css');
 		}
 
+		$logo = false;
+		if(isset($settings['logo']) && $settings['logo'] != '')
+		{
+			$logo = 'media/files/' . $settings['logo'];
+		}
+
+		$favicon = false;
+		if(isset($settings['favicon']) && $settings['favicon'] != '')
+		{
+			$favicon = true;
+		}
+
 		return $this->render($response, $route, [
 			'home'			=> $home,
 			'navigation' 	=> $navigation, 
@@ -221,7 +236,10 @@ class PageController extends Controller
 			'settings' 		=> $settings,
 			'metatabs'		=> $metatabs,
 			'base_url' 		=> $base_url, 
-			'image' 		=> $firstImage ]);
+			'image' 		=> $firstImage,
+			'logo'			=> $logo,
+			'favicon'		=> $favicon
+		]);
 	}
 
 	protected function getCachedStructure($cache)

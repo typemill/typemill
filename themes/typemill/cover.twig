@@ -2,7 +2,15 @@
 
 {% block content %}
 
-	<h1>{{ title }}</h1>
+	{% if logo and settings.themes.typemill.coverlogo %}
+
+		<img src="{{ logo }}" alt="logo {{title}}" class="coverlogo"/>
+	
+	{% else %}
+
+		<h1 class="coverheadline">{{ title }}</h1>
+
+	{% endif %}
 
 	<div class="lead">
 

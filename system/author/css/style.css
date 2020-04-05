@@ -2,7 +2,7 @@
 *  		TRANSITION	  *
 **********************/
 
-a, a:link, a:visited, a:focus, a:hover, a:active, button, .button, .tab-button, input, .control-group, .sidebar-menu, .sidebar-menu--content, .menu-action, .button-arrow{
+a, a:link, a:visited, a:focus, a:hover, a:active, .link, button, .button, .tab-button, input, .control-group, .sidebar-menu, .sidebar-menu--content, .menu-action, .button-arrow{
 	-webkit-transition: color 0.2s ease;
 	-moz-transition: color 0.2s ease;
 	-o-transition: color 0.2s ease;
@@ -30,6 +30,130 @@ a, a:link, a:visited, a:focus, a:hover, a:active, button, .button, .tab-button, 
 	-ms-transition: all 0.1s ease;
 	transition: all 0.1s ease;	
 }
+/********************
+*  	TACHYONS 	    *
+********************/
+
+.tm-red{
+	color:#e0474c;
+}
+.bg-tm-red{
+	background:#e0474c;
+}
+.b--tm-red{
+	border-color: #e0474c;
+}
+.hover-tm-red:hover{
+	color:#e0474c;
+}
+.hover-bg-tm-red:hover{
+	background:#e0474c;
+}
+.hover-b--tm-red:hover{
+	border-color:#e0474c;
+}
+.tm-green{
+	color:#66b0a3;
+}
+.bg-tm-green{
+	background:#66b0a3;
+}
+.b--tm-green{
+	border-color:#66b0a3;
+}
+.hover-tm-green:hover{
+	color:#66b0a3;
+}
+.hover-bg-tm-green:hover{
+	background:#66b0a3;
+}
+.hover-b--tm-green:hover{
+	border-color:#66b0a3;
+}
+.w-100{
+	width:100%!important;
+}
+.w-15{
+	width: 15%;
+}
+.w-29{
+	width: 29%;
+}
+.w-95{
+	width:95%;
+}
+.w6{
+	width: 22rem;
+}
+.h0{
+	height: 0;
+}
+.h6{
+	height: 22rem;
+}
+.mw6{
+	max-width:22rem;
+}
+.max-h6{
+	max-height: 22rem;
+}
+.shadow-tm{
+	box-shadow: 0 0 2px 1px rgba(0,0,0,.1);
+}
+.bg-chess{
+	background-image: linear-gradient(45deg, #808080 25%, transparent 25%), linear-gradient(-45deg, #808080 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #808080 75%), linear-gradient(-45deg, transparent 75%, #808080 75%);
+ 	background-size: 20px 20px;
+	background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+}
+input.upload{
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 0;
+	padding: 0;
+	font-size: 20px;
+	cursor: pointer;
+	opacity: 0;
+}
+.top-3{
+	top: 3rem;
+}
+.list-enter-active, .list-leave-active {
+  transition: all .3s;
+}
+.list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+
+/****************************
+*  	download-commponent		*
+****************************/
+
+a.tm-download
+{
+	line-height: 35px;
+	margin-left: 40px;
+}
+a.tm-download::before{
+	content: '\2193';
+	position: absolute;
+	margin-left: -40px;
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	font-family: "Comic Sans MS",cursive,sans-serif;	
+	border: 2px solid #e0474c;
+	border-radius: 50%;
+	text-align: center;
+	text-decoration: underline;
+}
+a.tm-download:hover::before{
+	text-decoration:underline;
+	color: #fff;
+	background: #e0474c;
+}
+
+
 /********************
 *  	COMMONS 	    *
 ********************/
@@ -453,8 +577,7 @@ footer{
 	bottom: 0;
 	left: 0;
 	right: 0;
-	background: #FFF;
-	background: rgba(255,255,255,0.9);
+	background: rgba(0,0,0,0.4);
 }
 .modal{
 	display: none;
@@ -1526,14 +1649,14 @@ label .help, .label .help{
 }
 .blox-buttons button.edit{
 	background: #70c1b3;
-	color: #eee;
+	color: #fff;
 }
 .blox-buttons button.edit:hover{
 	background: #4D978A;
 }
 .blox-buttons button.cancel:hover{
 	background: #e0474c;
-	color: #eee;
+	color: #fff;
 }
 .blox-buttons button.edit:disabled, .blox-buttons button.cancel:disabled{
 	background: #eee;
@@ -1750,6 +1873,9 @@ button.post-button:hover{
   width: 0.7142857142857142em;
   margin-right: 10px;
 }
+.icon-upload {
+  width: 0.9285714285714285em;
+}
 .format-bar .hidden{
 	display: none;
 }
@@ -1764,7 +1890,7 @@ button.post-button:hover{
 .format-bar .editactive{
 	position: relative;
 	margin-left: -20px;
-	margin-right: 20px;
+	margin-right: -20px;
 }
 .format-bar.blox{
 	width: auto;
@@ -2121,6 +2247,25 @@ button.delDL i:hover{
 .blox blockquote p{
 	margin-left: 50px;
 }
+.imageupload{
+	width: 50%;
+	position: relative;
+	display: inline-block;
+	border-right: 1px dotted grey;
+	box-sizing:border-box;
+}
+.imageselect{
+	width: 50%;
+	position: relative;
+	display: inline-block;
+	box-sizing:border-box;
+	border:0px;
+	padding: 0 0 0 0;
+	margin: 0 0 0 0;
+	min-height: 70px;
+	background: #f9f8f6;
+	font-family: Helvetica, Calibri, Arial, sans-serif;
+}
 .dropbox{
 	min-height: 70px;
 	background: #f9f8f6;
@@ -2212,6 +2357,22 @@ button.delDL i:hover{
   border-color: transparent transparent transparent rgba(255, 255, 255, 0.75);
   content: ' ';
 }
+.medialib{
+	margin: auto;
+	width: 100%;
+	height: 80%;
+	overflow: auto;
+	background: #f9f8f6;
+	max-width: 1200px;
+}
+.imagecard{
+	margin: 10px;
+	box-shadow:0 2px 5px rgba(22,23,26,.05);
+	display: inline-block;
+	vertical-align: top;
+	background: #fff;
+}
+
 sup{}
 cite{}
 abbr{}

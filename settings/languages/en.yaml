@@ -58,8 +58,10 @@ QUOTES: Quote
 TABLE_OF_CONTENTS: Table of Contents
 TABLE: Table
 TEXT_FILE: text-file
+UPLOAD: upload
 VIDEO: Video
 
+# others
 ACCOUNT: Account
 ACTIVE: Active
 ACTUAL_PASSWORD: Actual Password
@@ -70,7 +72,9 @@ ADD_ITEM: add item
 ALL_USERS: All users
 AUTHOR: Author
 BACK_TO_STARTPAGE: back to startpage
+BROWSE: BROWSE
 BY: by
+CHOOSE_FILE: Choose file
 CODE: code
 CONTENT: Content
 COPYRIGHT: Copyright

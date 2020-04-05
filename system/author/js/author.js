@@ -125,7 +125,7 @@
 	/**********************************
 	** 		START VERSION CHECK	 	 **
 	**********************************/
-		
+
 	if(document.getElementById("system"))
 	{
 		getVersions('system', document.getElementsByClassName("fc-system-version"));
@@ -243,7 +243,6 @@
 		}
 		return segmentsA.length - segmentsB.length;
 	}
-
 	
 	/*************************************
 	** 		CARDS: ACTIVATE/OPEN CLOSE	**
@@ -267,6 +266,38 @@
 				}
 			});
 		}
+	}
+	
+	/*************************************
+	**			Input Type File			**
+	*************************************/
+
+	var fileinputs = document.querySelectorAll( ".fileinput" );
+						
+	for (i = 0; i < fileinputs.length; ++i)
+	{
+		(function () {
+			
+			thisfileinput = fileinputs[i];
+
+			var deletefilebutton	= thisfileinput.getElementsByClassName("deletefilebutton")[0];
+			var deletefileinput		= thisfileinput.getElementsByClassName("deletefileinput")[0];
+			var visiblefilename		= thisfileinput.getElementsByClassName("visiblefilename")[0];
+			var hiddenfile			= thisfileinput.getElementsByClassName("hiddenfile")[0];
+								
+			hiddenfile.onchange = function()
+			{
+				visiblefilename.value = this.files[0].name;
+			}
+
+			deletefilebutton.onclick = function(event)
+			{
+				event.preventDefault();
+				deletefileinput.value = 'delete';
+				visiblefilename.value = '';
+			}
+
+		}());	
 	}
 	
 	/*************************************

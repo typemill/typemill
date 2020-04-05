@@ -199,8 +199,9 @@ $container['view'] = function ($container)
     $view->addExtension(new Slim\Views\TwigExtension($container['router'], $basePath));
 	$view->addExtension(new Twig_Extension_Debug());
     $view->addExtension(new Typemill\Extensions\TwigUserExtension());
-	$view->addExtension(new Typemill\Extensions\TwigMarkdownExtension());	
+	$view->addExtension(new Typemill\Extensions\TwigMarkdownExtension());
 	$view->addExtension(new Typemill\Extensions\TwigMetaExtension());	
+	$view->addExtension(new Typemill\Extensions\TwigPagelistExtension());	
 
         // i18n
 	$view->addExtension(new Typemill\Extensions\TwigLanguageExtension( $container->get('settings')['labels'] ));

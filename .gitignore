@@ -7,11 +7,11 @@ cache/structure-draft.txt
 cache/structure-extended.yaml
 cache/structure.txt
 content/index.yaml
-content/00-Welcome/index.yaml
-content/00-Welcome/00-Setup.yaml
-content/00-Welcome/01-Write-Content.yaml
-content/00-Welcome/02-Get-Help.yaml
-content/00-Welcome/03-Markdown-Test.yaml
+content/00-welcome/index.yaml
+content/00-welcome/00-setup.yaml
+content/00-welcome/01-write-content.yaml
+content/00-welcome/02-get-help.yaml
+content/00-welcome/03-markdown-test.yaml
 settings/settings.yaml
 settings/users
 system/vendor

@@ -10,14 +10,15 @@
 		<meta name="description" content="{{ metatabs.meta.description }}" />
 		<meta name="author" content="{{ settings.author }}" />
 		<meta name="generator" content="TYPEMILL" />
-		<meta name="msapplication-TileColor" content="#F9F8F6" />
-		<meta name="msapplication-TileImage" content="{{ base_url }}/themes/typemill/img/mstile-144x144.png" />
 
-		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{ base_url }}/themes/typemill/img/apple-touch-icon-144x144.png" />
-		<link rel="apple-touch-icon-precomposed" sizes="152x152" href="{{ base_url }}/themes/typemill/img/apple-touch-icon-152x152.png" />
-		<link rel="icon" type="image/png" href="{{ base_url }}/themes/typemill/img/favicon-32x32.png" sizes="32x32" />
-		<link rel="icon" type="image/png" href="{{ base_url }}/themes/typemill/img/favicon-16x16.png" sizes="16x16" />
-		
+		{% if favicon %}
+			<meta name="msapplication-TileColor" content="#F9F8F6" />
+			<meta name="msapplication-TileImage" content="{{ base_url }}/media/files/favicon-144.png" />
+			<link rel="icon" type="image/png" href="{{ base_url }}/media/files/favicon-16.png" sizes="16x16" />
+			<link rel="icon" type="image/png" href="{{ base_url }}/media/files/favicon-32.png" sizes="32x32" />
+			<link rel="apple-touch-icon" sizes="180x180" href="{{ base_url }}/media/files/favicon-180.png" />
+		{% endif %}
+	
 		<link rel="canonical" href="{{ item.urlAbs }}" />
 		
 		<meta property="og:site_name" content="{{ settings.title }}">
@@ -41,7 +42,13 @@
 	<body>
 		<div class="main">
 			<header>
-				<p><a href="{{ base_url }}">{{ settings.title }}</a></p>
+				<p><a href="{{ base_url }}">
+					{% if logo %}
+						<img src="{{ logo }}" class="logo"/>
+					{% else %}
+						{{ settings.title }}
+					{% endif %}
+				</a></p>
 			</header>
 			
 			<article class="{{ item.elementType == 'file' ? 'page' : 'chapter' }}">
