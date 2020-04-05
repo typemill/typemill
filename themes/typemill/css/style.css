@@ -578,6 +578,41 @@ cite{}
 abbr{}
 hr{}
 
+img.logo{
+	width: 100%;
+}
+img.coverlogo{
+	margin-top: 4em;
+}
+/****************************
+*  	download-commponent		*
+****************************/
+
+a.tm-download
+{
+	line-height: 35px;
+	margin-left: 40px;
+}
+a.tm-download::before{
+	content: '\2193';
+	position: absolute;
+	margin-left: -40px;
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	font-family: "Comic Sans MS",cursive,sans-serif;	
+	border: 2px solid #e0474c;
+	border-radius: 50%;
+	text-align: center;
+	text-decoration: underline;
+}
+a.tm-download:hover::before{
+	text-decoration:underline;
+	color: #fff;
+	background: #e0474c;
+}
+
+
 /************************
 *  	TABLE OF CONTENTS 	*
 ************************/

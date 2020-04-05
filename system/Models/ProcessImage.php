@@ -1,9 +1,11 @@
 <?php
 namespace Typemill\Models;
 
-class ProcessImage
+use Typemill\Models\Helpers;
+
+class ProcessImage extends ProcessAssets
 {
-	public function createImage(string $image, array $desiredSizes)
+	public function createImage(string $image, string $name, array $desiredSizes)
 	{
 		# fix error from jpeg-library
 		ini_set ('gd.jpeg_ignore_warning', 1);
@@ -11,7 +13,10 @@ class ProcessImage
 		
 		# clear temporary folder
 		$this->clearTempFolder();
-		
+
+		# set the name of the image 
+		$this->setFileName($name, 'image');
+
 		# decode the image from base64-string
 		$imageDecoded	= $this->decodeImage($image);
 		$imageData		= $imageDecoded["image"];
@@ -28,25 +33,24 @@ class ProcessImage
 		
 		# resize the images
 		$resizedImages	= $this->imageResize($image, $imageSize, $desiredSizes, $imageType);
-		
-		$basePath		= getcwd() . DIRECTORY_SEPARATOR . 'media';
-		$tmpFolder		= $basePath . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
 
-		$this->saveOriginal($tmpFolder, $imageData, 'original', $imageType);
-	
-		if($imageType == "gif" && $this->detectAnimatedGif($imageData))
-		{
-			$this->saveOriginal($tmpFolder, $imageData, 'live', $imageType);
+		# store the original name as txt-file
+		$tmpname = fopen($this->tmpFolder . $this->getName() . '.' . $imageType .  ".txt", "w");
+
+		$this->saveOriginal($this->tmpFolder, $imageData, $name = 'original', $imageType);
 			
-			return true;
-		}
-		
 		# temporary store resized images
 		foreach($resizedImages as $key => $resizedImage)
 		{
-			$this->saveImage($tmpFolder, $resizedImage, $key, $imageType);
+			$this->saveImage($this->tmpFolder, $resizedImage, $key, $imageType);
 		}
-		
+	
+		# if the image is an animated gif, then overwrite the resized version for live use with the original version
+		if($imageType == "gif" && $this->detectAnimatedGif($imageData))
+		{
+			$this->saveOriginal($this->tmpFolder, $imageData, $name = 'live', $imageType);			
+		}
+	
 		return true;
 	}
 	
@@ -60,42 +64,54 @@ class ProcessImage
 		return false;
 	}
 	
-	public function publishImage(array $desiredSizes, $name = false)
+	public function publishImage()
 	{
-		/* get images from tmp folder */
-		$basePath		= getcwd() . DIRECTORY_SEPARATOR . 'media';
-		$tmpFolder		= $basePath . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
-		$originalFolder	= $basePath . DIRECTORY_SEPARATOR . 'original' . DIRECTORY_SEPARATOR;
-		$liveFolder		= $basePath . DIRECTORY_SEPARATOR . 'live' . DIRECTORY_SEPARATOR;
+		# name is stored in temporary folder as name of the .txt-file
+		foreach(glob($this->tmpFolder . '*.txt') as $imagename)
+		{
+			$tmpname = str_replace('.txt', '', basename($imagename));
 
-		if(!file_exists($originalFolder)){ mkdir($originalFolder, 0774, true); }
-		if(!file_exists($liveFolder)){ mkdir($liveFolder, 0774, true); }
+			# set extension and sanitize name
+			$this->setFileName($tmpname, 'image');
 
-		$name 			= $name ? $name : uniqid();
-		
-		$files 			= scandir($tmpFolder);
+			unlink($imagename);
+		}
+
+		$name 			=  uniqid();
+
+		if($this->filename && $this->extension)
+		{			
+			$name 		= $this->filename;
+		}
+
+		$files 			= scandir($this->tmpFolder);
 		$success		= true;
 		
 		foreach($files as $file)
 		{
 			if (!in_array($file, array(".","..")))
-			{			
+			{
 				$tmpfilename 	= explode(".", $file);
 				
 				if($tmpfilename[0] == 'original')
 				{
-					$success = rename($tmpFolder . $file, $originalFolder . $name . '-' . $file);
+					$success = rename($this->tmpFolder . $file, $this->originalFolder . $name . '.' . $tmpfilename[1]);
 				}
-				else
+				if($tmpfilename[0] == 'live')
 				{
-					$success = rename($tmpFolder . $file, $liveFolder . $name . '-' . $file);
+					$success = rename($this->tmpFolder . $file, $this->liveFolder . $name . '.' . $tmpfilename[1]);
+				}
+				if($tmpfilename[0] == 'thumbs')
+				{
+					$success = rename($this->tmpFolder . $file, $this->thumbFolder . $name . '.' . $tmpfilename[1]);
 				}
 			}
 		}
 		
 		if($success)
 		{
-			return 'media/live/' . $name . '-live.' . $tmpfilename[1];
+			return true;
+			return 'media/live/' . $name . '.' . $tmpfilename[1];
 		}
 		
 		return false;
@@ -126,6 +142,7 @@ class ProcessImage
 	{
 		foreach($desiredSizes as $key => $desiredSize)
 		{
+			# if desired size is bigger than the actual image, then drop the desired sizes and use the actual image size instead
 			if($desiredSize['width'] > $imageSize['width'])
 			{
 				$desiredSizes[$key] = $imageSize;
@@ -141,129 +158,61 @@ class ProcessImage
 		return $desiredSizes;
 	}
 
-	public function imageResize($imageData, array $imageSize, array $desiredSizes, $imageType)
+	public function imageResize($imageData, array $source, array $desiredSizes, $imageType)
 	{
+
 		$copiedImages			= array();
-		$source_aspect_ratio 	= $imageSize['width'] / $imageSize['height'];
-				
-		foreach($desiredSizes as $key => $desiredSize)
+
+		foreach($desiredSizes as $key => $desired)
 		{
-			$desired_aspect_ratio 	= $desiredSize['width'] / $desiredSize['height'];
+			// resize
+		    $ratio = max($desired['width']/$source['width'], $desired['height']/$source['height']);
+		    $h = $desired['height'] / $ratio;
+		    $x = ($source['width'] - $desired['width'] / $ratio) / 2;
+		    $y = ($source['height'] - $desired['height'] / $ratio) / 2;
+		    $w = $desired['width'] / $ratio;
 
-			if ( $source_aspect_ratio > $desired_aspect_ratio )
-			{
-				# when source image is wider
-				$temp_height 	= $desiredSize['height'];
-				$temp_width 	= ( int ) ($desiredSize['height'] * $source_aspect_ratio);
-				$temp_width 	= round($temp_width, 0);
-			}
-			else
-			{
-				# when source image is similar or taller
-				$temp_width 	= $desiredSize['width'];
-				$temp_height 	= ( int ) ($desiredSize['width'] / $source_aspect_ratio);
-				$temp_height 	= round($temp_height, 0);
-			}
+			$new = imagecreatetruecolor($desired['width'], $desired['height']);
 
-			# Create a temporary GD image with desired size
-			$temp_gdim = imagecreatetruecolor( $temp_width, $temp_height );
+		  	// preserve transparency
+		  	if($imageType == "gif" or $imageType == "png")
+		  	{
+		    	imagecolortransparent($new, imagecolorallocatealpha($new, 0, 0, 0, 127));
+		    	imagealphablending($new, false);
+		    	imagesavealpha($new, true);
+		  	}
 
-			if ($imageType == "gif")
-			{
-				$transparent_index 	= imagecolortransparent($imageData);
-				imagepalettecopy($imageData, $temp_gdim);
-				imagefill($temp_gdim, 0, 0, $transparent_index);
-				imagecolortransparent($temp_gdim, $transparent_index);
-				imagetruecolortopalette($temp_gdim, true, 256);
-			}
-			elseif($imageType == "png")
-			{ 
-				imagealphablending($temp_gdim, false);
-				imagesavealpha($temp_gdim, true);
-				$transparent = imagecolorallocatealpha($temp_gdim, 255, 255, 255, 127);
-				imagefilledrectangle($temp_gdim, 0, 0, $temp_width, $temp_height, $transparent);
-			}
-			
-			# resize image
-			imagecopyresampled(
-				$temp_gdim,
-				$imageData,
-				0, 0,
-				0, 0,
-				$temp_width, $temp_height,
-				$imageSize['width'], $imageSize['height']
-			);
+		  	imagecopyresampled($new, $imageData, 0, 0, $x, $y, $desired['width'], $desired['height'], $w, $h);
 
-			$copiedImages[$key]		= $temp_gdim;
-			
-			/*
-			
-			# Copy cropped region from temporary image into the desired GD image
-			$x0 = ( $temp_width - $desiredSize['width'] ) / 2;
-			$y0 = ( $temp_height - $desiredSize['height'] ) / 2;
-
-			$desired_gdim = imagecreatetruecolor( $desiredSize['width'], $desiredSize['height'] );
-
-			if ($imageType == "gif")
-			{
-				imagepalettecopy($temp_gdim, $desired_gdim);
-				imagefill($desired_gdim, 0, 0, $transparent_index);
-				imagecolortransparent($desired_gdim, $transparent_index);
-				imagetruecolortopalette($desired_gdim, true, 256);
-			}
-			elseif($imageType == "png")
-			{
-				imagealphablending($desired_gdim, false);
-				imagesavealpha($desired_gdim,true);
-				$transparent = imagecolorallocatealpha($desired_gdim, 255, 255, 255, 127);
-				imagefilledrectangle($desired_gdim, 0, 0, $desired_size['with'], $desired_size['height'], $transparent);
-			}
-
-			imagecopyresampled(
-				$desired_gdim,
-				$temp_gdim,
-				0, 0,
-				0, 0,
-				$x0, $y0,
-				$desiredSize['width'], $desiredSize['height']				
-			);
-			$copiedImages[$key]		= $desired_gdim;
-			
-			*/
+			$copiedImages[$key]		= $new;
 		}
+
 		return $copiedImages;
 	}
 	
+	# save original in temporary folder
 	public function saveOriginal($folder, $image, $name, $type)
-	{
-		if(!file_exists($folder))
-		{
-			mkdir($folder, 0774, true);
-		}
-		
+	{		
 		$path = $folder . $name . '.' . $type;
 		
 		file_put_contents($path, $image);
 	}
 
+
+	# save resized images in temporary folder
 	public function saveImage($folder, $image, $name, $type)
-	{
-		if(!file_exists($folder))
-		{
-			mkdir($folder, 0774, true);
-		}
-		
+	{		
 		if($type == "png")
 		{
-			$result = imagepng( $image, $folder . '/' . $name . '.png' );
+			$result = imagepng( $image, $folder . $name . '.png' );
 		}
 		elseif($type == "gif")
 		{
-			$result = imagegif( $image, $folder . '/' . $name . '.gif' );
+			$result = imagegif( $image, $folder . $name . '.gif' );
 		}
 		else
 		{
-			$result = imagejpeg( $image, $folder . '/' . $name . '.jpeg' );
+			$result = imagejpeg( $image, $folder . $name . '.jpeg' );
 			$type = 'jpeg';
 		}
 		
@@ -277,60 +226,156 @@ class ProcessImage
 		return false;
 	}
 	
-	public function clearTempFolder()
-	{
-		$folder		= getcwd() . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
-
-		if(!file_exists($folder))
-		{
-			mkdir($folder, 0774, true);
-			return true;
-		}		
-		
-		$files 		= scandir($folder);
-		$result		= true;
-		
-		foreach($files as $file)
-		{
-			if (!in_array($file, array(".","..")))
-			{			
-				$filelink = $folder . $file;
-				if(!unlink($filelink))
-				{
-					$success = false;
-				}	
-			}
-		}
-		
-		return $result;
-	}
-	
 	public function deleteImage($name)
 	{
-		$baseFolder		= getcwd() . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR;
-		$original		= $baseFolder . 'original' . DIRECTORY_SEPARATOR . $name . '*';
-		$live			= $baseFolder . 'live' . DIRECTORY_SEPARATOR . $name . '*';
-		$success 		= true;
-		
-		foreach(glob($original) as $image)
+
+		# validate name 
+		$name = basename($name);
+
+		$result = true;
+
+		if(!file_exists($this->originalFolder . $name) OR !unlink($this->originalFolder . $name))
+		{
+			$result = false;
+		}
+
+		if(!file_exists($this->liveFolder . $name) OR !unlink($this->liveFolder . $name))
+		{
+			$result = false;
+		}
+
+		if(!file_exists($this->thumbFolder . $name) OR !unlink($this->thumbFolder . $name))
+		{
+			$result = false;
+		}
+
+		# you should not use glob but exact name with ending 
+		/*
+		foreach(glob($this->originalFolder . $name) as $image)
 		{
 			if(!unlink($image))
 			{
 				$success = false;
 			}
 		}
+		*/
 		
-		foreach(glob($live) as $image)
-		{
-			if(!unlink($image))
-			{
-				$success = false;
-			}
-		}
-		
-		return $success;
+		# array_map('unlink', glob("some/dir/*.txt"));
+
+		return $result;
 	}
+
+	/*
+	* scans content of a folder (without recursion)
+	* vars: folder path as string
+	* returns: one-dimensional array with names of folders and files
+	*/
+	public function scanMediaFlat()
+	{
+		$thumbs 		= array_diff(scandir($this->thumbFolder), array('..', '.'));
+		$imagelist		= array();
+
+		foreach ($thumbs as $key => $name)
+		{
+			if (file_exists($this->liveFolder . $name))
+			{
+				$imagelist[] = [
+					'name' 		=> $name,
+					'timestamp'	=> filemtime($this->liveFolder . $name),
+					'src_thumb'	=> 'media/thumbs/' . $name,
+					'src_live'	=> 'media/live/' . $name,
+				];
+			}
+		}
+
+		$imagelist = Helpers::array_sort($imagelist, 'timestamp', SORT_DESC);
+
+		return $imagelist;
+	}
+
+
+	public function getImageDetails($name, $structure)
+	{		
+		$name = basename($name);
+
+		if (!in_array($name, array(".","..")) && file_exists($this->liveFolder . $name))
+		{
+			$imageinfo 		= getimagesize($this->liveFolder . $name);
+
+			$imagedetails = [
+				'name' 		=> $name,
+				'timestamp'	=> filemtime($this->liveFolder . $name),
+				'bytes' 	=> filesize($this->liveFolder . $name),
+				'width'		=> $imageinfo[0],
+				'height'	=> $imageinfo[1],
+				'type'		=> $imageinfo['mime'],
+				'src_thumb'	=> 'media/thumbs/' . $name,
+				'src_live'	=> 'media/live/' . $name,
+				'pages'		=> $this->findPagesWithUrl($structure, $name, $result = [])
+			];
+
+			return $imagedetails;
+		}
+
+		return false;
+	}
+
+	public function generateThumbs()
+	{
+		# generate images from live folder to 'tmthumbs'
+		$liveImages 	= scandir($this->liveFolder);
+
+		foreach ($liveImages as $key => $name)
+		{
+			if (!in_array($name, array(".","..")))
+			{
+				$this->generateThumbFromImageFile($name);
+			}
+		}
+	}
+
+	public function generateThumbFromImageFile($filename)
+	{
+		$this->setFileName($filename, 'image', $overwrite = true);
+
+		if($this->extension == 'jpeg') $this->extension = 'jpg';
+		
+		switch($this->extension)
+		{
+			case 'gif': $image = imagecreatefromgif($this->liveFolder . $filename); break;
+			case 'jpg': $image = imagecreatefromjpeg($this->liveFolder . $filename); break;
+			case 'png': $image = imagecreatefrompng($this->liveFolder . $filename); break;
+			default: return 'image type not supported';
+		}
+
+		$originalSize 	= $this->getImageSize($image);
+
+		$thumbSize		= $this->desiredSizes['thumbs'];
+
+		$thumb 			= $this->imageResize($image, $originalSize, ['thumbs' => $thumbSize ], $this->extension);
+
+		$this->saveImage($this->thumbFolder, $thumb['thumbs'], $this->filename, $this->extension);
+	}
+
+	public function generateSizesFromImageFile($filename, $image)
+	{
+		$this->setFileName($filename, 'image');
+
+		if($this->extension == 'jpeg') $this->extension = 'jpg';
+		
+		switch($this->extension)
+		{
+			case 'gif': $image = imagecreatefromgif($image); break;
+			case 'jpg': $image = imagecreatefromjpeg($image); break;
+			case 'png': $image = imagecreatefrompng($image); break;
+			default: return 'image type not supported';
+		}
+
+		$originalSize 	= $this->getImageSize($image);
+
+		$resizedImages 	= $this->imageResize($image, $originalSize, $this->desiredSizes, $this->extension);
+
+		return $resizedImages;
+	}
+
 }
-
-
-?>

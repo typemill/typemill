@@ -9,6 +9,13 @@ use Typemill\Models\Write;
 
 class SetupController extends Controller
 {
+
+	# redirect if visit /setup route
+	public function redirect($request, $response)
+	{
+		return $response->withRedirect($this->c->router->pathFor('setup.show'));
+	}
+
 	public function show($request, $response, $args)
 	{
 		/* make some checks befor you install */

@@ -16,6 +16,25 @@ class Settings
 			$settings 			= array_merge($defaultSettings, $userSettings);
 		}
 
+		# if there is no theme set
+		if(!isset($settings['theme']))
+		{
+			# scan theme folder and get the first theme
+			$themefolder = $settings['rootPath'] . $settings['themeFolder'] . DIRECTORY_SEPARATOR;
+			$themes = array_diff(scandir($themefolder), array('..', '.'));
+			$firsttheme = reset($themes);
+
+			# if there is a theme with valid theme settings-file
+			if($firsttheme && self::getObjectSettings('themes', $firsttheme))
+			{
+				$settings['theme'] = $firsttheme;
+			}
+			else
+			{
+				die('There is no theme in the theme-folder. Please add a theme from https://themes.typemill.net');
+			}
+		}
+
 	    # i18n
 	    # load the strings of the set language
 	    $language = $settings['language'];
@@ -30,7 +49,7 @@ class Settings
 		{
 			$themeSettings = self::getObjectSettings('themes', $settings['theme']);
 			$settings['themes'][$settings['theme']] = isset($themeSettings['settings']) ? $themeSettings['settings'] : false;
-		}		
+		}
 
 		return array('settings' => $settings);
 	}
@@ -48,7 +67,6 @@ class Settings
 			'language'								=> 'en',
 			'startpage'								=> true,
 			'rootPath'								=> $rootPath,
-			'theme'									=> 'typemill',
 			'themeFolder'							=> 'themes',
 			'themeBasePath'							=> $rootPath,
 			'themePath'								=> '',
@@ -56,14 +74,14 @@ class Settings
 			'userPath'								=> $rootPath . 'settings' . DIRECTORY_SEPARATOR . 'users',
 			'authorPath'							=> __DIR__ . DIRECTORY_SEPARATOR . 'author' . DIRECTORY_SEPARATOR,
 			'editor'								=> 'visual',
-			'formats'								=> ['markdown', 'headline', 'ulist', 'olist', 'table', 'quote', 'image', 'video', 'toc', 'hr', 'definition', 'code'],
+			'formats'								=> ['markdown', 'headline', 'ulist', 'olist', 'table', 'quote', 'image', 'video', 'file', 'toc', 'hr', 'definition', 'code'],
 			'contentFolder'							=> 'content',
 			'cache'									=> true,
 			'cachePath'								=> $rootPath . 'cache',
 			'version'								=> '1.3.3',
 			'setup'									=> true,
 			'welcome'								=> true,
-			'images'								=> ['live' => ['width' => 820], 'mlibrary' => ['width' => 50, 'height' => 50]],
+			'images'								=> ['live' => ['width' => 820], 'thumbs' => ['width' => 250, 'height' => 150]],
 		];
 	}
 	
@@ -137,23 +155,25 @@ class Settings
 		
 		if($userSettings)
 		{
-			# whitelist settings that can be stored in usersettings (values are not relevant here, only keys)			
+			# whitelist settings that can be stored in usersettings (values are not relevant here, only keys)
 			$allowedUserSettings = ['displayErrorDetails' => true,
-									'title' => false,
-									'copyright' => false,
-									'language' => false,
-									'startpage' => false,
-									'author' => false,
-									'year' => false,
-									'theme' => false,
-									'editor' => false,
-									'formats' => false,
-									'setup' => false,
-									'welcome' => false,
-									'images' => false,
-									'plugins' => false,
-									'themes' => false,
-									'latestVersion' => false 
+									'title' => true,
+									'copyright' => true,
+									'language' => true,
+									'startpage' => true,
+									'author' => true,
+									'year' => true,
+									'theme' => true,
+									'editor' => true,
+									'formats' => true,
+									'setup' => true,
+									'welcome' => true,
+									'images' => true,
+									'plugins' => true,
+									'themes' => true,
+									'latestVersion' => true,
+									'logo' => true,
+									'favicon' => true, 
 								];
 
 			# cleanup the existing usersettings

@@ -30,9 +30,8 @@ class Folder
 				}
 			}
 		}
-		return $folderContent;		
+		return $folderContent;
 	}
-	
 	
 	/*
 	* scans content of a folder recursively
@@ -301,6 +300,25 @@ class Folder
 		return $result;
 	}
 
+	public static function getItemForUrlFrontend($folderContentDetails, $url, $result = NULL)
+	{
+		foreach($folderContentDetails as $key => $item)
+		{
+			# set item active, needed to move item in navigation
+			if($item->urlRelWoF === $url)
+			{
+				$item->active = true;
+				$result = $item;
+			}
+			elseif($item->elementType === "folder")
+			{
+				$result = self::getItemForUrlFrontend($item->folderContent, $url, $result);
+			}
+		}
+
+		return $result;
+	}	
+
 	public static function getPagingForItem($content, $item)
 	{
 		$keyPos 			= count($item->keyPathArray)-1;
@@ -475,6 +493,7 @@ class Folder
 		
 		while($i < count($searchArray))
 		{
+			if(!isset($content[$searchArray[$i]])){ return false; }
 			$item = $content[$searchArray[$i]];
 
 			if($i == count($searchArray)-1)

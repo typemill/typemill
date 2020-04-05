@@ -69,4 +69,11 @@ foreach($routes as $pluginRoute)
 	}
 }
 
-$app->get('/[{params:.*}]', PageController::class . ':index')->setName('home');
+if($settings['settings']['setup'])
+{
+	$app->get('/[{params:.*}]', SetupController::class . ':redirect');	
+}
+else
+{
+	$app->get('/[{params:.*}]', PageController::class . ':index')->setName('home');
+}
