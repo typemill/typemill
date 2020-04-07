@@ -1,0 +1,52 @@
+# Dutch
+nl:
+  add content-block: inhoudblok toevoegen
+  add definition: definitie toevoegen
+  add left column: linkerkolom toevoegen
+  add right column: rechter kolom toevoegen
+  add row above: rij boven toevoegen
+  add row below: rij hieronder toevoegen
+  Alt-Text: Alt-tekst
+  author: auteur
+  Bullet List: Lijst met opsommingstekens
+  cancel: annuleren
+  Caption: Bijschrift
+  cell: cel
+  Center: Midden
+  Class: Class
+  Code: Code
+  Content: inhoud
+  Created at (readonly): Gemaakt om (alleen lezen)
+  Definition List: Definitielijst
+  delete column: kolom verwijderen
+  delete content-block: content-block verwijderen
+  delete row: rij verwijderen
+  description: omschrijving
+  drag a picture or click to select: sleep een foto of klik om te selecteren
+  Head: Kop
+  Headline: Kop
+  Horizontal Line: Horizontale lijn
+  If not filled, the description is extracted from content.: Indien niet ingevuld, wordt de beschrijving uit de inhoud gehaald.
+  Image: Afbeelding
+  Last modified live (readonly): Laatst gewijzigd live (alleen-lezen)
+  Left: Links
+  Link: Link
+  Link to video: Link naar video
+  Manual date: Handmatige datum
+  Meta description: Metabeschrijving
+  meta: meta
+  Meta title: Metatitel
+  Numbered List: Genummerde lijst
+  Paragraph: Paragraaf
+  Please correct the errors above: Corrigeer bovenstaande fouten
+  Quote: Citeren
+  Right: Rechts
+  Saved successfully: succesvol opgeslagen
+  save: opslaan
+  table of contents: inhoudsopgave
+  Table: Tabel
+  Taken from your user account if set.: Genomen uit uw gebruikersaccount indien ingesteld.
+  term: term
+  Title: Titel
+  Used as fallback when no manual date is set.: Gebruikt als fallback als er geen handmatige datum is ingesteld.
+  Video: video
