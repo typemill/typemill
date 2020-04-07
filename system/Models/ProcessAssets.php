@@ -60,9 +60,9 @@ class ProcessAssets
 
 		foreach($folders as $folder)
 		{
-			if(!file_exists($folder))
+			if(!file_exists($folder) && !is_dir( $folder ))
 			{
-				if(!mkdir($folder, 0774, true))
+				if(!mkdir($folder, 0755, true))
 				{
 					return false;
 				}
@@ -75,12 +75,27 @@ class ProcessAssets
 					$this->generateThumbs();
 				}
 			}
-			elseif(!is_writeable($folder))
+			elseif(!is_writeable($folder) OR !is_readable($folder))
 			{
 				return false;
 			} 
+
+			# check if thumb-folder is empty, then generate thumbs from live folder
+			if($folder == $this->thumbFolder && $this->is_dir_empty($folder))
+			{				
+				# cleanup old systems
+				$this->cleanupLiveFolder();
+
+				# generate thumbnails from live folder
+				$this->generateThumbs();
+			}
 		}
 		return true;
+	}
+
+	public function is_dir_empty($dir) 
+	{
+		return (count(scandir($dir)) == 2);
 	}
 
 	public function setFileName($originalname, $type, $overwrite = null)

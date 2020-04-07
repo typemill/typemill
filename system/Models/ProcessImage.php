@@ -329,9 +329,10 @@ class ProcessImage extends ProcessAssets
 		{
 			if (!in_array($name, array(".","..")))
 			{
-				$this->generateThumbFromImageFile($name);
+				$result = $this->generateThumbFromImageFile($name);
 			}
 		}
+		return $result;
 	}
 
 	public function generateThumbFromImageFile($filename)
@@ -354,7 +355,12 @@ class ProcessImage extends ProcessAssets
 
 		$thumb 			= $this->imageResize($image, $originalSize, ['thumbs' => $thumbSize ], $this->extension);
 
-		$this->saveImage($this->thumbFolder, $thumb['thumbs'], $this->filename, $this->extension);
+		$saveImage 		= $this->saveImage($this->thumbFolder, $thumb['thumbs'], $this->filename, $this->extension);
+		if($saveImage)
+		{
+			return true;
+		}
+		return false;
 	}
 
 	public function generateSizesFromImageFile($filename, $image)

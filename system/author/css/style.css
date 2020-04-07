@@ -1727,6 +1727,7 @@ label .help, .label .help{
 }
 .blox-editor input.mdcontent.h2,.blox-editor input.mdcontent.h3,.blox-editor input.mdcontent.h4,.blox-editor input.mdcontent.h5,.blox-editor input.mdcontent.h6{
 	padding-left: 35px;
+	height: auto;
 }
 .blox-editor input.mdcontent.h2{
 	font-size: 1.6em;
@@ -1973,7 +1974,8 @@ button.format-item.close:hover{
 ************************/
 
 /* format menu */
-.inlineFormatBar {  
+.inlineFormatBar { 
+	box-sizing:content-box; 
 	height: 30px;  
 	padding: 5px 10px;  
 	background: #333;  
@@ -2403,10 +2405,12 @@ hr{
 }
 .blox li.h1{
 	font-weight: 700;
+	height:auto;
 }
 .blox li.h2,.blox li.h3,.blox li.h4,.blox li.h5,.blox li.h6{
 	font-weight: 400;
 	padding-left: 25px;	
+	height:auto;
 }
 .blox a, .blox a:link, .blox a:visited,
 footer a, footer a:link, footer a:visited

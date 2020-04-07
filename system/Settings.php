@@ -16,6 +16,9 @@ class Settings
 			$settings 			= array_merge($defaultSettings, $userSettings);
 		}
 
+		# no individual image sizes are allowed sind 1.3.4
+		$settings['images']	= $defaultSettings['images'];
+
 		# if there is no theme set
 		if(!isset($settings['theme']))
 		{
@@ -78,7 +81,7 @@ class Settings
 			'contentFolder'							=> 'content',
 			'cache'									=> true,
 			'cachePath'								=> $rootPath . 'cache',
-			'version'								=> '1.3.3',
+			'version'								=> '1.3.4',
 			'setup'									=> true,
 			'welcome'								=> true,
 			'images'								=> ['live' => ['width' => 820], 'thumbs' => ['width' => 250, 'height' => 150]],
