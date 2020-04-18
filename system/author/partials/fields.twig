@@ -62,7 +62,7 @@
 
 	{% endif %}
 
-	{% if field.description %}<div class="description">{{field.description}}</div>{% endif %}
+	{% if field.description %}<div class="description">{{ __(field.description) }}</div>{% endif %}
 	
 	{% if errors[itemName][field.name] %}
 		<span class="error">{{ errors[itemName][field.name] | first }}</span>

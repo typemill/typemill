@@ -1,123 +1,138 @@
 # Italiano
-
-# themes/typemill/typemill.yaml
-ACTIVATE_SPECIAL_STARTPAGE_DESIGN: Attiva il disegno speciale della pagina iniziale
-AUTHOR_INTRO: Introduzione dell'autore
-BOTTOM: Sotto
-BY: di
-COUNT_CHAPTERS_IN_NAVIGATION?: Contare i capitoli nella navigazione?
-DIFFERENT_DESIGN_FOR_STARTPAGE: Disegno diverso per la pagina iniziale
-FACEBOOK: Facebook
-FORMAT: Format
-GITHUB: GitHub
-LABEL_FOR_CHAPTER: Etichetta per capitolo
-LABEL_FOR_START_BUTTON: Etichetta per il pulsante Comincia
-LAST_MODIFIED_FORMAT: Ultimo formato modificato
-LAST_MODIFIED_TEXT: Ultimo testo modificato
-LAST_MODIFIED: Ultima modifica
-LINKEDIN: Linkedin
-LINK_TO_GIT_REPOSITORY: Collegamento al deposito git
-MAIL: Mail
-POSITION_OF_AUTHOR: Posizione dell'autore
-POSITION_OF_GIT_EDIT_LINK: Posizione del collegamento modifica Git
-POSITION_OF_MODIFIED_TEXT: Posizione del testo modificato
-POSITION_OF_SHARE_BUTTONS: Posizione dei pulsanti di condivisione
-SELECT_SHARE_BUTTONS: Seleziona i pulsanti pulsanti di condivisione
-SHARE: Condividere
-SHOW_CHAPTER_NUMBERS: Mostra i numeri dei capitoli
-TOP: Sopra
-TWITTER: Twitter
-TYPEMILL_DESCRIPTION: Il tema standard per Typemill. Reattivo, minimo e senza dipendenze. Utilizza i caratteri di sistema Calibri ed Helvetica. Non viene utilizzato JavaScript.
-WHATSAPP: WhatsApp
-XING: Xing
-
-# system/author/layouts/layoutBlox.twig
-ADD: aggiungi
-BOLD: grassetto
-BULLET_LIST: Elenco puntato
-CHECK: controllo
-CODE: Codice
-COG: ingranaggio
-CROSS: croce
-DEFINITION: Elenco delle definizioni
-DELETE_CLOSE: elimina/chiudi
-DELETE: elimina
-EXTERNAL_LINK: collegamento esterno
-FOLDER: cartella
-HEADLINE: Titolo
-HOME: home
-HORIZONTAL_LINE: Linea orizzontale
-IMAGE: Immagine
-ITALIC: corsivo
-LINK: collegamento
-MOVE_VERTICAL: spostare in verticale
-NUMBERED_LIST: Elenco numerato
-PARAGRAPH: Paragrafo
-POWER_OFF: spegni
-QUOTES: Citazione
-TABLE_OF_CONTENTS: Sommario
-TABLE: Tabella
-TEXT_FILE: file di testo
-VIDEO: Video
-
 ACCOUNT: Utenza
+ACTIVATE_SPECIAL_STARTPAGE_DESIGN: Attiva il disegno speciale della pagina iniziale
 ACTIVE: Attivo
 ACTUAL_PASSWORD: Parola d'ordine corrente
+ADD: aggiungi
+ADD_CONTENT_BLOCK: aggiungi blocco contenuto
+ADD_DEFINITION: aggiungi definizione
 ADD_FILE: aggiungi file
 ADD_FOLDER: aggiungi cartella
 ADD_FOLDER_TO_BASE_LEVEL: aggiungi cartella al livello base
 ADD_ITEM: aggiungi articolo
+ADD_LEFT_COLUMN: aggiungi colonna a sinistra
+ADD_RIGHT_COLUMN: aggiungi colonna a destra
+ADD_ROW_ABOVE: aggiungi la riga sopra
+ADD_ROW_BELOW: aggiungi la riga sotto
 ALL_USERS: Tutti gli utenti
+ALT_TEXT: Testo alternativo
 AUTHOR: Autore
+AUTHOR_INTRO: Introduzione dell'autore
 BACK_TO_STARTPAGE: torna alla pagina iniziale
+BOLD: grassetto
+BOTTOM: Sotto
+BROWSE: Sfoglia
+BULLET_LIST: Elenco puntato
 BY: di
-CODE: codice
+CANCEL: Annulla
+CAPTION: Didascalia
+CELL: cella
+CENTER: Centro
+CHECK: controllo
+CHOOSE_FILE: Scegli il file
+CLASS: Classe
+CODE: Codice
+COG: ingranaggio
+CONTENT: Contenuto
 CONTENT: Contenuto
 COPYRIGHT: Diritti d'autore
+COUNT_CHAPTERS_IN_NAVIGATION?: Contare i capitoli nella navigazione?
+CREATED_AT__READ_ONLY_: Creato il (sola lettura)
+CREATED_AT__READONLY_: Creato il (sola lettura)
 CREATE_NEW_USER: Crea nuovo utente
 CREATE_USER: Crea utente
-DEFINITION: elenco di definizioni
+CROSS: croce
+CUSTOM_CSS: CSS personalizzato
+DEFINITION: Elenco delle definizioni
+DEFINITION_LIST: Elenco delle definizioni
+DELETE_CLOSE: elimina/chiudi
+DELETE_COLUMN: elimina colonna
+DELETE_CONTENT_BLOCK: elimina blocco contenuto
 DELETE: elimina
 DELETE_PAGE: Elimina pagina
+DELETE_ROW: elimina riga
 DELETE_USER: Elimina utente
+DESCRIPTION: descrizione
+DIFFERENT_DESIGN_FOR_STARTPAGE: Disegno diverso per la pagina iniziale
 DISCARD_CHANGES: Non salvare le modifiche
 DISCARD: Scarta
 DO_YOU_REALLY_WANT_TO_DELETE_THE_USER: Vuoi veramente eliminare l'utente
 DO_YOU_REALLY_WANT_TO_DELETE_THIS_PAGE: Vuoi veramente cancellare questa pagina?
 DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES_AND_SET_THE_CONTENT_BACK_TO_THE_LIVE_VERSION: Vuoi annullare le modifiche e ripristinare i contenuti alla versione precedente?
 DRAFT: Bozza
+DRAG_A_PICTURE_OR_CLICK_TO_SELECT: trascina un'immagine o fai clic per selezionare
 EDIT: modifica
 EDIT_USER: Modifica utente
 E_G_: per es.:
 E_MAIL: Posta elettronica
+EXTERNAL_LINK: collegamento esterno
+FACEBOOK: Facebook
+File: File
 FIRST_NAME: Nome
+FOLDER: cartella
 FORGOT_PASSWORD: Parola d'ordine dimenticata
-HEADLINE: titolo
+FORMAT: Format
+GITHUB: GitHub
+HEAD: Intestazione
+HEADLINE: Titolo
+HIDE: Nascondi
+HIDE_PAGE_FROM_NAVIGATION: Nasconde la pagina dalla navigazione
+HOME: home
 HOMEPAGE: Homepage
-HR: linea orizzontale
-IMAGE: immagine
+HORIZONTAL_LINE: Linea orizzontale
+HR: Linea orizzontale
+IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: Se non compilato, la descrizione viene estratta dal contenuto.
+IMAGE: Immagine
+ITALIC: corsivo
+LABEL_FOR_CHAPTER: Etichetta per capitolo
+LABEL_FOR_START_BUTTON: Etichetta per il pulsante Comincia
 LANGUAGE: Lingua
+LAST_MODIFIED_FORMAT: Ultimo formato modificato
+LAST_MODIFIED_LIVE__READONLY_: Ultima modifica (sola lettura)
+LAST_MODIFIED_TEXT: Ultimo testo modificato
+LAST_MODIFIED: Ultima modifica
 LAST_NAME: Cognome
+LEFT: Sinistra
 LICENCE: Licenza
+LINK: Collegamento
+LINKEDIN: Linkedin
+LINK_TO_GIT_REPOSITORY: Collegamento al deposito git
+LINK_TO_VIDEO: Collega al video
 LOGIN: Accesso
+LOGO_ON_STARTPAGE: Logo sulla pagina iniziale
 LOGOUT: Disconnessione
-MARKDOWN: markdown
+MAIL: Mail
+MANUAL_DATE: Data manuale
+MARKDOWN: Markdown
 MENU: Menu
-META_TITLE: meta titolo
+META_DESCRIPTION: Descrizione
+META_TITLE: Titolo
+META: Metadati
 MISSING_REQUIREMENTS: Requisiti mancanti
+MOVE_VERTICAL: spostare in verticale
+NAVIGATION_TITLE: Titolo di navigazione
 NEW_PASSWORD: Nuova parola d'ordine
 NO_DESCRIPTION: Nessuna descrizione
 NO_PREVIEW: Nessuna anteprima
 NO_SETTINGS: Nessuna impostazione
 NOT_EDITABLE: non modificabile
-OLIST: elenchi ordinati
+NUMBERED_LIST: Elenco numerato
+OLIST: Elenchi ordinati
 ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: Sono ammessi solo i seguenti caratteri speciali:
+PARAGRAPH: Paragrafo
 PASSWORD: Parola d'ordine
 PLEASE_CONFIRM: Per favore conferma
+PLEASE_CORRECT_THE_ERRORS_ABOVE: Si prega di correggere gli errori sopra
 PLUGINS: Plugin
 PLUGIN_STORE: Deposito plugin
+POSITION_OF_AUTHOR: Posizione dell'autore
+POSITION_OF_GIT_EDIT_LINK: Posizione del collegamento modifica Git
+POSITION_OF_MODIFIED_TEXT: Posizione del testo modificato
+POSITION_OF_SHARE_BUTTONS: Posizione dei pulsanti di condivisione
+POWER_OFF: spegni
 PUBLISH: Pubblica
-QUOTE: citazione
+QUOTE: Citazione
+QUOTES: Citazione
 RAW_CONTENT_EDITOR: Editore contenuto grezzo
 RAW: grezzo
 RAW_MARKDOWN_EDITOR: Editore grezzo Markdown
@@ -125,30 +140,46 @@ RAW_MODE: modo grezzo
 READONLY: Sola lettura
 REMEMBER_TO_BOOKMARK_THIS_PAGE: Ricorda di aggiungere questa pagina ai segnalibri
 REQUIRED: Richiesto
+RIGHT: Destra
 ROLE: Ruolo
 SAVE_ALL_SETTINGS: Salva tutte le impostazioni
+SAVED_SUCCESSFULLY: Salvato con successo
 SAVE: Salva
 SAVE_THEME: Salva tema
+SELECT_SHARE_BUTTONS: Seleziona i pulsanti pulsanti di condivisione
 SETTINGS: Impostazioni
+SETTINGS_ARE_STORED: Le impostazioni sono memorizzate
 SETUP: Configurazione
+SHARE: Condividere
+SHOW_CHAPTER_NUMBERS: Mostra i numeri dei capitoli
+SHOW_LOGO_INSTEAD_OF_TITLE_ON_STARTPAGE: Mostra logo invece del titolo sulla pagina iniziale
 STANDARD_EDITOR_MODE: Modalità editore standard
 START: Comincia
 SYSTEM: Sistema
-TABLE: tabella
+TABLE_OF_CONTENTS: Sommario
+TABLE: Tabella
+TAKEN_FROM_YOUR_USER_ACCOUNT_IF_SET_: Tratto dalla tua utenza, se impostata.
+TERM: termine
+TEXT_FILE: file di testo
 THE_FORMAT_BUTTONS: pulsanti di formattazione
 THEMES: Temi
 THEME_STORE: Deposito temi
 TITLE: Titolo
-TOC: sommario
-ULIST: elenchi non ordinati
+TOC: Sommario
+TOP: Sopra
+TWITTER: Twitter
+TYPEMILL_DESCRIPTION: Il tema standard per Typemill. Reattivo, minimo e senza dipendenze. Utilizza i caratteri di sistema Calibri ed Helvetica. Non viene utilizzato JavaScript.
+ULIST: Elenchi non ordinati
 UNKNOWN: Ignoto
 UPDATE_USER: Aggiorna utente
+UPLOAD: carica
 USE_2_TO_40_CHARACTERS: Usa da 2 a 40 caratteri.
 USE_A_VALID_YEAR: Usa un anno valido
+USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Utilizzato come ripiego quando non è impostata alcuna data manuale.
 USERNAME: Nome utente
 USERS: Utenti
 USER: Utente
-VIDEO: video
+VIDEO: Video
 VIEW_SITE: Mostra sito
 VISUAL_CONTENT_EDITOR: Editore contenuto visivo
 VISUAL_EDITOR: Editore visivo
@@ -158,5 +189,8 @@ VISUAL: visivo
 WAIT: aspetta
 WEBSITE_TITLE: Titolo del sito
 WEB: Sito
+WHATSAPP: WhatsApp
 WRITING: Scrittura
+XING: Xing
 YEAR: Anno
+YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: È possibile sovrascrivere il css del tema con il proprio CSS qui.

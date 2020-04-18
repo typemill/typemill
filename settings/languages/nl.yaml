@@ -1,123 +1,131 @@
 # Dutch
-
-# themes/typemill/typemill.yaml
-ACTIVATE_SPECIAL_STARTPAGE_DESIGN: Activeer speciaal startpagina-ontwerp
-AUTHOR_INTRO: Auteur Intro
-BOTTOM: bodem
-BY: door
-COUNT_CHAPTERS_IN_NAVIGATION?: Hoofdstukken tellen in navigatie?
-DIFFERENT_DESIGN_FOR_STARTPAGE: ander ontwerp voor startpagina
-FACEBOOK: Facebook
-FORMAT: Formaat
-GITHUB: GitHub
-LABEL_FOR_CHAPTER: Label voor hoofdstuk
-LABEL_FOR_START_BUTTON: label voor startknop
-LAST_MODIFIED_FORMAT: Laatst gewijzigd formaat
-LAST_MODIFIED: Laatst gewijzigd
-LAST_MODIFIED_TEXT: Laatst gewijzigde tekst
-LINKEDIN: Linkedin
-LINK_TO_GIT_REPOSITORY: Link naar git repository
-MAIL: Mail
-POSITION_OF_AUTHOR: Positie van auteur
-POSITION_OF_GIT_EDIT_LINK: Positie van Git Link bewerken
-POSITION_OF_MODIFIED_TEXT: Positie van gemodificeerde tekst
-POSITION_OF_SHARE_BUTTONS: Positie van Share-knoppen
-SELECT_SHARE_BUTTONS: Selecteer Share-knoppen
-SHARE: deel
-SHOW_CHAPTER_NUMBERS: hoofdstuknummers tonen
-TOP: Top
-TWITTER: Twitter
-TYPEMILL_DESCRIPTION: Het standaardthema voor typemill. Responsief, minimaal en zonder afhankelijkheden. Het gebruikt de systeemlettertypen Calibri en Helvetica. Er is geen JavaScript gebruikt.
-WHATSAPP: Whatsapp
-XING: Xing
-
-# system/author/layouts/layoutBlox.twig
-ADD: toevoegen
-BOLD: vetgedrukt
-BULLET_LIST: Bullet List
-CHECK: check
-CODE: Code
-COG: tandwiel
-CROSS: kruis
-DEFINITION: Definitielijst
-DELETE_CLOSE: verwijderen / sluiten
-DELETE: verwijderen
-EXTERNAL_LINK: externe link
-FOLDER: map
-HEADLINE: Kop
-HOME: home
-HORIZONTAL_LINE: Horizontale lijn
-IMAGE: Afbeelding
-ITALIC: cursief
-LINK: link
-MOVE_VERTICAL: verplaats verticaal
-NUMBERED_LIST: Genummerde lijst
-PARAGRAPH: Paragraaf
-POWER_OFF: power-off
-QUOTES: Citeren
-TABLE_OF_CONTENTS: Inhoudsopgave
-TABLE: tabel
-TEXT_FILE: tekstbestand
-VIDEO: Video
-
 ACCOUNT: Account
+ACTIVATE_SPECIAL_STARTPAGE_DESIGN: Activeer speciaal startpagina-ontwerp
 ACTIVE: Actief
 ACTUAL_PASSWORD: Actueel wachtwoord
+ADD_CONTENT_BLOCK: inhoudblok toevoegen
+ADD_DEFINITION: definitie toevoegen
 ADD_FILE: Bestand toevoegen
 ADD_FOLDER: Map toevoegen
 ADD_FOLDER_TO_BASE_LEVEL: map toevoegen op basisniveau
 ADD_ITEM: Item toevoegen
+ADD_LEFT_COLUMN: linkerkolom toevoegen
+ADD_RIGHT_COLUMN: rechter kolom toevoegen
+ADD_ROW_ABOVE: rij boven toevoegen
+ADD_ROW_BELOW: rij hieronder toevoegen
+ADD: toevoegen
 ALL_USERS: Alle gebruikers
+ALT_TEXT: Alt-tekst
 AUTHOR: Auteur
+AUTHOR_INTRO: Auteur Intro
 BACK_TO_STARTPAGE: terug naar startpagina
+BOLD: vetgedrukt
+BOTTOM: bodem
+BULLET_LIST: Lijst met opsommingstekens
 BY: door
-CODE: code
+CANCEL: annuleren
+CAPTION: Bijschrift
+CELL: cel
+CENTER: Midden
+CHECK: check
+CLASS: Class
+CODE: Code
+COG: tandwiel
 CONTENT: Inhoud
 COPYRIGHT: Auteursrecht
+COUNT_CHAPTERS_IN_NAVIGATION?: Hoofdstukken tellen in navigatie?
+CREATED_AT__READ_ONLY_: Gemaakt om (alleen lezen)
+CREATED_AT__READONLY_: Gemaakt om (alleen lezen)
 CREATE_NEW_USER: Nieuwe gebruiker maken
 CREATE_USER: Gebruiker maken
-DEFINITION: definitie
-DELETE: verwijderen
+CROSS: kruis
+DEFINITION: Definitielijst
+DEFINITION_LIST: Definitielijst
+DELETE_CLOSE: verwijderen / sluiten
+DELETE_COLUMN: kolom verwijderen
+DELETE_CONTENT_BLOCK: content-block verwijderen
 DELETE_PAGE: pagina verwijderen
+DELETE_ROW: rij verwijderen
 DELETE_USER: Gebruiker verwijderen
+DELETE: verwijderen
+DESCRIPTION: omschrijving
+DIFFERENT_DESIGN_FOR_STARTPAGE: ander ontwerp voor startpagina
 DISCARD_CHANGES: Wijzigingen negeren
 DISCARD: weggooien
 DO_YOU_REALLY_WANT_TO_DELETE_THE_USER: Wilt u de gebruiker echt verwijderen
 DO_YOU_REALLY_WANT_TO_DELETE_THIS_PAGE: Wilt u deze pagina echt verwijderen?
 DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES_AND_SET_THE_CONTENT_BACK_TO_THE_LIVE_VERSION: Wilt u uw wijzigingen annuleren en de inhoud terugzetten naar de live versie?
 DRAFT: Ontwerp
+DRAG_A_PICTURE_OR_CLICK_TO_SELECT: sleep een foto of klik om te selecteren
 EDIT: bewerken
 EDIT_USER: Gebruiker bewerken
 E_G_: bijv.
 E_MAIL: e-mail
+EXTERNAL_LINK: externe link
+FACEBOOK: Facebook
 FIRST_NAME: Voornaam
+FOLDER: map
 FORGOT_PASSWORD: Wachtwoord vergeten
-HEADLINE: kop
+FORMAT: Formaat
+GITHUB: GitHub
+HEAD: Kop
+HEADLINE: Kop
+HOME: home
 HOMEPAGE: Homepage
+HORIZONTAL_LINE: Horizontale lijn
+HORIZONTAL_LINE: Horizontale lijn
 HR: hr
-IMAGE: afbeelding
+IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: Indien niet ingevuld, wordt de beschrijving uit de inhoud gehaald.
+IMAGE: Afbeelding
+ITALIC: cursief
+LABEL_FOR_CHAPTER: Label voor hoofdstuk
+LABEL_FOR_START_BUTTON: label voor startknop
 LANGUAGE: Taal
+LAST_MODIFIED_FORMAT: Laatst gewijzigd formaat
+LAST_MODIFIED: Laatst gewijzigd
+LAST_MODIFIED_LIVE__READONLY_: Laatst gewijzigd live (alleen-lezen)
+LAST_MODIFIED_TEXT: Laatst gewijzigde tekst
 LAST_NAME: achternaam
+LEFT: Links
 LICENCE: Licentie
+LINKEDIN: Linkedin
+LINK: Link
+LINK_TO_GIT_REPOSITORY: Link naar git repository
+LINK_TO_VIDEO: Link naar video
 LOGIN: Inloggen
 LOGOUT: Uitloggen
+MAIL: Mail
+MANUAL_DATE: Handmatige datum
 MARKDOWN: Markdown
 MENU: Menu
+META_DESCRIPTION: Metabeschrijving
+META: meta
 META_TITLE: metatitel
+META_TITLE: Metatitel
 MISSING_REQUIREMENTS: ontbrekende vereisten
+MOVE_VERTICAL: verplaats verticaal
 NEW_PASSWORD: Nieuw wachtwoord
 NO_DESCRIPTION: Geen beschrijving
 NO_PREVIEW: Geen voorbeeld
 NO_SETTINGS: Geen instellingen
 NOT_EDITABLE: niet bewerkbaar
+NUMBERED_LIST: Genummerde lijst
 OLIST: olist
 ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: alleen de volgende speciale tekens zijn toegestaan:
+PARAGRAPH: Paragraaf
 PASSWORD: Wachtwoord
 PLEASE_CONFIRM: bevestig alstublieft
+PLEASE_CORRECT_THE_ERRORS_ABOVE: Corrigeer bovenstaande fouten
 PLUGINS: plug-ins
 PLUGIN_STORE: Plugin Store
+POSITION_OF_AUTHOR: Positie van auteur
+POSITION_OF_GIT_EDIT_LINK: Positie van Git Link bewerken
+POSITION_OF_MODIFIED_TEXT: Positie van gemodificeerde tekst
+POSITION_OF_SHARE_BUTTONS: Positie van Share-knoppen
+POWER_OFF: power-off
 PUBLISH: Publiceren
-QUOTE: quote
+QUOTE: Citeren
+QUOTES: Citeren
 RAW_CONTENT_EDITOR: Raw Content Editor
 RAW_MARKDOWN_EDITOR: Raw Markdown Editor
 RAW_MODE: onbewerkte modus
@@ -125,30 +133,43 @@ RAW: rauw
 READONLY: Alleen lezen
 REMEMBER_TO_BOOKMARK_THIS_PAGE: vergeet deze pagina niet te bookmarken
 REQUIRED: verplicht
+RIGHT: Rechts
 ROLE: rol
 SAVE_ALL_SETTINGS: sla alle instellingen op
+SAVED_SUCCESSFULLY: succesvol opgeslagen
 SAVE: Opslaan
 SAVE_THEME: Thema opslaan
+SELECT_SHARE_BUTTONS: Selecteer Share-knoppen
 SETTINGS: Instellingen
 SETUP: Setup
+SHARE: deel
+SHOW_CHAPTER_NUMBERS: hoofdstuknummers tonen
 STANDARD_EDITOR_MODE: Standaardeditormodus
 START: Start
 SYSTEM: Systeem
-TABLE: tabel
+TABLE_OF_CONTENTS: Inhoudsopgave
+TABLE: Tabel
+TAKEN_FROM_YOUR_USER_ACCOUNT_IF_SET_: Genomen uit uw gebruikersaccount indien ingesteld.
+TERM: term
+TEXT_FILE: tekstbestand
 THE_FORMAT_BUTTONS: De opmaakknoppen
 THEMAS: Thema's
 THEME_STORE: Theme Store
 TITLE: Titel
 TOC: toc
+TOP: Top
+TWITTER: Twitter
+TYPEMILL_DESCRIPTION: Het standaardthema voor typemill. Responsief, minimaal en zonder afhankelijkheden. Het gebruikt de systeemlettertypen Calibri en Helvetica. Er is geen JavaScript gebruikt.
 ULIST: ulist
 UNKNOWN: onbekend
 UPDATE_USER: Gebruiker bijwerken
 USE_2_TO_40_CHARACTERS: gebruik 2 tot 40 tekens.
 USE_A_VALID_YEAR: Gebruik een geldig jaar
+USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Gebruikt als fallback als er geen handmatige datum is ingesteld.
+USER: Gebruiker
 USERNAME: Gebruikersnaam
 USERS: Gebruikers
-USER: Gebruiker
-VIDEO: video
+VIDEO: Video
 VIEW_SITE: Site bekijken
 VISUAL_CONTENT_EDITOR: Visual Content Editor
 VISUAL_EDITOR: visuele editor
@@ -158,5 +179,7 @@ VISUEEL: visueel
 WAIT: wacht
 WEBSITE_TITLE: Titel van de website
 WEB: Web
+WHATSAPP: Whatsapp
 WRITING: schrijven
+XING: Xing
 YEAR: Jaar

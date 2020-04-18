@@ -1,127 +1,138 @@
 # English
-
-# themes/typemill/typemill.yaml
-ACTIVATE_SPECIAL_STARTPAGE_DESIGN: Activate Special Startpage-Design
-AUTHOR_INTRO: Author Intro
-BOTTOM: Bottom
-BY: by
-COUNT_CHAPTERS_IN_NAVIGATION?: Count chapters in navigation?
-DIFFERENT_DESIGN_FOR_STARTPAGE: Different Design for Startpage
-FACEBOOK: Facebook
-FORMAT: Format
-GITHUB: GitHub
-LABEL_FOR_CHAPTER: Label for Chapter
-LABEL_FOR_START_BUTTON: Label for Start Button
-LAST_MODIFIED_FORMAT: Last Modified Format
-LAST_MODIFIED: Last Modified
-LAST_MODIFIED_TEXT: Last Modified Text
-LINKEDIN: Linkedin
-LINK_TO_GIT_REPOSITORY: Link to git repository
-MAIL: Mail
-POSITION_OF_AUTHOR: Position of Author
-POSITION_OF_GIT_EDIT_LINK: Position of Git Edit Link
-POSITION_OF_MODIFIED_TEXT: Position of Modified Text
-POSITION_OF_SHARE_BUTTONS: Position of Share-Buttons
-SELECT_SHARE_BUTTONS: Select Share Buttons
-SHARE: Share
-SHOW_CHAPTER_NUMBERS: Show Chapter Numbers
-TOP: Top
-TWITTER: Twitter
-TYPEMILL_DESCRIPTION: The standard theme for Typemill. Responsive, minimal and without any dependencies. It uses the system fonts Calibri and Helvetica. No JavaScript is used.
-WHATSAPP: WhatsApp
-XING: Xing
-
-# system/author/layouts/layoutBlox.twig
-ADD: add
-BOLD: bold
-BULLET_LIST: Bullet List
-CHECK: check
-CODE: Code
-COG: cog
-CROSS: cross
-DEFINITION: Definition List
-DELETE_CLOSE: delete/close
-DELETE: delete
-EXTERNAL_LINK: external-link
-FOLDER: folder
-HEADLINE: Headline
-HOME: home
-HORIZONTAL_LINE: Horizontal Line
-IMAGE: Image
-ITALIC: italic
-LINK: link
-MOVE_VERTICAL: move vertical
-NUMBERED_LIST: Numbered List
-PARAGRAPH: Paragraph
-POWER_OFF: power-off
-QUOTES: Quote
-TABLE_OF_CONTENTS: Table of Contents
-TABLE: Table
-TEXT_FILE: text-file
-UPLOAD: upload
-VIDEO: Video
-
-# others
 ACCOUNT: Account
+ACTIVATE_SPECIAL_STARTPAGE_DESIGN: Activate Special Startpage-Design
 ACTIVE: Active
 ACTUAL_PASSWORD: Actual Password
+ADD: add
+ADD_CONTENT_BLOCK: add content-block
+ADD_DEFINITION: add definition
 ADD_FILE: add file
 ADD_FOLDER: add folder
 ADD_FOLDER_TO_BASE_LEVEL: add folder to base level
 ADD_ITEM: add item
+ADD_LEFT_COLUMN: add left column
+ADD_RIGHT_COLUMN: add right column
+ADD_ROW_ABOVE: add row above
+ADD_ROW_BELOW: add row below
 ALL_USERS: All users
+ALT_TEXT: Alt-Text
 AUTHOR: Author
+AUTHOR_INTRO: Author Intro
 BACK_TO_STARTPAGE: back to startpage
+BOLD: bold
+BOTTOM: Bottom
 BROWSE: BROWSE
+BULLET_LIST: Bullet List
 BY: by
+CANCEL: cancel
+CAPTION: Caption
+CELL: cell
+CENTER: Center
+CHECK: check
 CHOOSE_FILE: Choose file
-CODE: code
+CLASS: Class
+CODE: Code
+COG: cog
+CONTENT: Content
 CONTENT: Content
 COPYRIGHT: Copyright
+COUNT_CHAPTERS_IN_NAVIGATION?: Count chapters in navigation?
+CREATED_AT__READ_ONLY_: Created at (readonly)
+CREATED_AT__READONLY_: Created at (read only)
 CREATE_NEW_USER: Create New User
 CREATE_USER: Create User
-DEFINITION: definition
+CROSS: cross
+CUSTOM_CSS: Custom CSS
+DEFINITION: Definition List
+DEFINITION_LIST: Definition List
+DELETE_CLOSE: delete/close
+DELETE_COLUMN: delete column
+DELETE_CONTENT_BLOCK: delete content-block
 DELETE: delete
 DELETE_PAGE: Delete page
+DELETE_ROW: delete row
 DELETE_USER: Delete User
+DESCRIPTION: description
+DIFFERENT_DESIGN_FOR_STARTPAGE: Different Design for Startpage
 DISCARD_CHANGES: Discard Changes
 DISCARD: Discard
 DO_YOU_REALLY_WANT_TO_DELETE_THE_USER: Do you really want to delete the user
 DO_YOU_REALLY_WANT_TO_DELETE_THIS_PAGE: Do you really want to delete this page?
 DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES_AND_SET_THE_CONTENT_BACK_TO_THE_LIVE_VERSION: Do you want to discard your changes and set the content back to the live version?
 DRAFT: Draft
+DRAG_A_PICTURE_OR_CLICK_TO_SELECT: upload an image
 EDIT: edit
 EDIT_USER: Edit User
 E_G_: e.g.
 E_MAIL: E-Mail
+EXTERNAL_LINK: external-link
+FACEBOOK: Facebook
+FILE: File
 FIRST_NAME: First Name
+FOLDER: folder
 FORGOT_PASSWORD: Forgot password
-HEADLINE: headline
+FORMAT: Format
+GITHUB: GitHub
+HEAD: Head
+HEADLINE: Headline
+HIDE: Hide
+HIDE_PAGE_FROM_NAVIGATION: Hide page from navigation
+HOME: home
 HOMEPAGE: Homepage
+HORIZONTAL_LINE: Horizontal Line
 HR: hr
-IMAGE: image
+IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: If not filled, the description is extracted from content.
+IMAGE: Image
+ITALIC: italic
+LABEL_FOR_CHAPTER: Label for Chapter
+LABEL_FOR_START_BUTTON: Label for Start Button
 LANGUAGE: Language
+LAST_MODIFIED_FORMAT: Last Modified Format
+LAST_MODIFIED: Last Modified
+LAST_MODIFIED_LIVE__READONLY_: Last modified live (readonly)
+LAST_MODIFIED_TEXT: Last Modified Text
 LAST_NAME: Last Name
+LEFT: Left
 LICENCE: Licence
+LINKEDIN: Linkedin
+LINK: Link
+LINK_TO_GIT_REPOSITORY: Link to git repository
+LINK_TO_VIDEO: Link to video
 LOGIN: Login
+LOGO_ON_STARTPAGE: Logo on startpage
 LOGOUT: Logout
+MAIL: Mail
+MANUAL_DATE: Manual date
 MARKDOWN: markdown
 MENU: Menu
-META_TITLE: meta title
+META_DESCRIPTION: Meta description
+META: meta
+META_TITLE: Meta title
 MISSING_REQUIREMENTS: Missing Requirements
+MOVE_VERTICAL: move vertical
+NAVIGATION_TITLE: Navigation Title
 NEW_PASSWORD: New Password
 NO_DESCRIPTION: No description
 NO_PREVIEW: No Preview
 NO_SETTINGS: No Settings
 NOT_EDITABLE: not editable
+NUMBERED_LIST: Numbered List
 OLIST: olist
 ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: Only the following special characters are allowed:
+PARAGRAPH: Paragraph
 PASSWORD: Password
 PLEASE_CONFIRM: Please confirm
+PLEASE_CORRECT_THE_ERRORS_ABOVE: Please correct the errors above
 PLUGINS: Plugins
 PLUGIN_STORE: Plugin Store
+POSITION_OF_AUTHOR: Position of Author
+POSITION_OF_GIT_EDIT_LINK: Position of Git Edit Link
+POSITION_OF_MODIFIED_TEXT: Position of Modified Text
+POSITION_OF_SHARE_BUTTONS: Position of Share-Buttons
+POWER_OFF: power-off
 PUBLISH: Publish
-QUOTE: quote
+QUOTE: Quote
+QUOTES: Quote
 RAW_CONTENT_EDITOR: Raw Content Editor
 RAW_MARKDOWN_EDITOR: Raw Markdown Editor
 RAW_MODE: raw mode
@@ -129,30 +140,46 @@ RAW: raw
 READONLY: Readonly
 REMEMBER_TO_BOOKMARK_THIS_PAGE: Remember to bookmark this page
 REQUIRED: Required
+RIGHT: Right
 ROLE: Role
 SAVE_ALL_SETTINGS: Save All Settings
+SAVED_SUCCESSFULLY: Saved successfully
 SAVE: Save
 SAVE_THEME: Save Theme
+SELECT_SHARE_BUTTONS: Select Share Buttons
 SETTINGS: Settings
+SETTINGS_ARE_STORED: Settings are stored
 SETUP: Setup
+SHARE: Share
+SHOW_CHAPTER_NUMBERS: Show Chapter Numbers
+SHOW_LOGO_INSTEAD_OF_TITLE_ON_STARTPAGE: Show logo instead of title on startpage
 STANDARD_EDITOR_MODE: Standard Editor Mode
 START: Start
 SYSTEM: System
-TABLE: table
+TABLE_OF_CONTENTS: Table of Contents
+TABLE: Table
+TAKEN_FROM_YOUR_USER_ACCOUNT_IF_SET_: Taken from your user account if set.
+TERM: term
+TEXT_FILE: text-file
 THE_FORMAT_BUTTONS: The Format Buttons
 THEMES: Themes
 THEME_STORE: Theme Store
 TITLE: Title
 TOC: toc
+TOP: Top
+TWITTER: Twitter
+TYPEMILL_DESCRIPTION: The standard theme for Typemill. Responsive, minimal and without any dependencies. It uses the system fonts Calibri and Helvetica. No JavaScript is used.
 ULIST: ulist
 UNKNOWN: Unknown
 UPDATE_USER: Update User
+UPLOAD: upload
 USE_2_TO_40_CHARACTERS: Use 2 to 40 characters.
 USE_A_VALID_YEAR: Use a valid year
+USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Used as fallback when no manual date is set.
 USERNAME: Username
 USERS: Users
 USER: User
-VIDEO: video
+VIDEO: Video
 VIEW_SITE: View Site
 VISUAL_CONTENT_EDITOR: Visual Content Editor
 VISUAL_EDITOR: Visual Editor
@@ -162,5 +189,8 @@ VISUAL: visual
 WAIT: wait
 WEBSITE_TITLE: Website Title
 WEB: Web
+WHATSAPP: WhatsApp
 WRITING: Writing
+XING: Xing
 YEAR: Year
+YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: You can overwrite the theme-css with your own css here.

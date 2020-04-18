@@ -42,7 +42,6 @@ class Settings
 	    # load the strings of the set language
 	    $language = $settings['language'];
 	    $settings['labels'] = self::getLanguageLabels($language);
-	    $settings['vuejsLabels'] = self::getVuejsLabels($language);
 
 		# We know the used theme now so create the theme path 
 		$settings['themePath'] = $settings['rootPath'] . $settings['themeFolder'] . DIRECTORY_SEPARATOR . $settings['theme'];

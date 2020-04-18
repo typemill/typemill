@@ -89,7 +89,6 @@
 			myaxios.defaults.baseURL =  "{{ base_url }}";
 		</script>		
 		<script src="{{ base_url }}/system/author/js/vue.min.js?20200405"></script>
-    	<script src="{{ base_url }}/system/author/js/vue-i18n.min.js?20200405"></script>
 		<script src="{{ base_url }}/system/author/js/autosize.min.js?20200405"></script>
 		<script src="{{ base_url }}/system/author/js/sortable.min.js?20200405"></script>
 		<script src="{{ base_url }}/system/author/js/vuedraggable.umd.min.js?20200405"></script>
@@ -97,7 +96,7 @@
 
 	    <script>
     	  	let language = {{ settings.language|json_encode() }};
-	      	let vuejsLabels = {{ settings.vuejsLabels|json_encode() }};
+          let labels = {{ settings.labels|json_encode() }};
       		let navigation = {{ navigation|json_encode() }};
 		</script>
     
