@@ -98,7 +98,7 @@ class ProcessAssets
 		return (count(scandir($dir)) == 2);
 	}
 
-	public function setFileName($originalname, $type, $overwrite = null)
+	public function setFileName($originalname, $type, $overwrite = NULL)
 	{
 		$pathinfo			= pathinfo($originalname);
 		
@@ -133,6 +133,11 @@ class ProcessAssets
 	public function getName()
 	{
 		return $this->filename;
+	}
+
+	public function setExtension($extension)
+	{
+		$this->extension = $extension;
 	}
 
 	public function getExtension()

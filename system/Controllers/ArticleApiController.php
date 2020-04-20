@@ -7,6 +7,7 @@ use Slim\Http\Response;
 use Typemill\Models\Folder;
 use Typemill\Models\Write;
 use Typemill\Models\WriteYaml;
+use Typemill\Models\WriteMeta;
 use Typemill\Extensions\ParsedownExtension;
 use Typemill\Events\OnPagePublished;
 use Typemill\Events\OnPageUnpublished;
@@ -77,10 +78,15 @@ class ArticleApiController extends ContentController
 			# update the public structure
 			$this->setStructure($draft = false, $cache = false);
 
-			# dispatch event
-			$this->c->dispatcher->dispatch('onPagePublished', new OnPagePublished($this->item));
+			# complete the page meta if title or description not set
+			$writeMeta = new WriteMeta();
+			$meta = $writeMeta->completePageMeta($this->content, $this->settings, $this->item);
 
-			return $response->withJson(['success'], 200);
+			# dispatch event
+			$page = ['content' => $this->content, 'meta' => $meta, 'item' => $this->item];
+			$this->c->dispatcher->dispatch('onPagePublished', new OnPagePublished($page));
+
+			return $response->withJson(['success' => true, 'meta' => $meta], 200);
 		}
 		else
 		{
@@ -260,7 +266,7 @@ class ArticleApiController extends ContentController
 		}
 		else
 		{
-			return $response->withJson(array('data' => $this->structure, 'errors' => $this->errors), 404); 
+			return $response->withJson(array('data' => $this->structure, 'errors' => $this->errors), 422); 
 		}
 	}
 	
@@ -465,12 +471,11 @@ class ArticleApiController extends ContentController
 		# create the url for the item
 		$urlWoF 	= $folder->urlRelWoF . '/' . $slug;
 
-		# add the navigation name to the item htmlspecialchars needed for frensh language
+		# add the navigation name to the item htmlspecialchars needed for french language
 		$extended[$urlWoF] = ['hide' => false, 'navtitle' => $name];
 
 		# store the extended structure
 		$write->updateYaml('cache', 'structure-extended.yaml', $extended);
-
 
 		# update the structure for editor
 		$this->setStructure($draft = true, $cache = false);
@@ -482,7 +487,6 @@ class ArticleApiController extends ContentController
 		
 		return $response->withJson(array('posts' => $folder, $this->structure, 'errors' => false, 'url' => $url));
 	}
-
 	
 	public function createArticle(Request $request, Response $response, $args)
 	{
@@ -546,14 +550,10 @@ class ArticleApiController extends ContentController
 		if($writeError){ return $response->withJson(array('data' => $this->structure, 'errors' => 'Something went wrong. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404); }
 
 		# add prefix number to the name
-#		$namePath 	= $index > 9 ? $index . '-' . $name : '0' . $index . '-' . $name;
 		$namePath 	= $index > 9 ? $index . '-' . $slug : '0' . $index . '-' . $slug;
 		$folderPath	= 'content' . $folder->path;
 		
-#		$title = implode(" ", $nameParts); 
-
 		# create default content
-#		$content = json_encode(['# ' . $title, 'Content']);
 		$content = json_encode(['# ' . $name, 'Content']);
 		
 		if($this->params['type'] == 'file')
@@ -576,20 +576,17 @@ class ArticleApiController extends ContentController
 
 		}
 		
-
 		# get extended structure
 		$extended = $write->getYaml('cache', 'structure-extended.yaml');
 
 		# create the url for the item
 		$urlWoF = $folder->urlRelWoF . '/' . $slug;
 
-		# add the navigation name to the item htmlspecialchars needed for frensh language
+		# add the navigation name to the item htmlspecialchars needed for french language
 		$extended[$urlWoF] = ['hide' => false, 'navtitle' => $name];
 
 		# store the extended structure
 		$write->updateYaml('cache', 'structure-extended.yaml', $extended);
-
-
 
 		# update the structure for editor
 		$this->setStructure($draft = true, $cache = false);
@@ -643,7 +640,7 @@ class ArticleApiController extends ContentController
 			# check, if the same name as new item, then return an error
 			if($item->slug == $slug)
 			{
-				return $response->withJson(array('data' => $this->structure, 'errors' => 'There is already a page with this name. Please choose another name.', 'url' => $url), 404);
+				return $response->withJson(array('data' => $this->structure, 'errors' => 'There is already a page with this name. Please choose another name.', 'url' => $url), 422);
 			}
 			
 			if(!$write->moveElement($item, '', $index))
@@ -653,7 +650,7 @@ class ArticleApiController extends ContentController
 			$index++;
 		}
 
-		if($writeError){ return $response->withJson(array('data' => $this->structure, 'errors' => 'Something went wrong. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404); }
+		if($writeError){ return $response->withJson(array('data' => $this->structure, 'errors' => 'Something went wrong. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 422); }
 
 		# add prefix number to the name
 		$namePath 	= $index > 9 ? $index . '-' . $slug : '0' . $index . '-' . $slug;
@@ -667,14 +664,14 @@ class ArticleApiController extends ContentController
 		{
 			if(!$write->writeFile($folderPath, $namePath . '.txt', $content))
 			{
-				return $response->withJson(array('data' => $this->structure, 'errors' => 'We could not create the file. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404);
+				return $response->withJson(array('data' => $this->structure, 'errors' => 'We could not create the file. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 422);
 			}
 		}
 		elseif($this->params['type'] == 'folder')
 		{
 			if(!$write->checkPath($folderPath . DIRECTORY_SEPARATOR . $namePath))
 			{
-				return $response->withJson(array('data' => $this->structure, 'errors' => 'We could not create the folder. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404);
+				return $response->withJson(array('data' => $this->structure, 'errors' => 'We could not create the folder. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 422);
 			}
 			$write->writeFile($folderPath . DIRECTORY_SEPARATOR . $namePath, 'index.txt', $content);
 
@@ -694,7 +691,6 @@ class ArticleApiController extends ContentController
 
 		# store the extended structure
 		$write->updateYaml('cache', 'structure-extended.yaml', $extended);
-
 
 		# update the structure for editor
 		$this->setStructure($draft = true, $cache = false);

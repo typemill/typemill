@@ -6,6 +6,7 @@ use Typemill\Models\Folder;
 use Typemill\Models\WriteCache;
 use Typemill\Models\WriteSitemap;
 use Typemill\Models\WriteYaml;
+use Typemill\Models\WriteMeta;
 use \Symfony\Component\Yaml\Yaml;
 use Typemill\Models\VersionCheck;
 use Typemill\Models\Helpers;
@@ -30,7 +31,6 @@ class PageController extends Controller
 		$item			= false;
 		$home			= false;
 		$breadcrumb 	= false;
-		$description	= '';
 		$settings		= $this->c->get('settings');
 		$pathToContent	= $settings['rootPath'] . $settings['contentFolder'];
 		$cache 			= new WriteCache();
@@ -61,10 +61,6 @@ class PageController extends Controller
 					/* update sitemap */
 					$sitemap = new WriteSitemap();
 					$sitemap->updateSitemap('cache', 'sitemap.xml', 'lastSitemap.txt', $structure, $uri->getBaseUrl());
-
-					/* check and update the typemill-version in the user settings */
-					# this version check is not needed 
-					# $this->updateVersion($uri->getBaseUrl());
 				}
 			}
 			
@@ -89,7 +85,7 @@ class PageController extends Controller
 		if(empty($args))
 		{
 			$home = true;
-			$item = Folder::getItemForUrl($structure, $uri->getBasePath(), $uri->getBasePath());
+			$item = Folder::getItemForUrl($navigation, $uri->getBasePath(), $uri->getBasePath());
 		}
 		else
 		{
@@ -110,10 +106,10 @@ class PageController extends Controller
 			$breadcrumb = $this->c->dispatcher->dispatch('onBreadcrumbLoaded', new OnBreadcrumbLoaded($breadcrumb))->getData();
 
 			# set pages active for navigation again
-			Folder::getBreadcrumb($navigation, $item->keyPathArray);
+			Folder::getBreadcrumb($structure, $item->keyPathArray);
 			
 			/* add the paging to the item */
-			$item = Folder::getPagingForItem($structure, $item);
+			$item = Folder::getPagingForItem($navigation, $item);
 		}
 
 		# dispatch the item
@@ -126,6 +122,9 @@ class PageController extends Controller
 		if($item->elementType == 'folder')
 		{
 			$filePath 	= $filePath . DIRECTORY_SEPARATOR . 'index.md';
+
+			# use navigation instead of structure to get
+			$item = Folder::getItemForUrl($navigation, $urlRel, $uri->getBasePath());
 		}
 
 		# read the content of the file
@@ -135,13 +134,10 @@ class PageController extends Controller
 		$this->c->dispatcher->dispatch('onOriginalLoaded', new OnOriginalLoaded($contentMD));
 		
 		# get meta-Information
-		$writeYaml 		= new WriteYaml();
-		$metatabs 		= $writeYaml->getPageMeta($settings, $item);
+		$writeMeta 		= new WriteMeta();
 
-		if(!$metatabs)
-		{
-			$metatabs 	= $writeYaml->getPageMetaDefaults($contentMD, $settings, $item);
-		}
+		# makes sure that you always have the full meta with title, description and all the rest.
+		$metatabs 		= $writeMeta->completePageMeta($contentMD, $settings, $item);
 
 		# dispatch meta 
 		$metatabs 		= $this->c->dispatcher->dispatch('onMetaLoaded', new OnMetaLoaded($metatabs))->getData();
@@ -149,20 +145,20 @@ class PageController extends Controller
 		# dispatch content
 		$contentMD 		= $this->c->dispatcher->dispatch('onMarkdownLoaded', new OnMarkdownLoaded($contentMD))->getData();
 
+		$itemUrl 		= isset($item->urlRel) ? $item->urlRel : false;
+
 		/* initialize parsedown */
-		$parsedown 		= new ParsedownExtension();
+		$parsedown 		= new ParsedownExtension($settings['headlineanchors']);
 		
 		/* set safe mode to escape javascript and html in markdown */
 		$parsedown->setSafeMode(true);
 
 		/* parse markdown-file to content-array */
-		$contentArray 	= $parsedown->text($contentMD);
+		$contentArray 	= $parsedown->text($contentMD, $itemUrl);
 		$contentArray 	= $this->c->dispatcher->dispatch('onContentArrayLoaded', new OnContentArrayLoaded($contentArray))->getData();
 		
 		/* get the first image from content array */
 		$firstImage		= $this->getFirstImage($contentArray);
-
-		$itemUrl 		= isset($item->urlRel) ? $item->urlRel : false;
 		
 		/* parse markdown-content-array to content-string */
 		$contentHTML	= $parsedown->markup($contentArray, $itemUrl);
@@ -172,25 +168,7 @@ class PageController extends Controller
 		$contentParts	= explode("</h1>", $contentHTML);
 		$title			= isset($contentParts[0]) ? strip_tags($contentParts[0]) : $settings['title'];
 		
-		$contentHTML	=  isset($contentParts[1]) ? $contentParts[1] : $contentHTML;
-
-		# if there is not meta description 
-		if(!isset($metatabs['meta']['description']) or !$metatabs['meta']['description'])
-		{
-			# create excerpt from html
-			$excerpt		= substr($contentHTML,0,500);
-			
-			# create description from excerpt
-			$description	= isset($excerpt) ? strip_tags($excerpt) : false;
-			if($description)
-			{
-				$description 	= trim(preg_replace('/\s+/', ' ', $description));
-				$description	= substr($description, 0, 300);		
-				$lastSpace 		= strrpos($description, ' ');
-
-				$metatabs['meta']['description'] 	= substr($description, 0, $lastSpace);
-			}
-		}
+		$contentHTML	= isset($contentParts[1]) ? $contentParts[1] : $contentHTML;
 
 		/* get url and alt-tag for first image, if exists */
 		if($firstImage)
@@ -208,7 +186,7 @@ class PageController extends Controller
 		$route = empty($args) && isset($settings['themes'][$theme]['cover']) ? '/cover.twig' : '/index.twig';
 
 		# check if there is a custom theme css
-		$customcss = $writeYaml->checkFile('cache', $theme . '-custom.css');
+		$customcss = $writeMeta->checkFile('cache', $theme . '-custom.css');
 		if($customcss)
 		{
 			$this->c->assets->addCSS($base_url . '/cache/' . $theme . '-custom.css');
@@ -262,10 +240,10 @@ class PageController extends Controller
 		$yaml = new writeYaml();
 		$extended = $yaml->getYaml('cache', 'structure-extended.yaml');
 
-		/* create an array of object with the whole content of the folder */
+		# create an array of object with the whole content of the folder
 		$structure = Folder::getFolderContentDetails($structure, $extended, $uri->getBaseUrl(), $uri->getBasePath());
 
-		/* cache structure */
+		# cache structure
 		$cache->updateCache('cache', 'structure.txt', 'lastCache.txt', $structure);
 
 		if($extended && $this->containsHiddenPages($extended))
@@ -282,7 +260,8 @@ class PageController extends Controller
 			$cache->deleteFileWithPath('cache' . DIRECTORY_SEPARATOR . 'navigation.txt');
 		}
 		
-		return $structure;
+		# load and return the cached structure, because might be manipulated with navigation....
+		return 	$this->getCachedStructure($cache);
 	}
 	
 	protected function containsHiddenPages($extended)

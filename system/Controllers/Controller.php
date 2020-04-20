@@ -18,6 +18,7 @@ abstract class Controller
 		$this->c = $c;
 	}
 	
+	# frontend rendering
 	protected function render($response, $route, $data)
 	{
 		# why commented this out??
@@ -29,8 +30,6 @@ abstract class Controller
 		}
 		
 		$response = $response->withoutHeader('Server');
-		$response = $response->withoutHeader('X-Powered-By');		
-		
 		if($this->c->request->getUri()->getScheme() == 'https')
 		{
 			$response = $response->withAddedHeader('Strict-Transport-Security', 'max-age=63072000');
@@ -40,6 +39,8 @@ abstract class Controller
 		$response = $response->withAddedHeader('X-Frame-Options', 'SAMEORIGIN');
 		$response = $response->withAddedHeader('X-XSS-Protection', '1;mode=block');
 		$response = $response->withAddedHeader('Referrer-Policy', 'no-referrer-when-downgrade');
+		$response = $response->withAddedHeader('X-Powered-By', 'Typemill');
+		
 
 		return $this->c->view->render($response, $route, $data);
 	}

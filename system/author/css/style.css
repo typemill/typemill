@@ -141,18 +141,28 @@ a.tm-download::before{
 	width: 30px;
 	height: 30px;
 	line-height: 30px;
-	font-family: "Comic Sans MS",cursive,sans-serif;	
+	font-family: "Comic Sans MS",cursive,sans-serif;
+	font-size: 1.3em;
+	font-weight: 900;	
 	border: 2px solid #e0474c;
 	border-radius: 50%;
 	text-align: center;
-	text-decoration: underline;
+	text-decoration: none;
 }
 a.tm-download:hover::before{
-	text-decoration:underline;
+	text-decoration: none;
 	color: #fff;
 	background: #e0474c;
 }
 
+a.tm-heading-anchor {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: -1em;
+    width: 1em;
+    opacity: 0;
+}
 
 /********************
 *  	COMMONS 	    *

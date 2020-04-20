@@ -7,7 +7,7 @@
 
 	{% if field.type == 'textarea' %}
 
-		<textarea name="{{ itemName }}[{{ field.name }}]"{{field.getAttributeValues() }}{{ field.getAttributes() }}>{{ field.getContent() }}</textarea>
+		<textarea id="{{ itemName }}[{{ field.name }}]" name="{{ itemName }}[{{ field.name }}]"{{field.getAttributeValues() }}{{ field.getAttributes() }}>{{ field.getContent() }}</textarea>
 
 	{% elseif field.type == 'paragraph' %}
 		
@@ -16,7 +16,7 @@
 	{% elseif field.type == 'checkbox' %}
 			
 		<label class="control-group">{{ __( field.getCheckboxLabel() ) }}
-			<input type="checkbox" name="{{ itemName}}[{{ field.name }}]"{{ field.getAttributeValues() }}{{ field.getAttributes() }}>
+			<input type="checkbox" id="{{ itemName}}[{{ field.name }}]" name="{{ itemName}}[{{ field.name }}]"{{ field.getAttributeValues() }}{{ field.getAttributes() }}>
 			<span class="checkmark"></span>
 		</label>
 
@@ -27,7 +27,7 @@
 		{% for value,label in options %}
 			
 			<label class="control-group">{{ __( label ) }}
-				<input type="checkbox" name="{{ itemName }}[{{ field.name }}][{{value}}]" {{ settings[object][itemName][field.name][value] ? ' checked' : '' }}>
+				<input type="checkbox" id="{{ itemName }}[{{ field.name }}][{{value}}]" name="{{ itemName }}[{{ field.name }}][{{value}}]" {{ settings[object][itemName][field.name][value] ? ' checked' : '' }}>
 				<span class="checkmark"></span>
 			</label>
 
@@ -37,7 +37,7 @@
 
 		{% set options = field.getOptions() %}
 
-		<select name="{{ itemName }}[{{ field.name }}]"{{ field.getAttributeValues() }}{{ field.getAttributes() }}>
+		<select id="{{ itemName }}[{{ field.name }}]" name="{{ itemName }}[{{ field.name }}]"{{ field.getAttributeValues() }}{{ field.getAttributes() }}>
 			{% for value,label in options %}
 				<option value="{{ value }}" {{ (value == field.getAttributeValue('value')) ? ' selected' : '' }}>{{ label }}</option>
 			{% endfor %}
@@ -50,7 +50,7 @@
 		{% for value,label in options %}
 			
 			<label class="control-group">{{ label }} 
-				<input type="radio" name="{{ itemName }}[{{ field.name }}]" value="{{ value }}" {{ (value == settings[object][itemName][field.name]) ? ' checked' : '' }}>
+				<input type="radio" id="{{ itemName }}[{{ field.name }}]" name="{{ itemName }}[{{ field.name }}]" value="{{ value }}" {{ (value == settings[object][itemName][field.name]) ? ' checked' : '' }}>
 				<span class="radiomark"></span>
 			</label>
 
@@ -58,7 +58,7 @@
 		
 	{% else %}
 
-		<input name="{{itemName}}[{{ field.name }}]" type="{{ field.type }}"{{ field.getAttributeValues() }}{{ field.getAttributes() }}>
+		<input id="{{itemName}}[{{ field.name }}]" name="{{itemName}}[{{ field.name }}]" type="{{ field.type }}"{{ field.getAttributeValues() }}{{ field.getAttributes() }}>
 
 	{% endif %}
 

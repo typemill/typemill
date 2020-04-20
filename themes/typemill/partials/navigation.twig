@@ -15,7 +15,7 @@
 		{% endif %}
             {% if (element.elementType == 'folder') %}
 				<a href="{{ element.urlAbs }}">{% if chapnum %}{{ element.chapter }}. {% endif %}{{ element.name }}</a>
-		{% if (element.folderContent|length > 0) %}	
+		{% if ( element.folderContent|length > 0 ) and (element.contains == 'pages') %}	
                 <ul>
                     {{ macros.loop_over(element.folderContent,chapnum) }}
                 </ul>

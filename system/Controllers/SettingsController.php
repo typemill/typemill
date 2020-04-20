@@ -57,15 +57,16 @@ class SettingsController extends Controller
 			{
 				/* make sure only allowed fields are stored */
 				$newSettings = array(
-					'title' 		=> $newSettings['title'],
-					'author' 		=> $newSettings['author'],
-					'copyright' 	=> $newSettings['copyright'],
-					'year'			=> $newSettings['year'],
-					'language'		=> $newSettings['language'],
-					'editor' 		=> $newSettings['editor'], 
-					'formats'		=> $newSettings['formats'],
+					'title' 			=> $newSettings['title'],
+					'author' 			=> $newSettings['author'],
+					'copyright' 		=> $newSettings['copyright'],
+					'year'				=> $newSettings['year'],
+					'language'			=> $newSettings['language'],
+					'editor' 			=> $newSettings['editor'], 
+					'formats'			=> $newSettings['formats'],
+					'headlineanchors'	=> isset($newSettings['headlineanchors']) ? $newSettings['headlineanchors'] : null,
 				);
-				
+
 				# https://www.slimframework.com/docs/v3/cookbook/uploading-files.html; 
 
 				$copyright 			= $this->getCopyright();

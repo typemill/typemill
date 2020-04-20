@@ -6,9 +6,12 @@ use \URLify;
 
 class ParsedownExtension extends \ParsedownExtra
 {
-	function __construct()
+	function __construct($showAnchor = NULL)
     {
 		parent::__construct();
+
+        # show anchor next to headline? 
+        $this->showAnchor = $showAnchor;
 
         # math support
         $this->BlockTypes['\\'][] = 'Math';
@@ -30,8 +33,10 @@ class ParsedownExtension extends \ParsedownExtra
         $this->visualMode = true;
     }
 
-	public function text($text)
+	public function text($text, $relurl = null)
 	{
+        $this->relurl = $relurl ? $relurl : '';
+
         $Elements = $this->textElements($text);
 		
 		return $Elements;
@@ -117,20 +122,37 @@ class ParsedownExtension extends \ParsedownExtra
             {
                 return;
             }
-    
+
             $text = trim($text, ' ');
-    						
-			$Block = array(
-				'element' => array(
-					'name' => 'h' . min(6, $level),
-					'text' => $text,
-					'handler' => 'line',
-					'attributes' => array(
-						'id' => "$headline"
-					)
-				)
-			);
-			
+
+            $Block = array(
+                'element' => array(
+                    'name' => 'h' . min(6, $level),
+                    'text' => $text,
+                    'handler' => 'line',
+                    'attributes' => array(
+                        'id' => "$headline"
+                    )
+                )
+            );
+
+            if($this->showAnchor && $level > 1)
+            {
+                $Block['element']['elements'] = array(
+                            array(
+                                'name' => 'a',
+                                'attributes' => array(
+                                    'href' => $this->relurl . "#" . $headline,
+                                    'class' => 'tm-heading-anchor',
+                                ),
+                                'text' => '#',
+                            ),
+                            array(
+                                'text' => $text,
+                            )
+                        );
+            }
+
 			$this->headlines[]	= array('level' => $level, 'name' => $Block['element']['name'], 'attribute' => $Block['element']['attributes']['id'], 'text' => $text);
 
             return $Block;

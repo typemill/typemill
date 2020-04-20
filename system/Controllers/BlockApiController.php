@@ -769,28 +769,29 @@ class BlockApiController extends ContentController
 			$imageData	= @file_get_contents($videoURL0, 0, $ctx);
 			if($imageData === false)
 			{
-				return $response->withJson(array('errors' => 'could not get the video image'));
+				return $response->withJson(['errors' => ['message' => 'We did not find that video or could not get a preview image.']], 500);
 			}
 		}
 		
-		$imageData64	= 'data:image/jpeg;base64,' . base64_encode($imageData);
-		$desiredSizes	= ['live' => ['width' => 560, 'height' => 315]];
-		$imageProcessor	= new ProcessImage($this->settings['images']);
-		if(!$imageProcessor->checkFolders())
+		$imageData64			= 'data:image/jpeg;base64,' . base64_encode($imageData);
+		$desiredSizes 			= $this->settings['images'];
+		$desiredSizes['live']	= ['width' => 560, 'height' => 315];
+		$imageProcessor			= new ProcessImage($desiredSizes);
+		
+		if(!$imageProcessor->checkFolders('images'))
 		{
 			return $response->withJson(['errors' => ['message' => 'Please check if your media-folder exists and all folders inside are writable.']], 500);
 		}
-
-		$tmpImage		= $imageProcessor->createImage($imageData64, $desiredSizes);
 		
-		if(!$tmpImage)
+		if(!$imageProcessor->createImage($imageData64, 'youtube-' . $videoID, $desiredSizes, $overwrite = true))
 		{
-			return $response->withJson(array('errors' => 'could not create temporary image'));			
+			return $response->withJson(['errors' => ['message' => 'We could not create the image.']], 500);
 		}
-		
-		$imageUrl 		= $imageProcessor->publishImage($desiredSizes, $videoID);
+
+		$imageUrl 		= $imageProcessor->publishImage();
 		if($imageUrl)
 		{
+
 			$this->params['markdown'] = '![' . $class . '-video](' . $imageUrl . ' "click to load video"){#' . $videoID. ' .' . $class . '}';
 
 			$request 	= $request->withParsedBody($this->params);

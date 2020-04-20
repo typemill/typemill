@@ -60,6 +60,7 @@ abstract class ContentController
 		$this->structureDraftName 	= 'structure-draft.txt';
 	}
 	
+	# admin ui rendering
 	protected function render($response, $route, $data)
 	{
 		if(isset($_SESSION['old']))
@@ -68,7 +69,7 @@ abstract class ContentController
 		}
 
 		$response = $response->withoutHeader('Server');
-		$response = $response->withoutHeader('X-Powered-By');		
+		$response = $response->withoutHeader('X-Powered-By');
 		
 		if($this->c->request->getUri()->getScheme() == 'https')
 		{
@@ -376,7 +377,7 @@ abstract class ContentController
 		if(file_exists($path))
 		{
 			$files = array_diff(scandir($path), array('.', '..'));
-			
+
 			# check if there are published pages or folders inside, then stop the operation
 			foreach ($files as $file)
 			{
@@ -385,9 +386,9 @@ abstract class ContentController
 					$this->errors = ['message' => 'Please delete the sub-folder first.'];
 				}
 
-				if(substr($file, -3) == '.md' )
+				if(substr($file, -3) == '.md' && $file != 'index.md')
 				{
-					$this->errors = ['message' => 'Please unpublish all pages in the folder first.'];					
+					$this->errors = ['message' => 'Please unpublish all pages in the folder first.'];		
 				}
 			}
 

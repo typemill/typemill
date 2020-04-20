@@ -253,6 +253,16 @@ const contentComponent = Vue.component('content-block', {
 					{
 						params.new = true;
 					}
+					else
+					{
+						var oldVideoID = this.$root.$data.blockMarkdown.match(/#.*? /);
+						if(this.compmarkdown.indexOf(oldVideoID[0].substring(1).trim()) !== -1)
+						{
+							this.activatePage();
+							this.switchToPreviewMode();	
+							return;
+						}
+					}
 				}
 				else if(this.componentType == 'file-component')
 				{
@@ -282,7 +292,7 @@ const contentComponent = Vue.component('content-block', {
 						self.activatePage();
 						publishController.errors.message = "Looks like you are logged out. Please login and try again.";
 					}
-					else if(response)					
+					else if(response)			
 					{
 						self.activatePage();
 
@@ -342,9 +352,14 @@ const contentComponent = Vue.component('content-block', {
 							self.$root.checkMath(result.id);
 
 							/* check youtube here */
-							if(thisBlockType == "video-component" || thisBlockType == "image-component")
+							if(thisBlockType == "video-component")
 							{
-								self.$root.checkVideo(result.id);
+								setTimeout(function(){ 
+									self.$nextTick(function () 
+									{
+										self.$root.checkVideo(result.id);
+									});
+								}, 300);
 							}
 
 							/* update the navigation and mark navigation item as modified */
@@ -1192,7 +1207,6 @@ const definitionComponent = Vue.component('definition-component', {
 	},
 })
 
-
 const videoComponent = Vue.component('video-component', {
 	props: ['compmarkdown', 'disabled', 'load'],
 	template: '<div class="video dropbox">' +
@@ -1200,6 +1214,20 @@ const videoComponent = Vue.component('video-component', {
 				'<label for="video">{{ $t(\'Link to video\') }}: </label><input type="url" ref="markdown" placeholder="https://www.youtube.com/watch?v=" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown">' +
 				'<div v-if="load" class="loadwrapper"><span class="load"></span></div>' +
 				'</div>',
+	mounted: function(){
+
+		this.$refs.markdown.focus();
+
+		if(this.compmarkdown)
+		{
+			var videoid = this.compmarkdown.match(/#.*? /);
+			if(videoid)
+			{
+				var event = { 'target': { 'value': 'https://www.youtube.com/watch?v=' + videoid[0].trim().substring(1) }};
+				this.updatemarkdown(event);
+			}
+		}
+	},				
 	methods: {
 		updatemarkdown: function(event)
 		{
@@ -1207,7 +1235,6 @@ const videoComponent = Vue.component('video-component', {
 		},
 	},
 })
-
 
 const imageComponent = Vue.component('image-component', {
 	props: ['compmarkdown', 'disabled'],
@@ -1231,7 +1258,7 @@ const imageComponent = Vue.component('image-component', {
 				'<label for="imgtitle">{{ $t(\'Title\') }}: </label><input name="imgtitle" type="text" placeholder="title" v-model="imgtitle" @input="createmarkdown" max="64" />' +
 				'<label for="imgcaption">{{ $t(\'Caption\') }}: </label><input title="imgcaption" type="text" placeholder="caption" v-model="imgcaption" @input="createmarkdown" max="140" />' +
 				'<label for="imgurl">{{ $t(\'Link\') }}: </label><input title="imgurl" type="url" placeholder="url" v-model="imglink" @input="createmarkdown" />' +
-				'<label for="imgclass">{{ $t(\'Class\') }}: </label><select title="imgclass" v-model="imgclass" @change="createmarkdown"><option value="center">{{ $t(\'Center\') }}</option><option value="left">{{ $t(\'Left\') }}</option><option value="right">{{ $t(\'Right\') }}</option><option value="youtube">Youtube</option><option value="vimeo">Vimeo</option></select>' +
+				'<label for="imgclass">{{ $t(\'Class\') }}: </label><select title="imgclass" v-model="imgclass" @change="createmarkdown"><option value="center">{{ $t(\'Center\') }}</option><option value="left">{{ $t(\'Left\') }}</option><option value="right">{{ $t(\'Right\') }}</option></select>' +
 				'<input title="imgid" type="hidden" placeholder="id" v-model="imgid" @input="createmarkdown" max="140" />' +
 				'</div></div>',
 	data: function(){
@@ -2266,7 +2293,6 @@ let editor = new Vue({
 			}
 			if(response)
 			{
-
 				var result = JSON.parse(response);
 				
 				if(result.errors)
@@ -2277,7 +2303,7 @@ let editor = new Vue({
 				{
 					self.markdown = result.data;
 					
-					/* make math plugin working */
+					/* activate math plugin */
 					
 					if (typeof renderMathInElement === "function") { 
 						self.$nextTick(function () {
@@ -2419,29 +2445,26 @@ let editor = new Vue({
 		},
 		initiateVideo()
 		{
-			/* check for youtube videos */
+			/* check for youtube videos on first page load */
 			if (typeof typemillUtilities !== "undefined")
 			{
 				this.$nextTick(function () {
-						typemillUtilities.start();
+					typemillUtilities.start();
 				});
 			}
 		},
 		checkVideo(elementid)
 		{
-			/* check for youtube videos */
+			/* check for youtube videos for new blox */
 			var element = document.getElementById("blox-"+elementid);
+
 			if(element && typeof typemillUtilities !== "undefined")
 			{
 				imageElement = element.getElementsByClassName("youtube");
+
 				if(imageElement[0])
 				{
-					setTimeout(function(){ 
-						self.$nextTick(function () 
-						{
-								typemillUtilities.addYoutubePlayButton(imageElement[0]);
-						});
-					}, 300);
+					typemillUtilities.addYoutubePlayButton(imageElement[0]);
 				}
 			}
 		}
