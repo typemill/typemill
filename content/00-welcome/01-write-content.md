@@ -6,7 +6,7 @@ Typemill is a simple Flat File Content Management System (CMS). We (the communit
 
 You can create, structure and reorder all pages with the navigation on the left. To structure your content, you can create new folders and files with the "add item" button. To reorder the pages, just drag an item and drop it wherever you want. Play around with it and you will notice, that it works pretty similar to the folder- and file-system of your laptop. And in fact, this is exactly what Typemill does in the background: It stores your content in files and folders on the server.
 
-However, there are some limitations when you try to reorder elements. For example, you cannot move a complete folder to another folder. Click on the question-mark at the top of the navigation for detailed information.
+However, there are some limitations when you try to reorder elements. For example, you cannot move a complete folder to another folder, because this would change all the urls of the pages inside that folder, which is a nightmare for readers and search engines.
 
 ## The Editor
 
