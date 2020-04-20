@@ -16,14 +16,36 @@
 	{{ content }}
 
 
-	<div class="toc-nav">
-		
-		<ul>
+	{% if item.contains == 'pages' %}
+		<div class="toc-nav">
+			
+			<ul>
+				{% for element in item.folderContent %}
+
+					<li class="level-2"><a href="{{ element.urlAbs }}">{% if settings.themes.typemill.chapnum %}{{ element.chapter }} {% endif %}{{ element.name }}</a></li>
+				
+				{% endfor %}
+			</ul>
+			
+		</div>
+
+	{% elseif item.contains == 'posts' %}
+
+		<ul class="post">
+
 			{% for element in item.folderContent %}
 
-				<li class="level-2"><a href="{{ element.urlAbs }}">{% if settings.themes.typemill.chapnum %}{{ element.chapter }} {% endif %}{{ element.name }}</a></li>
-			
+				{% set post = getPageMeta(settings, element) %}
+				{% set date = element.order[0:4] ~ '-' ~ element.order[4:2] ~ '-' ~ element.order[6:2] %}
+
+				<li class="post-entry">
+					<a href="{{ element.urlAbs }}"><h2>{{ post.meta.title }}</h2></a>
+					<small><time datetime="{{date}}">{{ date | date("d.m.Y") }}</time> | {{ post.meta.author }}</small>
+					<p>{{ post.meta.description }}</p>
+				</li>
+
 			{% endfor %}
+			
 		</ul>
-		
-	</div>
+
+	{% endif %}	

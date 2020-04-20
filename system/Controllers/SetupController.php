@@ -52,7 +52,7 @@ class SetupController extends Controller
 		$setuperrors = empty($systemcheck) ? false : 'Some system requirements for Typemill are missing.';
 		$systemcheck = empty($systemcheck) ? false : $systemcheck;
 
-		return $this->render($response, 'auth/setup.twig', array( 'messages' => $setuperror, 'systemcheck' => $systemcheck ));
+		return $this->render($response, 'auth/setup.twig', array( 'messages' => $setuperrors, 'systemcheck' => $systemcheck ));
 	}
 
 	public function create($request, $response, $args)

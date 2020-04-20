@@ -24,7 +24,6 @@ class AuthController extends Controller
 		}
 	}
 
-	
 	/**
 	* show login form
 	* 

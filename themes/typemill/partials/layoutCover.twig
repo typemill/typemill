@@ -51,6 +51,9 @@
 		</div>
 
 		{% block javascripts %}
+			<script src="{{ base_url }}/themes/typemill/js/script.js"></script>		
+			<script src="{{ base_url }}/system/author/js/typemillutils.js?20200418"></script>
+			<script>typemillUtilities.start();</script>
 		
 			{{ assets.renderJS() }}
 		

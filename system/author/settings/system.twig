@@ -63,7 +63,12 @@
 					</div><div class="medium">
 						<label for="settings[sitemap]">Google Sitemap <small>({{ __('Readonly') }})</small></label>
 						<input type="text" name="settings[sitemap]" id="sitemap" readonly value="{{ base_url }}/cache/sitemap.xml" />
-					</div><div class="medium{{ errors.settings.logo ? ' error' : '' }}">
+					</div>
+					<hr>
+					<header class="headline">
+						<h2>{{ __('General Presentation') }}</h2>
+					</header>
+					<div class="medium{{ errors.settings.logo ? ' error' : '' }}">
 						<label for="settings[logo]">Logo <small>(jpg,jpeg,png,svg)</small></label>
 						<div class="flex fileinput">
 							<button class="deletefilebutton w-10 bg-tm-gray bn hover-bg-tm-red hover-white">x</button>
@@ -91,6 +96,12 @@
 						{% if errors.settings.favicon %}
 							<span class="error">{{ errors.settings.favicon | first }}</span>
 						{% endif %}
+					</div><div class="medium{{ errors.settings.headlineanchors ? ' error' : '' }}">
+						<label for="settings[headlineanchors]">{{ __('Headline Anchors') }} *</label>
+						<label class="control-group">{{ __('Show anchors next to headlines') }}
+							<input name="settings[headlineanchors]" type="checkbox" {% if (old.settings.headlineanchors) %} checked {% endif %}>
+							<span class="checkmark"></span>
+						</label>
 					</div>
 					<hr>
 					<header class="headline">

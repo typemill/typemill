@@ -27,14 +27,14 @@ class Settings
 			$themes = array_diff(scandir($themefolder), array('..', '.'));
 			$firsttheme = reset($themes);
 
-			# if there is a theme with valid theme settings-file
-			if($firsttheme && self::getObjectSettings('themes', $firsttheme))
+			# if there is a theme with an index.twig-file
+			if($firsttheme && file_exists($themefolder . $firsttheme . DIRECTORY_SEPARATOR . 'index.twig'))
 			{
 				$settings['theme'] = $firsttheme;
 			}
 			else
 			{
-				die('There is no theme in the theme-folder. Please add a theme from https://themes.typemill.net');
+				die('You need at least one theme with an index.twig-file in your theme-folder.');
 			}
 		}
 
@@ -166,6 +166,7 @@ class Settings
 									'startpage' => true,
 									'author' => true,
 									'year' => true,
+									'headlineanchors' => true,
 									'theme' => true,
 									'editor' => true,
 									'formats' => true,

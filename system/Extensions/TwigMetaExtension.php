@@ -2,7 +2,7 @@
 
 namespace Typemill\Extensions;
 
-use Typemill\Models\WriteYaml;
+use Typemill\Models\WriteMeta;
 
 class TwigMetaExtension extends \Twig_Extension
 {
@@ -15,9 +15,30 @@ class TwigMetaExtension extends \Twig_Extension
 		
 	public function getMeta($settings, $item)
 	{
-		$write = new WriteYaml();
+		$writeMeta = new WriteMeta();
 		
-		$meta = $write->getPageMeta($settings, $item);
+		$meta = $writeMeta->getPageMeta($settings, $item);
+
+		if(!$meta OR $meta['meta']['title'] == '' OR $meta['meta']['description'] == '')
+		{
+			# create path to the file
+			$filePath	= $settings['rootPath'] . $settings['contentFolder'] . $item->path;
+			
+			# check if url is a folder and add index.md 
+			if($item->elementType == 'folder')
+			{
+				$filePath 	= $filePath . DIRECTORY_SEPARATOR . 'index.md';
+			}
+
+			if(file_exists($filePath))
+			{
+				# get content
+				$content = file_get_contents($filePath);
+
+				# completes title and description or generate default meta values
+				$meta = $writeMeta->completePageMeta($content, $settings, $item);
+			}
+		}
 		
 		return $meta;
 	}

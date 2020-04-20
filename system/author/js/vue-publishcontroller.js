@@ -69,6 +69,11 @@ let publishController = new Vue({
 					}
 					else
 					{
+						if(result.meta)
+						{
+							meta.formData = result.meta;
+						}
+
 						self.draftDisabled = "disabled";
 						self.publishResult = "success";
 						self.publishStatus = false;

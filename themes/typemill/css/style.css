@@ -67,7 +67,7 @@ pre,code{
 *  	   HEADLINES    *
 ********************/
 
-h1, h2, h3, h4, h5, h6{ font-weight: 700; line-height: 1em; }
+h1, h2, h3, h4, h5, h6{ font-weight: 700; line-height: 1em; position: relative;}
 h1{ font-size: 2.2em; margin: 1.4em 0 0.6em; }
 h2{ font-size: 1.6em; margin: 1.3em 0 0.6em; }
 h3{	font-size: 1.3em; margin: 1.2em 0 0.6em; }
@@ -350,11 +350,11 @@ article img.youtube{
 	position: relative;
 	max-width: 560px;
 }
-article .video-container{
+.video-container{
 	position: relative;
 	text-align: center;
 }
-article button.play-video { 
+button.play-video { 
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -369,11 +369,11 @@ article button.play-video {
 	padding: 0;
 	text-align: center;
 }
-article button.play-video:hover {
+button.play-video:hover {
 	background: #cc4146;
 	cursor: pointer;
 }
-article button.play-video::after {
+button.play-video::after {
 	position: absolute;
 	top: 50%;
 	margin: -20px 0 0 -15px;
@@ -548,6 +548,11 @@ ul,ol{
 	padding-left: 0px;
 	margin-left: 18px;
 }
+ul.post{
+	list-style: none;
+	padding: 0 0 0 0;
+	margin: 0 0 0 0;
+}
 blockquote{
 	border-left: 4px solid #e0474c;
 	background: #f9f8f6;
@@ -600,16 +605,42 @@ a.tm-download::before{
 	width: 30px;
 	height: 30px;
 	line-height: 30px;
-	font-family: "Comic Sans MS",cursive,sans-serif;	
+	font-family: "Comic Sans MS",cursive,sans-serif;
+	font-size: 1.3em;
+	font-weight: 900;	
 	border: 2px solid #e0474c;
 	border-radius: 50%;
 	text-align: center;
-	text-decoration: underline;
+	text-decoration: none;
 }
 a.tm-download:hover::before{
-	text-decoration:underline;
+	text-decoration: none;
 	color: #fff;
 	background: #e0474c;
+}
+a.tm-heading-anchor {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: -1em;
+    width: 1em;
+    opacity: 0;
+}
+a.tm-heading-anchor:hover,a.tm-heading-anchor:focus {
+    opacity: 1;
+    text-decoration: none;
+}
+h2:focus > .tm-heading-anchor, 
+h2:hover > .tm-heading-anchor, 
+h3:focus > .tm-heading-anchor, 
+h3:hover > .tm-heading-anchor, 
+h4:focus > .tm-heading-anchor, 
+h4:hover > .tm-heading-anchor,
+h5:focus > .tm-heading-anchor, 
+h5:hover > .tm-heading-anchor,
+h6:focus > .tm-heading-anchor, 
+h6:hover > .tm-heading-anchor{
+	opacity: .75;
 }
 
 
@@ -735,6 +766,9 @@ img.myClass{
 	.cover h1{ 
 		font-size: 4em; 
 	}
+	a.tm-heading-anchor{
+    	display: block;
+    }
 	.github{
 		position:absolute;
 		display:block;

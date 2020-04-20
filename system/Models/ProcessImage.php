@@ -5,7 +5,7 @@ use Typemill\Models\Helpers;
 
 class ProcessImage extends ProcessAssets
 {
-	public function createImage(string $image, string $name, array $desiredSizes)
+	public function createImage(string $image, string $name, array $desiredSizes, $overwrite = NULL)
 	{
 		# fix error from jpeg-library
 		ini_set ('gd.jpeg_ignore_warning', 1);
@@ -15,13 +15,15 @@ class ProcessImage extends ProcessAssets
 		$this->clearTempFolder();
 
 		# set the name of the image 
-		$this->setFileName($name, 'image');
+		$this->setFileName($name, 'image', $overwrite);
 
 		# decode the image from base64-string
 		$imageDecoded	= $this->decodeImage($image);
 		$imageData		= $imageDecoded["image"];
 		$imageType		= $imageDecoded["type"];
 		
+		$this->setExtension($imageType);
+
 		# transform image-stream into image
 		$image 			= imagecreatefromstring($imageData);
 		
@@ -38,7 +40,7 @@ class ProcessImage extends ProcessAssets
 		$tmpname = fopen($this->tmpFolder . $this->getName() . '.' . $imageType .  ".txt", "w");
 
 		$this->saveOriginal($this->tmpFolder, $imageData, $name = 'original', $imageType);
-			
+
 		# temporary store resized images
 		foreach($resizedImages as $key => $resizedImage)
 		{
@@ -71,8 +73,8 @@ class ProcessImage extends ProcessAssets
 		{
 			$tmpname = str_replace('.txt', '', basename($imagename));
 
-			# set extension and sanitize name
-			$this->setFileName($tmpname, 'image');
+			# set extension and sanitize name. Overwrite because this has been checked before
+			$this->setFileName($tmpname, 'image', $overwrite = true);
 
 			unlink($imagename);
 		}
@@ -80,7 +82,7 @@ class ProcessImage extends ProcessAssets
 		$name 			=  uniqid();
 
 		if($this->filename && $this->extension)
-		{			
+		{
 			$name 		= $this->filename;
 		}
 
@@ -110,7 +112,7 @@ class ProcessImage extends ProcessAssets
 		
 		if($success)
 		{
-			return true;
+			# return true;
 			return 'media/live/' . $name . '.' . $tmpfilename[1];
 		}
 		
@@ -201,7 +203,9 @@ class ProcessImage extends ProcessAssets
 
 	# save resized images in temporary folder
 	public function saveImage($folder, $image, $name, $type)
-	{		
+	{
+		$type = strtolower($type);
+
 		if($type == "png")
 		{
 			$result = imagepng( $image, $folder . $name . '.png' );
@@ -210,10 +214,14 @@ class ProcessImage extends ProcessAssets
 		{
 			$result = imagegif( $image, $folder . $name . '.gif' );
 		}
+		elseif($type == "jpg" OR $type == "jpeg")
+		{
+			$result = imagejpeg( $image, $folder . $name . '.' . $type );
+		}
 		else
 		{
-			$result = imagejpeg( $image, $folder . $name . '.jpeg' );
-			$type = 'jpeg';
+			# image type not supported
+			return false;
 		}
 		
 		imagedestroy($image);
@@ -339,12 +347,13 @@ class ProcessImage extends ProcessAssets
 	{
 		$this->setFileName($filename, 'image', $overwrite = true);
 
-		if($this->extension == 'jpeg') $this->extension = 'jpg';
+		# if($this->extension == 'jpg') $this->extension = 'jpeg';
 		
 		switch($this->extension)
 		{
 			case 'gif': $image = imagecreatefromgif($this->liveFolder . $filename); break;
-			case 'jpg': $image = imagecreatefromjpeg($this->liveFolder . $filename); break;
+			case 'jpg' :
+			case 'jpeg': $image = imagecreatefromjpeg($this->liveFolder . $filename); break;
 			case 'png': $image = imagecreatefrompng($this->liveFolder . $filename); break;
 			default: return 'image type not supported';
 		}
@@ -367,12 +376,13 @@ class ProcessImage extends ProcessAssets
 	{
 		$this->setFileName($filename, 'image');
 
-		if($this->extension == 'jpeg') $this->extension = 'jpg';
+		if($this->extension == 'jpg') $this->extension = 'jpeg';
 		
 		switch($this->extension)
 		{
 			case 'gif': $image = imagecreatefromgif($image); break;
-			case 'jpg': $image = imagecreatefromjpeg($image); break;
+			case 'jpg' :
+			case 'jpeg': $image = imagecreatefromjpeg($image); break;
 			case 'png': $image = imagecreatefrompng($image); break;
 			default: return 'image type not supported';
 		}
@@ -383,5 +393,4 @@ class ProcessImage extends ProcessAssets
 
 		return $resizedImages;
 	}
-
 }

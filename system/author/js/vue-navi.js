@@ -178,6 +178,7 @@ const navcomponent = Vue.component('navigation', {
 					{
 						// evt.item.classList.remove("load");
 						self.$root.$data.items = result.data;						
+						self.newItem = '';
 						self.showForm = false;
 					}
 				}
@@ -280,6 +281,7 @@ let navi = new Vue({
 					if(result.data)
 					{
 						self.items = result.data;						
+						self.newItem = '';
 						self.showForm = false;
 					}
 				}
@@ -312,6 +314,7 @@ let navi = new Vue({
 					if(result.data)
 					{
 						self.items = result.data;
+						self.newItem = '';
 						self.homepage = result.homepage;						
 					}
 				}

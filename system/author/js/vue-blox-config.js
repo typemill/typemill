@@ -35,8 +35,15 @@ let determiner = {
 		}
 		return false;
 	},
+	video: function(block,lines,firstChar,secondChar,thirdChar){
+		if( (firstChar == '!' && secondChar == '[' && lines[0].indexOf('.youtube') != -1) || (firstChar == '[' && secondChar == '!' && lines[0].indexOf('.youtube') != -1) )
+		{
+			return "video-component";
+		}
+		return false;
+	},
 	image: function(block,lines,firstChar,secondChar,thirdChar){
-		if( (firstChar == '!' && secondChar == '[') || (firstChar == '[' && secondChar == '!' && thirdChar == '[') )
+		if( (firstChar == '!' && secondChar == '[' ) || (firstChar == '[' && secondChar == '!' && thirdChar == '[') )
 		{
 			return "image-component";
 		}

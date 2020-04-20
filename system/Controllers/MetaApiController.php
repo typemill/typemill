@@ -5,6 +5,7 @@ namespace Typemill\Controllers;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Typemill\Models\WriteYaml;
+use Typemill\Models\WriteMeta;
 use Typemill\Models\Folder;
 
 class MetaApiController extends ContentController
@@ -24,6 +25,7 @@ class MetaApiController extends ContentController
 
 		$metatabs = $writeYaml->getYaml('system' . DIRECTORY_SEPARATOR . 'author', 'metatabs.yaml');
 
+		# add radio buttons to choose posts or pages for folder.
 		if($folder)
 		{
 			$metatabs['meta']['fields']['contains'] = [
@@ -70,22 +72,22 @@ class MetaApiController extends ContentController
 		# set item 
 		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
 
-		$writeYaml = new writeYaml();
+		$writeMeta = new writeMeta();
 
-		$pagemeta = $writeYaml->getPageMeta($this->settings, $this->item);
+		$pagemeta = $writeMeta->getPageMeta($this->settings, $this->item);
 
 		if(!$pagemeta)
 		{
 			# set the status for published and drafted
 			$this->setPublishStatus();
-					
+
 			# set path
 			$this->setItemPath($this->item->fileType);
 
 			# read content from file
 			if(!$this->setContent()){ return $response->withJson(array('data' => false, 'errors' => $this->errors), 404); }
 
-			$pagemeta = $writeYaml->getPageMetaDefaults($this->content, $this->settings, $this->item);
+			$pagemeta = $writeMeta->getPageMetaBlank($this->content, $this->settings, $this->item);
 		}
 
 		# if item is a folder
@@ -118,7 +120,7 @@ class MetaApiController extends ContentController
 		}
 
 		# store the metascheme in cache for frontend
-		$writeYaml->updateYaml('cache', 'metatabs.yaml', $metascheme);
+		$writeMeta->updateYaml('cache', 'metatabs.yaml', $metascheme);
 
 		return $response->withJson(array('metadata' => $metadata, 'metadefinitions' => $metadefinitions, 'item' => $this->item, 'errors' => false));
 	}
@@ -187,13 +189,13 @@ class MetaApiController extends ContentController
 		# return validation errors
 		if($errors){ return $response->withJson(array('errors' => $errors),422); }
 		
-		$writeYaml = new writeYaml();
+		$writeMeta = new writeMeta();
 
 		# get existing metadata for page
-		$metaPage = $writeYaml->getYaml($this->settings['contentFolder'], $this->item->pathWithoutType . '.yaml');
+		$metaPage = $writeMeta->getYaml($this->settings['contentFolder'], $this->item->pathWithoutType . '.yaml');
 		
 		# get extended structure
-		$extended = $writeYaml->getYaml('cache', 'structure-extended.yaml');
+		$extended = $writeMeta->getYaml('cache', 'structure-extended.yaml');
 
 		# flag for changed structure
 		$structure = false;
@@ -218,7 +220,7 @@ class MetaApiController extends ContentController
 					$pathWithoutFile 	= str_replace($this->item->originalName, "", $this->item->path);
 					$newPathWithoutType	= $pathWithoutFile . $datetime . '-' . $this->item->slug;
 
-					$writeYaml->renamePost($this->item->pathWithoutType, $newPathWithoutType);
+					$writeMeta->renamePost($this->item->pathWithoutType, $newPathWithoutType);
 
 					# recreate the draft structure
 					$this->setStructure($draft = true, $cache = false);
@@ -235,11 +237,11 @@ class MetaApiController extends ContentController
 
 				if($metaInput['contains'] == "posts")
 				{
-					$writeYaml->transformPagesToPosts($this->item);
+					$writeMeta->transformPagesToPosts($this->item);
 				}
 				if($metaInput['contains'] == "pages")
 				{
-					$writeYaml->transformPostsToPages($this->item);
+					$writeMeta->transformPostsToPages($this->item);
 				}
 			}
 
@@ -273,12 +275,12 @@ class MetaApiController extends ContentController
 		$meta[$tab] = $metaInput;
 
 		# store the metadata
-		$writeYaml->updateYaml($this->settings['contentFolder'], $this->item->pathWithoutType . '.yaml', $meta);
+		$writeMeta->updateYaml($this->settings['contentFolder'], $this->item->pathWithoutType . '.yaml', $meta);
 
 		if($structure)
 		{
 			# store the extended file
-			$writeYaml->updateYaml('cache', 'structure-extended.yaml', $extended);
+			$writeMeta->updateYaml('cache', 'structure-extended.yaml', $extended);
 
 			# recreate the draft structure
 			$this->setStructure($draft = true, $cache = false);
@@ -310,5 +312,3 @@ class MetaApiController extends ContentController
 		return true;
 	}
 }
-
-# check models -> writeYaml for getPageMeta and getPageMetaDefaults.

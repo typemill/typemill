@@ -1,5 +1,7 @@
 {% extends '/partials/layoutCover.twig' %}
 
+{% block title %}{{ metatabs.meta.title | default(title) }} | {{ settings.title }}{% endblock %}
+
 {% block content %}
 
 	{% if logo and settings.themes.typemill.coverlogo %}
