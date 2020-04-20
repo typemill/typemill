@@ -1,9 +1,20 @@
 const FormBus = new Vue();
 
+Vue.filter('translate', function (value) {
+  if (!value) return ''
+  value = value.replace(/[ ]/g,"_").replace(/[.]/g, "_").replace(/[-]/g, "_").replace(/[,]/g,"_").replace(/[(]/g,"_").replace(/[)]/g,"_").toUpperCase()
+  translated_string = labels[value]
+  if(!translated_string || translated_string.length === 0){
+    return value + '?'
+  } else {
+    return labels[value]
+  }
+})
+
 Vue.component('component-text', {
 	props: ['class', 'id', 'description', 'maxlength', 'hidden', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
 	template: '<div class="large">' +
-				'<label>{{ $t(label) }}</label>' +
+				'<label>{{ label|translate }}</label>' +
 				'<input type="text"' + 
 					' :id="id"' +
 					' :maxlength="maxlength"' +
@@ -16,7 +27,7 @@ Vue.component('component-text', {
 					' :value="value"' +
 					'@input="update($event, name)">' +
 			  	'<span v-if="errors[name]" class="error">{{ errors[name] }}</span>' +
-			  	'<span v-else class="fielddescription"><small>{{ $t(description) }}</small></span>' +
+			  	'<span v-else class="fielddescription"><small>{{ description|translate }}</small></span>' +
 			  '</div>',
 	methods: {
 		update: function($event, name)
@@ -29,7 +40,7 @@ Vue.component('component-text', {
 Vue.component('component-textarea', {
 	props: ['class', 'id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
 	template: '<div class="large">' +
-				'<label>{{ $t(label) }}</label>' +
+				'<label>{{ label|translate }}</label>' +
 				'<textarea ' +
 					' :id="id"' +
 					' :readonly="readonly"' +
@@ -40,7 +51,7 @@ Vue.component('component-textarea', {
 					' :value="value"' +
 					' @input="update($event, name)"></textarea>' +
 			  	'<span v-if="errors[name]" class="error">{{ errors[name] }}</span>' +
-			  	'<span v-else class="fielddescription"><small>{{ $t(description) }}</small></span>' +
+			  	'<span v-else class="fielddescription"><small>{{ description|translate }}</small></span>' +
 			  '</div>',
 	methods: {
 		update: function($event, name)
@@ -53,7 +64,7 @@ Vue.component('component-textarea', {
 Vue.component('component-url', {
 	props: ['class', 'id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
 	template: '<div class="large">' +
-				'<label>{{ $t(label) }}</label>' +
+				'<label>{{ label|translate }}</label>' +
 				'<input type="url"' + 
 					' :id="id"' +
 					' :maxlength="maxlength"' +
@@ -65,7 +76,7 @@ Vue.component('component-url', {
 					' :value="value"' +
 					'@input="update($event, name)">' +
 			  	'<span v-if="errors[name]" class="error">{{ errors[name] }}</span>' +
-			  	'<span v-else class="fielddescription"><small>{{ $t(description) }}</small></span>' +			  	
+			  	'<span v-else class="fielddescription"><small>{{ description|translate }}</small></span>' +			  	
 			  '</div>',
 	methods: {
 		update: function($event, name)
@@ -78,7 +89,7 @@ Vue.component('component-url', {
 Vue.component('component-number', {
 	props: ['class', 'id', 'description', 'min', 'max', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
 	template: '<div class="large">' +
-				'<label>{{ $t(label) }}</label>' +
+				'<label>{{ label|translate }}</label>' +
 				'<input type="number"' + 
 					' :id="id"' +
 					' :min="min"' +
@@ -92,7 +103,7 @@ Vue.component('component-number', {
 					' :value="value"' +
 					'@input="update($event, name)">' +
 			  	'<span v-if="errors[name]" class="error">{{ errors[name] }}</span>' +
-			  	'<span v-else class="fielddescription"><small>{{ $t(description) }}</small></span>' +
+			  	'<span v-else class="fielddescription"><small>{{ description|translate }}</small></span>' +
 			  '</div>',
 	methods: {
 		update: function($event, name)
@@ -105,7 +116,7 @@ Vue.component('component-number', {
 Vue.component('component-email', {
 	props: ['class', 'id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
 	template: '<div class="large">' +
-				'<label>{{ $t(label) }}</label>' +
+				'<label>{{ label|translate }}</label>' +
 				'<input type="email"' + 
 					' :id="id"' +
 					' :maxlength="maxlength"' +
@@ -117,7 +128,7 @@ Vue.component('component-email', {
 					' :value="value"' +
 					'@input="update($event, name)">' +
 			  	'<span v-if="errors[name]" class="error">{{ errors[name] }}</span>' +
-			  	'<span v-else class="fielddescription"><small>{{ $t(description) }}</small></span>' +
+			  	'<span v-else class="fielddescription"><small>{{ description|translate }}</small></span>' +
 			  '</div>',
 	methods: {
 		update: function($event, name)
@@ -130,7 +141,7 @@ Vue.component('component-email', {
 Vue.component('component-tel', {
 	props: ['class', 'id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
 	template: '<div class="large">' +
-				'<label>{{ $t(label) }}</label>' +
+				'<label>{{ label|translate }}</label>' +
 				'<input type="tel"' + 
 					' :id="id"' +
 					' :maxlength="maxlength"' +
@@ -142,7 +153,7 @@ Vue.component('component-tel', {
 					' :value="value"' +
 					'@input="update($event, name)">' +
 			  	'<span v-if="errors[name]" class="error">{{ errors[name] }}</span>' +
-			  	'<span v-else class="fielddescription"><small>{{ $t(description) }}</small></span>' +
+			  	'<span v-else class="fielddescription"><small>{{ description|translate }}</small></span>' +
 			  '</div>',
 	methods: {
 		update: function($event, name)
@@ -155,7 +166,7 @@ Vue.component('component-tel', {
 Vue.component('component-password', {
 	props: ['class', 'id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
 	template: '<div class="large">' +
-				'<label>{{ $t(label) }}</label>' +
+				'<label>{{ label|translate }}</label>' +
 				'<input type="password"' + 
 					' :id="id"' +
 					' :maxlength="maxlength"' +
@@ -167,7 +178,7 @@ Vue.component('component-password', {
 					' :value="value"' +
 					'@input="update($event, name)">' +
 			  	'<span v-if="errors[name]" class="error">{{ errors[name] }}</span>' +
-			  	'<span v-else class="fielddescription"><small>{{ $t(description) }}</small></span>' +
+			  	'<span v-else class="fielddescription"><small>{{ description|translate }}</small></span>' +
 			  '</div>',
 	methods: {
 		update: function($event, name)
@@ -180,7 +191,7 @@ Vue.component('component-password', {
 Vue.component('component-date', {
 	props: ['class', 'id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
 	template: '<div class="large">' +
-				'<label>{{ $t(label) }}</label>' +
+				'<label>{{ label|translate }}</label>' +
 				'<input type="date" ' +
 					' :id="id"' +
 					' :readonly="readonly"' +
@@ -191,7 +202,7 @@ Vue.component('component-date', {
 					' :value="value"' +
 					' @input="update($event, name)">' +
 			  	'<span v-if="errors[name]" class="error">{{ errors[name] }}</span>' +
-			  	'<span v-else class="fielddescription"><small>{{ $t(description) }}</small></span>' +
+			  	'<span v-else class="fielddescription"><small>{{ description|translate }}</small></span>' +
 			  '</div>',
 	methods: {
 		update: function($event, name)
@@ -204,7 +215,7 @@ Vue.component('component-date', {
 Vue.component('component-color', {
 	props: ['class', 'id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
 	template: '<div class="large">' +
-				'<label>{{ $t(label) }}</label>' +
+				'<label>{{ label|translate }}</label>' +
 				'<input type="color" ' +
 					' :id="id"' +
 					' :readonly="readonly"' +
@@ -215,7 +226,7 @@ Vue.component('component-color', {
 					' :value="value"' +
 					' @input="update($event, name)">' +
 			  	'<span v-if="errors[name]" class="error">{{ errors[name] }}</span>' +
-			  	'<span v-else class="fielddescription"><small>{{ $t(description) }}</small></span>' +
+			  	'<span v-else class="fielddescription"><small>{{ description|translate }}</small></span>' +
 			  '</div>',
 	methods: {
 		update: function($event, name)
@@ -228,7 +239,7 @@ Vue.component('component-color', {
 Vue.component('component-select', {
 	props: ['class', 'id', 'description', 'readonly', 'required', 'disabled', 'label', 'name', 'type', 'options', 'value', 'errors'],
 	template: '<div class="large">' +
-				'<label>{{ $t(label) }}</label>' +
+				'<label>{{ label|translate }}</label>' +
 			    '<select' + 
 					' :id="id"' +
 					' :name="name"' +
@@ -239,7 +250,7 @@ Vue.component('component-select', {
 			      	'<option v-for="option,optionkey in options" v-bind:value="optionkey">{{option}}</option>' +
 			    '</select>' +
 			  	'<span v-if="errors[name]" class="error">{{ errors[name] }}</span>' +
-			  	'<span v-else class="fielddescription"><small>{{ $t(description) }}</small></span>' +
+			  	'<span v-else class="fielddescription"><small>{{ description|translate }}</small></span>' +
 			  '</div>',
 	methods: {
 		update: function($event, name)
@@ -252,8 +263,8 @@ Vue.component('component-select', {
 Vue.component('component-checkbox', {
 	props: ['class', 'id', 'description', 'readonly', 'required', 'disabled', 'label', 'checkboxlabel', 'name', 'type', 'value', 'errors'],
 	template: '<div class="large">' +
-				'<label>{{ $t(label) }}</label>' +
-				'<label class="control-group">{{ checkboxlabel }}' +
+				'<label>{{ label|translate }}</label>' +
+				'<label class="control-group">{{ checkboxlabel|translate }}' +
 				  '<input type="checkbox"' + 
 					' :id="id"' +
 					' :readonly="readonly"' +
@@ -264,7 +275,7 @@ Vue.component('component-checkbox', {
 				    ' @change="update($event, value, name)">' +				
 			  	  '<span class="checkmark"></span>' +
 			  	  '<span v-if="errors[name]" class="error">{{ errors[name] }}</span>' +
-				  '<span v-else class="fielddescription"><small>{{ $t(description) }}</small></span>' +
+				  '<span v-else class="fielddescription"><small>{{ description|translate }}</small></span>' +
 			  	'</label>' +  
 			  '</div>',
 	methods: {
@@ -278,7 +289,7 @@ Vue.component('component-checkbox', {
 Vue.component('component-checkboxlist', {
 	props: ['class', 'description', 'readonly', 'required', 'disabled', 'label', 'checkboxlabel', 'options', 'name', 'type', 'value', 'errors'],
 	template: '<div class="large">' +
-				'<label>{{ $t(label) }}</label>' +
+				'<label>{{ label|translate }}</label>' +
 				'<label v-for="option, optionvalue in options" class="control-group">{{ option }}' +
 				  '<input type="checkbox"' + 
 					' :id="optionvalue"' +
@@ -287,7 +298,7 @@ Vue.component('component-checkboxlist', {
 				  	' @change="update($event, value, optionvalue, name)">' +
 			  	  '<span class="checkmark"></span>' +
 			  	  '<span v-if="errors[name]" class="error">{{ errors[name] }}</span>' +
-			  	  '<span v-else class="fielddescription"><small>{{ $t(description) }}</small></span>' +
+			  	  '<span v-else class="fielddescription"><small>{{ description|translate }}</small></span>' +
 			  '</div>',
 	methods: {
 		update: function($event, value, optionvalue, name)
@@ -305,7 +316,7 @@ Vue.component('component-checkboxlist', {
 Vue.component('component-radio', {
 	props: ['class', 'id', 'description', 'readonly', 'required', 'disabled', 'options', 'label', 'name', 'type', 'value', 'errors'],
 	template: '<div class="large">' +
-				'<label>{{ $t(label) }}</label>' +
+				'<label>{{ label|translate }}</label>' +
 				'<label v-for="option,optionvalue in options" class="control-group">{{ option }}' +
 				  '<input type="radio"' + 
 					' :id="id"' +
@@ -318,7 +329,7 @@ Vue.component('component-radio', {
 				  	' @change="update($event, value, name)">' +				
 			  	  '<span class="radiomark"></span>' +
 			  	  '<span v-if="errors[name]" class="error">{{ errors[name] }}</span>' +
-				  '<span v-else class="fielddescription"><small>{{ $t(description) }}</small></span>' +
+				  '<span v-else class="fielddescription"><small>{{ description|translate }}</small></span>' +
 			  	'</label>' +  
 			  '</div>',
 	methods: {
@@ -340,9 +351,9 @@ Vue.component('tab-meta', {
                 	'v-model="formdata[index]"' +
                 	'v-bind="field">' +
 				'</component>' + 
-				'<div v-if="saved" class="metaLarge"><div class="metaSuccess">{{ $t(\'Saved successfully\') }}</div></div>' +
-				'<div v-if="errors" class="metaLarge"><div class="metaErrors">{{ $t(\'Please correct the errors above\') }}</div></div>' +
-				'<div class="large"><input type="submit" @click.prevent="saveInput" :value="$t(\'save\')"></input></div>' +
+				'<div v-if="saved" class="metaLarge"><div class="metaSuccess">{{ \'Saved successfully\'|translate }}</div></div>' +
+				'<div v-if="errors" class="metaLarge"><div class="metaErrors">{{ \'Please correct the errors above\'|translate }}</div></div>' +
+				'<div class="large"><input type="submit" @click.prevent="saveInput" :value="\'save\'|translate"></input></div>' +
 			  '</form></section>',
 	methods: {
 		selectComponent: function(field)
@@ -357,11 +368,6 @@ Vue.component('tab-meta', {
 })
 
 let meta = new Vue({
-
-  	i18n: new VueI18n({
-    	locale: language,
-    	messages: vuejsLabels
-  	}),
     delimiters: ['${', '}'],
 	el: '#metanav',	
 	data: function () {

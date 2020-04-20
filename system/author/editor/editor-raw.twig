@@ -12,7 +12,7 @@
 		    v-bind:key="tab"
 		    v-bind:class="['tab-button', { active: currentTab === tab }]"
 		    v-on:click="currentTab = tab"
-		  >${ $t(tab) }</button>
+		  >${ tab|translate }</button>
 
 		  <component 
 		  	class="tab" 
