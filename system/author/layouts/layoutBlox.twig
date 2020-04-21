@@ -18,7 +18,7 @@
 		
 		<link rel="stylesheet" href="{{ base_url }}/system/author/css/normalize.css" />
 		<link rel="stylesheet" href="{{ base_url }}/system/author/css/tachyons.min.css" />
-		<link rel="stylesheet" href="{{ base_url }}/system/author/css/style.css?20200405" />
+		<link rel="stylesheet" href="{{ base_url }}/system/author/css/style.css?20200420" />
 		<link rel="stylesheet" href="{{ base_url }}/system/author/css/color-picker.min.css" />
 
 		{{ assets.renderCSS() }}
@@ -196,28 +196,27 @@
 			const myaxios = axios.create();
 			myaxios.defaults.baseURL =  "{{ base_url }}";
 		</script>
-		<script src="{{ base_url }}/system/author/js/typemillutils.js?20200405"></script>
-		<script src="{{ base_url }}/system/author/js/vue.min.js?20200405"></script>
-    	<script src="{{ base_url }}/system/author/js/vue-i18n.min.js?20200405"></script>
-		<script src="{{ base_url }}/system/author/js/autosize.min.js?20200405"></script>
-		<script src="{{ base_url }}/system/author/js/author.js?20200405"></script>
-		<script src="{{ base_url }}/system/author/js/vue-publishcontroller.js?20200405"></script>
-		<script src="{{ base_url }}/system/author/js/vue-blox-config.js?20200405"></script>
+		<script src="{{ base_url }}/system/author/js/typemillutils.js?20200420"></script>
+		<script src="{{ base_url }}/system/author/js/vue.min.js?20200420"></script>
+		<script src="{{ base_url }}/system/author/js/autosize.min.js?20200420"></script>
+		<script src="{{ base_url }}/system/author/js/author.js?20200420"></script>
+		<script src="{{ base_url }}/system/author/js/vue-publishcontroller.js?20200420"></script>
+		<script src="{{ base_url }}/system/author/js/vue-blox-config.js?20200420"></script>
 		<script>
 			let formatConfig = {{ settings.formats|json_encode() }};
       		let language = {{ settings.language|json_encode() }};
-      		let vuejsLabels = {{ settings.vuejsLabels|json_encode() }};
+      		let labels = {{ settings.labels|json_encode() }};
       		let navigation = {{ navigation|json_encode() }};
 		</script>
 
 		{{ assets.renderEditorJS() }}
 
-		<script src="{{ base_url }}/system/author/js/vue-blox.js?20200405"></script>
-		<script src="{{ base_url }}/system/author/js/vue-posts.js?20200405"></script>
-		<script src="{{ base_url }}/system/author/js/sortable.min.js?20200405"></script>
-		<script src="{{ base_url }}/system/author/js/vuedraggable.umd.min.js?20200405"></script>
-		<script src="{{ base_url }}/system/author/js/vue-navi.js?20200405"></script>
-		<script src="{{ base_url }}/system/author/js/vue-meta.js?20200405"></script>
+		<script src="{{ base_url }}/system/author/js/vue-blox.js?20200420"></script>
+		<script src="{{ base_url }}/system/author/js/vue-posts.js?20200420"></script>
+		<script src="{{ base_url }}/system/author/js/sortable.min.js?20200420"></script>
+		<script src="{{ base_url }}/system/author/js/vuedraggable.umd.min.js?20200420"></script>
+		<script src="{{ base_url }}/system/author/js/vue-navi.js?20200420"></script>
+		<script src="{{ base_url }}/system/author/js/vue-meta.js?20200420"></script>
 
 		{{ assets.renderJS() }}
 

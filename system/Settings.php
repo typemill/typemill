@@ -42,7 +42,6 @@ class Settings
 	    # load the strings of the set language
 	    $language = $settings['language'];
 	    $settings['labels'] = self::getLanguageLabels($language);
-	    $settings['vuejsLabels'] = self::getVuejsLabels($language);
 
 		# We know the used theme now so create the theme path 
 		$settings['themePath'] = $settings['rootPath'] . $settings['themeFolder'] . DIRECTORY_SEPARATOR . $settings['theme'];
@@ -81,7 +80,7 @@ class Settings
 			'contentFolder'							=> 'content',
 			'cache'									=> true,
 			'cachePath'								=> $rootPath . 'cache',
-			'version'								=> '1.3.4',
+			'version'								=> '1.3.5',
 			'setup'									=> true,
 			'welcome'								=> true,
 			'images'								=> ['live' => ['width' => 820], 'thumbs' => ['width' => 250, 'height' => 150]],
