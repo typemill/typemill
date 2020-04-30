@@ -2073,7 +2073,7 @@ const medialib = Vue.component('medialib', {
 
 				this.$parent.showmedialib = false;
 
-				this.$parent.updatemarkdown(imgmarkdown);
+				this.$parent.updatemarkdown(imgmarkdown, image.src_live);
 			}
 			if(this.parentcomponent == 'files')
 			{
@@ -2084,7 +2084,7 @@ const medialib = Vue.component('medialib', {
 
 				this.$parent.showmedialib = false;
 
-				this.$parent.updatemarkdown(filemarkdown);
+				this.$parent.updatemarkdown(filemarkdown, image.src_live);
 			}
 		},
 		selectFile: function(file)
@@ -2106,7 +2106,7 @@ const medialib = Vue.component('medialib', {
 
 				this.$parent.showmedialib = false;
 
-				this.$parent.updatemarkdown(imgmarkdown);				
+				this.$parent.updatemarkdown(imgmarkdown, file.url);
 			}
 			if(this.parentcomponent == 'files')
 			{
@@ -2117,7 +2117,7 @@ const medialib = Vue.component('medialib', {
 				this.$parent.filemeta = true;
 				this.$parent.filetitle = file.info.filename + ' (' + file.info.extension.toUpperCase() + ')';
 
-				this.$parent.updatemarkdown(filemarkdown);
+				this.$parent.updatemarkdown(filemarkdown, file.url);
 			}
 			this.showFiles();
 		},		

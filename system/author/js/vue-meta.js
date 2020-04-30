@@ -2,12 +2,12 @@ const FormBus = new Vue();
 
 Vue.filter('translate', function (value) {
   if (!value) return ''
-  value = value.replace(/[ ]/g,"_").replace(/[.]/g, "_").replace(/[-]/g, "_").replace(/[,]/g,"_").replace(/[(]/g,"_").replace(/[)]/g,"_").toUpperCase()
-  translated_string = labels[value]
+  transvalue = value.replace(/[ ]/g,"_").replace(/[.]/g, "_").replace(/[-]/g, "_").replace(/[,]/g,"_").replace(/[(]/g,"_").replace(/[)]/g,"_").toUpperCase()
+  translated_string = labels[transvalue]
   if(!translated_string || translated_string.length === 0){
-    return value + '?'
+    return value
   } else {
-    return labels[value]
+    return labels[transvalue]
   }
 })
 
@@ -37,18 +37,42 @@ Vue.component('component-text', {
 	},
 })
 
+Vue.component('component-hidden', {
+	props: ['class', 'id', 'maxlength', 'required', 'disabled', 'name', 'type', 'value', 'errors'],
+	template: '<div class="hidden">' +
+				'<input type="hidden"' + 
+					' :id="id"' +
+					' :maxlength="maxlength"' +
+					' :name="name"' +
+					' :value="value"' +
+					'@input="update($event, name)">' +
+			  '</div>',
+	methods: {
+		update: function($event, name)
+		{
+			FormBus.$emit('forminput', {'name': name, 'value' : $event.target.value});
+		},
+	},
+})
+
 Vue.component('component-textarea', {
 	props: ['class', 'id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
+	data: function () {
+		return {
+			textareaclass: ''
+		 }
+	},
 	template: '<div class="large">' +
 				'<label>{{ label|translate }}</label>' +
-				'<textarea ' +
+				'<textarea rows="8" ' +
 					' :id="id"' +
+					' :class="textareaclass"' +
 					' :readonly="readonly"' +
 					' :required="required"' +  
 					' :disabled="disabled"' +  
 					' :name="name"' +
 					' :placeholder="placeholder"' +
-					' :value="value"' +
+					' :value="formatValue(value)"' +
 					' @input="update($event, name)"></textarea>' +
 			  	'<span v-if="errors[name]" class="error">{{ errors[name] }}</span>' +
 			  	'<span v-else class="fielddescription"><small>{{ description|translate }}</small></span>' +
@@ -57,6 +81,15 @@ Vue.component('component-textarea', {
 		update: function($event, name)
 		{
 			FormBus.$emit('forminput', {'name': name, 'value' : $event.target.value});
+		},
+		formatValue: function(value)
+		{
+			if(value !== null && typeof value === 'object')
+			{
+				this.textareaclass = 'codearea';
+				return JSON.stringify(value, undefined, 4);
+			}
+			return value;
 		},
 	},
 })

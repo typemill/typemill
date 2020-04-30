@@ -605,7 +605,7 @@ a.tm-download::before{
 	width: 30px;
 	height: 30px;
 	line-height: 30px;
-	font-family: "Comic Sans MS",cursive,sans-serif;
+	font-family: Calibri, "Segoe UI", Roboto, Courier, Helvetica, -apple-system, BlinkMacSystemFont, sans-serif, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 	font-size: 1.3em;
 	font-weight: 900;	
 	border: 2px solid #e0474c;

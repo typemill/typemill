@@ -11,6 +11,13 @@ meta:
       size: 160
       class: large
       description: If not filled, the description is extracted from content.
+    heroimage:
+      type: image
+      label: Hero Image
+      description: Maximum size for an image is 5 MB. Hero images are not supported by all themes.
+    heroimagealt:
+      type: text
+      label: Alternative Text for the hero image
     author:
       type: text
       label: author

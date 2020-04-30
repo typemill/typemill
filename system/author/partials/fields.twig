@@ -9,6 +9,11 @@
 
 		<textarea id="{{ itemName }}[{{ field.name }}]" name="{{ itemName }}[{{ field.name }}]"{{field.getAttributeValues() }}{{ field.getAttributes() }}>{{ field.getContent() }}</textarea>
 
+	{% elseif field.type == 'image' %}
+		<div class="imageupload dropbox">
+			<input id="{{itemName}}[{{ field.name }}]" class="input-file" name="{{itemName}}[{{ field.name }}]" type="file" accept="image/*"{{ field.getAttributeValues() }}{{ field.getAttributes() }}>
+			<p><svg class="icon icon-upload baseline"><use xlink:href="#icon-upload"></use></svg> upload an image</p>
+		</div>
 	{% elseif field.type == 'paragraph' %}
 		
 		{{ markdown(field.getContent()) }}	

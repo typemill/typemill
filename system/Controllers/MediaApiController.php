@@ -108,6 +108,11 @@ class MediaApiController extends ContentController
 
 		if($imageProcessor->createImage($this->params['image'], $this->params['name'], $this->settings['images']))
 		{
+			# publish image directly, used for example by image field for meta-tabs
+			if($this->params['publish'])
+			{
+				$imageProcessor->publishImage();
+			}
 			return $response->withJson(['name' => 'media/live/' . $imageProcessor->getFullName(),'errors' => false]);	
 		}
 

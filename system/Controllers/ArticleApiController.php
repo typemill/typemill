@@ -84,9 +84,9 @@ class ArticleApiController extends ContentController
 
 			# dispatch event
 			$page = ['content' => $this->content, 'meta' => $meta, 'item' => $this->item];
-			$this->c->dispatcher->dispatch('onPagePublished', new OnPagePublished($page));
+			$page = $this->c->dispatcher->dispatch('onPagePublished', new OnPagePublished($page))->getData();
 
-			return $response->withJson(['success' => true, 'meta' => $meta], 200);
+			return $response->withJson(['success' => true, 'meta' => $page['meta']], 200);
 		}
 		else
 		{

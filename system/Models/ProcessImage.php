@@ -333,6 +333,8 @@ class ProcessImage extends ProcessAssets
 		# generate images from live folder to 'tmthumbs'
 		$liveImages 	= scandir($this->liveFolder);
 
+		$result = false;
+
 		foreach ($liveImages as $key => $name)
 		{
 			if (!in_array($name, array(".","..")))

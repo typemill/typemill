@@ -342,7 +342,7 @@ class Validation
 	*/
 	
 	public function objectField($fieldName, $fieldValue, $objectName, $fieldDefinitions, $skiprequired = NULL)
-	{	
+	{
 		$v = new Validator(array($fieldName => $fieldValue));
 		
 		if(isset($fieldDefinitions['required']) && !$skiprequired)
@@ -412,8 +412,16 @@ class Validation
 #				$v->rule('regex', $fieldName, '/^[\pL0-9_ \-\.\?\!\/\:]*$/u');
 				break;
 			case "textarea":
-				$v->rule('noHTML', $fieldName);
-				$v->rule('lengthMax', $fieldName, 1000);
+				# it understands array, json, yaml
+				if(is_array($fieldValue))
+				{
+					$v = $this->checkArray($fieldValue, $v);
+				}
+				else
+				{
+					$v->rule('noHTML', $fieldName);
+					$v->rule('lengthMax', $fieldName, 1000);
+				}
 				break;
 			case "paragraph":
 				$v->rule('noHTML', $fieldName);
@@ -422,9 +430,13 @@ class Validation
 			case "password":
 				$v->rule('lengthMax', $fieldName, 100);
 				break;
+			case "image":
+				$v->rule('noHTML', $fieldName);
+				$v->rule('lengthMax', $fieldName, 1000);
+				break;
 			default:
 				$v->rule('lengthMax', $fieldName, 1000);
-				$v->rule('regex', $fieldName, '/^[\pL0-9_ \-]*$/u');		
+				$v->rule('regex', $fieldName, '/^[\pL0-9_ \-]*$/u');
 		}
 		return $this->validationResult($v, $objectName);
 	}
@@ -435,6 +447,20 @@ class Validation
 	* @param obj $v the validation object.
 	* @return bool
 	*/
+
+	public function checkArray($arrayvalues, $v)
+	{		
+		foreach($arrayvalues as $key => $value)
+		{
+			if(is_array($value))
+			{
+				$this->checkArray($value, $v);
+			}
+			$v->rule('noHTML', $value);
+			$v->rule('lengthMax', $value, 1000);
+		}
+		return $v;
+	}
 	
 	public function validationResult($v, $name = false)
 	{

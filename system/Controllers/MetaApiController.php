@@ -272,10 +272,10 @@ class MetaApiController extends ContentController
 		}
 
 		# add the new/edited metadata
-		$meta[$tab] = $metaInput;
+		$metaPage[$tab] = $metaInput;
 
 		# store the metadata
-		$writeMeta->updateYaml($this->settings['contentFolder'], $this->item->pathWithoutType . '.yaml', $meta);
+		$writeMeta->updateYaml($this->settings['contentFolder'], $this->item->pathWithoutType . '.yaml', $metaPage);
 
 		if($structure)
 		{
