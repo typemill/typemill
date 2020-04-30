@@ -751,8 +751,9 @@ class SettingsController extends Controller
 	private function getLanguages()
 	{
 		return array(
-			'nl' => 'Dutch, Flemish',
 			'en' => 'English',
+			'ru' => 'Russian',
+			'nl' => 'Dutch, Flemish',
 			'de' => 'German',
 			'it' => 'Italian',
 		);
