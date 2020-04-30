@@ -1,6 +1,5 @@
 # Italiano
 ACCOUNT: Utenza
-ACTIVATE_SPECIAL_STARTPAGE_DESIGN: Attiva il disegno speciale della pagina iniziale
 ACTIVE: Attivo
 ACTUAL_PASSWORD: Parola d'ordine corrente
 ADD: aggiungi
@@ -17,7 +16,6 @@ ADD_ROW_BELOW: aggiungi la riga sotto
 ALL_USERS: Tutti gli utenti
 ALT_TEXT: Testo alternativo
 AUTHOR: Autore
-AUTHOR_INTRO: Introduzione dell'autore
 BACK_TO_STARTPAGE: torna alla pagina iniziale
 BOLD: grassetto
 BOTTOM: Sotto
@@ -31,12 +29,12 @@ CENTER: Centro
 CHECK: controllo
 CHOOSE_FILE: Scegli il file
 CLASS: Classe
+CLOSE_LIBRARY: Chiudi libreria
 CODE: Codice
 COG: ingranaggio
 CONTENT: Contenuto
 CONTENT: Contenuto
 COPYRIGHT: Diritti d'autore
-COUNT_CHAPTERS_IN_NAVIGATION?: Contare i capitoli nella navigazione?
 CREATED_AT__READ_ONLY_: Creato il (sola lettura)
 CREATED_AT__READONLY_: Creato il (sola lettura)
 CREATE_NEW_USER: Crea nuovo utente
@@ -53,7 +51,6 @@ DELETE_PAGE: Elimina pagina
 DELETE_ROW: elimina riga
 DELETE_USER: Elimina utente
 DESCRIPTION: descrizione
-DIFFERENT_DESIGN_FOR_STARTPAGE: Disegno diverso per la pagina iniziale
 DISCARD_CHANGES: Non salvare le modifiche
 DISCARD: Scarta
 DO_YOU_REALLY_WANT_TO_DELETE_THE_USER: Vuoi veramente eliminare l'utente
@@ -61,19 +58,25 @@ DO_YOU_REALLY_WANT_TO_DELETE_THIS_PAGE: Vuoi veramente cancellare questa pagina?
 DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES_AND_SET_THE_CONTENT_BACK_TO_THE_LIVE_VERSION: Vuoi annullare le modifiche e ripristinare i contenuti alla versione precedente?
 DRAFT: Bozza
 DRAG_A_PICTURE_OR_CLICK_TO_SELECT: trascina un'immagine o fai clic per selezionare
+DUTCH__FLEMISH: Olandese, Fiammingo
 EDIT: modifica
 EDIT_USER: Modifica utente
 E_G_: per es.:
 E_MAIL: Posta elettronica
+ENGLISH: Inglese
 EXTERNAL_LINK: collegamento esterno
-FACEBOOK: Facebook
-File: File
+FAVICON: Favicon
+FILE: Archivio
+FILES: Archivi
 FIRST_NAME: Nome
 FOLDER: cartella
 FORGOT_PASSWORD: Parola d'ordine dimenticata
 FORMAT: Format
-GITHUB: GitHub
+GENERAL_PRESENTATION: Presentazione generale
+GERMAN: Tedesco
+GOOGLE_SITEMAP: Sitemap di Google
 HEAD: Intestazione
+HEADLINE_ANCHORS: Ancoraggi del titolo
 HEADLINE: Titolo
 HIDE: Nascondi
 HIDE_PAGE_FROM_NAVIGATION: Nasconde la pagina dalla navigazione
@@ -83,41 +86,37 @@ HORIZONTAL_LINE: Linea orizzontale
 HR: Linea orizzontale
 IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: Se non compilato, la descrizione viene estratta dal contenuto.
 IMAGE: Immagine
+IMAGES: Immagini
+ITALIAN: Italiano
 ITALIC: corsivo
-LABEL_FOR_CHAPTER: Etichetta per capitolo
-LABEL_FOR_START_BUTTON: Etichetta per il pulsante Comincia
 LANGUAGE: Lingua
-LAST_MODIFIED_FORMAT: Ultimo formato modificato
 LAST_MODIFIED_LIVE__READONLY_: Ultima modifica (sola lettura)
-LAST_MODIFIED_TEXT: Ultimo testo modificato
-LAST_MODIFIED: Ultima modifica
 LAST_NAME: Cognome
 LEFT: Sinistra
 LICENCE: Licenza
 LINK: Collegamento
-LINKEDIN: Linkedin
-LINK_TO_GIT_REPOSITORY: Collegamento al deposito git
 LINK_TO_VIDEO: Collega al video
 LOGIN: Accesso
-LOGO_ON_STARTPAGE: Logo sulla pagina iniziale
-LOGOUT: Disconnessione
-MAIL: Mail
+LOGO: Logo
+LOGOUT: Esci
 MANUAL_DATE: Data manuale
 MARKDOWN: Markdown
 MENU: Menu
 META_DESCRIPTION: Descrizione
-META_TITLE: Titolo
 META: Metadati
+META_TITLE: Titolo
 MISSING_REQUIREMENTS: Requisiti mancanti
 MOVE_VERTICAL: spostare in verticale
 NAVIGATION_TITLE: Titolo di navigazione
 NEW_PASSWORD: Nuova parola d'ordine
 NO_DESCRIPTION: Nessuna descrizione
+NONE: Nessuna
 NO_PREVIEW: Nessuna anteprima
 NO_SETTINGS: Nessuna impostazione
 NOT_EDITABLE: non modificabile
 NUMBERED_LIST: Elenco numerato
 OLIST: Elenchi ordinati
+ONLINE: in linea
 ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: Sono ammessi solo i seguenti caratteri speciali:
 PARAGRAPH: Paragrafo
 PASSWORD: Parola d'ordine
@@ -125,10 +124,6 @@ PLEASE_CONFIRM: Per favore conferma
 PLEASE_CORRECT_THE_ERRORS_ABOVE: Si prega di correggere gli errori sopra
 PLUGINS: Plugin
 PLUGIN_STORE: Deposito plugin
-POSITION_OF_AUTHOR: Posizione dell'autore
-POSITION_OF_GIT_EDIT_LINK: Posizione del collegamento modifica Git
-POSITION_OF_MODIFIED_TEXT: Posizione del testo modificato
-POSITION_OF_SHARE_BUTTONS: Posizione dei pulsanti di condivisione
 POWER_OFF: spegni
 PUBLISH: Pubblica
 QUOTE: Citazione
@@ -142,17 +137,16 @@ REMEMBER_TO_BOOKMARK_THIS_PAGE: Ricorda di aggiungere questa pagina ai segnalibr
 REQUIRED: Richiesto
 RIGHT: Destra
 ROLE: Ruolo
+RUSSIAN: Russo
 SAVE_ALL_SETTINGS: Salva tutte le impostazioni
 SAVED_SUCCESSFULLY: Salvato con successo
 SAVE: Salva
 SAVE_THEME: Salva tema
-SELECT_SHARE_BUTTONS: Seleziona i pulsanti pulsanti di condivisione
-SETTINGS: Impostazioni
+SELECT_FROM_MEDIALIB: seleziona da medialib
 SETTINGS_ARE_STORED: Le impostazioni sono memorizzate
+SETTINGS: Impostazioni
 SETUP: Configurazione
-SHARE: Condividere
-SHOW_CHAPTER_NUMBERS: Mostra i numeri dei capitoli
-SHOW_LOGO_INSTEAD_OF_TITLE_ON_STARTPAGE: Mostra logo invece del titolo sulla pagina iniziale
+SHOW_ANCHORS_NEXT_TO_HEADLINES: Mostra le ancore accanto ai titoli
 STANDARD_EDITOR_MODE: Modalità editore standard
 START: Comincia
 SYSTEM: Sistema
@@ -167,12 +161,13 @@ THEME_STORE: Deposito temi
 TITLE: Titolo
 TOC: Sommario
 TOP: Sopra
-TWITTER: Twitter
 TYPEMILL_DESCRIPTION: Il tema standard per Typemill. Reattivo, minimo e senza dipendenze. Utilizza i caratteri di sistema Calibri ed Helvetica. Non viene utilizzato JavaScript.
 ULIST: Elenchi non ordinati
 UNKNOWN: Ignoto
 UPDATE_USER: Aggiorna utente
 UPLOAD: carica
+UPLOAD_FILE: Carica un file
+USE_2_TO_20_CHARACTERS: Usa da 2 a 20 caratteri.
 USE_2_TO_40_CHARACTERS: Usa da 2 a 40 caratteri.
 USE_A_VALID_YEAR: Usa un anno valido
 USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Utilizzato come ripiego quando non è impostata alcuna data manuale.
@@ -189,8 +184,24 @@ VISUAL: visivo
 WAIT: aspetta
 WEBSITE_TITLE: Titolo del sito
 WEB: Sito
-WHATSAPP: WhatsApp
 WRITING: Scrittura
-XING: Xing
 YEAR: Anno
 YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: È possibile sovrascrivere il css del tema con il proprio CSS qui.
+
+SW_SETUP_WELCOME: Benvenuto all'installazione
+SW_HURRA: Evviva
+SW_YOUR_ACCOUNT: Il tuo account è stato creato e ora sei connesso.
+SW_NEXT_STOP: Prossimo passo:
+SW_VISIT: Visita il pannello autore e configura il tuo nuovo sito. Puoi configurare il sistema, scegliere i temi e aggiungere plugin.
+SW_GET_HELP: Chiedi aiuto:
+SW_IF_YOU_HAVE: In caso di domande, si prega di leggere la
+SW_DOCS: documentazione
+SW_OR_OPEN: o aprire un nuovo problema su
+SW_CODED: Codificato con
+SW_BY: dalla
+SW_COMMUNITY: comunità
+SW_TRENDSCHAU: Trendschau Digital
+SW_CONFIGURE: Configura il tuo sito
+SW_GIVE_YOUR_NEW: Dai un nome al tuo nuovo sito, aggiungi l'autore e scegli un diritto d'autore.
+SW_CHOOSE_A_THEME: Scegli un tema per il tuo sito e configura i dettagli del tema.
+SW_ADD_NEW_FEATURE: Aggiungi nuove funzionalità al tuo sito mediante plugin e configurali.

@@ -1,6 +1,5 @@
 # English
 ACCOUNT: Account
-ACTIVATE_SPECIAL_STARTPAGE_DESIGN: Activate Special Startpage-Design
 ACTIVE: Active
 ACTUAL_PASSWORD: Actual Password
 ADD: add
@@ -17,7 +16,6 @@ ADD_ROW_BELOW: add row below
 ALL_USERS: All users
 ALT_TEXT: Alt-Text
 AUTHOR: Author
-AUTHOR_INTRO: Author Intro
 BACK_TO_STARTPAGE: back to startpage
 BOLD: bold
 BOTTOM: Bottom
@@ -37,7 +35,6 @@ COG: cog
 CONTENT: Content
 CONTENT: Content
 COPYRIGHT: Copyright
-COUNT_CHAPTERS_IN_NAVIGATION?: Count chapters in navigation?
 CREATED_AT__READ_ONLY_: Created at (readonly)
 CREATED_AT__READONLY_: Created at (read only)
 CREATE_NEW_USER: Create New User
@@ -54,7 +51,6 @@ DELETE_PAGE: Delete page
 DELETE_ROW: delete row
 DELETE_USER: Delete User
 DESCRIPTION: description
-DIFFERENT_DESIGN_FOR_STARTPAGE: Different Design for Startpage
 DISCARD_CHANGES: Discard Changes
 DISCARD: Discard
 DO_YOU_REALLY_WANT_TO_DELETE_THE_USER: Do you really want to delete the user
@@ -62,19 +58,25 @@ DO_YOU_REALLY_WANT_TO_DELETE_THIS_PAGE: Do you really want to delete this page?
 DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES_AND_SET_THE_CONTENT_BACK_TO_THE_LIVE_VERSION: Do you want to discard your changes and set the content back to the live version?
 DRAFT: Draft
 DRAG_A_PICTURE_OR_CLICK_TO_SELECT: upload an image
+DUTCH__FLEMISH: Dutch, Flemish
 EDIT: edit
 EDIT_USER: Edit User
 E_G_: e.g.
 E_MAIL: E-Mail
+ENGLISH: English
 EXTERNAL_LINK: external-link
-FACEBOOK: Facebook
+FAVICON: Favicon
 FILE: File
+FILES: Files
 FIRST_NAME: First Name
 FOLDER: folder
 FORGOT_PASSWORD: Forgot password
 FORMAT: Format
-GITHUB: GitHub
+GENERAL_PRESENTATION: General Presentation
+GERMAN: German
+GOOGLE_SITEMAP: Google Sitemap
 HEAD: Head
+HEADLINE_ANCHORS: Headline Anchors
 HEADLINE: Headline
 HIDE: Hide
 HIDE_PAGE_FROM_NAVIGATION: Hide page from navigation
@@ -84,25 +86,19 @@ HORIZONTAL_LINE: Horizontal Line
 HR: hr
 IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: If not filled, the description is extracted from content.
 IMAGE: Image
+IMAGES: Images
+ITALIAN: Italian
 ITALIC: italic
-LABEL_FOR_CHAPTER: Label for Chapter
-LABEL_FOR_START_BUTTON: Label for Start Button
 LANGUAGE: Language
-LAST_MODIFIED_FORMAT: Last Modified Format
-LAST_MODIFIED: Last Modified
 LAST_MODIFIED_LIVE__READONLY_: Last modified live (readonly)
-LAST_MODIFIED_TEXT: Last Modified Text
 LAST_NAME: Last Name
 LEFT: Left
 LICENCE: Licence
-LINKEDIN: Linkedin
 LINK: Link
-LINK_TO_GIT_REPOSITORY: Link to git repository
 LINK_TO_VIDEO: Link to video
 LOGIN: Login
-LOGO_ON_STARTPAGE: Logo on startpage
+LOGO: Logo
 LOGOUT: Logout
-MAIL: Mail
 MANUAL_DATE: Manual date
 MARKDOWN: markdown
 MENU: Menu
@@ -114,11 +110,13 @@ MOVE_VERTICAL: move vertical
 NAVIGATION_TITLE: Navigation Title
 NEW_PASSWORD: New Password
 NO_DESCRIPTION: No description
+NONE: None
 NO_PREVIEW: No Preview
 NO_SETTINGS: No Settings
 NOT_EDITABLE: not editable
 NUMBERED_LIST: Numbered List
 OLIST: olist
+ONLINE: online
 ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: Only the following special characters are allowed:
 PARAGRAPH: Paragraph
 PASSWORD: Password
@@ -126,10 +124,6 @@ PLEASE_CONFIRM: Please confirm
 PLEASE_CORRECT_THE_ERRORS_ABOVE: Please correct the errors above
 PLUGINS: Plugins
 PLUGIN_STORE: Plugin Store
-POSITION_OF_AUTHOR: Position of Author
-POSITION_OF_GIT_EDIT_LINK: Position of Git Edit Link
-POSITION_OF_MODIFIED_TEXT: Position of Modified Text
-POSITION_OF_SHARE_BUTTONS: Position of Share-Buttons
 POWER_OFF: power-off
 PUBLISH: Publish
 QUOTE: Quote
@@ -143,17 +137,16 @@ REMEMBER_TO_BOOKMARK_THIS_PAGE: Remember to bookmark this page
 REQUIRED: Required
 RIGHT: Right
 ROLE: Role
+RUSSIAN: Russian
 SAVE_ALL_SETTINGS: Save All Settings
 SAVED_SUCCESSFULLY: Saved successfully
 SAVE: Save
 SAVE_THEME: Save Theme
-SELECT_SHARE_BUTTONS: Select Share Buttons
-SETTINGS: Settings
+SELECT_FROM_MEDIALIB: select from medialib
 SETTINGS_ARE_STORED: Settings are stored
+SETTINGS: Settings
 SETUP: Setup
-SHARE: Share
-SHOW_CHAPTER_NUMBERS: Show Chapter Numbers
-SHOW_LOGO_INSTEAD_OF_TITLE_ON_STARTPAGE: Show logo instead of title on startpage
+SHOW_ANCHORS_NEXT_TO_HEADLINES: Show anchors next to headlines
 STANDARD_EDITOR_MODE: Standard Editor Mode
 START: Start
 SYSTEM: System
@@ -168,13 +161,13 @@ THEME_STORE: Theme Store
 TITLE: Title
 TOC: toc
 TOP: Top
-TWITTER: Twitter
 TYPEMILL_DESCRIPTION: The standard theme for Typemill. Responsive, minimal and without any dependencies. It uses the system fonts Calibri and Helvetica. No JavaScript is used.
 ULIST: ulist
 UNKNOWN: Unknown
 UPDATE_USER: Update User
-UPLOAD: upload
 UPLOAD_FILE: Upload a file
+UPLOAD: upload
+USE_2_TO_20_CHARACTERS: Use 2 to 20 characters.
 USE_2_TO_40_CHARACTERS: Use 2 to 40 characters.
 USE_A_VALID_YEAR: Use a valid year
 USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Used as fallback when no manual date is set.
@@ -191,8 +184,24 @@ VISUAL: visual
 WAIT: wait
 WEBSITE_TITLE: Website Title
 WEB: Web
-WHATSAPP: WhatsApp
 WRITING: Writing
-XING: Xing
 YEAR: Year
 YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: You can overwrite the theme-css with your own css here.
+
+SW_SETUP_WELCOME: Setup Welcome
+SW_HURRA: Hurra
+SW_YOUR_ACCOUNT: Your account has been created and you are logged in now.
+SW_NEXT_STOP: Next step:
+SW_VISIT: Visit the author panel and setup your new website. You can configure the system, choose themes and add plugins.
+SW_GET_HELP: Get help:
+SW_IF_YOU_HAVE: If you have any questions, please read the
+SW_DOCS: docs
+SW_OR_OPEN: or open a new issue on
+SW_CODED: Coded with
+SW_BY: by the
+SW_COMMUNITY: community
+SW_TRENDSCHAU: Trendschau Digital
+SW_CONFIGURE: Configure your website
+SW_GIVE_YOUR_NEW: Give your new website a name, add the author and choose a copyright.
+SW_CHOOSE_A_THEME: Choose a theme for your website and configure the theme details.
+SW_ADD_NEW_FEATURE: Add new features to your website with plugins and configure them.

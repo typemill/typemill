@@ -1,5 +1,5 @@
 {% extends 'layouts/layoutAuth.twig' %}
-{% block title %}Setup{% endblock %}
+{% block title %}{{ labels['SETUP'] ? labels['SETUP'] : 'Setup' }}{% endblock %}
 
 {% block content %}
 
@@ -19,21 +19,21 @@
 
 				<fieldset class="auth">
 					<div class="formElement{{ errors.username ? ' errors' : '' }}">
-						<label for="username">Username <abbr title="required">*</abbr></label>
+						<label for="username">{{ labels['USERNAME'] ? labels['USERNAME'] : 'Username' }} <abbr title="{{ labels['REQUIRED'] ? labels['REQUIRED'] : 'required' }}">*</abbr></label>
 						<input type="text" name="username" value="{{ old.username }}" required>
 						{% if errors.username %}
 							<span class="error">{{ errors.username | first }}</span>
 						{% endif %}
 					</div>
 					<div class="formElement{{ errors.email ? ' errors' : '' }}">
-						<label for="email">E-Mail <abbr title="required">*</abbr></label>
+						<label for="email">{{ labels['E_MAIL'] ? labels['E_MAIL'] : 'E-Mail' }} <abbr title="{{ labels['REQUIRED'] ? labels['REQUIRED'] : 'required' }}">*</abbr></label>
 						<input type="text" name="email" value="{{ old.email }}" required>
 						{% if errors.email %}
 							<span class="error">{{ errors.email | first }}</span>
 						{% endif %}
 					</div>
 					<div class="formElement{{ errors.password ? ' errors' : '' }}">
-						<label for="password">Password <abbr title="required">*</abbr></label>
+						<label for="password">{{ labels['PASSWORD'] ? labels['PASSWORD'] : 'Password' }} <abbr title="{{ labels['REQUIRED'] ? labels['REQUIRED'] : 'required' }}">*</abbr></label>
 						<input type="password" name="password" required autocomplete="off">
 						{% if errors.password %}
 							<span class="error">{{ errors.password | first }}</span>
@@ -41,7 +41,7 @@
 					</div>
 				</fieldset>
 
-				<input type="submit" value="Create User" />
+				<input type="submit" value="{{ labels['CREATE_USER'] ? labels['CREATE_USER'] : 'Create User' }}" />
 				{{ csrf_field() | raw }}
 						
 			</form>

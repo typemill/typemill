@@ -52,8 +52,31 @@ class SetupController extends Controller
 		$setuperrors = empty($systemcheck) ? false : 'Some system requirements for Typemill are missing.';
 		$systemcheck = empty($systemcheck) ? false : $systemcheck;
 
-		return $this->render($response, 'auth/setup.twig', array( 'messages' => $setuperrors, 'systemcheck' => $systemcheck ));
+    # Get the translated strings
+    $labels = $this->getSetupLabels();
+
+		return $this->render($response, 'auth/setup.twig', array( 'messages' => $setuperrors, 'systemcheck' => $systemcheck, 'labels' => $labels ));
 	}
+
+  public function getSetupLabels()
+  {
+    # Check which languages are available
+    $langs = [];
+    $path = __DIR__ . '/../author/languages/*.yaml';
+    foreach (glob($path) as $filename) {
+      $langs[] = basename($filename,'.yaml');
+    }
+    
+    # Detect browser language
+    $accept_lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+    $lang = in_array($accept_lang, $langs) ? $accept_lang : 'en';
+
+    # At least in the setup phase noon there should be no plugins and the theme should be typemill
+    $labels = \Typemill\Settings::getLanguageLabels($lang,'typemill',[]);
+
+    return $labels;
+  }
+
 
 	public function create($request, $response, $args)
 	{
@@ -98,7 +121,10 @@ class SetupController extends Controller
 	{
 		/* store updated settings */
 		\Typemill\Settings::updateSettings(array('welcome' => false));
+
+    # Get the translated strings
+    $labels = $this->getSetupLabels();
 		
-		return $this->render($response, 'auth/welcome.twig', array());		
+		return $this->render($response, 'auth/welcome.twig', array( 'labels' => $labels ));		
 	}
 }

@@ -41,7 +41,12 @@ class Settings
 	    # i18n
 	    # load the strings of the set language
 	    $language = $settings['language'];
-	    $settings['labels'] = self::getLanguageLabels($language);
+      $theme = $settings['theme'];
+      $plugins = [];
+      if(isset($settings['plugins'])){
+        $plugins = $settings['plugins'];
+      }
+	    $settings['labels'] = self::getLanguageLabels($language, $theme, $plugins);
 
 		# We know the used theme now so create the theme path 
 		$settings['themePath'] = $settings['rootPath'] . $settings['themeFolder'] . DIRECTORY_SEPARATOR . $settings['theme'];
@@ -98,7 +103,7 @@ class Settings
 
 
     # i18n
- 	public static function getLanguageLabels($language)
+ 	public static function getLanguageLabels($language, $theme, $plugins)
 	{
     	# if not present, set the English language
     	if( empty($language) )
@@ -106,23 +111,36 @@ class Settings
       		$language = 'en';
     	}
 
-    	# load the strings of the set language
+    	# loads the system strings of the set language
 		$yaml = new Models\WriteYaml();
-		$labels = $yaml->getYaml('settings/languages', $language.'.yaml');
-		
-		return $labels;
-	}
+    $system_labels = $yaml->getYaml('system/author/languages', $language.'.yaml');
 
-  public static function getVuejsLabels($language)
-	{
-    if( empty($language) ){
-      $language = 'en';
+    # loads the theme strings of the set language
+    $theme_labels = [];
+    $theme_language_folder = 'themes/'.$theme.'/languages';
+    if (file_exists($theme_language_folder)) {
+      $theme_labels = $yaml->getYaml($theme_language_folder, $language.'.yaml');
     }
-    
-    // load the strings of the set language
-		$yaml = new Models\WriteYaml();
-    $labels = $yaml->getYaml('settings/languages', 'vuejs-'.$language.'.yaml');
-		
+
+    # loads the plugins strings of the set language
+    $plugins_labels = [];
+    if(!empty($plugins)){
+      $plugin_labels = [];
+      foreach($plugins as $name => $value){
+        $plugin_language_folder = 'plugins/'.$name.'/languages';
+        if (file_exists($theme_language_folder)) {
+          $plugin_labels[$name] = $yaml->getYaml($plugin_language_folder, $language.'.yaml');
+        }
+      }
+      $plugins_labels = [];
+      foreach($plugin_labels as $key => $value){
+        $plugins_labels = array_merge($plugins_labels, $value);
+      }
+    }
+
+    # Combines arrays of system languages, themes and plugins
+    $labels = array_merge($system_labels, $theme_labels, $plugins_labels);
+
 		return $labels;
 	}
 
@@ -138,12 +156,30 @@ class Settings
 		return $objectSettings;
 	}
 
+  public function whichLanguage()
+  {
+    # Check which languages are available
+    $langs = [];
+    $path = __DIR__ . '/author/languages/*.yaml';
+    foreach (glob($path) as $filename) {
+      $langs[] = basename($filename,'.yaml');
+    }
+    
+    # Detect browser language
+    $accept_lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+    $lang = in_array($accept_lang, $langs) ? $accept_lang : 'en';
+
+    return $lang;
+  }
+  
 	public static function createSettings()
 	{
 		$yaml = new Models\WriteYaml();
-		
+
+    $language = self::whichLanguage();
+    
 		# create initial settings file with only setup false
-		if($yaml->updateYaml('settings', 'settings.yaml', array('setup' => false)))
+		if($yaml->updateYaml('settings', 'settings.yaml', array('setup' => false, 'language' => $language)))
 		{
 			return true; 
 		}
