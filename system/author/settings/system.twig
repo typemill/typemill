@@ -24,13 +24,13 @@
 				
 					<div class="medium{{ errors.settings.title ? ' error' : '' }}">
 						<label for="settings[title]">{{ __('Website Title') }} *</label>
-						<input type="text" name="settings[title]" id="title" pattern=".{2,20}" required title="Use 2 to 20 characters." value="{{ old.settings.title ? old.settings.title : settings.title }}" />
+						<input type="text" name="settings[title]" id="title" pattern=".{2,20}" required title="{{ __('Use 2 to 20 characters') }}" value="{{ old.settings.title ? old.settings.title : settings.title }}" />
 						{% if errors.settings.title %}
 							<span class="error">{{ errors.settings.title | first }}</span>
 						{% endif %}
 					</div><div class="medium{{ errors.settings.author ? ' error' : '' }}">
 						<label for="settings[author]">{{ __('Author') }}</label>
-						<input type="text" name="settings[author]" id="author" pattern="[^()/><\]\{\}\?\$@#!*%§=[\\\x22;:|]{2,40}" value="{{ old.settings.author ? old.settings.author : settings.author }}" title="{{ __('Use 2 to 40 characters') }} {{ __('Only the following special characters are allowed') }} a,b a.b a-b a_b a&b a+b" />
+						<input type="text" name="settings[author]" id="author" pattern="[^()/><\]\{\}\?\$@#!*%§=[\\\x22;:|]{2,40}" value="{{ old.settings.author ? old.settings.author : __(settings.author) }}" title="{{ __('Use 2 to 40 characters') }} {{ __('Only the following special characters are allowed') }} a,b a.b a-b a_b a&b a+b" />
 						{% if errors.settings.author %}
 							<span class="error">{{ errors.settings.author | first }}</span>
 						{% endif %}
@@ -38,7 +38,7 @@
 						<label for="settings[copyright]">{{ __('Copyright') }}/{{ __('Licence') }}</label>
 						<select name="settings[copyright]" id="copyright">
 							{% for copy in copyright %}
-								<option value="{{ copy }}"{% if copy == old.settings.copyright or copy == mycopy %} selected{% endif %}>{{ copy }}</option>
+								<option value="{{ copy }}"{% if copy == old.settings.copyright or copy == mycopy %} selected{% endif %}>{{ __(copy) }}</option>
 							{% endfor %}
 						</select>
 						{% if errors.settings.copyright %}
@@ -54,14 +54,14 @@
 						<label for="settings[language]">{{ __('Language') }}</label>
 						<select name="settings[language]" id="language">
 							{% for key,lang in languages %}
-								<option value="{{ key }}"{% if (key == old.settings.language or key == mylang) %} selected{% endif %}>{{ lang }}</option>
+								<option value="{{ key }}"{% if (key == old.settings.language or key == mylang) %} selected{% endif %}>{{ __(lang) }}</option>
 							{% endfor %}
 						</select>
 						{% if errors.settings.language %}
 							<span class="error">{{ errors.settings.language | first }}</span>
 						{% endif %}
 					</div><div class="medium">
-						<label for="settings[sitemap]">Google Sitemap <small>({{ __('Readonly') }})</small></label>
+						<label for="settings[sitemap]">{{ __('Google Sitemap') }} <small>({{ __('Readonly') }})</small></label>
 						<input type="text" name="settings[sitemap]" id="sitemap" readonly value="{{ base_url }}/cache/sitemap.xml" />
 					</div>
 					<hr>
@@ -69,7 +69,7 @@
 						<h2>{{ __('General Presentation') }}</h2>
 					</header>
 					<div class="medium{{ errors.settings.logo ? ' error' : '' }}">
-						<label for="settings[logo]">Logo <small>(jpg,jpeg,png,svg)</small></label>
+						<label for="settings[logo]">{{ __('Logo') }} <small>(jpg,jpeg,png,svg)</small></label>
 						<div class="flex fileinput">
 							<button class="deletefilebutton w-10 bg-tm-gray bn hover-bg-tm-red hover-white">x</button>
 							<input class="deletefileinput" name="settings[deletelogo]" type="hidden" value="NULL" />
@@ -83,7 +83,7 @@
 							<span class="error">{{ errors.settings.logo | first }}</span>
 						{% endif %}
 					</div><div class="medium{{ errors.settings.favicon ? ' error' : '' }}">
-						<label for="settings[favicon]">Favicon <small>(png)</small></label>
+						<label for="settings[favicon]">{{ __('Favicon') }} <small>(png)</small></label>
 						<div class="flex fileinput">
 							<button class="deletefilebutton w-10 bg-tm-gray bn hover-bg-tm-red hover-white">x</button>
 							<input class="deletefileinput" name="settings[deletefav]" type="hidden" value="NULL" />

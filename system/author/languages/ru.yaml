@@ -1,7 +1,6 @@
 # Russian
 #Translation: Paul (https://paul.bid) paulbid@protonmail.com
 ACCOUNT: Аккаунт
-ACTIVATE_SPECIAL_STARTPAGE_DESIGN: Активировать особый дизайн для Главной страницы
 ACTIVE: Активный
 ACTUAL_PASSWORD: Текущий пароль
 ADD: добавить
@@ -18,7 +17,6 @@ ADD_ROW_BELOW: добавить строку ниже
 ALL_USERS: Все пользователи
 ALT_TEXT: Альтернативный текст
 AUTHOR: Автор
-AUTHOR_INTRO: Напись перед указанием автора
 BACK_TO_STARTPAGE: назад на страртовую страницу
 BOLD: Полужирный
 BOTTOM: Внизу
@@ -38,7 +36,6 @@ COG: cog
 CONTENT: Редактор
 CONTENT: Контент
 COPYRIGHT: Копирайт
-COUNT_CHAPTERS_IN_NAVIGATION?: Нумеровать разделы в панели навигации?
 CREATED_AT__READ_ONLY_: Создано в (только просмотр)
 CREATED_AT__READONLY_: Создано в (только просмотр)
 CREATE_NEW_USER: Создание нового пользователя
@@ -55,7 +52,6 @@ DELETE_PAGE: Удалить страницу
 DELETE_ROW: удалить строку
 DELETE_USER: Удалить пользователя
 DESCRIPTION: описание
-DIFFERENT_DESIGN_FOR_STARTPAGE: Особый дизайн для Главной страницы
 DISCARD_CHANGES: Сбросить изменения
 DISCARD: Сбросить
 DO_YOU_REALLY_WANT_TO_DELETE_THE_USER: Вы действительно хотите удалить пользователя?
@@ -68,13 +64,11 @@ EDIT_USER: Редактирование профиля
 E_G_: например
 E_MAIL: Email
 EXTERNAL_LINK: внешняя ссылка
-FACEBOOK: Facebook
 FILE: Файл
 FIRST_NAME: Имя
 FOLDER: раздел
 FORGOT_PASSWORD: Забыл пароль
 FORMAT: Формат
-GITHUB: GitHub
 HEAD: Заголовок
 HEADLINE: Заголовок
 HIDE: Скрыть
@@ -86,24 +80,15 @@ HR: Горизонтальная линия
 IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: Если не заполнено, описание генерируется из содержимого.
 IMAGE: Изображение
 ITALIC: Наклонный
-LABEL_FOR_CHAPTER: Надпись обозначающая раздел
-LABEL_FOR_START_BUTTON: Надпись на кнопке «Начать»
 LANGUAGE: Язык
-LAST_MODIFIED_FORMAT: Формат даты последнего изменения
-LAST_MODIFIED: Последние изменения
 LAST_MODIFIED_LIVE__READONLY_: Последнее изменение (только просмотр)
-LAST_MODIFIED_TEXT: Текст перед указанием даты последнего изменения
 LAST_NAME: Фамилия
 LEFT: Слева
 LICENCE: Лицензия
-LINKEDIN: LinkedIn
 LINK: Ссылка
-LINK_TO_GIT_REPOSITORY: Ссылка на git репозиторий
 LINK_TO_VIDEO: Ссылка на видео
 LOGIN: Войти
-LOGO_ON_STARTPAGE: Логотип на Стартовой странице
 LOGOUT: Выйти
-MAIL: Почта
 MANUAL_DATE: Выбор даты вручную
 MARKDOWN: Markdown
 MENU: Меню
@@ -127,10 +112,6 @@ PLEASE_CONFIRM: Пожалуйста подтвердите
 PLEASE_CORRECT_THE_ERRORS_ABOVE: Пожалуйста, исправьте ошибки выше
 PLUGINS: Плагины
 PLUGIN_STORE: Магазин Плагинов
-POSITION_OF_AUTHOR: Место для отображения авторства
-POSITION_OF_GIT_EDIT_LINK: Позиция Git-ссылки на редактирование
-POSITION_OF_MODIFIED_TEXT: Позиция надписи о последнем изменении
-POSITION_OF_SHARE_BUTTONS: Позиция кнопок «поделиться»
 POWER_OFF: выключить
 PUBLISH: Опубликовать
 QUOTE: Цитата
@@ -148,13 +129,9 @@ SAVE_ALL_SETTINGS: Сохранить все настройки
 SAVED_SUCCESSFULLY: Успешно сохранено
 SAVE: Сохранить
 SAVE_THEME: Сохранить настройки Темы
-SELECT_SHARE_BUTTONS: Выберите кнопки нужные «поделиться»
 SETTINGS: Настройки
 SETTINGS_ARE_STORED: Настройки сохранены
 SETUP: Установка
-SHARE: Поделиться
-SHOW_CHAPTER_NUMBERS: Отображать нумерацию разделов
-SHOW_LOGO_INSTEAD_OF_TITLE_ON_STARTPAGE: Показывать логотип вместо названия на Стартовой странице
 STANDARD_EDITOR_MODE: Стандартный режим редактора
 START: Начать
 SYSTEM: Система
@@ -169,7 +146,6 @@ THEME_STORE: Магазин Тем
 TITLE: Название
 TOC: Оглавление
 TOP: Наверху
-TWITTER: Twitter
 TYPEMILL_DESCRIPTION: Стандартная тема для Typemill. Отзывчивая, минималистичная и без каких-либо зависимостей. Используются системные шрифты Calibri и Helvetica. JavaScript не используется.
 ULIST: Маркированный список
 UNKNOWN: Неизвестен
@@ -192,8 +168,6 @@ VISUAL: визуально
 WAIT: подождите
 WEBSITE_TITLE: Название сайта
 WEB: Сайт
-WHATSAPP: WhatsApp
 WRITING: Написание
-XING: Xing
 YEAR: Год
 YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: Вы можете изменить CSS стиль Темы на свой собственный CSS здесь.

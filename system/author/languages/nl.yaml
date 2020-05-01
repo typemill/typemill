@@ -1,6 +1,5 @@
 # Dutch
 ACCOUNT: Account
-ACTIVATE_SPECIAL_STARTPAGE_DESIGN: Activeer speciaal startpagina-ontwerp
 ACTIVE: Actief
 ACTUAL_PASSWORD: Actueel wachtwoord
 ADD_CONTENT_BLOCK: inhoudblok toevoegen
@@ -17,7 +16,6 @@ ADD: toevoegen
 ALL_USERS: Alle gebruikers
 ALT_TEXT: Alt-tekst
 AUTHOR: Auteur
-AUTHOR_INTRO: Auteur Intro
 BACK_TO_STARTPAGE: terug naar startpagina
 BOLD: vetgedrukt
 BOTTOM: bodem
@@ -33,7 +31,6 @@ CODE: Code
 COG: tandwiel
 CONTENT: Inhoud
 COPYRIGHT: Auteursrecht
-COUNT_CHAPTERS_IN_NAVIGATION?: Hoofdstukken tellen in navigatie?
 CREATED_AT__READ_ONLY_: Gemaakt om (alleen lezen)
 CREATED_AT__READONLY_: Gemaakt om (alleen lezen)
 CREATE_NEW_USER: Nieuwe gebruiker maken
@@ -49,7 +46,6 @@ DELETE_ROW: rij verwijderen
 DELETE_USER: Gebruiker verwijderen
 DELETE: verwijderen
 DESCRIPTION: omschrijving
-DIFFERENT_DESIGN_FOR_STARTPAGE: ander ontwerp voor startpagina
 DISCARD_CHANGES: Wijzigingen negeren
 DISCARD: weggooien
 DO_YOU_REALLY_WANT_TO_DELETE_THE_USER: Wilt u de gebruiker echt verwijderen
@@ -62,12 +58,10 @@ EDIT_USER: Gebruiker bewerken
 E_G_: bijv.
 E_MAIL: e-mail
 EXTERNAL_LINK: externe link
-FACEBOOK: Facebook
 FIRST_NAME: Voornaam
 FOLDER: map
 FORGOT_PASSWORD: Wachtwoord vergeten
 FORMAT: Formaat
-GITHUB: GitHub
 HEAD: Kop
 HEADLINE: Kop
 HOME: home
@@ -78,23 +72,15 @@ HR: hr
 IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: Indien niet ingevuld, wordt de beschrijving uit de inhoud gehaald.
 IMAGE: Afbeelding
 ITALIC: cursief
-LABEL_FOR_CHAPTER: Label voor hoofdstuk
-LABEL_FOR_START_BUTTON: label voor startknop
 LANGUAGE: Taal
-LAST_MODIFIED_FORMAT: Laatst gewijzigd formaat
-LAST_MODIFIED: Laatst gewijzigd
 LAST_MODIFIED_LIVE__READONLY_: Laatst gewijzigd live (alleen-lezen)
-LAST_MODIFIED_TEXT: Laatst gewijzigde tekst
 LAST_NAME: achternaam
 LEFT: Links
 LICENCE: Licentie
-LINKEDIN: Linkedin
 LINK: Link
-LINK_TO_GIT_REPOSITORY: Link naar git repository
 LINK_TO_VIDEO: Link naar video
 LOGIN: Inloggen
 LOGOUT: Uitloggen
-MAIL: Mail
 MANUAL_DATE: Handmatige datum
 MARKDOWN: Markdown
 MENU: Menu
@@ -118,10 +104,6 @@ PLEASE_CONFIRM: bevestig alstublieft
 PLEASE_CORRECT_THE_ERRORS_ABOVE: Corrigeer bovenstaande fouten
 PLUGINS: plug-ins
 PLUGIN_STORE: Plugin Store
-POSITION_OF_AUTHOR: Positie van auteur
-POSITION_OF_GIT_EDIT_LINK: Positie van Git Link bewerken
-POSITION_OF_MODIFIED_TEXT: Positie van gemodificeerde tekst
-POSITION_OF_SHARE_BUTTONS: Positie van Share-knoppen
 POWER_OFF: power-off
 PUBLISH: Publiceren
 QUOTE: Citeren
@@ -139,11 +121,8 @@ SAVE_ALL_SETTINGS: sla alle instellingen op
 SAVED_SUCCESSFULLY: succesvol opgeslagen
 SAVE: Opslaan
 SAVE_THEME: Thema opslaan
-SELECT_SHARE_BUTTONS: Selecteer Share-knoppen
 SETTINGS: Instellingen
 SETUP: Setup
-SHARE: deel
-SHOW_CHAPTER_NUMBERS: hoofdstuknummers tonen
 STANDARD_EDITOR_MODE: Standaardeditormodus
 START: Start
 SYSTEM: Systeem
@@ -158,7 +137,6 @@ THEME_STORE: Theme Store
 TITLE: Titel
 TOC: toc
 TOP: Top
-TWITTER: Twitter
 TYPEMILL_DESCRIPTION: Het standaardthema voor typemill. Responsief, minimaal en zonder afhankelijkheden. Het gebruikt de systeemlettertypen Calibri en Helvetica. Er is geen JavaScript gebruikt.
 ULIST: ulist
 UNKNOWN: onbekend
@@ -179,7 +157,5 @@ VISUEEL: visueel
 WAIT: wacht
 WEBSITE_TITLE: Titel van de website
 WEB: Web
-WHATSAPP: Whatsapp
 WRITING: schrijven
-XING: Xing
 YEAR: Jaar

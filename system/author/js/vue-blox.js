@@ -949,14 +949,14 @@ const tableComponent = Vue.component('table-component', {
 								 '<div class="actionline" @click="addbelowrow(value)">{{ \'add row below\'|translate }}</div>' +
 								 '<div class="actionline" @click="deleterow(value)">{{ \'delete row\'|translate }}</div>' +						
 							  '</div>' + 
-							'{{ value }}</th>' +
+							'{{ value|translate }}</th>' +
 							'<td v-if="rowindex > 1" v-for="(value,colindex) in row" :contenteditable="colindex !== 0 ? true : false" @click="switchrowbar(value)" @blur="updatedata($event,colindex,rowindex)" :class="colindex !== 0 ? editable : noteditable">' + 
 							 '<div v-if="colindex === 0 && rowbar === value" class="rowaction">' + 
   								 '<div class="actionline" @click="addaboverow(value)">{{ \'add row above\'|translate }}</div>' +
 								 '<div class="actionline" @click="addbelowrow(value)">{{ \'add row below\'|translate }}</div>' +
 								 '<div class="actionline" @click="deleterow(value)">{{ \'delete row\'|translate }}</div>' +
 							  '</div>' +
-							'{{ value }}</td>' +
+							'{{ value|translate }}</td>' +
 						'</tr>' +
 					'</tbody>' +
 				'</table>' +
@@ -1244,7 +1244,7 @@ const imageComponent = Vue.component('image-component', {
 					'<input type="file" name="image" accept="image/*" class="input-file" @change="onFileChange( $event )" /> ' +
 					'<p><svg class="icon icon-upload baseline"><use xlink:href="#icon-upload"></use></svg> {{ \'drag a picture or click to select\'|translate }}</p>' +
 				'</div>' +
-				'<button class="imageselect" @click.prevent="openmedialib()"><svg class="icon icon-image baseline"><use xlink:href="#icon-image"></use></svg> select from medialib</button>' +
+				'<button class="imageselect" @click.prevent="openmedialib()"><svg class="icon icon-image baseline"><use xlink:href="#icon-image"></use></svg> {{ \'select from medialib\'|translate }}</button>' +
 				'<transition name="fade-editor">' +
 					'<div v-if="showmedialib" class="modalWindow">' +
 						'<medialib parentcomponent="images"></medialib>' + 
@@ -1536,7 +1536,7 @@ const fileComponent = Vue.component('file-component', {
 					'<input type="file" accept="*" name="file" class="input-file" @change="onFileChange( $event )" /> ' +
 					'<p><svg class="icon icon-upload baseline"><use xlink:href="#icon-upload"></use></svg> {{ \'upload file\'|translate }}</p>' +
 				'</div>' +
-				'<button class="imageselect" @click.prevent="openmedialib()"><svg class="icon icon-paperclip baseline"><use xlink:href="#icon-paperclip"></use></svg> select from medialib</button>' +
+				'<button class="imageselect" @click.prevent="openmedialib()"><svg class="icon icon-paperclip baseline"><use xlink:href="#icon-paperclip"></use></svg> {{ \'select from medialib\'|translate }}</button>' +
 				'<transition name="fade-editor">' +
 					'<div v-if="showmedialib" class="modalWindow">' +
 						'<medialib parentcomponent="files"></medialib>' + 
@@ -1729,8 +1729,8 @@ const medialib = Vue.component('medialib', {
 	                    '<div class="w-100 relative">' + 
 	                    	'<div><input v-model="search" class="w-100 border-box pa2 mb3 br0 ba b--light-silver"><svg class="icon icon-search absolute top-1 right-1 pa1 gray"><use xlink:href="#icon-search"></use></svg></div>' +
 	                    '</div>' + 
-						'<button @click.prevent="showImages()" class="link br0 ba ph3 pv2 mv2 mr1" :class="isImagesActive()">Images</button>' +
-						'<button @click.prevent="showFiles()" class="link br0 ba ph3 pv2 mv2 ml1" :class="isFilesActive()">Files</button>' +
+						'<button @click.prevent="showImages()" class="link br0 ba ph3 pv2 mv2 mr1" :class="isImagesActive()">{{ \'Images\'|translate }}</button>' +
+						'<button @click.prevent="showFiles()" class="link br0 ba ph3 pv2 mv2 ml1" :class="isFilesActive()">{{ \'Files\'|translate }}</button>' +
 					'</div>' +
 					'<div class="w-70 dib v-top center">' +
 						'<div v-if="errors" class="w-95 mv3 white bg-tm-red tc f5 lh-copy pa3">{{errors}}</div>' +

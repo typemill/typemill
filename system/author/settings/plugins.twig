@@ -31,12 +31,12 @@
 							<div id="{{ pluginName }}" class="fc-plugin-version update-banner">{{ plugin.version ? plugin.version : __('Unknown') }}</div>
 							
 							<div class="cardDescPlugin">
-								<p>{{ plugin.description ? plugin.description : __('No description') }}</p>
+								<p>{{ plugin.description ? __(plugin.description) : __('No description') }}</p>
 								
 								<ul class="cardInfo">
 									<li>{{ plugin.version ? plugin.version : __('Unknown') }}</li><li>
 									{{ plugin.licence ? plugin.licence : __('Unkown') }}</li><li>
-									by {{ plugin.author ? plugin.author : __('Unknown') }}</li>{% if plugin.homepage %}<li>
+									{{ __('by') }} {{ plugin.author ? plugin.author : __('Unknown') }}</li>{% if plugin.homepage %}<li>
 									<a href="{{ plugin.homepage}}" target="blank">{{ __('Web') }}</a></li>{% endif %}
 								</ul>
 							</div>
