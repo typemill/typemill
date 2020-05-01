@@ -90,6 +90,8 @@ IMAGES: Images
 ITALIAN: Italian
 ITALIC: italic
 LANGUAGE: Language
+LANGUAGE_ADMIN: Language (admin-ui)
+LANGUAGE_ATTR: Language Attribute (website)
 LAST_MODIFIED_LIVE__READONLY_: Last modified live (readonly)
 LAST_NAME: Last Name
 LEFT: Left
@@ -169,6 +171,7 @@ UPLOAD_FILE: Upload a file
 UPLOAD: upload
 USE_2_TO_20_CHARACTERS: Use 2 to 20 characters.
 USE_2_TO_40_CHARACTERS: Use 2 to 40 characters.
+USE_A_VALID_LANGUAGE_ATTRIBUTE: Use a valid language attribute
 USE_A_VALID_YEAR: Use a valid year
 USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Used as fallback when no manual date is set.
 USERNAME: Username

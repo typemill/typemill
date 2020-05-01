@@ -387,6 +387,21 @@ button.play-video::after {
 article .gitlink{
 	float: right;
 }
+.herocontainer{
+	position: relative;
+    margin: -30px -90px 0px;
+    height: 300px;
+	overflow: hidden;
+}
+.heroimage{
+	width: 100%;
+}
+.herocontainer .breadcrumb{
+	position: absolute;
+	top: 30px;
+	left: 10%;
+	width: 80%;	
+}
 
 /************************
 *  	PAGING / BREADCRUMB *

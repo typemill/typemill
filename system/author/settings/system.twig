@@ -51,7 +51,7 @@
 							<span class="error">{{ errors.settings.year | first }}</span>
 						{% endif %}
 					</div><div class="medium{{ errors.settings.language ? ' error' : '' }}">
-						<label for="settings[language]">{{ __('Language') }}</label>
+						<label for="settings[language]">{{ __('Language_admin') }}</label>
 						<select name="settings[language]" id="language">
 							{% for key,lang in languages %}
 								<option value="{{ key }}"{% if (key == old.settings.language or key == mylang) %} selected{% endif %}>{{ __(lang) }}</option>
@@ -59,6 +59,12 @@
 						</select>
 						{% if errors.settings.language %}
 							<span class="error">{{ errors.settings.language | first }}</span>
+						{% endif %}
+					</div><div class="medium{{ errors.settings.langattr ? ' error' : '' }}">
+						<label for="langattr">{{ __('Language_attr') }}</label>
+						<input type="text" name="settings[langattr]" id="langattr" value="{{ old.settings.langattr ? old.settings.langattr : settings.langattr }}" pattern="[a-z]{2}" title="{{ __('Use a valid language attribute') }}, {{ __('e.g.') }} en" />
+						{% if errors.settings.langattr %}
+							<span class="error">{{ errors.settings.langattr | first }}</span>
 						{% endif %}
 					</div><div class="medium">
 						<label for="settings[sitemap]">{{ __('Google Sitemap') }} <small>({{ __('Readonly') }})</small></label>

@@ -205,6 +205,7 @@ class Validation
 		$v->rule('regex', 'author', '/^[\pL_ \-]*$/u');
 		$v->rule('integer', 'year');
 		$v->rule('length', 'year', 4);
+		$v->rule('length', 'langattr', 2);		
 		$v->rule('in', 'editor', ['raw', 'visual']);
 		$v->rule('values_allowed', 'formats', $formats);
 		$v->rule('in', 'copyright', $copyright);

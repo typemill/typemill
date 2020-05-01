@@ -90,6 +90,8 @@ IMAGES: Immagini
 ITALIAN: Italiano
 ITALIC: corsivo
 LANGUAGE: Lingua
+LANGUAGE_ADMIN: Lingua (admin-ui)
+LANGUAGE_ATTR: Language Attribute (website)
 LAST_MODIFIED_LIVE__READONLY_: Ultima modifica (sola lettura)
 LAST_NAME: Cognome
 LEFT: Sinistra
@@ -169,6 +171,7 @@ UPLOAD: carica
 UPLOAD_FILE: Carica un file
 USE_2_TO_20_CHARACTERS: Usa da 2 a 20 caratteri.
 USE_2_TO_40_CHARACTERS: Usa da 2 a 40 caratteri.
+USE_A_VALID_LANGUAGE_ATTRIBUTE: Use a valid language attribute
 USE_A_VALID_YEAR: Usa un anno valido
 USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Utilizzato come ripiego quando non è impostata alcuna data manuale.
 USERNAME: Nome utente

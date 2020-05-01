@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ settings.language }}">
+<html lang="{{ settings.langattr|default('en') }}">
 	<head>
 		<meta charset="UTF-8">
 		<title>{% block title %}{% endblock %}</title>

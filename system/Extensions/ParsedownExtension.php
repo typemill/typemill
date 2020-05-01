@@ -321,6 +321,28 @@ class ParsedownExtension extends \ParsedownExtra
 
         return $Element;
     }
+
+    protected function paragraph($Line)
+    {
+        $paragraph = array(
+            'type' => 'Paragraph',
+            'element' => array(
+                'name' => 'p',
+                'handler' => array(
+                    'function' => 'lineElements',
+                    'argument' => $Line['text'],
+                    'destination' => 'elements',
+                ),
+            ),
+        );
+
+        if(isset($Line['text'][1]) && $Line['text'][0] == '!' && $Line['text'][1] == '[')
+        {
+            $paragraph['element']['attributes']['class'] = 'p-image';
+        }
+        return $paragraph;
+    }
+
     
     # Inline Math
     # check https://github.com/BenjaminHoegh/ParsedownMath

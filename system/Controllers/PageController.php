@@ -86,6 +86,7 @@ class PageController extends Controller
 		{
 			$home = true;
 			$item = Folder::getItemForUrl($navigation, $uri->getBasePath(), $uri->getBasePath());
+			$urlRel = $uri->getBasePath();		
 		}
 		else
 		{

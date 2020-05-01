@@ -73,6 +73,8 @@ IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: Indien niet ingevuld,
 IMAGE: Afbeelding
 ITALIC: cursief
 LANGUAGE: Taal
+LANGUAGE_ADMIN: Taal (admin-ui)
+LANGUAGE_ATTR: Language Attribute (website)
 LAST_MODIFIED_LIVE__READONLY_: Laatst gewijzigd live (alleen-lezen)
 LAST_NAME: achternaam
 LEFT: Links
@@ -142,6 +144,7 @@ ULIST: ulist
 UNKNOWN: onbekend
 UPDATE_USER: Gebruiker bijwerken
 USE_2_TO_40_CHARACTERS: gebruik 2 tot 40 tekens.
+USE_A_VALID_LANGUAGE_ATTRIBUTE: Use a valid language attribute
 USE_A_VALID_YEAR: Gebruik een geldig jaar
 USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Gebruikt als fallback als er geen handmatige datum is ingesteld.
 USER: Gebruiker

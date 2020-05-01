@@ -4,7 +4,21 @@
 
 {% block content %}
 
-	{% include '/partials/breadcrumb.twig' %}
+	{% if metatabs.meta.heroimage %}
+	
+		<div class="herocontainer">
+			
+			<img class="heroimage" src="{{ metatabs.meta.heroimage }}" alt="{{ metatabs.meta.heroimagealt }}"/>
+		
+			{% include '/partials/breadcrumb.twig' %}
+
+		</div>
+		
+	{% else %}
+		
+		{% include '/partials/breadcrumb.twig' %}
+
+	{% endif %}
 
 	{% if item.elementType == 'file' %}
 

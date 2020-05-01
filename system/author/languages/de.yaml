@@ -1,101 +1,209 @@
-# Deutsch
+# English
 ACCOUNT: Account
 ACTIVE: Aktiv
-ACTUAL_PASSWORD: Actuelles Passwort
-ADD_FILE: + Datei
+ACTUAL_PASSWORD: Aktuelles Passwort
+ADD: hinzufügen
+ADD_CONTENT_BLOCK: + Inhalts-Block
+ADD_DEFINITION: + Definition
+ADD_FILE: + Seite
 ADD_FOLDER: + Ordner
-ADD_FOLDER_TO_BASE_LEVEL: add folder to base level
-ADD_ITEM: add item
+ADD_FOLDER_TO_BASE_LEVEL: + Ordner in Basis-Ebene
+ADD_ITEM: + Element
+ADD_LEFT_COLUMN: + Linke Spalte
+ADD_RIGHT_COLUMN: + Rechte Spalte
+ADD_ROW_ABOVE: + Reihe oberhalb
+ADD_ROW_BELOW: + Reihe unterhalb
 ALL_USERS: Alle Nutzer
+ALT_TEXT: Alt-Text
 AUTHOR: Autor
-BACK_TO_STARTPAGE: Zur Startseite
-BY: Von
-CODE: code
-CONTENT: Inhalte
+BACK_TO_STARTPAGE: Zurück zur Startseite
+BOLD: fett
+BOTTOM: Unten
+BROWSE: WÄHLEN
+BULLET_LIST: Auflistung
+BY: von
+CANCEL: abbrechen
+CAPTION: Bild-Unterschrift
+CELL: Zelle
+CENTER: Mitte
+CHECK: prüfen
+CHOOSE_FILE: Datei wählen
+CLASS: Class
+CLOSE_LIBRARY: Medialib schließen
+CODE: Code
+COG: Einstellungen
+CONTENT: Inhalt
 COPYRIGHT: Copyright
-CREATE_NEW_USER: Neuen Nutzer erstellen
-CREATE_USER: Nutzer erstellen
-DEFINITION: Definition
-DELETE: Löschen
+CREATED_AT__READ_ONLY_: Erstellt am (nur lesen)
+CREATED_AT__READONLY_: Erstellt am (nur lesen)
+CREATE_NEW_USER: + Neuen Nutzer
+CREATE_USER: + Nutzer
+CROSS: Kreuz
+CUSTOM_CSS: Eigenes CSS
+DEFINITION: Definitions-Liste
+DEFINITION_LIST: Definitions-Liste
+DELETE_CLOSE: löschen
+DELETE_COLUMN: Spalte löschen
+DELETE_CONTENT_BLOCK: Inhaltsblock löschen
+DELETE: löschen
 DELETE_PAGE: Seite löschen
+DELETE_ROW: Reihe löschen
 DELETE_USER: Nutzer löschen
+DESCRIPTION: Beschreibung
 DISCARD_CHANGES: Änderungen verwerfen
 DISCARD: Verwerfen
 DO_YOU_REALLY_WANT_TO_DELETE_THE_USER: Soll der Nutzer wirklich gelöscht werden?
 DO_YOU_REALLY_WANT_TO_DELETE_THIS_PAGE: Soll die Seite wirklich gelöscht werden?
-DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES_AND_SET_THE_CONTENT_BACK_TO_THE_LIVE_VERSION: Sollen die Änderungen verworfen und der Inhalt zurück auf die Live-Version gesetzt werden?
+DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES_AND_SET_THE_CONTENT_BACK_TO_THE_LIVE_VERSION: Sollen die Änderungen wirklich verworfen und der Inhalt auf den Live-Zustand zurückgesetzt werden?
 DRAFT: Entwurf
-EDIT: bearbeiten
+DRAG_A_PICTURE_OR_CLICK_TO_SELECT: Bild hochladen
+DUTCH__FLEMISH: Dänisch, Flämisch
+EDIT: editieren
 EDIT_USER: Nutzer bearbeiten
 E_G_: z.B.
 E_MAIL: E-Mail
+ENGLISH: Englisch
+EXTERNAL_LINK: externer Link
+FAVICON: Favicon
+FILE: Datei
+FILES: Dateien
 FIRST_NAME: Vorname
+FOLDER: Ordner
 FORGOT_PASSWORD: Passwort vergessen
+FORMAT: Format
+GENERAL_PRESENTATION: Generelle Darstellung
+GERMAN: Deutsch
+GOOGLE_SITEMAP: Google Sitemap
+HEAD: Kopf
+HEADLINE_ANCHORS: Überschriften-Anker
 HEADLINE: Überschrift
+HIDE: Verbergen
+HIDE_PAGE_FROM_NAVIGATION: Seite in Navigation verbergen
+HOME: Home
 HOMEPAGE: Homepage
-HR: hr
+HORIZONTAL_LINE: Horizontale Linie
+HR: Horizontale Linie
+IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: Wenn leer wird die Beschreibung vom Inhalt extrahiert.
 IMAGE: Bild
-LANGUAGE: Sprache
-LAST_NAME: Nachname
+IMAGES: Bilder
+ITALIAN: Italienisch
+ITALIC: kursiv
+LANGUAGE: Language
+LANGUAGE_ADMIN: Sprache (Admin-UI)
+LANGUAGE_ATTR: Sprach-Attribut (website)
+LAST_MODIFIED_LIVE__READONLY_: Live zuletzt geändert (nur lesen)
+LAST_NAME: Zuname
+LEFT: Links
 LICENCE: Lizenz
+LINK: Link
+LINK_TO_VIDEO: Link zum Video
 LOGIN: Anmelden
+LOGO: Logo
 LOGOUT: Abmelden
+MANUAL_DATE: Manuelles Datum
 MARKDOWN: Markdown
-MENU: Übersicht
-META_TITLE: Meta Titel
+MENU: Menü
+META_DESCRIPTION: Meta description
+META: Meta
+META_TITLE: Meta title
 MISSING_REQUIREMENTS: Fehlende Anforderungen
+MOVE_VERTICAL: vertikal verschieben
+NAVIGATION_TITLE: Navigationstitel
 NEW_PASSWORD: Neues Passwort
 NO_DESCRIPTION: Keine Beschreibung
+NONE: Keine
 NO_PREVIEW: Keine Vorschau
 NO_SETTINGS: Keine Einstellungen
 NOT_EDITABLE: Nicht editierbar
-OLIST: Aufzählung
+NUMBERED_LIST: Aufzählung
+OLIST: olist
+ONLINE: online
 ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: Nur die folgenden Sonderzeichen sind erlaubt:
+PARAGRAPH: Absatz
 PASSWORD: Passwort
 PLEASE_CONFIRM: Bitte bestätigen
+PLEASE_CORRECT_THE_ERRORS_ABOVE: Bitte korrigiere die Fehler oben
 PLUGINS: Plugins
-PLUGIN_STORE: Plugin Seite
-PUBLISH: Veröffentlichen
+PLUGIN_STORE: Plugin Store
+POWER_OFF: Energie aus
+PUBLISH: Publizieren
 QUOTE: Zitat
-RAW_CONTENT_EDITOR: Purer Inhalts-Editor
-RAW_MARKDOWN_EDITOR: Purer Markdown-Editor
-RAW_MODE: Pur-Modus
-RAW: pur
+QUOTES: Zitate
+RAW_CONTENT_EDITOR: Raw Content Editor
+RAW_MARKDOWN_EDITOR: Raw Markdown Editor
+RAW_MODE: Raw Modus
+RAW: raw
 READONLY: Nur lesend
-REMEMBER_TO_BOOKMARK_THIS_PAGE: Denk daran die Seite zu bookmarken
-REQUIRED: Erforderlich
+REMEMBER_TO_BOOKMARK_THIS_PAGE: Bookmark nicht vergessen
+REQUIRED: erforderlich
+RIGHT: Recht
 ROLE: Rolle
+RUSSIAN: Russisch
 SAVE_ALL_SETTINGS: Alle Einstellungen speichern
-SAVE: Speichern
+SAVED_SUCCESSFULLY: Erfolgreich gespeichert
+SAVE: speichern
 SAVE_THEME: Theme speichern
+SELECT_FROM_MEDIALIB: Aus Medialib wählen
+SETTINGS_ARE_STORED: Einstellungen sind gespeichert
 SETTINGS: Einstellungen
-SETUP: Einrichtung
-STANDARD_EDITOR_MODE: Standard-Editor Modus
+SETUP: Setup
+SHOW_ANCHORS_NEXT_TO_HEADLINES: Anker neben Überschrift anzeigen
+STANDARD_EDITOR_MODE: Standard Editor-Modus
 START: Start
 SYSTEM: System
+TABLE_OF_CONTENTS: Inhaltsverzeichnis
 TABLE: Tabelle
+TAKEN_FROM_YOUR_USER_ACCOUNT_IF_SET_: Vom Nutzer-Account genommen falls vorhanden.
+TERM: Bedingung
+TEXT_FILE: Text-Datei
 THE_FORMAT_BUTTONS: Die Formatierungs-Buttons
 THEMES: Themes
-THEME_STORE: Theme Seite
+THEME_STORE: Theme Store
 TITLE: Titel
-TOC: Inhaltsverzeichnis
-ULIST: Auflistung
+TOC: IHV
+TOP: Oben
+TYPEMILL_DESCRIPTION: The standard theme for Typemill. Responsive, minimal and without any dependencies. It uses the system fonts Calibri and Helvetica. No JavaScript is used.
+ULIST: ulist
 UNKNOWN: Unbekannt
 UPDATE_USER: Nutzer aktualisieren
-USE_2_TO_40_CHARACTERS: Verwende 2 bis 40 Anschläge.
-USE_A_VALID_YEAR: Verwende ein gültiges Jahr
+UPLOAD_FILE: Datei hochladen
+UPLOAD: hochladen
+USE_2_TO_20_CHARACTERS: 2 bis 20 Anschläge erlaubt.
+USE_2_TO_40_CHARACTERS: 2 to 40 Anschläge erlaubt.
+USE_A_VALID_LANGUAGE_ATTRIBUTE: Gültiges Language Attribut erforderlich.
+USE_A_VALID_YEAR: Gültiges Jahr erforderlich.
+USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Wird alternativ zum manuellen Datum genutzt.
 USERNAME: Nutzername
 USERS: Nutzer
 USER: Nutzer
 VIDEO: Video
-VIEW_SITE: Seite ansehen
+VIEW_SITE: Zur Webseite
 VISUAL_CONTENT_EDITOR: Visueller Inhalts-Editor
 VISUAL_EDITOR: Visueller Editor
 VISUAL_MARKDOWN_EDITOR: Visueller Markdown Editor
 VISUAL_MODE: visueller Modus
 VISUAL: visuell
 WAIT: warte
-WEBSITE_TITLE: Webseiten-Titel
+WEBSITE_TITLE: WebseitenTitel
 WEB: Web
 WRITING: Schreiben
 YEAR: Jahr
+YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: Du kannst das CSS des Themes hier überschreiben.
+
+SW_SETUP_WELCOME: Setup Willkommen
+SW_HURRA: Hurra
+SW_YOUR_ACCOUNT: Dein Account wurde erstellt und du bist jetzt angemeldet.
+SW_NEXT_STOP: Nächster Schritt:
+SW_VISIT: Besuche die Autorenoberfläche und richte die Seite ein. Du kannst das System konfigurieren, Themes auswählen and Plugins hinzufügen.
+SW_GET_HELP: Hilfe erhalten:
+SW_IF_YOU_HAVE: Wenn du Fragen hast, lies bitte die
+SW_DOCS: Dokumentation
+SW_OR_OPEN: oder öffne ein neues Issue
+SW_CODED: Entwickelt mit
+SW_BY: von der
+SW_COMMUNITY: Community
+SW_TRENDSCHAU: Trendschau Digital
+SW_CONFIGURE: Richte deine Seite ein.
+SW_GIVE_YOUR_NEW: Gib deiner neuen Seite einen Namen, füge Autoren hinzu und wähle ein Copyright.
+SW_CHOOSE_A_THEME: Richte ein Theme für deine Webseite ein.
+SW_ADD_NEW_FEATURE: Füge mit Plugins neue Funktionen hinzu.

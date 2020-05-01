@@ -26,7 +26,7 @@ class SettingsController extends Controller
 		$locale				= isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? substr($_SERVER["HTTP_ACCEPT_LANGUAGE"],0,2) : 'en';
 		$users				= $user->getUsers();
 		$route 				= $request->getAttribute('route');
-		
+
 		return $this->render($response, 'settings/system.twig', array('settings' => $settings, 'copyright' => $copyright, 'languages' => $languages, 'locale' => $locale, 'formats' => $defaultSettings['formats'] ,'users' => $users, 'route' => $route->getName() ));
 	}
 	
@@ -62,6 +62,7 @@ class SettingsController extends Controller
 					'copyright' 		=> $newSettings['copyright'],
 					'year'				=> $newSettings['year'],
 					'language'			=> $newSettings['language'],
+					'langattr'			=> $newSettings['langattr'],
 					'editor' 			=> $newSettings['editor'], 
 					'formats'			=> $newSettings['formats'],
 					'headlineanchors'	=> isset($newSettings['headlineanchors']) ? $newSettings['headlineanchors'] : null,
