@@ -1,4 +1,4 @@
-	{% if item.prevItem or item.nextItem %}
+
 		<div class="breadcrumb">
 			{% if item.prevItem %}
 				<span class="prev"><a href="{{ item.prevItem.urlRel }}"><i class="icon-left-open-big"></i></a></span>
@@ -8,9 +8,8 @@
 				<li><a href="{{ crumb.urlRel }}">{{ crumb.name }}</a></li>
 			{% endfor %}
 			</ul>
-			<button id="menu" class="menu">contents</button>
+			<button id="tmmenu" class="menu">contents</button>
 			{% if item.nextItem %}
 				<span class="next"><a href="{{ item.nextItem.urlRel }}"><i class="icon-right-open-big"></i></a></span>
 			{% endif %}			
 		</div>
-	{% endif %}

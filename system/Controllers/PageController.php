@@ -9,7 +9,6 @@ use Typemill\Models\WriteYaml;
 use Typemill\Models\WriteMeta;
 use \Symfony\Component\Yaml\Yaml;
 use Typemill\Models\VersionCheck;
-use Typemill\Models\Helpers;
 use Typemill\Models\Markdown;
 use Typemill\Events\OnPagetreeLoaded;
 use Typemill\Events\OnBreadcrumbLoaded;
@@ -39,17 +38,17 @@ class PageController extends Controller
 
 		try
 		{
-			/* if the cached structure is still valid, use it */
+			# if the cached structure is still valid, use it
 			if($cache->validate('cache', 'lastCache.txt', 600))
 			{
 				$structure	= $this->getCachedStructure($cache);
 			}
 			if(!isset($structure) OR !$structure) 
 			{
-				/* if not, get a fresh structure of the content folder */
+				# if not, get a fresh structure of the content folder
 				$structure 	= $this->getFreshStructure($pathToContent, $cache, $uri);
 
-				/* if there is no structure at all, the content folder is probably empty */
+				# if there is no structure at all, the content folder is probably empty
 				if(!$structure)
 				{
 					$content = '<h1>No Content</h1><p>Your content folder is empty.</p>'; 
@@ -58,13 +57,13 @@ class PageController extends Controller
 				}
 				elseif(!$cache->validate('cache', 'lastSitemap.txt', 86400))
 				{
-					/* update sitemap */
+					# update sitemap
 					$sitemap = new WriteSitemap();
 					$sitemap->updateSitemap('cache', 'sitemap.xml', 'lastSitemap.txt', $structure, $uri->getBaseUrl());
 				}
 			}
 			
-			/* dispatch event and let others manipulate the structure */
+			# dispatch event and let others manipulate the structure
 			$structure = $this->c->dispatcher->dispatch('onPagetreeLoaded', new OnPagetreeLoaded($structure))->getData();
 		}
 		catch (Exception $e)
@@ -86,31 +85,45 @@ class PageController extends Controller
 		{
 			$home = true;
 			$item = Folder::getItemForUrl($navigation, $uri->getBasePath(), $uri->getBasePath());
-			$urlRel = $uri->getBasePath();		
+			$urlRel = $uri->getBasePath();
 		}
 		else
 		{
-			/* get the request url */
+			# get the request url
 			$urlRel = $uri->getBasePath() . '/' . $args['params'];
 			
-			/* find the url in the content-item-tree and return the item-object for the file */
+			# find the url in the content-item-tree and return the item-object for the file
+			# important to use the structure here so it is found, even if the item is hidden.
 			$item = Folder::getItemForUrl($structure, $urlRel, $uri->getBasePath());
 
-			/* if there is still no item, return a 404-page */
+			# if there is still no item, return a 404-page
 			if(!$item)
 			{
 				return $this->render404($response, array( 'navigation' => $navigation, 'settings' => $settings,  'base_url' => $base_url )); 
 			}
 
-			/* get breadcrumb for page */
-			$breadcrumb = Folder::getBreadcrumb($structure, $item->keyPathArray);
-			$breadcrumb = $this->c->dispatcher->dispatch('onBreadcrumbLoaded', new OnBreadcrumbLoaded($breadcrumb))->getData();
+			if(!$item->hide)
+			{
+				# get breadcrumb for page and set pages active
+				# use navigation, the hidden pages won't get a breadcrumb
+				$breadcrumb = Folder::getBreadcrumb($navigation, $item->keyPathArray);
+				$breadcrumb = $this->c->dispatcher->dispatch('onBreadcrumbLoaded', new OnBreadcrumbLoaded($breadcrumb))->getData();
 
-			# set pages active for navigation again
-			Folder::getBreadcrumb($structure, $item->keyPathArray);
-			
-			/* add the paging to the item */
-			$item = Folder::getPagingForItem($navigation, $item);
+				# set pages active for navigation again
+				# Folder::getBreadcrumb($navigation, $item->keyPathArray);
+				
+				# add the paging to the item
+				$item = Folder::getPagingForItem($navigation, $item);
+			}
+		}
+
+		if(isset($item->hide) && $item->hide) 
+		{
+			# delete the paging elements
+			$item->thisChapter = false;
+			$item->nextItem = false;
+			$item->prevItem = false;
+			$breadcrumb = false;
 		}
 
 		# dispatch the item
@@ -124,8 +137,12 @@ class PageController extends Controller
 		{
 			$filePath 	= $filePath . DIRECTORY_SEPARATOR . 'index.md';
 
-			# use navigation instead of structure to get
-			$item = Folder::getItemForUrl($navigation, $urlRel, $uri->getBasePath());
+			# if folder is not hidden
+			if(isset($item->hide) && !$item->hide)
+			{
+				# use the navigation instead of the structure so that hidden elements are erased
+				$item = Folder::getItemForUrl($navigation, $urlRel, $uri->getBasePath());
+			}
 		}
 
 		# read the content of the file

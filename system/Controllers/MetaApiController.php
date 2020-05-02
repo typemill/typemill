@@ -37,14 +37,17 @@ class MetaApiController extends ContentController
 		}
 
 		# loop through all plugins
-		foreach($this->settings['plugins'] as $name => $plugin)
+		if(!empty($this->settings['plugins']))
 		{
-			if($plugin['active'])
+			foreach($this->settings['plugins'] as $name => $plugin)
 			{
-				$pluginSettings = \Typemill\Settings::getObjectSettings('plugins', $name);
-				if($pluginSettings && isset($pluginSettings['metatabs']))
+				if($plugin['active'])
 				{
-					$metatabs = array_merge_recursive($metatabs, $pluginSettings['metatabs']);
+					$pluginSettings = \Typemill\Settings::getObjectSettings('plugins', $name);
+					if($pluginSettings && isset($pluginSettings['metatabs']))
+					{
+						$metatabs = array_merge_recursive($metatabs, $pluginSettings['metatabs']);
+					}
 				}
 			}
 		}

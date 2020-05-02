@@ -116,12 +116,14 @@ header{
 }
 aside{
 	display: block;
-	position: absolute;
-	top: 175px;
 	padding: 0;
 	margin: 0;
 	left: 20px;
 	right: 20px;
+}
+aside#tmnavigation{
+	position: absolute;
+	top: 175px;
 }
 article{
 	width: 100%;
@@ -402,7 +404,22 @@ article .gitlink{
 	left: 10%;
 	width: 80%;	
 }
-
+/*
+.p-image{
+	display: table;
+	margin:auto;
+	max-width: 100%;
+}
+.p-image + .left{
+	float:left;
+}
+.p-image img{
+	display: block;
+}
+.p-image em{
+	display: table-caption;
+	caption-side: bottom;
+}
 /************************
 *  	PAGING / BREADCRUMB *
 ************************/
@@ -881,7 +898,7 @@ img.myClass{
 	header{ 
 		text-align: left;
 	}
-	aside{
+	aside, aside#tmnavigation{
 		position: relative;
 		top: 0;
 		left: 0;

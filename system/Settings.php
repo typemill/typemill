@@ -39,7 +39,7 @@ class Settings
 		}
 
 		# let us load translations only for admin area to improve performance for frontend
-		$uri = $_SERVER[REQUEST_URI];
+		$uri = $_SERVER['REQUEST_URI'];
 		if(isset($uri) && (strpos($uri,'/tm/') !== false OR strpos($uri,'/setup') !== false))
 		{
 		    # i18n

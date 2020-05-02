@@ -1,5 +1,5 @@
-var menu = document.getElementById("menu"),
-	navi = document.getElementById("navigation");
+var menu = document.getElementById("tmmenu"),
+	navi = document.getElementById("tmnavigation");
 				
 if(menu)
 {
