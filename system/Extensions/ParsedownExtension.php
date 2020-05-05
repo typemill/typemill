@@ -93,7 +93,8 @@ class ParsedownExtension extends \ParsedownExtra
         return $footnotes;
     }
 
-    # BlockImages
+    # BlockImages with html5 figure and figcaption
+    # No, this is not the most elegant code on planet earth!!
     protected function blockImage($line, $block)
     {
         if (preg_match('/^\!\[/', $line['text'], $matches))
