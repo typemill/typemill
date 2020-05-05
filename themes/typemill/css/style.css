@@ -327,27 +327,35 @@ article{
 	font-size: 1em;
 	line-height: 1.35em;
 }
-article img{
-	max-width: 100%;
+
+img, figure,figure img{
+	max-width: 100%;	
 }
-article img.left{
+figure{
+	display: table;
+	margin: 2em auto;
+	padding: 0;
+}
+figure.left{
 	width: auto;
-	max-width: 100%;
 	float: left;
-	margin: 10px 10px 10px 0;
+	margin: 0px 30px 30px 0;
 }
-article img.right{
+figure.right{
 	width: auto;
-	max-width: 100%;
 	float: right;
-	margin: 10px 0px 10px 10px;	
+	margin: 0px 0px 30px 30px;	
 }
-article img.middle{
-	display:block;
-	width: auto;
-	max-width: 100%;
+figure img{
+	display: block;
 	margin: auto;
 }
+figcaption{
+	display: table-caption;
+	caption-side: bottom;
+}
+
+
 article img.youtube{
 	position: relative;
 	max-width: 560px;
@@ -404,22 +412,29 @@ article .gitlink{
 	left: 10%;
 	width: 80%;	
 }
-/*
-.p-image{
-	display: table;
-	margin:auto;
-	max-width: 100%;
+.notice1 {
+    margin: 1em 0;
+    padding: 10px 1em;
+    background-color: #fdf0f0;
+    border-left: 10px solid #d00;
 }
-.p-image + .left{
-	float:left;
+.notice2 {
+    margin: 1em 0;
+    padding: 10px 1em;
+    background-color: #fffbf0;
+    border-left: 10px solid #fb0;
 }
-.p-image img{
-	display: block;
+.notice3,
+.notice4,
+.notice5,
+.notice6 {
+    margin: 1em 0;
+    padding: 10px 1em;
+    background-color: #f0f8fe;
+    border-left: 10px solid #08e;
 }
-.p-image em{
-	display: table-caption;
-	caption-side: bottom;
-}
+
+
 /************************
 *  	PAGING / BREADCRUMB *
 ************************/

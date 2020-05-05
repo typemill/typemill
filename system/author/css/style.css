@@ -215,6 +215,52 @@ aside.sidebar{
 	float: right;
 }
 
+img, figure,figure img{
+	max-width: 100%;	
+}
+figure{
+	display: table;
+	margin: 2em auto;
+	padding: 0;
+}
+figure.left{
+	float: none;
+}
+figure.right{
+	float: none;
+}
+figure img{
+	display: block;
+	margin: auto;
+}
+figcaption{
+	display: table-caption;
+	caption-side: bottom;
+}
+
+.notice1 {
+    margin: 1em 0;
+    padding: 10px 1em;
+    background-color: #fdf0f0;
+    border-left: 10px solid #d00;
+}
+.notice2 {
+    margin: 1em 0;
+    padding: 10px 1em;
+    background-color: #fffbf0;
+    border-left: 10px solid #fb0;
+}
+.notice3,
+.notice4,
+.notice5,
+.notice6 {
+    margin: 1em 0;
+    padding: 10px 1em;
+    background-color: #f0f8fe;
+    border-left: 10px solid #08e;
+}
+
+
 /********************
 * 		NAVI 		*
 ********************/

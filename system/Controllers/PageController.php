@@ -72,6 +72,29 @@ class PageController extends Controller
 			exit(1);
 		}
 
+		# get meta-Information
+		$writeMeta 		= new WriteMeta();
+		$theme 			= $settings['theme'];
+
+		# check if there is a custom theme css
+		$customcss = $writeMeta->checkFile('cache', $theme . '-custom.css');
+		if($customcss)
+		{
+			$this->c->assets->addCSS($base_url . '/cache/' . $theme . '-custom.css');
+		}
+
+		$logo = false;
+		if(isset($settings['logo']) && $settings['logo'] != '')
+		{
+			$logo = 'media/files/' . $settings['logo'];
+		}
+
+		$favicon = false;
+		if(isset($settings['favicon']) && $settings['favicon'] != '')
+		{
+			$favicon = true;
+		}
+
 		# get the cached navigation here (structure without hidden files )
 		$navigation = $cache->getCache('cache', 'navigation.txt');
 		if(!$navigation)
@@ -99,7 +122,19 @@ class PageController extends Controller
 			# if there is still no item, return a 404-page
 			if(!$item)
 			{
-				return $this->render404($response, array( 'navigation' => $navigation, 'settings' => $settings,  'base_url' => $base_url )); 
+				return $this->render404($response, array( 
+					'navigation'	=> $navigation, 
+					'settings' 		=> $settings,  
+					'base_url' 		=> $base_url,
+					'title' 		=> false,
+					'content' 		=> false, 
+					'item' 			=> false,
+					'breadcrumb' 	=> false, 
+					'metatabs'		=> false,
+					'image' 		=> false,
+					'logo'			=> $logo,
+					'favicon'		=> $favicon
+				)); 
 			}
 
 			if(!$item->hide)
@@ -151,9 +186,6 @@ class PageController extends Controller
 		# dispatch the original content without plugin-manipulations for case anyone wants to use it
 		$this->c->dispatcher->dispatch('onOriginalLoaded', new OnOriginalLoaded($contentMD));
 		
-		# get meta-Information
-		$writeMeta 		= new WriteMeta();
-
 		# makes sure that you always have the full meta with title, description and all the rest.
 		$metatabs 		= $writeMeta->completePageMeta($contentMD, $settings, $item);
 
@@ -174,10 +206,7 @@ class PageController extends Controller
 		/* parse markdown-file to content-array */
 		$contentArray 	= $parsedown->text($contentMD, $itemUrl);
 		$contentArray 	= $this->c->dispatcher->dispatch('onContentArrayLoaded', new OnContentArrayLoaded($contentArray))->getData();
-		
-		/* get the first image from content array */
-		$firstImage		= $this->getFirstImage($contentArray);
-		
+				
 		/* parse markdown-content-array to content-string */
 		$contentHTML	= $parsedown->markup($contentArray, $itemUrl);
 		$contentHTML 	= $this->c->dispatcher->dispatch('onHtmlLoaded', new OnHtmlLoaded($contentHTML))->getData();
@@ -188,39 +217,32 @@ class PageController extends Controller
 		
 		$contentHTML	= isset($contentParts[1]) ? $contentParts[1] : $contentHTML;
 
-		/* get url and alt-tag for first image, if exists */
-		if($firstImage)
+		# get the first image from content array */
+		$img_url		= isset($metatabs['meta']['heroimage']) ? $metatabs['meta']['heroimage'] : false;
+		$img_alt		= isset($metatabs['meta']['heroimagealt']) ? $metatabs['meta']['heroimagealt'] : false;
+
+		# get url and alt-tag for first image, if exists */
+		if(!$img_url OR $img_url == '')
 		{
-			preg_match('#\((.*?)\)#', $firstImage, $img_url);
-			if($img_url[1])
+			# extract first image from content
+			$firstImageMD = $this->getFirstImage($contentArray);
+
+			if($firstImageMD)
 			{
-				preg_match('#\[(.*?)\]#', $firstImage, $img_alt);
+				preg_match('#\((.*?)\)#', $firstImageMD, $img_url_result);
+				$img_url = isset($img_url_result[1]) ? $img_url_result[1] : false;
 				
-				$firstImage = array('img_url' => $base_url . '/' . $img_url[1], 'img_alt' => $img_alt[1]);
+				if($img_url)
+				{
+					preg_match('#\[(.*?)\]#', $firstImageMD, $img_alt_result);
+					$img_alt = isset($img_alt_result[1]) ? $img_alt_result[1] : false;
+				}
 			}
 		}
 		
-		$theme = $settings['theme'];
+		$firstImage = array('img_url' => $base_url . '/' . $img_url, 'img_alt' => $img_alt);
+		
 		$route = empty($args) && isset($settings['themes'][$theme]['cover']) ? '/cover.twig' : '/index.twig';
-
-		# check if there is a custom theme css
-		$customcss = $writeMeta->checkFile('cache', $theme . '-custom.css');
-		if($customcss)
-		{
-			$this->c->assets->addCSS($base_url . '/cache/' . $theme . '-custom.css');
-		}
-
-		$logo = false;
-		if(isset($settings['logo']) && $settings['logo'] != '')
-		{
-			$logo = 'media/files/' . $settings['logo'];
-		}
-
-		$favicon = false;
-		if(isset($settings['favicon']) && $settings['favicon'] != '')
-		{
-			$favicon = true;
-		}
 
 		return $this->render($response, $route, [
 			'home'			=> $home,

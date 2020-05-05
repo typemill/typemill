@@ -137,15 +137,19 @@ Or you can use a shortcut like http://typemill.net.
 ````
 The same rules as with links, but with a !
 ![alt-text](media/markdown.png)
+*With caption*
 ![alt-text](media/markdown.png "my title"){#myid .imgClass}
+*With caption that spans over several lines*
 ![alt-text](media/markdown.png "my title"){#myid .otherclass width=150px}
 ````
 
 The same rules as with links, but with a !
 
-![alt-text](media/markdown.png)
+![alt-text](media/markdown.png){.center}
+*With Caption*
 
-![alt-text](media/markdown.png "my title"){#myid .imgClass}
+![alt-text](media/markdown.png  "my title"){#myid .imgClass}
+*With a caption that spans over several lines.*
 
 ![alt-text](media/markdown.png "my title"){#myid .otherclass width=150px}
 
@@ -165,21 +169,27 @@ You can link an image with a nested syntax like this:
 ````
 You can controll the image position with the classes .left, .right and .middle like this:
 ![alt-text](media/markdown.png){.left}
+*With caption that spans over several lines*
 ![alt-text](media/markdown.png){.right}
-![alt-text](media/markdown.png){.middle}
+*With caption that spans over several lines*
+![alt-text](media/markdown.png){.center}
+*With caption that spans over several lines*
 ````
 
 ![image float left](media/markdown.png){.left}
+*With caption that spans over several lines*
 
-The first image should float on the left side of this paragraph. This might not work with all themes. If you are a theme developer, please ensure that you support the image classes "left", "right" and "middle". You can add these classes manually in the raw mode or you can assign them in the visual mode when you edit a picture (double click on it to open the dialog.)
+The first image should float on the left side of this paragraph. This might not work with all themes. If you are a theme developer, please ensure that you support the image classes "left", "right" and "center". You can add these classes manually in the raw mode or you can assign them in the visual mode when you edit a picture (double click on it to open the dialog). Images in a separate line are rendered with the html5 elements `figure` and `figcapture`.
 
 ![image float right](media/markdown.png){.right}
+*With caption that spans over several lines*
 
-The second image should float on the right side of this paragraph. This might not work with all themes. If you are a theme developer, please ensure that you support the image classes "left", "right" and "middle". You can add these classes manually in the raw mode or you can assign them in the visual mode when you edit a picture (double click on it to open the dialog.)
+The second image should float on the right side of this paragraph. This might not work with all themes. If you are a theme developer, please ensure that you support the image classes "left", "right" and "center". You can add these classes manually in the raw mode or you can assign them in the visual mode when you edit a picture (double click on it to open the dialog). Images in a separate line are rendered with the html5 elements `figure` and `figcapture`.
 
-![image middle](media/markdown.png){.middle}
+![image center](media/markdown.png){.center}
+*With caption that spans over several lines*
 
-The thirds image should be placed above this paragraph and centered to the middle of the content area. This might not work with all themes. If you are a theme developer, please ensure that you support the image classes "left", "right" and "middle".
+The thirds image should be placed above this paragraph and centered to the middle of the content area. This might not work with all themes. If you are a theme developer, please ensure that you support the image classes "left", "right" and "center". You can add these classes manually in the raw mode or you can assign them in the visual mode when you edit a picture (double click on it to open the dialog). Images in a separate line are rendered with the html5 elements `figure` and `figcapture`.
 
 ## Blockquote
 
@@ -238,6 +248,22 @@ Orange
 :   The fruit of an evergreen tree of the genus Citrus.
 
 
+
+## Notices
+
+You can create different notices if you add a '!', '!!', '!!!', '!!!!' before a line. This will wrap the content into a div-class with the classes `notice1`, `notice2`, `notice3` and `notice4`. You can also span notices over several lines. This logic follows some other CMS like Grav, Lektor or Yellow and it is not compatible with other markdown processors or editors.
+
+! Notice 1
+! 
+! Please note that you can use **markdown** inside of the notice so you can *format* your text here.
+
+!! Notice 2
+!! 
+!! Please note that you can use **markdown** inside of the notice so you can *format* your text here.
+
+!!! Notice 3
+!!! 
+!!! Please note that you can use **markdown** inside of the notice so you can *format* your text here.
 
 ## Tables
 

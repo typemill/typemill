@@ -22,9 +22,12 @@ class ParsedownExtension extends \ParsedownExtra
         $this->inlineMarkerList .= '\\';
         $this->inlineMarkerList .= '$';
 
+        $this->BlockTypes['!'][] = 'Image';
+        $this->BlockTypes['!'][] = "Notice";        
+
         $this->visualMode = false;
 
-		# table of content support
+        # identify Table Of contents after footnotes and links		
         array_unshift($this->BlockTypes['['], 'TableOfContents');
     }
 	
@@ -88,6 +91,148 @@ class ParsedownExtension extends \ParsedownExtra
         }
 
         return $footnotes;
+    }
+
+    # BlockImages
+    protected function blockImage($line, $block)
+    {
+        if (preg_match('/^\!\[/', $line['text'], $matches))
+        {
+
+            $Block = array(
+                'element' => array(
+                    'name' => 'figure',
+                    'elements' => array(
+                    )
+                ),
+            );
+
+            $Elements = array(
+                'handler' => array(
+                    'function' => 'lineElements',
+                    'argument' => $line['text'],
+                    'destination' => 'elements',
+                )
+            );
+
+            if (preg_match('/[ ]*{('.$this->regexAttribute.'+)}/', $line['text'], $matches, PREG_OFFSET_CAPTURE))
+            {
+                $attributeString = $matches[1][0];
+                $dataAttributes = $this->parseAttributeData($attributeString);
+
+                # move classes and ids from img to the figure element
+                $figureAttributes = array();
+                if(isset($dataAttributes['class']))
+                {
+                    $figureAttributes['class'] = $dataAttributes['class'];
+                    $classes = explode(' ', $dataAttributes['class']);
+                    foreach($classes as $class)
+                    {
+                        $attributeString = str_replace('.'.$class, '', $attributeString);
+                    }
+                }
+                if(isset($dataAttributes['id']))
+                {
+                    $figureAttributes['id'] = $dataAttributes['id'];
+                    $attributeString = str_replace('#'.$dataAttributes['id'], '', $attributeString);
+                }
+
+                $attributeString = trim(str_replace('  ', ' ', $attributeString));
+                $line['text'] = substr($line['text'], 0, $matches[0][1]);
+                if(str_replace(' ', '', $attributeString) != '')
+                {
+                    $line['text'] .= '{' . $attributeString . '}';
+                }
+
+                $Block['element']['attributes'] = $figureAttributes;
+
+                $Elements['handler']['argument'] = $line['text'];
+            }
+
+            $Block['element']['elements'][] = $Elements;
+  
+            return $Block;
+        }
+    }
+
+    protected function blockImageContinue($line, $block)
+    {
+        if (isset($block['complete']))
+        {
+            return;
+        }
+
+        # A blank newline has occurred, so it is a new content-block and not a caption
+        if (isset($block['interrupted']))
+        {
+            return;
+        }
+
+        $block['element']['elements'][] = array(
+                'name' => 'figcaption',
+                'handler' => array(
+                    'function' => 'lineElements',
+                    'argument' => $line['text'],
+                    'destination' => 'elements',
+                )
+        );
+        
+        $block['complete'] = true;
+
+        return $block;
+    }
+
+    protected function blockImageComplete($block)
+    {
+        return $block;
+    }
+
+    # Handle notice blocks
+    # adopted from grav: https://github.com/getgrav/grav-plugin-markdown-notices/blob/develop/markdown-notices.php
+    # and yellow / datenstrom: https://raw.githubusercontent.com/datenstrom/yellow-extensions/master/features/markdown/markdownx.php
+    protected function blockNotice($Line, $Block) 
+    {
+        if (preg_match("/^!(?!\[)[ ]?+(.*+)/", $Line["text"], $matches)) 
+        {
+            $level  = strspn(str_replace(array("![", " "), "", $Line["text"]), "!");
+            $text   = substr($matches[0], $level);
+
+            $Block = [
+                'element' => [
+                    'name' => 'div',
+                    'handler' => array(
+                        'function' => 'linesElements',
+                        'argument' => (array) $text,
+                        'destination' => 'elements',
+                    ),
+                    'attributes' => [
+                        'class' => "notice$level",
+                    ],
+                ],
+            ];
+
+            return $Block;
+        }
+    }
+    
+    # Handle notice blocks over multiple lines
+    # adopted from grav: https://github.com/getgrav/grav-plugin-markdown-notices/blob/develop/markdown-notices.php
+    # and yellow / datenstrom: https://raw.githubusercontent.com/datenstrom/yellow-extensions/master/features/markdown/markdownx.php
+    protected function blockNoticeContinue($Line, $Block) 
+    {
+        if (isset($Block['interrupted']))
+        {
+            return;
+        }
+
+        if (preg_match("/^!(?!\[)[ ]?+(.*+)/", $Line["text"], $matches) )
+        {
+            $level  = strspn(str_replace(array("![", " "), "", $Line["text"]), "!");
+            $text   = substr($matches[0], $level);
+
+            $Block['element']['handler']['argument'][] = $text;
+            return $Block;
+        }
     }
 
     # TableOfContents
@@ -322,27 +467,6 @@ class ParsedownExtension extends \ParsedownExtra
         return $Element;
     }
 
-    protected function paragraph($Line)
-    {
-        $paragraph = array(
-            'type' => 'Paragraph',
-            'element' => array(
-                'name' => 'p',
-                'handler' => array(
-                    'function' => 'lineElements',
-                    'argument' => $Line['text'],
-                    'destination' => 'elements',
-                ),
-            ),
-        );
-
-        if(isset($Line['text'][1]) && $Line['text'][0] == '!' && $Line['text'][1] == '[')
-        {
-            $paragraph['element']['attributes']['class'] = 'p-image';
-        }
-        return $paragraph;
-    }
-
     
     # Inline Math
     # check https://github.com/BenjaminHoegh/ParsedownMath
@@ -451,6 +575,7 @@ class ParsedownExtension extends \ParsedownExtra
         
 	# advanced attribute data, check parsedown extra plugin: https://github.com/tovic/parsedown-extra-plugin
     protected function parseAttributeData($text) {
+
         // Allow compact attributes ...
         $text = str_replace(array('#', '.'), array(' #', ' .'), $text);
         if (strpos($text, '="') !== false || strpos($text, '=\'') !== false) {
