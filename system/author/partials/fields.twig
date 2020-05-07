@@ -1,5 +1,5 @@
 <div class="cardField{{ errors[itemName][field.name] ? ' error' : '' }}{{field.fieldsize ? ' ' ~ field.fieldsize : ''}}">
-				
+
 	<label for="{{ itemName }}[{{ field.name }}]">{{ __( field.getLabel() ) }}
 		{% if field.getAttribute('required') %}<strong><abbr title="{{ __('required') }}">*</abbr></strong>{% endif %}
 		{% if field.help %}<div class="help">?<span class="tooltip">{{__(field.help|slice(0,100))}}</span></div>{% endif %}
@@ -58,7 +58,7 @@
 		
 	{% else %}
 
-		<input id="{{itemName}}[{{ field.name }}]" name="{{itemName}}[{{ field.name }}]" type="{{ field.type }}"{{ field.getAttributeValues()|ta }}{{ field.getAttributes() }}>
+		<input id="{{itemName}}[{{ field.name }}]" name="{{itemName}}[{{ field.name }}]" type="{{ field.type }}"{{ field.getAttributeValues() }}{{ field.getAttributes() }}>
 
 	{% endif %}
 
