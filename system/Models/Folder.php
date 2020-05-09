@@ -275,10 +275,26 @@ class Folder
 		{
 			# return a standard item-object
 			$item 					= new \stdClass;
+			$item->status 			= 'published';
+			$item->originalName 	= 'home';
 			$item->elementType 		= 'folder';
+			$item->fileType			= 'md';
+			$item->order 			= false;
+			$item->name 			= 'home';
+			$item->slug				= '';
 			$item->path				= '';
-			$item->urlRel			= '/';
 			$item->pathWithoutType	= DIRECTORY_SEPARATOR . 'index';
+			$item->key				= false;
+			$item->keyPath			= false;
+			$item->keyPathArray		= false;
+			$item->chapter			= false;
+			$item->urlRel			= '/';
+			$item->urlRelWoF		= '/';
+			$item->urlAbs			= $baseUrl;
+			$item->name 			= 'home';
+			$item->active			= false;
+			$item->activeParent		= false;
+			$item->hide 			= false;
 
 			return $item;
 		}

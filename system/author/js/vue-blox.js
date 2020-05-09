@@ -949,14 +949,14 @@ const tableComponent = Vue.component('table-component', {
 								 '<div class="actionline" @click="addbelowrow(value)">{{ \'add row below\'|translate }}</div>' +
 								 '<div class="actionline" @click="deleterow(value)">{{ \'delete row\'|translate }}</div>' +						
 							  '</div>' + 
-							'{{ value|translate }}</th>' +
+							'{{ value }}</th>' +
 							'<td v-if="rowindex > 1" v-for="(value,colindex) in row" :contenteditable="colindex !== 0 ? true : false" @click="switchrowbar(value)" @blur="updatedata($event,colindex,rowindex)" :class="colindex !== 0 ? editable : noteditable">' + 
 							 '<div v-if="colindex === 0 && rowbar === value" class="rowaction">' + 
   								 '<div class="actionline" @click="addaboverow(value)">{{ \'add row above\'|translate }}</div>' +
 								 '<div class="actionline" @click="addbelowrow(value)">{{ \'add row below\'|translate }}</div>' +
 								 '<div class="actionline" @click="deleterow(value)">{{ \'delete row\'|translate }}</div>' +
 							  '</div>' +
-							'{{ value|translate }}</td>' +
+							'{{ value }}</td>' +
 						'</tr>' +
 					'</tbody>' +
 				'</table>' +
