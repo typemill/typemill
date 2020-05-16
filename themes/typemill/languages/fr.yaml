@@ -1,0 +1,193 @@
+ACCOUNT: Compte
+ACTIVATE_SPECIAL_STARTPAGE_DESIGN: Activer le design spécial pour la page d'accueil
+ACTIVE: Actif
+ACTUAL_PASSWORD: Mot de passe actuel
+ADD: Ajouter
+ADD CONTENT-BLOCK: ajouter un bloc
+ADD DEFINITION: ajouter une définition
+ADD_FILE: Ajouter un article
+ADD_FOLDER: Ajouter un dossier
+ADD_FOLDER_TO_BASE_LEVEL: Ajouter un dossier de premier niveau
+ADD_ITEM: Ajouter un élément
+ADD LEFT COLUMN: Ajouter une colonne à gauche
+ADD RIGHT COLUMN: Ajouter une colonne à droite
+ADD ROW ABOVE: Ajouter une rangée en haut
+ADD ROW BELOW: Ajouter une rangée en bas
+ALL_USERS: Tous les utilisateurs
+ALT_TEXT: Alt-Text
+AUTHOR: Auteur
+AUTHOR_INTRO: Étiquette de mention de l'auteur
+BACK_TO_STARTPAGE: Revenir à la page d'accueil
+BOLD: Gras
+BOTTOM: En bas
+BULLET_LIST: Liste à puces
+BY: de
+CANCEL: Annuler
+CAPTION: Légende
+CELL: cellule
+CENTER: Center
+CHECK: Vérifier
+CLASS: Classe
+CLOSE_LIBRARY: Fermer la bibliothèque
+CODE: Code
+COG: cog
+CONTENT: Contenu
+COPYRIGHT: Copyright
+COUNT_CHAPTERS_IN_NAVIGATION?: Numéroter les chapitres dans la  navigation ?
+CREATED_AT__READ_ONLY_: Date de création (lecture seule)
+CREATE_NEW_USER: Créer un nouvel utilisateur
+CREATE_USER: Créer un utilisateur
+DEFINITION: Liste de définition
+DEFINITION_LIST: Liste de définition
+DELETE_CLOSE: Supprimer/Fermer
+DELETE_COLUMN: Supprimer cette colonne
+DELETE_CONTENT-BLOCK: Supprimer un bloc
+DELETE_PAGE: Supprimer la page
+DELETE_ROW: Supprimer une rangée
+DELETE: Supprimer
+DELETE_USER: Supprimer l'utilisateur
+DESCRIPTION: Description
+DIFFERENT_DESIGN_FOR_STARTPAGE: Design différent pour la page d'accueil
+DISCARD: Annuler les modifications
+DISCARD_CHANGES: Ne pas sauvegarder les modifications
+DO_YOU_REALLY_WANT_TO_DELETE_THE_USER: Voulez-vous vraiment supprimer cet utilisateur ?
+DO_YOU_REALLY_WANT_TO_DELETE_THIS_PAGE: Voulez-vous vraiment supprimer cette page ?
+DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES_AND_SET_THE_CONTENT_BACK_TO_THE_LIVE_VERSION: Voulez-vous annuler les modifications et revenir à la version précédente ?
+DRAFT: comme brouillon
+DRAG_A_PICTURE_OR_CLICK_TO_SELECT: faire glisser une image ou cliquer pour sélectionner
+EDIT: Éditer
+EDIT_USER: Modifier l'utilisateur
+E_G_: ex.:
+E_MAIL: Courriel
+EXTERNAL_LINK: Lien externe
+FACEBOOK: Facebook
+FILE: Fichier
+FILES: Fichiers
+FIRST_NAME: Nom
+FOLDER: Dossier
+FORGOT_PASSWORD: Mot de passe oublié
+FORMAT: Mise en forme
+GITHUB: GitHub
+HEADLINE: Titre
+HEAD: Tête de colonne
+HIDE: Masquer
+HIDE_PAGE_FROM_NAVIGATION: Masquer dans le menu de navigation du site
+HOME: Accueil
+HOMEPAGE: Page d'accueil
+HORIZONTAL_LINE: Ligne horizontale
+HR: Ligne horizontale
+IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: Si non renseignée ici, la description est extraite du contenu.
+IMAGE: Image
+ITALIC: Italique
+LABEL_FOR_CHAPTER: Étiquette de chapitre
+LABEL_FOR_START_BUTTON: Étiquette pour le bouton Démarrer
+LANGUAGE: Langue
+LAST_MODIFIED: Dernière modification
+LAST_MODIFIED_FORMAT: Date de modification (lecture seule)
+LAST_MODIFIED_LIVE__READONLY_: Dernière modification (lecture seule)
+LAST_MODIFIED_TEXT: Étiquette pour la date de modification
+LAST_NAME: Prénom
+LEFT: Gauche
+LICENCE: Licence
+LINKEDIN: Linkedin
+LINK: Lien
+LINK: Lien hypertexte
+LINK_TO_GIT_REPOSITORY: Lien vers le dépôt git
+LINK_TO_VIDEO: Lien vers une vidéo
+LOGIN: Connexion
+LOGO_ON_STARTPAGE: Logo sur la page d'accueil
+LOGOUT: Déconnexion
+MAIL: Courriel
+MANUAL_DATE: Date manuelle
+MARKDOWN: Markdown
+MENU: Menu
+META_DESCRIPTION: Meta description
+META: Métadonnées
+META_TITLE: Meta titre
+MISSING_REQUIREMENTS: Prérequis non satisfaits
+MOVE_VERTICAL: Déplacer verticalement
+NAVIGATION_TITLE: Titre dans le menu de navigation
+NEW_PASSWORD: Nouveau mot de passe
+NO_DESCRIPTION: Aucune description
+NO_PREVIEW: Pas de prévisualisation
+NO_SETTINGS: Aucun paramètre
+NOT_EDITABLE: Non modifiable
+NUMBERED_LIST: Liste numérotée
+OLIST: Liste ordonnée
+ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: Seuls sont autorisés les caractères spéciaux suivants :
+PARAGRAPH: Paragraphe
+PASSWORD: Mot de passe
+PLEASE_CONFIRM: Confirmer
+PLEASE_CORRECT_THE_ERRORS_ABOVE: Veuillez corriger les erreurs ci-dessus
+PLUGINS: Plugins
+PLUGIN_STORE: Dépôt des plugins
+POSITION_OF_AUTHOR: Position de l'auteur
+POSITION_OF_GIT_EDIT_LINK: Position du lien d'édition dans github
+POSITION_OF_MODIFIED_TEXT: Position de la date de modification
+POSITION_OF_SHARE_BUTTONS: Position des boutons de partage
+POWER_OFF: Éteindre
+PUBLISH: Publier
+QUOTE: Citation
+QUOTES: Citations
+RAW_CONTENT_EDITOR: Editeur de contenu brut
+RAW_MARKDOWN_EDITOR: Editeur Markdown brut
+RAW_MODE: Mode texte brut
+RAW: Texte brut
+READONLY: Lecture seule
+REMEMBER_TO_BOOKMARK_THIS_PAGE: Pensez à marquer cette page
+REQUIRED: Requis
+RIGHT: Droit
+ROLE: Rôle
+SAVE_ALL_SETTINGS: Sauvegarder tous les paramètres
+SAVE_DRAFT: Enregistrer comme brouillon
+SAVED_SUCCESSFULLY: Enregistré avec succès
+SAVE: Enregistrer
+SAVE_THEME: Enregistrer et activer ce thème
+SELECT_SHARE_BUTTONS: Sélection des boutons de partage
+SETTINGS: Paramètres
+SETUP: Configuration
+SHARE: Partager
+SHOW_CHAPTER_NUMBERS: Afficher les numéros de chapitre
+SHOW_LOGO_INSTEAD_OF_TITLE_ON_STARTPAGE: Afficher le logo au lieu du titre en page d'accueil
+STANDARD_EDITOR_MODE: Editeur standard
+START: Démarrer
+SYSTEM: Système
+TABLE_OF_CONTENTS: Sommaire
+TABLE: Tableau
+TAKEN_FROM_YOUR_USER_ACCOUNT_IF_SET_: Si non renseigné ici, le nom est tiré du compte utilisateur courant.
+TERM: terme
+TEXT_FILE: fichier texte
+THE_FORMAT_BUTTONS: Boutons de mise en forme
+THEMES: Thèmes
+THEME_STORE: Dépôt des thèmes
+TITLE: Titre
+TOC: Sommaire
+TOP: En haut
+TWITTER: Twitter
+TYPEMILL_DESCRIPTION: Thème standard pour Typemill. Responsive, minimal et sans aucune dépendance. Il emploie les polices système Calibri et Helvetica. Pas de javascript utilisé.
+ULIST: Liste simple
+UNKNOWN: Inconnu
+UPDATE_USER: Mettre à jour l'utilisateur
+UPLOAD: Télécharger
+UPLOAD_FILE: Télécharger un fichier
+USE_2_TO_40_CHARACTERS: Vous devez saisir au moins 2 caractères et au maximum 40
+USE_A_VALID_YEAR: Entrez une année valide
+USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Utilisé si aucune date manuelle n'est définie.
+USERNAME: Nom de l'utilisateur
+USERS: Utilisateurs
+USER: Utilisateur
+VIDEO: Vidéo
+VIEW_SITE: Voir le site
+VISUAL_CONTENT_EDITOR: Editeur de contenu visuel
+VISUAL_EDITOR: Editeur visuel
+VISUAL_MARKDOWN_EDITOR: Editeur Markdown visuel
+VISUAL_MODE: Mode visuel
+VISUAL: visuel
+WAIT: Attendez
+WEB: Site
+WEBSITE_TITLE: Titre du site
+WHATSAPP: WhatsApp
+WRITING: Rédaction
+XING: Xing
+YEAR: Année
+YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: Vous pouvez surcharger ici le css du thème avec vos propres styles.
