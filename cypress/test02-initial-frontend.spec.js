@@ -105,14 +105,19 @@ describe('Typemill Initial Frontend', function()
       /* images */
       cy.get('img').eq(0).should('have.attr', 'alt', 'alt-text')
       cy.get('img').eq(0).should('have.attr', 'src', 'media/markdown.png')
-      cy.get('img').eq(2).should('have.id', 'myid')
+      cy.get('figure').eq(2).should('have.id', 'myid')
         .and('have.class', 'otherclass')
-        .and('have.attr', 'alt', 'alt-text')
+      cy.get('img').eq(2).should('have.attr', 'alt', 'alt-text')
         .and('have.attr', 'title', 'my title')
         .and('have.attr', 'width', '150px')
 
       /* blockquote */
       cy.get('blockquote').should('exist') 
+      
+      /* has navigation element */
+      cy.get('.notice1').should('exist')
+      cy.get('.notice2').should('exist')
+      cy.get('.notice3').should('exist')
 
       /* footnote */
       cy.get('sup').eq(0).should('have.id', 'fnref1:1')

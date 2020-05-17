@@ -5,7 +5,7 @@
 	
 	<div class="formWrapper">
 
-		<form method="POST" action="{{ path_for('user.update') }}">
+		<form id="userform" method="POST" action="{{ path_for('user.update') }}">
 		
 			<section id="user" class="settings">
 
@@ -93,7 +93,7 @@
 	<div id="modalWindow" class="modal">
 		<div class="modalInner">
 			<div id="closeModal" class="closeModal">X</div>
-			<form method="POST" action="{{ path_for('user.delete') }}">
+			<form id="userdeleteform" method="POST" action="{{ path_for('user.delete') }}">
 				<h2>{{ __('Delete') }} {{ userdata.username }}</h2>
 				<p>{{ __('Do you really want to delete the user') }} {{userdata.username}}? {{ __('Please confirm') }}.</p>
 				<input type="hidden" name="username" value="{{userdata.username}}">
