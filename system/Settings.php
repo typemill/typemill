@@ -128,7 +128,11 @@ class Settings
     	$theme_language_file = $language . '.yaml';
     	if (file_exists($theme_language_folder . $theme_language_file))
     	{
-      		$theme_labels = $yaml->getYaml($theme_language_folder, $theme_language_file);
+      		$this_theme_labels = $yaml->getYaml($theme_language_folder, $theme_language_file);
+      		if(is_array($this_theme_labels))
+      		{
+	      		$theme_labels = $this_theme_labels;
+      		}
     	}
 
     	# loads the plugins strings of the set language
@@ -143,20 +147,20 @@ class Settings
 
         		if (file_exists($plugin_language_folder . $plugin_language_file))
         		{
-          			$plugin_labels[$name] = $yaml->getYaml($plugin_language_folder, $plugin_language_file);
+        			$this_plugin_labels = $yaml->getYaml($plugin_language_folder, $plugin_language_file);
+        			if(is_array($this_plugin_labels))
+        			{
+	          			$plugin_labels[$name] = $this_plugin_labels;
+        			}
         		}
       		}
+
       		foreach($plugin_labels as $key => $value)
       		{
         		$plugins_labels = array_merge($plugins_labels, $value);
       		}
     	}
-
-    	# Combines arrays of system languages, themes and plugins
-    	$labels = array_merge($system_labels, $theme_labels, $plugins_labels);
-
-		return $labels;
-	}
+    }
 
   	public function whichLanguage()
   	{
