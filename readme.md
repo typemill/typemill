@@ -6,23 +6,24 @@ TYPEMILL is a small flat file cms created for editors and writers. It provides a
 
 ## Features
 
-* Creates a website based on markdown files.
-* Provides an author-friendly visual markdown editor (work in progress, based on VUE.js).
-* Provides a pure markdown editing mode.
-* Markdown supports table of contents (TOC), tables, footnotes, abbreviations and definition lists.
-* Create and sort pages with drag & drop in the navigation.
-* Configure the system, the themes and the plugins in the dashboard.
-* Create and manage users.
-* Develop configurable plugins with the Symfony Event Dispatcher.
-* Develop configurable themes with TWIG.
-* Allows super easy backend and frontend forms with simple YAML-files.
-* Ships with a fully responsive standard theme
-* Ships with plugins for 
-  * Search
-  * MathJax and KaTeX.
-  * Code highlighting.
-  * Matomo/Piwik and Google Analytics.
-  * Cookie Consent.
+* Website with markdown-files.
+* Flexible drag & drop navigation.
+* Visual markdown editor (VUE.js) and raw markdown mode.
+* Markdown extras with
+  * table of contents (TOC)
+  * tables
+  * footnotes
+  * abbreviations
+  * definition lists
+  * notices
+  * math (with plugin)
+  * figures with captions
+* Media library with images and files.
+* System configurations.
+* User management.
+* Flexible form management with YAML-files.
+* Plugins (with symfony event dispatcher).
+* Themes (with TWIG).
 
 ## Requirements
 
@@ -77,10 +78,15 @@ TYPEMILL is published under MIT licence. Please check the licence of the include
 
 ## Contributors & Supporters
 
-* [Severo Juliano](https://github.com/iusvar) did the internationalization i18n.
+* [Severo Juliano](https://github.com/iusvar) manages the internationalization i18n.
 * [Eziquel Bruni](https://github.com/EzequielBruni) edits the typemill documentation.
 * [Ricky](https://github.com/rbertram90) developed the discard functionality.
 * [vodaris](https://www.vodaris.de) sponsored the development of the search plugin.
+* Translations: 
+  * Dutch: [svanlaere](https://github.com/svanlaere)
+  * German: [trendschau](https://github.com/trendschau)
+  * Italian: [Severo Juliano](https://github.com/iusvar)
+  * Russian: [Hide-me](https://github.com/hide-me)
 
 ## How to Contribute
 
@@ -90,10 +96,11 @@ You can check the [roadmap for Typemill](https://github.com/typemill/typemill/is
 
 Here are some contribution-ideas for non-coder:
 
-* Find bugs and errors (open a new issue on github for it).
+* Share typemill with social media.
+* Write about typemill.
 * Improve the documentation.
+* Find bugs and errors (open a new issue on github for it).
 * Describe some missing features and explain, why they are important for other users.
-* Write a blog post about typemill.
 
 Some ideas for devs (please fork this repository make your changes and create a pull request):
 
@@ -103,6 +110,7 @@ Some ideas for devs (please fork this repository make your changes and create a 
 * An auto-update functionality for core system, plugins and themes is highly needed.
 * Improve the accessibility of html and css.
 * Implement user roles and rights with RBAC or ACL.
+* Write autotests with Cypress.
 
 For hints, questions, problems and support, please open up a new issue on GitHub.
 
