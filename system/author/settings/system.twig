@@ -105,7 +105,7 @@
 					</div><div class="medium{{ errors.settings.headlineanchors ? ' error' : '' }}">
 						<label for="settings[headlineanchors]">{{ __('Headline Anchors') }} *</label>
 						<label class="control-group">{{ __('Show anchors next to headlines') }}
-							<input name="settings[headlineanchors]" type="checkbox" {% if (old.settings.headlineanchors) %} checked {% endif %}>
+							<input name="settings[headlineanchors]" type="checkbox" {% if (settings.headlineanchors) %} checked {% endif %}>
 							<span class="checkmark"></span>
 						</label>
 					</div>
