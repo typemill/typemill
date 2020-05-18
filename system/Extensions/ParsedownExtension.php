@@ -6,9 +6,9 @@ use \URLify;
 
 class ParsedownExtension extends \ParsedownExtra
 {
-	function __construct($showAnchor = NULL)
+    function __construct($showAnchor = NULL)
     {
-		parent::__construct();
+        parent::__construct();
 
         # show anchor next to headline? 
         $this->showAnchor = $showAnchor;
@@ -27,30 +27,30 @@ class ParsedownExtension extends \ParsedownExtra
 
         $this->visualMode = false;
 
-        # identify Table Of contents after footnotes and links		
+        # identify Table Of contents after footnotes and links      
         array_unshift($this->BlockTypes['['], 'TableOfContents');
     }
-	
+    
     public function setVisualMode()
     {
         $this->visualMode = true;
     }
 
-	public function text($text, $relurl = null)
-	{
+    public function text($text, $relurl = null)
+    {
         $this->relurl = $relurl ? $relurl : '';
 
         $Elements = $this->textElements($text);
-		
-		return $Elements;
-	}
-	
-	public function markup($Elements, $relurl)
-	{
+        
+        return $Elements;
+    }
+    
+    public function markup($Elements, $relurl)
+    {
 
-		# make relurl available for other functions
-		$this->relurl = $relurl;
-		
+        # make relurl available for other functions
+        $this->relurl = $relurl;
+        
         # convert to markup
         $markup = $this->elements($Elements);
 
@@ -60,14 +60,14 @@ class ParsedownExtension extends \ParsedownExtra
         # merge consecutive dl elements
         $markup = preg_replace('/<\/dl>\s+<dl>\s+/', '', $markup);
 
-		# create table of contents
+        # create table of contents
         if(isset($this->DefinitionData['TableOfContents']))
         {
-			$TOC = $this->buildTOC($this->headlines);
-			
-			$markup = preg_replace('%(<p[^>]*>\[TOC\]</p>)%i', $TOC, $markup);
+            $TOC = $this->buildTOC($this->headlines);
+            
+            $markup = preg_replace('%(<p[^>]*>\[TOC\]</p>)%i', $TOC, $markup);
         }
-		
+        
         # add footnotes
         if (isset($this->DefinitionData['Footnote']))
         {
@@ -75,8 +75,8 @@ class ParsedownExtension extends \ParsedownExtra
             
             $markup .= "\n" . $this->element($Element);
         }
-		
-		return $markup;
+        
+        return $markup;
     }
     
 
@@ -188,6 +188,81 @@ class ParsedownExtension extends \ParsedownExtra
         return $block;
     }
 
+    protected function blockTable($Line, array $Block = null)
+    {
+
+        $Block = parent::blockTable($Line, $Block);
+
+        if($Block)
+        {
+            $table = $Block['element'];
+
+            $Block['element'] = [
+                    'name' => 'div',
+                    'element' => $table,
+                    'attributes' => [
+                        'class' => "tm-table",
+                    ],
+            ];
+        }
+        
+        return $Block;
+    }    
+
+    protected function blockTableContinue($Line, array $Block)
+    {
+        if (isset($Block['interrupted']))
+        {
+            return;
+        }
+
+        if (count($Block['alignments']) === 1 or $Line['text'][0] === '|' or strpos($Line['text'], '|'))
+        {
+            $Elements = array();
+
+            $row = $Line['text'];
+
+            $row = trim($row);
+            $row = trim($row, '|');
+
+            preg_match_all('/(?:(\\\\[|])|[^|`]|`[^`]++`|`)++/', $row, $matches);
+
+            $cells = array_slice($matches[0], 0, count($Block['alignments']));
+
+            foreach ($cells as $index => $cell)
+            {
+                $cell = trim($cell);
+
+                $Element = array(
+                    'name' => 'td',
+                    'handler' => array(
+                        'function' => 'lineElements',
+                        'argument' => $cell,
+                        'destination' => 'elements',
+                    )
+                );
+
+                if (isset($Block['alignments'][$index]))
+                {
+                    $Element['attributes'] = array(
+                        'style' => 'text-align: ' . $Block['alignments'][$index] . ';',
+                    );
+                }
+
+                $Elements []= $Element;
+            }
+
+            $Element = array(
+                'name' => 'tr',
+                'elements' => $Elements,
+            );
+
+            $Block['element']['element']['elements'][1]['elements'] []= $Element;
+
+            return $Block;
+        }
+    }
+
     # Handle notice blocks
     # adopted from grav: https://github.com/getgrav/grav-plugin-markdown-notices/blob/develop/markdown-notices.php
     # and yellow / datenstrom: https://raw.githubusercontent.com/datenstrom/yellow-extensions/master/features/markdown/markdownx.php
@@ -215,7 +290,7 @@ class ParsedownExtension extends \ParsedownExtra
             return $Block;
         }
     }
-    
+
     # Handle notice blocks over multiple lines
     # adopted from grav: https://github.com/getgrav/grav-plugin-markdown-notices/blob/develop/markdown-notices.php
     # and yellow / datenstrom: https://raw.githubusercontent.com/datenstrom/yellow-extensions/master/features/markdown/markdownx.php
@@ -242,14 +317,14 @@ class ParsedownExtension extends \ParsedownExtra
     {
         if ($line['text'] == '[TOC]')
         {
-			$this->DefinitionData['TableOfContents'] = true;
+            $this->DefinitionData['TableOfContents'] = true;
         }
     }
 
     # Header
-	
-	public $headlines = array();
-	
+    
+    public $headlines = array();
+    
     protected function blockHeader($Line)
     {
         if (isset($Line['text'][1]))
@@ -262,7 +337,7 @@ class ParsedownExtension extends \ParsedownExtra
             }
 
             $text = trim($Line['text'], '#');
-			$headline = URLify::filter($Line['text']);
+            $headline = URLify::filter($Line['text']);
 
             if ($this->strictMode and isset($text[0]) and $text[0] !== ' ')
             {
@@ -299,49 +374,49 @@ class ParsedownExtension extends \ParsedownExtra
                         );
             }
 
-			$this->headlines[]	= array('level' => $level, 'name' => $Block['element']['name'], 'attribute' => $Block['element']['attributes']['id'], 'text' => $text);
+            $this->headlines[]  = array('level' => $level, 'name' => $Block['element']['name'], 'attribute' => $Block['element']['attributes']['id'], 'text' => $text);
 
             return $Block;
         }
     }
-	
+    
     # build the markup for table of contents 
     
-	public function buildTOC($headlines)
-	{
-		$markup = '<ul class="TOC">';
-		
-		foreach($headlines as $key => $headline)
-		{
-			$thisLevel = $headline['level'];
-			$prevLevel = $key > 0 ? $headlines[$key-1]['level'] : 1;
-			$nextLevel = isset($headlines[$key+1]) ? $headlines[$key+1]['level'] : 0;
-			
-			if($thisLevel > $prevLevel)
-			{
-				$markup .= '<ul>';
-			}
-			
-			$markup .= '<li class="' . $headline['name'] . '"><a href="' . $this->relurl . '#' . $headline['attribute'] . '">' . $headline['text'] . '</a>';
-			
-			if($thisLevel == $nextLevel)
-			{
-				$markup .= '</li>';
-			}
-			elseif($thisLevel > $nextLevel)
-			{
-				while($thisLevel > $nextLevel)
-				{
-					$markup .= '</li></ul>';
-					$thisLevel--;
-				}
-			}
-		}
-		
-		$markup .= '</ul>';
-		
-		return $markup;
-	}
+    public function buildTOC($headlines)
+    {
+        $markup = '<ul class="TOC">';
+        
+        foreach($headlines as $key => $headline)
+        {
+            $thisLevel = $headline['level'];
+            $prevLevel = $key > 0 ? $headlines[$key-1]['level'] : 1;
+            $nextLevel = isset($headlines[$key+1]) ? $headlines[$key+1]['level'] : 0;
+            
+            if($thisLevel > $prevLevel)
+            {
+                $markup .= '<ul>';
+            }
+            
+            $markup .= '<li class="' . $headline['name'] . '"><a href="' . $this->relurl . '#' . $headline['attribute'] . '">' . $headline['text'] . '</a>';
+            
+            if($thisLevel == $nextLevel)
+            {
+                $markup .= '</li>';
+            }
+            elseif($thisLevel > $nextLevel)
+            {
+                while($thisLevel > $nextLevel)
+                {
+                    $markup .= '</li></ul>';
+                    $thisLevel--;
+                }
+            }
+        }
+        
+        $markup .= '</ul>';
+        
+        return $markup;
+    }
 
     #
     # Footnote Marker
@@ -363,9 +438,9 @@ class ParsedownExtension extends \ParsedownExtra
 
         return $element;
     }
-	
-	public $footnoteCount = 0;
-	
+    
+    public $footnoteCount = 0;
+    
     public function buildFootnoteElement()
     {
         $Element = array(
@@ -574,7 +649,7 @@ class ParsedownExtension extends \ParsedownExtra
         return $Block;
     }
         
-	# advanced attribute data, check parsedown extra plugin: https://github.com/tovic/parsedown-extra-plugin
+    # advanced attribute data, check parsedown extra plugin: https://github.com/tovic/parsedown-extra-plugin
     protected function parseAttributeData($text) {
 
         // Allow compact attributes ...
@@ -629,28 +704,28 @@ class ParsedownExtension extends \ParsedownExtra
 
     protected $regexAttribute = '(?:[#.][-\w:\\\]+[ ]*|[-\w:\\\]+(?:=(?:["\'][^\n]*?["\']|[^\s]+)?)?[ ]*)';
 
-	# turn markdown into an array of markdown blocks for typemill edit mode	
-	function markdownToArrayBlocks($markdown)
-	{
+    # turn markdown into an array of markdown blocks for typemill edit mode 
+    function markdownToArrayBlocks($markdown)
+    {
         # standardize line breaks
         $markdown = str_replace(array("\r\n", "\r"), "\n", $markdown);
 
         # remove surrounding line breaks
         $markdown = trim($markdown, "\n");
 
-		# trim to maximum two linebreaks
-		
+        # trim to maximum two linebreaks
+        
         # split text into blocks
         $blocks = explode("\n\n", $markdown);
-		
-		# clean up code blocks
-		$cleanBlocks = array();
-		
-		# holds the content of codeblocks
-		$codeBlock = '';
-		
-		# flag if codeblock is on or off.
-		$codeBlockOn = false;
+        
+        # clean up code blocks
+        $cleanBlocks = array();
+        
+        # holds the content of codeblocks
+        $codeBlock = '';
+        
+        # flag if codeblock is on or off.
+        $codeBlockOn = false;
         
         # holds the content of a definition list
         $definitionList = "";
@@ -658,46 +733,46 @@ class ParsedownExtension extends \ParsedownExtra
         # flag if definition-list is on or off.
         $definitionListOn = false;
 
-		foreach($blocks as $block)
-		{
-			# remove empty lines
-			if (chop($block) === '') continue;
-			
-			# if the block starts with a fenced code
-			if(substr($block,0,2) == '``')
-			{
-				# and if we are in an open code-block
-				if($codeBlockOn)
-				{
-					# it must be the end of the codeblock, so add it to the codeblock
-					$block = $codeBlock . "\n" . $block;
-					
-					# reset codeblock-value and close the codeblock.
-					$codeBlock = '';
-					$codeBlockOn = false;
-				}
-				else
-				{
-					# it must be the start of the codeblock.
-					$codeBlockOn = true;
-				}
-			}
-			if($codeBlockOn)
-			{
-				# if the codeblock is complete
-				if($this->isComplete($block))
-				{
-					$block = $codeBlock . "\n" . $block;
+        foreach($blocks as $block)
+        {
+            # remove empty lines
+            if (chop($block) === '') continue;
+            
+            # if the block starts with a fenced code
+            if(substr($block,0,2) == '``')
+            {
+                # and if we are in an open code-block
+                if($codeBlockOn)
+                {
+                    # it must be the end of the codeblock, so add it to the codeblock
+                    $block = $codeBlock . "\n" . $block;
+                    
+                    # reset codeblock-value and close the codeblock.
+                    $codeBlock = '';
+                    $codeBlockOn = false;
+                }
+                else
+                {
+                    # it must be the start of the codeblock.
+                    $codeBlockOn = true;
+                }
+            }
+            if($codeBlockOn)
+            {
+                # if the codeblock is complete
+                if($this->isComplete($block))
+                {
+                    $block = $codeBlock . "\n" . $block;
 
-					# reset codeblock-value and close the codeblock.
-					$codeBlock = '';
-					$codeBlockOn = false;
-				}
-				else
-				{
-					$codeBlock .= "\n" . $block;
-					continue;
-				}
+                    # reset codeblock-value and close the codeblock.
+                    $codeBlock = '';
+                    $codeBlockOn = false;
+                }
+                else
+                {
+                    $codeBlock .= "\n" . $block;
+                    continue;
+                }
             }
             
             # handle definition lists
@@ -715,37 +790,37 @@ class ParsedownExtension extends \ParsedownExtra
                 $definitionListOn = false;
             }
             
-			$block = trim($block, "\n");
-						
-			$cleanBlocks[] = $block;
-		}
-		return $cleanBlocks;
-	}
-	
-	public function arrayBlocksToMarkdown(array $arrayBlocks)
-	{	
-		$markdown = '';
-		
-		foreach($arrayBlocks as $block)
-		{
-			$markdown .=  $block . "\n\n";
-		}
-		
-		return $markdown;
-	}	
-	
-	protected function isComplete($codeblock)
-	{
-		$lines = explode("\n", $codeblock);
-		if(count($lines) > 1)
-		{
-			$lastLine = array_pop($lines);
-			if(substr($lastLine,0,2) == '``')
-			{
-				return true;
-			}
-			return false;
-		}
-		return false;
-	}
+            $block = trim($block, "\n");
+                        
+            $cleanBlocks[] = $block;
+        }
+        return $cleanBlocks;
+    }
+    
+    public function arrayBlocksToMarkdown(array $arrayBlocks)
+    {   
+        $markdown = '';
+        
+        foreach($arrayBlocks as $block)
+        {
+            $markdown .=  $block . "\n\n";
+        }
+        
+        return $markdown;
+    }   
+    
+    protected function isComplete($codeblock)
+    {
+        $lines = explode("\n", $codeblock);
+        if(count($lines) > 1)
+        {
+            $lastLine = array_pop($lines);
+            if(substr($lastLine,0,2) == '``')
+            {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
 }
