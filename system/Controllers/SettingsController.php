@@ -757,6 +757,7 @@ class SettingsController extends Controller
 			'nl' => 'Dutch, Flemish',
 			'de' => 'German',
 			'it' => 'Italian',
+			'fr' => 'French',
 		);
 	}
 }
