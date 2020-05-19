@@ -84,6 +84,7 @@ TYPEMILL is published under MIT licence. Please check the licence of the include
 * [vodaris](https://www.vodaris.de) sponsored the development of the search plugin.
 * Translations: 
   * Dutch: [svanlaere](https://github.com/svanlaere)
+  * French: [Olivier Crouzet]https://github.com/oliviercrouzet
   * German: [trendschau](https://github.com/trendschau)
   * Italian: [Severo Juliano](https://github.com/iusvar)
   * Russian: [Hide-me](https://github.com/hide-me)
