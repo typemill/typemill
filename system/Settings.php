@@ -160,6 +160,12 @@ class Settings
         		$plugins_labels = array_merge($plugins_labels, $value);
       		}
     	}
+
+    	# Combines arrays of system languages, themes and plugins
+    	$labels = array_merge($system_labels, $theme_labels, $plugins_labels);
+
+		return $labels;
+    	
     }
 
   	public function whichLanguage()
