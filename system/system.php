@@ -203,9 +203,6 @@ $container['view'] = function ($container)
 	$view->addExtension(new Typemill\Extensions\TwigMetaExtension());	
 	$view->addExtension(new Typemill\Extensions\TwigPagelistExtension());	
 
-        // i18n
-	$view->addExtension(new Typemill\Extensions\TwigLanguageExtension( $container->get('settings')['labels'] ));
-
 	/* use {{ base_url() }} in twig templates */
 	$view['base_url']	 = $container['request']->getUri()->getBaseUrl();
 	$view['current_url'] = $container['request']->getUri()->getPath();
@@ -219,6 +216,24 @@ $container['view'] = function ($container)
 
 	/* add asset-function to all views */
 	$view->getEnvironment()->addGlobal('assets', $container->assets);
+
+
+/******************************
+* LOAD TRANSLATIONS           *
+******************************/
+  $uri = $_SERVER['REQUEST_URI'];
+  if(isset($uri) && (strpos($uri,'/tm/') !== false OR strpos($uri,'/setup') !== false))
+  {
+    // Admin environment labels
+    $labels = Typemill\Translations::loadTranslations('admin');
+  } else {
+    // User environment labels
+    // For now it is useless, but it will prove useful in the future
+    $labels = Typemill\Translations::loadTranslations('user');
+  }
+  $container['translations'] = $labels;
+  $view['translations'] = $labels;
+  $view->addExtension(new Typemill\Extensions\TwigLanguageExtension( $labels ));
 
 	return $view;
 };
