@@ -1,6 +1,6 @@
 {% extends 'layouts/layoutAuth.twig' %}
 
-{% block title %}{{ labels['SW_SETUP_WELCOME'] ? labels['SW_SETUP_WELCOME'] : 'Setup Welcome' }}{% endblock %}
+{% block title %}{{ __('Setup Welcome') }}{% endblock %}
 
 {% block content %}
 		
@@ -8,37 +8,37 @@
 	
 		<div class="medium">
 			<div class="welcomeIntro">
-				<h1>{{ labels['SW_HURRA'] ? labels['SW_HURRA'] : 'Hurra' }}!</h1>
-				<p>{{ labels['SW_YOUR_ACCOUNT'] ? labels['SW_YOUR_ACCOUNT'] : 'Your account has been created and you are logged in now.'}}</p>
-				<p><strong>{{ labels['SW_NEXT_STOP'] ? labels['SW_NEXT_STOP'] : 'Next step:' }}</strong> {{ labels['SW_VISIT'] ? labels['SW_VISIT'] : 'Visit the author panel and setup your new website. You can configure the system, choose themes and add plugins.' }}</p>
-				<p><strong>{{ labels['SW_GET_HELP'] ? labels['SW_GET_HELP'] : 'Get help:' }}</strong> {{ labels['SW_IF_YOU_HAVE'] ? labels['SW_IF_YOU_HAVE'] : 'If you have any questions, please read the' }} <a target="_blank" href="https://typemill.net/typemill"><i class="icon-link-ext"></i> {{ labels['SW_DOCS'] ? labels['SW_DOCS'] : 'docs' }}</a> {{ labels['SW_OR_OPEN'] ? labels['SW_OR_OPEN'] : 'or open a new issue on' }} <a target="_blank" href="https://github.com/typemill/typemill"><i class="icon-link-ext"></i> {{ labels['GITHUB'] ? labels['GITHUB'] : 'github' }}</a>.</p>
-				<p>{{ labels['SW_CODED'] ? labels['SW_CODED'] : 'Coded with' }} <span style="font-size: 1.4em;color:#e0474c; margin:0px 3px">&#9829;</span> {{ labels['SW_BY'] ? labels['SW_BY'] : 'by the' }} <a target="_blank" href="https://github.com/typemill/typemill">{{ labels['SW_COMMUNITY'] ? labels['SW_COMMUNITY'] : 'community' }}</a> & <a target="_blank" href="https://trendschau.net/typemill-development"><i class="icon-link-ext"></i> {{ labels['SW_TRENDSCHAU'] ? labels['SW_TRENDSCHAU'] : 'Trendschau Digital' }}</a>.</p>
+				<h1>{{ __('Hurra') }}!</h1>
+				<p>{{ __('Your account has been created and you are logged in now.') }}</p>
+				<p><strong>{{ __('Next step') }}:</strong> {{ __('Visit the author panel and setup your new website. You can configure the system, choose themes and add plugins.') }}</p>
+				<p><strong>{{ __('Get help') }}:</strong> {{ __('If you have any questions, please read the') }} <a target="_blank" href="https://typemill.net/typemill"><i class="icon-link-ext"></i> {{ __('docs') }}</a> {{ __('or open a new issue on') }} <a target="_blank" href="https://github.com/typemill/typemill"><i class="icon-link-ext"></i> {{ __('github') }}</a>.</p>
+				<p>{{ __('Coded with') }} <span style="font-size: 1.4em;color:#e0474c; margin:0px 3px">&#9829;</span> {{ __('by the') }} <a target="_blank" href="https://github.com/typemill/typemill">{{ __('community') }}</a> & <a target="_blank" href="https://trendschau.net/typemill-development"><i class="icon-link-ext"></i> {{ __('Trendschau Digital') }}</a>.</p>
 			</div>
-			<a class="button" href="{{ path_for('settings.show') }}">{{ labels['SW_CONFIGURE'] ? labels['SW_CONFIGURE'] : 'Configure your website' }}</a>
+			<a class="button" href="{{ path_for('settings.show') }}">{{ __('Configure your website') }}</a>
  		</div>
 		
 		<div class="small">
 			<div class="welcomeCard">
 				<a href="{{ path_for('settings.show') }}">
 					<div class="welcomeInner">
-						<h3>{{ labels['SYSTEM'] ? labels['SYSTEM'] : 'System' }}</h3>
-						<p>{{ labels['SW_GIVE_YOUR_NEW'] ? labels['SW_GIVE_YOUR_NEW'] : 'Give your new website a name, add the author and choose a copyright.' }}</p>				
+						<h3>{{ __('System') }}</h3>
+						<p>{{ __('Give your new website a name, add the author and choose a copyright.') }}</p>				
 					</div>
 				</a>				
 			</div>
 			<div class="welcomeCard">
 				<a href="{{ path_for('themes.show') }}">
 					<div class="welcomeInner">
-						<h3>{{ labels['THEMES'] ? labels['THEMES'] : 'Themes' }}</h3>
-						<p>{{ labels['SW_CHOOSE_A_THEME'] ? labels['SW_CHOOSE_A_THEME'] : 'Choose a theme for your website and configure the theme details.' }}</p>
+						<h3>{{ __('Themes') }}</h3>
+						<p>{{ __('Choose a theme for your website and configure the theme details.') }}</p>
 					</div>
 				</a>
 			</div>
 			<div class="welcomeCard">
 				<a href="{{ path_for('plugins.show') }}">
 					<div class="welcomeInner">
-						<h3>{{ labels['PLUGINS'] ? labels['PLUGINS'] : 'Plugins' }}</h3>
-						<p>{{ labels['SW_ADD_NEW_FEATURE'] ? labels['SW_ADD_NEW_FEATURE'] : 'Add new features to your website with plugins and configure them.' }}</p>
+						<h3>{{ __('Plugins') }}</h3>
+						<p>{{ __('Add new features to your website with plugins and configure them.') }}</p>
 					</div>
 				</a>
 			</div>
