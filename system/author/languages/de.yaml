@@ -190,20 +190,20 @@ WRITING: Schreiben
 YEAR: Jahr
 YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: Du kannst das CSS des Themes hier überschreiben.
 
-SW_SETUP_WELCOME: Setup Willkommen
-SW_HURRA: Hurra
-SW_YOUR_ACCOUNT: Dein Account wurde erstellt und du bist jetzt angemeldet.
-SW_NEXT_STOP: Nächster Schritt:
-SW_VISIT: Besuche die Autorenoberfläche und richte die Seite ein. Du kannst das System konfigurieren, Themes auswählen and Plugins hinzufügen.
-SW_GET_HELP: Hilfe erhalten:
-SW_IF_YOU_HAVE: Wenn du Fragen hast, lies bitte die
-SW_DOCS: Dokumentation
-SW_OR_OPEN: oder öffne ein neues Issue
-SW_CODED: Entwickelt mit
-SW_BY: von der
-SW_COMMUNITY: Community
-SW_TRENDSCHAU: Trendschau Digital
-SW_CONFIGURE: Richte deine Seite ein.
-SW_GIVE_YOUR_NEW: Gib deiner neuen Seite einen Namen, füge Autoren hinzu und wähle ein Copyright.
-SW_CHOOSE_A_THEME: Richte ein Theme für deine Webseite ein.
-SW_ADD_NEW_FEATURE: Füge mit Plugins neue Funktionen hinzu.
+SETUP_WELCOME: Setup Willkommen
+HURRA: Hurra
+YOUR_ACCOUNT_HAS_BEEN_CREATED_AND_YOU_ARE_LOGGED_IN_NOW_: Dein Account wurde erstellt und du bist jetzt angemeldet.
+NEXT_STEP: Nächster Schritt:
+VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: Besuche die Autorenoberfläche und richte die Seite ein. Du kannst das System konfigurieren, Themes auswählen and Plugins hinzufügen.
+GET_HELP: Hilfe erhalten
+IF_YOU_HAVE_ANY_QUESTIONS__PLEASE_READ_THE: Wenn du Fragen hast, lies bitte die
+DOCS: Dokumentation
+OR_OPEN_A_NEW_ISSUE_ON: oder öffne ein neues Issue
+CODED_WITH: Entwickelt mit
+BY_THE: von der
+COMMUNITY: Community
+TRENDSCHAU_DIGITAL: Trendschau Digital
+CONFIGURE_YOUR_WEBSITE: Richte deine Seite ein.
+GIVE_YOUR_NEW_WEBSITE_A_NAME__ADD_THE_AUTHOR_AND_CHOOSE_A_COPYRIGHT_: Gib deiner neuen Seite einen Namen, füge Autoren hinzu und wähle ein Copyright.
+CHOOSE_A_THEME_FOR_YOUR_WEBSITE_AND_CONFIGURE_THE_THEME_DETAILS_: Richte ein Theme für deine Webseite ein.
+ADD_NEW_FEATURES_TO_YOUR_WEBSITE_WITH_PLUGINS_AND_CONFIGURE_THEM_: Füge mit Plugins neue Funktionen hinzu.

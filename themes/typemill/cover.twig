@@ -19,10 +19,10 @@
 		{{ content }}
 		
 		<div class="actionLink">
-			<a href="{{ navigation[0].urlRel }}">{{ settings.themes.typemill.start ? settings.themes.typemill.start : __('Start')}}</a>
+			<a href="{{ navigation[0].urlRel }}">{{ settings.themes.typemill.start ? settings.themes.typemill.start : 'Start' }}</a>
 			
 			{% if settings.setup  %}
-				<a href="{{ base_url }}/setup">{{ __('Setup') }}</a>
+				<a href="{{ base_url }}/setup">Setup</a>
 			{% endif %}
 		</div>
 	</div>

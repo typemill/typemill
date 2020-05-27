@@ -15,6 +15,7 @@ ADD_ROW_ABOVE: aggiungi la riga sopra
 ADD_ROW_BELOW: aggiungi la riga sotto
 ALL_USERS: Tutti gli utenti
 ALT_TEXT: Testo alternativo
+ALTERNATIVE_TEXT_FOR_THE_HERO_IMAGE: Testo alternativo per l'immagine hero
 AUTHOR: Autore
 BACK_TO_STARTPAGE: torna alla pagina iniziale
 BOLD: grassetto
@@ -78,6 +79,7 @@ GOOGLE_SITEMAP: Sitemap di Google
 HEAD: Intestazione
 HEADLINE_ANCHORS: Ancoraggi del titolo
 HEADLINE: Titolo
+HERO_IMAGE: Immagine Hero
 HIDE: Nascondi
 HIDE_PAGE_FROM_NAVIGATION: Nasconde la pagina dalla navigazione
 HOME: home
@@ -87,11 +89,12 @@ HR: Linea orizzontale
 IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: Se non compilato, la descrizione viene estratta dal contenuto.
 IMAGE: Immagine
 IMAGES: Immagini
+IMAGE_URL__READ_ONLY_: Immagine URL (sola lettura)
 ITALIAN: Italiano
 ITALIC: corsivo
 LANGUAGE: Lingua
 LANGUAGE_ADMIN: Lingua (admin-ui)
-LANGUAGE_ATTR: Language Attribute (website)
+LANGUAGE_ATTR: Attributo Lingua (sito)
 LAST_MODIFIED_LIVE__READONLY_: Ultima modifica (sola lettura)
 LAST_NAME: Cognome
 LEFT: Sinistra
@@ -103,6 +106,7 @@ LOGO: Logo
 LOGOUT: Esci
 MANUAL_DATE: Data manuale
 MARKDOWN: Markdown
+MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB__HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES_: La dimensione massima per un'immagine è di 5 MB. Le immagini hero non sono supportate da tutti i temi.
 MENU: Menu
 META_DESCRIPTION: Descrizione
 META: Metadati
@@ -169,6 +173,7 @@ UNKNOWN: Ignoto
 UPDATE_USER: Aggiorna utente
 UPLOAD: carica
 UPLOAD_FILE: Carica un file
+UPLOAD_AN_IMAGE: carica un'immagine
 USE_2_TO_20_CHARACTERS: Usa da 2 a 20 caratteri.
 USE_2_TO_40_CHARACTERS: Usa da 2 a 40 caratteri.
 USE_A_VALID_LANGUAGE_ATTRIBUTE: Use a valid language attribute
@@ -191,20 +196,20 @@ WRITING: Scrittura
 YEAR: Anno
 YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: È possibile sovrascrivere il css del tema con il proprio CSS qui.
 
-SW_SETUP_WELCOME: Benvenuto all'installazione
-SW_HURRA: Evviva
-SW_YOUR_ACCOUNT: Il tuo account è stato creato e ora sei connesso.
-SW_NEXT_STOP: Prossimo passo:
-SW_VISIT: Visita il pannello autore e configura il tuo nuovo sito. Puoi configurare il sistema, scegliere i temi e aggiungere plugin.
-SW_GET_HELP: Chiedi aiuto:
-SW_IF_YOU_HAVE: In caso di domande, si prega di leggere la
-SW_DOCS: documentazione
-SW_OR_OPEN: o aprire un nuovo problema su
-SW_CODED: Codificato con
-SW_BY: dalla
-SW_COMMUNITY: comunità
-SW_TRENDSCHAU: Trendschau Digital
-SW_CONFIGURE: Configura il tuo sito
-SW_GIVE_YOUR_NEW: Dai un nome al tuo nuovo sito, aggiungi l'autore e scegli un diritto d'autore.
-SW_CHOOSE_A_THEME: Scegli un tema per il tuo sito e configura i dettagli del tema.
-SW_ADD_NEW_FEATURE: Aggiungi nuove funzionalità al tuo sito mediante plugin e configurali.
+SETUP_WELCOME: Benvenuto all'installazione
+HURRA: Evviva
+YOUR_ACCOUNT_HAS_BEEN_CREATED_AND_YOU_ARE_LOGGED_IN_NOW_: Il tuo account è stato creato e ora sei connesso.
+NEXT_STEP: Prossimo passo
+VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: Visita il pannello autore e configura il tuo nuovo sito. Puoi configurare il sistema, scegliere i temi e aggiungere plugin.
+GET_HELP: Chiedi aiuto
+IF_YOU_HAVE_ANY_QUESTIONS__PLEASE_READ_THE: In caso di domande, si prega di leggere la
+DOCS: documentazione
+OR_OPEN_A_NEW_ISSUE_ON: o aprire un nuovo problema su
+CODED_WITH: Codificato con
+BY_THE: dalla
+COMMUNITY: comunità
+TRENDSCHAU_DIGITAL: Trendschau Digital
+CONFIGURE_YOUR_WEBSITE: Configura il tuo sito
+GIVE_YOUR_NEW_WEBSITE_A_NAME__ADD_THE_AUTHOR_AND_CHOOSE_A_COPYRIGHT_: Dai un nome al tuo nuovo sito, aggiungi l'autore e scegli un diritto d'autore.
+CHOOSE_A_THEME_FOR_YOUR_WEBSITE_AND_CONFIGURE_THE_THEME_DETAILS_: Scegli un tema per il tuo sito e configura i dettagli del tema.
+ADD_NEW_FEATURES_TO_YOUR_WEBSITE_WITH_PLUGINS_AND_CONFIGURE_THEM_: Aggiungi nuove funzionalità al tuo sito mediante plugin e configurali.

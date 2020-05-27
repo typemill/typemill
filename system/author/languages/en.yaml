@@ -15,6 +15,7 @@ ADD_ROW_ABOVE: add row above
 ADD_ROW_BELOW: add row below
 ALL_USERS: All users
 ALT_TEXT: Alt-Text
+ALTERNATIVE_TEXT_FOR_THE_HERO_IMAGE: Alternative Text for the hero image
 AUTHOR: Author
 BACK_TO_STARTPAGE: back to startpage
 BOLD: bold
@@ -78,6 +79,7 @@ GOOGLE_SITEMAP: Google Sitemap
 HEAD: Head
 HEADLINE_ANCHORS: Headline Anchors
 HEADLINE: Headline
+HERO_IMAGE: Hero Image
 HIDE: Hide
 HIDE_PAGE_FROM_NAVIGATION: Hide page from navigation
 HOME: home
@@ -87,6 +89,7 @@ HR: hr
 IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: If not filled, the description is extracted from content.
 IMAGE: Image
 IMAGES: Images
+IMAGE_URL__READ_ONLY_: Image URL (read only)
 ITALIAN: Italian
 ITALIC: italic
 LANGUAGE: Language
@@ -103,6 +106,7 @@ LOGO: Logo
 LOGOUT: Logout
 MANUAL_DATE: Manual date
 MARKDOWN: markdown
+MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB__HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES_: Maximum size for an image is 5 MB. Hero images are not supported by all themes.
 MENU: Menu
 META_DESCRIPTION: Meta description
 META: meta
@@ -168,6 +172,7 @@ ULIST: ulist
 UNKNOWN: Unknown
 UPDATE_USER: Update User
 UPLOAD_FILE: Upload a file
+UPLOAD_AN_IMAGE: upload an image
 UPLOAD: upload
 USE_2_TO_20_CHARACTERS: Use 2 to 20 characters.
 USE_2_TO_40_CHARACTERS: Use 2 to 40 characters.
@@ -191,20 +196,20 @@ WRITING: Writing
 YEAR: Year
 YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: You can overwrite the theme-css with your own css here.
 
-SW_SETUP_WELCOME: Setup Welcome
-SW_HURRA: Hurra
-SW_YOUR_ACCOUNT: Your account has been created and you are logged in now.
-SW_NEXT_STOP: Next step:
-SW_VISIT: Visit the author panel and setup your new website. You can configure the system, choose themes and add plugins.
-SW_GET_HELP: Get help:
-SW_IF_YOU_HAVE: If you have any questions, please read the
-SW_DOCS: docs
-SW_OR_OPEN: or open a new issue on
-SW_CODED: Coded with
-SW_BY: by the
-SW_COMMUNITY: community
-SW_TRENDSCHAU: Trendschau Digital
-SW_CONFIGURE: Configure your website
-SW_GIVE_YOUR_NEW: Give your new website a name, add the author and choose a copyright.
-SW_CHOOSE_A_THEME: Choose a theme for your website and configure the theme details.
-SW_ADD_NEW_FEATURE: Add new features to your website with plugins and configure them.
+SETUP_WELCOME: Setup Welcome
+HURRA: Hurra
+YOUR_ACCOUNT_HAS_BEEN_CREATED_AND_YOU_ARE_LOGGED_IN_NOW_: Your account has been created and you are logged in now.
+NEXT_STEP: Next step
+VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: Visit the author panel and setup your new website. You can configure the system, choose themes and add plugins.
+GET_HELP: Get help
+IF_YOU_HAVE_ANY_QUESTIONS__PLEASE_READ_THE: If you have any questions, please read the
+DOCS: docs
+OR_OPEN_A_NEW_ISSUE_ON: or open a new issue on
+CODED_WITH: Coded with
+BY_THE: by the
+COMMUNITY: community
+TRENDSCHAU_DIGITAL: Trendschau Digital
+CONFIGURE_YOUR_WEBSITE: Configure your website
+GIVE_YOUR_NEW_WEBSITE_A_NAME__ADD_THE_AUTHOR_AND_CHOOSE_A_COPYRIGHT_: Give your new website a name, add the author and choose a copyright.
+CHOOSE_A_THEME_FOR_YOUR_WEBSITE_AND_CONFIGURE_THE_THEME_DETAILS_: Choose a theme for your website and configure the theme details.
+ADD_NEW_FEATURES_TO_YOUR_WEBSITE_WITH_PLUGINS_AND_CONFIGURE_THEM_: Add new features to your website with plugins and configure them.

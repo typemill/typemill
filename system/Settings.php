@@ -38,22 +38,6 @@ class Settings
 			}
 		}
 
-		# let us load translations only for admin area to improve performance for frontend
-		$uri = $_SERVER['REQUEST_URI'];
-		if(isset($uri) && (strpos($uri,'/tm/') !== false OR strpos($uri,'/setup') !== false))
-		{
-		    # i18n
-		    # load the strings of the set language
-		    $language = $settings['language'];
-		    $theme = $settings['theme'];
-		    $plugins = [];
-		    if(isset($settings['plugins']))
-		    {
-	        	$plugins = $settings['plugins'];
-	      	}
-	      	$settings['labels'] = self::getLanguageLabels($language, $theme, $plugins);
-		}
-
 		# We know the used theme now so create the theme path 
 		$settings['themePath'] = $settings['rootPath'] . $settings['themeFolder'] . DIRECTORY_SEPARATOR . $settings['theme'];
 
@@ -108,65 +92,6 @@ class Settings
 		return $userSettings;
 	}
 
-
-    # i18n
- 	public static function getLanguageLabels($language, $theme, $plugins)
-	{
-    	# if not present, set the English language
-    	if( empty($language) )
-    	{
-      		$language = 'en';
-    	}
-
-    	# loads the system strings of the set language
-		$yaml = new Models\WriteYaml();
-    	$system_labels = $yaml->getYaml('system' . DIRECTORY_SEPARATOR . 'author' . DIRECTORY_SEPARATOR . 'languages', $language . '.yaml');
-
-    	# loads the theme strings of the set language
-    	$theme_labels = [];
-    	$theme_language_folder = 'themes' . DIRECTORY_SEPARATOR . $theme . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR;
-    	$theme_language_file = $language . '.yaml';
-    	if (file_exists($theme_language_folder . $theme_language_file))
-    	{
-      		$this_theme_labels = $yaml->getYaml($theme_language_folder, $theme_language_file);
-      		if(is_array($this_theme_labels))
-      		{
-	      		$theme_labels = $this_theme_labels;
-      		}
-    	}
-
-    	# loads the plugins strings of the set language
-    	$plugins_labels = [];
-    	if(!empty($plugins))
-    	{
-      		$plugin_labels = [];
-      		foreach($plugins as $name => $value)
-      		{
-        		$plugin_language_folder = 'plugins' . DIRECTORY_SEPARATOR . $name . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR;
-        		$plugin_language_file = $language . '.yaml';
-
-        		if (file_exists($plugin_language_folder . $plugin_language_file))
-        		{
-        			$this_plugin_labels = $yaml->getYaml($plugin_language_folder, $plugin_language_file);
-        			if(is_array($this_plugin_labels))
-        			{
-	          			$plugin_labels[$name] = $this_plugin_labels;
-        			}
-        		}
-      		}
-
-      		foreach($plugin_labels as $key => $value)
-      		{
-        		$plugins_labels = array_merge($plugins_labels, $value);
-      		}
-    	}
-
-    	# Combines arrays of system languages, themes and plugins
-    	$labels = array_merge($system_labels, $theme_labels, $plugins_labels);
-
-		return $labels;
-    	
-    }
 
   	public function whichLanguage()
   	{
