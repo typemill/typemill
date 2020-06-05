@@ -86,7 +86,7 @@ class Fields
 					}
 					else
 					{
-						$field->unsetAttribute('chhecked');
+						$field->unsetAttribute('checked');
 					}
 				}
 				else

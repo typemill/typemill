@@ -1114,7 +1114,7 @@ ul.cardInfo{
 	border: 0px;
 }
 .cardFields.open{
-	max-height: 5000px;
+	max-height: 20000px;
 	transition: max-height 0.5s ease-in;
 	overflow: hidden;
 	border: 1px;
@@ -2489,6 +2489,8 @@ footer a:focus, footer a:hover, footer a:active
 	color: #e0474c; 
 }
 .blox .TOC li:before{ color: #bbb; }
+
+.mbfix{ margin-bottom: 0px!important; }
 
 
 @media only screen and (min-width: 600px) {

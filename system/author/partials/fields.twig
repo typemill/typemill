@@ -5,67 +5,99 @@
 		{% if field.help %}<div class="help">?<span class="tooltip">{{__(field.help|slice(0,100))}}</span></div>{% endif %}
 	</label>
 
-	{% if field.type == 'textarea' %}
+	{% if field.type == 'image' %}
+		<div class="img-upload flex flex-wrap item-start">
+			<div class="w-50">
+				<div class="w6 h6 bg-black-40 dtc v-mid bg-chess">
+					<img src="{{ settings[object][itemName][field.name] }}" class="function-img-src mw6 max-h6 dt center">
+				</div>
+			</div>
+			<div class="w-50 ph3 lh-copy f6 relative">
+				<div class="relative dib w-100">
+					<input class="function-img-file absolute o-0 w-100 top-0 z-1 pointer" type="file" id="{{ itemName }}[{{ field.name }}]" name="{{ itemName }}[{{ field.name }}]" accept="image/*" />
+					<div class="relative w-100 bn br1 bg-tm-green white pa3 ma0 tc"><svg class="icon icon-upload baseline"><use xlink:href="#icon-upload"></use></svg> {{ __('Upload an image') }}</div>
+				</div>
+				<div class="dib w-100 mt3">
+					<label>Image URL</label>
+					<div class="flex">
+						<button class="function-delete-img w-10 bg-tm-gray bn hover-bg-tm-red hover-white">x</button>
+						<input class="function-img-url w-90 mbfix" type="text" name="{{ itemName }}[{{ field.name }}]" value="{{ settings[object][itemName][field.name] }}" readonly>
+					</div>
+				</div>
+				{% if errors[itemName][field.name] %}
+					<div class="error f6">{{ errors[itemName][field.name] | first }}</div>
+				{% endif %}
 
-		<textarea id="{{ itemName }}[{{ field.name }}]" name="{{ itemName }}[{{ field.name }}]"{{field.getAttributeValues() }}{{ field.getAttributes() }}>{{ field.getContent() }}</textarea>
+				{% if field.description %}<div class="description pv3">{{ __(field.description) }}</div>{% endif %}
 
-	{% elseif field.type == 'paragraph' %}
-		
-		{{ markdown(field.getContent()) }}	
+			</div>
+		</div>
 
-	{% elseif field.type == 'checkbox' %}
+	{% else %}
+
+		{% if field.type == 'textarea' %}
+
+			<textarea id="{{ itemName }}[{{ field.name }}]" name="{{ itemName }}[{{ field.name }}]"{{field.getAttributeValues() }}{{ field.getAttributes() }}>{{ field.getContent() }}</textarea>
+
+		{% elseif field.type == 'paragraph' %}
 			
-		<label class="control-group">{{ __( field.getCheckboxLabel() ) }}
-			<input type="checkbox" id="{{ itemName}}[{{ field.name }}]" name="{{ itemName}}[{{ field.name }}]"{{ field.getAttributeValues() }}{{ field.getAttributes() }}>
-			<span class="checkmark"></span>
-		</label>
+			{{ markdown(field.getContent()) }}	
 
-	{% elseif field.type == 'checkboxlist' %}
-
-		{% set options = field.getOptions() %}
-
-		{% for value,label in options %}
-			
-			<label class="control-group">{{ __( label ) }}
-				<input type="checkbox" id="{{ itemName }}[{{ field.name }}][{{value}}]" name="{{ itemName }}[{{ field.name }}][{{value}}]" {{ settings[object][itemName][field.name][value] ? ' checked' : '' }}>
+		{% elseif field.type == 'checkbox' %}
+				
+			<label class="control-group">{{ __( field.getCheckboxLabel() ) }}
+				<input type="checkbox" id="{{ itemName}}[{{ field.name }}]" name="{{ itemName}}[{{ field.name }}]"{{ field.getAttributeValues() }}{{ field.getAttributes() }}>
 				<span class="checkmark"></span>
 			</label>
 
-		{% endfor %}
+		{% elseif field.type == 'checkboxlist' %}
 
-	{% elseif field.type == 'select' %}
+			{% set options = field.getOptions() %}
 
-		{% set options = field.getOptions() %}
-
-		<select id="{{ itemName }}[{{ field.name }}]" name="{{ itemName }}[{{ field.name }}]"{{ field.getAttributeValues() }}{{ field.getAttributes() }}>
 			{% for value,label in options %}
-				<option value="{{ value }}" {{ (value == field.getAttributeValue('value')) ? ' selected' : '' }}>{{ label }}</option>
+				
+				<label class="control-group">{{ __( label ) }}
+					<input type="checkbox" id="{{ itemName }}[{{ field.name }}][{{value}}]" name="{{ itemName }}[{{ field.name }}][{{value}}]" {{ settings[object][itemName][field.name][value] ? ' checked' : '' }}>
+					<span class="checkmark"></span>
+				</label>
+
 			{% endfor %}
-		</select>
 
-	{% elseif field.type == 'radio' %}
+		{% elseif field.type == 'select' %}
 
-		{% set options = field.getOptions() %}
+			{% set options = field.getOptions() %}
 
-		{% for value,label in options %}
+			<select id="{{ itemName }}[{{ field.name }}]" name="{{ itemName }}[{{ field.name }}]"{{ field.getAttributeValues() }}{{ field.getAttributes() }}>
+				{% for value,label in options %}
+					<option value="{{ value }}" {{ (value == field.getAttributeValue('value')) ? ' selected' : '' }}>{{ label }}</option>
+				{% endfor %}
+			</select>
+
+		{% elseif field.type == 'radio' %}
+
+			{% set options = field.getOptions() %}
+
+			{% for value,label in options %}
+				
+				<label class="control-group">{{ label }} 
+					<input type="radio" id="{{ itemName }}[{{ field.name }}]" name="{{ itemName }}[{{ field.name }}]" value="{{ value }}" {{ (value == settings[object][itemName][field.name]) ? ' checked' : '' }}>
+					<span class="radiomark"></span>
+				</label>
+
+			{% endfor %}
 			
-			<label class="control-group">{{ label }} 
-				<input type="radio" id="{{ itemName }}[{{ field.name }}]" name="{{ itemName }}[{{ field.name }}]" value="{{ value }}" {{ (value == settings[object][itemName][field.name]) ? ' checked' : '' }}>
-				<span class="radiomark"></span>
-			</label>
+		{% else %}
 
-		{% endfor %}
+			<input id="{{itemName}}[{{ field.name }}]" name="{{itemName}}[{{ field.name }}]" type="{{ field.type }}"{{ field.getAttributeValues() }}{{ field.getAttributes() }}>
+
+		{% endif %}
+
+		{% if field.description %}<div class="description">{{ __(field.description) }}</div>{% endif %}
 		
-	{% else %}
+		{% if errors[itemName][field.name] %}
+			<span class="error">{{ errors[itemName][field.name] | first }}</span>
+		{% endif %}
 
-		<input id="{{itemName}}[{{ field.name }}]" name="{{itemName}}[{{ field.name }}]" type="{{ field.type }}"{{ field.getAttributeValues() }}{{ field.getAttributes() }}>
-
-	{% endif %}
-
-	{% if field.description %}<div class="description">{{ __(field.description) }}</div>{% endif %}
-	
-	{% if errors[itemName][field.name] %}
-		<span class="error">{{ errors[itemName][field.name] | first }}</span>
 	{% endif %}
 
 </div>

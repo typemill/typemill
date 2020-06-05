@@ -172,7 +172,7 @@ class SettingsController extends Controller
 	
 	public function showThemes($request, $response, $args)
 	{
-		$userSettings 	= $this->c->get('settings');		
+		$userSettings 	= $this->c->get('settings');
 		$themes 		= $this->getThemes();
 		$themedata		= array();
 		$fieldsModel	= new Fields();
@@ -332,7 +332,7 @@ class SettingsController extends Controller
 			$userInput		= isset($params[$themeName]) ? $params[$themeName] : false;
 			$validate		= new Validation();
 			$themeSettings 	= \Typemill\Settings::getObjectSettings('themes', $themeName);
-			
+
 			if(isset($themeSettings['settings']['images']))
 			{	
 				# get the default settings
@@ -375,10 +375,21 @@ class SettingsController extends Controller
 
 			if($userInput)
 			{
-				/* validate the user-input */
-				$this->validateInput('themes', $themeName, $userInput, $validate);
-				
+				# validate the user-input and return image-fields if they are defined
+				$imageFields = $this->validateInput('themes', $themeName, $userInput, $validate);
+
 				/* set user input as theme settings */
+				$userSettings['themes'][$themeName] = $userInput;
+			}
+
+			# handle images
+			$images = $request->getUploadedFiles();
+
+			if(!isset($_SESSION['errors']) && isset($images[$themeName]))
+			{
+				$userInput = $this->saveImages($imageFields, $userInput, $userSettings, $images[$themeName]);
+
+				# set user input as theme settings
 				$userSettings['themes'][$themeName] = $userInput;
 			}
 			
@@ -428,9 +439,20 @@ class SettingsController extends Controller
 				else
 				{
 					/* validate the user-input */
-					$this->validateInput('plugins', $pluginName, $userInput[$pluginName], $validate);
+					$imageFields = $this->validateInput('plugins', $pluginName, $userInput[$pluginName], $validate);
 
 					/* use the input data */
+					$pluginSettings[$pluginName] = $userInput[$pluginName];
+				}
+
+				# handle images
+				$images = $request->getUploadedFiles();
+
+				if(!isset($_SESSION['errors']) && isset($images[$pluginName]))
+				{
+					$userInput[$pluginName] = $this->saveImages($imageFields, $userInput[$pluginName], $userSettings, $images[$pluginName]);
+
+					# set user input as theme settings
 					$pluginSettings[$pluginName] = $userInput[$pluginName];
 				}
 				
@@ -464,6 +486,9 @@ class SettingsController extends Controller
 	{
 		/* fetch the original settings from the folder (plugin or theme) to get the field definitions */
 		$originalSettings = \Typemill\Settings::getObjectSettings($objectType, $objectName);
+
+		# images get special treatment
+		$imageFieldDefinitions = array();
 
 		if(isset($originalSettings['forms']['fields']))
 		{
@@ -509,6 +534,12 @@ class SettingsController extends Controller
 				{
 					/* validate user input for this field */
 					$validate->objectField($fieldName, $fieldValue, $objectName, $fieldDefinition, $skiprequired);
+					
+					if($fieldDefinition['type'] == 'image')
+					{
+						# we want to return all images-fields for further processing
+						$imageFieldDefinitions[$fieldName] = $fieldDefinition;
+					}
 				}
 				if(!$fieldDefinition && $fieldName != 'active')
 				{
@@ -516,6 +547,45 @@ class SettingsController extends Controller
 				}
 			}
 		}
+
+		return $imageFieldDefinitions;
+	}
+
+	protected function saveImages($imageFields, $userInput, $userSettings, $files)
+	{
+
+		# initiate image processor with standard image sizes
+		$processImages = new ProcessImage($userSettings['images']);
+
+		if(!$processImages->checkFolders())
+		{
+			$this->c->flash->addMessage('error', 'Please make sure that your media folder exists and is writable.');
+			return false; 
+		}
+
+		foreach($imageFields as $fieldName => $imageField)
+		{
+			if(isset($userInput[$fieldName]))
+			{
+				# handle single input with single file upload
+    			$image = $files[$fieldName];
+    		
+    			if($image->getError() === UPLOAD_ERR_OK) 
+    			{
+    				# not the most elegant, but createImage expects a base64-encoded string.
+    				$imageContent = $image->getStream()->getContents();
+					$imageData = base64_encode($imageContent);
+					$imageSrc = 'data: ' . $image->getClientMediaType() . ';base64,' . $imageData;
+
+					if($processImages->createImage($imageSrc, $image->getClientFilename(), $userSettings['images'], $overwrite = NULL))
+					{
+						# returns image path to media library
+						$userInput[$fieldName] = $processImages->publishImage();
+					}
+			    }
+			}
+		}
+		return $userInput;
 	}
 
 	/***********************
