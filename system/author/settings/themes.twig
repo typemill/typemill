@@ -15,7 +15,7 @@
 				
 				{% for themeName, theme in themes %}
 				
-					<form method="POST" id="theme-{{ themeName }}" action="{{ path_for('themes.save') }}">
+					<form method="POST" id="theme-{{ themeName }}" action="{{ path_for('themes.save') }}" enctype="multipart/form-data">
 					
 						<fieldset class="card{{ errors[themeName] ? ' errors' : '' }}">
 						

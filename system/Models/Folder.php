@@ -506,7 +506,9 @@ class Folder
 	{
 		# if it is the first round, create an empty array
 		if(!$i){ $i = 0; $breadcrumb = array();}
-		
+
+		if(!$searchArray){ return $breadcrumb;}
+
 		while($i < count($searchArray))
 		{
 			if(!isset($content[$searchArray[$i]])){ return false; }

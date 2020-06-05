@@ -27,6 +27,15 @@ class Validation
 			return false;
 		}, 'invalid values');
 
+		Validator::addRule('image_types', function($field, $value, array $params, array $fields) use ($user)
+		{
+    		$allowed 	= ['jpg', 'jpeg', 'png'];
+			$pathinfo	= pathinfo($value);
+			$extension 	= strtolower($pathinfo['extension']);
+			if(array_search($extension, $allowed)){ return true; }
+			return false;
+		}, 'only jpg, jpeg, png allowed');
+
 		Validator::addRule('userAvailable', function($field, $value, array $params, array $fields) use ($user)
 		{
 			$userdata = $user->getUser($value);
@@ -434,6 +443,7 @@ class Validation
 			case "image":
 				$v->rule('noHTML', $fieldName);
 				$v->rule('lengthMax', $fieldName, 1000);
+				$v->rule('image_types', $fieldName);
 				break;
 			default:
 				$v->rule('lengthMax', $fieldName, 1000);
