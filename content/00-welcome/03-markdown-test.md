@@ -120,6 +120,7 @@ Links can also be [relative](/info).
 You can also add a [title](http://typemill.net "typemill").
 You can even add [ids or classes](http://typemill.net){#myid .myclass}.
 Or you can use a shortcut like http://typemill.net.
+You can even use a download-link like []()
 ````
 
 This is an ordinary [Link](http://typemill.net).
@@ -131,6 +132,8 @@ You can also add a [title](http://typemill.net "typemill").
 You can even add [ids or classes](http://typemill.net){#myid .myclass}.
 
 Or you can use a shortcut like http://typemill.net.
+
+[markdown (PNG, 1.05 KB)](media/files/markdown.png){.tm-download file-png}
 
 ##Images
 
@@ -145,13 +148,13 @@ The same rules as with links, but with a !
 
 The same rules as with links, but with a !
 
-![alt-text](media/markdown.png){.center}
+![alt](media/files/markdown.png){.center}
 *With Caption*
 
-![alt-text](media/markdown.png  "my title"){#myid .imgClass}
+![alt](media/files/markdown.png "title"){.center}
 *With a caption that spans over several lines.*
 
-![alt-text](media/markdown.png "my title"){#myid .otherclass width=150px}
+![alt-text](media/files/markdown.png "my title"){#myid .otherclass width=150px}
 
 ## Linked Images
 
@@ -162,7 +165,7 @@ You can link an image with a nested syntax like this:
 
 You can link an image with a nested syntax like this:
 
-[![alt-text](media/markdown.png){.imgClass}](https://typemill.net)
+[![alt-text](media/files/markdown.png){.imgClass}](https://typemill.net)
 
 ## Image Position
 
@@ -176,17 +179,17 @@ You can controll the image position with the classes .left, .right and .middle l
 *With caption that spans over several lines*
 ````
 
-![image float left](media/markdown.png){.left}
+![image float left](media/files/markdown.png){.left}
 *With caption that spans over several lines*
 
 The first image should float on the left side of this paragraph. This might not work with all themes. If you are a theme developer, please ensure that you support the image classes "left", "right" and "center". You can add these classes manually in the raw mode or you can assign them in the visual mode when you edit a picture (double click on it to open the dialog). Images in a separate line are rendered with the html5 elements `figure` and `figcapture`.
 
-![image float right](media/markdown.png){.right}
+![image float right](media/files/markdown.png){.right}
 *With caption that spans over several lines*
 
 The second image should float on the right side of this paragraph. This might not work with all themes. If you are a theme developer, please ensure that you support the image classes "left", "right" and "center". You can add these classes manually in the raw mode or you can assign them in the visual mode when you edit a picture (double click on it to open the dialog). Images in a separate line are rendered with the html5 elements `figure` and `figcapture`.
 
-![image center](media/markdown.png){.center}
+![image center](media/files/markdown.png){.center}
 *With caption that spans over several lines*
 
 The thirds image should be placed above this paragraph and centered to the middle of the content area. This might not work with all themes. If you are a theme developer, please ensure that you support the image classes "left", "right" and "center". You can add these classes manually in the raw mode or you can assign them in the visual mode when you edit a picture (double click on it to open the dialog). Images in a separate line are rendered with the html5 elements `figure` and `figcapture`.
