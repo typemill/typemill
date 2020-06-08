@@ -257,19 +257,19 @@ class ProcessImage extends ProcessAssets
 			$result = false;
 		}
 
-		# you should not use glob but exact name with ending 
-		/*
-		foreach(glob($this->originalFolder . $name) as $image)
+		# delete custom images (resized and grayscaled) 
+		# array_map('unlink', glob("some/dir/*.txt"));
+		$pathinfo = pathinfo($name);
+
+		foreach(glob($this->customFolder . $pathinfo['filename'] . '\-*.' . $pathinfo['extension']) as $image)
 		{
+			# you could check if extension is the same here
 			if(!unlink($image))
 			{
 				$success = false;
 			}
 		}
-		*/
 		
-		# array_map('unlink', glob("some/dir/*.txt"));
-
 		return $result;
 	}
 
@@ -350,15 +350,8 @@ class ProcessImage extends ProcessAssets
 		$this->setFileName($filename, 'image', $overwrite = true);
 
 		# if($this->extension == 'jpg') $this->extension = 'jpeg';
-		
-		switch($this->extension)
-		{
-			case 'gif': $image = imagecreatefromgif($this->liveFolder . $filename); break;
-			case 'jpg' :
-			case 'jpeg': $image = imagecreatefromjpeg($this->liveFolder . $filename); break;
-			case 'png': $image = imagecreatefrompng($this->liveFolder . $filename); break;
-			default: return 'image type not supported';
-		}
+
+		$image 			= $this->createImageFromPath($this->liveFolder . $filename, $this->extension);
 
 		$originalSize 	= $this->getImageSize($image);
 
@@ -374,25 +367,42 @@ class ProcessImage extends ProcessAssets
 		return false;
 	}
 
-	public function generateSizesFromImageFile($filename, $image)
+	# filename and imagepath can be a tmp-version after upload.
+	public function generateSizesFromImageFile($filename, $imagePath)
 	{
 		$this->setFileName($filename, 'image');
 
-		if($this->extension == 'jpg') $this->extension = 'jpeg';
-		
-		switch($this->extension)
-		{
-			case 'gif': $image = imagecreatefromgif($image); break;
-			case 'jpg' :
-			case 'jpeg': $image = imagecreatefromjpeg($image); break;
-			case 'png': $image = imagecreatefrompng($image); break;
-			default: return 'image type not supported';
-		}
+#		if($this->extension == 'jpg') $this->extension = 'jpeg';
+
+		$image 			= $this->createImageFromPath($imagePath, $this->extension);
 
 		$originalSize 	= $this->getImageSize($image);
 
 		$resizedImages 	= $this->imageResize($image, $originalSize, $this->desiredSizes, $this->extension);
 
 		return $resizedImages;
+	}
+
+	public function grayscale($imagePath, $extension)
+	{
+		$image 	= $this->createImageFromPath($imagePath, $extension);
+
+		imagefilter($image, IMG_FILTER_GRAYSCALE);
+
+		return $image;
+	}
+
+	public function createImageFromPath($imagePath, $extension)
+	{
+		switch($extension)
+		{
+			case 'gif': $image = imagecreatefromgif($imagePath); break;
+			case 'jpg' :
+			case 'jpeg': $image = imagecreatefromjpeg($imagePath); break;
+			case 'png': $image = imagecreatefrompng($imagePath); break;
+			default: return 'image type not supported';
+		}
+		
+		return $image;		
 	}
 }

@@ -6,22 +6,22 @@ use \URLify;
 class ProcessAssets
 {
 	# holds the path to the baseFolder
-	protected $baseFolder;
+	public $baseFolder;
 
 	# holds the path to the mediaFolder
-	protected $mediaFolder;
+	public $mediaFolder;
 
 	# holds the path to the temporary image folder
-	protected $tmpFolder;
+	public $tmpFolder;
 
 	# holds the path where original images are stored
-	protected $originalFolder;
+	public $originalFolder;
 
 	# holds the path where images for frontend use are stored
-	protected $liveFolder;
+	public $liveFolder;
 
 	# holds the folder where the thumbs for the media library are stored
-	protected $thumbFolder;
+	public $thumbFolder;
 
 	# holds the folder where the thumbs for the media library are stored
 	public $fileFolder;
@@ -43,6 +43,8 @@ class ProcessAssets
 
 		$this->thumbFolder 		= $this->mediaFolder . 'thumbs' . DIRECTORY_SEPARATOR;
 
+		$this->customFolder 	= $this->mediaFolder . 'custom' . DIRECTORY_SEPARATOR;
+
 		$this->fileFolder 		= $this->mediaFolder . 'files' . DIRECTORY_SEPARATOR;
 
 		$this->desiredSizes 	= $desiredSizes;
@@ -55,7 +57,7 @@ class ProcessAssets
 		
 		if($forassets == 'images')
 		{
-			$folders = [$this->mediaFolder, $this->tmpFolder, $this->originalFolder, $this->liveFolder, $this->thumbFolder];
+			$folders = [$this->mediaFolder, $this->tmpFolder, $this->originalFolder, $this->liveFolder, $this->thumbFolder, $this->customFolder];
 		}
 
 		foreach($folders as $folder)

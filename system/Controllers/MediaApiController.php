@@ -213,7 +213,7 @@ class MediaApiController extends ContentController
 		}
 
 		$imageProcessor	= new ProcessImage($this->settings['images']);
-		if(!$imageProcessor->checkFolders())
+		if(!$imageProcessor->checkFolders('images'))
 		{
 			return $response->withJson(['errors' => 'Please check if your media-folder exists and all folders inside are writable.'], 500);
 		}
