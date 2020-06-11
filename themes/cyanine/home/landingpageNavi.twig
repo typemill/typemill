@@ -1,0 +1,12 @@
+	<section class="bg-secondary w-100 dib tc bl br bb b--primary">
+		
+		<div class="mw7 pv6 ph3 center">
+
+			<h2 class="f2 {{ settings.themes.cyanine.fontheadline|default('tm-sans-serif') }}">{{ settings.themes.cyanine.naviTitle }}</h2>
+			<nav class="f5 f4-l fw3">
+				{% include 'partials/navigationFlat.twig' with {'flatnavi': navigation, 'navidepth': settings.themes.cyanine.naviDepth } %}
+			</nav>
+
+		</div>
+
+	</section>

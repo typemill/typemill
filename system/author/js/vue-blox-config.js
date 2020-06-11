@@ -63,6 +63,13 @@ let determiner = {
 		}
 		return false;
 	},
+	notice: function(block,lines,firstChar,secondChar,thirdChar){
+		if( firstChar == '!' && ( secondChar == '!' || secondChar == ' ') )
+		{
+			return "notice-component";
+		}
+		return false;
+	},
 	ulist: function(block,lines,firstChar,secondChar,thirdChar){
 		if( (firstChar == '*' || firstChar == '-' || firstChar == '+') && secondChar == ' ')
 		{
@@ -79,6 +86,7 @@ let bloxFormats = {
 			olist: { label: '<svg class="icon icon-list-numbered"><use xlink:href="#icon-list-numbered"></use></svg>', title: 'Numbered List', component: 'olist-component' },
 			table: { label: '<svg class="icon icon-table2"><use xlink:href="#icon-table2"></use></svg>', title: 'Table', component: 'table-component' },
 			quote: { label: '<svg class="icon icon-quotes-left"><use xlink:href="#icon-quotes-left"></use></svg>', title: 'Quote', component: 'quote-component' },
+			notice: { label: '<svg class="icon icon-exclamation-circle"><use xlink:href="#icon-exclamation-circle"></use></svg>', title: 'Notice', component: 'notice-component' },
 			image: { label: '<svg class="icon icon-image"><use xlink:href="#icon-image"></use></svg>', title: 'Image', component: 'image-component' },
 			video: { label: '<svg class="icon icon-play"><use xlink:href="#icon-play"></use></svg>', title: 'Video', component: 'video-component' },
 			file: { label: '<svg class="icon icon-paperclip"><use xlink:href="#icon-paperclip"></use></svg>', title: 'File', component: 'file-component' },

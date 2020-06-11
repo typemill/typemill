@@ -1,0 +1,19 @@
+{% set home = { 
+	"landingpageIntro" : settings.themes.cyanine.landingpageIntro,
+	"landingpageInfo" : settings.themes.cyanine.landingpageInfo,
+ 	"landingpageTeaser" : settings.themes.cyanine.landingpageTeaser,
+ 	"landingpageContrast" : settings.themes.cyanine.landingpageContrast,
+ 	"landingpageNavi" : settings.themes.cyanine.landingpageNavi,
+ 	"landingpageNews" : settings.themes.cyanine.landingpageNews
+	}
+%}
+
+{% for section,index in home|sort %}
+
+	{% if index > 0 %}
+
+		{% include 'home/' ~ section ~ '.twig' %}
+	
+	{% endif %}
+
+{% endfor %}

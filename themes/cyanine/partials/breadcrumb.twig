@@ -1,0 +1,23 @@
+<div class="f6 pv3 w-100 flex-l justify-between {{ settings.themes.cyanine.fontnavi}}">
+
+	<div>
+		<a class="link f-link underline-hover" href="{{ base_url }}">{{ settings.title|title }}</a>
+
+		{% for crumb in breadcrumb %}
+			&nbsp; &#x203A; &nbsp;  
+			{% if loop.last %}
+				{{ crumb.name|title }}
+			{% else %}
+				<a class="link f-link underline-hover" href="{{ crumb.urlRel }}">{{ crumb.name|title }}</a>
+			{% endif %}
+		{% endfor %}
+	</div>
+	<div class="dn dib-l">
+		{% if item.prevItem %}
+			<a class="link pr1 f-link underline-hover" href="{{ item.prevItem.urlRel }}">&lsaquo;&nbsp; previous</a>
+		{% endif %}
+		{% if item.nextItem %}
+			<a class="link pl1 f-link underline-hover" href="{{ item.nextItem.urlRel }}">next &nbsp;&rsaquo;</a>
+		{% endif %}					
+	</div>
+</div>
