@@ -1,0 +1,24 @@
+{% set nowYear = "now"|date("Y") %}
+
+<footer class="w-100 bg-secondary bl br bb b--primary lh-copy">
+	<div class="mw8 center pv3 flex-l">
+		{% for column,key in settings.themes.cyanine.footercolumns %}
+			{% if settings.themes.cyanine[column] %}
+				<div class="w-100 pv3 ph3 ph4-l">
+					{{ markdown(settings.themes.cyanine[column]) }}
+				</div>
+			{% endif %}
+		{% endfor %}
+	</div>
+	<div class="mw8 center pv3 tc-l w100">
+		{% if settings.year is empty or settings.year == nowYear %}
+		    {% set copyrightYears = nowYear %}
+		{% else %}
+		    {% set copyrightYears = settings.year ~ ' - ' ~ nowYear %}
+		{% endif %}
+	</div>
+</footer>
+
+<div class="w-100 center f6 f-secondary">
+	<p class="f6">{{ settings.copyright }} by {{ settings.author }}, {{ copyrightYears }}. All Rights Reserved. Built with <a class="link underline f-secondary" href="https://typemill.net">Typemill</a>.</p>
+</div>

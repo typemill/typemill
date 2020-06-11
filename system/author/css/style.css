@@ -238,6 +238,22 @@ figcaption{
 	caption-side: bottom;
 }
 
+button.note1{
+    background-color: #d00;
+	color: #fff;
+}
+button.note2{
+    background-color: #fb0;
+	color: #fff;
+}
+button.note3{
+    background-color: #08e;
+	color: #fff;
+}
+
+.blox-editor textarea.pl-notice{
+	padding-left: 40px;
+}
 .notice1 {
     margin: 1em 0;
     padding: 10px 1em;
@@ -1814,16 +1830,21 @@ button.hdown{
 	left: 0px;
 	font-size: 1em;
 	font-weight: 700;
-	background: #f9f8f6;
 	border: 0px solid #fff;
 	border-right: 1px solid #fff;
-	color: #66b0a3;
+//	background: #f9f8f6;
+//	color: #66b0a3;
 }
+button.hdown.headline{
+	color: #f9f8f6;
+	background: #66b0a3; 	
+}
+/*
 button.hdown:hover,button.hdown:focus,button.hdown:active{
 	color: #f9f8f6;
 	background: #66b0a3; 
 }
-
+*/
 .blox-editor .contenttype {
 	position: absolute;
 	top: 15px;

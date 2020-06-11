@@ -165,7 +165,7 @@ const contentComponent = Vue.component('content-block', {
 		},
  		submitBlock: function(){
 			var emptyline = /^\s*$(?:\r\n?|\n)/gm;
-			if(this.componentType == "code-component" || this.componentType == "math-component"){ }
+			if(this.componentType == "code-component" || this.componentType == "math-component" || this.componentType == "notice-component"){ }
 			else if(this.componentType == "ulist-component" || this.componentType == "olist-component")
 			{
 				var listend = (this.componentType == "ulist-component") ? '* \n' : '1. \n';
@@ -834,11 +834,82 @@ const olistComponent = Vue.component('olist-component', {
 	},
 })
 
+
+const noticeComponent = Vue.component('notice-component', {
+	props: ['compmarkdown', 'disabled'],
+	template: '<div>' + 
+				'<input type="hidden" ref="markdown" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown" />' +
+				'<div class="contenttype"><svg class="icon icon-exclamation-circle"><use xlink:href="#icon-exclamation-circle"></use></svg></div>' +
+				'<button class="hdown" :class="noteclass" @click.prevent="noticedown" v-html="prefix"></button>' +
+				'<inline-formats>' +
+					'<textarea class="mdcontent pl-notice" ref="markdown" v-model="notice" :disabled="disabled" @input="updatemarkdown(event.target.value)"></textarea>' + 
+				'</inline-formats>' +
+			'</div>',
+	data: function(){
+		return {
+			prefix: '! ',
+			notice: '',
+			noteclass: 'note1'
+		}
+	},
+	mounted: function(){
+		this.$refs.markdown.focus();
+		if(this.compmarkdown)
+		{
+			this.prefix = this.getNoticePrefix(this.compmarkdown);
+
+			var lines = this.compmarkdown.match(/^.*([\n\r]+|$)/gm);
+			for (var i = 0; i < lines.length; i++) {
+			    lines[i] = lines[i].replace(/(^[\! ]+)/mg, '');
+			}
+
+			this.notice = lines.join('');
+			this.noteclass = 'note'+this.prefix.length;
+		}
+		this.$nextTick(function () {
+			autosize(document.querySelectorAll('textarea'));
+		});
+	},
+	methods: {
+		noticedown: function()
+		{
+			this.prefix = this.getNoticePrefix(this.compmarkdown);
+			this.prefix += "! ";
+			if(this.prefix.length > 4)
+			{
+				this.prefix = "! ";
+			}
+			this.noteclass = 'note' + (this.prefix.length-1);
+			this.updatemarkdown(this.notice);
+		},
+		getNoticePrefix: function(str)
+		{
+			var prefix = '';
+			for(var i = 0; i < str.length; i++){
+				if(str[i] != '!'){ return prefix }
+				prefix += '!';
+			}
+		  	return prefix+' ';
+		},
+		updatemarkdown: function(value)
+		{
+			this.notice = value;
+
+			var lines = value.match(/^.*([\n\r]|$)/gm);
+
+			var notice = this.prefix + lines.join(this.prefix);
+
+			this.$emit('updatedMarkdown', notice);
+		},
+	},
+})
+
+
 const headlineComponent = Vue.component('headline-component', { 
 	props: ['compmarkdown', 'disabled'],
 	template: '<div>' + 
 				'<div class="contenttype"><svg class="icon icon-header"><use xlink:href="#icon-header"></use></svg></div>' +
-				'<button class="hdown" @click.prevent="headlinedown" v-html="level"></button>' +
+				'<button class="hdown headline" @click.prevent="headlinedown" v-html="level"></button>' +
 				'<input class="mdcontent" :class="hlevel" type="text" ref="markdown" v-model="compmarkdown" :disabled="disabled" @input="updatemarkdown">' +
 				'</div>',
 	data: function(){

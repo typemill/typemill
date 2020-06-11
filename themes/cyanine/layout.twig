@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="{{ settings.langattr | default('en') }}">
+	<head>
+		<meta charset="UTF-8">
+		<title>{% block title %}{% endblock %}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<meta name="description" content="{{ metatabs.meta.description }}" />
+		<meta name="author" content="{{ metatabs.meta.author }}" />
+		<meta name="generator" content="TYPEMILL" />
+		<meta name="msapplication-TileColor" content="#F9F8F6" />
+
+		<base href="{{ base_url }}/">
+		
+		{% if favicon %}
+			<meta name="msapplication-TileColor" content="#F9F8F6" />
+			<meta name="msapplication-TileImage" content="{{ base_url }}/media/files/favicon-144.png" />
+			<link rel="icon" type="image/png" href="{{ base_url }}/media/files/favicon-16.png" sizes="16x16" />
+			<link rel="icon" type="image/png" href="{{ base_url }}/media/files/favicon-32.png" sizes="32x32" />
+			<link rel="apple-touch-icon" sizes="72x72" href="{{ base_url }}/media/files/favicon-72.png" />
+			<link rel="apple-touch-icon" sizes="114x114" href="{{ base_url }}/media/files/favicon-114.png" />
+			<link rel="apple-touch-icon" sizes="144x144" href="{{ base_url }}/media/files/favicon-144.png" />
+			<link rel="apple-touch-icon" sizes="180x180" href="{{ base_url }}/media/files/favicon-180.png" />
+		{% endif %}
+		
+		<link rel="canonical" href="{{ base_url }}{{ item.urlAbs }}" />
+		
+		<meta property="og:site_name" content="{{ settings.title }}">
+		<meta property="og:title" content="{{ title }}">
+		<meta property="og:description" content="{{ metatabs.meta.description }}">
+		<meta property="og:type" content="article">
+		<meta property="og:url" content="{{ item.urlAbs }}">
+		<meta property="og:image" content="{{ image.img_url }}">
+		<meta name="twitter:image:alt" content="{{ image.img_alt }}">
+		<meta name="twitter:card" content="summary_large_image">		
+
+		{% block stylesheets %}
+    
+			<link rel="stylesheet" href="{{ base_url }}/themes/cyanine/css/style.css" />
+			
+			<style>
+				.f-link,a.tm-download::before, 
+				article a, article a:link, article a:visited,
+				footer a, footer a:link, footer a:visited{ 
+					color: {{ settings.themes.cyanine.fontcolorlink|default('#007F7F') }};
+				}
+				article a:hover, article a:focus, article a:active,
+				footer a:hover, footer a:focus, footer a:active{ 
+					text-decoration: none;
+				}
+				table{
+					background: #fff;
+				}
+				thead{
+					color: {{ settings.themes.cyanine.fontcolorsecondary|default('#F7F7F7') }};
+					background-color: {{ settings.themes.cyanine.brandcolorprimary|default('lightseagreen') }};
+				}
+				tr{
+					border-color: {{ settings.themes.cyanine.thinbordercolor|default('lightgray') }};
+				}
+				article pre, article code{ 
+					background-color: #ddd;
+				}
+				article pre{
+					border-left: 4px solid {{ settings.themes.cyanine.brandcolorprimary|default('lightseagreen') }};
+				}
+				a.tm-download::before{
+					border: 1px solid {{ settings.themes.cyanine.fontcolorlink|default('#007F7F') }};
+				}
+				a.tm-download:hover::before{
+					color: {{ settings.themes.cyanine.fontcolorsecondary|default('#f7f7f7') }};
+					background: {{ settings.themes.cyanine.fontcolorlink|default('#007F7F') }};
+				}
+				.f-primary{
+					color: {{ settings.themes.cyanine.fontcolorprimary|default('#333') }};
+				}
+				.f-secondary,
+				.hover-f-secondary:hover,.hover-f-secondary:focus,.hover-f-secondary:active, .active > a:first-child.hover-f-secondary{
+					color: {{ settings.themes.cyanine.fontcolorsecondary|default('#f7f7f7') }};
+				}
+				.bg-primary,
+				.hover-bg-primary:hover,.hover-bg-primary:focus,.hover-bg-primary:active, .active > a:first-child.hover-bg-primary{
+					background-color: {{ settings.themes.cyanine.brandcolorprimary|default('lightseagreen') }};
+				}
+				.bg-secondary{
+					background-color: {{ settings.themes.cyanine.brandcolorsecondary|default('#f7f7f7') }};
+				}
+				.b--primary{
+					border-color: {{ settings.themes.cyanine.brandcolorprimary|default('lightseagreen') }};
+				}
+				.b--secondary{
+					border-color: {{ settings.themes.cyanine.brandcolorsecondary|default('#f7f7f7') }};
+				}
+				.b--tertiary{
+					border-color: {{ settings.themes.cyanine.thinbordercolor|default('lightgray') }};
+				}
+				h1, h2, h3, h4, h5, h6{
+					{% if settings.themes.cyanine.fontheadline == 'serif' %}
+						font-family: georgia, times, serif;
+					{% elseif settings.themes.cyanine.fontheadline == 'sans-serif-tm' %}
+						font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif; 
+					{% endif %}
+				}
+
+			</style>
+
+			{{ assets.activateTachyons() }}
+			{{ assets.renderCSS() }}
+			
+		{% endblock %}
+	</head>
+	<body class="{{ settings.themes.cyanine.font|default('tm-sans-serif') }} optimize-text pa2 bg-primary dark-gray">
+		
+		{% block content %}{% endblock %}
+			
+		{% include 'partials/footer.twig' %}
+
+		{% block javascripts %}
+
+			<script src="{{ base_url }}/system/author/js/typemillutils.js?20200418"></script>
+			<script>typemillUtilities.start();</script>
+
+			{{ assets.renderJS() }}
+		
+		{% endblock %}
+
+	</body>
+</html>

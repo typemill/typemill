@@ -19,11 +19,13 @@ class Settings
 		# no individual image sizes are allowed sind 1.3.4
 		$settings['images']	= $defaultSettings['images'];
 
-		# if there is no theme set
-		if(!isset($settings['theme']))
+		# we have to check if the theme has been deleted
+		$themefolder = $settings['rootPath'] . $settings['themeFolder'] . DIRECTORY_SEPARATOR;
+
+		# if there is no theme in settings or theme has been deleted
+		if(!isset($settings['theme']) OR !file_exists($themefolder . $settings['theme']))
 		{
 			# scan theme folder and get the first theme
-			$themefolder = $settings['rootPath'] . $settings['themeFolder'] . DIRECTORY_SEPARATOR;
 			$themes = array_diff(scandir($themefolder), array('..', '.'));
 			$firsttheme = reset($themes);
 
@@ -72,7 +74,7 @@ class Settings
 			'userPath'								=> $rootPath . 'settings' . DIRECTORY_SEPARATOR . 'users',
 			'authorPath'							=> __DIR__ . DIRECTORY_SEPARATOR . 'author' . DIRECTORY_SEPARATOR,
 			'editor'								=> 'visual',
-			'formats'								=> ['markdown', 'headline', 'ulist', 'olist', 'table', 'quote', 'image', 'video', 'file', 'toc', 'hr', 'definition', 'code'],
+			'formats'								=> ['markdown', 'headline', 'ulist', 'olist', 'table', 'quote', 'notice', 'image', 'video', 'file', 'toc', 'hr', 'definition', 'code'],
 			'contentFolder'							=> 'content',
 			'cache'									=> true,
 			'cachePath'								=> $rootPath . 'cache',

@@ -17,7 +17,7 @@ class Translations
       $language = $settings['language'];
     }
 
-    $theme = 'typemill';
+    $theme = 'cyanine';
     if($settings !== NULL){
       if(is_array($settings)){
         if (array_key_exists('theme', $settings)) {

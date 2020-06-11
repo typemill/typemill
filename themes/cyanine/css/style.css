@@ -1,0 +1,478 @@
+/*   Y O U R   C S S   S T Y L E S
+**
+** Style all markdown content elements properly
+** Use the markdown test file to check it: https://github.com/typemill/typemill/blob/master/content/00-Welcome/03-Markdown-Test.md
+** You can activate and use the Tachyons CSS library: https://typemill.net/theme-developers/helper-functions#activate-tachyons
+**
+*/
+
+/************************************
+*  		STANDARD-ELEMENTS  			*
+************************************/
+html{}
+body{}
+header{}
+footer{}
+nav{}
+main{}
+aside{}
+article{}
+article a, article a:link, article a:visited{ text-decoration: underline; }
+/* article a:before{ content: '\203A'; margin-right: 5px; } */
+abbr{}
+blockquote{
+  margin: 1.5em 1.5em;
+  padding: 0.5em 0;
+  quotes: "\201C""\201D""\2018""\2019";
+  font-style: italic;
+}
+blockquote:before{
+  color: #ccc;
+  content: open-quote;
+  font-size: 4em;
+  line-height: 0.1em;
+  margin-right: 0.25em;
+  vertical-align: -0.4em;
+}
+blockquote p {
+  display: inline;
+}
+article pre, article code{
+	font-family: monospace;
+}
+article pre{
+	white-space: pre;
+	padding: 1em;
+	display: block;
+	max-width: 100%;
+	overflow-x: auto;
+}
+article code{
+	font-size: 0.8em;
+	line-height: 1.4em;
+	padding: 0 0.5em;
+	word-break: break-all;
+}
+pre > code{
+	font-size: 0.8em;
+	padding: 0;
+}
+dl{}
+dt{}
+dd{}
+img{}
+article h1, article h2, article h3, article h4, article h5, article h6{
+	line-height: 1.15em;
+	font-weight: 700; 
+	line-height: 1em; 
+	position: relative;
+}
+article h1{ font-size: 2.2em; margin: 1.4em 0 0.6em; }
+article h2{ font-size: 1.6em; margin: 1.8em 0 0.6em; }
+article h3{	font-size: 1.3em; margin: 1.6em 0 0.6em; }
+article h4{	font-size: 1.1em; margin: 1.4em 0 0.6em; }
+article h5{	font-size: 1em; margin: 1.2em 0 0.6em; }
+article h6{	font-size: 1em; font-style: italic; font-weight:300; margin: 1em 0 0.6em; }
+article .h1, article .h2, article .h3, article .h4, article .h5, article .h6{
+	height: auto; /* fix for tachyons */
+}
+hr{}
+ol{}
+footer ul{ padding-left:1em; }
+li{}
+sup{}
+/* Make table look good */
+.tm-table{
+	overflow-x: auto;
+}
+table{
+	width: 100%;
+	border-collapse: collapse;
+	font-size: .8em;
+}
+thead{
+	text-align: left;
+}
+tr{
+	border-top: 1px solid;
+	border-bottom: 1px solid;
+	margin-bottom: -1px;
+}
+th,td{
+	padding: .5em 1em;
+}
+
+/************************************
+*  		STANDARD SUGGESTIONS 		*
+************************************/
+
+/* Make links and buttons smooth */
+.link, .link:active, .link:focus, .link:hover, .link:link, .link:visited{
+	transition: none;
+}
+a, a:link, a:visited, a:focus, a:hover, a:active, button{
+	transition: all .15s ease!important;
+	transition-property: color, background-color, text-shadow, border;
+}
+
+/* Fix background for hightlight plugin */
+code.hljs{ background: transparent; }
+
+/* For definition list */
+dt::after{
+	content: ":";
+}
+
+/* Make images and image captions look good */
+img, figure,figure img{
+	max-width: 100%;	
+}
+figure{
+	display: table;
+	margin: 2em auto;
+	padding: 0;
+}
+figure.left{
+	width: auto;
+	float: left;
+	margin: 0 2em 2em 0;
+}
+figure.right{
+	width: auto;
+	float: right;
+	margin: 0 0 2em 2em;
+}
+figure img{
+	display: block;
+	margin: auto;
+}
+figcaption{
+	display: table-caption;
+	caption-side: bottom;
+	font-size: 0.8em;
+	margin-top: .5em;
+	line-height: 1.2em;
+}
+.footnotes ol{
+	font-size: .8em;
+	line-height: 1em;
+	margin: 0 0 0 0;
+}
+
+/************************************
+* 			TYPEMILL-ELEMENTS 		*
+************************************/
+
+ul.TOC,.TOC ul{
+	list-style: none;
+}
+.TOC{
+	padding: 1em;
+	border: 1px solid;
+}
+.TOC{
+	border-color: lightgray;
+}
+.TOC li{
+	position: relative;
+}
+.TOC li a{
+	text-decoration: none;
+	display: inline-block;
+	width: 100%;
+	border-bottom: 1px dashed lightseagreen;
+	line-height: 1em;
+	margin: .3em 0;
+}
+.TOC li a:hover,.TOC li a:focus,.TOC li a:active{
+	border-bottom: 1px solid lightseagreen;
+}
+.TOC li a:after{
+	content: '\203A'; 
+	position: absolute;
+	right: 5px;
+	transition: all .2s;
+}
+.TOC li a:hover:after{
+	right: 0px;	
+}
+.notice1 {
+    margin: 1em 0;
+    padding: 10px 1em;
+    background-color: #ffded4;
+    border-left: 4px solid #f65a3c;	
+}
+.notice2 {
+    margin: 1em 0;
+    padding: 10px 1em;
+    background-color: #fff3d4;
+    border-left: 4px solid #f6b73c;
+}
+.notice3,
+.notice4,
+.notice5,
+.notice6 {
+    margin: 1em 0;
+    padding: 10px 1em;
+    background-color: #d4e0ff;
+    border-left: 4px solid #3c7bf6;	
+}
+
+/* Style the optional anchor-links for headlines */
+a.tm-heading-anchor {
+    position: absolute;
+    top: 0;
+	left: -0.8em;
+	width: 0.8em;
+	font-weight: 300;
+    opacity: 0;
+    text-decoration: none;
+}
+a.tm-heading-anchor:hover,a.tm-heading-anchor:focus {
+    opacity: 1;
+    text-decoration: none;
+}
+h2:focus > .tm-heading-anchor, 
+h2:hover > .tm-heading-anchor, 
+h3:focus > .tm-heading-anchor, 
+h3:hover > .tm-heading-anchor, 
+h4:focus > .tm-heading-anchor, 
+h4:hover > .tm-heading-anchor,
+h5:focus > .tm-heading-anchor, 
+h5:hover > .tm-heading-anchor,
+h6:focus > .tm-heading-anchor, 
+h6:hover > .tm-heading-anchor{
+	opacity: .5;
+	text-decoration: none;
+}
+
+/* style the typemill download-button for files */
+a.tm-download
+{
+	line-height: 35px;
+	margin-left: 40px;
+}
+a.tm-download::before{
+	content: '\2193';
+	position: absolute;
+	margin-left: -40px;
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	font-family: Calibri, "Segoe UI", Roboto, Courier, Helvetica, -apple-system, BlinkMacSystemFont, sans-serif, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	font-size: 1.3em;
+	font-weight: 900;	
+	border-radius: 50%;
+	text-align: center;
+	text-decoration: none;
+}
+a.tm-download:hover::before{
+	text-decoration: none;
+}
+
+/* Fake youtube button. Works with typemillutilities.js */
+.video-container{
+	position: relative;
+	text-align: center;
+}
+img.youtube{
+	position: relative;
+	max-width: 560px;
+}
+button.play-video { 
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: -50px;
+	margin-left: -50px;
+	height: 100px;
+	width: 100px;
+	background: #e0474c;
+	color: #FFFFFF;
+	border-radius: 50%;
+	border: 0px;
+	padding: 0;
+	text-align: center;
+}
+button.play-video:hover {
+	background: #cc4146;
+	cursor: pointer;
+}
+button.play-video::after {
+	position: absolute;
+	top: 50%;
+	margin: -20px 0 0 -15px;
+	height: 0;
+	width: 0;
+	border-style: solid;
+	border-width: 20px 0 20px 40px;
+	border-color: transparent transparent transparent rgba(255, 255, 255, 0.75);
+	content: ' ';
+}
+
+
+/************************************
+* 		TACHYONS ADDITIONS 			*
+************************************/
+
+/* Keeps Footer at the bottom */
+.body-footer-bottom { /* add this class to the body-tag */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.footer-bottom { /* add this class to the footer-tag */
+  margin-top: auto;
+}
+/* Nice set of system fonts, add this to the body-tag */
+.sans-serif-tm { 
+	font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif; 
+}
+.sans-serif-title{
+	font-family: arial,"Segoe UI",Roboto,-apple-system,BlinkMacSystemFont,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif; 	
+}
+/* optimize text, add this to the body-tag */
+.optimize-text{
+    /* Adjust font size */
+    font-size: 100%;
+    -webkit-text-size-adjust: 100%;
+    /* Font varient */
+    font-variant-ligatures: none;
+    -webkit-font-variant-ligatures: none;
+    /* Smoothing */
+    text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
+    font-smoothing: antialiased;
+    -webkit-font-smoothing: antialiased;
+	text-shadow: rgba(0, 0, 0, .01) 0 0 1px;
+}
+.grid-container{
+	display: block;
+}
+.grid-header, .grid-main, .grid-sidebar{
+	display: block;
+	width: 100%;
+}
+.f-large{
+	font-size: 4rem;
+}
+.h4-5{
+	height: 12rem;	
+}
+.shadow-2-hover{
+  transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);	
+}
+.shadow-2-hover:hover, .shadow-2-hover:focus{
+	box-shadow:0px 0px 8px 2px rgba( 0, 0, 0, 0.2 );
+}
+.margin-bottom-1{
+	margin-bottom: -1px;
+}
+.arrow-after:after{
+	content: '\203A'; position: absolute; right:5px;
+}
+.arrow-after-transition:after{
+	content: '\203A'; position: absolute; right:5px;
+	transition: all .2s;
+}
+.arrow-after-transition:hover:after{
+	right:0px;
+}
+.indent-l-1{ padding-left:1rem; }
+.indent-l-2{ padding-left:2rem; }
+.indent-l-3{ padding-left:3rem; }
+.indent-l-4{ padding-left:4rem; }
+.indent-l-5{ padding-left:4.5rem; }
+.indent-l-6{ padding-left:5rem; }
+.b--solid-hover:hover,.b--solid-hover:focus,.b--solid-hover:active{
+	border-style: solid;
+}
+
+/*************************
+*  RESPONSIVE NAVIGATION *
+*************************/
+
+.contentnav{
+	width: 70%;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+.burgerbutton{
+	display: inline-block;
+	font-size: 2em;
+	width: 100%;
+	text-align: right;
+	padding: 2rem;
+	box-sizing: border-box;
+}
+.burgerbutton, .menu{
+    transition:all .2s ease;
+}
+.menu {
+   	max-height: 0; /* hide menu completely when burger unchecked */
+	margin: 0px;
+	overflow:hidden;
+	position: relative;
+	z-index: 1;
+	font-size: 1.3rem;
+}
+#burger:checked ~ .menu {
+	max-height: 200%;
+}
+
+#burger:checked ~ .menu {
+	background: #333;
+}
+.menu a{
+	color: #fff;
+}
+#burger:checked ~ .burgerbutton {
+	color: #fff;
+	background: #333;
+}
+
+@media screen and (min-width:50em) {
+	.grid-container{
+		display: grid;
+		grid-template-columns: 30% 70%;
+		grid-column-gap: 1em;
+		grid-template-rows: auto auto;
+		grid-template-areas: 
+		"gridHeader gridMain"
+		"gridSidebar gridMain"
+		". gridMain"
+	}
+	.grid-header{
+		grid-area: gridHeader;
+	}
+	.grid-main{
+		grid-area: gridMain;
+	}
+	.grid-sidebar{
+		grid-area: gridSidebar;
+	}
+
+
+	#burger:checked ~ .burgerbutton {
+		color: inherit;
+		background: inherit;
+	}
+	#burger:checked ~ .menu {
+		background: inherit;
+	}
+	.menu a{
+		color: inherit;
+	}
+	.contentnav{
+		position: relative;
+		width: auto;
+	}
+	.burgerbutton{
+		display: none;
+	}
+	.menu{
+		font-size: inherit;
+		max-height: inherit;
+	}
+}

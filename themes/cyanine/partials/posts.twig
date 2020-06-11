@@ -1,0 +1,18 @@
+<ul class="post list pa0">
+
+	{% for element in item.folderContent %}
+
+		{% set post = getPageMeta(settings, element) %}
+		{% set date = element.order[0:4] ~ '-' ~ element.order[4:2] ~ '-' ~ element.order[6:2] %}
+
+		<li class="post-entry">
+			<header>
+				<a class="link f-link underline-hover" href="{{ element.urlAbs }}"><h2 class="mt4 mb2 {{ settings.themes.cyanine.fontheadline}}">{{ post.meta.title }}</h2></a>
+				<div class="mt3"><small><time datetime="{{date}}">{{ date | date("d.m.Y") }}</time> | {{ post.meta.author }}</small></div>
+			</header>
+			<p>{{ post.meta.description }}</p>
+		</li>
+
+	{% endfor %}
+
+</ul>

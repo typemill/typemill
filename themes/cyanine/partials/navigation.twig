@@ -1,0 +1,35 @@
+{% macro loop_over(navigation) %}
+
+    {% import _self as macros %}
+
+    {% for element in navigation %}
+
+		{% set depth = element.keyPathArray|length %}
+
+        {% if element.activeParent %}
+			<li class="bt bb b--tertiary margin-bottom-1 {{ element.elementType }} level-{{ depth }} activeParent">
+		{% elseif element.active %}
+			<li class="bt bb b--tertiary margin-bottom-1 {{ element.elementType }} level-{{ depth }} active">
+		{% else %}
+			<li class="bt bb b--tertiary margin-bottom-1 {{ element.elementType }} level-{{ depth }}">
+		{% endif %}
+        
+        {% if (element.elementType == 'folder') %}
+				<a class="link dib w-100 relative fw9 pv2 pr2 indent-l-{{depth}} margin-bottom-1 arrow-after hover-bg-primary f-primary hover-f-secondary" href="{{ element.urlAbs }}">{{ element.name }}</a>
+		{% if (element.folderContent|length > 0) and (element.contains == 'pages') %}	
+                <ul class="list pa0">
+                    {{ macros.loop_over(element.folderContent) }}
+                </ul>
+		{% endif %}
+            {% else %}
+				<a class="link dib w-100 relative fw3 pv2 pr2 indent-l-{{depth}} margin-bottom-1 arrow-after hover-bg-primary f-primary hover-f-secondary" href="{{ element.urlAbs }}">{{ element.name }}</a>
+            {% endif %}
+        </li>
+    {% endfor %}
+{% endmacro %}
+
+{% import _self as macros %}
+
+<ul class="list pa0 menu {{ settings.themes.cyanine.fontnavi}}">
+    {{ macros.loop_over(navigation) }}
+</ul>

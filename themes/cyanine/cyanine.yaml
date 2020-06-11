@@ -1,0 +1,304 @@
+name: Cyanine Theme
+version: 1.0.0
+description: Cyanine is a modern and flexible multi-purpose theme and the standard theme for typemill. 
+author: Trendschau
+homepage: https://trendschau.net
+licence: MIT
+paypal: https://paypal.me/typemill
+amount: 25
+
+settings:
+  myfield: My Default Value
+
+forms:
+  fields:
+
+    landingpage:
+      type: checkbox
+      checkboxlabel: Activate a landingpage
+
+    landingpageIntro:
+      type: fieldset
+      legend: Landingpage Intro Segment
+      fields:
+        landingpageIntro:
+          type: number
+          label: Position of Intro Segment
+          description: Use 0 to disable the section
+        introButtonLink:
+          type: text
+          label: Link for startbutton
+          placeholder: /my/deeplink
+        introButtonLabel:
+          type: text
+          label: Label for startbutton
+          placeholder: my label
+
+    landingpageInfo:
+      type: fieldset
+      legend: Landingpage Info Segment
+      fields:
+        landingpageInfo:
+          type: number
+          label: Position of Info Segment
+          description: Use 0 to disable the section          
+        infoMarkdown:
+          type: textarea
+          label: Use Makrdown
+
+    landingpageTeaser:
+      type: fieldset
+      legend: Landingpage Teaser Segment
+      fields:
+        landingpageTeaser:
+          type: number
+          label: Position of Teaser Segment
+          description: Use 0 to disable the section
+        teaser1title:
+          type: text
+          label: Teaser 1 Title
+        teaser1text:
+          type: text
+          label: Teaser 1 Text
+        teaser1link:
+          type: text
+          label: Teaser 1 Link
+          fieldsize: half
+        teaser1label:
+          type: text
+          label: Teaser 1 Label
+          fieldsize: half
+        teaser2title:
+          type: text
+          label: Teaser 2 Title
+        teaser2text:
+          type: text
+          label: Teaser 2 Text
+        teaser2link:
+          type: text
+          label: Teaser 2 Link
+          fieldsize: half
+        teaser2label:
+          type: text
+          label: Teaser 2 Label
+          fieldsize: half
+
+    landingpageContrast:
+      type: fieldset
+      legend: Landingpage Contrast Segment
+      fields:
+        landingpageContrast:
+          type: number
+          label: Position of Contrast Segment
+          description: Use 0 to disable the section          
+        contrastTitle:
+          type: text
+          label: Title
+        contrastText:
+          type: textarea
+          label: Text
+        contrastLink:
+          type: text
+          label: Button Link
+        contrastLabel:
+          type: text
+          label: Button Label
+
+    landingpageNavi:
+      type: fieldset
+      legend: Landingpage Contrast Segment
+      fields:
+        landingpageNavi:
+          type: number
+          label: Position of Navi Segment
+          description: Use 0 to disable the section          
+        naviTitle:
+          type: text
+          label: Title for navigation
+        naviDepth:
+          type: number
+          label: How many navigation levels?
+
+    landingpageNews:
+      type: fieldset
+      legend: Landingpage News Segment      
+      fields:
+        landingpageNews:
+          type: number
+          label: Position of News Segment
+          description: Use 0 to disable the section          
+        newsHeadline:
+          type: text
+          label: Headline for news-segment
+          placeholder: News
+        newsFolder:
+          type: text
+          label: List entries from folder
+          placeholder: /blog
+          description: Add a path to a folder from which you want to list entries
+        newsLabel:
+          type: text
+          label: Label for read more link
+          placeholder: All News
+
+    fieldsetAuthor:
+      type: fieldset
+      legend: Article Author
+      fields:
+        authorPosition:
+          type: checkboxlist
+          label: Position of article author-line (top/bottom)
+          options:
+            top: Top
+            bottom: Bottom
+
+        authorIntro:
+          type: text
+          label: Author intro text
+          placeholder: Author
+
+    fieldsetDate:
+      type: fieldset
+      legend: Article Date
+      fields:
+        datePosition:
+          type: checkboxlist
+          label: Position of article date (top/bottom)
+          options:
+            top: Top
+            bottom: Bottom
+
+        dateIntro:
+          type: text
+          label: Date intro text
+          placeholder: Last Updated
+
+        dateFormat:
+          type: select
+          label: Date format
+          options:
+            'm/d/Y': 01/20/2020
+            'd.m.Y': 20.01.2020
+
+    fieldsetGitHub:
+      type: fieldset
+      legend: Article edit link
+      fields:
+        gitPosition:
+          type: checkboxlist
+          label: Position of the edit link (top/bottom)
+          options:
+            top: Top
+            bottom: Bottom
+
+        gitLink:
+          type: text
+          label: Link to repository
+          placeholder: https://github.com/typemill/documentation
+          help: Add the base url to the content repository (e.g. github).
+
+        editText:
+          type: text
+          label: Text/label for edit link
+          placeholder: edit on github
+
+    fieldsetfooter:
+      type: fieldset
+      legend: Footer columns
+      fields:
+        footercolumns:
+          type: checkboxlist
+          label: Activate footer columns
+          options:
+            footer1: Column 1
+            footer2: Column 2
+            footer3: Column 3     
+        footer1:
+          type: textarea
+          label: footer column 1 (use markdown)
+        footer2:
+          type: textarea
+          label: footer column 2 (use markdown)
+        footer3:
+          type: textarea
+          label: footer column 3 (use markdown)
+
+    fieldsetFonts:
+      type: fieldset
+      legend: Font Families
+      fields:
+        font:
+          type: select
+          label: Basic font-family
+          description: All fonts are system fonts with (fallbacks) if the font is not installed
+          options: 
+            serif: serif
+            sans-serif-tm: sans-serif
+            courier: courier (sans-serif)
+            helvetica: helvetica (sans-serif)
+            avenir: avenir (sans-serif)
+            athelas: athelas (serif) 
+            georgia: georgia (serif)
+            times: times (serif)
+            bodoni: bodoni (serif)
+            calisto: calisto (serif)
+            garamond: garamond (serif)
+            baskerville: baskerville (serif)
+        fontheadline:
+          type: select
+          label: Font-family for headlines
+          description: All fonts are system fonts with (fallbacks) if the font is not installed
+          options: 
+            serif: serif
+            sans-serif-tm: sans-serif
+        fontnavi:
+          type: select
+          label: Font-family for navigations
+          description: All fonts are system fonts with (fallbacks) if the font is not installed
+          options: 
+            serif: serif
+            sans-serif-tm: sans-serif
+            courier: courier (sans-serif)
+            helvetica: helvetica (sans-serif)
+            avenir: avenir (sans-serif)
+            athelas: athelas (serif) 
+            georgia: georgia (serif)
+            times: times (serif)
+            bodoni: bodoni (serif)
+            calisto: calisto (serif)
+            garamond: garamond (serif)
+            baskerville: baskerville (serif)
+    fieldsetColors:
+      type: fieldset
+      legend: Colors
+      fields:
+        brandcolorprimary:
+          type: text
+          label: Primary brand color
+          placeholder: 'leightseagreen'
+          description: Used for the body background and borders
+        brandcolorsecondary:
+          type: text
+          label: Secondary brand color
+          placeholder: '#f7f7f7'
+          description: Used for content background, font-colors on hover and more
+        fontcolorprimary:
+          type: text
+          label: Primary font color
+          placeholder: 'lightseagreen'
+          description: Used for text
+        fontcolorsecondary:
+          type: text
+          label: Secondary font color
+          placeholder: '#F7F7F7'
+          description: Used as contrary color for hovers in navigation and buttons
+        fontcolorlink:
+          type: text
+          label: text-links
+          placeholder: '#007F7F'
+          description: Used for links, check contrast for a11y.        
+        thinbordercolor:
+          type: text
+          label: Thin border color
+          placeholder: 'lightgray'
+          description: Used for thin borders in navigations and tables
