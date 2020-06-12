@@ -9,7 +9,11 @@ amount: 25
 
 settings:
   landingpage: on
-  landingpageIntro: on
+  landingpageIntro: 1
+  landingpageNavi: 2
+  naviTitle: Get Started
+  fontheadline: sans-serif
+  fontnavi: sans-serif
 
 forms:
   fields:
@@ -107,7 +111,7 @@ forms:
 
     landingpageNavi:
       type: fieldset
-      legend: Landingpage Contrast Segment
+      legend: Landingpage Navigation Segment
       fields:
         landingpageNavi:
           type: number
@@ -202,6 +206,15 @@ forms:
           type: text
           label: Text/label for edit link
           placeholder: edit on github
+
+    fieldsetChapters:
+      type: fieldset
+      legend: Navigations and Chapters
+      fields:
+        chapnum:
+          type: checkbox
+          label: Show Chapter Numbers
+          checkboxlabel: Count chapters in navigation?
 
     fieldsetfooter:
       type: fieldset

@@ -735,6 +735,7 @@ const quoteComponent = Vue.component('quote-component', {
 			'</div>',
 	data: function(){
 		return {
+			prefix: '> ',
 			quote: ''
 		}
 	},
@@ -742,20 +743,96 @@ const quoteComponent = Vue.component('quote-component', {
 		this.$refs.markdown.focus();
 		if(this.compmarkdown)
 		{
-			var quote = this.compmarkdown.replace("> ", "");
-			quote = this.compmarkdown.replace(">", "").trim();
-			this.quote = quote;
+			var lines = this.compmarkdown.match(/^.*([\n\r]+|$)/gm);
+			for (var i = 0; i < lines.length; i++) {
+			    lines[i] = lines[i].replace(/(^[\> ]+)/mg, '');
+			}
+
+			this.quote = lines.join('');
 		}
 		this.$nextTick(function () {
 			autosize(document.querySelectorAll('textarea'));
-		});	
+		});
 	},
 	methods: {
 		updatemarkdown: function(value)
 		{
 			this.quote = value;
-			var quote = '> ' + value;
+
+			var lines = value.match(/^.*([\n\r]|$)/gm);
+
+			var quote = this.prefix + lines.join(this.prefix);
+
 			this.$emit('updatedMarkdown', quote);
+		},
+	},
+})
+
+const noticeComponent = Vue.component('notice-component', {
+	props: ['compmarkdown', 'disabled'],
+	template: '<div>' + 
+				'<input type="hidden" ref="markdown" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown" />' +
+				'<div class="contenttype"><svg class="icon icon-exclamation-circle"><use xlink:href="#icon-exclamation-circle"></use></svg></div>' +
+				'<button class="hdown" :class="noteclass" @click.prevent="noticedown" v-html="prefix"></button>' +
+				'<inline-formats>' +
+					'<textarea class="mdcontent pl-notice" ref="markdown" v-model="notice" :disabled="disabled" @input="updatemarkdown(event.target.value)"></textarea>' + 
+				'</inline-formats>' +
+			'</div>',
+	data: function(){
+		return {
+			prefix: '! ',
+			notice: '',
+			noteclass: 'note1'
+		}
+	},
+	mounted: function(){
+		this.$refs.markdown.focus();
+		if(this.compmarkdown)
+		{
+			this.prefix = this.getNoticePrefix(this.compmarkdown);
+
+			var lines = this.compmarkdown.match(/^.*([\n\r]+|$)/gm);
+			for (var i = 0; i < lines.length; i++) {
+			    lines[i] = lines[i].replace(/(^[\! ]+)/mg, '');
+			}
+
+			this.notice = lines.join('');
+			this.noteclass = 'note'+this.prefix.length;
+		}
+		this.$nextTick(function () {
+			autosize(document.querySelectorAll('textarea'));
+		});
+	},
+	methods: {
+		noticedown: function()
+		{
+			this.prefix = this.getNoticePrefix(this.compmarkdown);
+			this.prefix += "! ";
+			if(this.prefix.length > 4)
+			{
+				this.prefix = "! ";
+			}
+			this.noteclass = 'note' + (this.prefix.length-1);
+			this.updatemarkdown(this.notice);
+		},
+		getNoticePrefix: function(str)
+		{
+			var prefix = '';
+			for(var i = 0; i < str.length; i++){
+				if(str[i] != '!'){ return prefix }
+				prefix += '!';
+			}
+		  	return prefix+' ';
+		},
+		updatemarkdown: function(value)
+		{
+			this.notice = value;
+
+			var lines = value.match(/^.*([\n\r]|$)/gm);
+
+			var notice = this.prefix + lines.join(this.prefix);
+
+			this.$emit('updatedMarkdown', notice);
 		},
 	},
 })
@@ -833,77 +910,6 @@ const olistComponent = Vue.component('olist-component', {
 		},
 	},
 })
-
-
-const noticeComponent = Vue.component('notice-component', {
-	props: ['compmarkdown', 'disabled'],
-	template: '<div>' + 
-				'<input type="hidden" ref="markdown" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown" />' +
-				'<div class="contenttype"><svg class="icon icon-exclamation-circle"><use xlink:href="#icon-exclamation-circle"></use></svg></div>' +
-				'<button class="hdown" :class="noteclass" @click.prevent="noticedown" v-html="prefix"></button>' +
-				'<inline-formats>' +
-					'<textarea class="mdcontent pl-notice" ref="markdown" v-model="notice" :disabled="disabled" @input="updatemarkdown(event.target.value)"></textarea>' + 
-				'</inline-formats>' +
-			'</div>',
-	data: function(){
-		return {
-			prefix: '! ',
-			notice: '',
-			noteclass: 'note1'
-		}
-	},
-	mounted: function(){
-		this.$refs.markdown.focus();
-		if(this.compmarkdown)
-		{
-			this.prefix = this.getNoticePrefix(this.compmarkdown);
-
-			var lines = this.compmarkdown.match(/^.*([\n\r]+|$)/gm);
-			for (var i = 0; i < lines.length; i++) {
-			    lines[i] = lines[i].replace(/(^[\! ]+)/mg, '');
-			}
-
-			this.notice = lines.join('');
-			this.noteclass = 'note'+this.prefix.length;
-		}
-		this.$nextTick(function () {
-			autosize(document.querySelectorAll('textarea'));
-		});
-	},
-	methods: {
-		noticedown: function()
-		{
-			this.prefix = this.getNoticePrefix(this.compmarkdown);
-			this.prefix += "! ";
-			if(this.prefix.length > 4)
-			{
-				this.prefix = "! ";
-			}
-			this.noteclass = 'note' + (this.prefix.length-1);
-			this.updatemarkdown(this.notice);
-		},
-		getNoticePrefix: function(str)
-		{
-			var prefix = '';
-			for(var i = 0; i < str.length; i++){
-				if(str[i] != '!'){ return prefix }
-				prefix += '!';
-			}
-		  	return prefix+' ';
-		},
-		updatemarkdown: function(value)
-		{
-			this.notice = value;
-
-			var lines = value.match(/^.*([\n\r]|$)/gm);
-
-			var notice = this.prefix + lines.join(this.prefix);
-
-			this.$emit('updatedMarkdown', notice);
-		},
-	},
-})
-
 
 const headlineComponent = Vue.component('headline-component', { 
 	props: ['compmarkdown', 'disabled'],
@@ -1345,6 +1351,7 @@ const imageComponent = Vue.component('image-component', {
 			imglink: '',
 			imgclass: 'center',
 			imgid: '',
+			imgattr: '',
 			imgfile: '',
 		}
 	},
@@ -1403,6 +1410,10 @@ const imageComponent = Vue.component('image-component', {
 					else if(imgattr[i].charAt(0)  == '#')
 					{
 						this.imgid = imgattr[i].slice(1);
+					}
+					else
+					{
+						this.imgattr += ' ' + imgattr[i];
 					}
 				}
 			}
@@ -1484,7 +1495,11 @@ const imageComponent = Vue.component('image-component', {
 					errors = 'Maximum size of image class is 100 characters';
 				}
 			}
-			if(this.imgid != '' || this.imgclass != '')
+			if(this.imgattr != '')
+			{
+				imgattr += this.imgattr;
+			}
+			if(imgattr != '')
 			{
 				imgmarkdown = imgmarkdown + '{' + imgattr + '}';
 			}
@@ -2144,7 +2159,8 @@ const medialib = Vue.component('medialib', {
 
 				this.$parent.showmedialib = false;
 
-				this.$parent.updatemarkdown(imgmarkdown, image.src_live);
+				this.$parent.createmarkdown();
+/*				this.$parent.updatemarkdown(imgmarkdown, image.src_live); */
 			}
 			if(this.parentcomponent == 'files')
 			{
@@ -2177,7 +2193,8 @@ const medialib = Vue.component('medialib', {
 
 				this.$parent.showmedialib = false;
 
-				this.$parent.updatemarkdown(imgmarkdown, file.url);
+				this.$parent.createmarkdown();
+/*				this.$parent.updatemarkdown(imgmarkdown, file.url);*/
 			}
 			if(this.parentcomponent == 'files')
 			{

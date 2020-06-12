@@ -1832,19 +1832,11 @@ button.hdown{
 	font-weight: 700;
 	border: 0px solid #fff;
 	border-right: 1px solid #fff;
-//	background: #f9f8f6;
-//	color: #66b0a3;
 }
 button.hdown.headline{
 	color: #f9f8f6;
 	background: #66b0a3; 	
 }
-/*
-button.hdown:hover,button.hdown:focus,button.hdown:active{
-	color: #f9f8f6;
-	background: #66b0a3; 
-}
-*/
 .blox-editor .contenttype {
 	position: absolute;
 	top: 15px;
