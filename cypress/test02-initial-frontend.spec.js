@@ -1,24 +1,26 @@
 describe('Typemill Initial Frontend', function() 
 {
-    it('has startpage with buttons and links', function ()
+    it('has startpage with navigation', function ()
     {
       /* visit homepage */
       cy.visit('/')
 
-      /* has start and setup button */
-      cy.get('.actionLink').find('a').should(($a) => {
-        expect($a).to.have.length(1)
-        expect($a[0].href).to.match(/welcome/)
-      })
+      /* has startpage with headline */
+      cy.get('h1').contains("Typemill")
 
       /* has start and setup button */
-      cy.get('.toc-nav').find('a').should(($a) => {
-        expect($a).to.have.length(5)
+      cy.get('.cy-nav').find('a').should(($a) => {
+        expect($a).to.have.length(10)
         expect($a[0].href).to.match(/welcome/)
         expect($a[1].href).to.match(/welcome\/setup/)
         expect($a[2].href).to.match(/welcome\/write-content/)
         expect($a[3].href).to.match(/welcome\/get-help/)
         expect($a[4].href).to.match(/welcome\/markdown-test/)
+        expect($a[5].href).to.match(/cyanine-theme/)
+        expect($a[6].href).to.match(/cyanine-theme\/landingpage/)
+        expect($a[7].href).to.match(/cyanine-theme\/footer/)
+        expect($a[8].href).to.match(/cyanine-theme\/colors-and-fonts/)
+        expect($a[9].href).to.match(/cyanine-theme\/content-elements/)
       })      
     })
 
@@ -103,8 +105,8 @@ describe('Typemill Initial Frontend', function()
       /* links exists? hard to test, any idea? We need to wrap it in a div... */
 
       /* images */
-      cy.get('img').eq(0).should('have.attr', 'alt', 'alt-text')
-      cy.get('img').eq(0).should('have.attr', 'src', 'media/markdown.png')
+      cy.get('img').eq(0).should('have.attr', 'alt', 'alt')
+      cy.get('img').eq(0).should('have.attr', 'src', 'media/files/markdown.png')
       cy.get('figure').eq(2).should('have.id', 'myid')
         .and('have.class', 'otherclass')
       cy.get('img').eq(2).should('have.attr', 'alt', 'alt-text')

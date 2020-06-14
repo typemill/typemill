@@ -36,6 +36,8 @@ class PageController extends Controller
 		$uri 			= $request->getUri();
 		$base_url		= $uri->getBaseUrl();
 
+		$this->pathToContent = $pathToContent;
+
 		try
 		{
 			# if the cached structure is still valid, use it
@@ -280,6 +282,16 @@ class PageController extends Controller
 		$yaml = new writeYaml();
 		$extended = $yaml->getYaml('cache', 'structure-extended.yaml');
 
+		if(!$extended)
+		{
+			$extended = $this->createExtended($this->pathToContent, $yaml, $structure);
+
+			if(!empty($extended))
+			{
+				$yaml->updateYaml('cache', 'structure-extended.yaml', $extended);
+			}
+		}
+
 		# create an array of object with the whole content of the folder
 		$structure = Folder::getFolderContentDetails($structure, $extended, $uri->getBaseUrl(), $uri->getBasePath());
 
@@ -304,6 +316,34 @@ class PageController extends Controller
 		return 	$this->getCachedStructure($cache);
 	}
 	
+	protected function createExtended($contentPath, $yaml, $structure, $extended = NULL)
+	{
+		if(!$extended)
+		{
+			$extended = [];
+		}
+
+		foreach ($structure as $key => $item)
+		{
+			$filename = ($item->elementType == 'folder') ? DIRECTORY_SEPARATOR . 'index.yaml' : $item->pathWithoutType . '.yaml';
+
+			if(file_exists($contentPath . $filename))
+			{				
+				# read file
+				$meta = $yaml->getYaml('content', $filename);
+
+				$extended[$item->urlRelWoF]['hide'] = isset($meta['meta']['hide']) ? $meta['meta']['hide'] : false;
+				$extended[$item->urlRelWoF]['navtitle'] = isset($meta['meta']['navtitle']) ? $meta['meta']['navtitle'] : '';
+			}
+
+			if ($item->elementType == 'folder')
+			{
+				$extended 	= $this->createExtended($contentPath, $yaml, $item->folderContent, $extended);
+			}
+		}
+		return $extended;
+	}
+
 	protected function containsHiddenPages($extended)
 	{
 		foreach($extended as $element)

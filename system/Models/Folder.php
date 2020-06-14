@@ -587,5 +587,4 @@ class Folder
 		$parts = preg_split('/\./',$fileName);
 		return $parts[0];
 	}
-
 }

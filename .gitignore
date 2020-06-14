@@ -12,6 +12,11 @@ content/00-welcome/00-setup.yaml
 content/00-welcome/01-write-content.yaml
 content/00-welcome/02-get-help.yaml
 content/00-welcome/03-markdown-test.yaml
+content/01-cyanine-theme/index.yaml
+content/01-cyanine-theme/00-landingpage.yaml
+content/01-cyanine-theme/01-colors-and-fonts.yaml
+content/01-cyanine-theme/02-footer.yaml
+content/01-cyanine-theme/03-content-elements.yaml
 settings/settings.yaml
 settings/users
 system/vendor

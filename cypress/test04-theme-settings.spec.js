@@ -25,171 +25,132 @@ describe('Typemill Theme Settings', function()
   {
 
     // open the form
-    cy.get('#typemill-toggle')
+    cy.get('#cyanine-toggle')
       .should('contain', 'Settings')
       .click()
 
     // fill out valid data
-    cy.get('input[name="typemill[chapter]"]')
-      .should('have.value', 'Chapter')
+    cy.get('input[name="cyanine[introButtonLink]"]')
       .clear()
-      .type('Kapitel')
-      .should('have.value', 'Kapitel')
+      .type('https://typemill.net')
+      .should('have.value', 'https://typemill.net')
 
     // fill out valid data
-    cy.get('input[name="typemill[start]"]')
-      .should('have.value', 'Start')
+    cy.get('input[name="cyanine[introButtonLabel]"]')
       .clear()
-      .type('Run')
-      .should('have.value', 'Run')
+      .type('Typemill')
+      .should('have.value', 'Typemill')
 
     // fill out valid data
-    cy.get('input[name="typemill[chapnum]"]')
+    cy.get('input[name="cyanine[chapnum]"]')
       .should('not.be.checked')
       .and('not.be.visible')
       .check({ force: true })
       .should('be.checked')
 
     // fill out valid data
-    cy.get('input[name="typemill[authorPosition][top]"]')
+    cy.get('input[name="cyanine[authorPosition][top]"]')
       .should('not.be.checked')
       .and('not.be.visible')
       .check({ force: true })
       .should('be.checked')
 
     // fill out valid data
-    cy.get('input[name="typemill[authorIntro]"]')
-      .should('have.value', 'Author')
+    cy.get('input[name="cyanine[authorIntro]"]')
       .clear()
       .type('Writer')
       .should('have.value', 'Writer')
 
     // fill out valid data
-    cy.get('input[name="typemill[modifiedPosition][bottom]"]')
+    cy.get('input[name="cyanine[datePosition][bottom]"]')
       .should('not.be.checked')
       .and('not.be.visible')
       .check({ force: true })
       .should('be.checked')
 
     // fill out valid data
-    cy.get('input[name="typemill[modifiedText]"]')
-      .should('have.value', 'Last updated')
+    cy.get('input[name="cyanine[dateIntro]"]')
       .clear()
       .type('Final update')
       .should('have.value', 'Final update')
 
-    cy.get('select[name="typemill[modifiedFormat]"]')
-      .should('have.value', 'd.m.Y')
+    cy.get('select[name="cyanine[dateFormat]"]')
+      .should('have.value', 'm/d/Y')
       .select('m/d/Y')
       .should('have.value', 'm/d/Y')
 
-    cy.get('input[name="typemill[socialPosition][bottom]"]')
+    cy.get('input[name="cyanine[gitPosition][top]"]')
       .should('not.be.checked')
       .and('not.be.visible')
       .check({ force: true })
       .should('be.checked')
 
-    cy.get('input[name="typemill[socialButtons][facebook]"]')
-      .should('not.be.checked')
-      .and('not.be.visible')
-      .check({ force: true })
-      .should('be.checked')
-
-    cy.get('input[name="typemill[socialButtons][twitter]"]')
-      .should('not.be.checked')
-      .and('not.be.visible')
-      .check({ force: true })
-      .should('be.checked')
-
-    cy.get('input[name="typemill[socialButtons][xing]"]')
-      .should('not.be.checked')
-      .and('not.be.visible')
-      .check({ force: true })
-      .should('be.checked')
-
-    cy.get('input[name="typemill[gitPosition][top]"]')
-      .should('not.be.checked')
-      .and('not.be.visible')
-      .check({ force: true })
-      .should('be.checked')
-
-    cy.get('input[name="typemill[gitlink]"]')
+    cy.get('input[name="cyanine[gitLink]"]')
       .clear()
       .type('https://github.com/typemill/docs')
       .should('have.value', 'https://github.com/typemill/docs')
 
 
-    cy.get('#theme-typemill').submit()
+    cy.get('#theme-cyanine').submit()
         cy.get('#flash-message').should('contain', 'Settings are stored')
 
 
     // fill out valid data
-    cy.get('input[name="typemill[chapter]"]')
-      .should('have.value', 'Kapitel')
+    cy.get('input[name="cyanine[introButtonLink]"]')
+      .should('have.value', 'https://typemill.net')
 
     // fill out valid data
-    cy.get('input[name="typemill[start]"]')
-      .should('have.value', 'Run')
+    cy.get('input[name="cyanine[introButtonLabel]"]')
+      .should('have.value', 'Typemill')
 
     // fill out valid data
-    cy.get('input[name="typemill[chapnum]"]')
+    cy.get('input[name="cyanine[chapnum]"]')
       .should('be.checked')
 
     // fill out valid data
-    cy.get('input[name="typemill[authorPosition][top]"]')
+    cy.get('input[name="cyanine[authorPosition][top]"]')
       .should('be.checked')
 
     // fill out valid data
-    cy.get('input[name="typemill[authorIntro]"]')
+    cy.get('input[name="cyanine[authorIntro]"]')
       .should('have.value', 'Writer')
 
     // fill out valid data
-    cy.get('input[name="typemill[modifiedPosition][bottom]"]')
+    cy.get('input[name="cyanine[datePosition][bottom]"]')
       .should('be.checked')
 
     // fill out valid data
-    cy.get('input[name="typemill[modifiedText]"]')
+    cy.get('input[name="cyanine[dateIntro]"]')
       .should('have.value', 'Final update')
 
-    cy.get('select[name="typemill[modifiedFormat]"]')
+    cy.get('select[name="cyanine[dateFormat]"]')
       .should('have.value', 'm/d/Y')
 
-    cy.get('input[name="typemill[socialPosition][bottom]"]')
+    cy.get('input[name="cyanine[gitPosition][top]"]')
       .should('be.checked')
 
-    cy.get('input[name="typemill[socialButtons][facebook]"]')
-      .should('be.checked')
-
-    cy.get('input[name="typemill[socialButtons][twitter]"]')
-      .should('be.checked')
-
-    cy.get('input[name="typemill[socialButtons][xing]"]')
-      .should('be.checked')
-
-    cy.get('input[name="typemill[gitPosition][top]"]')
-      .should('be.checked')
-
-    cy.get('input[name="typemill[gitlink]"]')
+    cy.get('input[name="cyanine[gitLink]"]')
       .should('have.value', 'https://github.com/typemill/docs')
+
   })
 
   it('validates input', function()
   {
 
     // open the form
-    cy.get('#typemill-toggle')
+    cy.get('#cyanine-toggle')
       .should('contain', 'Settings')
       .click()
 
-    // fill out valid data
-    cy.get('input[name="typemill[chapter]"]')
-      .should('have.value', 'Kapitel')
+    // fill out invalid data
+    cy.get('input[name="cyanine[introButtonLabel]"]')
+      .should('have.value', 'Typemill')
       .clear()
       .type('Kapitel<?')
       .should('have.value', 'Kapitel<?')
 
       // submit form
-    cy.get('#theme-typemill').submit()
+    cy.get('#theme-cyanine').submit()
     
     cy.get('#flash-message').should('contain', 'Please correct the errors')
 
