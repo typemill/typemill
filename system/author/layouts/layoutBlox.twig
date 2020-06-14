@@ -20,7 +20,7 @@
 		
 		<link rel="stylesheet" href="{{ base_url }}/system/author/css/normalize.css" />
 		<link rel="stylesheet" href="{{ base_url }}/system/author/css/tachyons.min.css" />
-		<link rel="stylesheet" href="{{ base_url }}/system/author/css/style.css?20200505" />
+		<link rel="stylesheet" href="{{ base_url }}/system/author/css/style.css?20200614" />
 		<link rel="stylesheet" href="{{ base_url }}/system/author/css/color-picker.min.css" />
 
 		{{ assets.renderCSS() }}
@@ -202,12 +202,12 @@
 			const myaxios = axios.create();
 			myaxios.defaults.baseURL =  "{{ base_url }}";
 		</script>
-		<script src="{{ base_url }}/system/author/js/typemillutils.js?20200505"></script>
-		<script src="{{ base_url }}/system/author/js/vue.min.js?20200505"></script>
-		<script src="{{ base_url }}/system/author/js/autosize.min.js?20200505"></script>
-		<script src="{{ base_url }}/system/author/js/author.js?20200505"></script>
-		<script src="{{ base_url }}/system/author/js/vue-publishcontroller.js?20200505"></script>
-		<script src="{{ base_url }}/system/author/js/vue-blox-config.js?20200505"></script>
+		<script src="{{ base_url }}/system/author/js/typemillutils.js?20200614"></script>
+		<script src="{{ base_url }}/system/author/js/vue.min.js?20200614"></script>
+		<script src="{{ base_url }}/system/author/js/autosize.min.js?20200614"></script>
+		<script src="{{ base_url }}/system/author/js/author.js?20200614"></script>
+		<script src="{{ base_url }}/system/author/js/vue-publishcontroller.js?20200614"></script>
+		<script src="{{ base_url }}/system/author/js/vue-blox-config.js?20200614"></script>
 		<script>
 			let formatConfig = {{ settings.formats|json_encode() }};
       		let language = {{ settings.language|json_encode() }};
@@ -217,13 +217,13 @@
 
 		{{ assets.renderEditorJS() }}
 
-		<script src="{{ base_url }}/system/author/js/vue-blox.js?20200505"></script>
-		<script src="{{ base_url }}/system/author/js/vue-posts.js?20200505"></script>
-		<script src="{{ base_url }}/system/author/js/sortable.min.js?20200505"></script>
-		<script src="{{ base_url }}/system/author/js/vuedraggable.umd.min.js?20200505"></script>
-		<script src="{{ base_url }}/system/author/js/vue-navi.js?20200505"></script>
-		<script src="{{ base_url }}/system/author/js/vue-shared.js?20200505"></script>
-		<script src="{{ base_url }}/system/author/js/vue-meta.js?20200505"></script>
+		<script src="{{ base_url }}/system/author/js/vue-blox.js?20200614"></script>
+		<script src="{{ base_url }}/system/author/js/vue-posts.js?20200614"></script>
+		<script src="{{ base_url }}/system/author/js/sortable.min.js?20200614"></script>
+		<script src="{{ base_url }}/system/author/js/vuedraggable.umd.min.js?20200614"></script>
+		<script src="{{ base_url }}/system/author/js/vue-navi.js?20200614"></script>
+		<script src="{{ base_url }}/system/author/js/vue-shared.js?20200614"></script>
+		<script src="{{ base_url }}/system/author/js/vue-meta.js?20200614"></script>
 
 		{{ assets.renderJS() }}
 
