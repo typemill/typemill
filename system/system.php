@@ -222,7 +222,11 @@ $container['view'] = function ($container)
 	* LOAD TRANSLATIONS           *
 	******************************/
   	$uri = $_SERVER['REQUEST_URI'];
-  	if(isset($uri) && (strpos($uri,'/tm/') !== false OR strpos($uri,'/setup') !== false))
+
+    $base_path = $container['request']->getUri()->getBasePath();
+    $uri = str_replace($base_path,'',$uri);
+    $pieces = explode('/',$uri);
+    if(isset($uri) && ($pieces[1] === 'tm' OR $pieces[1] === 'setup') )
   	{
     	// Admin environment labels
     	$labels = Typemill\Translations::loadTranslations('admin');
@@ -231,7 +235,6 @@ $container['view'] = function ($container)
     	// For now it is useless, but it will prove useful in the future
     	$labels = Typemill\Translations::loadTranslations('user');
   	}
-  	$container['translations'] = $labels;
   	$view['translations'] = $labels;
 	$view->addExtension(new Typemill\Extensions\TwigLanguageExtension( $labels ));
 
