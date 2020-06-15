@@ -1,0 +1,77 @@
+# English
+# Please add translations for your theme like this
+ACTIVATE_A_LANDINGPAGE: Activate a landingpage
+ACTIVATE_FOOTER_COLUMNS: Activate footer columns
+ADD_A_PATH_TO_A_FOLDER_FROM_WHICH_YOU_WANT_TO_LIST_ENTRIES: Add a path to a folder from which you want to list entries
+ADD_THE_BASE_URL_TO_THE_CONTENT_REPOSITORY__E_G__GITHUB__: Add the base url to the content repository (e.g. github).
+ALL_FONTS_ARE_SYSTEM_FONTS_WITH_(FALLBACKS)_IF_THE_FONT_IS_NOT_INSTALLED: All fonts are system fonts with (fallbacks) if the font is not installed
+ARTICLE_AUTHOR: Article Author
+ARTICLE_DATE: Article Date
+ARTICLE_EDIT_LINK: Article edit link
+AUTHOR_INTRO_TEXT: Author intro text
+BASIC_FONT_FAMILY: Basic font-family
+BOTTOM: Bottom
+BUTTON_LABEL: Button Label
+BUTTON_LINK: Button Link
+COLORS: Colors
+COUNT_CHAPTERS_IN_NAVIGATION?: Count chapters in navigation?
+DATE_FORMAT: Date format
+DATE_INTRO_TEXT: Date intro text
+FONT_FAMILIES: Font Families
+FONT_FAMILY_FOR_HEADLINES: Font-family for headlines
+FONT_FAMILY_FOR_NAVIGATIONS: Font-family for navigations
+FOOTER_COLUMN_1_(USE_MARKDOWN): footer column 1 (use markdown)
+FOOTER_COLUMN_2_(USE_MARKDOWN): footer column 2 (use markdown)
+FOOTER_COLUMN_3_(USE_MARKDOWN): footer column 3 (use markdown)
+FOOTER_COLUMNS: Footer columns
+HEADLINE_FOR_NEWS_SEGMENT: Headline for news-segment
+HOW_MANY_NAVIGATION_LEVELS?: How many navigation levels?
+LABEL_FOR_READ_MORE_LINK: Label for read more link
+LABEL_FOR_STARTBUTTON: Label for startbutton
+LANDINGPAGE_CONTRAST_SEGMENT: Landingpage Contrast Segment
+LANDINGPAGE_INFO_SEGMENT: Landingpage Info Segment
+LANDINGPAGE_INTRO_SEGMENT: Landingpage Intro Segment
+LANDINGPAGE_NAVIGATION_SEGMENT: Landingpage Navigation Segment
+LANDINGPAGE_NEWS_SEGMENT: Landingpage News Segment
+LANDINGPAGE_TEASER_SEGMENT: Landingpage Teaser Segment
+LINK_FOR_STARTBUTTON: Link for startbutton
+LINK_TO_REPOSITORY: Link to repository
+LIST_ENTRIES_FROM_FOLDER: List entries from folder
+NAVIGATIONS_AND_CHAPTERS: Navigations and Chapters
+POSITION_OF_ARTICLE_AUTHOR_LINE_(TOP/BOTTOM): Position of article author-line (top/bottom)
+POSITION_OF_ARTICLE_DATE_(TOP/BOTTOM): Position of article date (top/bottom)
+POSITION_OF_CONTRAST_SEGMENT: Position of Contrast Segment
+POSITION_OF_INFO_SEGMENT: Position of Info Segment
+POSITION_OF_INTRO_SEGMENT: Position of Intro Segment
+POSITION_OF_NAVI_SEGMENT: Position of Navi Segment
+POSITION_OF_NEWS_SEGMENT: Position of News Segment
+POSITION_OF_TEASER_SEGMENT: Position of Teaser Segment
+POSITION_OF_THE_EDIT_LINK_(TOP/BOTTOM): Position of the edit link (top/bottom)
+PRIMARY_BRAND_COLOR: Primary brand color
+PRIMARY_FONT_COLOR: Primary font color
+SECONDARY_BRAND_COLOR: Secondary brand color
+SECONDARY_FONT_COLOR: Secondary font color
+SHOW_CHAPTER_NUMBERS: Show Chapter Numbers
+TEASER_1_LABEL: Teaser 1 Label
+TEASER_1_LINK: Teaser 1 Link
+TEASER_1_TEXT: Teaser 1 Text
+TEASER_1_TITLE: Teaser 1 Title
+TEASER_2_LABEL: Teaser 1 Label
+TEASER_2_LINK: Teaser 2 Link
+TEASER_2_TEXT: Teaser 2 Text
+TEASER_2_TITLE: Teaser 2 Title
+TEXT/LABEL_FOR_EDIT_LINK: Text/label for edit link
+TEXT_LINKS: text-links
+TEXT: Text
+THIN_BORDER_COLOR: Thin border color
+TITLE_FOR_NAVIGATION: Title for navigation
+TITLE: Title
+TOP: Top
+USE_0_TO_DISABLE_THE_SECTION: Use 0 to disable the section
+USED_AS_CONTRARY_COLOR_FOR_HOVERS_IN_NAVIGATION_AND_BUTTONS: Used as contrary color for hovers in navigation and buttons
+USED_FOR_CONTENT_BACKGROUND__FONT_COLORS_ON_HOVER_AND_MORE: Used for content background, font-colors on hover and more
+USED_FOR_LINKS__CHECK_CONTRAST_FOR_A11Y_: Used for links, check contrast for a11y.
+USED_FOR_TEXT: Used for text
+USED_FOR_THE_BODY_BACKGROUND_AND_BORDERS: Used for the body background and borders
+USED_FOR_THIN_BORDERS_IN_NAVIGATIONS_AND_TABLES: Used for thin borders in navigations and tables
+USE_MARKDOWN: Use Markdown
