@@ -28,7 +28,7 @@ class TwigLanguageExtension extends \Twig_Extension
 	}
 
 
-  public function translate( $label )
+  public function translate( $label, $labels_from_plugin = NULL )
 	{
     // replaces spaces, dots, comma and dash with underscores 
     $string = str_replace(" ", "_", $label);
@@ -40,7 +40,11 @@ class TwigLanguageExtension extends \Twig_Extension
     $string = strtoupper( $string );
 
     //translates the string
-    $translated_label = isset($this->labels[$string]) ? $this->labels[$string] : null;
+    if(isset($labels_from_plugin)){
+      $translated_label = isset($labels_from_plugin[$string]) ? $labels_from_plugin[$string] : null;
+    } else {
+      $translated_label = isset($this->labels[$string]) ? $this->labels[$string] : null;
+    }
 
     // if the string is not present, set the original string
     if( empty($translated_label) ){
