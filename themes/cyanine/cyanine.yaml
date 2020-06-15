@@ -49,7 +49,7 @@ forms:
           description: Use 0 to disable the section          
         infoMarkdown:
           type: textarea
-          label: Use Makrdown
+          label: Use Markdown
 
     landingpageTeaser:
       type: fieldset
