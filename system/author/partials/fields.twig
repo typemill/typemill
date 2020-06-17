@@ -79,7 +79,7 @@
 
 			{% for value,label in options %}
 				
-				<label class="control-group">{{ label }} 
+				<label class="control-group">{{ __(label) }} 
 					<input type="radio" id="{{ itemName }}[{{ field.name }}]" name="{{ itemName }}[{{ field.name }}]" value="{{ value }}" {{ (value == settings[object][itemName][field.name]) ? ' checked' : '' }}>
 					<span class="radiomark"></span>
 				</label>
