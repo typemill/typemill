@@ -32,8 +32,9 @@ class SetupController extends Controller
 
 
 		# check php-version
-		if (version_compare(phpversion(), '7.0.0', '<')) {
-				$systemcheck['error'][] = 'The PHP-version of your server is ' . phpversion() . ' and Typemill needs at least 7.0.0';
+		if (version_compare(phpversion(), '7.0.0', '<')) 
+		{
+			$systemcheck['error'][] = 'The PHP-version of your server is ' . phpversion() . ' and Typemill needs at least 7.0.0';
 		}
 
 		/* check if mod rewrite is enabled, does not work with PHP-fpm or NGINX
@@ -44,17 +45,18 @@ class SetupController extends Controller
 		}
 		*/
 
-		# check if GD  extension is enabled
-		if(!extension_loaded('gd')){
-			$systemcheck['error'][] = 'The php-extension GD for image manipulation is not enabled.';
-		}
+		# check if extensions are loaded
+		if(!extension_loaded('gd')){ $systemcheck['error'][] = 'The php-extension GD for image manipulation is not enabled.'; }
+		if(!extension_loaded('mbstring')){ $systemcheck['error'][] = 'The php-extension mbstring is not enabled.'; }
+		if(!extension_loaded('fileinfo')){ $systemcheck['error'][] = 'The php-extension fileinfo is not enabled.'; }
+		if(!extension_loaded('session')){ $systemcheck['error'][] = 'The php-extension session is not enabled.'; }
+		if(!extension_loaded('iconv')){ $systemcheck['error'][] = 'The php-extension iconv is not enabled.'; }
 
 		$setuperrors = empty($systemcheck) ? false : 'Some system requirements for Typemill are missing.';
 		$systemcheck = empty($systemcheck) ? false : $systemcheck;
 
-    return $this->render($response, 'auth/setup.twig', array( 'messages' => $setuperrors, 'systemcheck' => $systemcheck ));
+	    return $this->render($response, 'auth/setup.twig', array( 'messages' => $setuperrors, 'systemcheck' => $systemcheck ));
 	}
-
 
 	public function create($request, $response, $args)
 	{

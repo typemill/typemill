@@ -780,7 +780,7 @@ const noticeComponent = Vue.component('notice-component', {
 			'</div>',
 	data: function(){
 		return {
-			prefix: '! ',
+			prefix: '!',
 			notice: '',
 			noteclass: 'note1'
 		}
@@ -807,12 +807,12 @@ const noticeComponent = Vue.component('notice-component', {
 		noticedown: function()
 		{
 			this.prefix = this.getNoticePrefix(this.compmarkdown);
-			this.prefix += "! ";
-			if(this.prefix.length > 4)
+			this.prefix = this.prefix + '!';
+			if(this.prefix.length > 3)
 			{
-				this.prefix = "! ";
+				this.prefix = '!';
 			}
-			this.noteclass = 'note' + (this.prefix.length-1);
+			this.noteclass = 'note' + (this.prefix.length);
 			this.updatemarkdown(this.notice);
 		},
 		getNoticePrefix: function(str)
@@ -822,7 +822,7 @@ const noticeComponent = Vue.component('notice-component', {
 				if(str[i] != '!'){ return prefix }
 				prefix += '!';
 			}
-		  	return prefix+' ';
+		  	return prefix;
 		},
 		updatemarkdown: function(value)
 		{
@@ -830,7 +830,7 @@ const noticeComponent = Vue.component('notice-component', {
 
 			var lines = value.match(/^.*([\n\r]|$)/gm);
 
-			var notice = this.prefix + lines.join(this.prefix);
+			var notice = this.prefix + ' ' + lines.join(this.prefix+' ');
 
 			this.$emit('updatedMarkdown', notice);
 		},
