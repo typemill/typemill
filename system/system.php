@@ -109,7 +109,6 @@ $dispatcher->dispatch('onPluginsLoaded', new OnPluginsLoaded($pluginNames));
 # dispatch settings event and get all setting-updates from plugins
 $dispatcher->dispatch('onSettingsLoaded', new OnSettingsLoaded($settings))->getData();
 
-
 /******************************
 * ADD DISPATCHER TO CONTAINER *
 ******************************/
