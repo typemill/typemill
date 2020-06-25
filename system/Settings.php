@@ -95,7 +95,7 @@ class Settings
 	}
 
 
-  	public function whichLanguage()
+  	public static function whichLanguage()
   	{
     	# Check which languages are available
     	$langs = [];
