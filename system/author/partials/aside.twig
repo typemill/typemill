@@ -1,19 +1,12 @@
 <nav id="sidebar-menu" class="sidebar-menu">
 	{% if is_role('administrator') %}
 		<div id="mobile-menu" class="menu-action">{{ __('Menu') }} <span class="button-arrow"></span></div>
-		<h3>{{ __('Settings') }}</h3>
-		<ul class="menu-list margin-bottom">
-			<li class="menu-item"><a href="{{ path_for('settings.show') }}"{{ (route == 'settings.show') ? ' class="active"' : '' }}>{{ __('System') }}</a></li>
-			<li class="menu-item"><a href="{{ path_for('themes.show') }}"{{ (route == 'themes.show') ? ' class="active"' : '' }}>{{ __('Themes') }}</a></li>
-			<li class="menu-item"><a href="{{ path_for('plugins.show') }}"{{ (route == 'plugins.show') ? ' class="active"' : '' }}>{{ __('Plugins') }}</a></li>
-		</ul>
-		<h3>{{ __('Users') }}</h3>
-		<ul class="menu-list">
-			<li class="menu-item"><a href="{{ path_for('user.list') }}"{{ (route == 'user.list') ? ' class="active"' : '' }}>{{ __('All users') }}</a></li>
-			<li class="menu-item"><a href="{{ path_for('user.new') }}"{{  (route == 'user.new') ? ' class="active"' : '' }}>{{ __('Create user') }}</a></li>
-			{% for user in users %}
-				<li class="menu-item"><a href="{{ path_for('user.show', {'username' : user }) }}"{{ (username == user) ? ' class="active"' : '' }}>{{ user }}</a></li>
-			{% endfor %}
+		<ul class="list pa0 ma0">
+			<li class="pb1"><a class="link dark-gray hover-bg-white bl bw2 b--near-white hover-b--tm-green pa2 dib w-100{{ (route == 'settings.show') ? ' active' : '' }}" href="{{ path_for('settings.show') }}"><svg class="icon icon-wrench mr2"><use xlink:href="#icon-wrench"></use></svg> {{ __('System') }}</a></li>
+			<li class="pb1"><a class="link dark-gray hover-bg-white bl bw2 b--near-white hover-b--tm-green pa2 dib w-100{{ (route == 'themes.show') ? ' active' : '' }}" href="{{ path_for('themes.show') }}"><svg class="icon icon-paint-brush mr2"><use xlink:href="#icon-paint-brush"></use></svg> {{ __('Themes') }}</a></li>
+			<li class="pb1"><a class="link dark-gray hover-bg-white bl bw2 b--near-white hover-b--tm-green pa2 dib w-100{{ (route == 'plugins.show') ? ' active' : '' }}" href="{{ path_for('plugins.show') }}"><svg class="icon icon-plug mr2"><use xlink:href="#icon-plug"></use></svg> {{ __('Plugins') }}</a></li>
+			<li class="pb1"><a class="link dark-gray hover-bg-white bl bw2 b--near-white hover-b--tm-green pa2 dib w-100{{ (route == 'user.account') ? ' active' : '' }}" href="{{ path_for('user.account') }}"><svg class="icon icon-user mr2"><use xlink:href="#icon-user"></use></svg> {{ __('Account') }}</a></li>
+			<li class="pb1"><a class="link dark-gray hover-bg-white bl bw2 b--near-white hover-b--tm-green pa2 dib w-100{{ (route == 'user.list') ? ' active' : '' }}" href="{{ path_for('user.list') }}"><svg class="icon icon-group mr2"><use xlink:href="#icon-group"></use></svg> {{ __('Users') }}</a></li>
 		</ul>
 	{% endif %}
 </nav>

@@ -29,6 +29,13 @@ class User extends WriteYaml
 		$user = $this->getYaml('settings/users', $username . '.yaml');
 		return $user;
 	}
+
+	public function getSecureUser($username)
+	{
+		$user = $this->getYaml('settings/users', $username . '.yaml');
+		unset($user['password']);
+		return $user;
+	}
 	
 	public function createUser($params)
 	{		
@@ -91,11 +98,13 @@ class User extends WriteYaml
 		}
 	}
 	
+	/* replaced by ACL
 	public function getUserroles()
 	{
 		return array('administrator', 'editor');
 	}	
-	
+	*/
+
 	public function login($username)
 	{
 		$user = $this->getUser($username);

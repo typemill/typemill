@@ -231,11 +231,9 @@ class SettingsController extends Controller
 		}
 		
 		/* add the users for navigation */
-		$user		= new User();
-		$users		= $user->getUsers();
 		$route 		= $request->getAttribute('route');
 
-		return $this->render($response, 'settings/themes.twig', array('settings' => $userSettings, 'themes' => $themedata, 'users' => $users, 'route' => $route->getName() ));
+		return $this->render($response, 'settings/themes.twig', array('settings' => $userSettings, 'themes' => $themedata, 'route' => $route->getName() ));
 	}
 	
 	public function showPlugins($request, $response, $args)
@@ -300,11 +298,9 @@ class SettingsController extends Controller
 			}
 		}
 		
-		$user 	= new User();
-		$users 	= $user->getUsers();
 		$route 	= $request->getAttribute('route');
 		
-		return $this->render($response, 'settings/plugins.twig', array('settings' => $userSettings, 'plugins' => $plugins, 'users' => $users, 'route' => $route->getName() ));
+		return $this->render($response, 'settings/plugins.twig', array('settings' => $userSettings, 'plugins' => $plugins, 'route' => $route->getName() ));
 	}
 
 	/*************************************
@@ -482,10 +478,13 @@ class SettingsController extends Controller
 		}
 	}
 
-	private function validateInput($objectType, $objectName, $userInput, $validate)
+	private function validateInput($objectType, $objectName, $userInput, $validate, $originalSettings = NULL)
 	{
-		/* fetch the original settings from the folder (plugin or theme) to get the field definitions */
-		$originalSettings = \Typemill\Settings::getObjectSettings($objectType, $objectName);
+		if(!$originalSettings)
+		{
+			# fetch the original settings from the folder (plugin or theme) to get the field definitions
+			$originalSettings = \Typemill\Settings::getObjectSettings($objectType, $objectName);
+		}
 
 		# images get special treatment
 		$imageFieldDefinitions = array();
@@ -557,7 +556,7 @@ class SettingsController extends Controller
 		# initiate image processor with standard image sizes
 		$processImages = new ProcessImage($userSettings['images']);
 
-		if(!$processImages->checkFolders())
+		if(!$processImages->checkFolders('images'))
 		{
 			$this->c->flash->addMessage('error', 'Please make sure that your media folder exists and is writable.');
 			return false; 
@@ -591,10 +590,57 @@ class SettingsController extends Controller
 	/***********************
 	**   USER MANAGEMENT  **
 	***********************/
+
+	public function showAccount($request, $response, $args)
+	{		
+		$username 	= $_SESSION['user'];
+
+		$validate 	= new Validation();
+		
+		if($validate->username($username))
+		{
+			# get settings
+			$settings 	= $this->c->get('settings');
+
+			# get user with userdata
+			$user 		= new User();
+			$userdata 	= $user->getSecureUser($username);
+			
+			# instantiate field-builder
+			$fieldsModel	= new Fields();
+
+			# get the field-definitions
+			$fieldDefinitions = $this->getUserFields($_SESSION['role']);
+
+			# prepare userdata for field-builder
+			$userSettings['user'][$username] = $userdata;
+
+			# generate the input form
+			$userform = $fieldsModel->getFields($userSettings, 'user', $username, $fieldDefinitions);
+
+			$route = $request->getAttribute('route');
+
+			return $this->render($response, 'settings/user.twig', array(
+				'settings' 		=> $settings, 
+				'usersettings' 	=> $userSettings, 		// needed for image url in form, will overwrite settings for field-template
+				'userform' 		=> $userform, 			// field model, needed to generate frontend-field
+				'userdata' 		=> $userdata, 			// needed to fill form with data
+#				'userrole' 		=> false,				// not needed ? 
+#				'username' 		=> $args['username'], 	// not needed ?
+				'route' 		=> $route->getName()  	// needed to set link active
+			));
+			
+			return $this->render($response, 'settings/user.twig', array('settings' => $settings, 'usersettings' => $userSettings, 'userdata' => $userdata, 'userrole' => false, 'username' => $username, 'userform' => $userform, 'route' => $route->getName() ));
+		}
+		
+		$this->c->flash->addMessage('error', 'User does not exists');
+		return $response->withRedirect($this->c->router->pathFor('home'));
+	}
 	
 	public function showUser($request, $response, $args)
 	{
-		if($_SESSION['role'] == 'editor' && $_SESSION['user'] !== $args['username'])
+		# if user has no rights to watch userlist, then only show his user-entry
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'userlist', 'view') && $_SESSION['user'] !== $args['username'] )
 		{
 			return $response->withRedirect($this->c->router->pathFor('user.show', ['username' => $_SESSION['user']] ));
 		}
@@ -603,20 +649,77 @@ class SettingsController extends Controller
 		
 		if($validate->username($args['username']))
 		{
-			$user 		= new User();
-			$users		= $user->getUsers();
-			$userrole	= $user->getUserroles();
-			$userdata 	= $user->getUser($args['username']);
+			# get settings
 			$settings 	= $this->c->get('settings');
+
+			# get user with userdata		
+			$user 		= new User();
+			$userdata 	= $user->getSecureUser($args['username']);
+
+			$username	= $userdata['username'];
 			
-			if($userdata)
-			{				
-				return $this->render($response, 'settings/user.twig', array('settings' => $settings, 'users' => $users, 'userdata' => $userdata, 'userrole' => $userrole, 'username' => $args['username'] ));
-			}
+			# instantiate field-builder
+			$fieldsModel	= new Fields();
+
+			# get the field-definitions
+			$fieldDefinitions = $this->getUserFields($userdata['userrole']);
+
+			# prepare userdata for field-builder
+			$userSettings['user'][$username] = $userdata;
+
+			# generate the input form
+			$userform = $fieldsModel->getFields($userSettings, 'user', $username, $fieldDefinitions);
+
+			$route = $request->getAttribute('route');
+			
+			return $this->render($response, 'settings/user.twig', array(
+				'settings' 		=> $settings, 
+				'usersettings' 	=> $userSettings, 		// needed for image url in form, will overwrite settings for field-template
+				'userform' 		=> $userform, 			// field model, needed to generate frontend-field
+				'userdata' 		=> $userdata, 			// needed to fill form with data
+#				'userrole' 		=> false,				// not needed ? 
+#				'username' 		=> $args['username'], 	// not needed ?
+				'route' 		=> $route->getName()  	// needed to set link active
+			));
 		}
 		
 		$this->c->flash->addMessage('error', 'User does not exists');
-		return $response->withRedirect($this->c->router->pathFor('user.list'));
+		return $response->withRedirect($this->c->router->pathFor('user.account'));
+	}
+
+	private function getUserFields($role)
+	{
+		$fields = [];
+		$fields['username'] 	= ['label' => 'Username (read only)', 'type' => 'text', 'readonly' => true];
+		$fields['image'] 		= ['label' => 'Profile-Image', 'type' => 'image'];
+		$fields['description'] 	= ['label' => 'Author-Description (Markdown)', 'type' => 'textarea'];
+		$fields['firstname'] 	= ['label' => 'First Name', 'type' => 'text'];
+		$fields['lastname'] 	= ['label' => 'Last Name', 'type' => 'text'];
+		$fields['email'] 		= ['label' => 'E-Mail', 'type' => 'text', 'required' => true];
+		$fields['userrole'] 	= ['label' => 'Role', 'type' => 'text', 'readonly' => true];
+		$fields['password'] 	= ['label' => 'Actual Password', 'type' => 'password'];
+		$fields['newpassword'] 	= ['label' => 'New Password', 'type' => 'password'];
+
+		# dispatch fields;
+
+		# change admin stuff
+		if($_SESSION['role'] == 'administrator')
+		{
+			$userroles = $this->c->acl->getRoles();
+			$options = [];
+
+			# we need associative array to make select-field with key/value work
+			foreach($userroles as $userrole)
+			{
+				$options[$userrole] = $userrole;
+ 			}
+
+			$fields['userrole'] = ['label' => 'Role', 'type' => 'select', 'options' => $options];
+		}
+
+		$userform = [];
+		$userform['forms']['fields'] = $fields;
+		return $userform; 
 	}
 
 	public function listUser($request, $response)
@@ -632,7 +735,7 @@ class SettingsController extends Controller
 			$userdata[] = $user->getUser($username);
 		}
 		
-		return $this->render($response, 'settings/userlist.twig', array('settings' => $settings, 'users' => $users, 'userdata' => $userdata, 'route' => $route->getName() ));		
+		return $this->render($response, 'settings/userlist.twig', array('settings' => $settings, 'users' => $users, 'userdata' => $userdata, 'route' => $route->getName() ));
 	}
 	
 	public function newUser($request, $response, $args)
@@ -663,12 +766,18 @@ class SettingsController extends Controller
 			
 			$params 		= $request->getParams();
 			$user 			= new User();
-			$userroles		= $user->getUserroles();
 			$validate		= new Validation();
+			$userroles 		= $this->c->acl->getRoles();
 
 			if($validate->newUser($params, $userroles))
 			{
-				$userdata	= array('username' => $params['username'], 'firstname' => $params['firstname'], 'lastname' => $params['lastname'], 'email' => $params['email'], 'userrole' => $params['userrole'], 'password' => $params['password']);
+				$userdata	= array(
+					'username' => $params['username'], 
+					'firstname' => $params['firstname'], 
+					'lastname' => $params['lastname'], 
+					'email' => $params['email'], 
+					'userrole' => $params['userrole'], 
+					'password' => $params['password']);
 				
 				$user->createUser($userdata);
 
@@ -683,6 +792,7 @@ class SettingsController extends Controller
 	
 	public function updateUser($request, $response, $args)
 	{
+
 		if($request->isPost())
 		{
 			$referer		= $request->getHeader('HTTP_REFERER');
@@ -697,44 +807,73 @@ class SettingsController extends Controller
 			}
 			
 			$params 		= $request->getParams();
+			$userdata 		= $params['user'];
 			$user 			= new User();
-			$userroles		= $user->getUserroles();
 			$validate		= new Validation();
-			
-			/* non admins have different update rights */
-			if($_SESSION['role'] !== 'administrator')
+			$userroles 		= $this->c->acl->getRoles();
+
+			print_r($params);
+			die();
+						
+			# check if user is allowed to view (edit) userlist and other users
+			if(!$this->c->acl->isAllowed($_SESSION['role'], 'userlist', 'view'))
 			{
-				/* if an editor tries to update other userdata than its own */
-				if($_SESSION['user'] !== $params['username'])
+				# if an editor tries to update other userdata than its own */
+				if($_SESSION['user'] !== $userdata['username'])
 				{
-					return $response->withRedirect($this->c->router->pathFor('user.show', ['username' => $_SESSION['user']] ));
+					return $response->withRedirect($this->c->router->pathFor('user.account'));
 				}
 				
-				/* non admins cannot change his userrole */
-				$params['userrole'] = $_SESSION['role'];
+				# non admins cannot change his userrole, so set it to session-value
+				$userdata['userrole'] = $_SESSION['role'];
 			}
-	
-			if($validate->existingUser($params, $userroles))
+
+			# validate standard fields for users
+			if($validate->existingUser($userdata, $userroles))
 			{
-				$userdata	= array('username' => $params['username'], 'firstname' => $params['firstname'], 'lastname' => $params['lastname'], 'email' => $params['email'], 'userrole' => $params['userrole']);
-				
-				if(empty($params['password']) AND empty($params['newpassword']))
+				# validate custom input fields and return images
+				$userfields = $this->getUserFields($userdata['userrole']);
+				$imageFields = $this->validateInput('users', 'user', $userdata, $validate, $userfields);
+
+				if(!isset($_SESSION['errors']) && !empty($imageFields))
 				{
-					$user->updateUser($userdata);
-					$this->c->flash->addMessage('info', 'Saved all changes');
-					return $response->withRedirect($this->c->router->pathFor('user.show', ['username' => $params['username']]));
+					$images = $request->getUploadedFiles();
+
+					if(isset($images['user']))
+					{
+						# set image size
+						$settings = $this->c->get('settings');
+						$settings['images']['live'] = ['width' => 500, 'height' => 500];
+						$userdata = $this->saveImages($imageFields, $userdata, $settings, $images['user']);
+					}
 				}
-				elseif($validate->newPassword($params))
+			
+				# check for errors and redirect to path, if errors found */
+				if(isset($_SESSION['errors']))
 				{
-					$userdata['password'] = $params['newpassword'];				
+					$this->c->flash->addMessage('error', 'Please correct the errors');
+					return $response->withRedirect($this->c->router->pathFor('user.show', ['username' => $userdata['username']]));
+				}
+
+				if(empty($userdata['password']) AND empty($userdata['newpassword']))
+				{
 					$user->updateUser($userdata);
 					$this->c->flash->addMessage('info', 'Saved all changes');
-					return $response->withRedirect($this->c->router->pathFor('user.show', ['username' => $params['username']]));
+					return $response->withRedirect($this->c->router->pathFor('user.show', ['username' => $userdata['username']]));
+				}
+				elseif($validate->newPassword($userdata))
+				{
+					$userdata['password'] = $userdata['newpassword'];
+					unset($userdata['newpassword']);
+
+					$user->updateUser($userdata);
+					$this->c->flash->addMessage('info', 'Saved all changes');
+					return $response->withRedirect($this->c->router->pathFor('user.show', ['username' => $userdata['username']]));
 				}
 			}
 			
 			$this->c->flash->addMessage('error', 'Please correct your input');
-			return $response->withRedirect($this->c->router->pathFor('user.show', ['username' => $params['username']]));
+			return $response->withRedirect($this->c->router->pathFor('user.show', ['username' => $userdata['username']]));
 		}
 	}
 	

@@ -67,8 +67,11 @@ a, a:link, a:visited, a:focus, a:hover, a:active, .link, button, .button, .tab-b
 .hover-bg-tm-green:hover{
 	background:#66b0a3;
 }
-.hover-b--tm-green:hover{
+.hover-b--tm-green:hover,.hover-b--tm-green.active{
 	border-color:#66b0a3;
+}
+.hover-bg-white.active{
+	background-color: #fff;
 }
 .w-100{
 	width:100%!important;

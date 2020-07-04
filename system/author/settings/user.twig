@@ -5,79 +5,35 @@
 	
 	<div class="formWrapper">
 
-		<form id="userform" method="POST" action="{{ path_for('user.update') }}">
+		<form id="userform" method="POST" action="{{ path_for('user.update') }}" enctype="multipart/form-data">
 		
 			<section id="user" class="settings">
 
 				<header class="headline">
-					<h1>{{ __('Edit User') }}</h1>
+					<h1>{{ userdata.username }}</h1>
 				</header>
 				
 				<fieldset class="auth">
-				
-					<div class="large{{ errors.username ? ' errors' : '' }}">
-						<label for="username">{{ __('Username') }} <small>({{ __('not editable') }})</small></label>
-						<input type="text" name="showusername" value="{{ old.username ? old.username : userdata.username }}" required disabled>
-						<input type="hidden" name="username" value="{{ userdata.username }}">
-						{% if errors.username %}
-							<span class="error">{{ errors.username | first }}</span>
-						{% endif %}
-					</div>
 
-					<div class="large{{ errors.firstname ? ' errors' : '' }}">
-						<label for="firstname">{{ __('First Name') }}</label>
-						<input type="text" name="firstname" value="{{ old.firstname ? old.firstname : userdata.firstname }}">
-						{% if errors.firstname %}
-							<span class="error">{{ errors.firstname | first }}</span>
-						{% endif %}
-					</div>
+					{% for field in userform %}
 
-					<div class="large{{ errors.lastname ? ' errors' : '' }}">
-						<label for="lastname">{{ __('Last Name') }}</label>
-						<input type="text" name="lastname" value="{{ old.lastname ? old.lastname : userdata.lastname }}">
-						{% if errors.lastname %}
-							<span class="error">{{ errors.lastname | first }}</span>
-						{% endif %}
-					</div>
-					
-					<div class="large{{ errors.email ? ' errors' : '' }}">
-						<label for="email">{{ __('E-Mail') }} <abbr title="{{ __('required') }}">*</abbr></label>
-						<input type="text" name="email" value="{{ old.email ? old.email : userdata.email }}" required>
-						{% if errors.email %}
-							<span class="error">{{ errors.email | first }}</span>
-						{% endif %}
-					</div>
-
-					{% if is_role('administrator') %}
-						<div class="large{{ errors.userrole ? ' errors' : '' }}">
-							<label for="userrole">{{ __('Role') }} <abbr title="{{ __('required') }}">*</abbr></label>
-							<select name="userrole" required>
-								{% for role in userrole %}
-									<option value="{{ role }}"{% if (role == old.userrole or role == userdata.userrole) %} selected{% endif %}>{{ role }}</option>
+						{% if field.type == 'fieldset' %}
+											
+							<fieldset class="subfield">
+								<legend>{{ field.legend }}</legend>
+								{% for field in field.fields %}
+									{% include '/partials/fields.twig' with { 'settings': usersettings, 'object' : 'user', 'itemName' : userdata.username, 'class' : 'large' } %}
 								{% endfor %}
-							</select>
-							{% if errors.userrole %}
-								<span class="error">{{ errors.userrole | first }}</span>
-							{% endif %}
-						</div>
-					{% endif %}
-					
-					<div class="large{{ errors.password ? ' errors' : '' }}">
-						<label for="password">{{ __('Actual Password') }}</label>
-						<input type="password" name="password">
-						{% if errors.password %}
-							<span class="error">{{ errors.password | first }}</span>
-						{% endif %}
-					</div>
+							</fieldset>
+						
+							{% else %}
+								
+								{% include '/partials/fields.twig' with { 'settings': usersettings, 'object' : 'user', 'itemName' : userdata.username, 'class' : 'large' } %}
 
-					<div class="large{{ errors.newpassword ? ' errors' : '' }}">
-						<label for="newpassword">{{ __('New Password') }}</label>
-						<input type="password" name="newpassword">
-						{% if errors.newpassword %}
-							<span class="error">{{ errors.newpassword | first }}</span>
-						{% endif %}
-					</div>
-					
+							{% endif %}
+								
+						{% endfor %}
+
 				</fieldset>
 
 			</section>
@@ -87,7 +43,7 @@
 			<div class="actionLink">
 				<a href="#" id="openModal" class="openModal">{{ __('Delete User') }}</a>
 			</div>
-		</form>		
+		</form>
 	</div>
 	
 	<div id="modalWindow" class="modal">
@@ -102,6 +58,5 @@
 			</form>
 		</div>
 	</div>
-	
 	
 {% endblock %}

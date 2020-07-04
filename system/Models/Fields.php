@@ -78,7 +78,7 @@ class Fields
 					}
 				}
 				elseif($field->getType() == "checkbox")
-				{					
+				{
 					# checkboxes need a special treatment, because field does not exist in settings if unchecked by user
 					if(isset($userSettings[$objectType][$objectName][$fieldName]))
 					{
