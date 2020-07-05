@@ -15,7 +15,7 @@ class MediaApiController extends ContentController
 	{
 		# get params from call 
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 
 		$imageProcessor	= new ProcessImage($this->settings['images']);
 		if(!$imageProcessor->checkFolders('images'))
@@ -32,7 +32,7 @@ class MediaApiController extends ContentController
 	{
 		# get params from call
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 
 		$fileProcessor	= new ProcessFile();
 		if(!$fileProcessor->checkFolders())
@@ -49,7 +49,7 @@ class MediaApiController extends ContentController
 	{
 		# get params from call 
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 
 		$this->setStructure($draft = true, $cache = false);
 
@@ -73,7 +73,7 @@ class MediaApiController extends ContentController
 	{
 		# get params from call 
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 
 		$this->setStructure($draft = true, $cache = false);
 
@@ -97,7 +97,7 @@ class MediaApiController extends ContentController
 	{
 		# get params from call
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 		
 		$imageProcessor	= new ProcessImage($this->settings['images']);
 		
@@ -123,7 +123,7 @@ class MediaApiController extends ContentController
 	{
 		# get params from call
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 
 		# make sure only allowed filetypes are uploaded
 		$finfo = finfo_open( FILEINFO_MIME_TYPE );
@@ -205,7 +205,7 @@ class MediaApiController extends ContentController
 	{
 		# get params from call 
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 
 		if(!isset($this->params['name']))
 		{
@@ -230,7 +230,7 @@ class MediaApiController extends ContentController
 	{
 		# get params from call 
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 
 		if(!isset($this->params['name']))
 		{
@@ -251,7 +251,7 @@ class MediaApiController extends ContentController
 	{
 		/* get params from call */
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 		$class			= false;
 
 		$imageUrl		= $this->params['markdown'];

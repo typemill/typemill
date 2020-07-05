@@ -33,7 +33,7 @@ class PageController extends Controller
 		$settings		= $this->c->get('settings');
 		$pathToContent	= $settings['rootPath'] . $settings['contentFolder'];
 		$cache 			= new WriteCache();
-		$uri 			= $request->getUri();
+		$uri 			= $request->getUri()->withUserInfo('');
 		$base_url		= $uri->getBaseUrl();
 
 		$this->pathToContent = $pathToContent;

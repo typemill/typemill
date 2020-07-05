@@ -67,7 +67,7 @@ class MetaApiController extends ContentController
 	{
 		/* get params from call */
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 
 		# set structure
 		if(!$this->setStructure($draft = true)){ return $response->withJson($this->errors, 404); }
@@ -132,7 +132,7 @@ class MetaApiController extends ContentController
 	{
 		# get params from call
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 
 		$tab 			= isset($this->params['tab']) ? $this->params['tab'] : false;
 		$metaInput		= isset($this->params['data']) ? $this->params['data'] : false ;
