@@ -21,7 +21,7 @@ class ContentBackendController extends ContentController
 	public function showContent(Request $request, Response $response, $args)
 	{
 		# get params from call
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 		$this->params	= isset($args['params']) ? ['url' => $this->uri->getBasePath() . '/' . $args['params']] : ['url' => $this->uri->getBasePath()];
 		
 		# set structure
@@ -89,7 +89,7 @@ class ContentBackendController extends ContentController
 	public function showBlox(Request $request, Response $response, $args)
 	{
 		# get params from call
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 		$this->params	= isset($args['params']) ? ['url' => $this->uri->getBasePath() . '/' . $args['params']] : ['url' => $this->uri->getBasePath()];
 
 		# set structure

@@ -19,7 +19,7 @@ class BlockApiController extends ContentController
 	{
 		/* get params from call */
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 
 		/* validate input */
 		if(!$this->validateBlockInput()){ return $response->withJson($this->errors,422); }
@@ -199,7 +199,7 @@ class BlockApiController extends ContentController
 	{
 		/* get params from call */
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 
 		/* validate input */
 		if(!$this->validateBlockInput()){ return $response->withJson($this->errors,422); }
@@ -338,7 +338,7 @@ class BlockApiController extends ContentController
 	{
 		# get params from call
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 
 		# validate input 
 		# if(!$this->validateBlockInput()){ return $response->withJson($this->errors,422); }
@@ -430,7 +430,7 @@ class BlockApiController extends ContentController
 	{
 		/* get params from call */
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 		$errors			= false;
 		
 		# set structure
@@ -514,7 +514,7 @@ class BlockApiController extends ContentController
 	{
 		# get params from call 
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 
 		$imageProcessor	= new ProcessImage($this->settings['images']);
 		if(!$imageProcessor->checkFolders('images'))
@@ -531,7 +531,7 @@ class BlockApiController extends ContentController
 	{
 		# get params from call
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 
 		$fileProcessor	= new ProcessFile();
 		if(!$fileProcessor->checkFolders())
@@ -548,7 +548,7 @@ class BlockApiController extends ContentController
 	{
 		# get params from call 
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 
 		$this->setStructure($draft = true, $cache = false);
 
@@ -573,7 +573,7 @@ class BlockApiController extends ContentController
 	{
 		# get params from call 
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 
 		$this->setStructure($draft = true, $cache = false);
 
@@ -597,7 +597,7 @@ class BlockApiController extends ContentController
 	{
 		# get params from call
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 		
 		# do this shit in the model ...
 		$imagename = explode('.', $this->params['name']);
@@ -623,7 +623,7 @@ class BlockApiController extends ContentController
 	{
 		# get params from call
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 
 		$finfo = finfo_open( FILEINFO_MIME_TYPE );
 		$mtype = finfo_file( $finfo, $this->params['file'] );
@@ -688,7 +688,7 @@ class BlockApiController extends ContentController
 	{
 		# get params from call 
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 
 		if(!isset($this->params['name']))
 		{
@@ -710,7 +710,7 @@ class BlockApiController extends ContentController
 	{
 		# get params from call 
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 
 		if(!isset($this->params['name']))
 		{
@@ -732,7 +732,7 @@ class BlockApiController extends ContentController
 	{
 		/* get params from call */
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 		$class			= false;
 
 		$imageUrl		= $this->params['markdown'];

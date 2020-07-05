@@ -35,15 +35,16 @@ class SettingsController extends Controller
 		if($request->isPost())
 		{
 			$referer		= $request->getHeader('HTTP_REFERER');
-			$uri 			= $request->getUri();
+			$uri 			= $request->getUri()->withUserInfo('');
 			$base_url		= $uri->getBaseUrl();
 
-			# security, users should not be able to fake post with settings from other typemill pages.
+			/* security, users should not be able to fake post with settings from other typemill pages.
 			if(!isset($referer[0]) OR $referer[0] !== $base_url . '/tm/settings' )
 			{
 				$this->c->flash->addMessage('error', 'illegal referer');
 				return $response->withRedirect($this->c->router->pathFor('settings.show'));				
 			}
+			*/
 			
 			$settings 			= \Typemill\Settings::getUserSettings();
 			$defaultSettings	= \Typemill\Settings::getDefaultSettings();
@@ -312,15 +313,16 @@ class SettingsController extends Controller
 		if($request->isPost())
 		{
 			$referer		= $request->getHeader('HTTP_REFERER');
-			$uri 			= $request->getUri();
+			$uri 			= $request->getUri()->withUserInfo('');
 			$base_url		= $uri->getBaseUrl();
 
-			# users should not be able to fake post with settings from other typemill pages.
+			/* users should not be able to fake post with settings from other typemill pages.
 			if(!isset($referer[0]) OR $referer[0] !== $base_url . '/tm/themes' )
 			{
 				$this->c->flash->addMessage('error', 'illegal referer');
 				return $response->withRedirect($this->c->router->pathFor('themes.show'));
 			}
+			*/
 	
 			$userSettings 	= \Typemill\Settings::getUserSettings();
 			$params 		= $request->getParams();
@@ -409,16 +411,17 @@ class SettingsController extends Controller
 		if($request->isPost())
 		{
 			$referer		= $request->getHeader('HTTP_REFERER');
-			$uri 			= $request->getUri();
+			$uri 			= $request->getUri()->withUserInfo('');
 			$base_url		= $uri->getBaseUrl();
 
-			# security, users should not be able to fake post with settings from other typemill pages.
+			/* security, users should not be able to fake post with settings from other typemill pages.
 			if(!isset($referer[0]) OR $referer[0] !== $base_url . '/tm/plugins' )
 			{
 				$this->c->flash->addMessage('error', 'illegal referer');
 				return $response->withRedirect($this->c->router->pathFor('plugins.show'));
 			}
-			
+			*/
+
 			$userSettings 	= \Typemill\Settings::getUserSettings();
 			$pluginSettings	= array();
 			$userInput 		= $request->getParams();
@@ -754,15 +757,16 @@ class SettingsController extends Controller
 		if($request->isPost())
 		{
 			$referer		= $request->getHeader('HTTP_REFERER');
-			$uri 			= $request->getUri();
+			$uri 			= $request->getUri()->withUserInfo('');
 			$base_url		= $uri->getBaseUrl();
 
-			# security, users should not be able to fake post with settings from other typemill pages.
+			/* security, users should not be able to fake post with settings from other typemill pages.
 			if(!isset($referer[0]) OR $referer[0] !== $base_url . '/tm/user/new' )
 			{
 				$this->c->flash->addMessage('error', 'illegal referer');
 				return $response->withRedirect($this->c->router->pathFor('user.new'));
 			}
+			*/
 			
 			$params 		= $request->getParams();
 			$user 			= new User();
@@ -796,15 +800,16 @@ class SettingsController extends Controller
 		if($request->isPost())
 		{
 			$referer		= $request->getHeader('HTTP_REFERER');
-			$uri 			= $request->getUri();
+			$uri 			= $request->getUri()->withUserInfo('');
 			$base_url		= $uri->getBaseUrl();
 
-			# security, users should not be able to fake post with settings from other typemill pages.
+			/* security, users should not be able to fake post with settings from other typemill pages.
 			if(!isset($referer[0]) OR strpos($referer[0], $base_url . '/tm/user/') === false )
 			{
 				$this->c->flash->addMessage('error', 'illegal referer');
 				return $response->withRedirect($this->c->router->pathFor('user.list'));
 			}
+			*/
 			
 			$params 		= $request->getParams();
 			$userdata 		= $params['user'];
@@ -882,15 +887,16 @@ class SettingsController extends Controller
 		if($request->isPost())
 		{
 			$referer		= $request->getHeader('HTTP_REFERER');
-			$uri 			= $request->getUri();
+			$uri 			= $request->getUri()->withUserInfo('');
 			$base_url		= $uri->getBaseUrl();
 
-			# security, users should not be able to fake post with settings from other typemill pages.
+			/* security, users should not be able to fake post with settings from other typemill pages.
 			if(!isset($referer[0]) OR strpos($referer[0], $base_url . '/tm/user/') === false )
 			{
 				$this->c->flash->addMessage('error', 'illegal referer');
 				return $response->withRedirect($this->c->router->pathFor('user.list'));
 			}
+			*/
 			
 			$params 		= $request->getParams();
 			$validate		= new Validation();

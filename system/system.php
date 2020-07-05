@@ -146,14 +146,16 @@ $container['dispatcher'] = function($container) use ($dispatcher)
 	return $dispatcher;
 };
 
+# delete username and password from uri
+$uri = $container['request']->getUri()->withUserInfo('');
 
 /********************************
 * ADD ASSET-FUNCTION FOR TWIG	*
 ********************************/
 
-$container['assets'] = function($c)
+$container['assets'] = function($c) use ($uri)
 {
-	return new \Typemill\Assets($c['request']->getUri()->getBaseUrl());
+	return new \Typemill\Assets($uri->getBaseUrl());
 };
 
 /************************
@@ -166,7 +168,7 @@ $session_segments 	= array('setup', 'tm/', 'api/', '/setup', '/tm/', '/api/');
 $client_segments 	= $dispatcher->dispatch('onSessionSegmentsLoaded', new OnSessionSegmentsLoaded([]))->getData();
 $session_segments	= array_merge($session_segments, $client_segments);
 
-$path 				= $container['request']->getUri()->getPath();
+$path 				= $uri->getPath();
 $container['flash']	= false;
 $container['csrf'] 	= false;
 
@@ -177,7 +179,7 @@ foreach($session_segments as $segment)
 		// configure session
 		ini_set('session.cookie_httponly', 1 );
 		ini_set('session.use_strict_mode', 1);
-		if($container['request']->getUri()->getScheme() == 'https')
+		if($uri->getScheme() == 'https')
 		{
 			ini_set('session.cookie_secure', 1);
 			session_name('__Secure-typemill-session');
@@ -211,7 +213,7 @@ foreach($session_segments as $segment)
 * 	LOAD TWIG VIEW		*
 ************************/
 
-$container['view'] = function ($container)
+$container['view'] = function ($container) use ($uri)
 {
 	$path = array($container->get('settings')['themePath'], $container->get('settings')['authorPath']);
 	
@@ -222,18 +224,18 @@ $container['view'] = function ($container)
     ]);
     
     // Instantiate and add Slim specific extension
-    $basePath = rtrim(str_ireplace('index.php', '', $container['request']->getUri()->getBasePath()), '/');
+    $basePath = rtrim(str_ireplace('index.php', '', $uri->getBasePath()), '/');
     $view->addExtension(new Slim\Views\TwigExtension($container['router'], $basePath));
 	$view->addExtension(new Twig_Extension_Debug());
     $view->addExtension(new Typemill\Extensions\TwigUserExtension());
 	$view->addExtension(new Typemill\Extensions\TwigMarkdownExtension());
 	$view->addExtension(new Typemill\Extensions\TwigMetaExtension());	
 	$view->addExtension(new Typemill\Extensions\TwigPagelistExtension());	
-
-	/* use {{ base_url() }} in twig templates */
-	$view['base_url']	 = $container['request']->getUri()->getBaseUrl();
-	$view['current_url'] = $container['request']->getUri()->getPath();
 	
+	# use {{ base_url() }} in twig templates
+	$view['base_url']	 = $uri->getBaseUrl();
+	$view['current_url'] = $uri->getPath();
+
 	/* if session route, add flash messages and csrf-protection */
 	if($container['flash'])
 	{
@@ -243,7 +245,6 @@ $container['view'] = function ($container)
 
 	/* add asset-function to all views */
 	$view->getEnvironment()->addGlobal('assets', $container->assets);
-
 
 	/******************************
 	* LOAD TRANSLATIONS           *
