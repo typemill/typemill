@@ -221,7 +221,7 @@ $container['view'] = function ($container) use ($uri)
 	/******************************
 	* LOAD TRANSLATIONS           *
 	******************************/
-  	if(isset($uri->getPath) && (strpos($uri->getPath(),'/tm/') !== false OR strpos($uri->getPath(),'/setup') !== false))
+  	if(isset($uri->getPath()) && (strpos($uri->getPath(),'/tm/') !== false OR strpos($uri->getPath(),'/setup') !== false))
   	{
     	// Admin environment labels
     	$labels = Typemill\Translations::loadTranslations('admin');
