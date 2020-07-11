@@ -401,6 +401,7 @@ const contentComponent = Vue.component('content-block', {
 				if(httpStatus == 400)
 				{
 					self.activatePage();
+					publishController.errors.message = "Looks like you are logged out. Please login and try again.";
 				}
 				if(response)
 				{
@@ -410,7 +411,7 @@ const contentComponent = Vue.component('content-block', {
 	
 					if(result.errors)
 					{
-						publishController.errors.message = result.errors;
+						publishController.errors.message = result.errors.message;
 					}
 					else
 					{	
@@ -1587,6 +1588,7 @@ const imageComponent = Vue.component('image-component', {
 							if(httpStatus == 400)
 							{
 								self.activatePage();
+								publishController.errors.message = "Looks like you are logged out. Please login and try again.";
 							}
 							if(response)
 							{
@@ -1777,6 +1779,7 @@ const fileComponent = Vue.component('file-component', {
 							if(httpStatus == 400)
 							{
 								self.activatePage();
+								publishController.errors.message = "Looks like you are logged out. Please login and try again.";
 							}
 							if(response)
 							{
@@ -2316,6 +2319,7 @@ let editor = new Vue({
 	el: '#blox',
 /*	components: componentList, */
 	data: {
+		errors: [],
 		root: document.getElementById("main").dataset.url,
 		html: false,
 		title: false,

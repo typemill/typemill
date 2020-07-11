@@ -10,6 +10,7 @@ use Typemill\Models\Folder;
 use Typemill\Models\Write;
 use Typemill\Models\WriteCache;
 use Typemill\Models\WriteYaml;
+use Typemill\Models\WriteMeta;
 
 abstract class ContentController
 {
@@ -51,6 +52,9 @@ abstract class ContentController
 	
 	# holds the content of the page
 	protected $content;
+
+	# holds the ownership (my content or not my content)
+	protected $mycontent = false;
 	
 	public function __construct(ContainerInterface $c)
 	{
@@ -432,4 +436,19 @@ abstract class ContentController
 		$this->content = $content;
 		return true;		
 	}
+
+	protected function checkContentOwnership()
+	{
+		# get page meta
+		$writeMeta = new writeMeta();
+		$pagemeta = $writeMeta->getPageMeta($this->settings, $this->item);
+
+		# owner assertion, not 
+		if(isset($pagemeta['meta']['owner']) && $pagemeta['meta']['owner'] == $_SESSION['user'])
+		{
+			$this->mycontent = true;
+			return true;
+		}
+		return false;
+	}		
 }

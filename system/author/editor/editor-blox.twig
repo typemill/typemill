@@ -5,6 +5,8 @@
 
 	<div class="formWrapper">
 
+	  {% if (acl.isAllowed(get_role(), 'content', 'update')) or ( (mycontent) and (acl.isAllowed(get_role(), 'mycontent', 'update')) ) %}
+
 		<div id="metanav" class="metanav" v-cloak>
 		  
 		  <button
@@ -26,6 +28,8 @@
 
 		</div>
 
+      {% endif %}
+      
 		<section id="blox" :class="showBlox">
 
 			<div class="blox-body">
@@ -60,17 +64,21 @@
 						</content-block>
 					</draggable>
 				</div>
-	
-				<div class="format-bar">
 
-					<content-block :body="false">
+				{% if (acl.isAllowed(get_role(), 'content', 'edit')) or ( (mycontent) and (acl.isAllowed(get_role(), 'mycontent', 'update')) ) %}
 
-						<button v-for="button in formats" class="format-item"  @click.prevent="setData( $event, button.component )" data-id="99999" id="blox-99999" :title="button.title|translate" v-html="button.label"></button>
-					
-					</content-block>
+						<div class="format-bar">
 
-				</div>
-				
+							<content-block :body="false">
+
+								<button v-for="button in formats" class="format-item"  @click.prevent="setData( $event, button.component )" data-id="99999" id="blox-99999" :title="button.title|translate" v-html="button.label"></button>
+							
+							</content-block>
+
+						</div>
+
+				{% endif %}
+
 			</div>
 			
 		</section>

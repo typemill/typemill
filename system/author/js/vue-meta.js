@@ -516,6 +516,10 @@ let meta = new Vue({
 	            {
 	            	self.formErrors = error.response.data.errors;
 	            }
+	            if(error.response.data.errors.message)
+	            {
+	            	publishController.errors.message = error.response.data.errors.message;
+	            }
 	        });
 		},
 	}

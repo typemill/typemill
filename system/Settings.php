@@ -2,6 +2,10 @@
 
 namespace Typemill;
 
+use Laminas\Permissions\Acl\Acl;
+use Laminas\Permissions\Acl\Role\GenericRole as Role;
+use Laminas\Permissions\Acl\Resource\GenericResource as Resource;
+
 class Settings
 {	
 	public static function loadSettings()
@@ -181,5 +185,60 @@ class Settings
 			$yaml = new Models\WriteYaml();
 			$yaml->updateYaml('settings', 'settings.yaml', $settings);					
 		}
+	}
+
+	public static function loadResources()
+	{
+		return ['content',
+				'mycontent',
+				'user',
+				'userlist',
+				'system'];
+	}
+
+	public static function loadRolesAndPermissions()
+	{
+		$member['name']			= 'member';
+		$member['inherits'] 	= NULL;
+		$member['permissions']	= ['user' => ['view','update','delete']];
+
+		$author['name']			= 'author';
+		$author['inherits']		= 'member';
+		$author['permissions']	= ['mycontent' => ['view', 'create', 'update'],
+								   'content' => ['view']];
+
+		$editor['name']			= 'editor';
+		$editor['inherits']		= 'author';
+		$editor['permissions']	= [ 'mycontent' => ['delete', 'publish', 'unpublish'],
+									'content' => ['create', 'update', 'delete', 'publish', 'unpublish']];
+
+		return [$member, $author, $editor];
+	}
+
+	public static function createAcl($roles, $resources)
+	{
+		$acl = new Acl();
+
+		foreach($resources as $resource)
+		{
+			$acl->addResource(new Resource($resource));
+		}
+
+		# add administrator role
+		$acl->addRole(new Role('administrator'));
+		$acl->allow('administrator');
+
+		# add all other roles dynamically
+		foreach($roles as $role)
+		{
+			$acl->addRole(new Role($role['name']), $role['inherits']);
+
+			foreach($role['permissions'] as $resource => $permissions)
+			{
+				$acl->allow($role['name'], $resource, $permissions);
+			}
+		}
+
+		return $acl;
 	}
 }

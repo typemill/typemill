@@ -21,6 +21,12 @@ class BlockApiController extends ContentController
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri()->withUserInfo('');
 
+		# minimum permission is that user is allowed to update his own content
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'mycontent', 'update'))
+		{
+			return $response->withJson(array('data' => false, 'errors' => ['message' => 'You are not allowed to publish content.']), 403);
+		}
+
 		/* validate input */
 		if(!$this->validateBlockInput()){ return $response->withJson($this->errors,422); }
 		
@@ -29,6 +35,16 @@ class BlockApiController extends ContentController
 		
 		/* set item */
 		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
+
+		# if user has no right to delete content from others (eg admin or editor)
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'content', 'update'))
+		{
+			# check ownership. This code should nearly never run, because there is no button/interface to trigger it.
+			if(!$this->checkContentOwnership())
+			{
+				return $response->withJson(array('data' => false, 'errors' => ['message' => 'You are not allowed to edit content.']), 403);
+			}
+		}
 
 		# set the status for published and drafted
 		$this->setPublishStatus();
@@ -77,7 +93,7 @@ class BlockApiController extends ContentController
 		elseif(($this->params['block_id'] == 0) OR !isset($pageMarkdown[$this->params['block_id']]))
 		{
 			# if the block does not exists, return an error
-			return $response->withJson(array('data' => false, 'errors' => 'The ID of the content-block is wrong.'), 404);
+			return $response->withJson(array('data' => false, 'errors' => ['message' => 'The ID of the content-block is wrong.']), 404);
 		}
 		else
 		{
@@ -201,6 +217,12 @@ class BlockApiController extends ContentController
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri()->withUserInfo('');
 
+		# minimum permission is that user is allowed to update his own content
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'mycontent', 'update'))
+		{
+			return $response->withJson(array('data' => false, 'errors' => ['message' => 'You are not allowed to publish content.']), 403);
+		}
+
 		/* validate input */
 		if(!$this->validateBlockInput()){ return $response->withJson($this->errors,422); }
 		
@@ -209,6 +231,16 @@ class BlockApiController extends ContentController
 		
 		/* set item */
 		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
+
+		# if user has no right to delete content from others (eg admin or editor)
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'content', 'update'))
+		{
+			# check ownership. This code should nearly never run, because there is no button/interface to trigger it.
+			if(!$this->checkContentOwnership())
+			{
+				return $response->withJson(array('data' => false, 'errors' => ['message' => 'You are not allowed to edit content.']), 403);
+			}
+		}
 
 		# set the status for published and drafted
 		$this->setPublishStatus();
@@ -249,7 +281,7 @@ class BlockApiController extends ContentController
 		if(!isset($pageMarkdown[$this->params['block_id']]))
 		{
 			# if the block does not exists, return an error
-			return $response->withJson(array('data' => false, 'errors' => 'The ID of the content-block is wrong.'), 404);
+			return $response->withJson(array('data' => false, 'errors' => ['message' => 'The ID of the content-block is wrong.']), 404);
 		}
 		elseif($this->params['block_id'] == 0)
 		{
@@ -340,6 +372,12 @@ class BlockApiController extends ContentController
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri()->withUserInfo('');
 
+		# minimum permission is that user is allowed to update his own content
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'mycontent', 'update'))
+		{
+			return $response->withJson(array('data' => false, 'errors' => ['message' => 'You are not allowed to publish content.']), 403);
+		}
+
 		# validate input 
 		# if(!$this->validateBlockInput()){ return $response->withJson($this->errors,422); }
 		
@@ -348,6 +386,16 @@ class BlockApiController extends ContentController
 		
 		# set item 
 		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
+
+		# if user has no right to delete content from others (eg admin or editor)
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'content', 'update'))
+		{
+			# check ownership. This code should nearly never run, because there is no button/interface to trigger it.
+			if(!$this->checkContentOwnership())
+			{
+				return $response->withJson(array('data' => false, 'errors' => ['message' => 'You are not allowed to delete content.']), 403);
+			}
+		}
 
 		# set the status for published and drafted
 		$this->setPublishStatus();
@@ -382,7 +430,7 @@ class BlockApiController extends ContentController
 		if(!isset($pageMarkdown[$oldIndex]))
 		{
 			# if the block does not exists, return an error
-			return $response->withJson(array('data' => false, 'errors' => 'The ID of the content-block is wrong.'), 404);
+			return $response->withJson(array('data' => false, 'errors' => ['message' => 'The ID of the content-block is wrong.']), 404);
 		}
 
 		$extract = array_splice($pageMarkdown, $oldIndex, 1);
@@ -432,12 +480,28 @@ class BlockApiController extends ContentController
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri()->withUserInfo('');
 		$errors			= false;
+
+		# minimum permission is that user is allowed to update his own content
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'mycontent', 'update'))
+		{
+			return $response->withJson(array('data' => false, 'errors' => ['message' => 'You are not allowed to publish content.']), 403);
+		}
 		
 		# set structure
 		if(!$this->setStructure($draft = true)){ return $response->withJson(array('data' => false, 'errors' => $this->errors), 404); }
 		
 		# set item
 		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
+
+		# if user has no right to delete content from others (eg admin or editor)
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'content', 'update'))
+		{
+			# check ownership. This code should nearly never run, because there is no button/interface to trigger it.
+			if(!$this->checkContentOwnership())
+			{
+				return $response->withJson(array('data' => false, 'errors' => ['message' => 'You are not allowed to delete content.']), 403);
+			}
+		}
 
 		# set the status for published and drafted
 		$this->setPublishStatus();
@@ -616,7 +680,7 @@ class BlockApiController extends ContentController
 			return $response->withJson(array('errors' => false));	
 		}
 
-		return $response->withJson(array('errors' => 'could not store image to temporary folder'));	
+		return $response->withJson(array('errors' => ['message' => 'could not store image to temporary folder']));	
 	}
 
 	public function createFile(Request $request, Response $response, $args)
@@ -632,7 +696,7 @@ class BlockApiController extends ContentController
 		$allowedMimes = $this->getAllowedMtypes();
 		if(!in_array($mtype, $allowedMimes))
 		{
-			return $response->withJson(array('errors' => 'File-type is not allowed'));
+			return $response->withJson(array('errors' => ['message' => 'File-type is not allowed']));
 		}
 
 		# sanitize file name
@@ -653,7 +717,7 @@ class BlockApiController extends ContentController
 			return $response->withJson(array('errors' => false, 'name' => $name));
 		}
 
-		return $response->withJson(array('errors' => 'could not store file to temporary folder'));
+		return $response->withJson(array('errors' => ['message' => 'could not store file to temporary folder']));
 	}
 	
 	public function publishImage(Request $request, Response $response, $args)
@@ -681,7 +745,7 @@ class BlockApiController extends ContentController
 			return $this->updateBlock($request, $response, $args);
 		}
 
-		return $response->withJson(array('errors' => 'could not store image to media folder'));	
+		return $response->withJson(array('errors' => ['message' => 'could not store image to media folder']));	
 	}
 
 	public function deleteImage(Request $request, Response $response, $args)
@@ -692,7 +756,7 @@ class BlockApiController extends ContentController
 
 		if(!isset($this->params['name']))
 		{
-			return $response->withJson(array('errors' => 'image name is missing'));	
+			return $response->withJson(array('errors' => ['message' => 'image name is missing']));	
 		}
 
 		$imageProcessor	= new ProcessImage($this->settings['images']);
@@ -714,7 +778,7 @@ class BlockApiController extends ContentController
 
 		if(!isset($this->params['name']))
 		{
-			return $response->withJson(array('errors' => 'file name is missing'));	
+			return $response->withJson(array('errors' => ['message' => 'file name is missing']));	
 		}
 
 		$fileProcessor	= new ProcessFile();
@@ -725,7 +789,7 @@ class BlockApiController extends ContentController
 			return $response->withJson(array('errors' => false));
 		}
 
-		return $response->withJson(array('errors' => 'could not delete the file'));
+		return $response->withJson(array('errors' => ['message' => 'could not delete the file']));
 	}
 
 	public function saveVideoImage(Request $request, Response $response, $args)
@@ -803,7 +867,7 @@ class BlockApiController extends ContentController
 			return $this->updateBlock($request, $response, $args);
 		}
 		
-		return $response->withJson(array('errors' => 'could not store the preview image'));	
+		return $response->withJson(array('errors' => ['message' => 'could not store the preview image']));	
 	}
 
 	private function getAllowedMtypes()
@@ -828,6 +892,7 @@ class BlockApiController extends ContentController
 			'application/pdf',
 		   	'image/png',
 		   	'image/jpeg',
+		   	'image/jpg',
 		   	'image/gif',
 		   	'image/svg+xml',
 		   	'font/*',

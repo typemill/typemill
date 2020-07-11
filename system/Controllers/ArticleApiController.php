@@ -24,6 +24,12 @@ class ArticleApiController extends ContentController
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri()->withUserInfo('');
 
+		# minimum permission is that user can publish his own content
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'mycontent', 'publish'))
+		{
+			return $response->withJson(array('data' => false, 'errors' => ['message' => 'You are not allowed to publish content.']), 403);
+		}
+
 		# validate input only if raw mode
 		if($this->params['raw'])
 		{
@@ -35,6 +41,16 @@ class ArticleApiController extends ContentController
 
 		# set item 
 		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
+
+		# if user has no right to update content from others (eg admin or editor)
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'content', 'publish'))
+		{
+			# check ownership. This code should nearly never run, because there is no button/interface to trigger it.
+			if(!$this->checkContentOwnership())
+			{
+				return $response->withJson(array('data' => false, 'errors' => ['message' => 'You are not allowed to publish content.']), 403);
+			}
+		}
 		
 		# set the status for published and drafted
 		$this->setPublishStatus();
@@ -100,11 +116,27 @@ class ArticleApiController extends ContentController
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri()->withUserInfo('');
 
+		# minimum permission is that user can unpublish his own content
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'mycontent', 'unpublish'))
+		{
+			return $response->withJson(array('data' => false, 'errors' => ['message' => 'You are not allowed to unpublish content.']), 403);
+		}
+
 		# set structure
 		if(!$this->setStructure($draft = true)){ return $response->withJson($this->errors, 404); }
 
 		# set item 
 		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
+
+		# if user has no right to update content from others (eg admin or editor)
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'content', 'unpublish'))
+		{
+			# check ownership. This code should nearly never run, because there is no button/interface to trigger it.
+			if(!$this->checkContentOwnership())
+			{
+				return $response->withJson(array('data' => false, 'errors' => ['message' => 'You are not allowed to unpublish content.']), 403);
+			}
+		}
 
 		# set the status for published and drafted
 		$this->setPublishStatus();
@@ -178,17 +210,32 @@ class ArticleApiController extends ContentController
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri()->withUserInfo('');
 		
+		# minimum permission is that user is allowed to update his own content
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'mycontent', 'update'))
+		{
+			return $response->withJson(array('data' => false, 'errors' => ['message' => 'You are not allowed to publish content.']), 403);
+		}
+
 		# set structure
 		if(!$this->setStructure($draft = true)){ return $response->withJson($this->errors, 404); }
 
 		# set item
 		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
 		
+		# if user has no right to update content from others (eg admin or editor)
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'content', 'update'))
+		{
+			# check ownership. This code should nearly never run, because there is no button/interface to trigger it.
+			if(!$this->checkContentOwnership())
+			{
+				return $response->withJson(array('data' => false, 'errors' => ['message' => 'You are not allowed to update content.']), 403);
+			}
+		}
+
 		# remove the unpublished changes
 		$delete = $this->deleteContentFiles(['txt']);
 
 		# set redirect url to edit page
-
 		$url = $this->uri->getBaseUrl() . '/tm/content/' . $this->settings['editor'];
 		if(isset($this->item->urlRelWoF))
 		{
@@ -217,6 +264,12 @@ class ArticleApiController extends ContentController
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri()->withUserInfo('');
 
+		# minimum permission is that user is allowed to delete his own content
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'mycontent', 'delete'))
+		{
+			return $response->withJson(array('data' => false, 'errors' => ['message' => 'You are not allowed to delete content.']), 403);
+		}
+
 		# set url to base path initially
 		$url = $this->uri->getBaseUrl() . '/tm/content/' . $this->settings['editor'];
 		
@@ -225,6 +278,16 @@ class ArticleApiController extends ContentController
 
 		# set item
 		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
+
+		# if user has no right to delete content from others (eg admin or editor)
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'content', 'delete'))
+		{
+			# check ownership. This code should nearly never run, because there is no button/interface to trigger it.
+			if(!$this->checkContentOwnership())
+			{
+				return $response->withJson(array('data' => false, 'errors' => ['message' => 'You are not allowed to delete content.']), 403);
+			}
+		}
 		
 		if($this->item->elementType == 'file')
 		{
@@ -275,15 +338,31 @@ class ArticleApiController extends ContentController
 		# get params from call 
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri()->withUserInfo('');
+
+		# minimum permission is that user is allowed to update his own content
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'mycontent', 'update'))
+		{
+			return $response->withJson(array('data' => false, 'errors' => ['message' => 'You are not allowed to update content.']), 403);
+		}
 		
 		# validate input 
 		if(!$this->validateEditorInput()){ return $response->withJson($this->errors,422); }
 		
 		# set structure
 		if(!$this->setStructure($draft = true)){ return $response->withJson($this->errors, 404); }
-				
+
 		# set item 
 		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
+
+		# if user has no right to delete content from others (eg admin or editor)
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'content', 'update'))
+		{
+			# check ownership. This code should nearly never run, because there is no button/interface to trigger it.
+			if(!$this->checkContentOwnership())
+			{
+				return $response->withJson(array('data' => false, 'errors' => ['message' => 'You are not allowed to update content.']), 403);
+			}
+		}
 
 		# set path for the file (or folder)
 		$this->setItemPath('txt');
@@ -319,6 +398,12 @@ class ArticleApiController extends ContentController
 		# get params from call
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri()->withUserInfo('');
+
+		# minimum permission is that user is allowed to update his own content
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'mycontent', 'update'))
+		{
+			return $response->withJson(array('data' => false, 'errors' => 'You are not allowed to update content.'), 403);
+		}
 		
 		# url is only needed, if an active page is moved to another folder, so user has to be redirected to the new url
 		$url 			= false;
@@ -339,6 +424,19 @@ class ArticleApiController extends ContentController
 
 		if(!$item){ return $response->withJson(array('data' => $this->structure, 'errors' => 'We could not find this page. Please refresh and try again.', 'url' => $url), 404); }
 		
+		# needed for acl check
+		$this->item = $item;
+
+		# if user has no right to update content from others (eg admin or editor)
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'content', 'update'))
+		{
+			# check ownership. This code should nearly never run, because there is no button/interface to trigger it.
+			if(!$this->checkContentOwnership())
+			{
+				return $response->withJson(array('data' => $this->structure, 'errors'  => 'You are not allowed to move that content.'), 403);
+			}
+		}
+
 		# if an item is moved to the first level
 		if($this->params['parent_id_to'] == 'navi')
 		{
@@ -397,7 +495,7 @@ class ArticleApiController extends ContentController
 			}
 			$index++;
 		}
-		if($writeError){ return $response->withJson(array('data' => $this->structure, 'errors' => 'Something went wrong. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404); }
+		if($writeError){ return $response->withJson(array('data' => $this->structure, 'errors' => ['message' => 'Something went wrong. Please refresh the page and check, if all folders and files are writable.'], 'url' => $url), 404); }
 
 		# update the structure for editor
 		$this->setStructure($draft = true, $cache = false);
@@ -427,6 +525,12 @@ class ArticleApiController extends ContentController
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri()->withUserInfo('');
 
+		# minimum permission is that user is allowed to update his own content
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'mycontent', 'create'))
+		{
+			return $response->withJson(array('data' => false, 'errors' => ['message' => 'You are not allowed to create content.']), 403);
+		}
+
 		# url is only needed, if an active page is moved
 		$url 			= false;
 		
@@ -434,7 +538,7 @@ class ArticleApiController extends ContentController
 		if(!$this->setStructure($draft = true)){ return $response->withJson(array('data' => false, 'errors' => $this->errors, 'url' => $url), 404); }
 		
 		# validate input
-		if(!$this->validateNaviItem()){ return $response->withJson(array('data' => $this->structure, 'errors' => 'Special Characters not allowed. Length between 1 and 60 chars.', 'url' => $url), 422); }
+		if(!$this->validateNaviItem()){ return $response->withJson(array('data' => $this->structure, 'errors' => ['message' => 'Special Characters not allowed. Length between 1 and 60 chars.'], 'url' => $url), 422); }
 		
 		# get the ids (key path) for item, old folder and new folder
 		$folderKeyPath 	= explode('.', $this->params['folder_id']);
@@ -442,7 +546,7 @@ class ArticleApiController extends ContentController
 		# get the item from structure
 		$folder			= Folder::getItemWithKeyPath($this->structure, $folderKeyPath);
 
-		if(!$folder){ return $response->withJson(array('data' => $this->structure, 'errors' => 'We could not find this page. Please refresh and try again.', 'url' => $url), 404); }
+		if(!$folder){ return $response->withJson(array('data' => $this->structure, 'errors' => ['message' => 'We could not find this page. Please refresh and try again.'], 'url' => $url), 404); }
 				
 		$name 		= $this->params['item_name'];
 		$slug 		= URLify::filter(iconv(mb_detect_encoding($this->params['item_name'], mb_detect_order(), true), "UTF-8", $this->params['item_name']));
@@ -463,7 +567,6 @@ class ArticleApiController extends ContentController
 		{
 			return $response->withJson(array('data' => $this->structure, 'errors' => 'We could not create the file. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404);
 		}
-
 
 		# get extended structure
 		$extended 	= $write->getYaml('cache', 'structure-extended.yaml');
@@ -493,6 +596,12 @@ class ArticleApiController extends ContentController
 		# get params from call
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri()->withUserInfo('');
+
+		# minimum permission is that user is allowed to update his own content
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'mycontent', 'create'))
+		{
+			return $response->withJson(array('data' => false, 'errors' => ['message' => 'You are not allowed to create content.']), 403);
+		}
 
 		# url is only needed, if an active page is moved
 		$url 			= false;
@@ -608,6 +717,12 @@ class ArticleApiController extends ContentController
 		# get params from call
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri()->withUserInfo('');
+
+		# minimum permission is that user is allowed to update his own content
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'mycontent', 'create'))
+		{
+			return $response->withJson(array('data' => false, 'errors' => 'You are not allowed to create content.'), 403);
+		}
 		
 		# url is only needed, if an active page is moved
 		$url 			= false;
@@ -730,12 +845,28 @@ class ArticleApiController extends ContentController
 		/* get params from call */
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri()->withUserInfo('');
-		
+
+		# minimum permission is that user is allowed to update his own content. This will completely disable the block-editor
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'mycontent', 'update'))
+		{
+			return $response->withJson(array('data' => false, 'errors' => 'You are not allowed to edit content.'), 403);
+		}
+
 		# set structure
 		if(!$this->setStructure($draft = true)){ return $response->withJson(array('data' => false, 'errors' => $this->errors), 404); }
 		
 		/* set item */
 		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
+
+		# if user has no right to delete content from others (eg admin or editor)
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'content', 'update'))
+		{
+			# check ownership. This code should nearly never run, because there is no button/interface to trigger it.
+			if(!$this->checkContentOwnership())
+			{
+				return $response->withJson(array('data' => false, 'errors' => 'You are not allowed to delete content.'), 403);
+			}
+		}
 		
 		# set the status for published and drafted
 		$this->setPublishStatus();
@@ -778,12 +909,27 @@ class ArticleApiController extends ContentController
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri()->withUserInfo('');
 		
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'mycontent', 'update'))
+		{
+			return $response->withJson(array('data' => false, 'errors' => 'You are not allowed to edit content.'), 403);
+		}
+
 		# set structure
 		if(!$this->setStructure($draft = true)){ return $response->withJson(array('data' => false, 'errors' => $this->errors), 404); }
 		
 		/* set item */
 		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
-		
+
+		# if user has no right to delete content from others (eg admin or editor)
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'content', 'update'))
+		{
+			# check ownership. This code should nearly never run, because there is no button/interface to trigger it.
+			if(!$this->checkContentOwnership())
+			{
+				return $response->withJson(array('data' => false, 'errors' => 'You are not allowed to delete content.'), 403);
+			}
+		}
+
 		# set the status for published and drafted
 		$this->setPublishStatus();
 

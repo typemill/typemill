@@ -52,11 +52,18 @@ class WriteMeta extends WriteYaml
 
 		$description = $this->generateDescription($content, $parsedown, $item);
 
+		# owner holds the edit-rights
+		$owner = '';
+		if(isset($_SESSION['user']))
+		{
+			$owner = $_SESSION['user'];
+		}
+
 		$author = $settings['author'];
 
 		if(isset($_SESSION))
 		{
-			if(isset($_SESSION['firstname']) && $_SESSION['firstname'] !='' && isset($_SESSION['lastname']) && $_SESSION['lastname'] != '')
+			if(isset($_SESSION['firstname']) && $_SESSION['firstname'] != '' && isset($_SESSION['lastname']) && $_SESSION['lastname'] != '')
 			{
 				$author = $_SESSION['firstname'] . ' ' . $_SESSION['lastname'];
 			}
@@ -71,6 +78,7 @@ class WriteMeta extends WriteYaml
 			'meta' => [
 				'title' 		=> $title,
 				'description' 	=> $description,
+				'owner'			=> $owner,
 				'author' 		=> $author,
 				'created'		=> date("Y-m-d"),
 				'time'			=> date("H-i-s"),
@@ -88,6 +96,13 @@ class WriteMeta extends WriteYaml
 	# used by MetaApiController. Do not set title or description in defaults if page is not published yet
 	public function getPageMetaBlank($content, $settings, $item)
 	{
+		# owner holds the edit-rights
+		$owner = '';
+		if(isset($_SESSION['user']))
+		{
+			$owner = $_SESSION['user'];
+		}
+
 		$author = $settings['author'];
 
 		if(isset($_SESSION))
@@ -107,6 +122,7 @@ class WriteMeta extends WriteYaml
 			'meta' => [
 				'title' 		=> '',
 				'description' 	=> '',
+				'owner'			=> $owner,
 				'author' 		=> $author,
 				'created'		=> date("Y-m-d"),
 				'time'			=> date("H-i-s"),

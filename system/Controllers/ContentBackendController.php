@@ -32,6 +32,9 @@ class ContentBackendController extends ContentController
 
 		# set item
 		if(!$this->setItem()){ return $this->renderIntern404($response, array( 'navigation' => $this->structure, 'settings' => $this->settings, 'content' => $this->errors )); }
+
+		# we have to check ownership here to use it for permission-check in tempates
+		$this->checkContentOwnership();
 		
 		# get the breadcrumb (here we need it only to mark the actual item active in navigation)
 		$breadcrumb = isset($this->item->keyPathArray) ? Folder::getBreadcrumb($this->structure, $this->item->keyPathArray) : false;
@@ -75,7 +78,16 @@ class ContentBackendController extends ContentController
 			}
 		}
 
-		return $this->render($response, 'editor/editor-raw.twig', array('navigation' => $this->structure, 'homepage' => $this->homepage, 'title' => $title, 'content' => $content, 'item' => $this->item, 'settings' => $this->settings ));
+		return $this->render($response, 'editor/editor-raw.twig', array(
+			'acl'			=> $this->c->acl,
+			'mycontent'		=> $this->mycontent,
+			'navigation' 	=> $this->structure, 
+			'homepage' 		=> $this->homepage, 
+			'title' 		=> $title, 
+			'content' 		=> $content, 
+			'item' 			=> $this->item, 
+			'settings' 		=> $this->settings
+		));
 	}
 	
 	/**
@@ -100,6 +112,9 @@ class ContentBackendController extends ContentController
 
 		# set item
 		if(!$this->setItem()){ return $this->renderIntern404($response, array( 'navigation' => $this->structure, 'settings' => $this->settings, 'content' => $this->errors )); }
+
+		# we have to check ownership here to use it for permission-check in tempates
+		$this->checkContentOwnership();
 
 		# set the status for published and drafted
 		$this->setPublishStatus();
@@ -153,7 +168,16 @@ class ContentBackendController extends ContentController
 			unset($content[0]);			
 		}
 
-		return $this->render($response, 'editor/editor-blox.twig', array('navigation' => $this->structure, 'homepage' => $this->homepage, 'title' => $title, 'content' => $content, 'item' => $this->item, 'settings' => $this->settings ));
+		return $this->render($response, 'editor/editor-blox.twig', array(
+			'acl'			=> $this->c->acl, 
+			'mycontent'		=> $this->mycontent,
+			'navigation' 	=> $this->structure,
+			'homepage' 		=> $this->homepage, 
+			'title' 		=> $title, 
+			'content' 		=> $content, 
+			'item' 			=> $this->item, 
+			'settings' 		=> $this->settings 
+		));
 	}
 	
 	public function showEmpty(Request $request, Response $response, $args)

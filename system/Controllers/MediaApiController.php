@@ -207,6 +207,12 @@ class MediaApiController extends ContentController
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri()->withUserInfo('');
 
+		# minimum permission is that user is allowed to delete content
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'content', 'delete'))
+		{
+			return $response->withJson(array('data' => false, 'errors' => 'You are not allowed to delete images.'), 403);
+		}
+
 		if(!isset($this->params['name']))
 		{
 			return $response->withJson(['errors' => 'image name is missing'],500);
@@ -231,6 +237,12 @@ class MediaApiController extends ContentController
 		# get params from call 
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri()->withUserInfo('');
+
+		# minimum permission is that user is allowed to delete content
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'content', 'delete'))
+		{
+			return $response->withJson(array('data' => false, 'errors' => 'You are not allowed to delete files.'), 403);
+		}
 
 		if(!isset($this->params['name']))
 		{

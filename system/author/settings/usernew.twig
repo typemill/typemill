@@ -23,30 +23,6 @@
 						{% endif %}
 					</div>
 
-					<div class="large{{ errors.firstname ? ' errors' : '' }}">
-						<label for="firstname">{{ __('First Name') }}</label>
-						<input type="text" name="firstname" value="{{ old.firstname ? old.firstname : userdata.firstname }}">
-						{% if errors.firstname %}
-							<span class="error">{{ errors.firstname | first }}</span>
-						{% endif %}
-					</div>
-
-					<div class="large{{ errors.lastname ? ' errors' : '' }}">
-						<label for="lastname">{{ __('Last Name') }}</label>
-						<input type="text" name="lastname" value="{{ old.lastname ? old.lastname : userdata.lastname }}">
-						{% if errors.lastname %}
-							<span class="error">{{ errors.lastname | first }}</span>
-						{% endif %}
-					</div>					
-
-					<div class="large{{ errors.email ? ' errors' : '' }}">
-						<label for="email">{{ __('E-Mail') }} <abbr title="{{ __('required') }}">*</abbr></label>
-						<input type="text" name="email" value="{{ old.email ? old.email : '' }}" required>
-						{% if errors.email %}
-							<span class="error">{{ errors.email | first }}</span>
-						{% endif %}
-					</div>
-
 					<div class="large{{ errors.userrole ? ' errors' : '' }}">
 						<label for="userrole">{{ __('Role') }} <abbr title="{{ __('required') }}">*</abbr></label>
 						<select name="userrole" required>
@@ -57,7 +33,15 @@
 						{% if errors.userrole %}
 							<span class="error">{{ errors.userrole | first }}</span>
 						{% endif %}
-					</div>					
+					</div>
+
+					<div class="large{{ errors.email ? ' errors' : '' }}">
+						<label for="email">{{ __('E-Mail') }} <abbr title="{{ __('required') }}">*</abbr></label>
+						<input type="text" name="email" value="{{ old.email ? old.email : '' }}" required>
+						{% if errors.email %}
+							<span class="error">{{ errors.email | first }}</span>
+						{% endif %}
+					</div>
 					
 					<div class="large{{ errors.password ? ' errors' : '' }}">
 						<label for="password">{{ __('Password') }} <abbr title="{{ __('required') }}">*</abbr></label>

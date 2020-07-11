@@ -1,8 +1,13 @@
 meta:
     title: 'Content Elements'
     description: "There are a lot of other settings for your content area. For example:  \nAdd an edit-button for github, gitlab or other plattforms.\nShow the author.\nShow the publish date.\nShow the chapter numbers in the navigation.\n"
+    heroimage: null
+    heroimagealt: null
+    owner: testauthor
     author: trendschau
+    manualdate: null
+    modified: '2020-07-09'
     created: '2020-06-11'
     time: 21-05-02
     navtitle: 'content elements'
-    modified: '2020-06-11'
+    hide: false

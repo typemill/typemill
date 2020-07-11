@@ -9,6 +9,7 @@ use Typemill\Controllers\ContentBackendController;
 use Typemill\Middleware\RedirectIfUnauthenticated;
 use Typemill\Middleware\RedirectIfAuthenticated;
 use Typemill\Middleware\RedirectIfNoAdmin;
+use Typemill\Middleware\accessController;
 
 if($settings['settings']['setup'])
 {
@@ -35,37 +36,42 @@ $app->get('/tm/login', AuthController::class . ':show')->setName('auth.show')->a
 $app->post('/tm/login', AuthController::class . ':login')->setName('auth.login')->add(new RedirectIfAuthenticated($container['router'], $container['settings']));
 $app->get('/tm/logout', AuthController::class . ':logout')->setName('auth.logout')->add(new RedirectIfUnauthenticated($container['router'], $container['flash']));
 
-$app->get('/tm/settings', SettingsController::class . ':showSettings')->setName('settings.show')->add(new RedirectIfNoAdmin($container['router'], $container['flash']));
-$app->post('/tm/settings', SettingsController::class . ':saveSettings')->setName('settings.save')->add(new RedirectIfNoAdmin($container['router'], $container['flash']));
-$app->get('/tm/themes', SettingsController::class . ':showThemes')->setName('themes.show')->add(new RedirectIfNoAdmin($container['router'], $container['flash']));
-$app->post('/tm/themes', SettingsController::class . ':saveThemes')->setName('themes.save')->add(new RedirectIfNoAdmin($container['router'], $container['flash']));
-$app->get('/tm/plugins', SettingsController::class . ':showPlugins')->setName('plugins.show')->add(new RedirectIfNoAdmin($container['router'], $container['flash']));
-$app->post('/tm/plugins', SettingsController::class . ':savePlugins')->setName('plugins.save')->add(new RedirectIfNoAdmin($container['router'], $container['flash']));
-$app->get('/tm/user/new', SettingsController::class . ':newUser')->setName('user.new')->add(new RedirectIfNoAdmin($container['router'], $container['flash']));
-$app->post('/tm/user/create', SettingsController::class . ':createUser')->setName('user.create')->add(new RedirectIfNoAdmin($container['router'], $container['flash']));
+$app->get('/tm/settings', SettingsController::class . ':showSettings')->setName('settings.show')->add(new accessController($container['router'], $container['acl'], 'system', 'view'));
+$app->post('/tm/settings', SettingsController::class . ':saveSettings')->setName('settings.save')->add(new accessController($container['router'], $container['acl'], 'system', 'update'));
 
-$app->post('/tm/user/update', SettingsController::class . ':updateUser')->setName('user.update')->add(new RedirectIfUnauthenticated($container['router'], $container['flash']));
-$app->post('/tm/user/delete', SettingsController::class . ':deleteUser')->setName('user.delete')->add(new RedirectIfUnauthenticated($container['router'], $container['flash']));
-$app->get('/tm/user/{username}', SettingsController::class . ':showUser')->setName('user.show')->add(new RedirectIfUnauthenticated($container['router'], $container['flash']));
-$app->get('/tm/user', SettingsController::class . ':listUser')->setName('user.list')->add(new RedirectIfNoAdmin($container['router'], $container['flash']));
+$app->get('/tm/themes', SettingsController::class . ':showThemes')->setName('themes.show')->add(new accessController($container['router'], $container['acl'], 'system', 'view'));
+$app->post('/tm/themes', SettingsController::class . ':saveThemes')->setName('themes.save')->add(new accessController($container['router'], $container['acl'], 'system', 'update'));
 
-$app->get('/tm/content/raw[/{params:.*}]', ContentBackendController::class . ':showContent')->setName('content.raw')->add(new RedirectIfUnauthenticated($container['router'], $container['flash']));
-$app->get('/tm/content/visual[/{params:.*}]', ContentBackendController::class . ':showBlox')->setName('content.visual')->add(new RedirectIfUnauthenticated($container['router'], $container['flash']));
-$app->get('/tm/content[/{params:.*}]', ContentBackendController::class . ':showEmpty')->setName('content.empty')->add(new RedirectIfUnauthenticated($container['router'], $container['flash']));
+$app->get('/tm/plugins', SettingsController::class . ':showPlugins')->setName('plugins.show')->add(new accessController($container['router'], $container['acl'], 'system', 'view'));
+$app->post('/tm/plugins', SettingsController::class . ':savePlugins')->setName('plugins.save')->add(new accessController($container['router'], $container['acl'], 'system', 'update'));
+
+$app->get('/tm/account', SettingsController::class . ':showAccount')->setName('user.account')->add(new accessController($container['router'], $container['acl'], 'user', 'view'));
+$app->get('/tm/user/new', SettingsController::class . ':newUser')->setName('user.new')->add(new accessController($container['router'], $container['acl'], 'user', 'create'));
+$app->post('/tm/user/create', SettingsController::class . ':createUser')->setName('user.create')->add(new accessController($container['router'], $container['acl'], 'user', 'create'));
+$app->post('/tm/user/update', SettingsController::class . ':updateUser')->setName('user.update')->add(new accessController($container['router'], $container['acl'], 'user', 'update'));
+$app->post('/tm/user/delete', SettingsController::class . ':deleteUser')->setName('user.delete')->add(new accessController($container['router'], $container['acl'], 'user', 'delete'));
+$app->get('/tm/user/{username}', SettingsController::class . ':showUser')->setName('user.show')->add(new accessController($container['router'], $container['acl'], 'user', 'view'));
+$app->get('/tm/users', SettingsController::class . ':listUser')->setName('user.list')->add(new accessController($container['router'], $container['acl'], 'userlist', 'view'));
+
+$app->get('/tm/content/raw[/{params:.*}]', ContentBackendController::class . ':showContent')->setName('content.raw')->add(new accessController($container['router'], $container['acl'], 'content', 'view'));
+$app->get('/tm/content/visual[/{params:.*}]', ContentBackendController::class . ':showBlox')->setName('content.visual')->add(new accessController($container['router'], $container['acl'], 'content', 'view'));
+$app->get('/tm/content[/{params:.*}]', ContentBackendController::class . ':showEmpty')->setName('content.empty')->add(new accessController($container['router'], $container['acl'], 'content', 'view'));
 
 foreach($routes as $pluginRoute)
 {
-	$method = $pluginRoute['httpMethod'];
-	$route	= $pluginRoute['route'];
-	$class	= $pluginRoute['class'];
+	$method 	= $pluginRoute['httpMethod'];
+	$route		= $pluginRoute['route'];
+	$class		= $pluginRoute['class'];
+	$resource 	= isset($pluginRoute['resource']) ? $pluginRoute['resource'] : NULL;
+	$privilege 	= isset($pluginRoute['privilege']) ? $pluginRoute['privilege'] : NULL;
 
 	if(isset($pluginRoute['name']))
 	{
-		$app->{$method}($route, $class)->setName($pluginRoute['name']);
+		$app->{$method}($route, $class)->setName($pluginRoute['name'])->add(new accessController($container['router'], $container['acl'], $resource, $privilege));
 	}
 	else
 	{
-		$app->{$method}($route, $class);
+		$app->{$method}($route, $class)->add(new accessController($container['router'], $container['acl'], $resource, $privilege));
 	}
 }
 

@@ -1,19 +1,12 @@
 <nav id="sidebar-menu" class="sidebar-menu">
-	{% if is_role('administrator') %}
-		<div id="mobile-menu" class="menu-action">{{ __('Menu') }} <span class="button-arrow"></span></div>
-		<h3>{{ __('Settings') }}</h3>
-		<ul class="menu-list margin-bottom">
-			<li class="menu-item"><a href="{{ path_for('settings.show') }}"{{ (route == 'settings.show') ? ' class="active"' : '' }}>{{ __('System') }}</a></li>
-			<li class="menu-item"><a href="{{ path_for('themes.show') }}"{{ (route == 'themes.show') ? ' class="active"' : '' }}>{{ __('Themes') }}</a></li>
-			<li class="menu-item"><a href="{{ path_for('plugins.show') }}"{{ (route == 'plugins.show') ? ' class="active"' : '' }}>{{ __('Plugins') }}</a></li>
-		</ul>
-		<h3>{{ __('Users') }}</h3>
-		<ul class="menu-list">
-			<li class="menu-item"><a href="{{ path_for('user.list') }}"{{ (route == 'user.list') ? ' class="active"' : '' }}>{{ __('All users') }}</a></li>
-			<li class="menu-item"><a href="{{ path_for('user.new') }}"{{  (route == 'user.new') ? ' class="active"' : '' }}>{{ __('Create user') }}</a></li>
-			{% for user in users %}
-				<li class="menu-item"><a href="{{ path_for('user.show', {'username' : user }) }}"{{ (username == user) ? ' class="active"' : '' }}>{{ user }}</a></li>
-			{% endfor %}
-		</ul>
-	{% endif %}
+	<div id="mobile-menu" class="menu-action">{{ __('Menu') }} <span class="button-arrow"></span></div>
+	<ul class="list pa0 ma0">
+
+		{% for name,navitem in navigation %}
+			{% if acl.isAllowed(get_role(), navitem.aclresource, navitem.aclprivilege) %}
+				<li class="pb1"><a class="link dark-gray hover-bg-white bl bw2 b--near-white hover-b--tm-green pa2 dib w-100{{ navitem.active ? ' active' : '' }}" href="{{ path_for(navitem.routename) }}"><svg class="icon baseline {{ navitem.icon }} mr2"><use xlink:href="#{{ navitem.icon }}"></use></svg> {{ __(name) }}</a></li>
+			{% endif %}
+		{% endfor %}
+
+	</ul>
 </nav>

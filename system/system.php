@@ -3,6 +3,8 @@
 use Typemill\Events\OnSettingsLoaded;
 use Typemill\Events\OnPluginsLoaded;
 use Typemill\Events\OnSessionSegmentsLoaded;
+use Typemill\Events\OnRolesPermissionsLoaded;
+use Typemill\Events\OnResourcesLoaded;
 
 /****************************
 * HIDE ERRORS BY DEFAULT	  *
@@ -108,6 +110,32 @@ $dispatcher->dispatch('onPluginsLoaded', new OnPluginsLoaded($pluginNames));
 
 # dispatch settings event and get all setting-updates from plugins
 $dispatcher->dispatch('onSettingsLoaded', new OnSettingsLoaded($settings))->getData();
+
+
+/**********************************
+* 	LOAD ROLES AND PERMISSIONS 	  *
+**********************************/
+
+# load roles and permissions
+$rolesAndPermissions = Typemill\Settings::loadRolesAndPermissions();
+
+# dispatch roles so plugins can enhance them
+$rolesAndPermissions = $dispatcher->dispatch('onRolesPermissionsLoaded', new OnRolesPermissionsLoaded($rolesAndPermissions))->getData();
+
+# load resources
+$resources = Typemill\Settings::loadResources();
+
+# dispatch roles so plugins can enhance them
+$resources = $dispatcher->dispatch('onResourcesLoaded', new OnResourcesLoaded($resources))->getData();
+
+# create acl-object
+$acl = Typemill\Settings::createAcl($rolesAndPermissions, $resources);
+
+# add acl to container
+$container['acl'] = function($c) use ($acl)
+{
+	return $acl;
+};
 
 /******************************
 * ADD DISPATCHER TO CONTAINER *

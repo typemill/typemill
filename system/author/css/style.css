@@ -67,8 +67,11 @@ a, a:link, a:visited, a:focus, a:hover, a:active, .link, button, .button, .tab-b
 .hover-bg-tm-green:hover{
 	background:#66b0a3;
 }
-.hover-b--tm-green:hover{
+.hover-b--tm-green:hover,.hover-b--tm-green.active{
 	border-color:#66b0a3;
+}
+.hover-bg-white.active{
+	background-color: #fff;
 }
 .w-100{
 	width:100%!important;
@@ -717,6 +720,9 @@ li.row{
 	width: 100%;
 	box-sizing: border-box;
 }
+li.row.header{
+	display:none;
+}
 li.row ul{
 	background: #f9f8f6;
 	margin: 5px 0;
@@ -735,6 +741,15 @@ li.col.username, li.col.email, li.col.userrole, li.col.edit{
 li.col.username{
 	border-top: 2px solid #70c1b3;
 }
+li.col:before{
+	width: 25%;
+	font-weight:900;
+	display:inline-block;
+}
+li.col.username:before{content:"User: ";}
+li.col.userrole:before{content:"Role: ";}
+li.col.email:before{content:"Mail: ";}
+li.col.edit:before{content:"Link: ";}
 .col.username,.col.email,.col.userrole, .col.edit{
 	width: 100%;
 }
@@ -2778,6 +2793,23 @@ footer a:focus, footer a:hover, footer a:active
 		margin-top: 10px;
 		margin-bottom: 40px;
 	}
+	li.row.header{
+		display: block;
+	}
+	li.row.header ul{
+		color: #fff;
+		background: #70c1b3;
+	}
+	li.col.username, li.col.email, li.col.userrole, li.col.edit{
+		border: 1px solid #fff;
+	}
+	li.col.username{
+		border-top: 2px solid #70c1b3;
+	}
+	li.col:before{
+		width: 0%;
+		display:none;
+	}
 	li.row ul{
 		margin: 0px;
 	}
@@ -2786,10 +2818,10 @@ footer a:focus, footer a:hover, footer a:active
 	}
 	.col.edit{
 		width: 10%;
-	}	
+	}
 	li.col.username{
 		border-top: 0px;
-		border-left: 2px solid #70c1b3;
+		border-left: 0px solid #70c1b3;
 	}
 	.buttonset{
 		width: 76%;
