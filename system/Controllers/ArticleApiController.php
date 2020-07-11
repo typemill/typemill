@@ -22,7 +22,7 @@ class ArticleApiController extends ContentController
 	{
 		# get params from call 
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 
 		# validate input only if raw mode
 		if($this->params['raw'])
@@ -98,7 +98,7 @@ class ArticleApiController extends ContentController
 	{
 		# get params from call 
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 
 		# set structure
 		if(!$this->setStructure($draft = true)){ return $response->withJson($this->errors, 404); }
@@ -176,7 +176,7 @@ class ArticleApiController extends ContentController
 	{
 		# get params from call 
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 		
 		# set structure
 		if(!$this->setStructure($draft = true)){ return $response->withJson($this->errors, 404); }
@@ -215,7 +215,7 @@ class ArticleApiController extends ContentController
 	{
 		# get params from call 
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 
 		# set url to base path initially
 		$url = $this->uri->getBaseUrl() . '/tm/content/' . $this->settings['editor'];
@@ -274,7 +274,7 @@ class ArticleApiController extends ContentController
 	{
 		# get params from call 
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 		
 		# validate input 
 		if(!$this->validateEditorInput()){ return $response->withJson($this->errors,422); }
@@ -318,7 +318,7 @@ class ArticleApiController extends ContentController
 	{
 		# get params from call
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 		
 		# url is only needed, if an active page is moved to another folder, so user has to be redirected to the new url
 		$url 			= false;
@@ -425,7 +425,7 @@ class ArticleApiController extends ContentController
 	{
 		# get params from call
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 
 		# url is only needed, if an active page is moved
 		$url 			= false;
@@ -492,7 +492,7 @@ class ArticleApiController extends ContentController
 	{
 		# get params from call
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 
 		# url is only needed, if an active page is moved
 		$url 			= false;
@@ -607,7 +607,7 @@ class ArticleApiController extends ContentController
 	{
 		# get params from call
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 		
 		# url is only needed, if an active page is moved
 		$url 			= false;
@@ -708,7 +708,7 @@ class ArticleApiController extends ContentController
 	{
 		# get params from call
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 
 		# set structure
 		if(!$this->setStructure($draft = true, $cache = false)){ return $response->withJson(array('data' => false, 'errors' => $this->errors, 'url' => $url), 404); }
@@ -729,7 +729,7 @@ class ArticleApiController extends ContentController
 	{
 		/* get params from call */
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 		
 		# set structure
 		if(!$this->setStructure($draft = true)){ return $response->withJson(array('data' => false, 'errors' => $this->errors), 404); }
@@ -776,7 +776,7 @@ class ArticleApiController extends ContentController
 	{
 		/* get params from call */
 		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri();
+		$this->uri 		= $request->getUri()->withUserInfo('');
 		
 		# set structure
 		if(!$this->setStructure($draft = true)){ return $response->withJson(array('data' => false, 'errors' => $this->errors), 404); }

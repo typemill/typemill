@@ -63,7 +63,7 @@ abstract class Plugin implements EventSubscriberInterface
 
 	protected function getRoute()
 	{
-		return $this->container['request']->getUri();
+		return $this->container['request']->getUri()->withUserInfo('');
 	}
 	
 	protected function getPath()
