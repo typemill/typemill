@@ -134,6 +134,12 @@ class MetaApiController extends ContentController
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri()->withUserInfo('');
 
+		# minimum permission is that user is allowed to update his own content
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'mycontent', 'update'))
+		{
+			return $response->withJson(array('data' => false, 'errors' => ['message' => 'You are not allowed to update content.']), 403);
+		}
+
 		$tab 			= isset($this->params['tab']) ? $this->params['tab'] : false;
 		$metaInput		= isset($this->params['data']) ? $this->params['data'] : false ;
 		$objectName		= 'meta';
@@ -149,6 +155,16 @@ class MetaApiController extends ContentController
 
 		# set item 
 		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
+
+		# if user has no right to delete content from others (eg admin or editor)
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'content', 'update'))
+		{
+			# check ownership. This code should nearly never run, because there is no button/interface to trigger it.
+			if(!$this->checkContentOwnership())
+			{
+				return $response->withJson(array('data' => false, 'errors' => ['message' => 'You are not allowed to edit content.']), 403);
+			}
+		}
 
 		# if item is a folder
 		if($this->item->elementType == "folder")

@@ -9,7 +9,7 @@ class Translations
     $yaml = new Models\WriteYaml();
     $settings = $yaml->getYaml('settings', 'settings.yaml');
 
-    if($settings === FALSE){
+    if(!isset($settings['language'])){
       $language = \Typemill\Settings::whichLanguage();
     } else {
       $language = $settings['language'];

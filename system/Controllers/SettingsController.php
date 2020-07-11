@@ -9,6 +9,8 @@ use Typemill\Models\Validation;
 use Typemill\Models\User;
 use Typemill\Models\ProcessFile;
 use Typemill\Models\ProcessImage;
+use Typemill\Events\OnUserfieldsLoaded;
+use Typemill\Events\OnSystemnaviLoaded;
 
 class SettingsController extends Controller
 {	
@@ -26,26 +28,28 @@ class SettingsController extends Controller
 		$locale				= isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? substr($_SERVER["HTTP_ACCEPT_LANGUAGE"],0,2) : 'en';
 		$users				= $user->getUsers();
 		$route 				= $request->getAttribute('route');
+		$navigation 		= $this->getNavigation();
 
-		return $this->render($response, 'settings/system.twig', array('settings' => $settings, 'copyright' => $copyright, 'languages' => $languages, 'locale' => $locale, 'formats' => $defaultSettings['formats'] ,'users' => $users, 'route' => $route->getName() ));
+		# set navigation active
+		$navigation['System']['active'] = true;
+
+		return $this->render($response, 'settings/system.twig', array(
+			'settings' 		=> $settings,
+			'acl' 			=> $this->c->acl, 
+			'navigation'	=> $navigation,
+			'copyright' 	=> $copyright, 
+			'languages' 	=> $languages, 
+			'locale' 		=> $locale, 
+			'formats' 		=> $defaultSettings['formats'],
+			'users' 		=> $users, 
+			'route' 		=> $route->getName() 
+		));
 	}
 	
 	public function saveSettings($request, $response, $args)
 	{
 		if($request->isPost())
-		{
-			$referer		= $request->getHeader('HTTP_REFERER');
-			$uri 			= $request->getUri()->withUserInfo('');
-			$base_url		= $uri->getBaseUrl();
-
-			/* security, users should not be able to fake post with settings from other typemill pages.
-			if(!isset($referer[0]) OR $referer[0] !== $base_url . '/tm/settings' )
-			{
-				$this->c->flash->addMessage('error', 'illegal referer');
-				return $response->withRedirect($this->c->router->pathFor('settings.show'));				
-			}
-			*/
-			
+		{			
 			$settings 			= \Typemill\Settings::getUserSettings();
 			$defaultSettings	= \Typemill\Settings::getDefaultSettings();
 			$params 			= $request->getParams();
@@ -232,9 +236,19 @@ class SettingsController extends Controller
 		}
 		
 		/* add the users for navigation */
-		$route 		= $request->getAttribute('route');
+		$route 	= $request->getAttribute('route');
+		$navigation = $this->getNavigation();
 
-		return $this->render($response, 'settings/themes.twig', array('settings' => $userSettings, 'themes' => $themedata, 'route' => $route->getName() ));
+		# set navigation active
+		$navigation['Themes']['active'] = true;
+
+		return $this->render($response, 'settings/themes.twig', array(
+			'settings' 		=> $userSettings,
+			'acl' 			=> $this->c->acl,
+			'navigation' 	=> $navigation, 
+			'themes' 		=> $themedata, 
+			'route' 		=> $route->getName() 
+		));
 	}
 	
 	public function showPlugins($request, $response, $args)
@@ -300,8 +314,18 @@ class SettingsController extends Controller
 		}
 		
 		$route 	= $request->getAttribute('route');
+		$navigation = $this->getNavigation();
+
+		# set navigation active
+		$navigation['Plugins']['active'] = true;
 		
-		return $this->render($response, 'settings/plugins.twig', array('settings' => $userSettings, 'plugins' => $plugins, 'route' => $route->getName() ));
+		return $this->render($response, 'settings/plugins.twig', array(
+			'settings' 		=> $userSettings,
+			'acl' 			=> $this->c->acl,
+			'navigation' 	=> $navigation,
+			'plugins' 		=> $plugins,
+			'route' 		=> $route->getName() 
+		));
 	}
 
 	/*************************************
@@ -311,19 +335,7 @@ class SettingsController extends Controller
 	public function saveThemes($request, $response, $args)
 	{
 		if($request->isPost())
-		{
-			$referer		= $request->getHeader('HTTP_REFERER');
-			$uri 			= $request->getUri()->withUserInfo('');
-			$base_url		= $uri->getBaseUrl();
-
-			/* users should not be able to fake post with settings from other typemill pages.
-			if(!isset($referer[0]) OR $referer[0] !== $base_url . '/tm/themes' )
-			{
-				$this->c->flash->addMessage('error', 'illegal referer');
-				return $response->withRedirect($this->c->router->pathFor('themes.show'));
-			}
-			*/
-	
+		{	
 			$userSettings 	= \Typemill\Settings::getUserSettings();
 			$params 		= $request->getParams();
 			$themeName		= isset($params['theme']) ? $params['theme'] : false;
@@ -410,18 +422,6 @@ class SettingsController extends Controller
 	{
 		if($request->isPost())
 		{
-			$referer		= $request->getHeader('HTTP_REFERER');
-			$uri 			= $request->getUri()->withUserInfo('');
-			$base_url		= $uri->getBaseUrl();
-
-			/* security, users should not be able to fake post with settings from other typemill pages.
-			if(!isset($referer[0]) OR $referer[0] !== $base_url . '/tm/plugins' )
-			{
-				$this->c->flash->addMessage('error', 'illegal referer');
-				return $response->withRedirect($this->c->router->pathFor('plugins.show'));
-			}
-			*/
-
 			$userSettings 	= \Typemill\Settings::getUserSettings();
 			$pluginSettings	= array();
 			$userInput 		= $request->getParams();
@@ -479,6 +479,421 @@ class SettingsController extends Controller
 			
 			return $response->withRedirect($this->c->router->pathFor('plugins.show'));
 		}
+	}
+
+	/***********************
+	**   USER MANAGEMENT  **
+	***********************/
+
+	public function showAccount($request, $response, $args)
+	{
+		$username 	= $_SESSION['user'];
+
+		$validate 	= new Validation();
+		
+		if($validate->username($username))
+		{
+			# get settings
+			$settings 	= $this->c->get('settings');
+
+			# get user with userdata
+			$user 		= new User();
+			$userdata 	= $user->getSecureUser($username);
+			
+			# instantiate field-builder
+			$fieldsModel	= new Fields();
+
+			# get the field-definitions
+			$fieldDefinitions = $this->getUserFields($userdata['userrole']);
+
+			# prepare userdata for field-builder
+			$userSettings['users']['user'] = $userdata;
+
+			# generate the input form
+			$userform = $fieldsModel->getFields($userSettings, 'users', 'user', $fieldDefinitions);
+
+			$route = $request->getAttribute('route');
+			$navigation = $this->getNavigation();
+
+			# set navigation active
+			$navigation['Account']['active'] = true;
+
+			return $this->render($response, 'settings/user.twig', array(
+				'settings' 		=> $settings,
+				'acl' 			=> $this->c->acl,
+				'navigation'	=> $navigation, 
+				'usersettings' 	=> $userSettings, 		// needed for image url in form, will overwrite settings for field-template
+				'userform' 		=> $userform, 			// field model, needed to generate frontend-field
+				'userdata' 		=> $userdata, 			// needed to fill form with data
+#				'userrole' 		=> false,				// not needed ? 
+#				'username' 		=> $args['username'], 	// not needed ?
+				'route' 		=> $route->getName()  	// needed to set link active
+			));			
+		}
+		
+		$this->c->flash->addMessage('error', 'User does not exists');
+		return $response->withRedirect($this->c->router->pathFor('home'));
+	}
+	
+	public function showUser($request, $response, $args)
+	{
+		# if user has no rights to watch userlist, then redirect to 
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'userlist', 'view') && $_SESSION['user'] !== $args['username'] )
+		{
+			return $response->withRedirect($this->c->router->pathFor('user.show', ['username' => $_SESSION['user']] ));
+		}
+		
+		$validate 	= new Validation();
+		
+		if($validate->username($args['username']))
+		{
+			# get settings
+			$settings 	= $this->c->get('settings');
+
+			# get user with userdata
+			$user 		= new User();
+			$userdata 	= $user->getSecureUser($args['username']);
+
+			$username	= $userdata['username'];
+			
+			# instantiate field-builder
+			$fieldsModel	= new Fields();
+
+			# get the field-definitions
+			$fieldDefinitions = $this->getUserFields($userdata['userrole']);
+
+			# prepare userdata for field-builder
+			$userSettings['users']['user'] = $userdata;
+
+			# generate the input form
+			$userform = $fieldsModel->getFields($userSettings, 'users', 'user', $fieldDefinitions);
+
+			$route = $request->getAttribute('route');
+			$navigation = $this->getNavigation();
+
+			# set navigation active
+			$navigation['Users']['active'] = true;
+			
+			return $this->render($response, 'settings/user.twig', array(
+				'settings' 		=> $settings,
+				'acl' 			=> $this->c->acl, 
+				'navigation'	=> $navigation, 
+				'usersettings' 	=> $userSettings, 		// needed for image url in form, will overwrite settings for field-template
+				'userform' 		=> $userform, 			// field model, needed to generate frontend-field
+				'userdata' 		=> $userdata, 			// needed to fill form with data
+#				'userrole' 		=> false,				// not needed ? 
+#				'username' 		=> $args['username'], 	// not needed ?
+				'route' 		=> $route->getName()  	// needed to set link active
+			));
+		}
+		
+		$this->c->flash->addMessage('error', 'User does not exists');
+		return $response->withRedirect($this->c->router->pathFor('user.account'));
+	}
+
+	public function listUser($request, $response)
+	{
+		$user			= new User();
+		$users			= $user->getUsers();
+		$userdata 		= array();
+		$route 			= $request->getAttribute('route');
+		$settings 		= $this->c->get('settings');
+		$navigation 	= $this->getNavigation();
+		
+		# set navigation active
+		$navigation['Users']['active'] = true;
+
+		foreach($users as $username)
+		{
+			$userdata[] = $user->getUser($username);
+		}
+		
+		return $this->render($response, 'settings/userlist.twig', array(
+			'settings' 		=> $settings,
+			'acl' 			=> $this->c->acl, 
+			'navigation' 	=> $navigation, 
+			'users' 		=> $users, 
+			'userdata' 		=> $userdata, 
+			'route' 		=> $route->getName() 
+		));
+	}
+	
+	public function newUser($request, $response, $args)
+	{
+		$user 			= new User();
+		$users			= $user->getUsers();
+		$userroles 		= $this->c->acl->getRoles();
+		$route 			= $request->getAttribute('route');
+		$settings 		= $this->c->get('settings');
+		$navigation 	= $this->getNavigation();
+
+		# set navigation active
+		$navigation['Users']['active'] = true;
+
+		return $this->render($response, 'settings/usernew.twig', array(
+			'settings' 		=> $settings, 
+			'acl' 			=> $this->c->acl, 
+			'navigation'	=> $navigation,
+			'users' 		=> $users, 
+			'userrole' 		=> $userroles, 
+			'route' 		=> $route->getName() 
+		));
+	}
+		
+	public function createUser($request, $response, $args)
+	{
+		if($request->isPost())
+		{
+			$params 		= $request->getParams();
+			$user 			= new User();
+			$validate		= new Validation();
+			$userroles 		= $this->c->acl->getRoles();
+
+			if($validate->newUser($params, $userroles))
+			{
+				$userdata	= array(
+					'username' 		=> $params['username'], 
+					'email' 		=> $params['email'], 
+					'userrole' 		=> $params['userrole'], 
+					'password' 		=> $params['password']);
+				
+				$user->createUser($userdata);
+
+				$this->c->flash->addMessage('info', 'Welcome, there is a new user!');
+				return $response->withRedirect($this->c->router->pathFor('user.list'));
+			}
+			
+			$this->c->flash->addMessage('error', 'Please correct your input');
+			return $response->withRedirect($this->c->router->pathFor('user.new'));
+		}
+	}
+	
+	public function updateUser($request, $response, $args)
+	{
+
+		if($request->isPost())
+		{
+			$params 		= $request->getParams();
+			$userdata 		= $params['user'];
+			$user 			= new User();
+			$validate		= new Validation();
+			$userroles 		= $this->c->acl->getRoles();
+			
+			$redirectRoute	= ($userdata['username'] == $_SESSION['user']) ? $this->c->router->pathFor('user.account') : $this->c->router->pathFor('user.show', ['username' => $userdata['username']]);
+
+			# check if user is allowed to view (edit) userlist and other users
+			if(!$this->c->acl->isAllowed($_SESSION['role'], 'userlist', 'write'))
+			{
+				# if an editor tries to update other userdata than its own */
+				if($_SESSION['user'] !== $userdata['username'])
+				{
+					return $response->withRedirect($this->c->router->pathFor('user.account'));
+				}
+				
+				# non admins cannot change their userrole, so set it to session-value
+				$userdata['userrole'] = $_SESSION['role'];
+			}
+
+			# validate standard fields for users
+			if($validate->existingUser($userdata, $userroles))
+			{
+				# validate custom input fields and return images
+				$userfields = $this->getUserFields($userdata['userrole']);
+				$imageFields = $this->validateInput('users', 'user', $userdata, $validate, $userfields);
+
+				if(!empty($imageFields))
+				{
+					$images = $request->getUploadedFiles();
+
+					if(isset($images['user']))
+					{
+						# set image size
+						$settings = $this->c->get('settings');
+						$settings->replace(['images' => ['live' => ['width' => 500, 'height' => 500]]]);
+						$imageresult = $this->saveImages($imageFields, $userdata, $settings, $images['user']);
+		
+						if(isset($_SESSION['slimFlash']['error']))
+						{
+							return $response->withRedirect($redirectRoute);
+						}
+						elseif(isset($imageresult['username']))
+						{
+							$userdata = $imageresult;
+						}
+					}
+				}
+
+				# check for errors and redirect to path, if errors found */
+				if(isset($_SESSION['errors']))
+				{
+					$this->c->flash->addMessage('error', 'Please correct the errors');
+					return $response->withRedirect($redirectRoute);
+				}
+
+				if(empty($userdata['password']) AND empty($userdata['newpassword']))
+				{
+					# make sure no invalid passwords go into model
+					unset($userdata['password']);
+					unset($userdata['newpassword']);
+
+					$user->updateUser($userdata);
+					$this->c->flash->addMessage('info', 'Saved all changes');
+					return $response->withRedirect($redirectRoute);
+				}
+				elseif($validate->newPassword($userdata))
+				{
+					$userdata['password'] = $userdata['newpassword'];
+					unset($userdata['newpassword']);
+
+					$user->updateUser($userdata);
+					$this->c->flash->addMessage('info', 'Saved all changes');
+					return $response->withRedirect($redirectRoute);
+				}
+			}
+			
+			$this->c->flash->addMessage('error', 'Please correct your input');
+			return $response->withRedirect($redirectRoute);
+		}
+	}
+	
+	public function deleteUser($request, $response, $args)
+	{
+		if($request->isPost())
+		{			
+			$params 		= $request->getParams();
+			$validate		= new Validation();
+			$user			= new User();
+
+			# check if user is allowed to view (edit) userlist and other users
+			if(!$this->c->acl->isAllowed($_SESSION['role'], 'userlist', 'write'))
+			{
+				# if an editor tries to delete other user than its own
+				if($_SESSION['user'] !== $params['username'])
+				{
+					return $response->withRedirect($this->c->router->pathFor('user.account'));
+				}				
+			}
+			
+			if($validate->username($params['username']))
+			{
+				$user->deleteUser($params['username']);
+
+				# if user deleted his own account
+				if($_SESSION['user'] == $params['username'])
+				{
+					session_destroy();		
+					return $response->withRedirect($this->c->router->pathFor('auth.show'));
+				}
+				
+				$this->c->flash->addMessage('info', 'Say goodbye, the user is gone!');
+				return $response->withRedirect($this->c->router->pathFor('user.list'));
+			}
+			
+			$this->c->flash->addMessage('error', 'Ups, we did not find that user');
+			return $response->withRedirect($this->c->router->pathFor('user.show', ['username' => $params['username']]));			
+		}
+	}
+
+	private function getUserFields($role)
+	{
+		$fields = [];
+		$fields['username'] 	= ['label' => 'Username (read only)', 'type' => 'text', 'readonly' => true];
+		$fields['firstname'] 	= ['label' => 'First Name', 'type' => 'text'];
+		$fields['lastname'] 	= ['label' => 'Last Name', 'type' => 'text'];
+		$fields['email'] 		= ['label' => 'E-Mail', 'type' => 'text', 'required' => true];
+		$fields['userrole'] 	= ['label' => 'Role', 'type' => 'text', 'readonly' => true];
+		$fields['password'] 	= ['label' => 'Actual Password', 'type' => 'password'];
+		$fields['newpassword'] 	= ['label' => 'New Password', 'type' => 'password'];
+
+		# dispatch fields;
+		$fields = $this->c->dispatcher->dispatch('onUserfieldsLoaded', new OnUserfieldsLoaded($fields))->getData();
+
+		# only roles who can edit content need profile image and description
+		if($this->c->acl->isAllowed($role, 'content', 'create'))
+		{
+			$newfield['image'] 			= ['label' => 'Profile-Image', 'type' => 'image'];
+			$newfield['description'] 	= ['label' => 'Author-Description (Markdown)', 'type' => 'textarea'];			
+			array_splice($fields,1,0,$newfield);
+		}
+
+		# Only admin can change userroles
+		if($this->c->acl->isAllowed($_SESSION['role'], 'userlist', 'write'))
+		{
+			$userroles = $this->c->acl->getRoles();
+			$options = [];
+
+			# we need associative array to make select-field with key/value work
+			foreach($userroles as $userrole)
+			{
+				$options[$userrole] = $userrole;
+ 			}
+
+			$fields['userrole'] = ['label' => 'Role', 'type' => 'select', 'options' => $options];
+		}
+
+		$userform = [];
+		$userform['forms']['fields'] = $fields;
+		return $userform;
+	}
+
+	private function getThemes()
+	{
+		$themeFolder 	= $this->c->get('settings')['rootPath'] . $this->c->get('settings')['themeFolder'];
+		$themeFolderC 	= scandir($themeFolder);
+		$themes 		= array();
+		foreach ($themeFolderC as $key => $theme)
+		{
+			if (!in_array($theme, array(".","..")))
+			{
+				if (is_dir($themeFolder . DIRECTORY_SEPARATOR . $theme))
+				{
+					$themes[] = $theme;
+				}
+			}
+		}
+		return $themes;
+	}
+		
+	private function getCopyright()
+	{
+		return array(
+			"©",
+			"CC-BY",
+			"CC-BY-NC",
+			"CC-BY-NC-ND",
+			"CC-BY-NC-SA",
+			"CC-BY-ND",
+			"CC-BY-SA",
+			"None"
+		);
+	}
+		
+	private function getLanguages()
+	{
+		return array(
+			'en' => 'English',
+			'ru' => 'Russian',
+			'nl' => 'Dutch, Flemish',
+			'de' => 'German',
+			'it' => 'Italian',
+			'fr' => 'French',
+		);
+	}
+
+	private function getNavigation()
+	{
+		$navigation = [
+			'System'	=> ['routename' => 'settings.show', 'icon' => 'icon-wrench', 'aclresource' => 'system', 'aclprivilege' => 'view'],
+			'Themes'	=> ['routename' => 'themes.show', 'icon' => 'icon-paint-brush', 'aclresource' => 'system', 'aclprivilege' => 'view'],
+			'Plugins'	=> ['routename' => 'plugins.show', 'icon' => 'icon-plug', 'aclresource' => 'system', 'aclprivilege' => 'view'],
+			'Account'	=> ['routename' => 'user.account', 'icon' => 'icon-user', 'aclresource' => 'user', 'aclprivilege' => 'view'],
+			'Users'		=> ['routename' => 'user.list', 'icon' => 'icon-group', 'aclresource' => 'userlist', 'aclprivilege' => 'view']
+		];
+
+		# dispatch fields;
+		$navigation = $this->c->dispatcher->dispatch('onSystemnaviLoaded', new OnSystemnaviLoaded($navigation))->getData();
+
+		return $navigation;
 	}
 
 	private function validateInput($objectType, $objectName, $userInput, $validate, $originalSettings = NULL)
@@ -543,7 +958,7 @@ class SettingsController extends Controller
 						$imageFieldDefinitions[$fieldName] = $fieldDefinition;
 					}
 				}
-				if(!$fieldDefinition && $fieldName != 'active')
+				if(!$fieldDefinition && $objectType != 'users' && $fieldName != 'active')
 				{
 					$_SESSION['errors'][$objectName][$fieldName] = array('This field is not defined!');
 				}
@@ -588,391 +1003,5 @@ class SettingsController extends Controller
 			}
 		}
 		return $userInput;
-	}
-
-	/***********************
-	**   USER MANAGEMENT  **
-	***********************/
-
-	public function showAccount($request, $response, $args)
-	{		
-		$username 	= $_SESSION['user'];
-
-		$validate 	= new Validation();
-		
-		if($validate->username($username))
-		{
-			# get settings
-			$settings 	= $this->c->get('settings');
-
-			# get user with userdata
-			$user 		= new User();
-			$userdata 	= $user->getSecureUser($username);
-			
-			# instantiate field-builder
-			$fieldsModel	= new Fields();
-
-			# get the field-definitions
-			$fieldDefinitions = $this->getUserFields($_SESSION['role']);
-
-			# prepare userdata for field-builder
-			$userSettings['user'][$username] = $userdata;
-
-			# generate the input form
-			$userform = $fieldsModel->getFields($userSettings, 'user', $username, $fieldDefinitions);
-
-			$route = $request->getAttribute('route');
-
-			return $this->render($response, 'settings/user.twig', array(
-				'settings' 		=> $settings, 
-				'usersettings' 	=> $userSettings, 		// needed for image url in form, will overwrite settings for field-template
-				'userform' 		=> $userform, 			// field model, needed to generate frontend-field
-				'userdata' 		=> $userdata, 			// needed to fill form with data
-#				'userrole' 		=> false,				// not needed ? 
-#				'username' 		=> $args['username'], 	// not needed ?
-				'route' 		=> $route->getName()  	// needed to set link active
-			));
-			
-			return $this->render($response, 'settings/user.twig', array('settings' => $settings, 'usersettings' => $userSettings, 'userdata' => $userdata, 'userrole' => false, 'username' => $username, 'userform' => $userform, 'route' => $route->getName() ));
-		}
-		
-		$this->c->flash->addMessage('error', 'User does not exists');
-		return $response->withRedirect($this->c->router->pathFor('home'));
-	}
-	
-	public function showUser($request, $response, $args)
-	{
-		# if user has no rights to watch userlist, then only show his user-entry
-		if(!$this->c->acl->isAllowed($_SESSION['role'], 'userlist', 'view') && $_SESSION['user'] !== $args['username'] )
-		{
-			return $response->withRedirect($this->c->router->pathFor('user.show', ['username' => $_SESSION['user']] ));
-		}
-		
-		$validate 	= new Validation();
-		
-		if($validate->username($args['username']))
-		{
-			# get settings
-			$settings 	= $this->c->get('settings');
-
-			# get user with userdata		
-			$user 		= new User();
-			$userdata 	= $user->getSecureUser($args['username']);
-
-			$username	= $userdata['username'];
-			
-			# instantiate field-builder
-			$fieldsModel	= new Fields();
-
-			# get the field-definitions
-			$fieldDefinitions = $this->getUserFields($userdata['userrole']);
-
-			# prepare userdata for field-builder
-			$userSettings['user'][$username] = $userdata;
-
-			# generate the input form
-			$userform = $fieldsModel->getFields($userSettings, 'user', $username, $fieldDefinitions);
-
-			$route = $request->getAttribute('route');
-			
-			return $this->render($response, 'settings/user.twig', array(
-				'settings' 		=> $settings, 
-				'usersettings' 	=> $userSettings, 		// needed for image url in form, will overwrite settings for field-template
-				'userform' 		=> $userform, 			// field model, needed to generate frontend-field
-				'userdata' 		=> $userdata, 			// needed to fill form with data
-#				'userrole' 		=> false,				// not needed ? 
-#				'username' 		=> $args['username'], 	// not needed ?
-				'route' 		=> $route->getName()  	// needed to set link active
-			));
-		}
-		
-		$this->c->flash->addMessage('error', 'User does not exists');
-		return $response->withRedirect($this->c->router->pathFor('user.account'));
-	}
-
-	private function getUserFields($role)
-	{
-		$fields = [];
-		$fields['username'] 	= ['label' => 'Username (read only)', 'type' => 'text', 'readonly' => true];
-		$fields['image'] 		= ['label' => 'Profile-Image', 'type' => 'image'];
-		$fields['description'] 	= ['label' => 'Author-Description (Markdown)', 'type' => 'textarea'];
-		$fields['firstname'] 	= ['label' => 'First Name', 'type' => 'text'];
-		$fields['lastname'] 	= ['label' => 'Last Name', 'type' => 'text'];
-		$fields['email'] 		= ['label' => 'E-Mail', 'type' => 'text', 'required' => true];
-		$fields['userrole'] 	= ['label' => 'Role', 'type' => 'text', 'readonly' => true];
-		$fields['password'] 	= ['label' => 'Actual Password', 'type' => 'password'];
-		$fields['newpassword'] 	= ['label' => 'New Password', 'type' => 'password'];
-
-		# dispatch fields;
-
-		# change admin stuff
-		if($_SESSION['role'] == 'administrator')
-		{
-			$userroles = $this->c->acl->getRoles();
-			$options = [];
-
-			# we need associative array to make select-field with key/value work
-			foreach($userroles as $userrole)
-			{
-				$options[$userrole] = $userrole;
- 			}
-
-			$fields['userrole'] = ['label' => 'Role', 'type' => 'select', 'options' => $options];
-		}
-
-		$userform = [];
-		$userform['forms']['fields'] = $fields;
-		return $userform; 
-	}
-
-	public function listUser($request, $response)
-	{
-		$user		= new User();
-		$users		= $user->getUsers();
-		$userdata 	= array();
-		$route 		= $request->getAttribute('route');
-		$settings 	= $this->c->get('settings');
-		
-		foreach($users as $username)
-		{
-			$userdata[] = $user->getUser($username);
-		}
-		
-		return $this->render($response, 'settings/userlist.twig', array('settings' => $settings, 'users' => $users, 'userdata' => $userdata, 'route' => $route->getName() ));
-	}
-	
-	public function newUser($request, $response, $args)
-	{
-		$user 		= new User();
-		$users		= $user->getUsers();
-		$userrole	= $user->getUserroles();
-		$route 		= $request->getAttribute('route');
-		$settings 	= $this->c->get('settings');
-
-		return $this->render($response, 'settings/usernew.twig', array('settings' => $settings, 'users' => $users, 'userrole' => $userrole, 'route' => $route->getName() ));
-	}
-		
-	public function createUser($request, $response, $args)
-	{
-		if($request->isPost())
-		{
-			$referer		= $request->getHeader('HTTP_REFERER');
-			$uri 			= $request->getUri()->withUserInfo('');
-			$base_url		= $uri->getBaseUrl();
-
-			/* security, users should not be able to fake post with settings from other typemill pages.
-			if(!isset($referer[0]) OR $referer[0] !== $base_url . '/tm/user/new' )
-			{
-				$this->c->flash->addMessage('error', 'illegal referer');
-				return $response->withRedirect($this->c->router->pathFor('user.new'));
-			}
-			*/
-			
-			$params 		= $request->getParams();
-			$user 			= new User();
-			$validate		= new Validation();
-			$userroles 		= $this->c->acl->getRoles();
-
-			if($validate->newUser($params, $userroles))
-			{
-				$userdata	= array(
-					'username' => $params['username'], 
-					'firstname' => $params['firstname'], 
-					'lastname' => $params['lastname'], 
-					'email' => $params['email'], 
-					'userrole' => $params['userrole'], 
-					'password' => $params['password']);
-				
-				$user->createUser($userdata);
-
-				$this->c->flash->addMessage('info', 'Welcome, there is a new user!');
-				return $response->withRedirect($this->c->router->pathFor('user.list'));
-			}
-			
-			$this->c->flash->addMessage('error', 'Please correct your input');
-			return $response->withRedirect($this->c->router->pathFor('user.new'));
-		}
-	}
-	
-	public function updateUser($request, $response, $args)
-	{
-
-		if($request->isPost())
-		{
-			$referer		= $request->getHeader('HTTP_REFERER');
-			$uri 			= $request->getUri()->withUserInfo('');
-			$base_url		= $uri->getBaseUrl();
-
-			/* security, users should not be able to fake post with settings from other typemill pages.
-			if(!isset($referer[0]) OR strpos($referer[0], $base_url . '/tm/user/') === false )
-			{
-				$this->c->flash->addMessage('error', 'illegal referer');
-				return $response->withRedirect($this->c->router->pathFor('user.list'));
-			}
-			*/
-			
-			$params 		= $request->getParams();
-			$userdata 		= $params['user'];
-			$user 			= new User();
-			$validate		= new Validation();
-			$userroles 		= $this->c->acl->getRoles();
-
-			print_r($params);
-			die();
-						
-			# check if user is allowed to view (edit) userlist and other users
-			if(!$this->c->acl->isAllowed($_SESSION['role'], 'userlist', 'view'))
-			{
-				# if an editor tries to update other userdata than its own */
-				if($_SESSION['user'] !== $userdata['username'])
-				{
-					return $response->withRedirect($this->c->router->pathFor('user.account'));
-				}
-				
-				# non admins cannot change his userrole, so set it to session-value
-				$userdata['userrole'] = $_SESSION['role'];
-			}
-
-			# validate standard fields for users
-			if($validate->existingUser($userdata, $userroles))
-			{
-				# validate custom input fields and return images
-				$userfields = $this->getUserFields($userdata['userrole']);
-				$imageFields = $this->validateInput('users', 'user', $userdata, $validate, $userfields);
-
-				if(!isset($_SESSION['errors']) && !empty($imageFields))
-				{
-					$images = $request->getUploadedFiles();
-
-					if(isset($images['user']))
-					{
-						# set image size
-						$settings = $this->c->get('settings');
-						$settings['images']['live'] = ['width' => 500, 'height' => 500];
-						$userdata = $this->saveImages($imageFields, $userdata, $settings, $images['user']);
-					}
-				}
-			
-				# check for errors and redirect to path, if errors found */
-				if(isset($_SESSION['errors']))
-				{
-					$this->c->flash->addMessage('error', 'Please correct the errors');
-					return $response->withRedirect($this->c->router->pathFor('user.show', ['username' => $userdata['username']]));
-				}
-
-				if(empty($userdata['password']) AND empty($userdata['newpassword']))
-				{
-					$user->updateUser($userdata);
-					$this->c->flash->addMessage('info', 'Saved all changes');
-					return $response->withRedirect($this->c->router->pathFor('user.show', ['username' => $userdata['username']]));
-				}
-				elseif($validate->newPassword($userdata))
-				{
-					$userdata['password'] = $userdata['newpassword'];
-					unset($userdata['newpassword']);
-
-					$user->updateUser($userdata);
-					$this->c->flash->addMessage('info', 'Saved all changes');
-					return $response->withRedirect($this->c->router->pathFor('user.show', ['username' => $userdata['username']]));
-				}
-			}
-			
-			$this->c->flash->addMessage('error', 'Please correct your input');
-			return $response->withRedirect($this->c->router->pathFor('user.show', ['username' => $userdata['username']]));
-		}
-	}
-	
-	public function deleteUser($request, $response, $args)
-	{
-		if($request->isPost())
-		{
-			$referer		= $request->getHeader('HTTP_REFERER');
-			$uri 			= $request->getUri()->withUserInfo('');
-			$base_url		= $uri->getBaseUrl();
-
-			/* security, users should not be able to fake post with settings from other typemill pages.
-			if(!isset($referer[0]) OR strpos($referer[0], $base_url . '/tm/user/') === false )
-			{
-				$this->c->flash->addMessage('error', 'illegal referer');
-				return $response->withRedirect($this->c->router->pathFor('user.list'));
-			}
-			*/
-			
-			$params 		= $request->getParams();
-			$validate		= new Validation();
-			$user			= new User();
-
-			/* non admins have different update rights */
-			if($_SESSION['role'] !== 'administrator')
-			{
-				/* if an editor tries to delete other user than its own */
-				if($_SESSION['user'] !== $params['username'])
-				{
-					return $response->withRedirect($this->c->router->pathFor('user.show', ['username' => $_SESSION['user']] ));
-				}				
-			}
-			
-			if($validate->username($params['username']))
-			{
-				$user->deleteUser($params['username']);
-
-				# if user deleted his own account
-				if($_SESSION['user'] == $params['username'])
-				{
-					session_destroy();		
-					return $response->withRedirect($this->c->router->pathFor('auth.show'));
-				}
-				
-				$this->c->flash->addMessage('info', 'Say goodbye, the user is gone!');
-				return $response->withRedirect($this->c->router->pathFor('user.list'));			
-			}
-			
-			$this->c->flash->addMessage('error', 'Ups, we did not find that user');
-			return $response->withRedirect($this->c->router->pathFor('user.show', ['username' => $params['username']]));			
-		}
-	}
-
-	private function getThemes()
-	{
-		$themeFolder 	= $this->c->get('settings')['rootPath'] . $this->c->get('settings')['themeFolder'];
-		$themeFolderC 	= scandir($themeFolder);
-		$themes 		= array();
-		foreach ($themeFolderC as $key => $theme)
-		{
-			if (!in_array($theme, array(".","..")))
-			{
-				if (is_dir($themeFolder . DIRECTORY_SEPARATOR . $theme))
-				{
-					$themes[] = $theme;
-				}
-			}
-		}
-		return $themes;
-	}
-		
-	private function getCopyright()
-	{
-		return array(
-			"©",
-			"CC-BY",
-			"CC-BY-NC",
-			"CC-BY-NC-ND",
-			"CC-BY-NC-SA",
-			"CC-BY-ND",
-			"CC-BY-SA",
-			"None"
-		);
-	}
-		
-	private function getLanguages()
-	{
-		return array(
-			'en' => 'English',
-			'ru' => 'Russian',
-			'nl' => 'Dutch, Flemish',
-			'de' => 'German',
-			'it' => 'Italian',
-			'fr' => 'French',
-		);
-	}
+	}	
 }

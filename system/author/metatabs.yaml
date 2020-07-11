@@ -18,11 +18,16 @@ meta:
     heroimagealt:
       type: text
       label: Alternative Text for the hero image
+    owner:
+      type: text
+      label: owner (username)
+      class: medium
+      description: Has edit rights for this article.
     author:
       type: text
       label: author
-      class: large
-      description: Taken from your user account if set.
+      class: medium
+      description: Can be used for author line in frontend.
     manualdate:
       type: date
       label: Manual date

@@ -66,11 +66,11 @@ class SetupController extends Controller
 			$validate		= new Validation();
 			$user			= new User();
 
-			/* set user as admin */
+			# set user as admin
 			$params['userrole'] = 'administrator';
 			
-			/* get userroles for validation */
-			$userroles		= $user->getUserroles();
+			# get userroles for validation
+			$userroles 		= $this->c->acl->getRoles();
 			
 			/* validate user */
 			if($validate->newUser($params, $userroles))

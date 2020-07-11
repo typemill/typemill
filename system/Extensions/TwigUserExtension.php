@@ -8,6 +8,7 @@ class TwigUserExtension extends \Twig_Extension
 	{
 		return [
 			new \Twig_SimpleFunction('is_role', array($this, 'isRole' )),
+			new \Twig_SimpleFunction('get_role', array($this, 'getRole' )),
 			new \Twig_SimpleFunction('get_username', array($this, 'getUsername' ))
 		];
 	}
@@ -19,6 +20,15 @@ class TwigUserExtension extends \Twig_Extension
 			return true;
 		}
 		
+		return false;
+	}
+
+	public function getRole()
+	{
+		if(isset($_SESSION['role']))
+		{
+			return $_SESSION['role'];
+		}
 		return false;
 	}
 	

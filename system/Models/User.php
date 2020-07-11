@@ -66,25 +66,37 @@ class User extends WriteYaml
 	{
 		$userdata = $this->getUser($params['username']);
 		
+		# make sure passwords are not overwritten 
+		if(isset($params['newpassword'])){ unset($params['newpassword']); }
 		if(isset($params['password']))
 		{
-			$params['password'] = $this->generatePassword($params['password']);
+			if(empty($params['password']))
+			{ 
+				unset($params['password']); 
+			}
+			else
+			{
+				$params['password'] = $this->generatePassword($params['password']);
+			}
 		}
 		
 		$update = array_merge($userdata, $params);
 		
 		$this->updateYaml('settings/users', $userdata['username'] . '.yaml', $update);
 
-		$_SESSION['user'] 	= $update['username'];
-		$_SESSION['role'] 	= $update['userrole'];
+		# if user updated his own profile, update session data
+		if($_SESSION['user'] == $params['username'])
+		{
+			$_SESSION['role'] 	= $update['userrole'];
 
-		if(isset($update['firstname']))
-		{
-			$_SESSION['firstname'] = $update['firstname'];
-		}
-		if(isset($update['lastname']))
-		{
-			$_SESSION['lastname'] = $update['lastname'];
+			if(isset($update['firstname']))
+			{
+				$_SESSION['firstname'] = $update['firstname'];
+			}
+			if(isset($update['lastname']))
+			{
+				$_SESSION['lastname'] = $update['lastname'];
+			}
 		}
 		
 		return $userdata['username'];

@@ -8,6 +8,8 @@ use Slim\Http\Response;
 
 class RedirectIfNoAdmin
 {	
+	# NOT IN USE ANYMORE
+	/*
 	protected $router;
 	
 	public function __construct(RouterInterface $router, $flash)
@@ -29,4 +31,5 @@ class RedirectIfNoAdmin
 		
 		return $next($request, $response);
 	}
+	*/
 }

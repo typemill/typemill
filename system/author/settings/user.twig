@@ -22,13 +22,13 @@
 							<fieldset class="subfield">
 								<legend>{{ field.legend }}</legend>
 								{% for field in field.fields %}
-									{% include '/partials/fields.twig' with { 'settings': usersettings, 'object' : 'user', 'itemName' : userdata.username, 'class' : 'large' } %}
+									{% include '/partials/fields.twig' with { 'settings': usersettings, 'object' : 'users', 'itemName' : 'user', 'class' : 'large' } %}
 								{% endfor %}
 							</fieldset>
 						
 							{% else %}
 								
-								{% include '/partials/fields.twig' with { 'settings': usersettings, 'object' : 'user', 'itemName' : userdata.username, 'class' : 'large' } %}
+								{% include '/partials/fields.twig' with { 'settings': usersettings, 'object' : 'users', 'itemName' : 'user', 'class' : 'large' } %}
 
 							{% endif %}
 								

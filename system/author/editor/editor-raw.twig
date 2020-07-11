@@ -5,6 +5,8 @@
 	
 	<div class="formWrapper">
 
+	  {% if (acl.isAllowed(get_role(), 'content', 'update')) or ( (mycontent) and (acl.isAllowed(get_role(), 'mycontent', 'update')) ) %}
+
 		<div id="metanav" class="metanav" v-cloak>
 		  
 		  <button
@@ -25,6 +27,8 @@
 		  </component>
 
 		</div>
+
+      {% endif %}		
 
 		<div id="editor" class="editor">
 			<form action="#" v-cloak>

@@ -1,12 +1,12 @@
 <nav id="sidebar-menu" class="sidebar-menu">
-	{% if is_role('administrator') %}
-		<div id="mobile-menu" class="menu-action">{{ __('Menu') }} <span class="button-arrow"></span></div>
-		<ul class="list pa0 ma0">
-			<li class="pb1"><a class="link dark-gray hover-bg-white bl bw2 b--near-white hover-b--tm-green pa2 dib w-100{{ (route == 'settings.show') ? ' active' : '' }}" href="{{ path_for('settings.show') }}"><svg class="icon icon-wrench mr2"><use xlink:href="#icon-wrench"></use></svg> {{ __('System') }}</a></li>
-			<li class="pb1"><a class="link dark-gray hover-bg-white bl bw2 b--near-white hover-b--tm-green pa2 dib w-100{{ (route == 'themes.show') ? ' active' : '' }}" href="{{ path_for('themes.show') }}"><svg class="icon icon-paint-brush mr2"><use xlink:href="#icon-paint-brush"></use></svg> {{ __('Themes') }}</a></li>
-			<li class="pb1"><a class="link dark-gray hover-bg-white bl bw2 b--near-white hover-b--tm-green pa2 dib w-100{{ (route == 'plugins.show') ? ' active' : '' }}" href="{{ path_for('plugins.show') }}"><svg class="icon icon-plug mr2"><use xlink:href="#icon-plug"></use></svg> {{ __('Plugins') }}</a></li>
-			<li class="pb1"><a class="link dark-gray hover-bg-white bl bw2 b--near-white hover-b--tm-green pa2 dib w-100{{ (route == 'user.account') ? ' active' : '' }}" href="{{ path_for('user.account') }}"><svg class="icon icon-user mr2"><use xlink:href="#icon-user"></use></svg> {{ __('Account') }}</a></li>
-			<li class="pb1"><a class="link dark-gray hover-bg-white bl bw2 b--near-white hover-b--tm-green pa2 dib w-100{{ (route == 'user.list') ? ' active' : '' }}" href="{{ path_for('user.list') }}"><svg class="icon icon-group mr2"><use xlink:href="#icon-group"></use></svg> {{ __('Users') }}</a></li>
-		</ul>
-	{% endif %}
+	<div id="mobile-menu" class="menu-action">{{ __('Menu') }} <span class="button-arrow"></span></div>
+	<ul class="list pa0 ma0">
+
+		{% for name,navitem in navigation %}
+			{% if acl.isAllowed(get_role(), navitem.aclresource, navitem.aclprivilege) %}
+				<li class="pb1"><a class="link dark-gray hover-bg-white bl bw2 b--near-white hover-b--tm-green pa2 dib w-100{{ navitem.active ? ' active' : '' }}" href="{{ path_for(navitem.routename) }}"><svg class="icon baseline {{ navitem.icon }} mr2"><use xlink:href="#{{ navitem.icon }}"></use></svg> {{ __(name) }}</a></li>
+			{% endif %}
+		{% endfor %}
+
+	</ul>
 </nav>

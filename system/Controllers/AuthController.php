@@ -125,10 +125,15 @@ class AuthController extends Controller
 					$yaml->updateYaml('settings/users', '.logins', $logins);					
 				}
 
-				$settings = $this->c->get('settings');
-				$editor = (isset($settings['editor']) && $settings['editor'] == 'visual') ? 'visual' : 'raw';
-				
-				return $response->withRedirect($this->c->router->pathFor('content.' . $editor));
+				# if user is allowed to view content-area
+				if($this->c->acl->isAllowed($userdata['userrole'], 'content', 'view'))
+				{
+					$settings = $this->c->get('settings');
+					$editor = (isset($settings['editor']) && $settings['editor'] == 'visual') ? 'visual' : 'raw';
+					
+					return $response->withRedirect($this->c->router->pathFor('content.' . $editor));
+				}
+				return $response->withRedirect($this->c->router->pathFor('user.account'));
 			}
 		}
 
