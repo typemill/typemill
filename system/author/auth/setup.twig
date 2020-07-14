@@ -7,11 +7,13 @@
 
 		{% if systemcheck %}
 			<h2>Missing Requirements</h2>
-			<ul style="color:red;padding: 0 14px">
-				{% for systemerror in systemcheck %}
-					<li style="margin: 5px 0">{{ systemerror }}</li>
-				{% endfor %}
-			</ul>
+			{% if systemcheck.error %}
+				<ul style="color:red;padding: 0 14px">
+					{% for systemerror in systemcheck.error %}
+						<li style="margin: 5px 0">{{ systemerror }}</li>
+					{% endfor %}
+				</ul>
+			{% endif %}
 		{% endif %}
 
 		<div class="authformWrapper">
