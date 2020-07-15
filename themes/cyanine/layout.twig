@@ -119,6 +119,30 @@
 
 			<script src="{{ base_url }}/system/author/js/typemillutils.js?20200418"></script>
 			<script>typemillUtilities.start();</script>
+			
+			{% if settings.themes.cyanine.collapseNav %}
+				<script>
+					var expandButton = document.getElementById("expander");
+					if(expandButton)
+					{
+						expandButton.addEventListener('click', function(e)
+						{
+							var contentnav = document.getElementById("contentnav");
+							
+							contentnav.classList.toggle("collapse");
+
+							if(contentnav.classList.contains("collapse"))
+							{
+								expandButton.innerHTML = "expand navigation";
+							}
+							else
+							{
+								expandButton.innerHTML = "collapse navigation";
+							}
+						});
+					}
+				</script>
+			{% endif %}
 
 			{{ assets.renderJS() }}
 		

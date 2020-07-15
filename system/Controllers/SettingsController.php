@@ -14,6 +14,27 @@ use Typemill\Events\OnSystemnaviLoaded;
 
 class SettingsController extends Controller
 {	
+
+	public function showBlank($request, $response, $args)
+	{
+		$user				= new User();
+		$settings 			= $this->c->get('settings');
+#		$users				= $user->getUsers();
+		$route 				= $request->getAttribute('route');
+		$navigation 		= $this->getNavigation();
+
+		$content 			= '<h1>Hello</h1>';
+
+		return $this->render($response, 'settings/blank.twig', array(
+			'settings' 		=> $settings,
+			'acl' 			=> $this->c->acl, 
+			'navigation'	=> $navigation,
+			'content' 		=> $content,
+#			'users' 		=> $users, 
+			'route' 		=> $route->getName() 
+		));
+	}
+
 	/*********************
 	**	BASIC SETTINGS	**
 	*********************/
@@ -26,12 +47,14 @@ class SettingsController extends Controller
 		$copyright			= $this->getCopyright();
 		$languages			= $this->getLanguages();
 		$locale				= isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? substr($_SERVER["HTTP_ACCEPT_LANGUAGE"],0,2) : 'en';
-		$users				= $user->getUsers();
 		$route 				= $request->getAttribute('route');
 		$navigation 		= $this->getNavigation();
 
 		# set navigation active
 		$navigation['System']['active'] = true;
+
+		# set option for registered website
+		$options = ['' => 'all', 'registered' => 'registered users only'];
 
 		return $this->render($response, 'settings/system.twig', array(
 			'settings' 		=> $settings,
@@ -41,7 +64,7 @@ class SettingsController extends Controller
 			'languages' 	=> $languages, 
 			'locale' 		=> $locale, 
 			'formats' 		=> $defaultSettings['formats'],
-			'users' 		=> $users, 
+			'access'		=> $options,
 			'route' 		=> $route->getName() 
 		));
 	}
@@ -68,7 +91,8 @@ class SettingsController extends Controller
 					'year'				=> $newSettings['year'],
 					'language'			=> $newSettings['language'],
 					'langattr'			=> $newSettings['langattr'],
-					'editor' 			=> $newSettings['editor'], 
+					'editor' 			=> $newSettings['editor'],
+					'access'			=> $newSettings['access'], 
 					'formats'			=> $newSettings['formats'],
 					'headlineanchors'	=> isset($newSettings['headlineanchors']) ? $newSettings['headlineanchors'] : null,
 				);

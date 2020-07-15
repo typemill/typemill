@@ -79,6 +79,10 @@ if($settings['settings']['setup'])
 {
 	$app->get('/[{params:.*}]', SetupController::class . ':redirect');	
 }
+elseif(isset($settings['settings']['access']) && $settings['settings']['access'] != '')
+{
+	$app->get('/[{params:.*}]', PageController::class . ':index')->setName('home')->add(new accessController($container['router'], $container['acl'], 'user', 'view'));
+}
 else
 {
 	$app->get('/[{params:.*}]', PageController::class . ':index')->setName('home');

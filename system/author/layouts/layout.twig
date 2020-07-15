@@ -74,6 +74,12 @@
 			<footer></footer>
 		</div>
 <!--		<script src="{{ base_url }}/system/author/js/color-picker.min.js?20200505"></script> -->
+		<script src="{{ base_url }}/system/author/js/axios.min.js?20200226"></script>
+		<script>
+			const myaxios = axios.create();
+			myaxios.defaults.baseURL =  "{{ base_url }}";
+		</script>
+		<script src="{{ base_url }}/system/author/js/vue.min.js?20200614"></script>
 		<script src="{{ base_url }}/system/author/js/author.js?20200614"></script>
 		<script src="{{ base_url }}/system/author/js/typemillutils.js?20200614"></script>
 		<script>

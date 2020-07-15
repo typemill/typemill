@@ -111,7 +111,7 @@ class Settings
     	}
     
     	# Detect browser language
-    	$accept_lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+    	$accept_lang = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2) : false;
     	$lang = in_array($accept_lang, $langs) ? $accept_lang : 'en';
 
     	return $lang;
@@ -158,6 +158,7 @@ class Settings
 									'startpage' => true,
 									'author' => true,
 									'year' => true,
+									'access' => true,
 									'headlineanchors' => true,
 									'theme' => true,
 									'editor' => true,
@@ -169,7 +170,7 @@ class Settings
 									'themes' => true,
 									'latestVersion' => true,
 									'logo' => true,
-									'favicon' => true, 
+									'favicon' => true 
 								];
 
 			# cleanup the existing usersettings

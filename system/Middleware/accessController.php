@@ -20,6 +20,12 @@ class accessController
 
 	public function __invoke(Request $request, Response $response, $next)
 	{
+
+		if($this->resource == NULL && $this->privilege == NULL)
+		{
+			return $next($request, $response);
+		}
+
 		if(!isset($_SESSION['login']))
 		{
 			return $response->withRedirect($this->router->pathFor('auth.show'));

@@ -30,6 +30,10 @@
 
 {% import _self as macros %}
 
+{% if settings.themes.cyanine.collapseNav %}
+    <button id="expander" class=" dn db-l link pointer w-100 bg-secondary ba b--tertiary pa2 mb1 f7">expand navigation</button>
+{% endif %}
+
 <ul class="list pa0 menu {{ settings.themes.cyanine.fontnavi }}">
     {{ macros.loop_over(navigation, settings.themes.cyanine.chapnum ) }}
 </ul>

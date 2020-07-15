@@ -172,6 +172,13 @@ $path 				= $uri->getPath();
 $container['flash']	= false;
 $container['csrf'] 	= false;
 
+# if website is restricted to registered user
+if(isset($settings['settings']['access']) && $settings['settings']['access'] == 'registered')
+{
+	# activate session for all routes
+	$session_segments = [$path];
+}
+
 foreach($session_segments as $segment)
 {
 	if(substr( $path, 0, strlen($segment) ) === $segment)

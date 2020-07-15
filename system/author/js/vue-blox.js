@@ -165,7 +165,11 @@ const contentComponent = Vue.component('content-block', {
 		},
  		submitBlock: function(){
 			var emptyline = /^\s*$(?:\r\n?|\n)/gm;
+			
+			/* allow empty lines for these components */
 			if(this.componentType == "code-component" || this.componentType == "math-component" || this.componentType == "notice-component"){ }
+			
+			/* add new line with markup for these components */
 			else if(this.componentType == "ulist-component" || this.componentType == "olist-component")
 			{
 				var listend = (this.componentType == "ulist-component") ? '* \n' : '1. \n';
@@ -194,6 +198,7 @@ const contentComponent = Vue.component('content-block', {
 					}
 				}
 			}
+			/* save or close for all other components */
 			else if(this.compmarkdown.search(emptyline) > -1)
 			{
 				var checkempty = this.compmarkdown.replace(/(\r\n|\n|\r|\s)/gm,"");
@@ -1014,21 +1019,21 @@ const tableComponent = Vue.component('table-component', {
 					'</colgroup>' +
 					'<tbody>' +
 						'<tr v-for="(row, rowindex) in table">' +
-							'<td v-if="rowindex === 0" v-for="(value,colindex) in row" contenteditable="false" class="noteditable" @click="switchcolumnbar(value)">{{value}} ' +
+							'<td v-if="rowindex === 0" v-for="(value,colindex) in row" contenteditable="false" class="noteditable" @click="switchcolumnbar(value)"  @keydown.13.prevent="enter">{{value}} ' +
 							  '<div v-if="columnbar === value" class="columnaction">' + 
 							     '<div class="actionline" @click="addrightcolumn(value)">{{ \'add right column\'|translate }}</div>' +
 								 '<div class="actionline" @click="addleftcolumn(value)">{{ \'add left column\'|translate }}</div>' +
 								 '<div class="actionline" @click="deletecolumn(value)">{{ \'delete column\'|translate }}</div>' +							
 							  '</div>' +
 							'</td>' +
-							'<th v-if="rowindex === 1" v-for="(value,colindex) in row" :contenteditable="colindex !== 0 ? true : false" @click="switchrowbar(value)" @blur="updatedata($event,colindex,rowindex)" :class="colindex !== 0 ? editable : noteditable">' + 
+							'<th v-if="rowindex === 1" v-for="(value,colindex) in row" :contenteditable="colindex !== 0 ? true : false" @click="switchrowbar(value)" @keydown.13.prevent="enter" @blur="updatedata($event,colindex,rowindex)" :class="colindex !== 0 ? editable : noteditable">' + 
 							 '<div v-if="colindex === 0 && rowbar === value" class="rowaction">' + 
  								 '<div class="actionline" @click="addaboverow(value)">{{ \'add row above\'|translate }}</div>' +
 								 '<div class="actionline" @click="addbelowrow(value)">{{ \'add row below\'|translate }}</div>' +
 								 '<div class="actionline" @click="deleterow(value)">{{ \'delete row\'|translate }}</div>' +						
 							  '</div>' + 
 							'{{ value }}</th>' +
-							'<td v-if="rowindex > 1" v-for="(value,colindex) in row" :contenteditable="colindex !== 0 ? true : false" @click="switchrowbar(value)" @blur="updatedata($event,colindex,rowindex)" :class="colindex !== 0 ? editable : noteditable">' + 
+							'<td v-if="rowindex > 1" v-for="(value,colindex) in row" :contenteditable="colindex !== 0 ? true : false" @click="switchrowbar(value)" @keydown.13.prevent="enter" @blur="updatedata($event,colindex,rowindex)" :class="colindex !== 0 ? editable : noteditable">' + 
 							 '<div v-if="colindex === 0 && rowbar === value" class="rowaction">' + 
   								 '<div class="actionline" @click="addaboverow(value)">{{ \'add row above\'|translate }}</div>' +
 								 '<div class="actionline" @click="addbelowrow(value)">{{ \'add row below\'|translate }}</div>' +
@@ -1073,6 +1078,10 @@ const tableComponent = Vue.component('table-component', {
 		}
 	},
 	methods: {
+		enter: function()
+		{
+			return false;
+		},
 		updatedata: function(event,col,row)
 		{
 			this.table[row][col] = event.target.innerText;			
@@ -1215,7 +1224,7 @@ const definitionComponent = Vue.component('definition-component', {
 						'<svg class="icon icon-arrows-v"><use xlink:href="#icon-arrows-v"></use></svg>' +
 						'<input type="text" class="definitionTerm" v-bind:placeholder="\'term\'|translate" :value="definition.term" :disabled="disabled" @input="updateterm($event,dindex)" @blur="updateMarkdown">' +
 		  		  '<svg class="icon icon-dots-two-vertical"><use xlink:href="#icon-dots-two-vertical"></use></svg>' + 
-	  			  '<textarea class="definitionDescription" v-bind:placeholder="\'description\'|translate" v-html="definition.description" :disabled="disabled" @input="updatedescription($event, dindex)" @blur="updateMarkdown"></textarea>' +
+	  			  '<textarea class="definitionDescription" v-bind:placeholder="\'description\'|translate" v-html="definition.description" :disabled="disabled" @input="updatedescription($event, dindex)" @keydown.13.prevent="enter" @blur="updateMarkdown"></textarea>' +
 					  '<button class="delDL" @click.prevent="deleteDefinition(dindex)"><svg class="icon icon-minus"><use xlink:href="#icon-minus"></use></svg></button>' +
 				  '</div>' +
 				'</draggable>' +
@@ -1249,6 +1258,10 @@ const definitionComponent = Vue.component('definition-component', {
 		}
 	},
 	methods: {
+		enter: function()
+		{
+			return false;
+		},
 		updateterm: function(event, dindex)
 		{
 			this.definitionList[dindex].term = event.target.value;

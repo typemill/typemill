@@ -398,6 +398,12 @@ button.play-video::after {
 	right: 0;
 	top: 0;
 }
+.contentnav.collapse .folder > ul{
+	display: none;
+}
+.contentnav .folder.active > ul,.contentnav .folder.activeParent > ul{
+	display: block;
+}
 .burgerbutton{
 	display: inline-block;
 	font-size: 2em;

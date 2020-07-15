@@ -5,7 +5,7 @@
 	<div class="w-100 mw8 center grid-container">
 
 		<aside class="grid-header ph3 pv3">
-					
+
 			<header>
 						
 				<div class="logo">
@@ -21,6 +21,14 @@
 				</div>
 					
 			</header>
+
+			{% if widgets %}
+				{% for index,widget in widgets %}
+					<div id="{{ index }}" class="mt4-l mt3">
+						{{ widget }}					
+					</div>
+				{% endfor %}
+			{% endif %}
 
 		</aside>
 
@@ -105,9 +113,9 @@
 
 		</div>
 
-		<aside class="grid-sidebar ph3 pv4">
+		<aside class="grid-sidebar ph3 pv3">
 
-			<nav class="contentnav" aria-label="Menu">
+			<nav id="contentnav" class="contentnav{{ settings.themes.cyanine.collapseNav ? ' collapse' : '' }}" aria-label="Menu">
 
 				<!-- burger menu controlled by invisible checkbox -->
 	  			<input type="checkbox" id="burger" class="dn">
