@@ -125,7 +125,6 @@ class User extends WriteYaml
 		{
 			$user['lastlogin'] = time();
 			unset($user['password']);
-			$this->updateUser($user);
 
 			$_SESSION['user'] 	= $user['username'];
 			$_SESSION['role'] 	= $user['userrole'];
@@ -139,6 +138,9 @@ class User extends WriteYaml
 			{
 				$_SESSION['lastname'] = $user['lastname'];
 			}
+			
+			# update user last login
+			$this->updateUser($user);
 		}
 	}
 	

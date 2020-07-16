@@ -69,7 +69,7 @@ class Folder
 					
 					if($fileType == 'md')
 					{
-						$folderContent[] 			= $item;						
+						$folderContent[] 			= $item;					
 					}
 					
 					if($draft === true && $fileType == 'txt')
@@ -166,7 +166,7 @@ class Folder
 
 				$item->folderContent = self::getFolderContentDetails($name, $extended, $baseUrl, $item->urlRel, $item->urlRelWoF, $item->path, $item->keyPath, $item->chapter);
 			}
-			else
+			elseif($name)
 			{
 				# do not use files in base folder (only folders are allowed)
 				# if(!isset($keyPath)) continue;

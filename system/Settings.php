@@ -213,7 +213,7 @@ class Settings
 		$editor['permissions']	= [ 'mycontent' => ['delete', 'publish', 'unpublish'],
 									'content' => ['create', 'update', 'delete', 'publish', 'unpublish']];
 
-		return [$member, $author, $editor];
+		return ['member' => $member,'author' => $author, 'editor' => $editor];
 	}
 
 	public static function createAcl($roles, $resources)

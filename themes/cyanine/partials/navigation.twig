@@ -15,7 +15,7 @@
 		{% endif %}
         
         {% if (element.elementType == 'folder') %}
-				<a class="link dib w-100 relative fw9 pv2 pr2 indent-l-{{depth}} margin-bottom-1 arrow-after hover-bg-primary f-primary hover-f-secondary" href="{{ element.urlAbs }}">{% if chapnum %}{{ element.chapter }}. {% endif %}{{ element.name }}</a>
+				<a class="link dib w-100 relative fw7 pv2 pr2 indent-l-{{depth}} margin-bottom-1 arrow-after hover-bg-primary f-primary hover-f-secondary" href="{{ element.urlAbs }}">{% if chapnum %}{{ element.chapter }}. {% endif %}{{ element.name }}</a>
 		{% if (element.folderContent|length > 0) and (element.contains == 'pages') %}	
                 <ul class="list pa0">
                     {{ macros.loop_over(element.folderContent, chapnum) }}
