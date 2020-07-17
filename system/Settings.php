@@ -82,7 +82,7 @@ class Settings
 			'contentFolder'							=> 'content',
 			'cache'									=> true,
 			'cachePath'								=> $rootPath . 'cache',
-			'version'								=> '1.3.7.2',
+			'version'								=> '1.3.8',
 			'setup'									=> true,
 			'welcome'								=> true,
 			'images'								=> ['live' => ['width' => 820], 'thumbs' => ['width' => 250, 'height' => 150]],
@@ -111,7 +111,7 @@ class Settings
     	}
     
     	# Detect browser language
-    	$accept_lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+    	$accept_lang = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2) : false;
     	$lang = in_array($accept_lang, $langs) ? $accept_lang : 'en';
 
     	return $lang;
@@ -158,6 +158,7 @@ class Settings
 									'startpage' => true,
 									'author' => true,
 									'year' => true,
+									'access' => true,
 									'headlineanchors' => true,
 									'theme' => true,
 									'editor' => true,
@@ -169,7 +170,7 @@ class Settings
 									'themes' => true,
 									'latestVersion' => true,
 									'logo' => true,
-									'favicon' => true, 
+									'favicon' => true 
 								];
 
 			# cleanup the existing usersettings
@@ -212,7 +213,7 @@ class Settings
 		$editor['permissions']	= [ 'mycontent' => ['delete', 'publish', 'unpublish'],
 									'content' => ['create', 'update', 'delete', 'publish', 'unpublish']];
 
-		return [$member, $author, $editor];
+		return ['member' => $member,'author' => $author, 'editor' => $editor];
 	}
 
 	public static function createAcl($roles, $resources)

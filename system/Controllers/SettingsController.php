@@ -14,6 +14,27 @@ use Typemill\Events\OnSystemnaviLoaded;
 
 class SettingsController extends Controller
 {	
+
+	public function showBlank($request, $response, $args)
+	{
+		$user				= new User();
+		$settings 			= $this->c->get('settings');
+#		$users				= $user->getUsers();
+		$route 				= $request->getAttribute('route');
+		$navigation 		= $this->getNavigation();
+
+		$content 			= '<h1>Hello</h1>';
+
+		return $this->render($response, 'settings/blank.twig', array(
+			'settings' 		=> $settings,
+			'acl' 			=> $this->c->acl, 
+			'navigation'	=> $navigation,
+			'content' 		=> $content,
+#			'users' 		=> $users, 
+			'route' 		=> $route->getName() 
+		));
+	}
+
 	/*********************
 	**	BASIC SETTINGS	**
 	*********************/
@@ -26,12 +47,14 @@ class SettingsController extends Controller
 		$copyright			= $this->getCopyright();
 		$languages			= $this->getLanguages();
 		$locale				= isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? substr($_SERVER["HTTP_ACCEPT_LANGUAGE"],0,2) : 'en';
-		$users				= $user->getUsers();
 		$route 				= $request->getAttribute('route');
 		$navigation 		= $this->getNavigation();
 
 		# set navigation active
 		$navigation['System']['active'] = true;
+
+		# set option for registered website
+		$options = ['' => 'all', 'registered' => 'registered users only'];
 
 		return $this->render($response, 'settings/system.twig', array(
 			'settings' 		=> $settings,
@@ -41,7 +64,7 @@ class SettingsController extends Controller
 			'languages' 	=> $languages, 
 			'locale' 		=> $locale, 
 			'formats' 		=> $defaultSettings['formats'],
-			'users' 		=> $users, 
+			'access'		=> $options,
 			'route' 		=> $route->getName() 
 		));
 	}
@@ -68,7 +91,8 @@ class SettingsController extends Controller
 					'year'				=> $newSettings['year'],
 					'language'			=> $newSettings['language'],
 					'langattr'			=> $newSettings['langattr'],
-					'editor' 			=> $newSettings['editor'], 
+					'editor' 			=> $newSettings['editor'],
+					'access'			=> $newSettings['access'], 
 					'formats'			=> $newSettings['formats'],
 					'headlineanchors'	=> isset($newSettings['headlineanchors']) ? $newSettings['headlineanchors'] : null,
 				);
@@ -678,7 +702,7 @@ class SettingsController extends Controller
 			$user 			= new User();
 			$validate		= new Validation();
 			$userroles 		= $this->c->acl->getRoles();
-			
+
 			$redirectRoute	= ($userdata['username'] == $_SESSION['user']) ? $this->c->router->pathFor('user.account') : $this->c->router->pathFor('user.show', ['username' => $userdata['username']]);
 
 			# check if user is allowed to view (edit) userlist and other users
@@ -809,11 +833,13 @@ class SettingsController extends Controller
 		$fields = $this->c->dispatcher->dispatch('onUserfieldsLoaded', new OnUserfieldsLoaded($fields))->getData();
 
 		# only roles who can edit content need profile image and description
-		if($this->c->acl->isAllowed($role, 'content', 'create'))
+		if($this->c->acl->isAllowed($role, 'mycontent', 'create'))
 		{
 			$newfield['image'] 			= ['label' => 'Profile-Image', 'type' => 'image'];
 			$newfield['description'] 	= ['label' => 'Author-Description (Markdown)', 'type' => 'textarea'];			
-			array_splice($fields,1,0,$newfield);
+			
+			$fields = array_slice($fields, 0, 1, true) + $newfield + array_slice($fields, 1, NULL, true);
+			# array_splice($fields,1,0,$newfield);
 		}
 
 		# Only admin can change userroles

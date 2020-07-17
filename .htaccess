@@ -10,6 +10,7 @@ RewriteEngine On
 # Protect your system files from prying eyes
 RewriteRule ^(system\/author\/) - [L]
 RewriteRule ^(system) - [F,L]
+RewriteRule ^(data) - [F,L]
 RewriteRule ^(content) - [F,L]
 RewriteRule ^(settings) - [F,L]
 RewriteRule ^(.*)?\.yml$ - [F,L]

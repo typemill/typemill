@@ -1,5 +1,5 @@
 name: Cyanine Theme
-version: 1.0.0
+version: 1.0.1
 description: Cyanine is a modern and flexible multi-purpose theme and the standard theme for typemill. 
 author: Trendschau
 homepage: https://trendschau.net
@@ -211,10 +211,14 @@ forms:
       type: fieldset
       legend: Navigations and Chapters
       fields:
+        collapseNav:
+          type: checkbox
+          label: Collapse navigation
+          checkboxlabel: Collapse and expand navigation?
         chapnum:
           type: checkbox
-          label: Show Chapter Numbers
-          checkboxlabel: Count chapters in navigation?
+          label: Chapter Numbers
+          checkboxlabel: Show chapter numbers in navigation?
 
     fieldsetfooter:
       type: fieldset

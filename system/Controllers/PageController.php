@@ -270,10 +270,10 @@ class PageController extends Controller
 	protected function getFreshStructure($pathToContent, $cache, $uri)
 	{
 		/* scan the content of the folder */
-		$structure = Folder::scanFolder($pathToContent);
+		$pagetree = Folder::scanFolder($pathToContent);
 
 		/* if there is no content, render an empty page */
-		if(count($structure) == 0)
+		if(count($pagetree) == 0)
 		{
 			return false;
 		}
@@ -282,6 +282,10 @@ class PageController extends Controller
 		$yaml = new writeYaml();
 		$extended = $yaml->getYaml('cache', 'structure-extended.yaml');
 
+		# create an array of object with the whole content of the folder
+		$structure = Folder::getFolderContentDetails($pagetree, $extended, $uri->getBaseUrl(), $uri->getBasePath());
+
+		# now update the extended structure
 		if(!$extended)
 		{
 			$extended = $this->createExtended($this->pathToContent, $yaml, $structure);
@@ -289,12 +293,12 @@ class PageController extends Controller
 			if(!empty($extended))
 			{
 				$yaml->updateYaml('cache', 'structure-extended.yaml', $extended);
+
+				# we have to update the structure with extended again
+				$structure = Folder::getFolderContentDetails($pagetree, $extended, $uri->getBaseUrl(), $uri->getBasePath());
 			}
 		}
-
-		# create an array of object with the whole content of the folder
-		$structure = Folder::getFolderContentDetails($structure, $extended, $uri->getBaseUrl(), $uri->getBasePath());
-
+		
 		# cache structure
 		$cache->updateCache('cache', 'structure.txt', 'lastCache.txt', $structure);
 
@@ -325,7 +329,8 @@ class PageController extends Controller
 
 		foreach ($structure as $key => $item)
 		{
-			$filename = ($item->elementType == 'folder') ? DIRECTORY_SEPARATOR . 'index.yaml' : $item->pathWithoutType . '.yaml';
+			# $filename = ($item->elementType == 'folder') ? DIRECTORY_SEPARATOR . 'index.yaml' : $item->pathWithoutType . '.yaml';
+			$filename = $item->pathWithoutType . '.yaml';
 
 			if(file_exists($contentPath . $filename))
 			{				
