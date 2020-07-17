@@ -329,7 +329,8 @@ class PageController extends Controller
 
 		foreach ($structure as $key => $item)
 		{
-			$filename = ($item->elementType == 'folder') ? DIRECTORY_SEPARATOR . 'index.yaml' : $item->pathWithoutType . '.yaml';
+			# $filename = ($item->elementType == 'folder') ? DIRECTORY_SEPARATOR . 'index.yaml' : $item->pathWithoutType . '.yaml';
+			$filename = $item->pathWithoutType . '.yaml';
 
 			if(file_exists($contentPath . $filename))
 			{				

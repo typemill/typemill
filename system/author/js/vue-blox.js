@@ -2175,7 +2175,7 @@ const medialib = Vue.component('medialib', {
 
 				this.$parent.showmedialib = false;
 
-				this.$parent.createmarkdown();
+				this.$parent.createmarkdown(image.src_live);
 /*				this.$parent.updatemarkdown(imgmarkdown, image.src_live); */
 			}
 			if(this.parentcomponent == 'files')
@@ -2209,7 +2209,7 @@ const medialib = Vue.component('medialib', {
 
 				this.$parent.showmedialib = false;
 
-				this.$parent.createmarkdown();
+				this.$parent.createmarkdown(file.url);
 /*				this.$parent.updatemarkdown(imgmarkdown, file.url);*/
 			}
 			if(this.parentcomponent == 'files')

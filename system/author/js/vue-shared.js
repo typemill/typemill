@@ -64,6 +64,11 @@ Vue.component('component-image', {
 			/* is called from child component medialib */
 			this.update(url);
 		},
+		createmarkdown: function(url)
+		{
+			/* is called from child component medialib */
+			this.update(url);
+		},
 		deleteImage: function()
 		{
 			this.imgpreview = false;

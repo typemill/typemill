@@ -702,7 +702,7 @@ class SettingsController extends Controller
 			$user 			= new User();
 			$validate		= new Validation();
 			$userroles 		= $this->c->acl->getRoles();
-			
+
 			$redirectRoute	= ($userdata['username'] == $_SESSION['user']) ? $this->c->router->pathFor('user.account') : $this->c->router->pathFor('user.show', ['username' => $userdata['username']]);
 
 			# check if user is allowed to view (edit) userlist and other users
@@ -833,11 +833,13 @@ class SettingsController extends Controller
 		$fields = $this->c->dispatcher->dispatch('onUserfieldsLoaded', new OnUserfieldsLoaded($fields))->getData();
 
 		# only roles who can edit content need profile image and description
-		if($this->c->acl->isAllowed($role, 'content', 'create'))
+		if($this->c->acl->isAllowed($role, 'mycontent', 'create'))
 		{
 			$newfield['image'] 			= ['label' => 'Profile-Image', 'type' => 'image'];
 			$newfield['description'] 	= ['label' => 'Author-Description (Markdown)', 'type' => 'textarea'];			
-			array_splice($fields,1,0,$newfield);
+			
+			$fields = array_slice($fields, 0, 1, true) + $newfield + array_slice($fields, 1, NULL, true);
+			# array_splice($fields,1,0,$newfield);
 		}
 
 		# Only admin can change userroles
