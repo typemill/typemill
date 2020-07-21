@@ -14,10 +14,10 @@
 			<ul class="userlist">
 				<li class="row header">
 					<ul>
-						<li class="col username">Username
-						</li><li class="col userrole">Role
-						</li><li class="col email">E-Mail
-						</li><li class="col edit">Edit</li>
+						<li class="col username">{{ __('Username') }}</li>
+						<li class="col userrole">{{ __('Role') }}</li>
+						<li class="col email">{{ __('E-Mail') }}</li>
+						<li class="col edit">{{ __('Edit') }}</li>
 					</ul>
 				</li>
 				{% for user in userdata %}
@@ -25,7 +25,7 @@
 					<li class="row">
 						<ul>
 							<li class="col username">{{ user.username }}
-							</li><li class="col userrole">{{ user.userrole }}
+							</li><li class="col userrole">{{ __(user.userrole) }}
 							</li><li class="col email">{{ user.email }}
 							</li><li class="col edit"><a href="{{ path_for('user.show', {'username' : user.username }) }}">{{ __('edit') }}</a></li>
 						</ul>

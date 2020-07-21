@@ -18,7 +18,7 @@
 					<div class="relative w-100 bn br1 bg-tm-green white pa3 ma0 tc"><svg class="icon icon-upload baseline"><use xlink:href="#icon-upload"></use></svg> {{ __('Upload an image') }}</div>
 				</div>
 				<div class="dib w-100 mt3">
-					<label>Image URL</label>
+					<label>{{ __('Image URL') }}</label>
 					<div class="flex">
 						<button class="function-delete-img w-10 bg-tm-gray bn hover-bg-tm-red hover-white">x</button>
 						<input class="function-img-url w-90 mbfix" type="text" name="{{ itemName }}[{{ field.name }}]" value="{{ settings[object][itemName][field.name] }}" readonly>
@@ -69,7 +69,7 @@
 
 			<select id="{{ itemName }}[{{ field.name }}]" name="{{ itemName }}[{{ field.name }}]"{{ field.getAttributeValues() }}{{ field.getAttributes() }}>
 				{% for value,label in options %}
-					<option value="{{ value }}" {{ (value == field.getAttributeValue('value')) ? ' selected' : '' }}>{{ label }}</option>
+					<option value="{{ value }}" {{ (value == field.getAttributeValue('value')) ? ' selected' : '' }}>{{ __(label) }}</option>
 				{% endfor %}
 			</select>
 
