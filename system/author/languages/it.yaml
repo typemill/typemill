@@ -36,8 +36,8 @@ COG: ingranaggio
 CONTENT: Contenuto
 CONTENT: Contenuto
 COPYRIGHT: Diritti d'autore
-CREATED_AT__READ_ONLY_: Creato il (sola lettura)
-CREATED_AT__READONLY_: Creato il (sola lettura)
+CREATED_AT_(READ_ONLY): Creato il (sola lettura)
+CREATED_AT_(READONLY): Creato il (sola lettura)
 CREATE_NEW_USER: Crea nuovo utente
 CREATE_USER: Crea utente
 CROSS: croce
@@ -89,13 +89,13 @@ HR: Linea orizzontale
 IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: Se non compilato, la descrizione viene estratta dal contenuto.
 IMAGE: Immagine
 IMAGES: Immagini
-IMAGE_URL__READ_ONLY_: Immagine URL (sola lettura)
+IMAGE_URL_(READ_ONLY): URL immagine (sola lettura)
 ITALIAN: Italiano
 ITALIC: corsivo
 LANGUAGE: Lingua
 LANGUAGE_ADMIN: Lingua (admin-ui)
 LANGUAGE_ATTR: Attributo Lingua (sito)
-LAST_MODIFIED_LIVE__READONLY_: Ultima modifica (sola lettura)
+LAST_MODIFIED_LIVE_(READONLY): Ultima modifica (sola lettura)
 LAST_NAME: Cognome
 LEFT: Sinistra
 LICENCE: Licenza

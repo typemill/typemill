@@ -34,8 +34,8 @@ CODE: Code
 COG: Einstellungen
 CONTENT: Inhalt
 COPYRIGHT: Copyright
-CREATED_AT__READ_ONLY_: Erstellt am (nur lesen)
-CREATED_AT__READONLY_: Erstellt am (nur lesen)
+CREATED_AT_(READ_ONLY): Erstellt am (nur lesen)
+CREATED_AT_(READONLY): Erstellt am (nur lesen)
 CREATE_NEW_USER: + Neuen Nutzer
 CREATE_USER: + Nutzer
 CROSS: Kreuz
@@ -91,7 +91,7 @@ ITALIC: kursiv
 LANGUAGE: Language
 LANGUAGE_ADMIN: Sprache (Admin-UI)
 LANGUAGE_ATTR: Sprach-Attribut (website)
-LAST_MODIFIED_LIVE__READONLY_: Live zuletzt geändert (nur lesen)
+LAST_MODIFIED_LIVE_(READONLY): Live zuletzt geändert (nur lesen)
 LAST_NAME: Zuname
 LEFT: Links
 LICENCE: Lizenz

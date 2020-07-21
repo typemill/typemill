@@ -36,8 +36,8 @@ COG: cog
 CONTENT: Редактор
 CONTENT: Контент
 COPYRIGHT: Копирайт
-CREATED_AT__READ_ONLY_: Создано в (только просмотр)
-CREATED_AT__READONLY_: Создано в (только просмотр)
+CREATED_AT_(READ_ONLY): Создано в (только просмотр)
+CREATED_AT_(READONLY): Создано в (только просмотр)
 CREATE_NEW_USER: Создание нового пользователя
 CREATE_USER: Создать пользователя
 CROSS: Зачёркнутый
@@ -83,7 +83,7 @@ ITALIC: Наклонный
 LANGUAGE: Язык
 LANGUAGE_ADMIN: Язык (admin-ui)
 LANGUAGE_ATTR: Language Attribute (website)
-LAST_MODIFIED_LIVE__READONLY_: Последнее изменение (только просмотр)
+LAST_MODIFIED_LIVE_(READONLY): Последнее изменение (только просмотр)
 LAST_NAME: Фамилия
 LEFT: Слева
 LICENCE: Лицензия

@@ -36,8 +36,8 @@ COG: cog
 CONTENT: Content
 CONTENT: Content
 COPYRIGHT: Copyright
-CREATED_AT__READ_ONLY_: Created at (readonly)
-CREATED_AT__READONLY_: Created at (read only)
+CREATED_AT_(READ_ONLY): Created at (readonly)
+CREATED_AT_(READONLY): Created at (read only)
 CREATE_NEW_USER: Create New User
 CREATE_USER: Create User
 CROSS: cross
@@ -89,13 +89,13 @@ HR: hr
 IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: If not filled, the description is extracted from content.
 IMAGE: Image
 IMAGES: Images
-IMAGE_URL__READ_ONLY_: Image URL (read only)
+IMAGE_URL_(READ_ONLY): Image URL (read only)
 ITALIAN: Italian
 ITALIC: italic
 LANGUAGE: Language
 LANGUAGE_ADMIN: Language (admin-ui)
 LANGUAGE_ATTR: Language Attribute (website)
-LAST_MODIFIED_LIVE__READONLY_: Last modified live (readonly)
+LAST_MODIFIED_LIVE_(READONLY): Last modified live (readonly)
 LAST_NAME: Last Name
 LEFT: Left
 LICENCE: Licence
