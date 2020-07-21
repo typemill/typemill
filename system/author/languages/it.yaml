@@ -13,16 +13,20 @@ ADD_LEFT_COLUMN: aggiungi colonna a sinistra
 ADD_RIGHT_COLUMN: aggiungi colonna a destra
 ADD_ROW_ABOVE: aggiungi la riga sopra
 ADD_ROW_BELOW: aggiungi la riga sotto
+ADMINISTRATOR: Amministratore
+ALL: Tutti
 ALL_USERS: Tutti gli utenti
 ALT_TEXT: Testo alternativo
 ALTERNATIVE_TEXT_FOR_THE_HERO_IMAGE: Testo alternativo per l'immagine hero
 AUTHOR: Autore
+AUTHOR_DESCRIPTION_(MARKDOWN): Descrizione dell'autore (Markdown)
 BACK_TO_STARTPAGE: torna alla pagina iniziale
 BOLD: grassetto
 BOTTOM: Sotto
 BROWSE: Sfoglia
 BULLET_LIST: Elenco puntato
 BY: di
+CAN_BE_USED_FOR_AUTHOR_LINE_IN_FRONTEND_: Può essere usato per la linea autore nel sito.
 CANCEL: Annulla
 CAPTION: Didascalia
 CELL: cella
@@ -60,7 +64,8 @@ DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES_AND_SET_THE_CONTENT_BACK_TO_THE_LIVE_VERSION
 DRAFT: Bozza
 DRAG_A_PICTURE_OR_CLICK_TO_SELECT: trascina un'immagine o fai clic per selezionare
 DUTCH__FLEMISH: Olandese, Fiammingo
-EDIT: modifica
+EDIT: Modifica
+EDITOR: Curatore
 EDIT_USER: Modifica utente
 E_G_: per es.:
 E_MAIL: Posta elettronica
@@ -76,6 +81,7 @@ FORMAT: Format
 GENERAL_PRESENTATION: Presentazione generale
 GERMAN: Tedesco
 GOOGLE_SITEMAP: Sitemap di Google
+HAS_EDIT_RIGHTS_FOR_THIS_ARTICLE_: Ha i diritti di modifica per questo articolo.
 HEAD: Intestazione
 HEADLINE_ANCHORS: Ancoraggi del titolo
 HEADLINE: Titolo
@@ -89,6 +95,7 @@ HR: Linea orizzontale
 IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: Se non compilato, la descrizione viene estratta dal contenuto.
 IMAGE: Immagine
 IMAGES: Immagini
+IMAGE_URL: URL immagine
 IMAGE_URL_(READ_ONLY): URL immagine (sola lettura)
 ITALIAN: Italiano
 ITALIC: corsivo
@@ -107,6 +114,7 @@ LOGOUT: Esci
 MANUAL_DATE: Data manuale
 MARKDOWN: Markdown
 MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB__HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES_: La dimensione massima per un'immagine è di 5 MB. Le immagini hero non sono supportate da tutti i temi.
+MEMBER: Membro
 MENU: Menu
 META_DESCRIPTION: Descrizione
 META: Metadati
@@ -125,6 +133,7 @@ NUMBERED_LIST: Elenco numerato
 OLIST: Elenchi ordinati
 ONLINE: in linea
 ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: Sono ammessi solo i seguenti caratteri speciali:
+OWNER_(USERNAME): proprietario (nome utente)
 PARAGRAPH: Paragrafo
 PASSWORD: Parola d'ordine
 PLEASE_CONFIRM: Per favore conferma
@@ -132,6 +141,7 @@ PLEASE_CORRECT_THE_ERRORS_ABOVE: Si prega di correggere gli errori sopra
 PLUGINS: Plugin
 PLUGIN_STORE: Deposito plugin
 POWER_OFF: spegni
+PROFILE_IMAGE: Immagine del profilo
 PUBLISH: Pubblica
 QUOTE: Citazione
 QUOTES: Citazione
@@ -140,7 +150,8 @@ RAW: grezzo
 RAW_MARKDOWN_EDITOR: Editore grezzo Markdown
 RAW_MODE: modo grezzo
 READONLY: Sola lettura
-REMEMBER_TO_BOOKMARK_THIS_PAGE: Ricorda di aggiungere questa pagina ai segnalibri
+REGISTERED_USERS_ONLY: Solo utenti registrati
+REMEMBER_TO_BOOKMARK_THIS_PAGE: Ricorda di creare un segnalibro per la pagina
 REQUIRED: Richiesto
 RIGHT: Destra
 ROLE: Ruolo
@@ -181,6 +192,7 @@ USE_A_VALID_LANGUAGE_ATTRIBUTE: Use a valid language attribute
 USE_A_VALID_YEAR: Usa un anno valido
 USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Utilizzato come ripiego quando non è impostata alcuna data manuale.
 USERNAME: Nome utente
+USERNAME_(READ_ONLY): Nome utente (sola lettura)
 USERS: Utenti
 USER: Utente
 VIDEO: Video
@@ -193,6 +205,7 @@ VISUAL: visivo
 WAIT: aspetta
 WEBSITE_TITLE: Titolo del sito
 WEB: Sito
+WEBSITE_VISIBLE_FOR: Sito visibile per
 WRITING: Scrittura
 YEAR: Anno
 YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: È possibile sovrascrivere il css del tema con il proprio CSS qui.
