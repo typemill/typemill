@@ -3,27 +3,30 @@ ACCOUNT: Compte
 ACTIVE: Actif
 ACTUAL_PASSWORD: Mot de passe actuel
 ADD: Ajouter
-ADD CONTENT-BLOCK: ajouter un bloc
-ADD DEFINITION: ajouter une définition
+ADD_CONTENT_BLOCK: ajouter un bloc
+ADD_DEFINITION: ajouter une définition
 ADD_FILE: Ajouter un article
 ADD_FOLDER: Ajouter un dossier
 ADD_FOLDER_TO_BASE_LEVEL: Ajouter un dossier de premier niveau
 ADD_ITEM: Ajouter un élément
-ADD LEFT COLUMN: Ajouter une colonne à gauche
-ADD RIGHT COLUMN: Ajouter une colonne à droite
-ADD ROW ABOVE: Ajouter une rangée en haut
-ADD ROW BELOW: Ajouter une rangée en bas
+ADD_LEFT_COLUMN: Ajouter une colonne à gauche
+ADD_RIGHT_COLUMN: Ajouter une colonne à droite
+ADD_ROW_ABOVE: Ajouter une rangée en haut
+ADD_ROW_BELOW: Ajouter une rangée en bas
 ALL_USERS: Tous les utilisateurs
 ALT_TEXT: Texte alternatif
+ALTERNATIVE_TEXT_FOR_THE_HERO_IMAGE: Texte alternatif pour la bannière d'accueil
 AUTHOR: Auteur
+AUTHOR_DESCRIPTION__MARKDOWN_: Description (Markdown)
 BACK_TO_STARTPAGE: Revenir à la page d'accueil
 BOLD: Gras
 BOTTOM: En bas
-BROWSE: Feuilleter
+BROWSE: Parcourir
 BULLET_LIST: Liste à puces
 BY: de
 CANCEL: Annuler
 CAPTION: Légende
+CAN_BE_USED_FOR_AUTHOR_LINE_IN_FRONTEND_: Sera affiché comme auteur sur le site web.
 CELL: Cellule
 CENTER: Center
 CHECK: Vérifier
@@ -73,9 +76,11 @@ FORMAT: Mise en forme
 GENERAL_PRESENTATION: Presentation générale
 GERMAN: Allemand
 GOOGLE_SITEMAP: Google Sitemap
+HAS_EDIT_RIGHTS_FOR_THIS_ARTICLE_: Possède les droits d'édition sur cette article.
 HEAD: Tête de colonne
 HEADLINE_ANCHORS: Ancres de titre
 HEADLINE: Titre
+HERO_IMAGE: Bannière d'accueil (Hero image)
 HIDE: Masquer
 HIDE_PAGE_FROM_NAVIGATION: Masquer dans le menu de navigation du site
 HOME: Accueil
@@ -84,6 +89,8 @@ HORIZONTAL_LINE: Ligne horizontale
 HR: Ligne horizontale
 IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: Si non renseignée ici, la description est extraite du contenu.
 IMAGE: Image
+IMAGE_URL: URL de l'image
+IMAGE_URL__READ_ONLY_: URL de l'image (lecture seule)
 IMAGES: Images
 ITALIAN: Italien
 ITALIC: Italique
@@ -101,6 +108,7 @@ LOGO: Logo
 LOGOUT: Déconnexion
 MANUAL_DATE: Date manuelle
 MARKDOWN: Markdown
+MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB__HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES_: La taille maximale pour une image est 5 Mo. Les bannières d'accueil ne sont pas gérées dans tous les thèmes.
 MENU: Menu
 META_DESCRIPTION: Meta description
 META: Métadonnées
@@ -115,9 +123,11 @@ NO_PREVIEW: Pas de prévisualisation
 NO_SETTINGS: Aucun paramètre
 NOT_EDITABLE: Non modifiable
 NUMBERED_LIST: Liste numérotée
+NOTICE: Note
 OLIST: Liste ordonnée
 ONLINE: Online
 ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: Seuls sont autorisés les caractères spéciaux suivants :
+OWNER__USERNAME_: Responsable de l'article (nom)
 PARAGRAPH: Paragraphe
 PASSWORD: Mot de passe
 PLEASE_CONFIRM: Confirmer
@@ -125,6 +135,7 @@ PLEASE_CORRECT_THE_ERRORS_ABOVE: Veuillez corriger les erreurs ci-dessus
 PLUGINS: Plugins
 PLUGIN_STORE: Dépôt des plugins
 POWER_OFF: Éteindre
+PROFILE_IMAGE: Image du Profil
 PUBLISH: Publier
 QUOTE: Citation
 QUOTES: Citations
@@ -143,7 +154,7 @@ SAVED_SUCCESSFULLY: Enregistré avec succès
 SAVE: Enregistrer
 SAVE_THEME: Enregistrer et activer ce thème
 SELECT_FROM_MEDIALIB: Sélectionner dans la bibliothèque de médias
-SETTINGS_ARE_STORED: les paramètres sont mis en mémoire
+SETTINGS_ARE_STORED: Les paramètres sont mis en mémoire
 SETTINGS: Paramètres
 SETUP: Configuration
 SHOW_ANCHORS_NEXT_TO_HEADLINES: Afficher les ancres à coté des titres
@@ -153,8 +164,8 @@ SYSTEM: Système
 TABLE_OF_CONTENTS: Sommaire
 TABLE: Tableau
 TAKEN_FROM_YOUR_USER_ACCOUNT_IF_SET_: Si non renseigné ici, le nom est tiré du compte utilisateur courant.
-TERM: terme
-TEXT_FILE: fichier texte
+TERM: Terme
+TEXT_FILE: Fichier texte
 THE_FORMAT_BUTTONS: Boutons de mise en forme
 THEMES: Thèmes
 THEME_STORE: Dépôt des thèmes
@@ -167,12 +178,14 @@ UNKNOWN: Inconnu
 UPDATE_USER: Mettre à jour l'utilisateur
 UPLOAD: Télécharger
 UPLOAD_FILE: Télécharger un fichier
+UPLOAD_AN_IMAGE: Télécharger une image
 USE_2_TO_20_CHARACTERS: Vous devez saisir au moins 2 caractères et au maximum 20.
 USE_2_TO_40_CHARACTERS: Vous devez saisir au moins 2 caractères et au maximum 40.
 USE_A_VALID_LANGUAGE_ATTRIBUTE: Veuillez indiquer un attribut de langue valide
 USE_A_VALID_YEAR: Entrez une année valide
-USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Utilisé si aucune date manuelle n'est définie.
+USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Utilisée si aucune date manuelle n'est définie.
 USERNAME: Nom de l'utilisateur
+USERNAME__READ_ONLY_: Nom de l'utilisateur (lecture seule)
 USER: Utilisateur
 USERS: Utilisateurs
 VIDEO: Vidéo
@@ -185,6 +198,7 @@ VISUAL: Visuel
 WAIT: Attendez
 WEB: Site
 WEBSITE_TITLE: Titre du site
+WEBSITE_VISIBLE_FOR: Site visible pour
 WRITING: Rédaction
 YEAR: Année
 YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: Vous pouvez surcharger ici le css du thème avec vos propres styles.
@@ -193,14 +207,14 @@ SETUP_WELCOME: Bienvenue dans l'installation
 HURRA: Hourrah
 YOUR_ACCOUNT_HAS_BEEN_CREATED_AND_YOU_ARE_LOGGED_IN_NOW_: Votre compte a été créé et vous êtes maintenant connecté
 NEXT_STEP: Prochaine étape:
-VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: Visitez le volet Auteur et configurez votre nouveau site. Vous pouvez paramétrer le système, choisir un thème et ajouter des plugins.
+VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: Visitez le compte Utilisateur et configurez votre nouveau site. Vous pouvez paramétrer le système, choisir un thème et ajouter des plugins.
 GET_HELP: Obtenir de l'aide:
 IF_YOU_HAVE_ANY_QUESTIONS__PLEASE_READ_THE: Pour toutes questions, veuillez consulter la
 DOCS: documentation
 OR_OPEN_A_NEW_ISSUE_ON: ou ouvrir un nouveau bug sur
 CODED_WITH: Codé avec
-BY_THE: par
-COMMUNITY: communauté
+BY_THE: par la
+COMMUNITY: Communauté
 TRENDSCHAU_DIGITAL: Trendschau Digital
 CONFIGURE_YOUR_WEBSITE: Configurez votre site
 GIVE_YOUR_NEW_WEBSITE_A_NAME__ADD_THE_AUTHOR_AND_CHOOSE_A_COPYRIGHT_: Donnez un nom à votre nouveau site, ajouter un auteur et choisissez un copyright.
