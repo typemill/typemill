@@ -20,8 +20,11 @@ class Settings
 			$settings 			= array_merge($defaultSettings, $userSettings);
 		}
 
-		# no individual image sizes are allowed sind 1.3.4
-		$settings['images']	= $defaultSettings['images'];
+		# no individual image sizes are allowed since 1.3.4
+		# $settings['images']	= $defaultSettings['images'];
+		# make sure that thumb sizes are still there.
+		$images = array_merge($defaultSettings['images'], $settings['images']);
+		$settings['images'] = $images;
 
 		# we have to check if the theme has been deleted
 		$themefolder = $settings['rootPath'] . $settings['themeFolder'] . DIRECTORY_SEPARATOR;
@@ -60,10 +63,9 @@ class Settings
 	public static function getDefaultSettings()
 	{
 		$rootPath = __DIR__ . DIRECTORY_SEPARATOR .  '..' . DIRECTORY_SEPARATOR;
-		
+
 		return [
 			'determineRouteBeforeAppMiddleware' 	=> true,
-			'displayErrorDetails' 					=> false,
 			'title'									=> 'TYPEMILL',
 			'author'								=> 'Unknown',
 			'copyright'								=> 'Copyright',
@@ -80,8 +82,6 @@ class Settings
 			'editor'								=> 'visual',
 			'formats'								=> ['markdown', 'headline', 'ulist', 'olist', 'table', 'quote', 'notice', 'image', 'video', 'file', 'toc', 'hr', 'definition', 'code'],
 			'contentFolder'							=> 'content',
-			'cache'									=> true,
-			'cachePath'								=> $rootPath . 'cache',
 			'version'								=> '1.3.8',
 			'setup'									=> true,
 			'welcome'								=> true,
@@ -166,11 +166,15 @@ class Settings
 									'setup' => true,
 									'welcome' => true,
 									'images' => true,
+									'live' => true,
+									'width' => true,
+									'height' => true,
 									'plugins' => true,
 									'themes' => true,
 									'latestVersion' => true,
 									'logo' => true,
-									'favicon' => true 
+									'favicon' => true,
+									'twigcache' => true
 								];
 
 			# cleanup the existing usersettings

@@ -38,7 +38,7 @@ class Assets
 
 		$resize = '-';
 
-		if(ctype_digit($width) && $width < 10000)
+		if(is_int($width) && $width < 10000)
 		{
 			$resize .= $width;
 			$desiredSizes['custom']['width'] = $width;
@@ -46,7 +46,7 @@ class Assets
 
 		$resize .= 'x';
 
-		if(ctype_digit($height) && $height < 10000)
+		if(is_int($height) && $height < 10000)
 		{
 			$resize .= $height;
 			$desiredSizes['custom']['height'] = $height;
@@ -125,7 +125,7 @@ class Assets
 
 	public function src()
 	{
-		return $this->imageUrl;
+		return $this->baseUrl . '/' . $this->imageUrl;
 	}
 
 	public function addCSS($CSS)

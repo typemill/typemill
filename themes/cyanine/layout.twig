@@ -9,8 +9,6 @@
 		<meta name="author" content="{{ metatabs.meta.author }}" />
 		<meta name="generator" content="TYPEMILL" />
 		<meta name="msapplication-TileColor" content="#F9F8F6" />
-
-		<base href="{{ base_url }}/">
 		
 		{% if favicon %}
 			<meta name="msapplication-TileColor" content="#F9F8F6" />
@@ -23,15 +21,17 @@
 			<link rel="apple-touch-icon" sizes="180x180" href="{{ base_url }}/media/files/favicon-180.png" />
 		{% endif %}
 		
-		<link rel="canonical" href="{{ base_url }}{{ item.urlAbs }}" />
+		<link rel="canonical" href="{{ item.urlAbs }}" />
 		
 		<meta property="og:site_name" content="{{ settings.title }}">
 		<meta property="og:title" content="{{ title }}">
 		<meta property="og:description" content="{{ metatabs.meta.description }}">
 		<meta property="og:type" content="article">
 		<meta property="og:url" content="{{ item.urlAbs }}">
-		<meta property="og:image" content="{{ image.img_url }}">
-		<meta name="twitter:image:alt" content="{{ image.img_alt }}">
+		{% if image.img_url %}
+			<meta property="og:image" content="{{ image.img_url }}">
+			<meta name="twitter:image:alt" content="{{ image.img_alt }}">
+		{% endif %}
 		<meta name="twitter:card" content="summary_large_image">		
 
 		{% block stylesheets %}
@@ -39,68 +39,173 @@
 			<link rel="stylesheet" href="{{ base_url }}/themes/cyanine/css/style.css" />
 			
 			<style>
-				.f-link,a.tm-download::before, 
-				article a, article a:link, article a:visited,
-				footer a, footer a:link, footer a:visited{ 
-					color: {{ settings.themes.cyanine.fontcolorlink|default('#007F7F') }};
+
+				/*******************
+				**  LAYOUT SIZES  **
+				*******************/
+			
+				{% if settings.themes.cyanine.layoutsize == 'large' %}
+					@media screen and (min-width: 50em){
+						.grid-container{
+							max-width: 82rem;
+							grid-template-columns: 25% 75%;
+						}
+						.grid-main{
+							max-width: 56rem;
+							margin: auto;
+						}
+					}
+				{% elseif settings.themes.cyanine.layoutsize == 'full' %}
+					@media screen and (min-width: 70em){
+						.grid-container{
+							max-width: 100%;
+							grid-template-columns: 20% 80%;
+						}
+						.grid-main{
+							padding-left: 4rem;
+							padding-right: 4rem;
+							margin: auto;
+						}
+					}
+				{% else %}
+					@media screen and (min-width: 50em){
+						.grid-container{
+							max-width: 64rem;
+							grid-template-columns: 30% 70%;
+						}
+					}
+				{% endif %}
+
+
+
+				/*******************
+				**  FONT FAMILIES **
+				*******************/
+
+				body,.landingpagecontrast{
+					font-family: {{ settings.themes.cyanine.font|default('-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif') }};
 				}
-				article a:hover, article a:focus, article a:active,
-				footer a:hover, footer a:focus, footer a:active{ 
-					text-decoration: none;
+				h1,h2,h3,h4,h5,h6,.logo{
+					font-family: {{ settings.themes.cyanine.fontheadline|default('-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif') }};
 				}
-				table{
-					background: #fff;
+				.navigation, button, .button, .mainnavigation{
+					font-family: {{ settings.themes.cyanine.fontnavi|default('-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif') }};
 				}
-				thead{
-					color: {{ settings.themes.cyanine.fontcolorsecondary|default('#F7F7F7') }};
-					background-color: {{ settings.themes.cyanine.brandcolorprimary|default('lightseagreen') }};
+
+				/*******************
+				**      COLORS    **
+				*******************/
+
+				body,.landingpagecontrast{
+					background: {{ settings.themes.cyanine.brandcolorprimary|default('lightseagreen') }};
 				}
-				tr{
-					border-color: {{ settings.themes.cyanine.thinbordercolor|default('lightgray') }};
+				main, footer, .landingpageintro, .landingpageinfo, .landingpageteaser, .landingpagenavi, .landingpagecontrast, .landingpagenews{
+					border-color: {{ settings.themes.cyanine.brandcolorprimary|default('lightseagreen') }};
 				}
-				article pre, article code{ 
-					background-color: #ddd;
+				.landingpagecontrast a, .landingpagecontrast a:link, .landingpagecontrast a:visited{
+					background: {{ settings.themes.cyanine.brandcolorprimary|default('lightseagreen') }};
+				}
+				body,.landingpagecontrast, a,
+				.landingpagecontrast a, .landingpagecontrast a:link, .landingpagecontrast a:visited{
+					color: {{ settings.themes.cyanine.fontcolorprimary|default('#F7F7F7') }};
+				}
+				.landingpagecontrast a, .landingpagecontrast a:link, .landingpagecontrast a:visited{
+					border-color: {{ settings.themes.cyanine.fontcolorprimary|default('#F7F7F7') }};					
+				}
+
+				main, footer, .landingpageintro, .landingpageinfo, .landingpageteaser, .landingpagenavi, .landingpagenews,button.expander{
+					background: {{ settings.themes.cyanine.brandcolorsecondary|default('#f7f7f7') }};
+				}
+				main, footer, .landingpageintro, .landingpageinfo, .landingpageteaser, .landingpagenavi, .landingpagenews, .logo a, button.expander{
+					color: {{ settings.themes.cyanine.fontcolorsecondary|default('#333') }};					
+				}
+				button.expander{
+					border-color: {{ settings.themes.cyanine.fontcolorsecondary|default('#333') }};
+				}
+
+				main a, footer a, .landingpageintro p a, .landingpageinfo p a, .landingpageteaser p a, .landingpagenavi p a{
+					color: {{ settings.themes.cyanine.fontcolorlink|default('#007474') }};
+			  	}
+				.TOC li a, .TOC li a:hover,.TOC li a:focus,.TOC li a:active{
+					border-color: {{ settings.themes.cyanine.fontcolorlink|default('#007474') }};
+				}
+
+				.navigation, button, .button,thead{
+					background: {{ settings.themes.cyanine.brandcolortertiary|default('lightseagreen') }};
+				}
+				.navigation, button, .button{
+					border-color: {{ settings.themes.cyanine.bordercolortertiary|default('lightseagreen') }};
+				}
+				.navigation, button, .button,thead,
+				.navigation a,.navigation a:hover,.navigation a:focus, .navigation a:active{
+					color: {{ settings.themes.cyanine.fontcolortertiary|default('#F7F7F7') }};
 				}
 				article pre{
-					border-left: 4px solid {{ settings.themes.cyanine.brandcolorprimary|default('lightseagreen') }};
+					border-left: 4px solid {{ settings.themes.cyanine.brandcolortertiary|default('lightseagreen') }};
+				}
+				article pre, article code{
+					background: {{ settings.themes.cyanine.codebackground|default('#ddd') }};
+					color: {{ settings.themes.cyanine.codecolor|default('#333') }};
+				}
+
+				.mainnavigation a:hover,.mainnavigation a:focus,.mainnavigation a:active, .mainnavigation .active > a:first-child{
+					background: {{ settings.themes.cyanine.contentnavihoverbackground|default('lightseagreen') }};
+					color: {{ settings.themes.cyanine.contentnavihovercolor|default('white') }};
+				}
+				.landingpagenews li{
+					background: {{ settings.themes.cyanine.newsbackground|default('white') }};
+				}
+				.landingpagenews li a{
+					color: {{ settings.themes.cyanine.newscolor|default('#333') }};
+				}
+				.mainnavigation li, tr, hr{
+					border-color: {{ settings.themes.cyanine.thinbordercolor|default('lightgray') }};
 				}
 				a.tm-download::before{
 					border: 1px solid {{ settings.themes.cyanine.fontcolorlink|default('#007F7F') }};
+					color: {{ settings.themes.cyanine.fontcolorlink|default('#007F7F') }};
 				}
 				a.tm-download:hover::before{
-					color: {{ settings.themes.cyanine.fontcolorsecondary|default('#f7f7f7') }};
+					color: {{ settings.themes.cyanine.contentnavihovercolor|default('#f7f7f7') }};
 					background: {{ settings.themes.cyanine.fontcolorlink|default('#007F7F') }};
 				}
-				.f-primary{
-					color: {{ settings.themes.cyanine.fontcolorprimary|default('#333') }};
+
+				.notice1{
+				    background-color: #ffded4;
+				    border-left: 4px solid #f65a3c;
 				}
-				.f-secondary,
-				.hover-f-secondary:hover,.hover-f-secondary:focus,.hover-f-secondary:active, .active > a:first-child.hover-f-secondary{
-					color: {{ settings.themes.cyanine.fontcolorsecondary|default('#f7f7f7') }};
+				.notice2{
+					background-color: #fff3d4;
+					border-left: 4px solid #f6b73c;
 				}
-				.bg-primary,
-				.hover-bg-primary:hover,.hover-bg-primary:focus,.hover-bg-primary:active, .active > a:first-child.hover-bg-primary{
-					background-color: {{ settings.themes.cyanine.brandcolorprimary|default('lightseagreen') }};
+				.notice3,
+				.notice4,
+				.notice5,
+				.notice6 {
+				    background-color: #d4e0ff;
+				    border-left: 4px solid #3c7bf6;	
 				}
-				.bg-secondary{
-					background-color: {{ settings.themes.cyanine.brandcolorsecondary|default('#f7f7f7') }};
-				}
-				.b--primary{
-					border-color: {{ settings.themes.cyanine.brandcolorprimary|default('lightseagreen') }};
-				}
-				.b--secondary{
-					border-color: {{ settings.themes.cyanine.brandcolorsecondary|default('#f7f7f7') }};
-				}
-				.b--tertiary{
-					border-color: {{ settings.themes.cyanine.thinbordercolor|default('lightgray') }};
-				}
-				h1, h2, h3, h4, h5, h6{
-					{% if settings.themes.cyanine.fontheadline == 'serif' %}
-						font-family: georgia, times, serif;
-					{% elseif settings.themes.cyanine.fontheadline == 'sans-serif-tm' %}
-						font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif; 
-					{% endif %}
-				}
+
+				{% if settings.themes.cyanine.noticecolors %}
+					.notice1 {
+						background-color: #fafafa;
+						border-left: 10px solid #000;
+						color: #333;
+					}
+					.notice2 {
+						background-color: #eee;
+						border-left: 10px solid #999;
+						color: #333;
+					}
+					.notice3,
+					.notice4,
+					.notice5,
+					.notice6 {
+						background-color: #444;
+						border-left: 10px solid #ccc;
+						color: #fff;
+					}
+				{% endif %}
 
 			</style>
 
@@ -109,7 +214,7 @@
 			
 		{% endblock %}
 	</head>
-	<body class="{{ settings.themes.cyanine.font|default('tm-sans-serif') }} optimize-text pa2 bg-primary dark-gray">
+	<body class="optimize-text pa2">
 		
 		{% block content %}{% endblock %}
 			

@@ -29,12 +29,12 @@ class Validation
 
 		Validator::addRule('image_types', function($field, $value, array $params, array $fields) use ($user)
 		{
-    		$allowed 	= ['jpg', 'jpeg', 'png'];
+    		$allowed 	= ['jpg', 'jpeg', 'png', 'webp'];
 			$pathinfo	= pathinfo($value);
 			$extension 	= strtolower($pathinfo['extension']);
-			if(array_search($extension, $allowed)){ return true; }
+			if(in_array($extension, $allowed)){ return true; }
 			return false;
-		}, 'only jpg, jpeg, png allowed');
+		}, 'only jpg, jpeg, png, webp, allowed');
 
 		Validator::addRule('userAvailable', function($field, $value, array $params, array $fields) use ($user)
 		{

@@ -62,7 +62,9 @@ class Translations
                 }
               }
               foreach($plugin_labels as $key => $value) {
-                $plugins_labels = array_merge($plugins_labels, $value);
+                if(is_array($value)){
+                  $plugins_labels = array_merge($plugins_labels, $value);
+                }
               }
             }
           }

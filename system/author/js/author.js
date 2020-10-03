@@ -297,8 +297,39 @@
 				visiblefilename.value = '';
 			}
 
-		}());	
+		}());
 	}
+
+	/*************************************
+	**			Clear Cache				**
+	*************************************/
+
+	var cachebutton = document.getElementById("clearcache");
+
+	if(cachebutton)
+	{
+
+		cachebutton.addEventListener("click", function(event){
+			
+			event.preventDefault();
+			
+	        myaxios.delete('/api/v1/clearcache',{
+	        	data: {
+					'csrf_name': 	document.getElementById("csrf_name").value,
+					'csrf_value':	document.getElementById("csrf_value").value,
+	        	}
+			})			
+	        .then(function (response) {
+	        	cachebutton.disabled = true;
+	        	document.getElementById("cacheresult").innerHTML = "<span class='green f6'>Done!</span>";
+	        })
+	        .catch(function (error)
+	        {
+	        	document.getElementById("cacheresult").innerHTML = "<span class='red f6'>" + error.response.data.errors + "</span>";
+	        });
+		});
+	}
+
 	
 	/*************************************
 	**			COLOR PICKER			**

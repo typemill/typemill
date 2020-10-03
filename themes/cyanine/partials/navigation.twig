@@ -7,22 +7,22 @@
 		{% set depth = element.keyPathArray|length %}
 
         {% if element.activeParent %}
-			<li class="bt bb b--tertiary margin-bottom-1 {{ element.elementType }} level-{{ depth }} activeParent">
+			<li class="bt bb margin-bottom-1 {{ element.elementType }} level-{{ depth }} activeParent">
 		{% elseif element.active %}
-			<li class="bt bb b--tertiary margin-bottom-1 {{ element.elementType }} level-{{ depth }} active">
+			<li class="bt bb margin-bottom-1 {{ element.elementType }} level-{{ depth }} active">
 		{% else %}
-			<li class="bt bb b--tertiary margin-bottom-1 {{ element.elementType }} level-{{ depth }}">
+			<li class="bt bb margin-bottom-1 {{ element.elementType }} level-{{ depth }}">
 		{% endif %}
         
         {% if (element.elementType == 'folder') %}
-				<a class="link dib w-100 relative fw7 pv2 pr2 indent-l-{{depth}} margin-bottom-1 arrow-after hover-bg-primary f-primary hover-f-secondary" href="{{ element.urlAbs }}">{% if chapnum %}{{ element.chapter }}. {% endif %}{{ element.name }}</a>
+				<a class="link dib w-100 relative fw7 pv2 pr2 indent-l-{{depth}} margin-bottom-1 arrow-after" href="{{ element.urlAbs }}">{% if chapnum %}{{ element.chapter }}. {% endif %}{{ element.name }}</a>
 		{% if (element.folderContent|length > 0) and (element.contains == 'pages') %}	
                 <ul class="list pa0">
                     {{ macros.loop_over(element.folderContent, chapnum) }}
                 </ul>
 		{% endif %}
             {% else %}
-				<a class="link dib w-100 relative fw3 pv2 pr2 indent-l-{{depth}} margin-bottom-1 arrow-after hover-bg-primary f-primary hover-f-secondary" href="{{ element.urlAbs }}">{% if chapnum %}{{ element.chapter }} {% endif %}{{ element.name }}</a>
+				<a class="link dib w-100 relative fw3 pv2 pr2 indent-l-{{depth}} margin-bottom-1 arrow-after" href="{{ element.urlAbs }}">{% if chapnum %}{{ element.chapter }} {% endif %}{{ element.name }}</a>
             {% endif %}
         </li>
     {% endfor %}
@@ -31,9 +31,9 @@
 {% import _self as macros %}
 
 {% if settings.themes.cyanine.collapseNav %}
-    <button id="expander" class=" dn db-l link pointer w-100 bg-secondary ba b--tertiary pa2 mb1 f7">expand navigation</button>
+    <button id="expander" class="expander dim dn db-l link pointer w-100 ba pa2 mb3 f6">expand navigation</button>
 {% endif %}
 
-<ul class="list pa0 menu {{ settings.themes.cyanine.fontnavi }}">
+<ul class="mainnavigation list pa0 menu">
     {{ macros.loop_over(navigation, settings.themes.cyanine.chapnum ) }}
 </ul>

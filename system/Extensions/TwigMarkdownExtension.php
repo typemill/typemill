@@ -19,6 +19,6 @@ class TwigMarkdownExtension extends \Twig_Extension
 		
 		$markdownArray = $parsedown->text($markdown);
 		
-		return $parsedown->markup($markdownArray, false);
+		return $parsedown->markup($markdownArray);
 	}
 }

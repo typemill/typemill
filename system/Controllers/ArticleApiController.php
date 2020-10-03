@@ -977,7 +977,7 @@ class ArticleApiController extends ContentController
 			}
 
 			# parse markdown-content-array to content-string
-			$content[$key]	= ['id' => $key, 'html' => $parsedown->markup($contentArray, $relurl)];
+			$content[$key]	= ['id' => $key, 'html' => $parsedown->markup($contentArray)];
 		}
 
 		if($toc)
