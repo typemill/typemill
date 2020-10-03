@@ -27,7 +27,7 @@
 						<label for="userrole">{{ __('Role') }} <abbr title="{{ __('required') }}">*</abbr></label>
 						<select name="userrole" required>
 							{% for role in userrole %}
-								<option value="{{ role }}"{% if (role == old.userrole) %} selected{% endif %}>{{ role }}</option>
+								<option value="{{ role }}"{% if (role == old.userrole) %} selected{% endif %}>{{ __(role) }}</option>
 							{% endfor %}
 						</select>
 						{% if errors.userrole %}

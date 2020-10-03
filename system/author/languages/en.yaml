@@ -13,16 +13,20 @@ ADD_LEFT_COLUMN: add left column
 ADD_RIGHT_COLUMN: add right column
 ADD_ROW_ABOVE: add row above
 ADD_ROW_BELOW: add row below
+ADMINISTRATOR: administrator
+ALL: all
 ALL_USERS: All users
 ALT_TEXT: Alt-Text
 ALTERNATIVE_TEXT_FOR_THE_HERO_IMAGE: Alternative Text for the hero image
 AUTHOR: Author
+AUTHOR_DESCRIPTION_(MARKDOWN): Author-Description (Markdown)
 BACK_TO_STARTPAGE: back to startpage
 BOLD: bold
 BOTTOM: Bottom
 BROWSE: BROWSE
 BULLET_LIST: Bullet List
 BY: by
+CAN_BE_USED_FOR_AUTHOR_LINE_IN_FRONTEND_: Can be used for author line in frontend.
 CANCEL: cancel
 CAPTION: Caption
 CELL: cell
@@ -36,8 +40,8 @@ COG: cog
 CONTENT: Content
 CONTENT: Content
 COPYRIGHT: Copyright
-CREATED_AT__READ_ONLY_: Created at (readonly)
-CREATED_AT__READONLY_: Created at (read only)
+CREATED_AT_(READ_ONLY): Created at (readonly)
+CREATED_AT_(READONLY): Created at (read only)
 CREATE_NEW_USER: Create New User
 CREATE_USER: Create User
 CROSS: cross
@@ -61,6 +65,7 @@ DRAFT: Draft
 DRAG_A_PICTURE_OR_CLICK_TO_SELECT: upload an image
 DUTCH__FLEMISH: Dutch, Flemish
 EDIT: edit
+EDITOR: editor
 EDIT_USER: Edit User
 E_G_: e.g.
 E_MAIL: E-Mail
@@ -76,6 +81,7 @@ FORMAT: Format
 GENERAL_PRESENTATION: General Presentation
 GERMAN: German
 GOOGLE_SITEMAP: Google Sitemap
+HAS_EDIT_RIGHTS_FOR_THIS_ARTICLE_: Has edit rights for this article.
 HEAD: Head
 HEADLINE_ANCHORS: Headline Anchors
 HEADLINE: Headline
@@ -89,13 +95,14 @@ HR: hr
 IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: If not filled, the description is extracted from content.
 IMAGE: Image
 IMAGES: Images
-IMAGE_URL__READ_ONLY_: Image URL (read only)
+IMAGE_URL: Image URL
+IMAGE_URL_(READ_ONLY): Image URL (read only)
 ITALIAN: Italian
 ITALIC: italic
 LANGUAGE: Language
 LANGUAGE_ADMIN: Language (admin-ui)
 LANGUAGE_ATTR: Language Attribute (website)
-LAST_MODIFIED_LIVE__READONLY_: Last modified live (readonly)
+LAST_MODIFIED_LIVE_(READONLY): Last modified live (readonly)
 LAST_NAME: Last Name
 LEFT: Left
 LICENCE: Licence
@@ -107,6 +114,7 @@ LOGOUT: Logout
 MANUAL_DATE: Manual date
 MARKDOWN: markdown
 MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB__HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES_: Maximum size for an image is 5 MB. Hero images are not supported by all themes.
+MEMBER: member
 MENU: Menu
 META_DESCRIPTION: Meta description
 META: meta
@@ -125,6 +133,7 @@ NUMBERED_LIST: Numbered List
 OLIST: olist
 ONLINE: online
 ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: Only the following special characters are allowed:
+OWNER_(USERNAME): owner (username)
 PARAGRAPH: Paragraph
 PASSWORD: Password
 PLEASE_CONFIRM: Please confirm
@@ -132,6 +141,7 @@ PLEASE_CORRECT_THE_ERRORS_ABOVE: Please correct the errors above
 PLUGINS: Plugins
 PLUGIN_STORE: Plugin Store
 POWER_OFF: power-off
+PROFILE_IMAGE: Profile-Image
 PUBLISH: Publish
 QUOTE: Quote
 QUOTES: Quote
@@ -140,6 +150,7 @@ RAW_MARKDOWN_EDITOR: Raw Markdown Editor
 RAW_MODE: raw mode
 RAW: raw
 READONLY: Readonly
+REGISTERED_USERS_ONLY: registered users only
 REMEMBER_TO_BOOKMARK_THIS_PAGE: Remember to bookmark this page
 REQUIRED: Required
 RIGHT: Right
@@ -181,6 +192,7 @@ USE_A_VALID_LANGUAGE_ATTRIBUTE: Use a valid language attribute
 USE_A_VALID_YEAR: Use a valid year
 USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Used as fallback when no manual date is set.
 USERNAME: Username
+USERNAME_(READ_ONLY): Username (read only) 
 USERS: Users
 USER: User
 VIDEO: Video
@@ -193,6 +205,7 @@ VISUAL: visual
 WAIT: wait
 WEBSITE_TITLE: Website Title
 WEB: Web
+WEBSITE_VISIBLE_FOR: Website visible for
 WRITING: Writing
 YEAR: Year
 YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: You can overwrite the theme-css with your own css here.
