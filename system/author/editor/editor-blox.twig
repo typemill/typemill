@@ -51,7 +51,7 @@
 				<content-block class="title" :body="false">
 					<div class="blox title" @click.prevent="setData( $event )" data-id="0" id="blox-0" v-if="title" v-html="title.html"></div>
 				</content-block>
-				
+
 				<div id="sortblox" v-cloak>
 					<draggable v-model="html" @start="onStart" @end="moveBlock" :disabled="sortdisabled" :animation="150">
 						<content-block :body="true" v-for="(block, index) in html" v-if="index !== 0">

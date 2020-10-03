@@ -157,7 +157,7 @@ class ContentBackendController extends ContentController
 			$contentArray 	= $parsedown->text($block);
 
 			/* parse markdown-content-array to content-string */
-			$content[$key]	= $parsedown->markup($contentArray, $relurl);
+			$content[$key]	= $parsedown->markup($contentArray);
 		}
 
 		# extract title and delete from content array, array will start at 1 after that.

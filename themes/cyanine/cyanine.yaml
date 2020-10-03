@@ -18,6 +18,14 @@ settings:
 forms:
   fields:
 
+    layoutsize:
+      type: select
+      label: Layout Size
+      options:
+        standard: Standard
+        large: Large
+        full: Full Width
+
     landingpage:
       type: checkbox
       checkboxlabel: Activate a landingpage
@@ -30,6 +38,15 @@ forms:
           type: number
           label: Position of Intro Segment
           description: Use 0 to disable the section
+        introTitle:
+          type: text
+          label: Title for your landingpage intro
+          placeholder: Typemill
+          description: Leave empty to use the title of your base content page.
+        introMarkdown:
+          type: textarea
+          label: Text for your landingpage intro (use markdown)
+          description: Leave empty to use the content of your base content page.
         introButtonLink:
           type: text
           label: Link for startbutton
@@ -247,76 +264,137 @@ forms:
       fields:
         font:
           type: select
-          label: Basic font-family
-          description: All fonts are system fonts with (fallbacks) if the font is not installed
-          options: 
-            serif: serif
-            sans-serif-tm: sans-serif
-            courier: courier (sans-serif)
-            helvetica: helvetica (sans-serif)
-            avenir: avenir (sans-serif)
-            athelas: athelas (serif) 
-            georgia: georgia (serif)
-            times: times (serif)
-            bodoni: bodoni (serif)
-            calisto: calisto (serif)
-            garamond: garamond (serif)
-            baskerville: baskerville (serif)
+          label: General font-family
+          description: All fonts are system fonts with fallbacks
+          options:
+            BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif: sans-serif
+            georgia,times,serif: serif
+            courier,sans-serif: courier (sans-serif)
+            helvetica,sans-serif: helvetica (sans-serif)
+            avenir,sans-serif: avenir (sans-serif)
+            athelas,serif: athelas (serif) 
+            georgia,serif: georgia (serif)
+            times,serif: times (serif)
+            bodoni,serif: bodoni (serif)
+            calisto,serif: calisto (serif)
+            garamond,serif: garamond (serif)
+            baskerville,serif: baskerville (serif)
         fontheadline:
           type: select
           label: Font-family for headlines
-          description: All fonts are system fonts with (fallbacks) if the font is not installed
-          options: 
-            serif: serif
-            sans-serif-tm: sans-serif
+          description: All fonts are system fonts with fallbacks
+          options:
+            BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif: sans-serif
+            georgia,times,serif: serif
+            courier,sans-serif: courier (sans-serif)
+            helvetica,sans-serif: helvetica (sans-serif)
+            avenir,sans-serif: avenir (sans-serif)
+            athelas,serif: athelas (serif) 
+            georgia,serif: georgia (serif)
+            times,serif: times (serif)
+            bodoni,serif: bodoni (serif)
+            calisto,serif: calisto (serif)
+            garamond,serif: garamond (serif)
+            baskerville,serif: baskerville (serif)
         fontnavi:
           type: select
           label: Font-family for navigations
-          description: All fonts are system fonts with (fallbacks) if the font is not installed
-          options: 
-            serif: serif
-            sans-serif-tm: sans-serif
-            courier: courier (sans-serif)
-            helvetica: helvetica (sans-serif)
-            avenir: avenir (sans-serif)
-            athelas: athelas (serif) 
-            georgia: georgia (serif)
-            times: times (serif)
-            bodoni: bodoni (serif)
-            calisto: calisto (serif)
-            garamond: garamond (serif)
-            baskerville: baskerville (serif)
+          description: All fonts are system fonts with fallbacks
+          options:
+            BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif: sans-serif
+            georgia,times,serif: serif
+            courier,sans-serif: courier (sans-serif)
+            helvetica,sans-serif: helvetica (sans-serif)
+            avenir,sans-serif: avenir (sans-serif)
+            athelas,serif: athelas (serif) 
+            georgia,serif: georgia (serif)
+            times,serif: times (serif)
+            bodoni,serif: bodoni (serif)
+            calisto,serif: calisto (serif)
+            garamond,serif: garamond (serif)
+            baskerville,serif: baskerville (serif)
     fieldsetColors:
       type: fieldset
       legend: Colors
       fields:
         brandcolorprimary:
           type: text
-          label: Primary brand color
+          label: Background color for body
           placeholder: 'leightseagreen'
-          description: Used for the body background and borders
-        brandcolorsecondary:
-          type: text
-          label: Secondary brand color
-          placeholder: '#f7f7f7'
-          description: Used for content background, font-colors on hover and more
+          fieldsize: half
         fontcolorprimary:
           type: text
-          label: Primary font color
-          placeholder: 'lightseagreen'
-          description: Used for text
-        fontcolorsecondary:
+          label: Font color for body
+          placeholder: 'white'
+          fieldsize: half
+        newsbackground:
           type: text
-          label: Secondary font color
+          label: Background color for news-box
+          placeholder: 'white'
+          fieldsize: half
+        newscolor:
+          type: text
+          label: Font color for news-box
+          placeholder: '#333'
+          fieldsize: half
+        brandcolortertiary:
+          type: text
+          label: Background color for buttons
+          placeholder: 'lightseagreen'
+          fieldsize: half
+        fontcolortertiary:
+          type: text
+          label: Font color for buttons
           placeholder: '#F7F7F7'
-          description: Used as contrary color for hovers in navigation and buttons
+          fieldsize: half
+        bordercolortertiary:
+          type: text
+          label: Border color for buttons
+          placeholder: '#F7F7F7'
+          fieldsize: half
         fontcolorlink:
           type: text
-          label: text-links
+          label: Font color for content links
           placeholder: '#007F7F'
-          description: Used for links, check contrast for a11y.        
+          fieldsize: half
+        brandcolorsecondary:
+          type: text
+          label: Background color for content
+          placeholder: '#f7f7f7'
+          fieldsize: half
+        fontcolorsecondary:
+          type: text
+          label: Font color for content
+          placeholder: '#333'
+          fieldsize: half
+        codebackground:
+          type: text
+          label: Background color for code
+          placeholder: '#ddd'
+          fieldsize: half
+        codecolor:
+          type: text
+          label: Font color for code
+          placeholder: '#333'
+          fieldsize: half
+        contentnavihoverbackground:
+          type: text
+          label: Background color for hover of content navigation
+          placeholder: 'lightseagreen'
+          fieldsize: half
+        contentnavihovercolor:
+          type: text
+          label: Font color for hover of content navigation
+          placeholder: 'white'
+          fieldsize: half
         thinbordercolor:
           type: text
           label: Thin border color
           placeholder: 'lightgray'
-          description: Used for thin borders in navigations and tables
+          description: Used for content navigation, table and horizontal line
+          fieldsize: half
+        noticecolors:
+          type: checkbox
+          label: Color for notices
+          checkboxlabel: Use grayscale color schema for notices
+          fieldsize: half

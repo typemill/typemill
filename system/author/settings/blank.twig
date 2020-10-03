@@ -8,7 +8,10 @@
 		<section class="settings">
 			{{ content }}
 		</section>
-	
+
+		<input id="path" type="hidden" value="{{ item.urlRel }}" required readonly />
+		{{ csrf_field() | raw }}
+
 	</div>
 
 {% endblock %}

@@ -153,7 +153,7 @@ abstract class Plugin implements EventSubscriberInterface
 		$parsedown 		= new ParsedownExtension();
 		
 		$contentArray 	= $parsedown->text($markdown);
-		$html			= $parsedown->markup($contentArray,false);
+		$html			= $parsedown->markup($contentArray);
 		
 		return $html;
 	}

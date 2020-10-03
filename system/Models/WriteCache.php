@@ -46,11 +46,16 @@ class WriteCache extends Write
 	public function updateCache($folderName, $cacheFileName, $requestFileName, $cacheData)
 	{
 		$sCacheData = serialize($cacheData);
-		$this->writeFile($folderName, $cacheFileName, $sCacheData);
-		if($requestFileName)
+		if($this->writeFile($folderName, $cacheFileName, $sCacheData))
 		{
-			$this->writeFile($folderName, $requestFileName, time());
+			if($requestFileName)
+			{
+				$this->writeFile($folderName, $requestFileName, time());
+			}
+
+			return true;
 		}
+		return false;
 	}
 
 	/**

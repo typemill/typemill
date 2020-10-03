@@ -143,7 +143,7 @@ class BlockApiController extends ContentController
 		else
 		{
 			# parse markdown-content-array to content-string
-			$blockHTML = $parsedown->markup($blockArray, $relurl);
+			$blockHTML = $parsedown->markup($blockArray);
 			
 			# if it is a headline
 			if($blockMarkdown[0] == '#')
@@ -195,7 +195,7 @@ class BlockApiController extends ContentController
 			}
 
 			# parse markdown-content-array to content-string
-			$content[$key]	= ['id' => $key, 'html' => $parsedown->markup($contentArray, $relurl)];
+			$content[$key]	= ['id' => $key, 'html' => $parsedown->markup($contentArray)];
 		}
 
 		# if page has a table of content
@@ -353,7 +353,7 @@ class BlockApiController extends ContentController
 		else
 		{
 			# parse markdown-content-array to content-string
-			$blockHTML = $parsedown->markup($blockArray, $relurl);
+			$blockHTML = $parsedown->markup($blockArray);
 			
 			# if it is a headline
 			if($blockMarkdown[0] == '#')

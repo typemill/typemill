@@ -149,6 +149,8 @@ $container['dispatcher'] = function($container) use ($dispatcher)
 # delete username and password from uri
 $uri = $container['request']->getUri()->withUserInfo('');
 
+define("TM_BASE_URL", $uri->getBaseUrl());
+
 /********************************
 * ADD ASSET-FUNCTION FOR TWIG	*
 ********************************/
@@ -224,8 +226,10 @@ $container['view'] = function ($container) use ($uri)
 {
 	$path = array($container->get('settings')['themePath'], $container->get('settings')['authorPath']);
 	
+	$cache = ( isset($container->get('settings')['twigcache']) && $container->get('settings')['twigcache'] ) ? $container->get('settings')['rootPath'] . '/cache/twig' : false;
+
     $view = new \Slim\Views\Twig( $path, [
-		'cache' => false,
+		'cache' => $cache,
 		'autoescape' => false,
 		'debug' => true
     ]);

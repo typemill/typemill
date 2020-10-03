@@ -1,6 +1,6 @@
 {% set nowYear = "now"|date("Y") %}
 
-<footer class="w-100 bg-secondary bl br bb b--primary lh-copy">
+<footer class="w-100 bl br bb lh-copy">
 	<div class="mw8 center pv3 flex-l">
 		{% for column,key in settings.themes.cyanine.footercolumns %}
 			{% if settings.themes.cyanine[column] %}
@@ -19,6 +19,6 @@
 	</div>
 </footer>
 
-<div class="w-100 center f6 f-secondary">
+<div class="w-100 center f6">
 	<p class="f6">{{ settings.copyright }} {{ __('by') }} {{ settings.author }}, {{ copyrightYears }}. {{ __('All Rights Reserved') }}. {{ __('Built with') }} <a class="link underline f-secondary" href="https://typemill.net">Typemill</a>.</p>
 </div>

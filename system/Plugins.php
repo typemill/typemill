@@ -77,8 +77,7 @@ class Plugins
 		if( 
 			isset($route['httpMethod']) AND in_array($route['httpMethod'], array('get','post','put','delete','head','patch','options'))
 			AND isset($route['route']) AND is_string($route['route'])
-			AND isset($route['class']) AND is_string($route['class'])
-			AND !$this->in_array_r(strtolower($route['route']),$routes))
+			AND isset($route['class']) AND is_string($route['class']))
 		{
 			return true;
 		}

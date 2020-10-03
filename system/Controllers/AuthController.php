@@ -116,6 +116,13 @@ class AuthController extends Controller
 
 			if($userdata && password_verify($params['password'], $userdata['password']))
 			{
+				# check if user has confirmed the account 
+				if(isset($userdata['optintoken']) && $userdata['optintoken'])
+				{
+					$this->c->flash->addMessage('error', 'Your registration is not confirmed yet. Please check your e-mails and use the confirmation link.');
+					return $response->withRedirect($this->c->router->pathFor('auth.show'));				
+				}
+
 				$user->login($userdata['username']);
 
 				/* clear the user login attemps */

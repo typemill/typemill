@@ -1,17 +1,25 @@
-	<section class="bg-secondary w-100 dib tc bt bl br bb b--primary">
+	<section class="landingpageintro w-100 dib tc bt bl br bb">
 
 		<div class="mw7 pb7 ph3 center">
 			<header class="mt6">
-				<h1 class="f-large f-headline-ns lh-title mv2 pt5-ns {{ settings.themes.cyanine.fontheadline|default('tm-sans-serif') }}">{{ title }}</h1>
+				{% if settings.themes.cyanine.introTitle %}
+					<h1 class="f-large f-headline-ns lh-title mv2 pt5-ns">{{ settings.themes.cyanine.introTitle }}</h1>
+				{% else %}
+					<h1 class="f-large f-headline-ns lh-title mv2 pt5-ns">{{ title }}</h1>
+				{% endif %}
 			</header>
 
 			<div class="f5 f4-ns fw3 lh-copy">
-				{{ content }}
+				{% if settings.themes.cyanine.introMarkdown %}
+					{{ markdown(settings.themes.cyanine.introMarkdown) }}
+				{% else %}
+					{{ content }}
+				{% endif %}
 			</div>
 
 			{% if settings.themes.cyanine.introButtonLink %}
 
-				<a class="link bg-primary white dim ph4 pv3 mt3 dib {{ settings.themes.cyanine.fontnavi|default('tm-sans-serif') }}" href="{{ settings.themes.cyanine.introButtonLink }}">{{ settings.themes.cyanine.introButtonLabel }}</a>
+				<a class="button link dim ph4 pv3 mt3 ba dib" href="{{ settings.themes.cyanine.introButtonLink }}">{{ settings.themes.cyanine.introButtonLabel }}</a>
 
 			{% endif %}
 
