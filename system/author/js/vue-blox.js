@@ -79,7 +79,7 @@ const contentComponent = Vue.component('content-block', {
 		},
 		updateMarkdown: function($event)
 		{
-			eventBus.$emit('markdownChanged');
+			eventBus.$emit('markdownChanged', $event);
 			self.$root.$data.unsafed = true;
 			this.edit = true;
 			this.unsafed = true;
