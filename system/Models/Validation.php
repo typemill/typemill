@@ -50,6 +50,19 @@ class Validation
 			return false;
 		}, 'does not exist');
 		
+		Validator::addRule('iplist', function($field, $value, array $params, array $fields) use ($user)
+		{
+			$iplist = explode(",", $value);
+			foreach($iplist as $ip)
+			{
+		        if( filter_var( trim($ip), \FILTER_VALIDATE_IP) === false)
+		        {
+		        	return false;
+		        }
+			}
+			return true;
+		}, 'contains one or more invalid ip-adress');
+
 		Validator::addRule('checkPassword', function($field, $value, array $params, array $fields) use ($user)
 		{
 			$userdata = $user->getUser($fields['username']);
@@ -218,6 +231,7 @@ class Validation
 		$v->rule('in', 'editor', ['raw', 'visual']);
 		$v->rule('values_allowed', 'formats', $formats);
 		$v->rule('in', 'copyright', $copyright);
+		$v->rule('iplist', 'trustedproxies');
 
 		return $this->validationResult($v, $name);
 	}

@@ -187,6 +187,20 @@
 							<span class="error">{{ errors.settings.images.live.height | first }}</span>
 						{% endif %}
 					</div>
+					<div class="medium{{ errors.settings.proxy ? ' error' : '' }}">
+						<label for="settings[proxy]">{{ __('Proxy') }}</label>
+						<label class="control-group">{{ __('Use X-Forwarded Headers') }}
+							<input name="settings[proxy]" type="checkbox" {% if (settings.proxy or old.settings.proxy) %} checked {% endif %}>
+							<span class="checkmark"></span>
+						</label>
+					</div>
+					<div class="medium{{ errors.settings.trustedproxies ? ' error' : '' }}">
+						<label for="trustedproxies">{{ __('Trusted IPs for proxy (comma separated)') }}</label>
+						<input type="text" name="settings[trustedproxies]" id="trustedproxies" value="{{ old.settings.trustedproxies ? old.settings.trustedproxies : settings.trustedproxies }}" title="{{ __('Comma separated list of IPs') }}" />
+						{% if errors.settings.trustedproxies %}
+							<span class="error">{{ errors.settings.trustedproxies | first }}</span>
+						{% endif %}
+					</div>
 				</fieldset>
 			</section>
 			<input type="submit" value="{{ __('Save All Settings') }}" />

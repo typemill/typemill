@@ -23,7 +23,7 @@ class SettingsController extends Controller
 		$route 				= $request->getAttribute('route');
 		$navigation 		= $this->getNavigation();
 
-		$content 			= '<h1>Hello</h1>';
+		$content 			= '<h1>Hello</h1><p>I am the showBlank method from the settings controller</p><p>In most cases I have been called from a plugin. But if you see this content, then the plugin does not work or has forgotten to inject its own content.</p>';
 
 		return $this->render($response, 'settings/blank.twig', array(
 			'settings' 		=> $settings,
@@ -40,7 +40,7 @@ class SettingsController extends Controller
 	*********************/
 	
 	public function showSettings($request, $response, $args)
-	{		
+	{
 		$user				= new User();
 		$settings 			= $this->c->get('settings');
 		$defaultSettings	= \Typemill\Settings::getDefaultSettings();
@@ -96,11 +96,13 @@ class SettingsController extends Controller
 					'language'				=> $newSettings['language'],
 					'langattr'				=> $newSettings['langattr'],
 					'editor' 				=> $newSettings['editor'],
-					'access'				=> $newSettings['access'], 
+					'access'				=> $newSettings['access'],
 					'formats'				=> $newSettings['formats'],
 					'headlineanchors'		=> isset($newSettings['headlineanchors']) ? $newSettings['headlineanchors'] : null,
 					'displayErrorDetails'	=> isset($newSettings['displayErrorDetails']) ? true : null,
-					'twigcache'				=> isset($newSettings['twigcache']) ? true : null
+					'twigcache'				=> isset($newSettings['twigcache']) ? true : null,
+					'proxy'					=> isset($newSettings['proxy']) ? true : null,
+					'trustedproxies'		=> $newSettings['trustedproxies']
 				);
 
 				# https://www.slimframework.com/docs/v3/cookbook/uploading-files.html; 

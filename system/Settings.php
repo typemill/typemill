@@ -174,7 +174,9 @@ class Settings
 									'latestVersion' => true,
 									'logo' => true,
 									'favicon' => true,
-									'twigcache' => true
+									'twigcache' => true,
+									'proxy' => true,
+									'trustedproxies' => true,
 								];
 
 			# cleanup the existing usersettings
