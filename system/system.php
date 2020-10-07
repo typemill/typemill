@@ -48,7 +48,7 @@ $app = new \Slim\App($settings);
 
 $container = $app->getContainer();
 
-if($settings['settings']['proxy'])
+if(isset($settings['settings']['proxy']) && $settings['settings']['proxy'])
 {
 	$trustedProxies = isset($settings['settings']['trustedproxies']) ? explode(",", $settings['settings']['trustedproxies']) : [];
 	$app->add(new RKA\Middleware\ProxyDetection($trustedProxies));
@@ -251,7 +251,6 @@ $container['view'] = function ($container) use ($uri)
 
 	# use {{ base_url() }} in twig templates
 	$view['base_url']	 = $uri->getBaseUrl();
-	$view['base_url']	 = $basePath;
 	$view['current_url'] = $uri->getPath();
 
 	/* if session route, add flash messages and csrf-protection */
