@@ -227,3 +227,19 @@ CONFIGURE_YOUR_WEBSITE: Configura il tuo sito
 GIVE_YOUR_NEW_WEBSITE_A_NAME__ADD_THE_AUTHOR_AND_CHOOSE_A_COPYRIGHT_: Dai un nome al tuo nuovo sito, aggiungi l'autore e scegli un diritto d'autore.
 CHOOSE_A_THEME_FOR_YOUR_WEBSITE_AND_CONFIGURE_THE_THEME_DETAILS_: Scegli un tema per il tuo sito e configura i dettagli del tema.
 ADD_NEW_FEATURES_TO_YOUR_WEBSITE_WITH_PLUGINS_AND_CONFIGURE_THEM_: Aggiungi nuove funzionalità al tuo sito mediante plugin e configurali.
+
+DEVELOPER: Sviluppatore
+THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: Le seguenti opzioni sono solo per sviluppatori e amministratori esperti. Cambia le opzioni solo se le capisci davvero. Ad esempio: non attivare mai la segnalazione degli errori per un sito Web live, utilizzare questa opzione solo per la correzione dei bug.
+ERROR_REPORTING: Segnalazione errori
+DISPLAY_APPLICATION_ERRORS: Visualizza errori dell'applicazione
+TWIG_CACHE: Twig Cache
+ACTIVATE_CACHE_FOR_TWIG_TEMPLATES: Attiva la cache per i modelli Twig
+DELETE_ALL_CACHE_FILES: Elimina tutti i file della cache
+CLEAR_CACHE: Cancella cache
+STANDARD_WIDTH_FOR_IMAGES: Larghezza standard per le immagini
+THIS_APPLIES_ONLY_FOR_FUTURE_IMAGES_IN_THE_CONTENT_AREA_: Questo vale solo per le immagini future nell'area del contenuto.
+STANDARD_HEIGHT_FOR_IMAGES: Altezza standard per le immagini
+IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT__THEN_THE_IMAGE_WILL_BE_CROPPED_: Se aggiungi un valore per l'altezza, l'immagine verrà ritagliata.
+PROXY: Proxy
+USE_X_FORWARDED_HEADERS: Usa intestazioni con X-Forwarded
+TRUSTED_IPS_FOR_PROXY_(COMMA_SEPARATED): IP affidabili per proxy (separati da virgole)
