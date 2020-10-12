@@ -260,9 +260,8 @@ a.tm-download::before{
 	margin-left: -40px;
 	width: 30px;
 	height: 30px;
-	line-height: 30px;
-	font-family: Calibri, "Segoe UI", Roboto, Courier, Helvetica, -apple-system, BlinkMacSystemFont, sans-serif, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-	font-size: 1.3em;
+	font-family: Courier, Calibri, "Segoe UI", Roboto, Helvetica, -apple-system, BlinkMacSystemFont, sans-serif, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	font-size: 1em;
 	font-weight: 900;	
 	border-radius: 50%;
 	text-align: center;
