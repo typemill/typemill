@@ -227,3 +227,19 @@ CONFIGURE_YOUR_WEBSITE: Configure your website
 GIVE_YOUR_NEW_WEBSITE_A_NAME__ADD_THE_AUTHOR_AND_CHOOSE_A_COPYRIGHT_: Give your new website a name, add the author and choose a copyright.
 CHOOSE_A_THEME_FOR_YOUR_WEBSITE_AND_CONFIGURE_THE_THEME_DETAILS_: Choose a theme for your website and configure the theme details.
 ADD_NEW_FEATURES_TO_YOUR_WEBSITE_WITH_PLUGINS_AND_CONFIGURE_THEM_: Add new features to your website with plugins and configure them.
+
+DEVELOPER: Developer
+THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: The following options are only for developers and experienced administrators. Only change the options if you really understand them. For example: Never activate the error reporting for a live website, use this option only for bug-fixing.
+ERROR_REPORTING: Error Reporting
+DISPLAY_APPLICATION_ERRORS: Display Application Errors
+TWIG_CACHE: Twig Cache
+ACTIVATE_CACHE_FOR_TWIG_TEMPLATES: Activate Cache for Twig Templates
+DELETE_ALL_CACHE_FILES: Delete all cache files
+CLEAR_CACHE: Clear Cache
+STANDARD_WIDTH_FOR_IMAGES: Standard width for images
+THIS_APPLIES_ONLY_FOR_FUTURE_IMAGES_IN_THE_CONTENT_AREA_: This applies only for future images in the content area.
+STANDARD_HEIGHT_FOR_IMAGES: Standard height for images
+IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT__THEN_THE_IMAGE_WILL_BE_CROPPED_: If you add a value for the height, then the image will be cropped.
+PROXY: Proxy
+USE_X_FORWARDED_HEADERS: Use X-Forwarded Headers
+TRUSTED_IPS_FOR_PROXY_(COMMA_SEPARATED): Trusted IPs for proxy (comma separated)
