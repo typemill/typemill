@@ -249,5 +249,5 @@ class ProcessAssets
         }
 
         return $bytes;
-	}	
+	}
 }

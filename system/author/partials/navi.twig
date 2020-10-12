@@ -10,9 +10,9 @@
 				<a href="{{ base_url }}/tm/content/{{ settings.editor }}"{{ content ? ' class="active"' : '' }}><svg class="icon baseline icon-file-text-o"><use xlink:href="#icon-file-text-o"></use></svg><span class="nav-label"> {{ __('Content') }}</span></a></li><li>
 			{% endif %}
 			{% if acl.isAllowed(get_role(), 'system', 'view') %}
-				<a href="{{ path_for('settings.show') }}"{{ content ? '' : 'class="active"' }}><svg class="icon baseline icon-cog"><use xlink:href="#icon-cog"></use></svg><span class="nav-label"> {{ __('Settings') }}</span></a></li><li>
+				<a href="{{ path_for('settings.show') }}"{{ content ? '' : ' class="active"' }}><svg class="icon baseline icon-cog"><use xlink:href="#icon-cog"></use></svg><span class="nav-label"> {{ __('Settings') }}</span></a></li><li>
 			{% else %}
-				<a href="{{ path_for('user.account') }}"{{ content ? '' : 'class="active"' }}><svg class="icon icon-cog baseline"><use xlink:href="#icon-cog"></use></svg><span class="nav-label">  {{ __('Settings') }}</span></a></li><li>			
+				<a href="{{ path_for('user.account') }}"{{ content ? '' : ' class="active"' }}><svg class="icon icon-cog baseline"><use xlink:href="#icon-cog"></use></svg><span class="nav-label">  {{ __('Settings') }}</span></a></li><li>			
 			{% endif %}
 			<a href="{{ base_url }}"><svg class="icon baseline icon-external-link"><use xlink:href="#icon-external-link"></use></svg><span class="nav-label"> {{ __('View Site') }}</span></a></li><li>
 			<a href="{{ path_for('auth.logout') }}"><svg class="icon baseline icon-power-off"><use xlink:href="#icon-power-off"></use></svg><span class="nav-label">  {{ __('Logout') }}</span></a></li>

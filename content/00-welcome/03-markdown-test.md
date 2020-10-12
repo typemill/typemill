@@ -117,6 +117,7 @@ Easily created for example with three dashes like this:
 ````
 This is an ordinary [Link](http://typemill.net).
 Links can also be [relative](/info).
+You can link to anchors like this [anchor](#images)
 You can also add a [title](http://typemill.net "typemill").
 You can even add [ids or classes](http://typemill.net){#myid .myclass}.
 Or you can use a shortcut like http://typemill.net.
@@ -126,6 +127,8 @@ You can even use a download-link like []()
 This is an ordinary [Link](http://typemill.net).
 
 Links can also be [relative](/info).
+
+You can link to anchors like this [anchor](#images)
 
 You can also add a [title](http://typemill.net "typemill").
 

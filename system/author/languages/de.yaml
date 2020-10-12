@@ -34,8 +34,8 @@ CODE: Code
 COG: Einstellungen
 CONTENT: Inhalt
 COPYRIGHT: Copyright
-CREATED_AT__READ_ONLY_: Erstellt am (nur lesen)
-CREATED_AT__READONLY_: Erstellt am (nur lesen)
+CREATED_AT_(READ_ONLY): Erstellt am (nur lesen)
+CREATED_AT_(READONLY): Erstellt am (nur lesen)
 CREATE_NEW_USER: + Neuen Nutzer
 CREATE_USER: + Nutzer
 CROSS: Kreuz
@@ -91,7 +91,7 @@ ITALIC: kursiv
 LANGUAGE: Language
 LANGUAGE_ADMIN: Sprache (Admin-UI)
 LANGUAGE_ATTR: Sprach-Attribut (website)
-LAST_MODIFIED_LIVE__READONLY_: Live zuletzt geändert (nur lesen)
+LAST_MODIFIED_LIVE_(READONLY): Live zuletzt geändert (nur lesen)
 LAST_NAME: Zuname
 LEFT: Links
 LICENCE: Lizenz
@@ -195,7 +195,7 @@ YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: Du kannst das CSS des T
 SETUP_WELCOME: Setup Willkommen
 HURRA: Hurra
 YOUR_ACCOUNT_HAS_BEEN_CREATED_AND_YOU_ARE_LOGGED_IN_NOW_: Dein Account wurde erstellt und du bist jetzt angemeldet.
-NEXT_STEP: Nächster Schritt:
+NEXT_STEP: Nächster Schritt
 VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: Besuche die Autorenoberfläche und richte die Seite ein. Du kannst das System konfigurieren, Themes auswählen and Plugins hinzufügen.
 GET_HELP: Hilfe erhalten
 IF_YOU_HAVE_ANY_QUESTIONS__PLEASE_READ_THE: Wenn du Fragen hast, lies bitte die

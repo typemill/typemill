@@ -76,7 +76,10 @@ article h6{	font-size: 1em; font-style: italic; font-weight:300; margin: 1em 0 0
 article .h1, article .h2, article .h3, article .h4, article .h5, article .h6{
 	height: auto; /* fix for tachyons */
 }
-hr{}
+hr{
+	border: none;
+	border-top: 1px solid;
+}
 ol{}
 footer ul{ padding-left:1em; }
 li{}
@@ -114,7 +117,10 @@ a, a:link, a:visited, a:focus, a:hover, a:active, button{
 	transition: all .15s ease!important;
 	transition-property: color, background-color, text-shadow, border;
 }
-
+article a:hover, article a:focus, article a:active,
+footer a:hover, footer a:focus, footer a:active{ 
+	text-decoration: none;
+}
 /* Fix background for hightlight plugin */
 code.hljs{ background: transparent; }
 
@@ -180,12 +186,12 @@ ul.TOC,.TOC ul{
 	text-decoration: none;
 	display: inline-block;
 	width: 100%;
-	border-bottom: 1px dashed lightseagreen;
+	border-bottom: 1px dashed;
 	line-height: 1em;
 	margin: .3em 0;
 }
 .TOC li a:hover,.TOC li a:focus,.TOC li a:active{
-	border-bottom: 1px solid lightseagreen;
+	border-bottom: 1px solid;
 }
 .TOC li a:after{
 	content: '\203A'; 
@@ -199,14 +205,10 @@ ul.TOC,.TOC ul{
 .notice1 {
     margin: 1em 0;
     padding: 10px 1em;
-    background-color: #ffded4;
-    border-left: 4px solid #f65a3c;	
 }
 .notice2 {
     margin: 1em 0;
     padding: 10px 1em;
-    background-color: #fff3d4;
-    border-left: 4px solid #f6b73c;
 }
 .notice3,
 .notice4,
@@ -258,9 +260,8 @@ a.tm-download::before{
 	margin-left: -40px;
 	width: 30px;
 	height: 30px;
-	line-height: 30px;
-	font-family: Calibri, "Segoe UI", Roboto, Courier, Helvetica, -apple-system, BlinkMacSystemFont, sans-serif, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-	font-size: 1.3em;
+	font-family: Courier, Calibri, "Segoe UI", Roboto, Helvetica, -apple-system, BlinkMacSystemFont, sans-serif, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	font-size: 1em;
 	font-weight: 900;	
 	border-radius: 50%;
 	text-align: center;
@@ -310,6 +311,15 @@ button.play-video::after {
 	content: ' ';
 }
 
+.landingpageinfo h2{
+	font-size: 2.25rem;
+}
+.landingpageinfo h3{
+	font-size: 1.5rem;
+}
+.landingpageinfo h4{
+	font-size: 1.25rem;
+}
 
 /************************************
 * 		TACHYONS ADDITIONS 			*

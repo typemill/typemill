@@ -37,7 +37,7 @@ CODE: Code
 COG: cog
 CONTENT: Contenu
 COPYRIGHT: Copyright
-CREATED_AT__READ_ONLY_: Date de création (lecture seule)
+CREATED_AT_(READ_ONLY): Date de création (lecture seule)
 CREATE_NEW_USER: Créer un nouvel utilisateur
 CREATE_USER: Créer un utilisateur
 CROSS: croix
@@ -97,7 +97,7 @@ ITALIC: Italique
 LANGUAGE: Langue
 LANGUAGE_ADMIN: Langue de l'interface d'administration
 LANGUAGE_ATTR: Langue du site (website)
-LAST_MODIFIED_LIVE__READONLY_: Dernière modification (lecture seule)
+LAST_MODIFIED_LIVE_(READONLY): Dernière modification (lecture seule)
 LAST_NAME: Prénom
 LEFT: Gauche
 LICENCE: Licence
@@ -206,9 +206,9 @@ YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: Vous pouvez surcharger 
 SETUP_WELCOME: Bienvenue dans l'installation
 HURRA: Hourrah
 YOUR_ACCOUNT_HAS_BEEN_CREATED_AND_YOU_ARE_LOGGED_IN_NOW_: Votre compte a été créé et vous êtes maintenant connecté
-NEXT_STEP: Prochaine étape:
-VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: Visitez le compte Utilisateur et configurez votre nouveau site. Vous pouvez paramétrer le système, choisir un thème et ajouter des plugins.
-GET_HELP: Obtenir de l'aide:
+NEXT_STEP: Prochaine étape
+VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: Visitez le volet Auteur et configurez votre nouveau site. Vous pouvez paramétrer le système, choisir un thème et ajouter des plugins.
+GET_HELP: Obtenir de l'aide
 IF_YOU_HAVE_ANY_QUESTIONS__PLEASE_READ_THE: Pour toutes questions, veuillez consulter la
 DOCS: documentation
 OR_OPEN_A_NEW_ISSUE_ON: ou ouvrir un nouveau bug sur

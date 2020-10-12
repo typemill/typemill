@@ -38,26 +38,12 @@ class User extends WriteYaml
 	}
 	
 	public function createUser($params)
-	{		
-		$userdata = array(
-						'username' 	=> $params['username'],
-						'email'		=> $params['email'],
-						'password'	=> $this->generatePassword($params['password']),
-						'userrole' 	=> $params['userrole']
-					);
-
-		if(isset($params['firstname']))
-		{
-			$userdata['firstname'] = $params['firstname'];
-		}
-		if(isset($params['lastname']))
-		{
-			$userdata['lastname'] = $params['lastname'];
-		}
+	{
+		$params['password'] = $this->generatePassword($params['password']);
 	
-		if($this->updateYaml('settings/users', $userdata['username'] . '.yaml', $userdata))
+		if($this->updateYaml('settings/users', $params['username'] . '.yaml', $params))
 		{
-			return $userdata['username'];
+			return $params['username'];
 		}
 		return false;
 	}
@@ -81,11 +67,14 @@ class User extends WriteYaml
 		}
 		
 		$update = array_merge($userdata, $params);
+
+		# cleanup data here
+		
 		
 		$this->updateYaml('settings/users', $userdata['username'] . '.yaml', $update);
 
 		# if user updated his own profile, update session data
-		if($_SESSION['user'] == $params['username'])
+		if(isset($_SESSION['user']) && $_SESSION['user'] == $params['username'])
 		{
 			$_SESSION['role'] 	= $update['userrole'];
 

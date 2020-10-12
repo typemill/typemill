@@ -31,8 +31,8 @@ CODE: Code
 COG: tandwiel
 CONTENT: Inhoud
 COPYRIGHT: Auteursrecht
-CREATED_AT__READ_ONLY_: Gemaakt om (alleen lezen)
-CREATED_AT__READONLY_: Gemaakt om (alleen lezen)
+CREATED_AT_(READ_ONLY): Gemaakt om (alleen lezen)
+CREATED_AT_(READONLY): Gemaakt om (alleen lezen)
 CREATE_NEW_USER: Nieuwe gebruiker maken
 CREATE_USER: Gebruiker maken
 CROSS: kruis
@@ -75,7 +75,7 @@ ITALIC: cursief
 LANGUAGE: Taal
 LANGUAGE_ADMIN: Taal (admin-ui)
 LANGUAGE_ATTR: Language Attribute (website)
-LAST_MODIFIED_LIVE__READONLY_: Laatst gewijzigd live (alleen-lezen)
+LAST_MODIFIED_LIVE_(READONLY): Laatst gewijzigd live (alleen-lezen)
 LAST_NAME: achternaam
 LEFT: Links
 LICENCE: Licentie

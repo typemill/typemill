@@ -23,7 +23,7 @@ class SettingsController extends Controller
 		$route 				= $request->getAttribute('route');
 		$navigation 		= $this->getNavigation();
 
-		$content 			= '<h1>Hello</h1>';
+		$content 			= '<h1>Hello</h1><p>I am the showBlank method from the settings controller</p><p>In most cases I have been called from a plugin. But if you see this content, then the plugin does not work or has forgotten to inject its own content.</p>';
 
 		return $this->render($response, 'settings/blank.twig', array(
 			'settings' 		=> $settings,
@@ -40,7 +40,7 @@ class SettingsController extends Controller
 	*********************/
 	
 	public function showSettings($request, $response, $args)
-	{		
+	{
 		$user				= new User();
 		$settings 			= $this->c->get('settings');
 		$defaultSettings	= \Typemill\Settings::getDefaultSettings();
@@ -65,7 +65,7 @@ class SettingsController extends Controller
 			'locale' 		=> $locale, 
 			'formats' 		=> $defaultSettings['formats'],
 			'access'		=> $options,
-			'route' 		=> $route->getName() 
+			'route' 		=> $route->getName()
 		));
 	}
 	
@@ -83,18 +83,26 @@ class SettingsController extends Controller
 
 			if($newSettings)
 			{
-				/* make sure only allowed fields are stored */
+				# check for image settings
+				$imgwidth = isset($newSettings['images']['live']['width']) ? $newSettings['images']['live']['width'] : false;
+				$imgheight = isset($newSettings['images']['live']['height']) ? $newSettings['images']['live']['height'] : false;
+
+				# make sure only allowed fields are stored
 				$newSettings = array(
-					'title' 			=> $newSettings['title'],
-					'author' 			=> $newSettings['author'],
-					'copyright' 		=> $newSettings['copyright'],
-					'year'				=> $newSettings['year'],
-					'language'			=> $newSettings['language'],
-					'langattr'			=> $newSettings['langattr'],
-					'editor' 			=> $newSettings['editor'],
-					'access'			=> $newSettings['access'], 
-					'formats'			=> $newSettings['formats'],
-					'headlineanchors'	=> isset($newSettings['headlineanchors']) ? $newSettings['headlineanchors'] : null,
+					'title' 				=> $newSettings['title'],
+					'author' 				=> $newSettings['author'],
+					'copyright' 			=> $newSettings['copyright'],
+					'year'					=> $newSettings['year'],
+					'language'				=> $newSettings['language'],
+					'langattr'				=> $newSettings['langattr'],
+					'editor' 				=> $newSettings['editor'],
+					'access'				=> $newSettings['access'],
+					'formats'				=> $newSettings['formats'],
+					'headlineanchors'		=> isset($newSettings['headlineanchors']) ? $newSettings['headlineanchors'] : null,
+					'displayErrorDetails'	=> isset($newSettings['displayErrorDetails']) ? true : null,
+					'twigcache'				=> isset($newSettings['twigcache']) ? true : null,
+					'proxy'					=> isset($newSettings['proxy']) ? true : null,
+					'trustedproxies'		=> $newSettings['trustedproxies']
 				);
 
 				# https://www.slimframework.com/docs/v3/cookbook/uploading-files.html; 
@@ -102,6 +110,17 @@ class SettingsController extends Controller
 				$copyright 			= $this->getCopyright();
 
 				$validate->settings($newSettings, $copyright, $defaultSettings['formats'], 'settings');
+			
+				# use custom image settings
+				if( $imgwidth  && ctype_digit($imgwidth) && (strlen($imgwidth) < 5) )
+				{
+					$newSettings['images']['live']['width'] = $imgwidth;
+				}
+				if( $imgheight  && ctype_digit($imgheight) && (strlen($imgheight) < 5) )
+				{
+					$newSettings['images']['live']['height'] = $imgheight;
+				}
+
 			}
 			else
 			{
@@ -733,7 +752,9 @@ class SettingsController extends Controller
 					{
 						# set image size
 						$settings = $this->c->get('settings');
-						$settings->replace(['images' => ['live' => ['width' => 500, 'height' => 500]]]);
+						$imageSizes = $settings['images'];
+						$imageSizes['live'] = ['width' => 500, 'height' => 500];
+						$settings->replace(['images' => $imageSizes]);
 						$imageresult = $this->saveImages($imageFields, $userdata, $settings, $images['user']);
 		
 						if(isset($_SESSION['slimFlash']['error']))
@@ -816,6 +837,42 @@ class SettingsController extends Controller
 			$this->c->flash->addMessage('error', 'Ups, we did not find that user');
 			return $response->withRedirect($this->c->router->pathFor('user.show', ['username' => $params['username']]));			
 		}
+	}
+
+	public function clearCache($request, $response, $args)
+	{
+		$settings 	= $this->c->get('settings');
+		$dir 		= $settings['basePath'] . 'cache';
+		$iterator 	= new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS);
+		$files 		= new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::CHILD_FIRST);
+		
+		$error = false;
+
+		foreach($files as $file)
+		{
+		    if ($file->isDir())
+		    {
+		    	if(!rmdir($file->getRealPath()))
+		    	{
+		    		$error = 'Could not delete some folders.';
+		    	}
+		    }
+		    elseif($file->getExtension() !== 'css')
+		    {
+				if(!unlink($file->getRealPath()) )
+				{
+					$error = 'Could not delete some files.';
+				}
+		    }
+		}
+
+		if($error)
+		{
+			return $response->withJson(['errors' => $error], 500);
+		}
+
+		return $response->withJson(array('errors' => false));
+
 	}
 
 	private function getUserFields($role)
@@ -996,7 +1053,6 @@ class SettingsController extends Controller
 
 	protected function saveImages($imageFields, $userInput, $userSettings, $files)
 	{
-
 		# initiate image processor with standard image sizes
 		$processImages = new ProcessImage($userSettings['images']);
 
@@ -1029,5 +1085,6 @@ class SettingsController extends Controller
 			}
 		}
 		return $userInput;
-	}	
+	}
+
 }

@@ -147,7 +147,60 @@
 							</label>
 
 						{% endfor %}
-					</div>					
+					</div>
+					<hr>
+					<header class="headline">
+						<h2>{{ __('Developer') }}</h2>
+						<p>The following options are only for developers and experienced administrators. Only change the options if you really understand them. For example: Never activate the error reporting for a live website, use this option only for bug-fixing.</p>
+					</header>
+					<div class="large{{ errors.settings.displayErrorDetails ? ' error' : '' }}">
+						<label for="settings[displayErrorDetails]">{{ __('Error Reporting') }}</label>
+						<label class="control-group">{{ __('Display Application Errors') }}
+							<input name="settings[displayErrorDetails]" type="checkbox" {% if (settings.displayErrorDetails or old.settings.displayErrorDetails) %} checked {% endif %}>
+							<span class="checkmark"></span>
+						</label>
+					</div>
+					<div class="medium{{ errors.settings.twigcache ? ' error' : '' }}">
+						<label for="settings[twigcache]">{{ __('Twig Cache') }}</label>
+						<label class="control-group">{{ __('Activate Cache for Twig Templates') }}
+							<input name="settings[twigcache]" type="checkbox" {% if (settings.twigcache or old.settings.twigcache) %} checked {% endif %}>
+							<span class="checkmark"></span>
+						</label>
+					</div>
+					<div class="medium">
+						<div class="label">{{ __('Delete all cache files') }}</div>
+						<button id="clearcache" class="link bg-tm-green white dim bn br1 ph3 pv2 f6">Clear Cache</button><div id="cacheresult" class="dib ph3 pv2"></div>
+					</div>
+					<div class="medium{{ errors.settings.images.live.width ? ' error' : '' }}">
+						<label for="imagewidth">{{ __('Standard width for images') }}</label>
+						<input type="text" name="settings[images][live][width]" id="imagewidth" value="{{ old.settings.images.live.width ? old.settings.images.live.width : settings.images.live.width }}" title="{{ __('Use a valid number') }}" />
+						<div class="description">This applies only for future images in the content area.</div>
+						{% if errors.settings.images.live.width %}
+							<span class="error">{{ errors.settings.images.live.width | first }}</span>
+						{% endif %}
+					</div>
+					<div class="medium{{ errors.settings.images.live.height ? ' error' : '' }}">
+						<label for="imageheight">{{ __('Standard height for images') }}</label>
+						<input type="text" name="settings[images][live][height]" id="imageheight" value="{{ old.settings.images.live.height ? old.settings.images.live.height : settings.images.live.height }}" title="{{ __('Use a valid number') }}" />
+						<div class="description">If you add a value for the height, then the image will be cropped.</div>
+						{% if errors.settings.images.live.height %}
+							<span class="error">{{ errors.settings.images.live.height | first }}</span>
+						{% endif %}
+					</div>
+					<div class="medium{{ errors.settings.proxy ? ' error' : '' }}">
+						<label for="settings[proxy]">{{ __('Proxy') }}</label>
+						<label class="control-group">{{ __('Use X-Forwarded Headers') }}
+							<input name="settings[proxy]" type="checkbox" {% if (settings.proxy or old.settings.proxy) %} checked {% endif %}>
+							<span class="checkmark"></span>
+						</label>
+					</div>
+					<div class="medium{{ errors.settings.trustedproxies ? ' error' : '' }}">
+						<label for="trustedproxies">{{ __('Trusted IPs for proxy (comma separated)') }}</label>
+						<input type="text" name="settings[trustedproxies]" id="trustedproxies" value="{{ old.settings.trustedproxies ? old.settings.trustedproxies : settings.trustedproxies }}" title="{{ __('Comma separated list of IPs') }}" />
+						{% if errors.settings.trustedproxies %}
+							<span class="error">{{ errors.settings.trustedproxies | first }}</span>
+						{% endif %}
+					</div>
 				</fieldset>
 			</section>
 			<input type="submit" value="{{ __('Save All Settings') }}" />

@@ -177,7 +177,7 @@ class ProcessImage extends ProcessAssets
 			$new = imagecreatetruecolor($desired['width'], $desired['height']);
 
 		  	// preserve transparency
-		  	if($imageType == "gif" or $imageType == "png")
+		  	if($imageType == "gif" or $imageType == "png" or $imageType == "webp")
 		  	{
 		    	imagecolortransparent($new, imagecolorallocatealpha($new, 0, 0, 0, 127));
 		    	imagealphablending($new, false);
@@ -213,6 +213,10 @@ class ProcessImage extends ProcessAssets
 		elseif($type == "gif")
 		{
 			$result = imagegif( $image, $folder . $name . '.gif' );
+		}
+		elseif($type == "webp")
+		{
+			$result = imagewebp( $image, $folder . $name . '.webp', 100);
 		}
 		elseif($type == "jpg" OR $type == "jpeg")
 		{
@@ -400,6 +404,7 @@ class ProcessImage extends ProcessAssets
 			case 'jpg' :
 			case 'jpeg': $image = imagecreatefromjpeg($imagePath); break;
 			case 'png': $image = imagecreatefrompng($imagePath); break;
+			case 'webp': $image = imagecreatefromwebp($imagePath); break;
 			default: return 'image type not supported';
 		}
 		

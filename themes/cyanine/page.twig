@@ -1,8 +1,8 @@
 {% set published = metatabs.meta.manualdate ? metatabs.meta.manualdate : metatabs.meta.modified %}
 
-<main class="{{ item.elementType }} w-100 bg-secondary pb5 bl br bb b--primary">
+<main class="{{ item.elementType }} w-100 pb5 bl br bb">
 
-	<div class="w-100 mw8 center grid-container">
+	<div class="w-100 center grid-container">
 
 		<aside class="grid-header ph3 pv3">
 
@@ -10,9 +10,9 @@
 						
 				<div class="logo">
 					<p class="pa0 ma0">
-						<a class="link f1 fw9 f-primary {{ settings.themes.cyanine.fontheadline|default('tm-sans-serif') }}" href="{{ base_url }}" title="My Title">						
+						<a class="link f1 fw9" href="{{ base_url }}" title="My Title">						
 							{% if logo %}
-								<img src="{{ logo }}" class="logo-image"/>
+								<img src="{{ base_url }}/{{ logo }}" class="logo-image"/>
 							{% else %}
 								{{ settings.title }}
 							{% endif %}
@@ -25,7 +25,7 @@
 			{% if widgets %}
 				{% for index,widget in widgets %}
 					<div id="{{ index }}" class="mt4-l mt3">
-						{{ widget }}					
+						{{ widget }}
 					</div>
 				{% endfor %}
 			{% endif %}
@@ -41,7 +41,7 @@
 			<article>
 				<header>
 				
-					<h1 class="{{ settings.themes.cyanine.fontheadline|default('tm-sans-serif')  }}">{{ title }}</h1>
+					<h1>{{ title }}</h1>
 	
 					{% if (settings.themes.cyanine.datePosition.top or settings.themes.cyanine.authorPosition.top or settings.themes.cyanine.gitPosition.top) %}	
 						<div class="f5 pv1 flex justify-between">
@@ -86,10 +86,10 @@
 
 					<div class="f5 pv5 flex justify-between {{ settings.themes.cyanine.fontnavi|default('tm-sans-serif') }}">
 						{% if item.prevItem %}
-							<a class="link pv2 ph3 bg-primary white dim" href="{{ item.prevItem.urlRel }}">&lsaquo;&nbsp; {{ item.prevItem.name }}</a>
+							<a class="navigation link pv2 ph3 ba dim" href="{{ item.prevItem.urlRel }}">&lsaquo;&nbsp; {{ item.prevItem.name }}</a>
 						{% endif %}
 						{% if item.nextItem %}
-							<a class="link pv2 ph3 bg-primary white dim" href="{{ item.nextItem.urlRel }}">{{ item.nextItem.name }} &nbsp;&rsaquo;</a>
+							<a class="navigation link pv2 ph3 ba dim" href="{{ item.nextItem.urlRel }}">{{ item.nextItem.name }} &nbsp;&rsaquo;</a>
 						{% endif %}
 					</div>
 

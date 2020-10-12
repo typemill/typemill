@@ -6,12 +6,15 @@ use \URLify;
 
 class ParsedownExtension extends \ParsedownExtra
 {
-    function __construct($showAnchor = NULL)
+    function __construct($showAnchor = NULL, $skipAbsoluteUrls = NULL)
     {
         parent::__construct();
 
         # show anchor next to headline? 
         $this->showAnchor = $showAnchor;
+
+        # base url is needed for media/images and relative links (e.g. if www.mydomain.com/mywebsite)
+        $this->baseUrl = $skipAbsoluteUrls ? '' : TM_BASE_URL;
 
         # math support
         $this->BlockTypes['\\'][] = 'Math';
@@ -38,18 +41,18 @@ class ParsedownExtension extends \ParsedownExtra
 
     public function text($text, $relurl = null)
     {
-        $this->relurl = $relurl ? $relurl : '';
+ #       $this->relurl = $relurl ? $relurl : '';
 
         $Elements = $this->textElements($text);
         
         return $Elements;
     }
     
-    public function markup($Elements, $relurl)
+    public function markup($Elements)
     {
 
         # make relurl available for other functions
-        $this->relurl = $relurl;
+#        $this->relurl = $relurl;
         
         # convert to markup
         $markup = $this->elements($Elements);
@@ -75,7 +78,6 @@ class ParsedownExtension extends \ParsedownExtra
             
             $markup .= "\n" . $this->element($Element);
         }
-        
         return $markup;
     }
     
@@ -352,7 +354,7 @@ class ParsedownExtension extends \ParsedownExtra
                     'text' => $text,
                     'handler' => 'line',
                     'attributes' => array(
-                        'id' => "$headline"
+                        'id' => "h-$headline"
                     )
                 )
             );
@@ -363,8 +365,9 @@ class ParsedownExtension extends \ParsedownExtra
                             array(
                                 'name' => 'a',
                                 'attributes' => array(
-                                    'href' => $this->relurl . "#" . $headline,
-                                    'class' => 'tm-heading-anchor',
+#                                    'href' => $this->relurl . "#" . $headline,
+                                    'href'     =>  "#h-" . $headline,
+                                    'class'    => 'tm-heading-anchor',
                                 ),
                                 'text' => '#',
                             ),
@@ -391,15 +394,16 @@ class ParsedownExtension extends \ParsedownExtra
             $thisLevel = $headline['level'];
             $prevLevel = $key > 0 ? $headlines[$key-1]['level'] : 1;
             $nextLevel = isset($headlines[$key+1]) ? $headlines[$key+1]['level'] : 0;
-            
+
             if($thisLevel > $prevLevel)
             {
                 $markup .= '<ul>';
             }
             
-            $markup .= '<li class="' . $headline['name'] . '"><a href="' . $this->relurl . '#' . $headline['attribute'] . '">' . $headline['text'] . '</a>';
+#            $markup .= '<li class="' . $headline['name'] . '"><a href="' . $this->relurl . '#' . $headline['attribute'] . '">' . $headline['text'] . '</a>';
+            $markup .= '<li class="' . $headline['name'] . '"><a href="#' . $headline['attribute'] . '">' . $headline['text'] . '</a>';
             
-            if($thisLevel == $nextLevel)
+            if($thisLevel == $nextLevel )
             {
                 $markup .= '</li>';
             }
@@ -410,10 +414,13 @@ class ParsedownExtension extends \ParsedownExtra
                     $markup .= '</li></ul>';
                     $thisLevel--;
                 }
+
+                if($thisLevel > 0)
+                {
+                    $markup .= '</li>';
+                }
             }
         }
-        
-        $markup .= '</ul>';
         
         return $markup;
     }
@@ -434,7 +441,8 @@ class ParsedownExtension extends \ParsedownExtra
    
         $href = $element['element']['element']['attributes']['href'];
 
-        $element['element']['element']['attributes']['href'] = $this->relurl . $href;
+#        $element['element']['element']['attributes']['href'] = $this->relurl . $href;
+        $element['element']['element']['attributes']['href'] = $href;
 
         return $element;
     }
@@ -487,8 +495,9 @@ class ParsedownExtension extends \ParsedownExtra
                 $backLinkElements[] = array(
                     'name' => 'a',
                     'attributes' => array(
-                        'href' => $this->relurl . "#fnref$number:$definitionId",
-                        'rev' => 'footnote',
+#                        'href' => $this->relurl . "#fnref$number:$definitionId",
+                        'href'  => "#fnref$number:$definitionId",
+                        'rev'   => 'footnote',
                         'class' => 'footnote-backref',
                     ),
                     'rawHtml' => '&#8617;',
@@ -704,98 +713,188 @@ class ParsedownExtension extends \ParsedownExtra
 
     protected $regexAttribute = '(?:[#.][-\w:\\\]+[ ]*|[-\w:\\\]+(?:=(?:["\'][^\n]*?["\']|[^\s]+)?)?[ ]*)';
 
-    # turn markdown into an array of markdown blocks for typemill edit mode 
-    function markdownToArrayBlocks($markdown)
+
+
+    # manipulated method linesElements, returns array of markdown blocks
+    public function markdownToArrayBlocks($markdown)
     {
+
+        # make sure no definitions are set
+        $this->DefinitionData = array();
+
         # standardize line breaks
-        $markdown = str_replace(array("\r\n", "\r"), "\n", $markdown);
+        $text = str_replace(array("\r\n", "\r"), "\n", $markdown);
 
         # remove surrounding line breaks
-        $markdown = trim($markdown, "\n");
+        $text = trim($text, "\n");
 
-        # trim to maximum two linebreaks
-        
-        # split text into blocks
-        $blocks = explode("\n\n", $markdown);
-        
-        # clean up code blocks
-        $cleanBlocks = array();
-        
-        # holds the content of codeblocks
-        $codeBlock = '';
-        
-        # flag if codeblock is on or off.
-        $codeBlockOn = false;
-        
-        # holds the content of a definition list
-        $definitionList = "";
+        # split text into lines
+        $lines = explode("\n", $text);
 
-        # flag if definition-list is on or off.
-        $definitionListOn = false;
+        # manipulated method linesElements
 
-        foreach($blocks as $block)
+        $Elements = array();
+        $CurrentBlock = null;
+/*new*/ $mdElements = array();
+
+        foreach ($lines as $line)
         {
-            # remove empty lines
-            if (chop($block) === '') continue;
-            
-            # if the block starts with a fenced code
-            if(substr($block,0,2) == '``')
+            if (chop($line) === '')
             {
-                # and if we are in an open code-block
-                if($codeBlockOn)
+                if (isset($CurrentBlock))
                 {
-                    # it must be the end of the codeblock, so add it to the codeblock
-                    $block = $codeBlock . "\n" . $block;
-                    
-                    # reset codeblock-value and close the codeblock.
-                    $codeBlock = '';
-                    $codeBlockOn = false;
+                    $CurrentBlock['interrupted'] = (isset($CurrentBlock['interrupted'])
+                        ? $CurrentBlock['interrupted'] + 1 : 1
+                    );
                 }
-                else
-                {
-                    # it must be the start of the codeblock.
-                    $codeBlockOn = true;
-                }
-            }
-            if($codeBlockOn)
-            {
-                # if the codeblock is complete
-                if($this->isComplete($block))
-                {
-                    $block = $codeBlock . "\n" . $block;
 
-                    # reset codeblock-value and close the codeblock.
-                    $codeBlock = '';
-                    $codeBlockOn = false;
-                }
-                else
+                continue;
+            }
+
+            while (($beforeTab = strstr($line, "\t", true)) !== false)
+            {
+                $shortage = 4 - mb_strlen($beforeTab, 'utf-8') % 4;
+
+                $line = $beforeTab
+                    . str_repeat(' ', $shortage)
+                    . substr($line, strlen($beforeTab) + 1)
+                ;
+            }
+
+            $indent = strspn($line, ' ');
+
+            $text = $indent > 0 ? substr($line, $indent) : $line;
+
+            # ~
+
+            $Line = array('body' => $line, 'indent' => $indent, 'text' => $text);
+
+            # ~
+
+            # if we are in a multiline block element
+            if (isset($CurrentBlock['continuable']))
+            {
+                $methodName = 'block' . $CurrentBlock['type'] . 'Continue';
+                $Block = $this->$methodName($Line, $CurrentBlock);
+                
+                # if this line still belongs to the current multiline block
+                if (isset($Block))
                 {
-                    $codeBlock .= "\n" . $block;
+                    $CurrentBlock = $Block;
+/*new*/             $mdCurrentBlock = $mdCurrentBlock . "\n" . $line;
                     continue;
                 }
+                # if this line does not belong to the current multiline block
+                else
+                {
+                    # if multiline block element is finished
+                    if ($this->isBlockCompletable($CurrentBlock['type']))
+                    {
+                        $methodName = 'block' . $CurrentBlock['type'] . 'Complete';
+                        $CurrentBlock = $this->$methodName($CurrentBlock);
+/*new*/                 $mdCurrentBlock = $mdCurrentBlock;
+                    }
+                }
             }
-            
-            # handle definition lists
-            $checkDL = preg_split('/\r\n|\r|\n/',$block);
-            if(isset($checkDL[1]) && substr($checkDL[1],0,2) == ': ')
+
+            # ~
+
+            $marker = $text[0];
+
+            # ~
+
+            $blockTypes = $this->unmarkedBlockTypes;
+
+            if (isset($this->BlockTypes[$marker]))
             {
-                $definitionList .= $block . "\n\n";
-                $definitionListOn = true;
-                continue; 
+                foreach ($this->BlockTypes[$marker] as $blockType)
+                {
+                    $blockTypes []= $blockType;
+                }
             }
-            elseif($definitionListOn)
+
+            #
+            # ~
+
+            foreach ($blockTypes as $blockType)
             {
-                $cleanBlocks[] = $definitionList;
-                $definitionList = "";
-                $definitionListOn = false;
+                $Block = $this->{"block$blockType"}($Line, $CurrentBlock);
+/*new*/         $mdBlock = $line;
+                if (isset($Block))
+                {
+                    $Block['type'] = $blockType;
+                    if ( ! isset($Block['identified']))
+                    {
+                        if (isset($CurrentBlock))
+                        {
+                            $Elements[] = $this->extractElement($CurrentBlock);
+/*new*/                     $mdElements[] = $mdCurrentBlock;
+                        }
+
+                        $Block['identified'] = true;
+                    }
+
+                    if ($this->isBlockContinuable($blockType))
+                    {
+                        $Block['continuable'] = true;
+                    }
+
+                    $CurrentBlock = $Block;
+/*new*/             $mdCurrentBlock = $mdBlock;
+                    continue 2;
+                }
             }
-            
-            $block = trim($block, "\n");
-                        
-            $cleanBlocks[] = $block;
+
+            # ~
+
+            if (isset($CurrentBlock) and $CurrentBlock['type'] === 'Paragraph')
+            {
+                $Block = $this->paragraphContinue($Line, $CurrentBlock);
+/*new*/         $mdBlock = $mdCurrentBlock . "\n" . $line;
+            }
+
+            if (isset($Block))
+            {
+                $CurrentBlock = $Block;
+/*new*/         $mdCurrentBlock = $mdBlock;
+            }
+            else
+            {
+                if (isset($CurrentBlock))
+                {
+                    $Elements[] = $this->extractElement($CurrentBlock);
+/*new*/             $mdElements[] = $mdCurrentBlock;
+                }
+
+                $CurrentBlock = $this->paragraph($Line);
+/*new*/         $mdCurrentBlock = $line;
+                $CurrentBlock['identified'] = true;
+            }
+
         }
-        return $cleanBlocks;
+
+        # ~
+
+        if (isset($CurrentBlock['continuable']) and $this->isBlockCompletable($CurrentBlock['type']))
+        {
+            $methodName = 'block' . $CurrentBlock['type'] . 'Complete';
+            $CurrentBlock = $this->$methodName($CurrentBlock);
+/*new*/     $mdCurrentBlock = $mdCurrentBlock;
+        }
+
+        # ~
+
+        if (isset($CurrentBlock))
+        {
+            $Elements[] = $this->extractElement($CurrentBlock);
+/*new*/     $mdElements[] = $mdCurrentBlock;
+        }
+
+        # ~
+/*new*/ return $mdElements;
+#        return $Elements;
     }
+
     
     public function arrayBlocksToMarkdown(array $arrayBlocks)
     {   
@@ -823,4 +922,106 @@ class ParsedownExtension extends \ParsedownExtra
         }
         return false;
     }
+
+
+    protected function inlineLink($Excerpt)
+    {
+        $Element = array(
+            'name' => 'a',
+            'handler' => array(
+                'function' => 'lineElements',
+                'argument' => null,
+                'destination' => 'elements',
+            ),
+            'nonNestables' => array('Url', 'Link'),
+            'attributes' => array(
+                'href' => null,
+                'title' => null,
+            ),
+        );
+
+        $extent = 0;
+
+        $remainder = $Excerpt['text'];
+
+        if (preg_match('/\[((?:[^][]++|(?R))*+)\]/', $remainder, $matches))
+        {
+            $Element['handler']['argument'] = $matches[1];
+
+            $extent += strlen($matches[0]);
+
+            $remainder = substr($remainder, $extent);
+        }
+        else
+        {
+            return;
+        }
+
+        if (preg_match('/^[(]\s*+((?:[^ ()]++|[(][^ )]+[)])++)(?:[ ]+("[^"]*+"|\'[^\']*+\'))?\s*+[)]/', $remainder, $matches))
+        {
+            # start typemill: if relative link or media-link
+            $href = $matches[1];
+            if($href[0] == '/')
+            {
+                $href = $this->baseUrl . $href;
+            }
+            elseif(substr( $href, 0, 6 ) === "media/")
+            {
+                $href = $this->baseUrl . '/' . $href;
+            }
+            # end typemill
+            
+            $Element['attributes']['href'] = $href;
+
+            if (isset($matches[2]))
+            {
+                $Element['attributes']['title'] = substr($matches[2], 1, - 1);
+            }
+
+            $extent += strlen($matches[0]);
+        }
+        else
+        {
+            if (preg_match('/^\s*\[(.*?)\]/', $remainder, $matches))
+            {
+                $definition = strlen($matches[1]) ? $matches[1] : $Element['handler']['argument'];
+                $definition = strtolower($definition);
+
+                $extent += strlen($matches[0]);
+            }
+            else
+            {
+                $definition = strtolower($Element['handler']['argument']);
+            }
+
+            if ( ! isset($this->DefinitionData['Reference'][$definition]))
+            {
+                return;
+            }
+
+            $Definition = $this->DefinitionData['Reference'][$definition];
+
+            $Element['attributes']['href'] = $Definition['url'];
+            $Element['attributes']['title'] = $Definition['title'];
+        }
+
+        $Link = array(
+            'extent' => $extent,
+            'element' => $Element,
+        );
+
+        # Parsedown Extra
+        $remainder = $Link !== null ? substr($Excerpt['text'], $Link['extent']) : '';
+
+        if (preg_match('/^[ ]*{('.$this->regexAttribute.'+)}/', $remainder, $matches))
+        {
+            $Link['element']['attributes'] += $this->parseAttributeData($matches[1]);
+
+            $Link['extent'] += strlen($matches[0]);
+        }
+
+        return $Link;
+
+    }
+
 }

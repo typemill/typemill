@@ -48,6 +48,12 @@ $app = new \Slim\App($settings);
 
 $container = $app->getContainer();
 
+if(isset($settings['settings']['proxy']) && $settings['settings']['proxy'])
+{
+	$trustedProxies = isset($settings['settings']['trustedproxies']) ? explode(",", $settings['settings']['trustedproxies']) : [];
+	$app->add(new RKA\Middleware\ProxyDetection($trustedProxies));
+}
+
 /************************
 * LOAD & UPDATE PLUGINS *
 ************************/
@@ -149,6 +155,8 @@ $container['dispatcher'] = function($container) use ($dispatcher)
 # delete username and password from uri
 $uri = $container['request']->getUri()->withUserInfo('');
 
+define("TM_BASE_URL", $uri->getBaseUrl());
+
 /********************************
 * ADD ASSET-FUNCTION FOR TWIG	*
 ********************************/
@@ -224,8 +232,10 @@ $container['view'] = function ($container) use ($uri)
 {
 	$path = array($container->get('settings')['themePath'], $container->get('settings')['authorPath']);
 	
+	$cache = ( isset($container->get('settings')['twigcache']) && $container->get('settings')['twigcache'] ) ? $container->get('settings')['rootPath'] . '/cache/twig' : false;
+
     $view = new \Slim\Views\Twig( $path, [
-		'cache' => false,
+		'cache' => $cache,
 		'autoescape' => false,
 		'debug' => true
     ]);
@@ -238,7 +248,7 @@ $container['view'] = function ($container) use ($uri)
 	$view->addExtension(new Typemill\Extensions\TwigMarkdownExtension());
 	$view->addExtension(new Typemill\Extensions\TwigMetaExtension());	
 	$view->addExtension(new Typemill\Extensions\TwigPagelistExtension());	
-	
+
 	# use {{ base_url() }} in twig templates
 	$view['base_url']	 = $uri->getBaseUrl();
 	$view['current_url'] = $uri->getPath();
