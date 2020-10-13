@@ -48,12 +48,6 @@ $app = new \Slim\App($settings);
 
 $container = $app->getContainer();
 
-if(isset($settings['settings']['proxy']) && $settings['settings']['proxy'])
-{
-	$trustedProxies = isset($settings['settings']['trustedproxies']) ? explode(",", $settings['settings']['trustedproxies']) : [];
-	$app->add(new RKA\Middleware\ProxyDetection($trustedProxies));
-}
-
 /************************
 * LOAD & UPDATE PLUGINS *
 ************************/
@@ -316,6 +310,12 @@ if($container['flash'])
 	$app->add(new \Typemill\Middleware\ValidationErrorsMiddleware($container['view']));
 	$app->add(new \Typemill\Middleware\OldInputMiddleware($container['view']));
 	$app->add($container->get('csrf'));	
+}
+
+if(isset($settings['settings']['proxy']) && $settings['settings']['proxy'])
+{
+	$trustedProxies = ( isset($settings['settings']['trustedproxies']) && !empty($settings['settings']['trustedproxies']) ) ? explode(",", $settings['settings']['trustedproxies']) : [];
+	$app->add(new RKA\Middleware\ProxyDetection($trustedProxies));
 }
 
 /************************
