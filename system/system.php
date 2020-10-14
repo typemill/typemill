@@ -42,6 +42,17 @@ if($settings['settings']['displayErrorDetails'])
 
 $app = new \Slim\App($settings);
 
+
+/************************
+*  ADD PROXY DETECTION	*
+************************/
+
+if(isset($settings['settings']['proxy']) && $settings['settings']['proxy'])
+{
+	$trustedProxies = ( isset($settings['settings']['trustedproxies']) && !empty($settings['settings']['trustedproxies']) ) ? explode(",", $settings['settings']['trustedproxies']) : [];
+	$app->add(new RKA\Middleware\ProxyDetection($trustedProxies));
+}
+
 /************************
 *  GET SLIM CONTAINER	*
 ************************/
@@ -310,12 +321,6 @@ if($container['flash'])
 	$app->add(new \Typemill\Middleware\ValidationErrorsMiddleware($container['view']));
 	$app->add(new \Typemill\Middleware\OldInputMiddleware($container['view']));
 	$app->add($container->get('csrf'));	
-}
-
-if(isset($settings['settings']['proxy']) && $settings['settings']['proxy'])
-{
-	$trustedProxies = ( isset($settings['settings']['trustedproxies']) && !empty($settings['settings']['trustedproxies']) ) ? explode(",", $settings['settings']['trustedproxies']) : [];
-	$app->add(new RKA\Middleware\ProxyDetection($trustedProxies));
 }
 
 /************************
