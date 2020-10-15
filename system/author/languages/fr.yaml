@@ -1,4 +1,5 @@
-# Français
+# French (Français)
+# Author: 
 ACCOUNT: Compte
 ACTIVE: Actif
 ACTUAL_PASSWORD: Mot de passe actuel
@@ -13,9 +14,10 @@ ADD_LEFT_COLUMN: Ajouter une colonne à gauche
 ADD_RIGHT_COLUMN: Ajouter une colonne à droite
 ADD_ROW_ABOVE: Ajouter une rangée en haut
 ADD_ROW_BELOW: Ajouter une rangée en bas
+ALL: All visitors
 ALL_USERS: Tous les utilisateurs
-ALT_TEXT: Texte alternatif
 ALTERNATIVE_TEXT_FOR_THE_HERO_IMAGE: Texte alternatif pour la bannière d'accueil
+ALT_TEXT: Texte alternatif
 AUTHOR: Auteur
 AUTHOR_DESCRIPTION__MARKDOWN_: Description (Markdown)
 BACK_TO_STARTPAGE: Revenir à la page d'accueil
@@ -25,8 +27,8 @@ BROWSE: Parcourir
 BULLET_LIST: Liste à puces
 BY: de
 CANCEL: Annuler
-CAPTION: Légende
 CAN_BE_USED_FOR_AUTHOR_LINE_IN_FRONTEND_: Sera affiché comme auteur sur le site web.
+CAPTION: Légende
 CELL: Cellule
 CENTER: Center
 CHECK: Vérifier
@@ -37,6 +39,7 @@ CODE: Code
 COG: cog
 CONTENT: Contenu
 COPYRIGHT: Copyright
+CREATED_AT__READONLY_: Date de création (lectureseule)
 CREATED_AT__READ_ONLY_: Date de création (lecture seule)
 CREATE_NEW_USER: Créer un nouvel utilisateur
 CREATE_USER: Créer un utilisateur
@@ -44,10 +47,10 @@ CROSS: croix
 CUSTOM_CSS: CSS personnalisé
 DEFINITION: Liste de définition
 DEFINITION_LIST: Liste de définition
+DELETE: Supprimer
 DELETE_CLOSE: Supprimer/Fermer
 DELETE_COLUMN: Supprimer cette colonne
 DELETE_CONTENT_BLOCK: Supprimer un bloc
-DELETE: Supprimer
 DELETE_PAGE: Supprimer la page
 DELETE_ROW: Supprimer une rangée
 DELETE_USER: Supprimer l'utilisateur
@@ -62,10 +65,10 @@ DRAG_A_PICTURE_OR_CLICK_TO_SELECT: faire glisser une image ou cliquer pour séle
 DUTCH__FLEMISH: Néerlandais, Flamand
 EDIT: Éditer
 EDIT_USER: Modifier l'utilisateur
-E_G_: ex.:
 ENGLISH: Anglais
-E_MAIL: Courriel
 EXTERNAL_LINK: Lien externe
+E_G_: ex.:
+E_MAIL: Courriel
 FAVICON: Favicon
 FILE: Fichier
 FILES: Fichiers
@@ -73,13 +76,14 @@ FIRST_NAME: Nom
 FOLDER: Dossier
 FORGOT_PASSWORD: Mot de passe oublié
 FORMAT: Mise en forme
+FRENCH: French
 GENERAL_PRESENTATION: Presentation générale
 GERMAN: Allemand
 GOOGLE_SITEMAP: Google Sitemap
 HAS_EDIT_RIGHTS_FOR_THIS_ARTICLE_: Possède les droits d'édition sur cette article.
 HEAD: Tête de colonne
-HEADLINE_ANCHORS: Ancres de titre
 HEADLINE: Titre
+HEADLINE_ANCHORS: Ancres de titre
 HERO_IMAGE: Bannière d'accueil (Hero image)
 HIDE: Masquer
 HIDE_PAGE_FROM_NAVIGATION: Masquer dans le menu de navigation du site
@@ -89,9 +93,9 @@ HORIZONTAL_LINE: Ligne horizontale
 HR: Ligne horizontale
 IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: Si non renseignée ici, la description est extraite du contenu.
 IMAGE: Image
+IMAGES: Images
 IMAGE_URL: URL de l'image
 IMAGE_URL__READ_ONLY_: URL de l'image (lecture seule)
-IMAGES: Images
 ITALIAN: Italien
 ITALIC: Italique
 LANGUAGE: Langue
@@ -110,20 +114,20 @@ MANUAL_DATE: Date manuelle
 MARKDOWN: Markdown
 MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB__HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES_: La taille maximale pour une image est 5 Mo. Les bannières d'accueil ne sont pas gérées dans tous les thèmes.
 MENU: Menu
-META_DESCRIPTION: Meta description
 META: Métadonnées
+META_DESCRIPTION: Meta description
 META_TITLE: Meta titre
 MISSING_REQUIREMENTS: Prérequis non satisfaits
 MOVE_VERTICAL: Déplacer verticalement
 NAVIGATION_TITLE: Titre dans le menu de navigation
 NEW_PASSWORD: Nouveau mot de passe
-NO_DESCRIPTION: Aucune description
 NONE: Aucune
+NOTICE: Note
+NOT_EDITABLE: Non modifiable
+NO_DESCRIPTION: Aucune description
 NO_PREVIEW: Pas de prévisualisation
 NO_SETTINGS: Aucun paramètre
-NOT_EDITABLE: Non modifiable
 NUMBERED_LIST: Liste numérotée
-NOTICE: Note
 OLIST: Liste ordonnée
 ONLINE: Online
 ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: Seuls sont autorisés les caractères spéciaux suivants :
@@ -139,36 +143,37 @@ PROFILE_IMAGE: Image du Profil
 PUBLISH: Publier
 QUOTE: Citation
 QUOTES: Citations
+RAW: Texte brut
 RAW_CONTENT_EDITOR: Editeur de contenu brut
 RAW_MARKDOWN_EDITOR: Editeur Markdown brut
 RAW_MODE: Mode texte brut
-RAW: Texte brut
 READONLY: Lecture seule
+REGISTERED_USERS_ONLY: Registered users only
 REMEMBER_TO_BOOKMARK_THIS_PAGE: Pensez à marquer cette page
 REQUIRED: Requis
 RIGHT: Droit
 ROLE: Rôle
 RUSSIAN: Russe
-SAVE_ALL_SETTINGS: Sauvegarder tous les paramètres
-SAVED_SUCCESSFULLY: Enregistré avec succès
 SAVE: Enregistrer
+SAVED_SUCCESSFULLY: Enregistré avec succès
+SAVE_ALL_SETTINGS: Sauvegarder tous les paramètres
 SAVE_THEME: Enregistrer et activer ce thème
 SELECT_FROM_MEDIALIB: Sélectionner dans la bibliothèque de médias
-SETTINGS_ARE_STORED: Les paramètres sont mis en mémoire
 SETTINGS: Paramètres
+SETTINGS_ARE_STORED: Les paramètres sont mis en mémoire
 SETUP: Configuration
 SHOW_ANCHORS_NEXT_TO_HEADLINES: Afficher les ancres à coté des titres
 STANDARD_EDITOR_MODE: Mode éditeur standard
 START: Démarrer
 SYSTEM: Système
-TABLE_OF_CONTENTS: Sommaire
 TABLE: Tableau
+TABLE_OF_CONTENTS: Sommaire
 TAKEN_FROM_YOUR_USER_ACCOUNT_IF_SET_: Si non renseigné ici, le nom est tiré du compte utilisateur courant.
 TERM: Terme
 TEXT_FILE: Fichier texte
-THE_FORMAT_BUTTONS: Boutons de mise en forme
 THEMES: Thèmes
 THEME_STORE: Dépôt des thèmes
+THE_FORMAT_BUTTONS: Boutons de mise en forme
 TITLE: Titre
 TOC: Sommaire
 TOP: En haut
@@ -177,24 +182,24 @@ ULIST: Liste simple
 UNKNOWN: Inconnu
 UPDATE_USER: Mettre à jour l'utilisateur
 UPLOAD: Télécharger
-UPLOAD_FILE: Télécharger un fichier
 UPLOAD_AN_IMAGE: Télécharger une image
+UPLOAD_FILE: Télécharger un fichier
+USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Utilisée si aucune date manuelle n'est définie.
+USER: Utilisateur
+USERNAME: Nom de l'utilisateur
+USERNAME__READ_ONLY_: Nom de l'utilisateur (lecture seule)
+USERS: Utilisateurs
 USE_2_TO_20_CHARACTERS: Vous devez saisir au moins 2 caractères et au maximum 20.
 USE_2_TO_40_CHARACTERS: Vous devez saisir au moins 2 caractères et au maximum 40.
 USE_A_VALID_LANGUAGE_ATTRIBUTE: Veuillez indiquer un attribut de langue valide
 USE_A_VALID_YEAR: Entrez une année valide
-USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Utilisée si aucune date manuelle n'est définie.
-USERNAME: Nom de l'utilisateur
-USERNAME__READ_ONLY_: Nom de l'utilisateur (lecture seule)
-USER: Utilisateur
-USERS: Utilisateurs
 VIDEO: Vidéo
 VIEW_SITE: Voir le site
+VISUAL: Visuel
 VISUAL_CONTENT_EDITOR: Editeur visuel de contenu
 VISUAL_EDITOR: Editeur visuel
 VISUAL_MARKDOWN_EDITOR: Editeur visuel Markdown
 VISUAL_MODE: Mode visuel
-VISUAL: Visuel
 WAIT: Attendez
 WEB: Site
 WEBSITE_TITLE: Titre du site
@@ -203,20 +208,20 @@ WRITING: Rédaction
 YEAR: Année
 YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: Vous pouvez surcharger ici le css du thème avec vos propres styles.
 
-SETUP_WELCOME: Bienvenue dans l'installation
-HURRA: Hourrah
-YOUR_ACCOUNT_HAS_BEEN_CREATED_AND_YOU_ARE_LOGGED_IN_NOW_: Votre compte a été créé et vous êtes maintenant connecté
-NEXT_STEP: Prochaine étape:
-VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: Visitez le compte Utilisateur et configurez votre nouveau site. Vous pouvez paramétrer le système, choisir un thème et ajouter des plugins.
-GET_HELP: Obtenir de l'aide:
-IF_YOU_HAVE_ANY_QUESTIONS__PLEASE_READ_THE: Pour toutes questions, veuillez consulter la
-DOCS: documentation
-OR_OPEN_A_NEW_ISSUE_ON: ou ouvrir un nouveau bug sur
-CODED_WITH: Codé avec
-BY_THE: par la
-COMMUNITY: Communauté
-TRENDSCHAU_DIGITAL: Trendschau Digital
-CONFIGURE_YOUR_WEBSITE: Configurez votre site
-GIVE_YOUR_NEW_WEBSITE_A_NAME__ADD_THE_AUTHOR_AND_CHOOSE_A_COPYRIGHT_: Donnez un nom à votre nouveau site, ajouter un auteur et choisissez un copyright.
-CHOOSE_A_THEME_FOR_YOUR_WEBSITE_AND_CONFIGURE_THE_THEME_DETAILS_: Choisissez un thème pour votre site et configurez les details du thème.
 ADD_NEW_FEATURES_TO_YOUR_WEBSITE_WITH_PLUGINS_AND_CONFIGURE_THEM_: Ajoutez de nouvelles fonctionnalités à votre site grâce aux plugins et configurez-les.
+BY_THE: par la
+CHOOSE_A_THEME_FOR_YOUR_WEBSITE_AND_CONFIGURE_THE_THEME_DETAILS_: Choisissez un thème pour votre site et configurez les details du thème.
+CODED_WITH: Codé avec
+COMMUNITY: Communauté
+CONFIGURE_YOUR_WEBSITE: Configurez votre site
+DOCS: documentation
+GET_HELP: Obtenir de l'aide:
+GIVE_YOUR_NEW_WEBSITE_A_NAME__ADD_THE_AUTHOR_AND_CHOOSE_A_COPYRIGHT_: Donnez un nom à votre nouveau site, ajouter un auteur et choisissez un copyright.
+HURRA: Hourrah
+IF_YOU_HAVE_ANY_QUESTIONS__PLEASE_READ_THE: Pour toutes questions, veuillez consulter la
+NEXT_STEP: Prochaine étape:
+OR_OPEN_A_NEW_ISSUE_ON: ou ouvrir un nouveau bug sur
+SETUP_WELCOME: Bienvenue dans l'installation
+TRENDSCHAU_DIGITAL: Trendschau Digital
+VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: Visitez le compte Utilisateur et configurez votre nouveau site. Vous pouvez paramétrer le système, choisir un thème et ajouter des plugins.
+YOUR_ACCOUNT_HAS_BEEN_CREATED_AND_YOU_ARE_LOGGED_IN_NOW_: Votre compte a été créé et vous êtes maintenant connecté

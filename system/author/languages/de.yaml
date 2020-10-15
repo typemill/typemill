@@ -1,4 +1,5 @@
-# English
+# German (Deutsche)
+# Author: 
 ACCOUNT: Account
 ACTIVE: Aktiv
 ACTUAL_PASSWORD: Aktuelles Passwort
@@ -13,9 +14,12 @@ ADD_LEFT_COLUMN: + Linke Spalte
 ADD_RIGHT_COLUMN: + Rechte Spalte
 ADD_ROW_ABOVE: + Reihe oberhalb
 ADD_ROW_BELOW: + Reihe unterhalb
+ALL: All visitors
 ALL_USERS: Alle Nutzer
+ALTERNATIVE_TEXT_FOR_THE_HERO_IMAGE: Alternative Text for the hero image
 ALT_TEXT: Alt-Text
 AUTHOR: Autor
+AUTHOR_DESCRIPTION__MARKDOWN_: Description (Markdown)
 BACK_TO_STARTPAGE: Zurück zur Startseite
 BOLD: fett
 BOTTOM: Unten
@@ -23,6 +27,7 @@ BROWSE: WÄHLEN
 BULLET_LIST: Auflistung
 BY: von
 CANCEL: abbrechen
+CAN_BE_USED_FOR_AUTHOR_LINE_IN_FRONTEND_: Can be used for author line in frontend.
 CAPTION: Bild-Unterschrift
 CELL: Zelle
 CENTER: Mitte
@@ -34,24 +39,24 @@ CODE: Code
 COG: Einstellungen
 CONTENT: Inhalt
 COPYRIGHT: Copyright
-CREATED_AT__READ_ONLY_: Erstellt am (nur lesen)
 CREATED_AT__READONLY_: Erstellt am (nur lesen)
+CREATED_AT__READ_ONLY_: Erstellt am (nur lesen)
 CREATE_NEW_USER: + Neuen Nutzer
 CREATE_USER: + Nutzer
 CROSS: Kreuz
 CUSTOM_CSS: Eigenes CSS
 DEFINITION: Definitions-Liste
 DEFINITION_LIST: Definitions-Liste
+DELETE: löschen
 DELETE_CLOSE: löschen
 DELETE_COLUMN: Spalte löschen
 DELETE_CONTENT_BLOCK: Inhaltsblock löschen
-DELETE: löschen
 DELETE_PAGE: Seite löschen
 DELETE_ROW: Reihe löschen
 DELETE_USER: Nutzer löschen
 DESCRIPTION: Beschreibung
-DISCARD_CHANGES: Änderungen verwerfen
 DISCARD: Verwerfen
+DISCARD_CHANGES: Änderungen verwerfen
 DO_YOU_REALLY_WANT_TO_DELETE_THE_USER: Soll der Nutzer wirklich gelöscht werden?
 DO_YOU_REALLY_WANT_TO_DELETE_THIS_PAGE: Soll die Seite wirklich gelöscht werden?
 DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES_AND_SET_THE_CONTENT_BACK_TO_THE_LIVE_VERSION: Sollen die Änderungen wirklich verworfen und der Inhalt auf den Live-Zustand zurückgesetzt werden?
@@ -60,10 +65,10 @@ DRAG_A_PICTURE_OR_CLICK_TO_SELECT: Bild hochladen
 DUTCH__FLEMISH: Dänisch, Flämisch
 EDIT: editieren
 EDIT_USER: Nutzer bearbeiten
-E_G_: z.B.
-E_MAIL: E-Mail
 ENGLISH: Englisch
 EXTERNAL_LINK: externer Link
+E_G_: z.B.
+E_MAIL: E-Mail
 FAVICON: Favicon
 FILE: Datei
 FILES: Dateien
@@ -71,12 +76,15 @@ FIRST_NAME: Vorname
 FOLDER: Ordner
 FORGOT_PASSWORD: Passwort vergessen
 FORMAT: Format
+FRENCH: French
 GENERAL_PRESENTATION: Generelle Darstellung
 GERMAN: Deutsch
 GOOGLE_SITEMAP: Google Sitemap
+HAS_EDIT_RIGHTS_FOR_THIS_ARTICLE_: Has edit rights for this article.
 HEAD: Kopf
-HEADLINE_ANCHORS: Überschriften-Anker
 HEADLINE: Überschrift
+HEADLINE_ANCHORS: Überschriften-Anker
+HERO_IMAGE: Hero Image
 HIDE: Verbergen
 HIDE_PAGE_FROM_NAVIGATION: Seite in Navigation verbergen
 HOME: Home
@@ -86,6 +94,8 @@ HR: Horizontale Linie
 IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: Wenn leer wird die Beschreibung vom Inhalt extrahiert.
 IMAGE: Bild
 IMAGES: Bilder
+IMAGE_URL: Image URL
+IMAGE_URL__READ_ONLY_: Image URL (read only)
 ITALIAN: Italienisch
 ITALIC: kursiv
 LANGUAGE: Language
@@ -102,24 +112,26 @@ LOGO: Logo
 LOGOUT: Abmelden
 MANUAL_DATE: Manuelles Datum
 MARKDOWN: Markdown
+MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB__HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES_: Maximum size for an image is 5 MB. Hero images are not supported by all themes.
 MENU: Menü
-META_DESCRIPTION: Meta description
 META: Meta
+META_DESCRIPTION: Meta description
 META_TITLE: Meta title
 MISSING_REQUIREMENTS: Fehlende Anforderungen
 MOVE_VERTICAL: vertikal verschieben
 NAVIGATION_TITLE: Navigationstitel
 NEW_PASSWORD: Neues Passwort
-NO_DESCRIPTION: Keine Beschreibung
 NONE: Keine
+NOTICE: Hinweis
+NOT_EDITABLE: Nicht editierbar
+NO_DESCRIPTION: Keine Beschreibung
 NO_PREVIEW: Keine Vorschau
 NO_SETTINGS: Keine Einstellungen
-NOT_EDITABLE: Nicht editierbar
-NOTICE: Hinweis
 NUMBERED_LIST: Aufzählung
 OLIST: olist
 ONLINE: online
 ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: Nur die folgenden Sonderzeichen sind erlaubt:
+OWNER__USERNAME_: Owner (username)
 PARAGRAPH: Absatz
 PASSWORD: Passwort
 PLEASE_CONFIRM: Bitte bestätigen
@@ -127,39 +139,41 @@ PLEASE_CORRECT_THE_ERRORS_ABOVE: Bitte korrigiere die Fehler oben
 PLUGINS: Plugins
 PLUGIN_STORE: Plugin Store
 POWER_OFF: Energie aus
+PROFILE_IMAGE: Profile image
 PUBLISH: Publizieren
 QUOTE: Zitat
 QUOTES: Zitate
+RAW: raw
 RAW_CONTENT_EDITOR: Raw Content Editor
 RAW_MARKDOWN_EDITOR: Raw Markdown Editor
 RAW_MODE: Raw Modus
-RAW: raw
 READONLY: Nur lesend
+REGISTERED_USERS_ONLY: Registered users only
 REMEMBER_TO_BOOKMARK_THIS_PAGE: Bookmark nicht vergessen
 REQUIRED: erforderlich
 RIGHT: Recht
 ROLE: Rolle
 RUSSIAN: Russisch
-SAVE_ALL_SETTINGS: Alle Einstellungen speichern
-SAVED_SUCCESSFULLY: Erfolgreich gespeichert
 SAVE: speichern
+SAVED_SUCCESSFULLY: Erfolgreich gespeichert
+SAVE_ALL_SETTINGS: Alle Einstellungen speichern
 SAVE_THEME: Theme speichern
 SELECT_FROM_MEDIALIB: Aus Medialib wählen
-SETTINGS_ARE_STORED: Einstellungen sind gespeichert
 SETTINGS: Einstellungen
+SETTINGS_ARE_STORED: Einstellungen sind gespeichert
 SETUP: Setup
 SHOW_ANCHORS_NEXT_TO_HEADLINES: Anker neben Überschrift anzeigen
 STANDARD_EDITOR_MODE: Standard Editor-Modus
 START: Start
 SYSTEM: System
-TABLE_OF_CONTENTS: Inhaltsverzeichnis
 TABLE: Tabelle
+TABLE_OF_CONTENTS: Inhaltsverzeichnis
 TAKEN_FROM_YOUR_USER_ACCOUNT_IF_SET_: Vom Nutzer-Account genommen falls vorhanden.
 TERM: Bedingung
 TEXT_FILE: Text-Datei
-THE_FORMAT_BUTTONS: Die Formatierungs-Buttons
 THEMES: Themes
 THEME_STORE: Theme Store
+THE_FORMAT_BUTTONS: Die Formatierungs-Buttons
 TITLE: Titel
 TOC: IHV
 TOP: Oben
@@ -167,45 +181,47 @@ TYPEMILL_DESCRIPTION: The standard theme for Typemill. Responsive, minimal and w
 ULIST: ulist
 UNKNOWN: Unbekannt
 UPDATE_USER: Nutzer aktualisieren
-UPLOAD_FILE: Datei hochladen
-UPLOAD_AN_IMAGE: Bild hochladen
 UPLOAD: hochladen
+UPLOAD_AN_IMAGE: Bild hochladen
+UPLOAD_FILE: Datei hochladen
+USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Wird alternativ zum manuellen Datum genutzt.
+USER: Nutzer
+USERNAME: Nutzername
+USERNAME__READ_ONLY_: Username (read only)
+USERS: Nutzer
 USE_2_TO_20_CHARACTERS: 2 bis 20 Anschläge erlaubt.
 USE_2_TO_40_CHARACTERS: 2 to 40 Anschläge erlaubt.
 USE_A_VALID_LANGUAGE_ATTRIBUTE: Gültiges Language Attribut erforderlich.
 USE_A_VALID_YEAR: Gültiges Jahr erforderlich.
-USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Wird alternativ zum manuellen Datum genutzt.
-USERNAME: Nutzername
-USERS: Nutzer
-USER: Nutzer
 VIDEO: Video
 VIEW_SITE: Zur Webseite
+VISUAL: visuell
 VISUAL_CONTENT_EDITOR: Visueller Inhalts-Editor
 VISUAL_EDITOR: Visueller Editor
 VISUAL_MARKDOWN_EDITOR: Visueller Markdown Editor
 VISUAL_MODE: visueller Modus
-VISUAL: visuell
 WAIT: warte
-WEBSITE_TITLE: WebseitenTitel
 WEB: Web
+WEBSITE_TITLE: WebseitenTitel
+WEBSITE_VISIBLE_FOR: Website visible for
 WRITING: Schreiben
 YEAR: Jahr
 YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: Du kannst das CSS des Themes hier überschreiben.
 
-SETUP_WELCOME: Setup Willkommen
-HURRA: Hurra
-YOUR_ACCOUNT_HAS_BEEN_CREATED_AND_YOU_ARE_LOGGED_IN_NOW_: Dein Account wurde erstellt und du bist jetzt angemeldet.
-NEXT_STEP: Nächster Schritt:
-VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: Besuche die Autorenoberfläche und richte die Seite ein. Du kannst das System konfigurieren, Themes auswählen and Plugins hinzufügen.
-GET_HELP: Hilfe erhalten
-IF_YOU_HAVE_ANY_QUESTIONS__PLEASE_READ_THE: Wenn du Fragen hast, lies bitte die
-DOCS: Dokumentation
-OR_OPEN_A_NEW_ISSUE_ON: oder erstelle ein neues Issue auf
-CODED_WITH: Entwickelt mit
-BY_THE: von der
-COMMUNITY: Community
-TRENDSCHAU_DIGITAL: Trendschau Digital
-CONFIGURE_YOUR_WEBSITE: Zur Autorenoberfläche
-GIVE_YOUR_NEW_WEBSITE_A_NAME__ADD_THE_AUTHOR_AND_CHOOSE_A_COPYRIGHT_: Konfiguriere das System.
-CHOOSE_A_THEME_FOR_YOUR_WEBSITE_AND_CONFIGURE_THE_THEME_DETAILS_: Richte ein Theme für deine Webseite ein.
 ADD_NEW_FEATURES_TO_YOUR_WEBSITE_WITH_PLUGINS_AND_CONFIGURE_THEM_: Füge mit Plugins neue Funktionen hinzu.
+BY_THE: von der
+CHOOSE_A_THEME_FOR_YOUR_WEBSITE_AND_CONFIGURE_THE_THEME_DETAILS_: Richte ein Theme für deine Webseite ein.
+CODED_WITH: Entwickelt mit
+COMMUNITY: Community
+CONFIGURE_YOUR_WEBSITE: Zur Autorenoberfläche
+DOCS: Dokumentation
+GET_HELP: Hilfe erhalten
+GIVE_YOUR_NEW_WEBSITE_A_NAME__ADD_THE_AUTHOR_AND_CHOOSE_A_COPYRIGHT_: Konfiguriere das System.
+HURRA: Hurra
+IF_YOU_HAVE_ANY_QUESTIONS__PLEASE_READ_THE: Wenn du Fragen hast, lies bitte die
+NEXT_STEP: Nächster Schritt:
+OR_OPEN_A_NEW_ISSUE_ON: oder erstelle ein neues Issue auf
+SETUP_WELCOME: Setup Willkommen
+TRENDSCHAU_DIGITAL: Trendschau Digital
+VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: Besuche die Autorenoberfläche und richte die Seite ein. Du kannst das System konfigurieren, Themes auswählen and Plugins hinzufügen.
+YOUR_ACCOUNT_HAS_BEEN_CREATED_AND_YOU_ARE_LOGGED_IN_NOW_: Dein Account wurde erstellt und du bist jetzt angemeldet.
