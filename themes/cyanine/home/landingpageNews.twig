@@ -17,7 +17,7 @@
 						<li class="db list tl pa0 w-100 mh0 mv2 mh2-l shadow-2-hover">
 							<a class="link mv4 dim" href="{{ element.urlAbs }}">
 								<div class="db h4-5 overflow-hidden">
-									<img class="db w-100" src="{{ page.meta.heroimage }}" alt="{{ page.meta.heroimagealt }}">
+									<img class="db w-100" src="{{base_url}}/{{ page.meta.heroimage }}" alt="{{ page.meta.heroimagealt }}">
 								</div>
 								<div class="pa2 ph3-ns pb3-ns">
 									<h3>{{ page.meta.title }}</h3>
@@ -43,7 +43,7 @@
 
 							<a class="link mv4 dim" href="{{ element.urlAbs }}">
 								<div class="db h4-5 overflow-hidden">
-									<img class="db w-100" src="{{ post.meta.heroimage }}" alt="{{ post.meta.heroimagealt }}">
+									<img class="db w-100" src="{{base_url}}/{{ post.meta.heroimage }}" alt="{{ post.meta.heroimagealt }}">
 								</div>
 								<div class="pa2 ph3-ns pb3-ns">
 									<h3>{{ post.meta.title }}</h3>

@@ -267,11 +267,11 @@ class Folder
 		}
 	}
 
-	public static function getItemForUrl($folderContentDetails, $url, $baseUrl, $result = NULL)
+	public static function getItemForUrl($folderContentDetails, $url, $baseUrl, $result = NULL, $home = NULL )
 	{
 
 		# if we are on the homepage
-		if($url == '/' OR $url == $baseUrl)
+		if($home)
 		{
 			# return a standard item-object
 			$item 					= new \stdClass;

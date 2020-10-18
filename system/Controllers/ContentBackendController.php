@@ -28,7 +28,7 @@ class ContentBackendController extends ContentController
 		if(!$this->setStructure($draft = true)){ return $this->renderIntern404($response, array( 'navigation' => true, 'content' => $this->errors )); }
 		
 		# set information for homepage
-		$this->setHomepage();
+		$this->setHomepage($args);
 
 		# set item
 		if(!$this->setItem()){ return $this->renderIntern404($response, array( 'navigation' => $this->structure, 'settings' => $this->settings, 'content' => $this->errors )); }
@@ -44,7 +44,7 @@ class ContentBackendController extends ContentController
 
 		# set path
 		$this->setItemPath($this->item->fileType);
-						
+
 		# add the modified date for the file
 		$this->item->modified	= ($this->item->published OR $this->item->drafted) ? filemtime($this->settings['contentFolder'] . $this->path) : false;
 		
@@ -58,7 +58,7 @@ class ContentBackendController extends ContentController
 		if(is_array($content))
 		{
 			# transform array to markdown
-			$parsedown = new ParsedownExtension();			
+			$parsedown = new ParsedownExtension($this->uri->getBaseUrl());			
 			$content = $parsedown->arrayBlocksToMarkdown($content);
 		}
 
@@ -108,7 +108,7 @@ class ContentBackendController extends ContentController
 		if(!$this->setStructure($draft = true)){ return $this->renderIntern404($response, array( 'navigation' => true, 'content' => $this->errors )); }
 
 		# set information for homepage
-		$this->setHomepage();
+		$this->setHomepage($args);
 
 		# set item
 		if(!$this->setItem()){ return $this->renderIntern404($response, array( 'navigation' => $this->structure, 'settings' => $this->settings, 'content' => $this->errors )); }
@@ -136,7 +136,7 @@ class ContentBackendController extends ContentController
 		}
 		
 		# initialize parsedown extension
-		$parsedown = new ParsedownExtension();
+		$parsedown = new ParsedownExtension($this->uri->getBaseUrl());
 
 		# to fix footnote-logic in parsedown, set visual mode to true
 		$parsedown->setVisualMode();

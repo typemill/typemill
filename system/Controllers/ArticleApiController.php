@@ -39,6 +39,9 @@ class ArticleApiController extends ContentController
 		# set structure
 		if(!$this->setStructure($draft = true)){ return $response->withJson($this->errors, 404); }
 
+		# set information for homepage
+		$this->setHomepage($args = false);
+
 		# set item 
 		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
 
@@ -72,7 +75,7 @@ class ArticleApiController extends ContentController
 			if(is_array($this->content))
 			{
 				# initialize parsedown extension
-				$parsedown = new ParsedownExtension();
+				$parsedown = new ParsedownExtension($this->uri->getBaseUrl());
 
 				# turn markdown into an array of markdown-blocks
 				$this->content = $parsedown->arrayBlocksToMarkdown($this->content);				
@@ -125,6 +128,9 @@ class ArticleApiController extends ContentController
 		# set structure
 		if(!$this->setStructure($draft = true)){ return $response->withJson($this->errors, 404); }
 
+		# set information for homepage
+		$this->setHomepage($args = false);
+
 		# set item 
 		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
 
@@ -151,7 +157,7 @@ class ArticleApiController extends ContentController
 			if(!$this->setContent()){ return $response->withJson($this->errors, 404); }
 			
 			# initialize parsedown extension
-			$parsedown = new ParsedownExtension();
+			$parsedown = new ParsedownExtension($this->uri->getBaseUrl());
 
 			# turn markdown into an array of markdown-blocks
 			$contentArray = $parsedown->markdownToArrayBlocks($this->content);
@@ -219,6 +225,9 @@ class ArticleApiController extends ContentController
 		# set structure
 		if(!$this->setStructure($draft = true)){ return $response->withJson($this->errors, 404); }
 
+		# set information for homepage
+		$this->setHomepage($args = false);
+
 		# set item
 		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
 		
@@ -237,7 +246,7 @@ class ArticleApiController extends ContentController
 
 		# set redirect url to edit page
 		$url = $this->uri->getBaseUrl() . '/tm/content/' . $this->settings['editor'];
-		if(isset($this->item->urlRelWoF))
+		if(isset($this->item->urlRelWoF) && $this->item->urlRelWoF != '/' )
 		{
 			$url = $url . $this->item->urlRelWoF;
 		}
@@ -275,6 +284,9 @@ class ArticleApiController extends ContentController
 		
 		# set structure
 		if(!$this->setStructure($draft = true)){ return $response->withJson($this->errors, 404); }
+
+		# set information for homepage
+		$this->setHomepage($args = false);
 
 		# set item
 		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
@@ -351,6 +363,9 @@ class ArticleApiController extends ContentController
 		# set structure
 		if(!$this->setStructure($draft = true)){ return $response->withJson($this->errors, 404); }
 
+		# set information for homepage
+		$this->setHomepage($args = false);
+
 		# set item 
 		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
 
@@ -371,7 +386,7 @@ class ArticleApiController extends ContentController
 		$updatedContent = '# ' . $this->params['title'] . "\r\n\r\n" . $this->params['content'];
 
 		# initialize parsedown extension
-		$parsedown 		= new ParsedownExtension();
+		$parsedown 		= new ParsedownExtension($this->uri->getBaseUrl());
 		
 		# turn markdown into an array of markdown-blocks
 		$contentArray = $parsedown->markdownToArrayBlocks($updatedContent);
@@ -829,7 +844,7 @@ class ArticleApiController extends ContentController
 		if(!$this->setStructure($draft = true, $cache = false)){ return $response->withJson(array('data' => false, 'errors' => $this->errors, 'url' => $url), 404); }
 
 		# set information for homepage
-		$this->setHomepage();
+		$this->setHomepage($args = false);
 
 		# get item for url and set it active again
 		if(isset($this->params['url']))
@@ -854,6 +869,9 @@ class ArticleApiController extends ContentController
 
 		# set structure
 		if(!$this->setStructure($draft = true)){ return $response->withJson(array('data' => false, 'errors' => $this->errors), 404); }
+
+		# set information for homepage
+		$this->setHomepage($args = false);
 		
 		/* set item */
 		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
@@ -888,7 +906,7 @@ class ArticleApiController extends ContentController
 		if(!is_array($content))
 		{
 			# initialize parsedown extension
-			$parsedown = new ParsedownExtension();
+			$parsedown = new ParsedownExtension($this->uri->getBaseUrl());
 
 			# turn markdown into an array of markdown-blocks
 			$content = $parsedown->markdownToArrayBlocks($content);
@@ -916,6 +934,9 @@ class ArticleApiController extends ContentController
 
 		# set structure
 		if(!$this->setStructure($draft = true)){ return $response->withJson(array('data' => false, 'errors' => $this->errors), 404); }
+
+		# set information for homepage
+		$this->setHomepage($args = false);
 		
 		/* set item */
 		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
@@ -947,7 +968,7 @@ class ArticleApiController extends ContentController
 		}
 		
 		# initialize parsedown extension
-		$parsedown = new ParsedownExtension();
+		$parsedown = new ParsedownExtension($this->uri->getBaseUrl());
 
 		# fix footnotes in parsedown, might break with complicated footnotes
 		$parsedown->setVisualMode();

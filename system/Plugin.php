@@ -49,7 +49,7 @@ abstract class Plugin implements EventSubscriberInterface
             ->withHeader("Content-Type", "application/json")
             ->withStatus(400)
             ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
-    }    
+    }
 	
 	protected function getSettings()
 	{
