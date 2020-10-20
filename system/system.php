@@ -48,11 +48,12 @@ $app = new \Slim\App($settings);
 
 $container = $app->getContainer();
 
-if(isset($settings['settings']['proxy']) && $settings['settings']['proxy'])
-{
-	$trustedProxies = isset($settings['settings']['trustedproxies']) ? explode(",", $settings['settings']['trustedproxies']) : [];
-	$app->add(new RKA\Middleware\ProxyDetection($trustedProxies));
-}
+/************************
+* Create URI 			*
+************************/
+
+# get uri and delete username and password from uri
+$uri = \Slim\Http\Uri::createFromEnvironment(new \Slim\Http\Environment($_SERVER))->withUserInfo('');
 
 /************************
 * LOAD & UPDATE PLUGINS *
@@ -152,20 +153,6 @@ $container['dispatcher'] = function($container) use ($dispatcher)
 	return $dispatcher;
 };
 
-# delete username and password from uri
-$uri = $container['request']->getUri()->withUserInfo('');
-
-define("TM_BASE_URL", $uri->getBaseUrl());
-
-/********************************
-* ADD ASSET-FUNCTION FOR TWIG	*
-********************************/
-
-$container['assets'] = function($c) use ($uri)
-{
-	return new \Typemill\Assets($uri->getBaseUrl());
-};
-
 /************************
 * 	DECIDE FOR SESSION	*
 ************************/
@@ -176,20 +163,32 @@ $session_segments 	= array('setup', 'tm/', 'api/', '/setup', '/tm/', '/api/');
 $client_segments 	= $dispatcher->dispatch('onSessionSegmentsLoaded', new OnSessionSegmentsLoaded([]))->getData();
 $session_segments	= array_merge($session_segments, $client_segments);
 
-$path 				= $uri->getPath();
 $container['flash']	= false;
 $container['csrf'] 	= false;
+
+
+/************************************
+* ADD ASSET-FUNCTION FOR PLUGINS	*
+************************************/
+
+$container['assets'] = function($c) use ($uri)
+{
+	return new \Typemill\Assets($uri->getBaseUrl());
+};
+
+/********************************
+*  MOVE TO MIDDLEWARE NEXT TIME *
+********************************/
 
 # if website is restricted to registered user
 if(isset($settings['settings']['access']) && $settings['settings']['access'] == 'registered')
 {
 	# activate session for all routes
-	$session_segments = [$path];
+	$session_segments = [$uri->getPath()];
 }
-
 foreach($session_segments as $segment)
 {
-	if(substr( $path, 0, strlen($segment) ) === $segment)
+	if(substr( $uri->getPath(), 0, strlen($segment) ) === $segment)
 	{	
 		// configure session
 		ini_set('session.cookie_httponly', 1 );
@@ -240,9 +239,13 @@ $container['view'] = function ($container) use ($uri)
 		'debug' => true
     ]);
     
-    // Instantiate and add Slim specific extension
-    $basePath = rtrim(str_ireplace('index.php', '', $uri->getBasePath()), '/');
-    $view->addExtension(new Slim\Views\TwigExtension($container['router'], $basePath));
+    # Instantiate and add Slim specific extension
+    $router = $container->get('router');
+
+#    $basePath = rtrim(str_ireplace('index.php', '', $uri->getBasePath()), '/');
+#    $view->addExtension(new Slim\Views\TwigExtension($container['router'], $basePath));
+
+    $view->addExtension(new Slim\Views\TwigExtension($router, $uri));
 	$view->addExtension(new Twig_Extension_Debug());
     $view->addExtension(new Typemill\Extensions\TwigUserExtension());
 	$view->addExtension(new Typemill\Extensions\TwigMarkdownExtension());
@@ -250,34 +253,27 @@ $container['view'] = function ($container) use ($uri)
 	$view->addExtension(new Typemill\Extensions\TwigPagelistExtension());	
 
 	# use {{ base_url() }} in twig templates
-	$view['base_url']	 = $uri->getBaseUrl();
-	$view['current_url'] = $uri->getPath();
+#	$view['base_url']	 = $uri->getBaseUrl();
+#	$view['current_url'] = $uri->getPath();
 
-	/* if session route, add flash messages and csrf-protection */
+	# if session route, add flash messages and csrf-protection
 	if($container['flash'])
 	{
 		$view->getEnvironment()->addGlobal('flash', $container->flash);
 		$view->addExtension(new Typemill\Extensions\TwigCsrfExtension($container['csrf']));
 	}
 
-	/* add asset-function to all views */
-	$view->getEnvironment()->addGlobal('assets', $container->assets);
-
 	/******************************
 	* LOAD TRANSLATIONS           *
 	******************************/
-  	$uri = $_SERVER['REQUEST_URI'];
-
-    $base_path = $container['request']->getUri()->getBasePath();
-    $uri = str_replace($base_path,'',$uri);
-    $pieces = explode('/',$uri);
-    if(isset($uri) && ($pieces[1] === 'tm' OR $pieces[1] === 'setup') )
+    $pieces = explode('/',$uri->getPath());
+    if( ($pieces[0] === 'tm' OR $pieces[0] === 'setup') )
   	{
-    	// Admin environment labels
+    	# Admin environment labels
     	$labels = Typemill\Translations::loadTranslations('admin');
   	} else {
-    	// User environment labels
-    	// For now it is useless, but it will prove useful in the future
+    	# User environment labels
+    	# For now it is useless, but it will prove useful in the future
     	$labels = Typemill\Translations::loadTranslations('user');
   	}
   	$view['translations'] = $labels;
@@ -286,7 +282,7 @@ $container['view'] = function ($container) use ($uri)
 	return $view;
 };
 
-$container->dispatcher->dispatch('onTwigLoaded');
+# $container->dispatcher->dispatch('onTwigLoaded');
 
 /***************************
 * 	ADD NOT FOUND HANDLER  *
@@ -316,6 +312,22 @@ if($container['flash'])
 	$app->add(new \Typemill\Middleware\ValidationErrorsMiddleware($container['view']));
 	$app->add(new \Typemill\Middleware\OldInputMiddleware($container['view']));
 	$app->add($container->get('csrf'));	
+}
+
+/********************************
+*  ASSET MIDDLEWARE FOR TWIG	*
+********************************/
+
+$app->add(new \Typemill\Middleware\assetMiddleware($container));
+
+/********************************
+*  PROXY DETECTION FOR REQUEST	*
+********************************/
+
+if(isset($settings['settings']['proxy']) && $settings['settings']['proxy'])
+{
+	$trustedProxies = ( isset($settings['settings']['trustedproxies']) && !empty($settings['settings']['trustedproxies']) ) ? explode(",", $settings['settings']['trustedproxies']) : [];
+	$app->add(new RKA\Middleware\ProxyDetection($trustedProxies));	
 }
 
 /************************

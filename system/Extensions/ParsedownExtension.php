@@ -6,7 +6,7 @@ use \URLify;
 
 class ParsedownExtension extends \ParsedownExtra
 {
-    function __construct($showAnchor = NULL, $skipAbsoluteUrls = NULL)
+    function __construct($baseUrl = '', $showAnchor = NULL)
     {
         parent::__construct();
 
@@ -14,7 +14,7 @@ class ParsedownExtension extends \ParsedownExtra
         $this->showAnchor = $showAnchor;
 
         # base url is needed for media/images and relative links (e.g. if www.mydomain.com/mywebsite)
-        $this->baseUrl = $skipAbsoluteUrls ? '' : TM_BASE_URL;
+        $this->baseUrl = $baseUrl;
 
         # math support
         $this->BlockTypes['\\'][] = 'Math';

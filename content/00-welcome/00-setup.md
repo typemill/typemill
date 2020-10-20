@@ -2,8 +2,6 @@
 
 Congratulations! If you see this page, then the setup of the system has worked successfully!! You can now login (/tm/login) and configure your system, your themes and your plugins. You will find all settings in the settings-area (/tm/settings).
 
-## If it does not work
-
 If you face any problems during the installation, then please make sure, that your system supports these features:
 
 - PHP version 7+.

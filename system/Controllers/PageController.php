@@ -106,10 +106,11 @@ class PageController extends Controller
 		}
 
 		# if the user is on startpage
+		$home = false;
 		if(empty($args))
 		{
 			$home = true;
-			$item = Folder::getItemForUrl($navigation, $uri->getBasePath(), $uri->getBasePath());
+			$item = Folder::getItemForUrl($navigation, $uri->getBasePath(), $uri->getBaseUrl(), NULL, $home);
 			$urlRel = $uri->getBasePath();
 		}
 		else
@@ -178,7 +179,7 @@ class PageController extends Controller
 			if(isset($item->hide) && !$item->hide)
 			{
 				# use the navigation instead of the structure so that hidden elements are erased
-				$item = Folder::getItemForUrl($navigation, $urlRel, $uri->getBasePath());
+				$item = Folder::getItemForUrl($navigation, $urlRel, $uri->getBaseUrl(), NULL, $home);
 			}
 		}
 
@@ -200,7 +201,7 @@ class PageController extends Controller
 		$itemUrl 		= isset($item->urlRel) ? $item->urlRel : false;
 
 		/* initialize parsedown */
-		$parsedown 		= new ParsedownExtension($settings['headlineanchors']);
+		$parsedown 		= new ParsedownExtension($base_url, $settings['headlineanchors']);
 		
 		/* set safe mode to escape javascript and html in markdown */
 		$parsedown->setSafeMode(true);

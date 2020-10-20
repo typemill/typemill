@@ -62,6 +62,8 @@ abstract class ContentController
 		$this->settings				= $this->c->get('settings');
 		$this->structureLiveName 	= 'structure.txt';
 		$this->structureDraftName 	= 'structure-draft.txt';
+
+		$this->c->dispatcher->dispatch('onTwigLoaded');
 	}
 	
 	# admin ui rendering
@@ -275,7 +277,8 @@ abstract class ContentController
 		}
 	}
 
-	protected function setHomepage()
+	# this is only set by content backend controller
+	protected function setHomepage($args)
 	{
 		$contentFolder = Folder::scanFolderFlat($this->settings['rootPath'] . $this->settings['contentFolder']);
 
@@ -295,7 +298,7 @@ abstract class ContentController
 		}
 
 		$active = false;
-		if($this->params['url'] == '/' || $this->params['url'] == $this->uri->getBasePath() )
+		if($this->params['url'] == '/' || (is_array($args) && empty($args)))
 		{
 			$active = 'active';
 		}
@@ -305,8 +308,11 @@ abstract class ContentController
 
 	protected function setItem()
 	{
+		# home is only set by backend controller, not by api calls
+		$home = isset($this->homepage['active']) ? $this->homepage['active'] : false;
+
 		# search for the url in the structure
-		$item = Folder::getItemForUrl($this->structure, $this->params['url'], $this->uri->getBasePath());
+		$item = Folder::getItemForUrl($this->structure, $this->params['url'], $this->uri->getBaseUrl(), NULL, $home);
 
 		if($item)
 		{

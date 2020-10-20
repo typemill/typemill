@@ -6,7 +6,7 @@ use Typemill\Models\ProcessImage;
 
 class Assets
 {
-	protected $baseUrl;
+	public $baseUrl;
 	
 	public function __construct($baseUrl)
 	{
@@ -20,6 +20,16 @@ class Assets
 		$this->svgSymbols		= array();
 		$this->imageUrl 		= false;
 		$this->imageFolder 		= 'original';
+	}
+
+	public function setUri($uri)
+	{
+		$this->uri = $uri;
+	}
+
+	public function setBaseUrl($baseUrl)
+	{
+		$this->baseUrl = $baseUrl;
 	}
 
 	public function image($url)
@@ -151,6 +161,8 @@ class Assets
 		{
 			$this->JS[] = '<script src="' . $JSfile . '"></script>';
 		}
+
+#		print_r($this->JS);
 	}
 
 	public function addInlineJS($JS)

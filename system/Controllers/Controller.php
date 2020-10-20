@@ -15,7 +15,8 @@ abstract class Controller
 
 	public function __construct(ContainerInterface $c)
 	{
-		$this->c = $c;
+		$this->c 	= $c;
+		$this->c->dispatcher->dispatch('onTwigLoaded');
 	}
 	
 	# frontend rendering
@@ -23,7 +24,7 @@ abstract class Controller
 	{
 		# why commented this out??
 		$data = $this->c->dispatcher->dispatch('onPageReady', new OnPageReady($data))->getData();
-		
+
 		if(isset($_SESSION['old']))
 		{
 			unset($_SESSION['old']);
