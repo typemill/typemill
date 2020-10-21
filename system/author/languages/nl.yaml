@@ -1,7 +1,9 @@
-# Dutch
+# Dutch (Nederlands)
+# Author: 
 ACCOUNT: Account
 ACTIVE: Actief
 ACTUAL_PASSWORD: Actueel wachtwoord
+ADD: toevoegen
 ADD_CONTENT_BLOCK: inhoudblok toevoegen
 ADD_DEFINITION: definitie toevoegen
 ADD_FILE: Bestand toevoegen
@@ -12,94 +14,127 @@ ADD_LEFT_COLUMN: linkerkolom toevoegen
 ADD_RIGHT_COLUMN: rechter kolom toevoegen
 ADD_ROW_ABOVE: rij boven toevoegen
 ADD_ROW_BELOW: rij hieronder toevoegen
-ADD: toevoegen
+ADMINISTRATOR: administrator
+ALL: All visitors
 ALL_USERS: Alle gebruikers
+ALTERNATIVE_TEXT_FOR_THE_HERO_IMAGE: Alternative Text for the hero image
 ALT_TEXT: Alt-tekst
 AUTHOR: Auteur
+AUTHOR_DESCRIPTION_(MARKDOWN): Author-Description (Markdown)
 BACK_TO_STARTPAGE: terug naar startpagina
 BOLD: vetgedrukt
 BOTTOM: bodem
+BROWSE: BROWSE
 BULLET_LIST: Lijst met opsommingstekens
 BY: door
 CANCEL: annuleren
+CAN_BE_USED_FOR_AUTHOR_LINE_IN_FRONTEND_: Can be used for author line in frontend.
 CAPTION: Bijschrift
 CELL: cel
 CENTER: Midden
 CHECK: check
+CHOOSE_FILE: Choose file
 CLASS: Class
+CLOSE_LIBRARY: Close Library
 CODE: Code
 COG: tandwiel
 CONTENT: Inhoud
 COPYRIGHT: Auteursrecht
-CREATED_AT_(READ_ONLY): Gemaakt om (alleen lezen)
-CREATED_AT_(READONLY): Gemaakt om (alleen lezen)
+CREATED_AT_(READONLY): Created at (read only)
+CREATED_AT_(READ_ONLY): Created at (readonly)
 CREATE_NEW_USER: Nieuwe gebruiker maken
 CREATE_USER: Gebruiker maken
 CROSS: kruis
+CUSTOM_CSS: Custom CSS
 DEFINITION: Definitielijst
 DEFINITION_LIST: Definitielijst
+DELETE: verwijderen
 DELETE_CLOSE: verwijderen / sluiten
 DELETE_COLUMN: kolom verwijderen
 DELETE_CONTENT_BLOCK: content-block verwijderen
 DELETE_PAGE: pagina verwijderen
 DELETE_ROW: rij verwijderen
 DELETE_USER: Gebruiker verwijderen
-DELETE: verwijderen
 DESCRIPTION: omschrijving
-DISCARD_CHANGES: Wijzigingen negeren
 DISCARD: weggooien
+DISCARD_CHANGES: Wijzigingen negeren
 DO_YOU_REALLY_WANT_TO_DELETE_THE_USER: Wilt u de gebruiker echt verwijderen
 DO_YOU_REALLY_WANT_TO_DELETE_THIS_PAGE: Wilt u deze pagina echt verwijderen?
 DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES_AND_SET_THE_CONTENT_BACK_TO_THE_LIVE_VERSION: Wilt u uw wijzigingen annuleren en de inhoud terugzetten naar de live versie?
 DRAFT: Ontwerp
 DRAG_A_PICTURE_OR_CLICK_TO_SELECT: sleep een foto of klik om te selecteren
+DUTCH__FLEMISH: Dutch, Flemish
 EDIT: bewerken
+EDITOR: editor
 EDIT_USER: Gebruiker bewerken
+ENGLISH: English
+EXTERNAL_LINK: externe link
 E_G_: bijv.
 E_MAIL: e-mail
-EXTERNAL_LINK: externe link
+FAVICON: Favicon
+FILE: File
+FILES: Files
 FIRST_NAME: Voornaam
 FOLDER: map
 FORGOT_PASSWORD: Wachtwoord vergeten
 FORMAT: Formaat
+FRENCH: French
+GENERAL_PRESENTATION: General Presentation
+GERMAN: German
+GOOGLE_SITEMAP: Google Sitemap
+HAS_EDIT_RIGHTS_FOR_THIS_ARTICLE_: Has edit rights for this article.
 HEAD: Kop
 HEADLINE: Kop
+HEADLINE_ANCHORS: Headline Anchors
+HERO_IMAGE: Hero Image
+HIDE: Hide
+HIDE_PAGE_FROM_NAVIGATION: Hide page from navigation
 HOME: home
 HOMEPAGE: Homepage
-HORIZONTAL_LINE: Horizontale lijn
 HORIZONTAL_LINE: Horizontale lijn
 HR: hr
 IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: Indien niet ingevuld, wordt de beschrijving uit de inhoud gehaald.
 IMAGE: Afbeelding
+IMAGES: Images
+IMAGE_URL: Image URL
+IMAGE_URL_(READ_ONLY): Image URL (read only)
+ITALIAN: Italian
 ITALIC: cursief
 LANGUAGE: Taal
 LANGUAGE_ADMIN: Taal (admin-ui)
 LANGUAGE_ATTR: Language Attribute (website)
-LAST_MODIFIED_LIVE_(READONLY): Laatst gewijzigd live (alleen-lezen)
+LAST_MODIFIED_LIVE_(READONLY): Last modified live (readonly)
 LAST_NAME: achternaam
 LEFT: Links
 LICENCE: Licentie
 LINK: Link
 LINK_TO_VIDEO: Link naar video
 LOGIN: Inloggen
+LOGO: Logo
 LOGOUT: Uitloggen
 MANUAL_DATE: Handmatige datum
 MARKDOWN: Markdown
+MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB__HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES_: Maximum size for an image is 5 MB. Hero images are not supported by all themes.
+MEMBER: member
 MENU: Menu
-META_DESCRIPTION: Metabeschrijving
 META: meta
-META_TITLE: metatitel
+META_DESCRIPTION: Metabeschrijving
 META_TITLE: Metatitel
 MISSING_REQUIREMENTS: ontbrekende vereisten
 MOVE_VERTICAL: verplaats verticaal
+NAVIGATION_TITLE: Navigation Title
 NEW_PASSWORD: Nieuw wachtwoord
+NONE: None
+NOTICE: Notice
+NOT_EDITABLE: niet bewerkbaar
 NO_DESCRIPTION: Geen beschrijving
 NO_PREVIEW: Geen voorbeeld
 NO_SETTINGS: Geen instellingen
-NOT_EDITABLE: niet bewerkbaar
 NUMBERED_LIST: Genummerde lijst
 OLIST: olist
+ONLINE: online
 ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: alleen de volgende speciale tekens zijn toegestaan:
+OWNER_(USERNAME): owner (username)
 PARAGRAPH: Paragraaf
 PASSWORD: Wachtwoord
 PLEASE_CONFIRM: bevestig alstublieft
@@ -107,35 +142,41 @@ PLEASE_CORRECT_THE_ERRORS_ABOVE: Corrigeer bovenstaande fouten
 PLUGINS: plug-ins
 PLUGIN_STORE: Plugin Store
 POWER_OFF: power-off
+PROFILE_IMAGE: Profile image
 PUBLISH: Publiceren
 QUOTE: Citeren
 QUOTES: Citeren
+RAW: rauw
 RAW_CONTENT_EDITOR: Raw Content Editor
 RAW_MARKDOWN_EDITOR: Raw Markdown Editor
 RAW_MODE: onbewerkte modus
-RAW: rauw
 READONLY: Alleen lezen
+REGISTERED_USERS_ONLY: Registered users only
 REMEMBER_TO_BOOKMARK_THIS_PAGE: vergeet deze pagina niet te bookmarken
 REQUIRED: verplicht
 RIGHT: Rechts
 ROLE: rol
-SAVE_ALL_SETTINGS: sla alle instellingen op
-SAVED_SUCCESSFULLY: succesvol opgeslagen
+RUSSIAN: Russian
 SAVE: Opslaan
+SAVED_SUCCESSFULLY: succesvol opgeslagen
+SAVE_ALL_SETTINGS: sla alle instellingen op
 SAVE_THEME: Thema opslaan
+SELECT_FROM_MEDIALIB: select from medialib
 SETTINGS: Instellingen
+SETTINGS_ARE_STORED: Settings are stored
 SETUP: Setup
+SHOW_ANCHORS_NEXT_TO_HEADLINES: Show anchors next to headlines
 STANDARD_EDITOR_MODE: Standaardeditormodus
 START: Start
 SYSTEM: Systeem
-TABLE_OF_CONTENTS: Inhoudsopgave
 TABLE: Tabel
+TABLE_OF_CONTENTS: Inhoudsopgave
 TAKEN_FROM_YOUR_USER_ACCOUNT_IF_SET_: Genomen uit uw gebruikersaccount indien ingesteld.
 TERM: term
 TEXT_FILE: tekstbestand
-THE_FORMAT_BUTTONS: De opmaakknoppen
-THEMAS: Thema's
+THEMES: Themes
 THEME_STORE: Theme Store
+THE_FORMAT_BUTTONS: De opmaakknoppen
 TITLE: Titel
 TOC: toc
 TOP: Top
@@ -143,22 +184,63 @@ TYPEMILL_DESCRIPTION: Het standaardthema voor typemill. Responsief, minimaal en 
 ULIST: ulist
 UNKNOWN: onbekend
 UPDATE_USER: Gebruiker bijwerken
-USE_2_TO_40_CHARACTERS: gebruik 2 tot 40 tekens.
-USE_A_VALID_LANGUAGE_ATTRIBUTE: Use a valid language attribute
-USE_A_VALID_YEAR: Gebruik een geldig jaar
+UPLOAD: upload
+UPLOAD_AN_IMAGE: upload an image
+UPLOAD_FILE: Upload a file
 USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Gebruikt als fallback als er geen handmatige datum is ingesteld.
 USER: Gebruiker
 USERNAME: Gebruikersnaam
+USERNAME_(READ_ONLY): Username (read only) 
 USERS: Gebruikers
+USE_2_TO_20_CHARACTERS: Use 2 to 20 characters.
+USE_2_TO_40_CHARACTERS: gebruik 2 tot 40 tekens.
+USE_A_VALID_LANGUAGE_ATTRIBUTE: Use a valid language attribute
+USE_A_VALID_YEAR: Gebruik een geldig jaar
 VIDEO: Video
 VIEW_SITE: Site bekijken
+VISUAL: visual
 VISUAL_CONTENT_EDITOR: Visual Content Editor
 VISUAL_EDITOR: visuele editor
 VISUAL_MARKDOWN_EDITOR: Visual Markdown Editor
 VISUAL_MODE: visuele modus
-VISUEEL: visueel
 WAIT: wacht
-WEBSITE_TITLE: Titel van de website
 WEB: Web
+WEBSITE_TITLE: Titel van de website
+WEBSITE_VISIBLE_FOR: Website visible for
 WRITING: schrijven
 YEAR: Jaar
+YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: You can overwrite the theme-css with your own css here.
+
+ADD_NEW_FEATURES_TO_YOUR_WEBSITE_WITH_PLUGINS_AND_CONFIGURE_THEM_: Add new features to your website with plugins and configure them.
+BY_THE: by the
+CHOOSE_A_THEME_FOR_YOUR_WEBSITE_AND_CONFIGURE_THE_THEME_DETAILS_: Choose a theme for your website and configure the theme details.
+CODED_WITH: Coded with
+COMMUNITY: community
+CONFIGURE_YOUR_WEBSITE: Configure your website
+DOCS: docs
+GET_HELP: Get help
+GIVE_YOUR_NEW_WEBSITE_A_NAME__ADD_THE_AUTHOR_AND_CHOOSE_A_COPYRIGHT_: Give your new website a name, add the author and choose a copyright.
+HURRA: Hurra
+IF_YOU_HAVE_ANY_QUESTIONS__PLEASE_READ_THE: If you have any questions, please read the
+NEXT_STEP: Next step
+OR_OPEN_A_NEW_ISSUE_ON: or open a new issue on
+SETUP_WELCOME: Setup Welcome
+TRENDSCHAU_DIGITAL: Trendschau Digital
+VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: Visit the author panel and setup your new website. You can configure the system, choose themes and add plugins.
+YOUR_ACCOUNT_HAS_BEEN_CREATED_AND_YOU_ARE_LOGGED_IN_NOW_: Your account has been created and you are logged in now.
+
+ACTIVATE_CACHE_FOR_TWIG_TEMPLATES: Activate Cache for Twig Templates
+CLEAR_CACHE: Clear Cache
+DELETE_ALL_CACHE_FILES: Delete all cache files
+DEVELOPER: Developer
+DISPLAY_APPLICATION_ERRORS: Display Application Errors
+ERROR_REPORTING: Error Reporting
+IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT__THEN_THE_IMAGE_WILL_BE_CROPPED_: If you add a value for the height, then the image will be cropped.
+PROXY: Proxy
+STANDARD_HEIGHT_FOR_IMAGES: Standard height for images
+STANDARD_WIDTH_FOR_IMAGES: Standard width for images
+THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: The following options are only for developers and experienced administrators. Only change the options if you really understand them. For example: Never activate the error reporting for a live website, use this option only for bug-fixing.
+THIS_APPLIES_ONLY_FOR_FUTURE_IMAGES_IN_THE_CONTENT_AREA_: This applies only for future images in the content area.
+TRUSTED_IPS_FOR_PROXY_(COMMA_SEPARATED): Trusted IPs for proxy (comma separated)
+TWIG_CACHE: Twig Cache
+USE_X_FORWARDED_HEADERS: Use X-Forwarded Headers
