@@ -14,12 +14,13 @@ ADD_LEFT_COLUMN: Ajouter une colonne à gauche
 ADD_RIGHT_COLUMN: Ajouter une colonne à droite
 ADD_ROW_ABOVE: Ajouter une rangée en haut
 ADD_ROW_BELOW: Ajouter une rangée en bas
-ALL: All visitors
+ADMINISTRATOR: administrator
+ALL: all
 ALL_USERS: Tous les utilisateurs
 ALTERNATIVE_TEXT_FOR_THE_HERO_IMAGE: Texte alternatif pour la bannière d'accueil
 ALT_TEXT: Texte alternatif
 AUTHOR: Auteur
-AUTHOR_DESCRIPTION__MARKDOWN_: Description (Markdown)
+AUTHOR_DESCRIPTION_(MARKDOWN): Author-Description (Markdown)
 BACK_TO_STARTPAGE: Revenir à la page d'accueil
 BOLD: Gras
 BOTTOM: En bas
@@ -39,8 +40,8 @@ CODE: Code
 COG: cog
 CONTENT: Contenu
 COPYRIGHT: Copyright
-CREATED_AT__READONLY_: Date de création (lectureseule)
-CREATED_AT__READ_ONLY_: Date de création (lecture seule)
+CREATED_AT_(READONLY): Created at (read only)
+CREATED_AT_(READ_ONLY): Date de création (lecture seule)
 CREATE_NEW_USER: Créer un nouvel utilisateur
 CREATE_USER: Créer un utilisateur
 CROSS: croix
@@ -64,6 +65,7 @@ DRAFT: comme brouillon
 DRAG_A_PICTURE_OR_CLICK_TO_SELECT: faire glisser une image ou cliquer pour sélectionner
 DUTCH__FLEMISH: Néerlandais, Flamand
 EDIT: Éditer
+EDITOR: editor
 EDIT_USER: Modifier l'utilisateur
 ENGLISH: Anglais
 EXTERNAL_LINK: Lien externe
@@ -95,13 +97,13 @@ IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: Si non renseignée ic
 IMAGE: Image
 IMAGES: Images
 IMAGE_URL: URL de l'image
-IMAGE_URL__READ_ONLY_: URL de l'image (lecture seule)
+IMAGE_URL_(READ_ONLY): Image URL (read only)
 ITALIAN: Italien
 ITALIC: Italique
 LANGUAGE: Langue
 LANGUAGE_ADMIN: Langue de l'interface d'administration
 LANGUAGE_ATTR: Langue du site (website)
-LAST_MODIFIED_LIVE__READONLY_: Dernière modification (lecture seule)
+LAST_MODIFIED_LIVE_(READONLY): Dernière modification (lecture seule)
 LAST_NAME: Prénom
 LEFT: Gauche
 LICENCE: Licence
@@ -113,6 +115,7 @@ LOGOUT: Déconnexion
 MANUAL_DATE: Date manuelle
 MARKDOWN: Markdown
 MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB__HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES_: La taille maximale pour une image est 5 Mo. Les bannières d'accueil ne sont pas gérées dans tous les thèmes.
+MEMBER: member
 MENU: Menu
 META: Métadonnées
 META_DESCRIPTION: Meta description
@@ -131,7 +134,7 @@ NUMBERED_LIST: Liste numérotée
 OLIST: Liste ordonnée
 ONLINE: Online
 ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: Seuls sont autorisés les caractères spéciaux suivants :
-OWNER__USERNAME_: Responsable de l'article (nom)
+OWNER_(USERNAME): owner (username)
 PARAGRAPH: Paragraphe
 PASSWORD: Mot de passe
 PLEASE_CONFIRM: Confirmer
@@ -148,7 +151,7 @@ RAW_CONTENT_EDITOR: Editeur de contenu brut
 RAW_MARKDOWN_EDITOR: Editeur Markdown brut
 RAW_MODE: Mode texte brut
 READONLY: Lecture seule
-REGISTERED_USERS_ONLY: Registered users only
+REGISTERED_USERS_ONLY: registered users only
 REMEMBER_TO_BOOKMARK_THIS_PAGE: Pensez à marquer cette page
 REQUIRED: Requis
 RIGHT: Droit
@@ -187,7 +190,7 @@ UPLOAD_FILE: Télécharger un fichier
 USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Utilisée si aucune date manuelle n'est définie.
 USER: Utilisateur
 USERNAME: Nom de l'utilisateur
-USERNAME__READ_ONLY_: Nom de l'utilisateur (lecture seule)
+USERNAME_(READ_ONLY): Username (read only) 
 USERS: Utilisateurs
 USE_2_TO_20_CHARACTERS: Vous devez saisir au moins 2 caractères et au maximum 20.
 USE_2_TO_40_CHARACTERS: Vous devez saisir au moins 2 caractères et au maximum 40.
@@ -215,13 +218,29 @@ CODED_WITH: Codé avec
 COMMUNITY: Communauté
 CONFIGURE_YOUR_WEBSITE: Configurez votre site
 DOCS: documentation
-GET_HELP: Obtenir de l'aide:
+GET_HELP: Obtenir de l'aide
 GIVE_YOUR_NEW_WEBSITE_A_NAME__ADD_THE_AUTHOR_AND_CHOOSE_A_COPYRIGHT_: Donnez un nom à votre nouveau site, ajouter un auteur et choisissez un copyright.
 HURRA: Hourrah
 IF_YOU_HAVE_ANY_QUESTIONS__PLEASE_READ_THE: Pour toutes questions, veuillez consulter la
-NEXT_STEP: Prochaine étape:
+NEXT_STEP: Prochaine étape
 OR_OPEN_A_NEW_ISSUE_ON: ou ouvrir un nouveau bug sur
 SETUP_WELCOME: Bienvenue dans l'installation
 TRENDSCHAU_DIGITAL: Trendschau Digital
-VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: Visitez le compte Utilisateur et configurez votre nouveau site. Vous pouvez paramétrer le système, choisir un thème et ajouter des plugins.
+VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: Visitez le volet Auteur et configurez votre nouveau site. Vous pouvez paramétrer le système, choisir un thème et ajouter des plugins.
 YOUR_ACCOUNT_HAS_BEEN_CREATED_AND_YOU_ARE_LOGGED_IN_NOW_: Votre compte a été créé et vous êtes maintenant connecté
+
+ACTIVATE_CACHE_FOR_TWIG_TEMPLATES: Activate Cache for Twig Templates
+CLEAR_CACHE: Clear Cache
+DELETE_ALL_CACHE_FILES: Delete all cache files
+DEVELOPER: Developer
+DISPLAY_APPLICATION_ERRORS: Display Application Errors
+ERROR_REPORTING: Error Reporting
+IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT__THEN_THE_IMAGE_WILL_BE_CROPPED_: If you add a value for the height, then the image will be cropped.
+PROXY: Proxy
+STANDARD_HEIGHT_FOR_IMAGES: Standard height for images
+STANDARD_WIDTH_FOR_IMAGES: Standard width for images
+THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: The following options are only for developers and experienced administrators. Only change the options if you really understand them. For example: Never activate the error reporting for a live website, use this option only for bug-fixing.
+THIS_APPLIES_ONLY_FOR_FUTURE_IMAGES_IN_THE_CONTENT_AREA_: This applies only for future images in the content area.
+TRUSTED_IPS_FOR_PROXY_(COMMA_SEPARATED): Trusted IPs for proxy (comma separated)
+TWIG_CACHE: Twig Cache
+USE_X_FORWARDED_HEADERS: Use X-Forwarded Headers

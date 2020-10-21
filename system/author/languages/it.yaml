@@ -14,12 +14,13 @@ ADD_LEFT_COLUMN: aggiungi colonna a sinistra
 ADD_RIGHT_COLUMN: aggiungi colonna a destra
 ADD_ROW_ABOVE: aggiungi la riga sopra
 ADD_ROW_BELOW: aggiungi la riga sotto
+ADMINISTRATOR: administrator
 ALL: All visitors
 ALL_USERS: Tutti gli utenti
 ALTERNATIVE_TEXT_FOR_THE_HERO_IMAGE: Testo alternativo per l'immagine hero
 ALT_TEXT: Testo alternativo
 AUTHOR: Autore
-AUTHOR_DESCRIPTION__MARKDOWN_: Description (Markdown)
+AUTHOR_DESCRIPTION_(MARKDOWN): Author-Description (Markdown)
 BACK_TO_STARTPAGE: torna alla pagina iniziale
 BOLD: grassetto
 BOTTOM: Sotto
@@ -39,8 +40,8 @@ CODE: Codice
 COG: ingranaggio
 CONTENT: Contenuto
 COPYRIGHT: Diritti d'autore
-CREATED_AT__READONLY_: Creato il (sola lettura)
-CREATED_AT__READ_ONLY_: Creato il (sola lettura)
+CREATED_AT_(READONLY): Created at (read only)
+CREATED_AT_(READ_ONLY): Created at (readonly)
 CREATE_NEW_USER: Crea nuovo utente
 CREATE_USER: Crea utente
 CROSS: croce
@@ -64,6 +65,7 @@ DRAFT: Bozza
 DRAG_A_PICTURE_OR_CLICK_TO_SELECT: trascina un'immagine o fai clic per selezionare
 DUTCH__FLEMISH: Olandese, Fiammingo
 EDIT: modifica
+EDITOR: editor
 EDIT_USER: Modifica utente
 ENGLISH: Inglese
 EXTERNAL_LINK: collegamento esterno
@@ -95,13 +97,13 @@ IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: Se non compilato, la 
 IMAGE: Immagine
 IMAGES: Immagini
 IMAGE_URL: Image URL
-IMAGE_URL__READ_ONLY_: Immagine URL (sola lettura)
+IMAGE_URL_(READ_ONLY): Image URL (read only)
 ITALIAN: Italiano
 ITALIC: corsivo
 LANGUAGE: Lingua
 LANGUAGE_ADMIN: Lingua (admin-ui)
 LANGUAGE_ATTR: Attributo Lingua (sito)
-LAST_MODIFIED_LIVE__READONLY_: Ultima modifica (sola lettura)
+LAST_MODIFIED_LIVE_(READONLY): Last modified live (readonly)
 LAST_NAME: Cognome
 LEFT: Sinistra
 LICENCE: Licenza
@@ -113,6 +115,7 @@ LOGOUT: Esci
 MANUAL_DATE: Data manuale
 MARKDOWN: Markdown
 MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB__HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES_: La dimensione massima per un'immagine è di 5 MB. Le immagini hero non sono supportate da tutti i temi.
+MEMBER: member
 MENU: Menu
 META: Metadati
 META_DESCRIPTION: Descrizione
@@ -131,7 +134,7 @@ NUMBERED_LIST: Elenco numerato
 OLIST: Elenchi ordinati
 ONLINE: in linea
 ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: Sono ammessi solo i seguenti caratteri speciali:
-OWNER__USERNAME_: Owner (username)
+OWNER_(USERNAME): owner (username)
 PARAGRAPH: Paragrafo
 PASSWORD: Parola d'ordine
 PLEASE_CONFIRM: Per favore conferma
@@ -187,7 +190,7 @@ UPLOAD_FILE: Carica un file
 USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Utilizzato come ripiego quando non è impostata alcuna data manuale.
 USER: Utente
 USERNAME: Nome utente
-USERNAME__READ_ONLY_: Username (read only)
+USERNAME_(READ_ONLY): Username (read only) 
 USERS: Utenti
 USE_2_TO_20_CHARACTERS: Usa da 2 a 20 caratteri.
 USE_2_TO_40_CHARACTERS: Usa da 2 a 40 caratteri.
@@ -225,3 +228,19 @@ SETUP_WELCOME: Benvenuto all'installazione
 TRENDSCHAU_DIGITAL: Trendschau Digital
 VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: Visita il pannello autore e configura il tuo nuovo sito. Puoi configurare il sistema, scegliere i temi e aggiungere plugin.
 YOUR_ACCOUNT_HAS_BEEN_CREATED_AND_YOU_ARE_LOGGED_IN_NOW_: Il tuo account è stato creato e ora sei connesso.
+
+ACTIVATE_CACHE_FOR_TWIG_TEMPLATES: Activate Cache for Twig Templates
+CLEAR_CACHE: Clear Cache
+DELETE_ALL_CACHE_FILES: Delete all cache files
+DEVELOPER: Developer
+DISPLAY_APPLICATION_ERRORS: Display Application Errors
+ERROR_REPORTING: Error Reporting
+IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT__THEN_THE_IMAGE_WILL_BE_CROPPED_: If you add a value for the height, then the image will be cropped.
+PROXY: Proxy
+STANDARD_HEIGHT_FOR_IMAGES: Standard height for images
+STANDARD_WIDTH_FOR_IMAGES: Standard width for images
+THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: The following options are only for developers and experienced administrators. Only change the options if you really understand them. For example: Never activate the error reporting for a live website, use this option only for bug-fixing.
+THIS_APPLIES_ONLY_FOR_FUTURE_IMAGES_IN_THE_CONTENT_AREA_: This applies only for future images in the content area.
+TRUSTED_IPS_FOR_PROXY_(COMMA_SEPARATED): Trusted IPs for proxy (comma separated)
+TWIG_CACHE: Twig Cache
+USE_X_FORWARDED_HEADERS: Use X-Forwarded Headers

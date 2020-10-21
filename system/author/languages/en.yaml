@@ -1,4 +1,4 @@
-# English (English)
+# English
 # Author: Sebastian Schuermanns
 ACCOUNT: Account
 ACTIVE: Active
@@ -14,12 +14,13 @@ ADD_LEFT_COLUMN: add left column
 ADD_RIGHT_COLUMN: add right column
 ADD_ROW_ABOVE: add row above
 ADD_ROW_BELOW: add row below
-ALL: All visitors
+ADMINISTRATOR: administrator
+ALL: all
 ALL_USERS: All users
 ALTERNATIVE_TEXT_FOR_THE_HERO_IMAGE: Alternative Text for the hero image
 ALT_TEXT: Alt-Text
 AUTHOR: Author
-AUTHOR_DESCRIPTION__MARKDOWN_: Description (Markdown)
+AUTHOR_DESCRIPTION_(MARKDOWN): Author-Description (Markdown)
 BACK_TO_STARTPAGE: back to startpage
 BOLD: bold
 BOTTOM: Bottom
@@ -39,8 +40,8 @@ CODE: Code
 COG: cog
 CONTENT: Content
 COPYRIGHT: Copyright
-CREATED_AT__READONLY_: Created at (readonly)
-CREATED_AT__READ_ONLY_: Created at (read only)
+CREATED_AT_(READONLY): Created at (read only)
+CREATED_AT_(READ_ONLY): Created at (readonly)
 CREATE_NEW_USER: Create New User
 CREATE_USER: Create User
 CROSS: cross
@@ -64,6 +65,7 @@ DRAFT: Draft
 DRAG_A_PICTURE_OR_CLICK_TO_SELECT: upload an image
 DUTCH__FLEMISH: Dutch, Flemish
 EDIT: edit
+EDITOR: editor
 EDIT_USER: Edit User
 ENGLISH: English
 EXTERNAL_LINK: external-link
@@ -95,13 +97,13 @@ IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: If not filled, the de
 IMAGE: Image
 IMAGES: Images
 IMAGE_URL: Image URL
-IMAGE_URL__READ_ONLY_: Image URL (read only)
+IMAGE_URL_(READ_ONLY): Image URL (read only)
 ITALIAN: Italian
 ITALIC: italic
 LANGUAGE: Language
 LANGUAGE_ADMIN: Language (admin-ui)
 LANGUAGE_ATTR: Language Attribute (website)
-LAST_MODIFIED_LIVE__READONLY_: Last modified live (readonly)
+LAST_MODIFIED_LIVE_(READONLY): Last modified live (readonly)
 LAST_NAME: Last Name
 LEFT: Left
 LICENCE: Licence
@@ -113,6 +115,7 @@ LOGOUT: Logout
 MANUAL_DATE: Manual date
 MARKDOWN: markdown
 MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB__HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES_: Maximum size for an image is 5 MB. Hero images are not supported by all themes.
+MEMBER: member
 MENU: Menu
 META: meta
 META_DESCRIPTION: Meta description
@@ -131,7 +134,7 @@ NUMBERED_LIST: Numbered List
 OLIST: olist
 ONLINE: online
 ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: Only the following special characters are allowed:
-OWNER__USERNAME_: Owner (username)
+OWNER_(USERNAME): owner (username)
 PARAGRAPH: Paragraph
 PASSWORD: Password
 PLEASE_CONFIRM: Please confirm
@@ -139,7 +142,7 @@ PLEASE_CORRECT_THE_ERRORS_ABOVE: Please correct the errors above
 PLUGINS: Plugins
 PLUGIN_STORE: Plugin Store
 POWER_OFF: power-off
-PROFILE_IMAGE: Profile image
+PROFILE_IMAGE: Profile-Image
 PUBLISH: Publish
 QUOTE: Quote
 QUOTES: Quote
@@ -148,7 +151,7 @@ RAW_CONTENT_EDITOR: Raw Content Editor
 RAW_MARKDOWN_EDITOR: Raw Markdown Editor
 RAW_MODE: raw mode
 READONLY: Readonly
-REGISTERED_USERS_ONLY: Registered users only
+REGISTERED_USERS_ONLY: registered users only
 REMEMBER_TO_BOOKMARK_THIS_PAGE: Remember to bookmark this page
 REQUIRED: Required
 RIGHT: Right
@@ -187,7 +190,7 @@ UPLOAD_FILE: Upload a file
 USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Used as fallback when no manual date is set.
 USER: User
 USERNAME: Username
-USERNAME__READ_ONLY_: Username (read only)
+USERNAME_(READ_ONLY): Username (read only) 
 USERS: Users
 USE_2_TO_20_CHARACTERS: Use 2 to 20 characters.
 USE_2_TO_40_CHARACTERS: Use 2 to 40 characters.
@@ -225,3 +228,19 @@ SETUP_WELCOME: Setup Welcome
 TRENDSCHAU_DIGITAL: Trendschau Digital
 VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: Visit the author panel and setup your new website. You can configure the system, choose themes and add plugins.
 YOUR_ACCOUNT_HAS_BEEN_CREATED_AND_YOU_ARE_LOGGED_IN_NOW_: Your account has been created and you are logged in now.
+
+ACTIVATE_CACHE_FOR_TWIG_TEMPLATES: Activate Cache for Twig Templates
+CLEAR_CACHE: Clear Cache
+DELETE_ALL_CACHE_FILES: Delete all cache files
+DEVELOPER: Developer
+DISPLAY_APPLICATION_ERRORS: Display Application Errors
+ERROR_REPORTING: Error Reporting
+IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT__THEN_THE_IMAGE_WILL_BE_CROPPED_: If you add a value for the height, then the image will be cropped.
+PROXY: Proxy
+STANDARD_HEIGHT_FOR_IMAGES: Standard height for images
+STANDARD_WIDTH_FOR_IMAGES: Standard width for images
+THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: The following options are only for developers and experienced administrators. Only change the options if you really understand them. For example: Never activate the error reporting for a live website, use this option only for bug-fixing.
+THIS_APPLIES_ONLY_FOR_FUTURE_IMAGES_IN_THE_CONTENT_AREA_: This applies only for future images in the content area.
+TRUSTED_IPS_FOR_PROXY_(COMMA_SEPARATED): Trusted IPs for proxy (comma separated)
+TWIG_CACHE: Twig Cache
+USE_X_FORWARDED_HEADERS: Use X-Forwarded Headers
