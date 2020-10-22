@@ -1,4 +1,5 @@
 # English
+# Author: Sebastian Schuermanns
 ACCOUNT: Account
 ACTIVE: Active
 ACTUAL_PASSWORD: Actual Password
@@ -16,8 +17,8 @@ ADD_ROW_BELOW: add row below
 ADMINISTRATOR: administrator
 ALL: all
 ALL_USERS: All users
-ALT_TEXT: Alt-Text
 ALTERNATIVE_TEXT_FOR_THE_HERO_IMAGE: Alternative Text for the hero image
+ALT_TEXT: Alt-Text
 AUTHOR: Author
 AUTHOR_DESCRIPTION_(MARKDOWN): Author-Description (Markdown)
 BACK_TO_STARTPAGE: back to startpage
@@ -26,8 +27,8 @@ BOTTOM: Bottom
 BROWSE: BROWSE
 BULLET_LIST: Bullet List
 BY: by
-CAN_BE_USED_FOR_AUTHOR_LINE_IN_FRONTEND_: Can be used for author line in frontend.
 CANCEL: cancel
+CAN_BE_USED_FOR_AUTHOR_LINE_IN_FRONTEND_: Can be used for author line in frontend.
 CAPTION: Caption
 CELL: cell
 CENTER: Center
@@ -38,26 +39,25 @@ CLOSE_LIBRARY: Close Library
 CODE: Code
 COG: cog
 CONTENT: Content
-CONTENT: Content
 COPYRIGHT: Copyright
-CREATED_AT_(READ_ONLY): Created at (readonly)
 CREATED_AT_(READONLY): Created at (read only)
+CREATED_AT_(READ_ONLY): Created at (readonly)
 CREATE_NEW_USER: Create New User
 CREATE_USER: Create User
 CROSS: cross
 CUSTOM_CSS: Custom CSS
 DEFINITION: Definition List
 DEFINITION_LIST: Definition List
+DELETE: delete
 DELETE_CLOSE: delete/close
 DELETE_COLUMN: delete column
 DELETE_CONTENT_BLOCK: delete content-block
-DELETE: delete
 DELETE_PAGE: Delete page
 DELETE_ROW: delete row
 DELETE_USER: Delete User
 DESCRIPTION: description
-DISCARD_CHANGES: Discard Changes
 DISCARD: Discard
+DISCARD_CHANGES: Discard Changes
 DO_YOU_REALLY_WANT_TO_DELETE_THE_USER: Do you really want to delete the user
 DO_YOU_REALLY_WANT_TO_DELETE_THIS_PAGE: Do you really want to delete this page?
 DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES_AND_SET_THE_CONTENT_BACK_TO_THE_LIVE_VERSION: Do you want to discard your changes and set the content back to the live version?
@@ -67,10 +67,10 @@ DUTCH__FLEMISH: Dutch, Flemish
 EDIT: edit
 EDITOR: editor
 EDIT_USER: Edit User
-E_G_: e.g.
-E_MAIL: E-Mail
 ENGLISH: English
 EXTERNAL_LINK: external-link
+E_G_: e.g.
+E_MAIL: E-Mail
 FAVICON: Favicon
 FILE: File
 FILES: Files
@@ -78,13 +78,14 @@ FIRST_NAME: First Name
 FOLDER: folder
 FORGOT_PASSWORD: Forgot password
 FORMAT: Format
+FRENCH: French
 GENERAL_PRESENTATION: General Presentation
 GERMAN: German
 GOOGLE_SITEMAP: Google Sitemap
 HAS_EDIT_RIGHTS_FOR_THIS_ARTICLE_: Has edit rights for this article.
 HEAD: Head
-HEADLINE_ANCHORS: Headline Anchors
 HEADLINE: Headline
+HEADLINE_ANCHORS: Headline Anchors
 HERO_IMAGE: Hero Image
 HIDE: Hide
 HIDE_PAGE_FROM_NAVIGATION: Hide page from navigation
@@ -116,19 +117,19 @@ MARKDOWN: markdown
 MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB__HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES_: Maximum size for an image is 5 MB. Hero images are not supported by all themes.
 MEMBER: member
 MENU: Menu
-META_DESCRIPTION: Meta description
 META: meta
+META_DESCRIPTION: Meta description
 META_TITLE: Meta title
 MISSING_REQUIREMENTS: Missing Requirements
 MOVE_VERTICAL: move vertical
 NAVIGATION_TITLE: Navigation Title
 NEW_PASSWORD: New Password
-NO_DESCRIPTION: No description
 NONE: None
+NOTICE: Notice
+NOT_EDITABLE: not editable
+NO_DESCRIPTION: No description
 NO_PREVIEW: No Preview
 NO_SETTINGS: No Settings
-NOT_EDITABLE: not editable
-NOTICE: Notice
 NUMBERED_LIST: Numbered List
 OLIST: olist
 ONLINE: online
@@ -145,10 +146,10 @@ PROFILE_IMAGE: Profile-Image
 PUBLISH: Publish
 QUOTE: Quote
 QUOTES: Quote
+RAW: raw
 RAW_CONTENT_EDITOR: Raw Content Editor
 RAW_MARKDOWN_EDITOR: Raw Markdown Editor
 RAW_MODE: raw mode
-RAW: raw
 READONLY: Readonly
 REGISTERED_USERS_ONLY: registered users only
 REMEMBER_TO_BOOKMARK_THIS_PAGE: Remember to bookmark this page
@@ -156,26 +157,26 @@ REQUIRED: Required
 RIGHT: Right
 ROLE: Role
 RUSSIAN: Russian
-SAVE_ALL_SETTINGS: Save All Settings
-SAVED_SUCCESSFULLY: Saved successfully
 SAVE: Save
+SAVED_SUCCESSFULLY: Saved successfully
+SAVE_ALL_SETTINGS: Save All Settings
 SAVE_THEME: Save Theme
 SELECT_FROM_MEDIALIB: select from medialib
-SETTINGS_ARE_STORED: Settings are stored
 SETTINGS: Settings
+SETTINGS_ARE_STORED: Settings are stored
 SETUP: Setup
 SHOW_ANCHORS_NEXT_TO_HEADLINES: Show anchors next to headlines
 STANDARD_EDITOR_MODE: Standard Editor Mode
 START: Start
 SYSTEM: System
-TABLE_OF_CONTENTS: Table of Contents
 TABLE: Table
+TABLE_OF_CONTENTS: Table of Contents
 TAKEN_FROM_YOUR_USER_ACCOUNT_IF_SET_: Taken from your user account if set.
 TERM: term
 TEXT_FILE: text-file
-THE_FORMAT_BUTTONS: The Format Buttons
 THEMES: Themes
 THEME_STORE: Theme Store
+THE_FORMAT_BUTTONS: The Format Buttons
 TITLE: Title
 TOC: toc
 TOP: Top
@@ -183,63 +184,63 @@ TYPEMILL_DESCRIPTION: The standard theme for Typemill. Responsive, minimal and w
 ULIST: ulist
 UNKNOWN: Unknown
 UPDATE_USER: Update User
-UPLOAD_FILE: Upload a file
-UPLOAD_AN_IMAGE: upload an image
 UPLOAD: upload
+UPLOAD_AN_IMAGE: upload an image
+UPLOAD_FILE: Upload a file
+USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Used as fallback when no manual date is set.
+USER: User
+USERNAME: Username
+USERNAME_(READ_ONLY): Username (read only) 
+USERS: Users
 USE_2_TO_20_CHARACTERS: Use 2 to 20 characters.
 USE_2_TO_40_CHARACTERS: Use 2 to 40 characters.
 USE_A_VALID_LANGUAGE_ATTRIBUTE: Use a valid language attribute
 USE_A_VALID_YEAR: Use a valid year
-USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Used as fallback when no manual date is set.
-USERNAME: Username
-USERNAME_(READ_ONLY): Username (read only) 
-USERS: Users
-USER: User
 VIDEO: Video
 VIEW_SITE: View Site
+VISUAL: visual
 VISUAL_CONTENT_EDITOR: Visual Content Editor
 VISUAL_EDITOR: Visual Editor
 VISUAL_MARKDOWN_EDITOR: Visual Markdown Editor
 VISUAL_MODE: visual mode
-VISUAL: visual
 WAIT: wait
-WEBSITE_TITLE: Website Title
 WEB: Web
+WEBSITE_TITLE: Website Title
 WEBSITE_VISIBLE_FOR: Website visible for
 WRITING: Writing
 YEAR: Year
 YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: You can overwrite the theme-css with your own css here.
 
-SETUP_WELCOME: Setup Welcome
-HURRA: Hurra
-YOUR_ACCOUNT_HAS_BEEN_CREATED_AND_YOU_ARE_LOGGED_IN_NOW_: Your account has been created and you are logged in now.
-NEXT_STEP: Next step
-VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: Visit the author panel and setup your new website. You can configure the system, choose themes and add plugins.
-GET_HELP: Get help
-IF_YOU_HAVE_ANY_QUESTIONS__PLEASE_READ_THE: If you have any questions, please read the
-DOCS: docs
-OR_OPEN_A_NEW_ISSUE_ON: or open a new issue on
-CODED_WITH: Coded with
-BY_THE: by the
-COMMUNITY: community
-TRENDSCHAU_DIGITAL: Trendschau Digital
-CONFIGURE_YOUR_WEBSITE: Configure your website
-GIVE_YOUR_NEW_WEBSITE_A_NAME__ADD_THE_AUTHOR_AND_CHOOSE_A_COPYRIGHT_: Give your new website a name, add the author and choose a copyright.
-CHOOSE_A_THEME_FOR_YOUR_WEBSITE_AND_CONFIGURE_THE_THEME_DETAILS_: Choose a theme for your website and configure the theme details.
 ADD_NEW_FEATURES_TO_YOUR_WEBSITE_WITH_PLUGINS_AND_CONFIGURE_THEM_: Add new features to your website with plugins and configure them.
+BY_THE: by the
+CHOOSE_A_THEME_FOR_YOUR_WEBSITE_AND_CONFIGURE_THE_THEME_DETAILS_: Choose a theme for your website and configure the theme details.
+CODED_WITH: Coded with
+COMMUNITY: community
+CONFIGURE_YOUR_WEBSITE: Configure your website
+DOCS: docs
+GET_HELP: Get help
+GIVE_YOUR_NEW_WEBSITE_A_NAME__ADD_THE_AUTHOR_AND_CHOOSE_A_COPYRIGHT_: Give your new website a name, add the author and choose a copyright.
+HURRA: Hurra
+IF_YOU_HAVE_ANY_QUESTIONS__PLEASE_READ_THE: If you have any questions, please read the
+NEXT_STEP: Next step
+OR_OPEN_A_NEW_ISSUE_ON: or open a new issue on
+SETUP_WELCOME: Setup Welcome
+TRENDSCHAU_DIGITAL: Trendschau Digital
+VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: Visit the author panel and setup your new website. You can configure the system, choose themes and add plugins.
+YOUR_ACCOUNT_HAS_BEEN_CREATED_AND_YOU_ARE_LOGGED_IN_NOW_: Your account has been created and you are logged in now.
 
-DEVELOPER: Developer
-THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: The following options are only for developers and experienced administrators. Only change the options if you really understand them. For example: Never activate the error reporting for a live website, use this option only for bug-fixing.
-ERROR_REPORTING: Error Reporting
-DISPLAY_APPLICATION_ERRORS: Display Application Errors
-TWIG_CACHE: Twig Cache
 ACTIVATE_CACHE_FOR_TWIG_TEMPLATES: Activate Cache for Twig Templates
-DELETE_ALL_CACHE_FILES: Delete all cache files
 CLEAR_CACHE: Clear Cache
-STANDARD_WIDTH_FOR_IMAGES: Standard width for images
-THIS_APPLIES_ONLY_FOR_FUTURE_IMAGES_IN_THE_CONTENT_AREA_: This applies only for future images in the content area.
-STANDARD_HEIGHT_FOR_IMAGES: Standard height for images
+DELETE_ALL_CACHE_FILES: Delete all cache files
+DEVELOPER: Developer
+DISPLAY_APPLICATION_ERRORS: Display Application Errors
+ERROR_REPORTING: Error Reporting
 IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT__THEN_THE_IMAGE_WILL_BE_CROPPED_: If you add a value for the height, then the image will be cropped.
 PROXY: Proxy
-USE_X_FORWARDED_HEADERS: Use X-Forwarded Headers
+STANDARD_HEIGHT_FOR_IMAGES: Standard height for images
+STANDARD_WIDTH_FOR_IMAGES: Standard width for images
+THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: The following options are only for developers and experienced administrators. Only change the options if you really understand them. For example: Never activate the error reporting for a live website, use this option only for bug-fixing.
+THIS_APPLIES_ONLY_FOR_FUTURE_IMAGES_IN_THE_CONTENT_AREA_: This applies only for future images in the content area.
 TRUSTED_IPS_FOR_PROXY_(COMMA_SEPARATED): Trusted IPs for proxy (comma separated)
+TWIG_CACHE: Twig Cache
+USE_X_FORWARDED_HEADERS: Use X-Forwarded Headers
