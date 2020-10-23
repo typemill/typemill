@@ -157,7 +157,7 @@ class MetaApiController extends ContentController
 		if(!$this->setStructure($draft = true)){ return $response->withJson($this->errors, 404); }
 
 		# set information for homepage
-		$this->setHomepage($args);
+		$this->setHomepage($args = false);
 
 		# set item 
 		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
