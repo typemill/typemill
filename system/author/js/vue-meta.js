@@ -332,6 +332,7 @@ Vue.component('component-checkboxlist', {
 			  	  '<span class="checkmark"></span>' +
 			  	  '<span v-if="errors[name]" class="error">{{ errors[name] }}</span>' +
 			  	  '<span v-else class="fielddescription"><small>{{ description|translate }}</small></span>' +
+			  	'</label>' +
 			  '</div>',
 	methods: {
 		update: function($event, value, optionvalue, name)
@@ -369,6 +370,92 @@ Vue.component('component-radio', {
 		update: function($event, value, name)
 		{
 			FormBus.$emit('forminput', {'name': name, 'value' : value});
+		},
+	},
+})
+
+Vue.component('component-customfields', {
+	props: ['class', 'id', 'description', 'readonly', 'required', 'disabled', 'options', 'label', 'name', 'type', 'value', 'errors'],
+	data: function () {
+		return {
+			fielderrors: false,
+			fielddetails: {},
+		 }
+	},
+
+	template: '<div class="large">' +
+				'<label class="mb2">{{ label|translate }}</label>' +
+			  	'<div v-if="fielderrors" class="error mb2"><small>{{ fielderrors }}</small></div>' +
+			  	'<div v-else="description" class="fielddescription mb2"><small>{{ description|translate }}</small></div>' +
+	  			'<div class="customrow flex items-start mb3" v-for="(pairobject, pairindex) in value">' +
+					'<input type="text" placeholder="key" class="customkey" :class="pairobject.keyerror" :value="pairobject.key" @input="updatePairKey(pairindex,$event)">' +
+			  		'<div class="mt3"><svg class="icon icon-dots-two-vertical"><use xlink:href="#icon-dots-two-vertical"></use></svg></div>' + 
+	  			  	'<textarea placeholder="value" class="customvalue pa3" :class="pairobject.valueerror" v-html="pairobject.value" @input="updatePairValue(pairindex,$event)"></textarea>' +
+					'<button class="bg-tm-red white bn ml2 h1 w2 br1" @click.prevent="deleteField(pairindex)"><svg class="icon icon-minus"><use xlink:href="#icon-minus"></use></svg></button>' +
+				'</div>' +
+				'<button class="bg-tm-green white bn br1 pa2 f6" @click.prevent="addField()"><svg class="icon icon-plus f7"><use xlink:href="#icon-plus"></use></svg> Add Fields</button>' +
+			  '</div>',
+	mounted: function(){
+		
+		if(this.value === null)
+		{
+			this.value = [{}];
+		}
+	},
+	methods: {
+		update: function(value, name)
+		{
+			FormBus.$emit('forminput', {'name': name, 'value': value});
+		},
+		updatePairKey: function(index,event)
+		{
+			this.value[index].key = event.target.value;
+			
+			var regex = /^[a-z0-9]+$/i;
+			if(regex.test(event.target.value))
+			{
+				this.fielderrors = false;
+				delete this.value[index].keyerror;
+				this.update(this.value,this.name);
+			}
+			else
+			{
+				this.value[index].keyerror = 'red';
+				this.fielderrors = 'Only alphanumeric for keys allowed';
+			}
+		},
+		updatePairValue: function(index, event)
+		{
+			this.value[index].value = event.target.value;
+			
+			var regex = /<.*(?=>)/gm;
+			if(event.target.value == '' || regex.test(event.target.value))
+			{
+				this.value[index].valueerror = 'red';
+				this.fielderrors = 'No empty values or html tags are allowed';				
+			}
+			else
+			{
+				this.fielderrors = false;
+				delete this.value[index].valueerror;
+				this.update(this.value,this.name);
+			}
+		},
+		addField: function()
+		{
+			for(object in this.value)
+			{
+				if(Object.keys(this.value[object]).length === 0)
+				{
+					return;
+				}
+			}
+
+			this.value.push({});
+		},
+		deleteField: function(index)
+		{
+			this.value.splice(index,1);
 		},
 	},
 })
@@ -473,8 +560,17 @@ let meta = new Vue({
             }
         });
 
+        /* 	update single value or array 
+			this.$set(this.someObject, 'b', 2)  */
 		FormBus.$on('forminput', formdata => {
 			this.$set(this.formData[this.currentTab], formdata.name, formdata.value);
+		});
+
+		/*  update values that are objects 
+			this.someObject = Object.assign({}, this.someObject, { a: 1, b: 2 }) */
+
+		FormBus.$on('forminputobject', formdata => {
+			this.formData[this.currentTab][formdata.name] = Object.assign({}, this.formData[this.currentTab][formdata.name], formdata.value);			
 		});
 	},
 	methods: {

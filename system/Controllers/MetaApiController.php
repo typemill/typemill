@@ -122,6 +122,28 @@ class MetaApiController extends ContentController
 			{
 				$metascheme[$tabname][$fieldname] = true;
 				$metadata[$tabname][$fieldname] = isset($pagemeta[$tabname][$fieldname]) ? $pagemeta[$tabname][$fieldname] : null;
+
+				# special treatment for customfields
+				if(isset($fielddefinitions['type']) && ($fielddefinitions['type'] == 'customfields' ) )
+				{
+					# loop through the customdata
+					foreach($metadata[$tabname][$fieldname] as $key => $value)
+					{
+						# and make sure that arrays are transformed back into strings
+						if(isset($value['value']) && is_array($value['value']))
+						{
+							$valuestring = implode('\n',$value['value']);
+							$metadata[$tabname][$fieldname][$key]['value'] = $valuestring;
+						}
+					}
+					/*
+					echo 'fielddefinition: <pre>';
+					print_r($fielddefinitions);
+					echo '</pre>metadata: <pre>';
+					print_r($pagemeta[$tabname][$fieldname]);
+					die();
+					*/
+				}
 			}
 		}
 
@@ -208,6 +230,21 @@ class MetaApiController extends ContentController
 				{
 					$errors[$tab][$fieldName] = $result[$fieldName][0];
 				}
+
+				# special treatment for customfields 
+				if($fieldDefinition && isset($fieldDefinition['type']) && ($fieldDefinition['type'] == 'customfields' ) && isset($fieldDefinition['data']) && ($fieldDefinition['data'] == 'array' )  )
+				{
+					foreach($fieldValue as $key => $valuePair)
+					{
+						if(isset($valuePair['value']))
+						{
+							$arrayValues = explode(PHP_EOL,$valuePair['value']);
+							echo '<pre>';
+							print_r($arrayValues);
+						}
+					}
+					die();
+				}	
 			}
 		}
 

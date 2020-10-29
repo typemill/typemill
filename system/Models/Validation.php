@@ -63,6 +63,23 @@ class Validation
 			return true;
 		}, 'contains one or more invalid ip-adress');
 
+		Validator::addRule('customfields', function($field, $value, array $params, array $fields) use ($user)
+		{
+			foreach($value as $customfield)
+			{
+				if(!isset($customfield['key']) OR empty($customfield['key']) OR (preg_match('/^([a-z0-9])+$/i', $customfield['key']) == false) )
+				{
+		        	return false;
+		        }
+
+				if (!isset($customfield['value']) OR empty($customfield['value']) OR ( $customfield['value'] != strip_tags($customfield['value']) ) )
+				{
+					return false;
+				}
+			}
+			return true;
+		}, 'contains one or more invalid values');
+
 		Validator::addRule('checkPassword', function($field, $value, array $params, array $fields) use ($user)
 		{
 			$userdata = $user->getUser($fields['username']);
@@ -459,6 +476,10 @@ class Validation
 				$v->rule('lengthMax', $fieldName, 1000);
 				$v->rule('image_types', $fieldName);
 				break;
+			case "customfields":
+				$v->rule('array', $fieldName);
+				$v->rule('customfields', $fieldName);
+				break;			
 			default:
 				$v->rule('lengthMax', $fieldName, 1000);
 				$v->rule('regex', $fieldName, '/^[\pL0-9_ \-]*$/u');

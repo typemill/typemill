@@ -1,0 +1,15 @@
+name: Adam Hall Plugin
+version: 1.0.0
+description: Plugin for Adam Hall that integrates Custom Fields
+author: Sebastian Schürmanns
+homepage: http://trendschau.net
+licence: Owned by Adam Hall
+
+metatabs:
+  adamhall:
+    fields:
+      myfield:
+        type: customfields
+        label: Simple Custom Field
+        description: Please add some custom fields
+        data: array

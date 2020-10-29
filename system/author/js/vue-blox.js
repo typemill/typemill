@@ -1248,13 +1248,13 @@ const definitionComponent = Vue.component('definition-component', {
 	template: '<div class="definitionList">' +
 				'<div class="contenttype"><svg class="icon icon-dots-two-vertical"><use xlink:href="#icon-dots-two-vertical"></use></svg></div>' +
 				'<draggable v-model="definitionList" :animation="150" @end="moveDefinition">' +
-  			    '<div class="definitionRow" v-for="(definition, dindex) in definitionList" :key="definition.id">' +
+	  			    '<div class="definitionRow" v-for="(definition, dindex) in definitionList" :key="definition.id">' +
 						'<svg class="icon icon-arrows-v"><use xlink:href="#icon-arrows-v"></use></svg>' +
 						'<input type="text" class="definitionTerm" v-bind:placeholder="\'term\'|translate" :value="definition.term" :disabled="disabled" @input="updateterm($event,dindex)" @blur="updateMarkdown">' +
-		  		  '<svg class="icon icon-dots-two-vertical"><use xlink:href="#icon-dots-two-vertical"></use></svg>' + 
-	  			  '<textarea class="definitionDescription" v-bind:placeholder="\'description\'|translate" v-html="definition.description" :disabled="disabled" @input="updatedescription($event, dindex)" @keydown.13.prevent="enter" @blur="updateMarkdown"></textarea>' +
-					  '<button class="delDL" @click.prevent="deleteDefinition(dindex)"><svg class="icon icon-minus"><use xlink:href="#icon-minus"></use></svg></button>' +
-				  '</div>' +
+			  		  	'<svg class="icon icon-dots-two-vertical"><use xlink:href="#icon-dots-two-vertical"></use></svg>' + 
+		  			  	'<textarea class="definitionDescription" v-bind:placeholder="\'description\'|translate" v-html="definition.description" :disabled="disabled" @input="updatedescription($event, dindex)" @keydown.13.prevent="enter" @blur="updateMarkdown"></textarea>' +
+						'<button class="delDL" @click.prevent="deleteDefinition(dindex)"><svg class="icon icon-minus"><use xlink:href="#icon-minus"></use></svg></button>' +
+					'</div>' +
 				'</draggable>' +
 				'<button class="addDL" @click.prevent="addDefinition()"><svg class="icon icon-plus"><use xlink:href="#icon-plus"></use></svg> {{ \'add definition\'|translate }}</button>' +
 				'<div v-if="load" class="loadwrapper"><span class="load"></span></div>' +
