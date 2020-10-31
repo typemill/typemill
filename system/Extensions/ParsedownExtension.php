@@ -775,8 +775,15 @@ class ParsedownExtension extends \ParsedownExtra
             if (isset($CurrentBlock['continuable']))
             {
                 $methodName = 'block' . $CurrentBlock['type'] . 'Continue';
+
+/* fix definition list */
+                if($CurrentBlock['type'] == 'DefinitionList' && isset($CurrentBlock['interrupted']))
+                {
+                    $mdCurrentBlock = $mdCurrentBlock . "\n\n";
+                }
+
                 $Block = $this->$methodName($Line, $CurrentBlock);
-                
+
                 # if this line still belongs to the current multiline block
                 if (isset($Block))
                 {
@@ -795,7 +802,7 @@ class ParsedownExtension extends \ParsedownExtra
 /*new*/                 $mdCurrentBlock = $mdCurrentBlock;
                     }
                 }
-            }
+            }                
 
             # ~
 
@@ -815,11 +822,19 @@ class ParsedownExtension extends \ParsedownExtra
 
             #
             # ~
-
             foreach ($blockTypes as $blockType)
             {
                 $Block = $this->{"block$blockType"}($Line, $CurrentBlock);
-/*new*/         $mdBlock = $line;
+
+/* new */       $mdBlock = $line;
+
+/* dirty fix for tables and definition lists, not sure why this happens */     
+                if ( ($blockType == "Table" OR $blockType == "DefinitionList") && isset($mdCurrentBlock) ) 
+                {
+                   $mdBlock = $mdCurrentBlock . "\n" . $line;
+                }
+/* fix end */
+
                 if (isset($Block))
                 {
                     $Block['type'] = $blockType;
@@ -841,6 +856,7 @@ class ParsedownExtension extends \ParsedownExtra
 
                     $CurrentBlock = $Block;
 /*new*/             $mdCurrentBlock = $mdBlock;
+ 
                     continue 2;
                 }
             }
@@ -885,14 +901,17 @@ class ParsedownExtension extends \ParsedownExtra
         # ~
 
         if (isset($CurrentBlock))
-        {
+        {            
             $Elements[] = $this->extractElement($CurrentBlock);
 /*new*/     $mdElements[] = $mdCurrentBlock;
         }
 
         # ~
+/*        echo '<pre>';
+        print_r($mdElements);
+        die();
 /*new*/ return $mdElements;
-#        return $Elements;
+#       return $Elements;
     }
 
     
