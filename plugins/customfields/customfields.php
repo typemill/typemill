@@ -1,10 +1,10 @@
 <?php
 
-namespace Plugins\Adamhall;
+namespace Plugins\Customfields;
 
 use Typemill\Plugin;
 
-class Adamhall extends Plugin
+class Customfields extends Plugin
 {
     public static function getSubscribedEvents()
     {
@@ -16,7 +16,7 @@ class Adamhall extends Plugin
 
     public function onTwigLoaded()
     {
-        $this->addEditorJS('/adamhall/js/adamhall.js');
+        $this->addEditorJS('/customfields/js/customfields.js');
     }
 
     public function onMetaLoaded($meta)

@@ -1,9 +1,9 @@
-name: Adam Hall Plugin
+name: Customfields Plugin
 version: 1.0.0
-description: Plugin for Adam Hall that integrates Custom Fields
+description: Plugin to test customfields
 author: Sebastian Schürmanns
 homepage: http://trendschau.net
-licence: Owned by Adam Hall
+licence: No licence
 
 metatabs:
   adamhall:
