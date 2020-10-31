@@ -382,11 +382,11 @@ Vue.component('component-customfields', {
 			fielddetails: {},
 		 }
 	},
-
 	template: '<div class="large">' +
 				'<label class="mb2">{{ label|translate }}</label>' +
-			  	'<div v-if="fielderrors" class="error mb2"><small>{{ fielderrors }}</small></div>' +
-			  	'<div v-else="description" class="fielddescription mb2"><small>{{ description|translate }}</small></div>' +
+			  	'<div class="fielddescription mb2 f7">{{ description|translate }}</div>' +
+			  	'<div v-if="errors[name]" class="error mb2 f7">{{ errors[name] }}</div>' +
+			  	'<div v-if="fielderrors" class="error mb2 f7">{{ fielderrors }}</div>' +
 	  			'<div class="customrow flex items-start mb3" v-for="(pairobject, pairindex) in value">' +
 					'<input type="text" placeholder="key" class="customkey" :class="pairobject.keyerror" :value="pairobject.key" @input="updatePairKey(pairindex,$event)">' +
 			  		'<div class="mt3"><svg class="icon icon-dots-two-vertical"><use xlink:href="#icon-dots-two-vertical"></use></svg></div>' + 
@@ -405,24 +405,42 @@ Vue.component('component-customfields', {
 	methods: {
 		update: function(value, name)
 		{
+			this.fielderrors = false;
+			this.errors = false;
 			FormBus.$emit('forminput', {'name': name, 'value': value});
 		},
 		updatePairKey: function(index,event)
 		{
 			this.value[index].key = event.target.value;
-			
+
 			var regex = /^[a-z0-9]+$/i;
-			if(regex.test(event.target.value))
-			{
-				this.fielderrors = false;
-				delete this.value[index].keyerror;
-				this.update(this.value,this.name);
-			}
-			else
+
+			if(!this.keyIsUnique(event.target.value,index))
 			{
 				this.value[index].keyerror = 'red';
-				this.fielderrors = 'Only alphanumeric for keys allowed';
+				this.fielderrors = 'Error: The key already exists';
+				return;
 			}
+			else if(!regex.test(event.target.value))
+			{
+				this.value[index].keyerror = 'red';
+				this.fielderrors = 'Error: Only alphanumeric for keys allowed';
+				return;
+			}
+
+			delete this.value[index].keyerror;
+			this.update(this.value,this.name);
+		},
+		keyIsUnique: function(keystring, index)
+		{
+			for(obj in this.value)
+			{
+				if( (obj != index) && (this.value[obj].key == keystring) )
+				{
+					return false;
+				}
+			}
+			return true;
 		},
 		updatePairValue: function(index, event)
 		{
@@ -432,11 +450,10 @@ Vue.component('component-customfields', {
 			if(event.target.value == '' || regex.test(event.target.value))
 			{
 				this.value[index].valueerror = 'red';
-				this.fielderrors = 'No empty values or html tags are allowed';				
+				this.fielderrors = 'Error: No empty values or html tags are allowed';				
 			}
 			else
 			{
-				this.fielderrors = false;
 				delete this.value[index].valueerror;
 				this.update(this.value,this.name);
 			}
@@ -456,6 +473,7 @@ Vue.component('component-customfields', {
 		deleteField: function(index)
 		{
 			this.value.splice(index,1);
+			this.update(this.value,this.name);
 		},
 	},
 })

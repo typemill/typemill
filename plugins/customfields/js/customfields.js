@@ -1,4 +1,4 @@
-Vue.component('tab-adamhall', {
+Vue.component('tab-customfields', {
 	props: ['saved', 'errors', 'formdata', 'schema'],
 	template: '<section><form>' +
 				'<component v-for="(field, index) in schema.fields"' +

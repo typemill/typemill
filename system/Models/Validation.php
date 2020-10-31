@@ -61,7 +61,7 @@ class Validation
 		        }
 			}
 			return true;
-		}, 'contains one or more invalid ip-adress');
+		}, 'contains one or more invalid ip-adress.');
 
 		Validator::addRule('customfields', function($field, $value, array $params, array $fields) use ($user)
 		{
@@ -78,7 +78,7 @@ class Validation
 				}
 			}
 			return true;
-		}, 'contains one or more invalid values');
+		}, 'some fields are empty or contain invalid values.');
 
 		Validator::addRule('checkPassword', function($field, $value, array $params, array $fields) use ($user)
 		{

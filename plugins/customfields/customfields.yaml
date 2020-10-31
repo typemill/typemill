@@ -6,7 +6,7 @@ homepage: http://trendschau.net
 licence: No licence
 
 metatabs:
-  adamhall:
+  customfields:
     fields:
       myfield:
         type: customfields
