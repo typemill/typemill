@@ -193,6 +193,7 @@ foreach($session_segments as $segment)
 		// configure session
 		ini_set('session.cookie_httponly', 1 );
 		ini_set('session.use_strict_mode', 1);
+		ini_set('session.cookie_samesite', 'lax');
 		if($uri->getScheme() == 'https')
 		{
 			ini_set('session.cookie_secure', 1);
