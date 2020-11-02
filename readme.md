@@ -1,6 +1,6 @@
 # About TYPEMILL
 
-TYPEMILL is a small flat file cms created for editors and writers. It provides a author-friendly dashboard and a visual-block-editor for markdown based on vue.js. Use TYPEMILL for manuals, documentations, web-books and similar publications. The website http://typemill.net itself is an example for TYPEMILL.
+TYPEMILL is a small flat file cms created for editors and writers. It provides an author-friendly dashboard and a visual-block-editor for markdown based on vue.js. Use TYPEMILL for manuals, documentations, web-books and similar publications. The website http://typemill.net itself is an example for TYPEMILL.
 
 ![TYPEMILL Screenshot](https://typemill.net/media/tm-demo.gif)
 
@@ -62,11 +62,11 @@ You can use your ftp-software for that.
 
 ## Setup
 
-Please go to `your-typemill-website.com/setup`, create an initial user and configure your system in the author panel. 
+You will be redirected to the `/setup` page, please create an initial user and configure your system in the author panel. 
 
 ## Login
 
-You can find your login screen under `/tm/login` or simply go to `/setup` and you will be redirected to the login-page. 
+You can find your login screen under `/tm/login` or simply go to `/setup` and you will be redirected to the login-page, if the setup has been finished. 
 
 ## Documentation
 
@@ -89,9 +89,15 @@ TYPEMILL is published under MIT licence. Please check the licence of the include
   * Italian: [Severo Iuliano](https://github.com/iusvar)
   * Russian: [Hide-me](https://github.com/hide-me)
 
-## How to Contribute
+## IMPORTANT: How to Contribute
 
-Typemill is still in an early stage and contributions are highly welcome. 
+Typemill is still in an early stage and contributions are highly welcome. Please follow these rules:
+
+* If you plan bigger changes, then please create an issue first so we can discuss it.
+* Fork the "DEVELOP" branch from typemill. Never use the master branch, because it is protected and only contains tested releases.
+* Do your changes.
+* Before your request, please pull the recent develop branch again to get latest changes. 
+* Then make a pull request for the DEVELOP branch again.
 
 You can check the [roadmap for Typemill](https://github.com/typemill/typemill/issues/35) and scroll through the issues. I will mark issues in future that are easy to start with or where help is highly appreciated.
 
