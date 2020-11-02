@@ -715,10 +715,12 @@ class ParsedownExtension extends \ParsedownExtra
 
 
 
-    # manipulated method linesElements, returns array of markdown blocks
+    # ++
+    # blocks that belong to a "magneticType" would "merge" if they are next to each other
+    protected $magneticTypes = array('DefinitionList', 'Footnote');
+
     public function markdownToArrayBlocks($markdown)
     {
-
         # make sure no definitions are set
         $this->DefinitionData = array();
 
@@ -733,16 +735,23 @@ class ParsedownExtension extends \ParsedownExtra
 
         # manipulated method linesElements
 
-        $Elements = array();
-        $CurrentBlock = null;
-/*new*/ $mdElements = array();
+        # $Elements = array();
 
-        foreach ($lines as $line)
-        {
-            if (chop($line) === '')
-            {
-                if (isset($CurrentBlock))
-                {
+        # the block that's being built
+        # when a block is complete we add it to $Elements
+        $CurrentBlock = null;
+
+        # ++
+        $done = array();
+        $current = null;
+
+        foreach ($lines as $line) {
+
+            # is it a blank line
+            if (chop($line) === '') {
+                # mark current block as interrupted
+                if (isset($CurrentBlock)) {
+                    # set or increment interrupted
                     $CurrentBlock['interrupted'] = (isset($CurrentBlock['interrupted'])
                         ? $CurrentBlock['interrupted'] + 1 : 1
                     );
@@ -751,14 +760,16 @@ class ParsedownExtension extends \ParsedownExtra
                 continue;
             }
 
-            while (($beforeTab = strstr($line, "\t", true)) !== false)
-            {
+            # ~
+
+            # figure out line indent and text
+
+            while (($beforeTab = strstr($line, "\t", true)) !== false) {
                 $shortage = 4 - mb_strlen($beforeTab, 'utf-8') % 4;
 
                 $line = $beforeTab
                     . str_repeat(' ', $shortage)
-                    . substr($line, strlen($beforeTab) + 1)
-                ;
+                    . substr($line, strlen($beforeTab) + 1);
             }
 
             $indent = strspn($line, ' ');
@@ -771,149 +782,189 @@ class ParsedownExtension extends \ParsedownExtra
 
             # ~
 
-            # if we are in a multiline block element
-            if (isset($CurrentBlock['continuable']))
-            {
+            if (isset($CurrentBlock['continuable'])) {
+                # current block is continuable
+                # let's attempt to continue it
                 $methodName = 'block' . $CurrentBlock['type'] . 'Continue';
-
-/* fix definition list */
-                if($CurrentBlock['type'] == 'DefinitionList' && isset($CurrentBlock['interrupted']))
-                {
-                    $mdCurrentBlock = $mdCurrentBlock . "\n\n";
-                }
-
                 $Block = $this->$methodName($Line, $CurrentBlock);
 
-                # if this line still belongs to the current multiline block
-                if (isset($Block))
-                {
+                if (isset($Block)) {
+                    # attempt to continue was successful
+                    # let's update it
                     $CurrentBlock = $Block;
-/*new*/             $mdCurrentBlock = $mdCurrentBlock . "\n" . $line;
+
+                    # ++
+                    $current['text'] .= "\n$line";
+
+                    # move to next line
                     continue;
-                }
-                # if this line does not belong to the current multiline block
-                else
-                {
-                    # if multiline block element is finished
-                    if ($this->isBlockCompletable($CurrentBlock['type']))
-                    {
+                } else {
+                    # attempt to continue failed
+                    # this means current block is complete
+                    # let's call its "complete" method if it has one
+                    if ($this->isBlockCompletable($CurrentBlock['type'])) {
                         $methodName = 'block' . $CurrentBlock['type'] . 'Complete';
                         $CurrentBlock = $this->$methodName($CurrentBlock);
-/*new*/                 $mdCurrentBlock = $mdCurrentBlock;
                     }
                 }
-            }                
+            }
 
             # ~
+
+            # current block failed to "eat" current line
+            # let's see if we can start a new block
 
             $marker = $text[0];
 
             # ~
 
+            # make a list of the block types that current line can start
             $blockTypes = $this->unmarkedBlockTypes;
-
-            if (isset($this->BlockTypes[$marker]))
-            {
-                foreach ($this->BlockTypes[$marker] as $blockType)
-                {
-                    $blockTypes []= $blockType;
+            if (isset($this->BlockTypes[$marker])) {
+                foreach ($this->BlockTypes[$marker] as $blockType) {
+                    $blockTypes [] = $blockType;
                 }
             }
 
             #
             # ~
-            foreach ($blockTypes as $blockType)
-            {
+
+            foreach ($blockTypes as $blockType) {
+                # let's see if current line can start a block of type $blockType
                 $Block = $this->{"block$blockType"}($Line, $CurrentBlock);
 
-/* new */       $mdBlock = $line;
-
-/* dirty fix for tables and definition lists, not sure why this happens */     
-                if ( ($blockType == "Table" OR $blockType == "DefinitionList") && isset($mdCurrentBlock) ) 
-                {
-                   $mdBlock = $mdCurrentBlock . "\n" . $line;
-                }
-/* fix end */
-
-                if (isset($Block))
-                {
+                if (isset($Block)) {
+                    # echo "[$blockType]";
+                    # current line managed to start a block of type $blockType
+                    # let's set its type
                     $Block['type'] = $blockType;
-                    if ( ! isset($Block['identified']))
-                    {
-                        if (isset($CurrentBlock))
-                        {
-                            $Elements[] = $this->extractElement($CurrentBlock);
-/*new*/                     $mdElements[] = $mdCurrentBlock;
+
+                    # on start block, we "ship" current block and flag started block as identified
+                    # except when the started block has already flagged itself as identified
+                    # this is the case of table
+                    # blocks flag themselves as identified to "absorb" current block
+                    # setext function doesn't set "identified" but it inherits it from the $Block param
+                    if (!isset($Block['identified'])) {
+                        # if (isset($CurrentBlock)) {
+                            # $Elements[] = $this->extractElement($CurrentBlock);
+                        # }
+
+                        # ++
+                        # $current would be null if this is the first block
+                        if ($current !== null) {
+                            $done[] = $current;
                         }
 
+                        # ++
+                        # line doesn't belong to $current
+                        $current = ['text' => $line, 'type' => $blockType];
+
                         $Block['identified'] = true;
+                    } else {
+                        # ++
+                        $current['text'] .= "\n$line";
+                        $current['type'] = $blockType;
                     }
 
-                    if ($this->isBlockContinuable($blockType))
-                    {
+                    # does block have a "continue" method
+                    if ($this->isBlockContinuable($blockType)) {
                         $Block['continuable'] = true;
                     }
 
                     $CurrentBlock = $Block;
-/*new*/             $mdCurrentBlock = $mdBlock;
- 
+
+                    # we're done with this line
+                    # move on to next line
                     continue 2;
                 }
             }
 
             # ~
 
-            if (isset($CurrentBlock) and $CurrentBlock['type'] === 'Paragraph')
-            {
+            if (isset($CurrentBlock) and $CurrentBlock['type'] === 'Paragraph') {
+                # we continue paragraphs here because they are "lazy"
+                # they "eat" the line only if no other block type has "eaten" it
                 $Block = $this->paragraphContinue($Line, $CurrentBlock);
-/*new*/         $mdBlock = $mdCurrentBlock . "\n" . $line;
             }
 
-            if (isset($Block))
-            {
+            if (isset($Block)) {
                 $CurrentBlock = $Block;
-/*new*/         $mdCurrentBlock = $mdBlock;
-            }
-            else
-            {
-                if (isset($CurrentBlock))
-                {
-                    $Elements[] = $this->extractElement($CurrentBlock);
-/*new*/             $mdElements[] = $mdCurrentBlock;
+
+                # ++
+                $current['text'] .= "\n$line";
+            } else {
+                # is this "isset" might be here to handle $lines[0] (first line)
+                # version 1.7.x doesn't have it but it does unset($Blocks[0])
+                if (isset($CurrentBlock)) {
+                    # $Elements[] = $this->extractElement($CurrentBlock);
+
+                    # ++
+                    $done[] = $current;
                 }
 
                 $CurrentBlock = $this->paragraph($Line);
-/*new*/         $mdCurrentBlock = $line;
+
+                # ++
+                $current = ['text' => $line, 'type' => 'Paragraph'];
+
                 $CurrentBlock['identified'] = true;
             }
-
         }
 
         # ~
 
-        if (isset($CurrentBlock['continuable']) and $this->isBlockCompletable($CurrentBlock['type']))
-        {
+        # at this point, we're out of the $lines loop
+
+        # handles the case where the last block is continuable
+        # since there are no more lines, it won't get completed in the loop
+        # we need to complete it here
+        if (isset($CurrentBlock['continuable']) and $this->isBlockCompletable($CurrentBlock['type'])) {
             $methodName = 'block' . $CurrentBlock['type'] . 'Complete';
             $CurrentBlock = $this->$methodName($CurrentBlock);
-/*new*/     $mdCurrentBlock = $mdCurrentBlock;
         }
 
         # ~
 
-        if (isset($CurrentBlock))
-        {            
-            $Elements[] = $this->extractElement($CurrentBlock);
-/*new*/     $mdElements[] = $mdCurrentBlock;
+        if (isset($CurrentBlock)) {
+            # $Elements[] = $this->extractElement($CurrentBlock);
+
+            # ++
+            $done[] = $current;
         }
 
         # ~
-/*        echo '<pre>';
-        print_r($mdElements);
-        die();
-/*new*/ return $mdElements;
-#       return $Elements;
+
+        # ++
+        # merge blocks that have magnetic types
+        $done = array_reduce($done, function (array $accumulator, array $current) {
+            if ($accumulator) {
+                $last = array_pop($accumulator);
+
+                if ($current['type'] === $last['type'] and in_array($current['type'], $this->magneticTypes)) {
+                    $last['text'] .= "\n\n" . $current['text'];
+                    $accumulator[] = $last;
+                } else {
+                    $accumulator[] = $last;
+                    $accumulator[] = $current;
+                }
+            } else {
+                # first iteration
+                $accumulator[] = $current;
+            }
+
+            return $accumulator;
+        }, []);
+
+        # ~
+
+        # return $Elements;
+
+        # ++
+        # return just the text of each item
+        return array_map(function (array $item) {
+            return $item['text'];
+        }, $done);
     }
-
     
     public function arrayBlocksToMarkdown(array $arrayBlocks)
     {   
