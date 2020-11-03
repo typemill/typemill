@@ -24,6 +24,8 @@ if __name__ == '__main__':
 	key = [t.split(': ', 1)[0] for t in data]
 	for i in lang_codes[1:]:  # all lang codes except en, because en used like template
 		any_header = f_open(i).split('\n')
+		if 'ignore' in any_header[0].lower():  # first string in file may contain ignore keyword
+			continue
 		any_data = any_header[2:]
 		any_header = any_header[:2]
 		any_key = [t.split(': ', 1)[0] for t in any_data]
