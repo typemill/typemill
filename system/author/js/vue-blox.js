@@ -223,6 +223,7 @@ const contentComponent = Vue.component('content-block', {
 				var checkempty = this.compmarkdown.replace(/(\r\n|\n|\r|\s)/gm,"");
 				if(checkempty == '')
 				{
+					this.$root.$data.unsafed = false;
 					this.switchToPreviewMode();
 				}
 				else
