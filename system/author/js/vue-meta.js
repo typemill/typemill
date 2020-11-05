@@ -380,26 +380,29 @@ Vue.component('component-customfields', {
 		return {
 			fielderrors: false,
 			fielddetails: {},
+			disableaddbutton: false,
 		 }
 	},
 	template: '<div class="large">' +
 				'<label class="mb2">{{ label|translate }}</label>' +
 			  	'<div class="fielddescription mb2 f7">{{ description|translate }}</div>' +
 			  	'<div v-if="errors[name]" class="error mb2 f7">{{ errors[name] }}</div>' +
-			  	'<div v-if="fielderrors" class="error mb2 f7">{{ fielderrors }}</div>' +
-	  			'<div class="customrow flex items-start mb3" v-for="(pairobject, pairindex) in value">' +
-					'<input type="text" placeholder="key" class="customkey" :class="pairobject.keyerror" :value="pairobject.key" @input="updatePairKey(pairindex,$event)">' +
-			  		'<div class="mt3"><svg class="icon icon-dots-two-vertical"><use xlink:href="#icon-dots-two-vertical"></use></svg></div>' + 
-	  			  	'<textarea placeholder="value" class="customvalue pa3" :class="pairobject.valueerror" v-html="pairobject.value" @input="updatePairValue(pairindex,$event)"></textarea>' +
-					'<button class="bg-tm-red white bn ml2 h1 w2 br1" @click.prevent="deleteField(pairindex)"><svg class="icon icon-minus"><use xlink:href="#icon-minus"></use></svg></button>' +
-				'</div>' +
-				'<button class="bg-tm-green white bn br1 pa2 f6" @click.prevent="addField()"><svg class="icon icon-plus f7"><use xlink:href="#icon-plus"></use></svg> Add Fields</button>' +
+			  	'<transition name="fade"><div v-if="fielderrors" class="error mb2 f7">{{ fielderrors }}</div></transition>' +
+	  			'<transition-group name="fade" tag="div">' + 
+	  				'<div class="customrow flex items-start mb3" v-for="(pairobject, pairindex) in value" :key="pairindex">' +
+						'<input type="text" placeholder="key" class="customkey" :class="pairobject.keyerror" :value="pairobject.key" @input="updatePairKey(pairindex,$event)">' +
+				  		'<div class="mt3"><svg class="icon icon-dots-two-vertical"><use xlink:href="#icon-dots-two-vertical"></use></svg></div>' + 
+		  			  	'<textarea placeholder="value" class="customvalue pa3" :class="pairobject.valueerror" v-html="pairobject.value" @input="updatePairValue(pairindex,$event)"></textarea>' +
+						'<button class="bg-tm-red white bn ml2 h1 w2 br1" @click.prevent="deleteField(pairindex)"><svg class="icon icon-minus"><use xlink:href="#icon-minus"></use></svg></button>' +
+					'</div>' +
+				'</transition-group>' +
+				'<button :disabled="disableaddbutton" class="bg-tm-green white bn br1 pa2 f6" @click.prevent="addField()"><svg class="icon icon-plus f7"><use xlink:href="#icon-plus"></use></svg> Add Fields</button>' +
 			  '</div>',
 	mounted: function(){
-		
 		if(this.value === null)
 		{
 			this.value = [{}];
+			this.disableaddbutton = 'disabled';
 		}
 	},
 	methods: {
@@ -419,16 +422,19 @@ Vue.component('component-customfields', {
 			{
 				this.value[index].keyerror = 'red';
 				this.fielderrors = 'Error: The key already exists';
+				this.disableaddbutton = 'disabled';
 				return;
 			}
 			else if(!regex.test(event.target.value))
 			{
 				this.value[index].keyerror = 'red';
 				this.fielderrors = 'Error: Only alphanumeric for keys allowed';
+				this.disableaddbutton = 'disabled';
 				return;
 			}
 
 			delete this.value[index].keyerror;
+			this.disableaddbutton = false;
 			this.update(this.value,this.name);
 		},
 		keyIsUnique: function(keystring, index)
@@ -467,12 +473,13 @@ Vue.component('component-customfields', {
 					return;
 				}
 			}
-
 			this.value.push({});
+			this.disableaddbutton = 'disabled';
 		},
 		deleteField: function(index)
 		{
 			this.value.splice(index,1);
+			this.disableaddbutton = false;
 			this.update(this.value,this.name);
 		},
 	},
