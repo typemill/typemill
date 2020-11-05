@@ -419,13 +419,17 @@ class Validation
 				$v->rule('in', $fieldName, $fieldDefinitions['options']);
 				break;
 			case "checkboxlist":				
-				/* create array with option keys as value */
-				$options = array();
-				foreach($fieldDefinitions['options'] as $key => $value){ $options[] = $key; }
-				/* loop over input values and check, if the options of the field definitions (options for checkboxlist) contains the key (input from user, key is used as value, value is used as label) */
-				foreach($fieldValue as $key => $value)
+				if(isset($fieldValue) && is_array($fieldValue))
 				{
-					$v->rule('in', $key, $options);
+					/* create array with option keys as value */
+					$options = array();
+					foreach($fieldDefinitions['options'] as $key => $value){ $options[] = $key; }
+
+					/* loop over input values and check, if the options of the field definitions (options for checkboxlist) contains the key (input from user, key is used as value, value is used as label) */
+					foreach($fieldValue as $key => $value)
+					{
+						$v->rule('in', $key, $options);
+					}
 				}
 				break;
 			case "color":

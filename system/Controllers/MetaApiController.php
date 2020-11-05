@@ -124,18 +124,11 @@ class MetaApiController extends ContentController
 				$metadata[$tabname][$fieldname] = isset($pagemeta[$tabname][$fieldname]) ? $pagemeta[$tabname][$fieldname] : null;
 
 				# special treatment for customfields
-				if(isset($fielddefinitions['type']) && ($fielddefinitions['type'] == 'customfields' ) && isset($metadata[$tabname][$fieldname]) )
+				if(isset($fielddefinitions['type']) && ($fielddefinitions['type'] == 'customfields' ) && $metadata[$tabname][$fieldname] )
 				{
-					# loop through the customdata
-					foreach($metadata[$tabname][$fieldname] as $key => $value)
-					{
-						# and make sure that arrays are transformed back into strings
-						if(isset($value['value']) && is_array($value['value']))
-						{
-							$valuestring = implode(PHP_EOL . '- ', $value['value']);
-							$metadata[$tabname][$fieldname][$key]['value'] = '- ' . $valuestring;
-						}
-					}
+
+					$metadata[$tabname][$fieldname] = $this->customfieldsPrepareForEdit($metadata[$tabname][$fieldname]);
+
 				}
 			}
 		}
@@ -224,21 +217,16 @@ class MetaApiController extends ContentController
 					$errors[$tab][$fieldName] = $result[$fieldName][0];
 				}
 
-				# special treatment for customfields: if data is array, then lists wil transformed into array. 
-				if($fieldDefinition && isset($fieldDefinition['type']) && ($fieldDefinition['type'] == 'customfields' ) && isset($fieldDefinition['data']) && ($fieldDefinition['data'] == 'array' )  )
+				# special treatment for customfields 
+				if($fieldDefinition && isset($fieldDefinition['type']) && ($fieldDefinition['type'] == 'customfields' ) )
 				{
-					foreach($fieldValue as $key => $valuePair)
+					$arrayFeatureOn = false;
+					if(isset($fieldDefinition['data']) && ($fieldDefinition['data'] == 'array'))
 					{
-						if(isset($valuePair['value']))
-						{
-							$arrayValues = explode(PHP_EOL . '- ',$valuePair['value']);
-							if(count($arrayValues) > 1)
-							{
-								$arrayValues = array_map(function($item) { return trim($item, '- '); }, $arrayValues);
-								$metaInput[$fieldName][$key]['value'] = $arrayValues;
-							}
-						}
+						$arrayFeatureOn = true;
 					}
+
+					$metaInput[$fieldName] = $this->customfieldsPrepareForSave($metaInput[$fieldName], $arrayFeatureOn);
 				}
 			}
 		}
@@ -354,6 +342,67 @@ class MetaApiController extends ContentController
 
 		# return with the new metadata
 		return $response->withJson(array('metadata' => $metaInput, 'structure' => $structure, 'item' => $this->item, 'errors' => false));
+	}
+
+	private function customfieldsPrepareForEdit($customfields)
+	{
+		# to edit fields in vue we have to transform the arrays in yaml into an array of objects like [{key: abc, value: xyz}{...}]
+
+		$customfieldsForEdit = [];
+
+		foreach($customfields as $key => $value)
+		{
+			$valuestring = $value;
+
+			# and make sure that arrays are transformed back into strings
+			if(isset($value) && is_array($value))
+			{
+				$valuestring = '- ' . implode(PHP_EOL . '- ', $value);
+			}
+
+			$customfieldsForEdit[] = ['key' => $key, 'value' => $valuestring];
+		}
+
+		return $customfieldsForEdit;
+	}
+
+	private function customfieldsPrepareForSave($customfields, $arrayFeatureOn)
+	{
+		# we have to convert the incoming array of objects from vue [{key: abc, value: xyz}{...}] into key-value arrays for yaml. 
+
+		$customfieldsForSave = [];
+
+		foreach($customfields as $valuePair)
+		{
+			# doupbe check, not really needed because it is validated already
+			if(!isset($valuePair['key']) OR ($valuePair['key'] == ''))
+			{
+				# do not use data without valid keys
+				continue;
+			}
+
+			$key 	= $valuePair['key'];
+			$value 	= '';
+
+			if(isset($valuePair['value']))
+			{
+				$value = $valuePair['value'];
+
+				# check if value is formatted as a list, then transform it into an array
+				if($arrayFeatureOn)
+				{
+					$arrayValues = explode(PHP_EOL . '- ',$valuePair['value']);
+					if(count($arrayValues) > 1)
+					{
+						$value = array_map(function($item) { return trim($item, '- '); }, $arrayValues);
+					}
+				}
+			}
+
+			$customfieldsForSave[$key] = $value;
+		}
+
+		return $customfieldsForSave;
 	}
 
 	protected function hasChanged($input, $page, $field)

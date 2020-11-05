@@ -399,7 +399,7 @@ Vue.component('component-customfields', {
 				'<button :disabled="disableaddbutton" class="bg-tm-green white bn br1 pa2 f6" @click.prevent="addField()"><svg class="icon icon-plus f7"><use xlink:href="#icon-plus"></use></svg> Add Fields</button>' +
 			  '</div>',
 	mounted: function(){
-		if(this.value === null)
+		if(this.value === null || this.value.length == 0)
 		{
 			this.value = [{}];
 			this.disableaddbutton = 'disabled';

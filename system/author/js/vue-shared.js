@@ -5,7 +5,7 @@ Vue.component('component-image', {
 				'<div class="flex flex-wrap item-start">' +
 					'<div class="w-50">' +
 						'<div class="w6 h6 bg-black-40 dtc v-mid bg-chess">' +
-							'<img :src="imgpreview" class="mw6 max-h6 dt center">' +
+							'<img v-if="imgpreview" :src="imgpreview" class="mw6 max-h6 dt center">' +
 						'</div>' +
 					'</div>' +
 					'<div class="w-50 ph3 lh-copy f6 relative">' +
@@ -52,7 +52,10 @@ Vue.component('component-image', {
 		}
 	},
 	mounted: function(){
-		this.imgpreview = myaxios.defaults.baseURL + '/' + this.value;
+		if(this.value !== null && this.value !== '')
+		{
+			this.imgpreview = myaxios.defaults.baseURL + '/' + this.value;
+		}
 	},
 	methods: {
 		update: function(value)
@@ -527,7 +530,7 @@ const medialib = Vue.component('medialib', {
 				var imgmarkdown = {target: {value: '![alt]('+ file.url +')' }};
 
 				this.$parent.imgfile = file.url;
-				this.$parent.imgpreview = file.url;
+				this.$parent.imgpreview = this.baseurl + '/' + file.url;
 				this.$parent.imgmeta = true;
 
 				this.$parent.showmedialib = false;
