@@ -391,7 +391,12 @@ class MetaApiController extends ContentController
 				# check if value is formatted as a list, then transform it into an array
 				if($arrayFeatureOn)
 				{
-					$arrayValues = explode(PHP_EOL . '- ',$valuePair['value']);
+					# normalize line breaks, php-eol does not work here
+					$cleanvalue = str_replace(array("\r\n", "\r"), "\n", $valuePair['value']);
+					$cleanvalue = trim($cleanvalue, "\n");
+
+					$arrayValues = explode("\n- ",$cleanvalue);
+					
 					if(count($arrayValues) > 1)
 					{
 						$value = array_map(function($item) { return trim($item, '- '); }, $arrayValues);
