@@ -133,6 +133,13 @@ class Validation
 		}, 'not secure. For code please use markdown `inline-code` or ````fenced code blocks````.');
 	}
 
+	# return valitron standard object
+	public function returnValitron(array $params)
+	{
+		return new Validator($params);
+	}
+
+
 	/**
 	* validation for signup form
 	* 

@@ -31,7 +31,7 @@ const contentComponent = Vue.component('content-block', {
 			compmarkdown: '',
 			componentType: '',
 			disabled: false,
-			load: false,
+//fix			load: false,
 			newblock: false,
 		}
 	},
@@ -1386,7 +1386,7 @@ const imageComponent = Vue.component('image-component', {
 			maxsize: 5, // megabyte
 			imgpreview: false,
 			showmedialib: false,
-			load: false,
+//fix			load: false,
 			imgmeta: false,
 			imgalt: '',
 			imgtitle: '',
@@ -1683,7 +1683,7 @@ const fileComponent = Vue.component('file-component', {
 		return {
 			maxsize: 5, // megabyte
 			showmedialib: false,
-			load: false,
+//fix			load: false,
 			filemeta: false,
 			filetitle: '',
 			fileextension: '',

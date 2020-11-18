@@ -16,6 +16,7 @@ class Assets
 		$this->inlineJS			= array();
 		$this->inlineCSS		= array();
 		$this->editorJS 		= array();
+		$this->editorCSS 		= array();		
 		$this->editorInlineJS 	= array();
 		$this->svgSymbols		= array();
 		$this->imageUrl 		= false;
@@ -207,12 +208,12 @@ class Assets
 
 	public function renderCSS()
 	{
-		return implode('', $this->CSS) . implode('', $this->inlineCSS);
+		return implode("\n", $this->CSS) . implode("\n", $this->inlineCSS);
 	}
 	
 	public function renderJS()
 	{
-		return implode('', $this->JS) . implode('', $this->inlineJS);
+		return implode("\n", $this->JS) . implode("\n", $this->inlineJS);
 	}
 
 	public function renderSvg()
@@ -236,9 +237,24 @@ class Assets
 		$this->editorInlineJS[] = '<script>' . $JS . '</script>';
 	}
 
+	public function addEditorCSS($CSS)
+	{
+		$CSSfile = $this->getFileUrl($CSS);
+		
+		if($CSSfile)
+		{
+			$this->editorCSS[] = '<link rel="stylesheet" href="' . $CSSfile . '" />';
+		}
+	}
+
 	public function renderEditorJS()
 	{
-		return implode('', $this->editorJS) . implode('', $this->editorInlineJS);
+		return implode("\n", $this->editorJS) . implode("\n", $this->editorInlineJS);
+	}
+
+	public function renderEditorCSS()
+	{
+		return implode("\n", $this->editorCSS);
 	}
 
 	/**

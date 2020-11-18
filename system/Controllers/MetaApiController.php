@@ -7,6 +7,7 @@ use Slim\Http\Response;
 use Typemill\Models\WriteYaml;
 use Typemill\Models\WriteMeta;
 use Typemill\Models\Folder;
+use Typemill\Events\OnMetaDefinitionsLoaded;
 
 class MetaApiController extends ContentController
 {
@@ -59,6 +60,9 @@ class MetaApiController extends ContentController
 		{
 			$metatabs = array_merge_recursive($metatabs, $themeSettings['metatabs']);
 		}
+
+		# dispatch meta 
+		$metatabs 		= $this->c->dispatcher->dispatch('onMetaDefinitionsLoaded', new OnMetaDefinitionsLoaded($metatabs))->getData();
 
 		return $metatabs;
 	}

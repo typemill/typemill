@@ -133,6 +133,11 @@ abstract class Plugin implements EventSubscriberInterface
 		$this->container->assets->addInlineCSS($CSS);		
 	}
 
+	protected function addEditorCSS($CSS)
+	{
+		$this->container->assets->addEditorCSS($CSS);
+	}
+
 	protected function activateAxios()
 	{
 		$this->container->assets->activateAxios();		
