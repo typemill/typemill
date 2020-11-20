@@ -127,6 +127,7 @@ class MetaApiController extends ContentController
 				$metascheme[$tabname][$fieldname] = true;
 				$metadata[$tabname][$fieldname] = isset($pagemeta[$tabname][$fieldname]) ? $pagemeta[$tabname][$fieldname] : null;
 
+				/*
 				# special treatment for customfields
 				if(isset($fielddefinitions['type']) && ($fielddefinitions['type'] == 'customfields' ) && $metadata[$tabname][$fieldname] )
 				{
@@ -134,6 +135,7 @@ class MetaApiController extends ContentController
 					$metadata[$tabname][$fieldname] = $this->customfieldsPrepareForEdit($metadata[$tabname][$fieldname]);
 
 				}
+				*/
 			}
 		}
 
@@ -221,6 +223,7 @@ class MetaApiController extends ContentController
 					$errors[$tab][$fieldName] = $result[$fieldName][0];
 				}
 
+				/*
 				# special treatment for customfields 
 				if($fieldDefinition && isset($fieldDefinition['type']) && ($fieldDefinition['type'] == 'customfields' ) )
 				{
@@ -232,6 +235,7 @@ class MetaApiController extends ContentController
 
 					$metaInput[$fieldName] = $this->customfieldsPrepareForSave($metaInput[$fieldName], $arrayFeatureOn);
 				}
+				*/
 			}
 		}
 

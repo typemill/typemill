@@ -368,6 +368,7 @@ Vue.component('component-customfields', {
 			fielderrors: false,
 			fielddetails: {},
 			disableaddbutton: false,
+			cfvalue: [{}]
 		 }
 	},
 	template: '<div class="large">' +
@@ -376,7 +377,7 @@ Vue.component('component-customfields', {
 			  	'<div v-if="errors[name]" class="error mb2 f7">{{ errors[name] }}</div>' +
 			  	'<transition name="fade"><div v-if="fielderrors" class="error mb2 f7">{{ fielderrors }}</div></transition>' +
 	  			'<transition-group name="fade" tag="div">' + 
-	  				'<div class="customrow flex items-start mb3" v-for="(pairobject, pairindex) in value" :key="pairindex">' +
+	  				'<div class="customrow flex items-start mb3" v-for="(pairobject, pairindex) in cfvalue" :key="pairindex">' +
 						'<input type="text" placeholder="key" class="customkey" :class="pairobject.keyerror" :value="pairobject.key" @input="updatePairKey(pairindex,$event)">' +
 				  		'<div class="mt3"><svg class="icon icon-dots-two-vertical"><use xlink:href="#icon-dots-two-vertical"></use></svg></div>' + 
 		  			  	'<textarea placeholder="value" class="customvalue pa3" :class="pairobject.valueerror" v-html="pairobject.value" @input="updatePairValue(pairindex,$event)"></textarea>' +
@@ -388,9 +389,16 @@ Vue.component('component-customfields', {
 	mounted: function(){
 		if(typeof this.value === 'undefined' || this.value === null || this.value.length == 0)
 		{
-			var initialvalue = [{}];
-			this.update(initialvalue, this.name);
+			// this.cfvalue = [{}];
+			// this.update(this.cfvalue, this.name);
 			this.disableaddbutton = 'disabled';
+		}
+		else
+		{
+			/* turn object { key:value, key:value } into array [[key,value][key,value]] */
+			this.cfvalue = Object.entries(this.value);
+			/* and back into array of objects [ {key: key, value: value}{key:key, value: value }] */
+			this.cfvalue = this.cfvalue.map(function(item){ return { 'key': item[0], 'value': item[1] } });
 		}
 	},
 	methods: {
@@ -398,38 +406,45 @@ Vue.component('component-customfields', {
 		{
 			this.fielderrors = false;
 			this.errors = false;
-			FormBus.$emit('forminput', {'name': name, 'value': value});
+
+			/* transform array of objects [{key:mykey, value:myvalue}] into array [[mykey,myvalue]] */
+			var storedvalue = value.map(function(item){ return [item.key, item.value]; });
+
+			/* transform array [[mykey,myvalue]] into object { mykey:myvalue } */
+			storedvalue = Object.fromEntries(storedvalue);
+						
+			FormBus.$emit('forminput', {'name': name, 'value': storedvalue});
 		},
 		updatePairKey: function(index,event)
 		{
-			this.value[index].key = event.target.value;
+			this.cfvalue[index].key = event.target.value;
 
 			var regex = /^[a-z0-9]+$/i;
 
 			if(!this.keyIsUnique(event.target.value,index))
 			{
-				this.value[index].keyerror = 'red';
+				this.cfvalue[index].keyerror = 'red';
 				this.fielderrors = 'Error: The key already exists';
 				this.disableaddbutton = 'disabled';
 				return;
 			}
 			else if(!regex.test(event.target.value))
 			{
-				this.value[index].keyerror = 'red';
+				this.cfvalue[index].keyerror = 'red';
 				this.fielderrors = 'Error: Only alphanumeric for keys allowed';
 				this.disableaddbutton = 'disabled';
 				return;
 			}
 
-			delete this.value[index].keyerror;
+			delete this.cfvalue[index].keyerror;
 			this.disableaddbutton = false;
-			this.update(this.value,this.name);
+			this.update(this.cfvalue,this.name);
 		},
 		keyIsUnique: function(keystring, index)
 		{
-			for(obj in this.value)
+			for(obj in this.cfvalue)
 			{
-				if( (obj != index) && (this.value[obj].key == keystring) )
+				if( (obj != index) && (this.cfvalue[obj].key == keystring) )
 				{
 					return false;
 				}
@@ -438,37 +453,37 @@ Vue.component('component-customfields', {
 		},
 		updatePairValue: function(index, event)
 		{
-			this.value[index].value = event.target.value;
+			this.cfvalue[index].value = event.target.value;
 			
 			var regex = /<.*(?=>)/gm;
 			if(event.target.value == '' || regex.test(event.target.value))
 			{
-				this.value[index].valueerror = 'red';
+				this.cfvalue[index].valueerror = 'red';
 				this.fielderrors = 'Error: No empty values or html tags are allowed';				
 			}
 			else
 			{
-				delete this.value[index].valueerror;
-				this.update(this.value,this.name);
+				delete this.cfvalue[index].valueerror;
+				this.update(this.cfvalue,this.name);
 			}
 		},
 		addField: function()
 		{
-			for(object in this.value)
+			for(object in this.cfvalue)
 			{
-				if(Object.keys(this.value[object]).length === 0)
+				if(Object.keys(this.cfvalue[object]).length === 0)
 				{
 					return;
 				}
 			}
-			this.value.push({});
+			this.cfvalue.push({});
 			this.disableaddbutton = 'disabled';
 		},
 		deleteField: function(index)
 		{
-			this.value.splice(index,1);
+			this.cfvalue.splice(index,1);
 			this.disableaddbutton = false;
-			this.update(this.value,this.name);
+			this.update(this.cfvalue,this.name);
 		},
 	},
 })

@@ -63,16 +63,20 @@ class Validation
 			return true;
 		}, 'contains one or more invalid ip-adress.');
 
-		Validator::addRule('customfields', function($field, $value, array $params, array $fields) use ($user)
+		Validator::addRule('customfields', function($field, $customfields, array $params, array $fields) use ($user)
 		{
-			foreach($value as $customfield)
+			if(empty($customfields))
 			{
-				if(!isset($customfield['key']) OR empty($customfield['key']) OR (preg_match('/^([a-z0-9])+$/i', $customfield['key']) == false) )
+				return true;
+			}
+			foreach($customfields as $key => $value)
+			{
+				if(!isset($key) OR empty($key) OR (preg_match('/^([a-z0-9])+$/i', $key) == false) )
 				{
 		        	return false;
 		        }
 
-				if (!isset($customfield['value']) OR empty($customfield['value']) OR ( $customfield['value'] != strip_tags($customfield['value']) ) )
+				if (!isset($value) OR empty($value) OR ( $value != strip_tags($value) ) )
 				{
 					return false;
 				}
@@ -134,7 +138,7 @@ class Validation
 	}
 
 	# return valitron standard object
-	public function returnValitron(array $params)
+	public function returnValidator(array $params)
 	{
 		return new Validator($params);
 	}
