@@ -1,3 +1,5 @@
+<IfModule mod_rewrite.c>
+
 RewriteEngine On
 
 # If your homepage is http://yourdomain.com/yoursite
@@ -7,27 +9,14 @@ RewriteEngine On
 # In some environements, an empty RewriteBase is required:
 # RewriteBase /
 
-# Protect your system files from prying eyes
-RewriteRule ^(system\/author\/) - [L]
-RewriteRule ^(system) - [F,L]
-RewriteRule ^(data) - [F,L]
-RewriteRule ^(content) - [F,L]
-RewriteRule ^(settings) - [F,L]
-RewriteRule ^(.*)?\.yml$ - [F,L]
-Rewriterule ^(.*)?\.yaml$ - [F,L]
-RewriteRule ^(.*)?\.txt$ - [F,L]
-RewriteRule ^(.*)?\.example$ - [F,L]
-RewriteRule ^(.*/)?\.git+ - [F,L]
-
 # Use this to redirect HTTP to HTTPS on apache servers
 # RewriteCond %{HTTPS} off
 # RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
 # Use this to redirect www to non-wwww on apache servers
-# RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
 # RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
 
-# Use this to redirect slash/ to no slash urls on apache servers
+# Use this to redirect slash/ to url without slash on apache servers
 # RewriteCond %{REQUEST_FILENAME} !-d
 # RewriteRule ^(.*)/$ /$1 [R=301,L]
 
@@ -35,8 +24,48 @@ RewriteRule ^(.*/)?\.git+ - [F,L]
 RewriteCond %{THE_REQUEST} ^GET.*index\.php [NC]
 RewriteRule (.*?)index\.php/*(.*) /$1$2 [R=301,NE,L]
 
-# Directs all web requests through the site index file
+# REWRITE TO INDEX
+
+# If the requested path and file not /index.php
 RewriteCond %{REQUEST_URI} !^/index\.php
+
+# if requested doesn't match a physical file
 RewriteCond %{REQUEST_FILENAME} !-f
+
+# if requested doesn't match a physical folder
 RewriteCond %{REQUEST_FILENAME} !-d
+
+# then rewrite the request to the index.php script
 RewriteRule ^ index.php [QSA,L]
+
+
+# FILE/FOLDER PROTECTION
+
+# Deny access to these file types generally
+RewriteRule ^(.*)?\.yml$ - [F,L]
+Rewriterule ^(.*)?\.yaml$ - [F,L]
+RewriteRule ^(.*)?\.txt$ - [F,L]
+RewriteRule ^(.*)?\.example$ - [F,L]
+RewriteRule ^(.*/)?\.git+ - [F,L]
+RewriteRule ^(.*/)?\.md - [F,L]
+RewriteRule ^(.*/)?\.php - [F,L]
+RewriteRule ^(.*/)?\.twig - [F,L]
+
+# Block access to specific files in the root folder
+RewriteRule ^(licence\.md|readme\.md|composer\.lock|composer\.json|\.htaccess)$ error [F,L]
+
+# block files and folders starting with a dot except for the .well-known folder (Let's Encrypt)
+RewriteRule (^|/)\.(?!well-known\/) index.php [L]
+
+# Allow access to frontend files in author folder
+RewriteRule ^(system\/author\/css\/) - [L]
+RewriteRule ^(system\/author\/img\/) - [L]
+RewriteRule ^(system\/author\/js\/) - [L]
+
+# redirect all other direct requests to the following physical folders to the index.php so pages with same name work
+RewriteRule ^(system|content|data|settings) index.php [QSA,L]
+
+# disallow browsing other folders generally
+Options -Indexes
+
+</IfModule>

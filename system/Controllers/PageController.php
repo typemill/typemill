@@ -23,7 +23,8 @@ use Typemill\Extensions\ParsedownExtension;
 class PageController extends Controller
 {
 	public function index($request, $response, $args)
-	{
+	{	
+
 		/* Initiate Variables */
 		$structure		= false;
 		$contentHTML	= false;
@@ -115,9 +116,9 @@ class PageController extends Controller
 		}
 		else
 		{
-			# get the request url
-			$urlRel = $uri->getBasePath() . '/' . $args['params'];
-			
+			# get the request url, trim args so physical folders have no trailing slash
+			$urlRel = $uri->getBasePath() . '/' . trim($args['params'], "/");
+
 			# find the url in the content-item-tree and return the item-object for the file
 			# important to use the structure here so it is found, even if the item is hidden.
 			$item = Folder::getItemForUrl($structure, $urlRel, $uri->getBasePath());
