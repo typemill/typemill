@@ -177,6 +177,8 @@ class Settings
 									'twigcache' => true,
 									'proxy' => true,
 									'trustedproxies' => true,
+									'headersoff' => true,
+									'urlschemes' => true,
 								];
 
 			# cleanup the existing usersettings

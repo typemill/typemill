@@ -25,7 +25,8 @@ let posts = new Vue({
 			folderid: false,
 			format: /[@#*()=\[\]{};:"\\|,.<>\/]/,
 			root: document.getElementById("main").dataset.url,
-			editormode: document.getElementById("data-navi").dataset.editormode
+			editormode: document.getElementById("data-navi").dataset.editormode,
+			showPosts: 'show',
 		}
 	},
 	methods: {

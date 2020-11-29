@@ -6,12 +6,22 @@ use \URLify;
 
 class ParsedownExtension extends \ParsedownExtra
 {
-    function __construct($baseUrl = '', $showAnchor = NULL)
+    function __construct($baseUrl = '', $settings = NULL)
     {
         parent::__construct();
 
         # show anchor next to headline? 
-        $this->showAnchor = $showAnchor;
+        $this->showAnchor = isset($settings['headlineanchors']) ? $settings['headlineanchors'] : false;
+
+        # extend link schemes 
+        $urlschemes = ( isset($settings['urlschemes']) && !empty($settings['urlschemes']) ) ? explode(",", $settings['urlschemes']) : false;
+        if($urlschemes)
+        {
+            foreach($urlschemes as $urlschema)
+            {
+                $this->safeLinksWhitelist[] = $urlschema;
+            }
+        }
 
         # base url is needed for media/images and relative links (e.g. if www.mydomain.com/mywebsite)
         $this->baseUrl = $baseUrl;
@@ -33,7 +43,17 @@ class ParsedownExtension extends \ParsedownExtra
         # identify Table Of contents after footnotes and links      
         array_unshift($this->BlockTypes['['], 'TableOfContents');
     }
-    
+
+    public function extendLinksWhitelist($linktypes)
+    {
+        /*
+        if($linktypes)
+        {
+            $this->safeLinksWhitelist[] = ;
+        }
+        */
+    }
+
     public function setVisualMode()
     {
         $this->visualMode = true;

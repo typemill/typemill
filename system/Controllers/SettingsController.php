@@ -102,7 +102,9 @@ class SettingsController extends Controller
 					'displayErrorDetails'	=> isset($newSettings['displayErrorDetails']) ? true : null,
 					'twigcache'				=> isset($newSettings['twigcache']) ? true : null,
 					'proxy'					=> isset($newSettings['proxy']) ? true : null,
-					'trustedproxies'		=> $newSettings['trustedproxies']
+					'trustedproxies'		=> $newSettings['trustedproxies'],
+					'headersoff'			=> isset($newSettings['headersoff']) ? true : null,
+					'urlschemes'			=> $newSettings['urlschemes'],
 				);
 
 				# https://www.slimframework.com/docs/v3/cookbook/uploading-files.html; 
@@ -120,7 +122,6 @@ class SettingsController extends Controller
 				{
 					$newSettings['images']['live']['height'] = $imgheight;
 				}
-
 			}
 			else
 			{

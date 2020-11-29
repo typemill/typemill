@@ -13,9 +13,13 @@ abstract class Controller
 {
 	protected $c;
 
+	protected $settings;
+
 	public function __construct(ContainerInterface $c)
 	{
-		$this->c 	= $c;
+		$this->c 			= $c;
+		$this->settings		= $this->c->get('settings');
+
 		$this->c->dispatcher->dispatch('onTwigLoaded');
 	}
 	
@@ -31,17 +35,19 @@ abstract class Controller
 		}
 		
 		$response = $response->withoutHeader('Server');
-		if($this->c->request->getUri()->getScheme() == 'https')
-		{
-			$response = $response->withAddedHeader('Strict-Transport-Security', 'max-age=63072000');
-		}
-
-		$response = $response->withAddedHeader('X-Content-Type-Options', 'nosniff');
-		$response = $response->withAddedHeader('X-Frame-Options', 'SAMEORIGIN');
-		$response = $response->withAddedHeader('X-XSS-Protection', '1;mode=block');
-		$response = $response->withAddedHeader('Referrer-Policy', 'no-referrer-when-downgrade');
 		$response = $response->withAddedHeader('X-Powered-By', 'Typemill');
 		
+		if(!isset($this->settings['headersoff']) or !$this->settings['headersoff'])
+		{
+			$response = $response->withAddedHeader('X-Content-Type-Options', 'nosniff');
+			$response = $response->withAddedHeader('X-Frame-Options', 'SAMEORIGIN');
+			$response = $response->withAddedHeader('X-XSS-Protection', '1;mode=block');
+			$response = $response->withAddedHeader('Referrer-Policy', 'no-referrer-when-downgrade');
+			if($this->c->request->getUri()->getScheme() == 'https')
+			{
+				$response = $response->withAddedHeader('Strict-Transport-Security', 'max-age=63072000');
+			}
+		}
 
 		return $this->c->view->render($response, $route, $data);
 	}

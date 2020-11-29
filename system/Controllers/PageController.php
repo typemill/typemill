@@ -31,8 +31,7 @@ class PageController extends Controller
 		$item			= false;
 		$home			= false;
 		$breadcrumb 	= false;
-		$settings		= $this->c->get('settings');
-		$pathToContent	= $settings['rootPath'] . $settings['contentFolder'];
+		$pathToContent	= $this->settings['rootPath'] . $this->settings['contentFolder'];
 		$cache 			= new WriteCache();
 		$uri 			= $request->getUri()->withUserInfo('');
 		$base_url		= $uri->getBaseUrl();
@@ -77,7 +76,7 @@ class PageController extends Controller
 
 		# get meta-Information
 		$writeMeta 		= new WriteMeta();
-		$theme 			= $settings['theme'];
+		$theme 			= $this->settings['theme'];
 
 		# check if there is a custom theme css
 		$customcss = $writeMeta->checkFile('cache', $theme . '-custom.css');
@@ -87,13 +86,13 @@ class PageController extends Controller
 		}
 
 		$logo = false;
-		if(isset($settings['logo']) && $settings['logo'] != '')
+		if(isset($this->settings['logo']) && $this->settings['logo'] != '')
 		{
-			$logo = 'media/files/' . $settings['logo'];
+			$logo = 'media/files/' . $this->settings['logo'];
 		}
 
 		$favicon = false;
-		if(isset($settings['favicon']) && $settings['favicon'] != '')
+		if(isset($this->settings['favicon']) && $this->settings['favicon'] != '')
 		{
 			$favicon = true;
 		}
@@ -128,7 +127,7 @@ class PageController extends Controller
 			{
 				return $this->render404($response, array( 
 					'navigation'	=> $navigation, 
-					'settings' 		=> $settings,  
+					'settings' 		=> $this->settings,  
 					'base_url' 		=> $base_url,
 					'title' 		=> false,
 					'content' 		=> false, 
@@ -191,7 +190,7 @@ class PageController extends Controller
 		$this->c->dispatcher->dispatch('onOriginalLoaded', new OnOriginalLoaded($contentMD));
 		
 		# makes sure that you always have the full meta with title, description and all the rest.
-		$metatabs 		= $writeMeta->completePageMeta($contentMD, $settings, $item);
+		$metatabs 		= $writeMeta->completePageMeta($contentMD, $this->settings, $item);
 
 		# dispatch meta 
 		$metatabs 		= $this->c->dispatcher->dispatch('onMetaLoaded', new OnMetaLoaded($metatabs))->getData();
@@ -202,7 +201,7 @@ class PageController extends Controller
 		$itemUrl 		= isset($item->urlRel) ? $item->urlRel : false;
 
 		/* initialize parsedown */
-		$parsedown 		= new ParsedownExtension($base_url, $settings['headlineanchors']);
+		$parsedown 		= new ParsedownExtension($base_url, $this->settings);
 		
 		/* set safe mode to escape javascript and html in markdown */
 		$parsedown->setSafeMode(true);
@@ -217,7 +216,7 @@ class PageController extends Controller
 		
 		/* extract the h1 headline*/
 		$contentParts	= explode("</h1>", $contentHTML, 2);
-		$title			= isset($contentParts[0]) ? strip_tags($contentParts[0]) : $settings['title'];
+		$title			= isset($contentParts[0]) ? strip_tags($contentParts[0]) : $this->settings['title'];
 		
 		$contentHTML	= isset($contentParts[1]) ? $contentParts[1] : $contentHTML;
 
@@ -245,7 +244,7 @@ class PageController extends Controller
 			elseif($logo)
 			{
 				$img_url = $logo;
-				$pathinfo = pathinfo($settings['logo']);
+				$pathinfo = pathinfo($this->settings['logo']);
 				$img_alt = $pathinfo['filename'];
 			}
 		}
@@ -256,7 +255,7 @@ class PageController extends Controller
 			$firstImage = array('img_url' => $base_url . '/' . $img_url, 'img_alt' => $img_alt);
 		}
 		
-		$route = empty($args) && isset($settings['themes'][$theme]['cover']) ? '/cover.twig' : '/index.twig';
+		$route = empty($args) && isset($this->settings['themes'][$theme]['cover']) ? '/cover.twig' : '/index.twig';
 
 		return $this->render($response, $route, [
 			'home'			=> $home,
@@ -265,7 +264,7 @@ class PageController extends Controller
 			'content' 		=> $contentHTML, 
 			'item' 			=> $item,
 			'breadcrumb' 	=> $breadcrumb, 
-			'settings' 		=> $settings,
+			'settings' 		=> $this->settings,
 			'metatabs'		=> $metatabs,
 			'base_url' 		=> $base_url, 
 			'image' 		=> $firstImage,

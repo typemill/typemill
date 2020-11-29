@@ -60,10 +60,12 @@ let meta = new Vue({
 			if(this.currentTab == 'Content')
 			{
 				editor.showBlox = 'show';
+				posts.showPosts = 'show';
 			}
 			else
 			{
 				editor.showBlox = 'hidden';
+				posts.showPosts = 'hidden';
 			}
 	    	return 'tab-' + this.currentTab.toLowerCase()
 		}

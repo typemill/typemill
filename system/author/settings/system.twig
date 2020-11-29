@@ -201,6 +201,20 @@
 							<span class="error">{{ errors.settings.trustedproxies | first }}</span>
 						{% endif %}
 					</div>
+					<div class="medium{{ errors.settings.headersoff ? ' error' : '' }}">
+						<label for="settings[headersoff]">{{ __('Disable Headers') }}</label>
+						<label class="control-group">{{ __('Disable Typemill Headers And Send Your Own') }}
+							<input name="settings[headersoff]" type="checkbox" {% if (settings.headersoff or old.settings.headersoff) %} checked {% endif %}>
+							<span class="checkmark"></span>
+						</label>
+					</div>
+					<div class="large{{ errors.settings.urlschemes ? ' error' : '' }}">
+						<label for="urlschemes">{{ __('Add more url schemes for external links e.g. like dict:// (comma separated list)') }}</label>
+						<input type="text" name="settings[urlschemes]" id="urlschemes" value="{{ old.settings.urlschemes ? old.settings.urlschemes : settings.urlschemes }}" title="{{ __('Comma separated list additional schemes') }}" />
+						{% if errors.settings.urlschemes %}
+							<span class="error">{{ errors.settings.urlschemes | first }}</span>
+						{% endif %}
+					</div>
 				</fieldset>
 			</section>
 			<input type="submit" value="{{ __('Save All Settings') }}" />

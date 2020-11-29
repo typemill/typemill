@@ -86,7 +86,7 @@
 
 		{% if item.elementType == "folder" %}
 
-			<section id="posts" v-if="posts">
+			<section id="posts" v-if="posts" :class="showPosts">
 				<div class="posts formWrapper">
 					<input v-model="posttitle" type="text" maxlength="60" name="title" placeholder="add a short title">
 					<button type="button" @click.prevent="createPost()" class="post-button">create new post</button>
