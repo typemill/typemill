@@ -14,8 +14,8 @@ RewriteEngine On
 # RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
 # Use this to redirect www to non-wwww on apache servers
-RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
-RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+# RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+# RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
 
 # Use this to redirect slash/ to url without slash on apache servers
 # RewriteCond %{REQUEST_FILENAME} !-d
