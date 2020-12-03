@@ -38,7 +38,7 @@ class ProcessFile extends ProcessAssets
 
 		$path = $this->tmpFolder . $this->getFullName();
 
-		if(file_put_contents($path, $file))
+		if($file !== false && file_put_contents($path, $file["file"]))
 		{
 			$size = filesize($path);
 			$size = $this->formatSizeUnits($size);
