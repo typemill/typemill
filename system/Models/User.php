@@ -8,10 +8,10 @@ class User extends WriteYaml
 	{
 		$userDir = __DIR__ . '/../../settings/users';
 				
-		/* check if plugins directory exists */
+		/* check if users directory exists */
 		if(!is_dir($userDir)){ return array(); }
 		
-		/* get all plugins folder */
+		/* get all user files */
 		$users = array_diff(scandir($userDir), array('..', '.'));
 				
 		$cleanUser	= array();
@@ -22,6 +22,43 @@ class User extends WriteYaml
 		}
 
 		return $cleanUser;
+	}
+
+	# returns array of emails of all users
+	public function getUserMails()
+	{
+		$userDir = __DIR__ . '/../../settings/users';
+				
+		/* check if users directory exists */
+		if(!is_dir($userDir)){ return array(); }
+		
+		/* get all user files */
+		$users = array_diff(scandir($userDir), array('..', '.'));
+		
+		$usermails	= array();
+
+		foreach($users as $key => $user)
+		{
+			if($user == '.logins'){ continue; }
+
+			$contents 	= file_get_contents($userDir . DIRECTORY_SEPARATOR . $user);
+
+			if($contents === false){ continue; }
+
+			$searchfor 	= 'email:';
+
+			# escape special characters in the query
+			$pattern 	= preg_quote($searchfor, '/');
+			
+			# finalise the regular expression, matching the whole line
+			$pattern 	= "/^.*$pattern.*\$/m";
+
+			# search, and store first occurence in $matches
+			if(preg_match($pattern, $contents, $match)){
+				$usermails[] = trim(str_replace("email:", "", $match[0]));
+			}
+		}
+		return $usermails;
 	}
 	
 	public function getUser($username)

@@ -19,7 +19,6 @@ class SettingsController extends Controller
 	{
 		$user				= new User();
 		$settings 			= $this->c->get('settings');
-#		$users				= $user->getUsers();
 		$route 				= $request->getAttribute('route');
 		$navigation 		= $this->getNavigation();
 
@@ -30,7 +29,6 @@ class SettingsController extends Controller
 			'acl' 			=> $this->c->acl, 
 			'navigation'	=> $navigation,
 			'content' 		=> $content,
-#			'users' 		=> $users, 
 			'route' 		=> $route->getName() 
 		));
 	}
@@ -587,52 +585,46 @@ class SettingsController extends Controller
 			return $response->withRedirect($this->c->router->pathFor('user.show', ['username' => $_SESSION['user']] ));
 		}
 		
-		$validate 	= new Validation();
-		
-		if($validate->username($args['username']))
+		# get settings
+		$settings 	= $this->c->get('settings');
+
+		# get user with userdata
+		$user 		= new User();
+		$userdata 	= $user->getSecureUser($args['username']);
+
+		if(!$userdata)
 		{
-			# get settings
-			$settings 	= $this->c->get('settings');
-
-			# get user with userdata
-			$user 		= new User();
-			$userdata 	= $user->getSecureUser($args['username']);
-
-			$username	= $userdata['username'];
-			
-			# instantiate field-builder
-			$fieldsModel	= new Fields();
-
-			# get the field-definitions
-			$fieldDefinitions = $this->getUserFields($userdata['userrole']);
-
-			# prepare userdata for field-builder
-			$userSettings['users']['user'] = $userdata;
-
-			# generate the input form
-			$userform = $fieldsModel->getFields($userSettings, 'users', 'user', $fieldDefinitions);
-
-			$route = $request->getAttribute('route');
-			$navigation = $this->getNavigation();
-
-			# set navigation active
-			$navigation['Users']['active'] = true;
-			
-			return $this->render($response, 'settings/user.twig', array(
-				'settings' 		=> $settings,
-				'acl' 			=> $this->c->acl, 
-				'navigation'	=> $navigation, 
-				'usersettings' 	=> $userSettings, 		// needed for image url in form, will overwrite settings for field-template
-				'userform' 		=> $userform, 			// field model, needed to generate frontend-field
-				'userdata' 		=> $userdata, 			// needed to fill form with data
-#				'userrole' 		=> false,				// not needed ? 
-#				'username' 		=> $args['username'], 	// not needed ?
-				'route' 		=> $route->getName()  	// needed to set link active
-			));
+			$this->c->flash->addMessage('error', 'User does not exists');
+			return $response->withRedirect($this->c->router->pathFor('user.account'));				
 		}
-		
-		$this->c->flash->addMessage('error', 'User does not exists');
-		return $response->withRedirect($this->c->router->pathFor('user.account'));
+			
+		# instantiate field-builder
+		$fieldsModel	= new Fields();
+
+		# get the field-definitions
+		$fieldDefinitions = $this->getUserFields($userdata['userrole']);
+
+		# prepare userdata for field-builder
+		$userSettings['users']['user'] = $userdata;
+
+		# generate the input form
+		$userform = $fieldsModel->getFields($userSettings, 'users', 'user', $fieldDefinitions);
+
+		$route = $request->getAttribute('route');
+		$navigation = $this->getNavigation();
+
+		# set navigation active
+		$navigation['Users']['active'] = true;
+			
+		return $this->render($response, 'settings/user.twig', array(
+			'settings' 		=> $settings,
+			'acl' 			=> $this->c->acl, 
+			'navigation'	=> $navigation, 
+			'usersettings' 	=> $userSettings, 		// needed for image url in form, will overwrite settings for field-template
+			'userform' 		=> $userform, 			// field model, needed to generate frontend-field
+			'userdata' 		=> $userdata, 			// needed to fill form with data
+			'route' 		=> $route->getName()  	// needed to set link active
+		));		
 	}
 
 	public function listUser($request, $response)
@@ -796,7 +788,12 @@ class SettingsController extends Controller
 					return $response->withRedirect($redirectRoute);
 				}
 			}
-			
+
+			# change error-array for formbuilder
+			$errors = $_SESSION['errors'];
+			unset($_SESSION['errors']);
+			$_SESSION['errors']['user'] = $errors;#
+
 			$this->c->flash->addMessage('error', 'Please correct your input');
 			return $response->withRedirect($redirectRoute);
 		}

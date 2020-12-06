@@ -36,6 +36,26 @@ class Validation
 			return false;
 		}, 'only jpg, jpeg, png, webp, allowed');
 
+		# checks if email is available if user is created
+		Validator::addRule('emailAvailable', function($field, $value, array $params, array $fields) use ($user)
+		{
+			$usermails = $user->getUserMails();
+			if(in_array(trim($value), $usermails)){ return false; }
+			return true;
+		}, 'taken');
+
+		# checks if email is available if userdata is updated
+		Validator::addRule('emailChanged', function($field, $value, array $params, array $fields) use ($user)
+		{
+			$userdata = $user->getSecureUser($fields['username']);
+			if($userdata['email'] == $value){ return true; } # user has not updated his email
+
+			$usermails = $user->getUserMails();
+			if(in_array(trim($value), $usermails)){ return false; }
+			return true;
+		}, 'taken');
+
+		# checks if username is free when create new user
 		Validator::addRule('userAvailable', function($field, $value, array $params, array $fields) use ($user)
 		{
 			$userdata = $user->getUser($value);
@@ -43,6 +63,7 @@ class Validation
 			return true;
 		}, 'taken');
 
+		# checks if user exists when userdata is updated
 		Validator::addRule('userExists', function($field, $value, array $params, array $fields) use ($user)
 		{
 			$userdata = $user->getUser($value);
@@ -189,6 +210,7 @@ class Validation
 		$v->rule('noHTML', 'lastname')->message(" contains HTML");
 		$v->rule('lengthBetween', 'lastname', 2, 40);
 		$v->rule('email', 'email')->message("e-mail is invalid");
+		$v->rule('emailAvailable', 'email')->message("Email already taken");
 		$v->rule('in', 'userrole', $userroles);
 		
 		return $this->validationResult($v);
@@ -206,6 +228,7 @@ class Validation
 		$v->rule('noHTML', 'lastname')->message(" contains HTML");
 		$v->rule('lengthBetween', 'lastname', 2, 40);		
 		$v->rule('email', 'email')->message("e-mail is invalid");
+		$v->rule('emailChanged', 'email')->message("Email already taken");
 		$v->rule('in', 'userrole', $userroles);
 
 		return $this->validationResult($v);
