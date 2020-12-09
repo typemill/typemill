@@ -31,7 +31,6 @@ const contentComponent = Vue.component('content-block', {
 			compmarkdown: '',
 			componentType: '',
 			disabled: false,
-//fix			load: false,
 			newblock: false,
 		}
 	},
@@ -312,6 +311,7 @@ const contentComponent = Vue.component('content-block', {
 					var method 	= 'PUT';
 				}
 
+
 				sendJson(function(response, httpStatus)
 				{
 					if(httpStatus == 400)
@@ -415,56 +415,41 @@ const contentComponent = Vue.component('content-block', {
 			var bloxid = bloxeditor.getElementsByClassName('blox')[0].dataset.id;
 	
 			var self = this;
-				
-			var url = self.$root.$data.root + '/api/v1/block';
-				
-			var params = {
-				'url':				document.getElementById("path").value,
-				'block_id':			bloxid,
-				'csrf_name': 		document.getElementById("csrf_name").value,
-				'csrf_value':		document.getElementById("csrf_value").value,
-			};
-				
-			var method 	= 'DELETE';
-				
-			sendJson(function(response, httpStatus)
-			{
-				if(httpStatus == 400)
-				{
-					self.$root.$data.unsafed = false;
-					self.activatePage();
-					publishController.errors.message = "Looks like you are logged out. Please login and try again.";
-				}
-				if(response)
-				{
-					self.$root.$data.unsafed = false;
-					self.activatePage();
-					
-					var result = JSON.parse(response);
-	
-					if(result.errors)
-					{
-						publishController.errors.message = result.errors.message;
-					}
-					else
-					{	
-						self.switchToPreviewMode();
-						self.$root.$data.html.splice(bloxid,1);
-						self.$root.$data.markdown.splice(bloxid,1);
-						self.$root.$data.blockMarkdown = '';
-						self.$root.$data.blockType = '';
 
-						/* update the table of content if in result */
-						if(result.toc)
-						{
-							self.$root.$data.html.splice(result.toc.id, 1, result.toc);
-						}
-						
-						/* update the navigation and mark navigation item as modified */
-						navi.getNavi();
-					}
+	        myaxios.delete('/api/v1/block',{
+	        	data: {
+					'url':				document.getElementById("path").value,
+					'block_id':			bloxid,
+					'csrf_name': 		document.getElementById("csrf_name").value,
+					'csrf_value':		document.getElementById("csrf_value").value,
+	        	}
+			})
+	        .then(function (response)
+	        {
+				self.$root.$data.unsafed = false;
+				self.activatePage();
+				self.switchToPreviewMode();
+				self.$root.$data.html.splice(bloxid,1);
+				self.$root.$data.markdown.splice(bloxid,1);
+				self.$root.$data.blockMarkdown = '';
+				self.$root.$data.blockType = '';
+
+				/* update the table of content if in result */
+				if(response.data.toc)
+				{
+					self.$root.$data.html.splice(response.data.toc.id, 1, response.data.toc);
 				}
-			}, method, url, params);
+						
+				/* update the navigation and mark navigation item as modified */
+				navi.getNavi();
+	        })
+	        .catch(function (error)
+	        {
+	           	if(error.response)
+	            {
+					publishController.errors.message = error.response.data.errors.message;
+	            }
+	        });
 		},
 	},
 })
