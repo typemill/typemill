@@ -2,189 +2,138 @@ let publishController = new Vue({
     delimiters: ['${', '}'],
 	el: '#publishController',
 	data: {
-		root: document.getElementById("main").dataset.url,
+		root: 				document.getElementById("main").dataset.url,
 		form: {
-			title: 		false,
-			content: 	false,
-			url: 		document.getElementById("path").value,
-			csrf_name: 	document.getElementById("csrf_name").value,
-			csrf_value:	document.getElementById("csrf_value").value,
+			title: 			false,
+			content: 		false,
+			url: 			document.getElementById("path").value,
+			csrf_name: 		document.getElementById("csrf_name").value,
+			csrf_value:		document.getElementById("csrf_value").value,
 		},
 		errors:{
-			message: false,
+			message: 		false,
 		},
-		modalWindow: false,
-		modalType: false,
-		draftDisabled: true,
-		publishDisabled: document.getElementById("publishController").dataset.drafted ? false : true,
-		deleteDisabled: false,
-		draftResult: "",
-		publishResult: "",
-		discardResult: "",
-		deleteResult: "",
-		publishStatus: document.getElementById("publishController").dataset.published ? false : true,
-		publishLabel: document.getElementById("publishController").dataset.published ? "online" : "offline",
+		modalWindow: 		false,
+		modalType: 			false,
+		draftDisabled: 		true,
+		publishDisabled: 	document.getElementById("publishController").dataset.drafted ? false : true,
+		deleteDisabled: 	false,
+		draftResult: 		"",
+		publishResult: 		"",
+		discardResult: 		"",
+		deleteResult: 		"",
+		publishStatus: 		document.getElementById("publishController").dataset.published ? false : true,
+		publishLabel: 		document.getElementById("publishController").dataset.published ? "online" : "offline",
 		publishLabelMobile: document.getElementById("publishController").dataset.published ? "ON" : "OFF",
-		raw: false,
-		visual: false,
+		raw: 				false,
+		visual: 			false,
 	},
 	methods: {
-		publishDraft: function(e){
-			var self = this;
-			self.errors.message = false;
-			editor.errors = {title: false, content: false};
-			
-			self.publishResult = "load";
-			self.publishDisabled = "disabled";
+		handleErrors: function(error){
 
-			var url = this.root + '/api/v1/article/publish';
-			var method 	= 'POST';
-			this.form.raw = this.raw;
+			/* if there are custom error messages */
+			if(error.response.data.errors)
+			{
+				this.publishDisabled 	= false;
+				this.publishResult 		= "fail";
+
+				if(error.response.data.errors.message){ this.errors.message = error.response.data.errors.message };
+				if(error.response.data.errors.title){ editor.errors.title = error.response.data.errors.title[0] };
+				if(error.response.data.errors.content){ editor.errors.content = error.response.data.errors.content[0] };
+			}
+			else if(error.response.status == 400)
+			{
+				this.publishDisabled 	= false;
+				this.publishResult 		= "fail";
+				this.errors.message 	= "You are probably logged out. Please backup your changes, login and then try again."
+			}
+			else if(error.response.status != 200)
+			{
+				self.publishDisabled 	= false;
+				self.publishResult 		= "fail";
+				self.errors.message 	= "Something went wrong, please refresh the page and try again."					
+			}
+		},
+		publishDraft: function(e){
+			
+			this.errors.message 	= false;
+			editor.errors 			= {title: false, content: false};
+			
+			this.publishResult 		= "load";
+			this.publishDisabled 	= "disabled";
+
+			this.form.raw 			= this.raw;
 			if(this.form.raw)
 			{
-				this.form.title = editor.form.title;
-				this.form.content = editor.form.content;
+				this.form.title 	= editor.form.title;
+				this.form.content 	= editor.form.content;
 			}
 
-			sendJson(function(response, httpStatus)
-			{
-				if(httpStatus == 400)
-				{
-					self.publishDisabled 	= false;
-					self.publishResult 		= "fail";
-					self.errors.message 	= "You are probably logged out. Please backup your changes, login and then try again."
-				}
-				else if(response)
-				{					
-					var result = JSON.parse(response);
-					
-					if(result.errors)
-					{
-						self.publishDisabled = false;
-						self.publishResult = "fail";
-						
-						if(result.errors.title){ editor.errors.title = result.errors.title[0] };
-						if(result.errors.content){ editor.errors.content = result.errors.content[0] };
-						if(result.errors.message){ self.errors.message = result.errors.message };
-					}
-					else
-					{
-						if(result.meta)
-						{
-							meta.formData = result.meta;
-						}
-
-						self.draftDisabled = "disabled";
-						self.publishResult = "success";
-						self.publishStatus = false;
-						self.publishLabel = "online";
-						self.publishLabelMobile = "ON";
-						navi.getNavi();
-					}
-				}
-				else if(httpStatus != 200)
-				{
-					self.publishDisabled 	= false;
-					self.publishResult 		= "fail";
-					self.errors.message 	= "Something went wrong, please refresh the page and try again."					
-				}
-			}, method, url, this.form );
-		},
-		discardDraft: function(e) {
 			var self = this;
 
-			self.errors.message = false;
-			editor.errors = {title: false, content: false};
-			
-			self.discardResult = "load";
-			self.publishDisabled = "disabled";
+			myaxios.post('/api/v1/article/publish',self.form)
+			.then(function (response) {
+				if(response.data.meta)
+				{
+					meta.formData 	= response.data.meta;
+				}
 
-			var url = self.root + '/api/v1/article/discard';
-			var method 	= 'DELETE';
-
-			sendJson(function(response, httpStatus)
+				self.draftDisabled 	= "disabled";
+				self.publishResult 	= "success";
+				self.publishStatus 	= false;
+				self.publishLabel 	= "online";
+				self.publishLabelMobile = "ON";
+				navi.getNavi();
+			})
+			.catch(function (error)
 			{
-				if(httpStatus == 400)
-				{
-					self.publishDisabled = false;
-					self.discardResult   = "fail";
-					self.errors.message  = "You are probably logged out. Please backup your changes, login and then try again."
-				}
-				else if(response)
-				{
-					var result = JSON.parse(response);
+				self.handleErrors(error);
+			});
+		},
+		discardDraft: function(e) {
 
-					if(result.errors)
-					{
-						self.publishDisabled = false;
-						self.discardResult   = "fail";
-						if(result.errors.title){ editor.errors.title = result.errors.title[0] }
-						if(result.errors.content){ editor.errors.content = result.errors.content[0] }
-						if(result.errors.message){ self.errors.message = result.errors.message }
-					}
-					else
-					{
-						window.location.replace(result.url);
-					}
-				}
-				else if(httpStatus != 200)
-				{
-					self.publishDisabled = false;
-					self.discardResult   = "fail";
-					self.errors.message  = "Something went wrong, please refresh the page and try again."					
-				}
+			this.errors.message 	= false;
+			editor.errors 			= {title: false, content: false};
+			
+			this.discardResult 		= "load";
+			this.publishDisabled 	= "disabled";
 
-			}, method, url, this.form);
+	        myaxios.delete('/api/v1/article/discard',{
+	        	data: this.form
+			})
+	        .then(function (response)
+	        {
+				window.location.replace(response.data.url);
+	        })
+			.catch(function (error)
+			{
+				self.handleErrors(error);				
+			});
 		},
 		saveDraft: function(e){
 		
-			var self = this;
-			self.errors.message = false;
-			editor.errors = {title: false, content: false};
+			this.errors.message 	= false;
+			editor.errors 			= {title: false, content: false};
 			
-			self.draftDisabled = "disabled";
-			self.draftResult = "load";
-		
-			var url = this.root + '/api/v1/article';
-			var method = 'PUT';
-			
-			this.form.title = editor.form.title;
-			this.form.content = editor.form.content;
-			
-			sendJson(function(response, httpStatus)
-			{
-				if(httpStatus == 400)
-				{
-					self.publishDisabled 	= false;
-					self.publishResult 		= "fail";
-					self.errors.message 	= "You are probably logged out. Please backup your changes, login and then try again."
-				}
-				else if(response)
-				{
-					var result = JSON.parse(response);
-					
-					if(result.errors)
-					{
-						self.draftDisabled = false;
-						self.draftResult = 'fail';
+			this.draftResult 		= "load";
+			this.draftDisabled 		= "disabled";
 
-						if(result.errors.title){ editor.errors.title = result.errors.title[0]; };
-						if(result.errors.content){ editor.errors.content = result.errors.content[0] };
-						if(result.errors.message){ self.errors.message = result.errors.message; };
-					}
-					else
-					{
-						self.draftResult = 'success';
-						navi.getNavi();
-					}
-				}
-				else if(httpStatus != 200)
-				{
-					self.publishDisabled 	= false;
-					self.publishResult 		= "fail";
-					self.errors.message 	= "Something went wrong, please refresh the page and try again."					
-				}
-			}, method, url, this.form );
+			this.form.title 		= editor.form.title;
+			this.form.content 		= editor.form.content;
+		
+			var self = this;
+
+			myaxios.put('/api/v1/article',self.form)
+			.then(function (response) {
+				self.draftResult 	= 'success';
+				navi.getNavi();
+			})
+			.catch(function (error)
+			{
+				self.draftDisabled 	= false;
+				self.draftResult 	= 'fail';
+				self.handleErrors(error);
+			});
 		},
 		depublishArticle: function(e){
 		
@@ -194,98 +143,63 @@ let publishController = new Vue({
 				return;
 			}
 			
-			var self = this;
-			self.errors.message = false;
-			editor.errors = {title: false, content: false};
+			this.errors.message 	= false;
+			editor.errors 			= {title: false, content: false};
 
-			self.publishStatus = "disabled";
+			this.publishStatus 		= "disabled";
 		
-			var url = this.root + '/api/v1/article/unpublish';
-			var method 	= 'DELETE';
-			
-			sendJson(function(response, httpStatus)
+			var self = this;
+
+	        myaxios.delete('/api/v1/article/unpublish',{
+	        	data: self.form
+			})
+	        .then(function (response)
+	        {
+				self.publishResult 		= "";
+				self.publishLabel 		= "offline";
+				self.publishLabelMobile = "OFF";
+				self.publishDisabled 	= false;
+				navi.getNavi();
+	        })
+			.catch(function (error)
 			{
-				if(httpStatus == 400)
-				{
-					self.publishDisabled 	= false;
-					self.publishResult 		= "fail";
-					self.errors.message 	= "You are probably logged out. Please backup your changes, login and then try again."
-				}
-				else if(response)
-				{
-					var result = JSON.parse(response);
-					
-					if(result.errors)
-					{
-						self.publishStatus = false;
-						if(result.errors.message){ self.errors.message = result.errors.message };
-					}
-					else
-					{
-						self.publishResult = "";
-						self.publishLabel = "offline";
-						self.publishLabelMobile = "OFF";
-						self.publishDisabled = false;
-						navi.getNavi();
-					}
-				}
-				else if(httpStatus != 200)
-				{
-					self.publishDisabled 	= false;
-					self.publishResult 		= "fail";
-					self.errors.message 	= "Something went wrong, please refresh the page and try again.";
-				}				
-			}, method, url, this.form );
+				self.publishStatus = false;
+				self.handleErrors(error);
+			});			
 		},
 		deleteArticle: function(e){
-			var self = this;
-			self.errors.message = false;
-			editor.errors = {title: false, content: false};
+			this.errors.message 	= false;
+			editor.errors 			= {title: false, content: false};
 
-			self.deleteDisabled = "disabled";
-			self.deleteResult = "load";
+			this.deleteDisabled 	= "disabled";
+			this.deleteResult 		= "load";
 		
-			var url = this.root + '/api/v1/article';
-			var method 	= 'DELETE';
+			var self = this;
 
-			sendJson(function(response, httpStatus)
+	        myaxios.delete('/api/v1/article',{
+	        	data: self.form
+			})
+	        .then(function (response)
+	        {
+				self.modalWindow = false;
+				if(response.data.url)
+				{
+					window.location.replace(response.data.url);
+				}
+	        })
+			.catch(function (error)
 			{
-				if(httpStatus == 400)
-				{
-					self.publishDisabled 	= false;
-					self.publishResult 		= "fail";
-					self.errors.message 	= "You are probably logged out. Please backup your changes, login and then try again."
-				}
-				else if(response)
-				{
-					var result = JSON.parse(response);
-					
-					self.modalWindow = false;
-
-					if(httpStatus != 200)
-					{
-						self.publishDisabled 	= false;
-						self.publishResult 		= "fail";
-						self.errors.message 	= "Something went wrong, please refresh the page and try again.";
-					}
-					if(result.errors)
-					{
-						if(result.errors.message){ self.errors.message = result.errors.message };
-					}
-					else if(result.url)
-					{
-						window.location.replace(result.url);
-					}
-				}
-			}, method, url, this.form );
+				self.publishStatus = false;
+				self.handleErrors(error);
+			});
 		},
 		showModal: function(type){
-			this.modalType = type;
-			this.modalWindow = true;
+			this.modalType 		= type;
+			this.modalWindow 	= true;
 		},
 		hideModal: function(type){
-			this.modalWindow = false;
-			this.modalType = false;
+			this.modalWindow 	= false;
+			this.modalType 		= false;
 		},
 	}
 });

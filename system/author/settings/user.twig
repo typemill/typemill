@@ -2,7 +2,7 @@
 {% block title %}{{ __('User') }}{% endblock %}
 
 {% block content %}
-	
+		
 	<div class="formWrapper">
 
 		<form id="userform" method="POST" action="{{ path_for('user.update') }}" enctype="multipart/form-data">
@@ -22,13 +22,13 @@
 							<fieldset class="subfield">
 								<legend>{{ field.legend }}</legend>
 								{% for field in field.fields %}
-									{% include '/partials/fields.twig' with { 'settings': usersettings, 'object' : 'users', 'itemName' : 'user', 'class' : 'large' } %}
+									{% include '/partials/fields.twig' with { 'settings': usersettings, 'object' : 'users', 'itemName' : 'user', 'class' : 'large', 'errors': errors } %}
 								{% endfor %}
 							</fieldset>
 						
 							{% else %}
 								
-								{% include '/partials/fields.twig' with { 'settings': usersettings, 'object' : 'users', 'itemName' : 'user', 'class' : 'large' } %}
+								{% include '/partials/fields.twig' with { 'settings': usersettings, 'object' : 'users', 'itemName' : 'user', 'class' : 'large', 'errors': errors } %}
 
 							{% endif %}
 								

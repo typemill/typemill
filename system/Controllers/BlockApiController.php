@@ -490,7 +490,7 @@ class BlockApiController extends ContentController
 		# minimum permission is that user is allowed to update his own content
 		if(!$this->c->acl->isAllowed($_SESSION['role'], 'mycontent', 'update'))
 		{
-			return $response->withJson(array('data' => false, 'errors' => ['message' => 'You are not allowed to publish content.']), 403);
+			return $response->withJson(array('data' => false, 'errors' => ['message' => 'You are not allowed to delete this content.']), 403);
 		}
 		
 		# set structure
@@ -507,7 +507,7 @@ class BlockApiController extends ContentController
 			# check ownership. This code should nearly never run, because there is no button/interface to trigger it.
 			if(!$this->checkContentOwnership())
 			{
-				return $response->withJson(array('data' => false, 'errors' => ['message' => 'You are not allowed to delete content.']), 403);
+				return $response->withJson(array('data' => false, 'errors' => ['message' => 'You are not allowed to delete this content.']), 403);
 			}
 		}
 
