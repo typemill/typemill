@@ -1597,45 +1597,36 @@ const imageComponent = Vue.component('image-component', {
 
 						self.imgpreview = e.target.result;
 						
-						/* load image to server */
-						var url = self.$root.$data.root + '/api/v1/image';
-						
-						var params = {
+				        myaxios.post('/api/v1/image',{
 							'url':				document.getElementById("path").value,
 							'image':			e.target.result,
 							'name': 			imageFile.name, 
 							'csrf_name': 		document.getElementById("csrf_name").value,
 							'csrf_value':		document.getElementById("csrf_value").value,
-						};
+						})
+				        .then(function (response) {
+							
+							self.load = false;
+							self.$parent.activatePage();
 
-						var method 	= 'POST';
-
-						sendJson(function(response, httpStatus)
-						{
+							self.imgmeta = true;
+							self.imgfile = response.data.name;
+							self.$emit('updatedMarkdown', '![]('+ response.data.name +')');								
+				        })
+				        .catch(function (error)
+				        {
+				        	/*
 							if(httpStatus == 400)
 							{
 								self.activatePage();
 								publishController.errors.message = "Looks like you are logged out. Please login and try again.";
 							}
-							if(response)
-							{
-								self.load = false;
-								self.$parent.activatePage();
-								
-								var result = JSON.parse(response);
-
-								if(result.errors)
-								{
-									publishController.errors.message = result.errors;
-								}
-								else
-								{
-									self.imgmeta = true;
-									self.imgfile = result.name;
-									self.$emit('updatedMarkdown', '![]('+ result.name +')');
-								}
-							}
-						}, method, url, params);
+							*/
+				            if(error.response.data.errors.message)
+				            {
+				            	publishController.errors.message = error.response.data.errors.message;
+				            }
+				        });
 					}
 				}
 			}
@@ -1788,47 +1779,30 @@ const fileComponent = Vue.component('file-component', {
 					reader.readAsDataURL(uploadedFile);
 					reader.onload = function(e) {
 						
-						/* load file to server */
-						var url = self.$root.$data.root + '/api/v1/file';
-						
-						var params = {
+				        myaxios.post('/api/v1/file',{
 							'url':				document.getElementById("path").value,
 							'file':				e.target.result,
 							'name': 			uploadedFile.name, 
 							'csrf_name': 		document.getElementById("csrf_name").value,
 							'csrf_value':		document.getElementById("csrf_value").value,
-						};
-
-						var method 	= 'POST';
-
-						sendJson(function(response, httpStatus)
-						{
-							if(httpStatus == 400)
-							{
-								self.activatePage();
-								publishController.errors.message = "Looks like you are logged out. Please login and try again.";
-							}
-							if(response)
-							{
-								self.load = false;
-								self.$parent.activatePage();
+						})
+				        .then(function (response) {
+							self.load = false;
+							self.$parent.activatePage();
 								
-								var result = JSON.parse(response);
-
-								if(result.errors)
-								{
-									publishController.errors.message = result.errors;
-								}
-								else
-								{
-									self.filemeta = true;
-									self.filetitle = result.info.title;
-									self.fileextension = result.info.extension;
-									self.fileurl = result.info.url;
-									self.createmarkdown();
-								}
-							}
-						}, method, url, params);						
+							self.filemeta = true;
+							self.filetitle = response.data.info.title;
+							self.fileextension = response.data.info.extension;
+							self.fileurl = response.data.info.url;
+							self.createmarkdown();
+				        })
+				        .catch(function (error)
+				        {
+				            if(error.response.data.errors.message)
+				            {
+				            	publishController.errors.message = error.response.data.errors.message;
+				            }
+				        });
 					}
 				}
 			}
@@ -1875,82 +1849,63 @@ let editor = new Vue({
 
 		publishController.visual = true;
 
-		var self = this;		
-		
-		var url = this.root + '/api/v1/article/html';
-		
-		var params = {
+		var self = this;
+
+	    myaxios.post('/api/v1/article/html',{
 			'url':				document.getElementById("path").value,
 			'csrf_name': 		document.getElementById("csrf_name").value,
 			'csrf_value':		document.getElementById("csrf_value").value,
-		};
-		
-		var method 	= 'POST';
+		})
+	    .then(function (response) {
+	        
+			var contenthtml 	= response.data.data;
+			self.title 			= contenthtml[0];
+			self.html 			= contenthtml;
+			var initialcontent 	= document.getElementById("initial-content");
+			
+			initialcontent.parentNode.removeChild(initialcontent);
+	        
+	    })
+	   	.catch(function (error)
+	    {
+	       	if(error.response)
+	       	{
+				self.errors.title = error.response.errors;
+	    	}
+	   	});
 
-		sendJson(function(response, httpStatus)
-		{
-			if(httpStatus == 400)
-			{
-			}
-			if(response)
-			{
-				var result = JSON.parse(response);
-				
-				if(result.errors)
-				{
-					self.errors.title = result.errors;
-				}
-				else
-				{
-					var contenthtml = result.data;
-					self.title = contenthtml[0];
-					self.html = contenthtml;
-					var initialcontent = document.getElementById("initial-content");
-					initialcontent.parentNode.removeChild(initialcontent);
-				}
-			}
-		}, method, url, params);
-		
-		var url = this.root + '/api/v1/article/markdown';
-		
-		sendJson(function(response, httpStatus)
-		{
-			if(httpStatus == 400)
-			{
-			}
-			if(response)
-			{
-				var result = JSON.parse(response);
-				
-				if(result.errors)
-				{
-					self.errors.title = result.errors;
-				}
-				else
-				{
-					self.markdown = result.data;
+	    myaxios.post('/api/v1/article/markdown',{
+			'url':				document.getElementById("path").value,
+			'csrf_name': 		document.getElementById("csrf_name").value,
+			'csrf_value':		document.getElementById("csrf_value").value,
+		})
+	    .then(function (response) {
+	        
+			self.markdown = response.data.data;
 					
-					/* activate math plugin */
-					
-					if (typeof renderMathInElement === "function") { 
-						self.$nextTick(function () {
-							renderMathInElement(document.getElementById("blox"));
-						});
-					}
+			/* activate math plugin */		
+			if (typeof renderMathInElement === "function") { 
+				self.$nextTick(function () {
+					renderMathInElement(document.getElementById("blox"));
+				});
+			}
 
-					/* check for youtube videos */
-					if (typeof typemillUtilities !== "undefined")
-					{
-						setTimeout(function(){ 
-							self.$nextTick(function () 
-							{
-								typemillUtilities.start();
-							});
-						}, 200);
-					}
-				}
+			/* check for youtube videos */
+			if (typeof typemillUtilities !== "undefined") {
+				setTimeout(function(){ 
+					self.$nextTick(function () {
+						typemillUtilities.start();
+					});
+				}, 200);
 			}
-		}, method, url, params);
+	    })
+	   	.catch(function (error)
+	    {
+	       	if(error.response)
+	       	{
+				self.errors.title = error.response.errors;
+	    	}
+	   	});		
 	},
 	methods: {
 		onStart: function()
@@ -1959,60 +1914,51 @@ let editor = new Vue({
 		},
 		moveBlock: function(evt)
 		{
+			publishController.errors.message = false;
 
-			var params = {
+			var self = this;			
+
+	        myaxios.put('/api/v1/moveblock',{
 				'url':			document.getElementById("path").value,
 				'old_index': 	evt.oldIndex,
 				'new_index':	evt.newIndex,
 				'csrf_name': 	document.getElementById("csrf_name").value,
 				'csrf_value':	document.getElementById("csrf_value").value,
-			};
-			publishController.errors.message = false;
-
-			var url = this.root + '/api/v1/moveblock';
-			var self = this;
-			
-			var method 	= 'PUT';
-			
-			sendJson(function(response, httpStatus)
-			{
-				if(httpStatus == 400)
-				{
-				}
-				if(response)
-				{
+			})
+	        .then(function (response) {
 				
-					var result = JSON.parse(response);
+				self.freeze = false;
+				
+				self.markdown = response.data.markdown;
+				self.blockMarkdown = '';
+				self.blockType = '';
 
-					if(result.errors)
-					{
-						publishController.errors.message = result.errors;
-						publishController.publishDisabled = false;
-					}
-					else
-					{
-						self.freeze = false;
-
-						self.markdown = result.markdown;
-						self.blockMarkdown = '';
-						self.blockType = '';
-
-						if(result.toc)
-						{
-							self.html.splice(result.toc.id, 1, result.toc);
-						}
-						
-						publishController.publishDisabled = false;
-						publishController.publishResult = "";
-
-						/* update the navigation and mark navigation item as modified */
-						navi.getNavi();
-
-						/* update the math if plugin is there */
-						self.checkMath(params.new_index+1);
-					}
+				if(response.data.toc)
+				{
+					self.html.splice(response.data.toc.id, 1, response.data.toc);
 				}
-			}, method, url, params);
+						
+				publishController.publishDisabled = false;
+				publishController.publishResult = "";
+
+				/* update the navigation and mark navigation item as modified */
+				navi.getNavi();
+
+				/* update the math if plugin is there */
+				self.checkMath(params.new_index+1);
+	        })
+	        .catch(function (error)
+	        {
+				publishController.publishDisabled = false;
+	        	if(error.response.data.message)
+	        	{
+					publishController.errors.message = error.response.data.message;
+	        	}
+	        	if(error.response.data.errors.message)
+	        	{
+					publishController.errors.message = error.response.data.errors.message;
+	        	}
+	        });
 		},
 		setData: function(event, blocktype, body)
 		{

@@ -28,7 +28,19 @@ const navcomponent = Vue.component('navigation', {
 		},
 		onEnd : function(evt)
 		{
-			var locator = {
+			if(evt.from.parentNode.id == evt.to.parentNode.id && evt.oldIndex == evt.newIndex)
+			{
+				return
+			}
+
+			evt.item.classList.add("load");
+			
+			var self = this;
+			
+			self.$root.$data.freeze = true;
+			self.errors = {title: false, content: false, message: false};
+
+			myaxios.post('/api/v1/article/sort',{
 				'item_id': 			evt.item.id,
 				'parent_id_from': 	evt.from.parentNode.id,
 				'parent_id_to': 	evt.to.parentNode.id,
@@ -38,49 +50,32 @@ const navcomponent = Vue.component('navigation', {
 				'url':				document.getElementById("path").value,
 				'csrf_name': 		document.getElementById("csrf_name").value,
 				'csrf_value':		document.getElementById("csrf_value").value,
-			};
+			})
+			.then(function (response) {
 
-			if(locator.parent_id_from == locator.parent_id_to && locator.index_old == locator.index_new)
-			{
-				return
-			}
-			
-			evt.item.classList.add("load");
-			
-			var self = this;
-			
-			self.$root.$data.freeze = true;
-			self.errors = {title: false, content: false, message: false};
-			
-			var url = this.root + '/api/v1/article/sort';
-			var method 	= 'POST';
-
-			sendJson(function(response, httpStatus)
-			{
-				if(response)
-				{
-					self.$root.$data.freeze = false;
-					var result = JSON.parse(response);
+				self.$root.$data.freeze = false;
 					
-					if(result.errors)
-					{
-						publishController.errors.message = result.errors;
-					}
-					if(result.url)
-					{
-						window.location.replace(result.url);
-					}
-					if(result.data)
-					{
-						evt.item.classList.remove("load");
-						self.$root.$data.items = result.data;						
-					}
+				if(response.data.url)
+				{
+					window.location.replace(response.data.url);
 				}
-			}, method, url, locator );
+				if(response.data.data)
+				{
+					evt.item.classList.remove("load");
+					self.$root.$data.items = response.data.data;						
+				}
+			})
+			.catch(function (error)
+			{
+				if(error.response.data.errors.message)
+				{
+					publishController.errors.message = error.response.data.errors;
+				}
+			});
 		},
 		getUrl : function(root, url)
 		{
-			return root + '/tm/content/' + this.$root.$data.editormode + url
+			return root + '/tm/content/' + this.$root.$data.editormode + url;
 		},
 		getLevel : function(level)
 		{
@@ -140,49 +135,42 @@ const navcomponent = Vue.component('navigation', {
 				return;
 			}
 			
-			var newItem = {
+			var self = this;
+			
+			self.$root.$data.freeze = true;
+			self.errors = {title: false, content: false, message: false};
+
+			myaxios.post('/api/v1/article',{
 				'folder_id': 		this.$el.id,
 				'item_name': 		this.newItem,
 				'type':				type,
 				'url':				document.getElementById("path").value,
 				'csrf_name': 		document.getElementById("csrf_name").value,
 				'csrf_value':		document.getElementById("csrf_value").value,
-			};
-			
-			/* evt.item.classList.add("load"); */
-			
-			var self = this;
-			
-			self.$root.$data.freeze = true;
-			self.errors = {title: false, content: false, message: false};
-			
-			var url = this.root + '/api/v1/article';
-			var method 	= 'POST';
+			})
+			.then(function (response) {
 
-			sendJson(function(response, httpStatus)
-			{
-				if(response)
-				{
-					self.$root.$data.freeze = false;
-					var result = JSON.parse(response);
+				self.$root.$data.freeze = false;
 					
-					if(result.errors)
-					{
-						publishController.errors.message = result.errors;
-					}
-					if(result.url)
-					{
-						window.location.replace(result.url);
-					}
-					if(result.data)
-					{
-						// evt.item.classList.remove("load");
-						self.$root.$data.items = result.data;						
-						self.newItem = '';
-						self.showForm = false;
-					}
+				if(response.data.url)
+				{
+					window.location.replace(response.data.url);
 				}
-			}, method, url, newItem );
+				if(response.data.data)
+				{
+					// evt.item.classList.remove("load");
+					self.$root.$data.items = response.data.data;
+					self.newItem = '';
+					self.showForm = false;
+				}
+			})
+			.catch(function (error)
+			{
+				if(error.response.data.errors)
+				{
+				    publishController.errors.message = error.response.data.errors;
+				}
+			});
 		},
 	}
 })
@@ -247,45 +235,37 @@ let navi = new Vue({
 				return;
 			}
 			
-			var newItem = {
+			self = this; 
+			
+			self.freeze = true;
+			self.errors = {title: false, content: false, message: false};
+
+			myaxios.post('/api/v1/baseitem',{
 				'item_name': 		this.newItem,
 				'type':				type,
 				'url':				document.getElementById("path").value,
 				'csrf_name': 		document.getElementById("csrf_name").value,
 				'csrf_value':		document.getElementById("csrf_value").value,
-			};
-			
-			var self = this;
-			
-			self.freeze = true;
-			self.errors = {title: false, content: false, message: false};
-			
-			var url = this.root + '/api/v1/baseitem';
-			var method 	= 'POST';
-
-			sendJson(function(response, httpStatus)
-			{
-				if(response)
-				{
-					self.freeze = false;
-					var result = JSON.parse(response);
+			})
+			.then(function (response) {
+							
+				self.freeze = false;
 					
-					if(result.errors)
-					{
-						publishController.errors.message = result.errors;
-					}
-					if(result.url)
-					{
-						window.location.replace(result.url);
-					}
-					if(result.data)
-					{
-						self.items = result.data;						
-						self.newItem = '';
-						self.showForm = false;
-					}
+				if(response.data.url)
+				{
+					window.location.replace(response.data.url);
 				}
-			}, method, url, newItem );
+				if(response.data.data)
+				{
+					self.items = response.data.data;
+					self.newItem = '';
+					self.showForm = false;
+				}
+			})
+			.catch(function (error)
+			{
+				publishController.errors.message = error.response.data.errors;
+			});
 		},
 		getNavi: function()
 		{
@@ -297,28 +277,34 @@ let navi = new Vue({
 			self.errors = {title: false, content: false, message: false};
 
 			var activeItem = document.getElementById("path").value;
+			
 			var url = this.root + '/api/v1/navigation?url=' + activeItem;
 			var method 	= 'GET';
 
-			sendJson(function(response, httpStatus)
-			{
-				if(response)
+	        myaxios.get('/api/v1/navigation',{
+	        	params: {
+					'url':			activeItem,
+					'csrf_name': 	document.getElementById("csrf_name").value,
+					'csrf_value':	document.getElementById("csrf_value").value,
+	        	}
+			})
+	        .then(function (response) {
+
+				self.freeze = false;
+				if(response.data.data)
 				{
-					self.freeze = false;
-					var result = JSON.parse(response);
-					
-					if(result.errors)
-					{
-						publishController.errors.message = result.errors;
-					}
-					if(result.data)
-					{
-						self.items = result.data;
-						self.newItem = '';
-						self.homepage = result.homepage;						
-					}
+					self.items = response.data.data;
+					self.newItem = '';
+					self.homepage = response.data.homepage;						
 				}
-			}, method, url, activeItem );
+	        })
+	        .catch(function (error)
+	        {
+	           	if(error.response.data.errors)
+	            {
+					publishController.errors.message = error.response.data.errors;	            	
+	            }
+	        });
 		}
 	}
 })
