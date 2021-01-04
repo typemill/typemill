@@ -10,6 +10,7 @@ use Typemill\Models\WriteMeta;
 use \Symfony\Component\Yaml\Yaml;
 use Typemill\Models\VersionCheck;
 use Typemill\Models\Markdown;
+use Typemill\Events\OnCacheUpdated;
 use Typemill\Events\OnPagetreeLoaded;
 use Typemill\Events\OnBreadcrumbLoaded;
 use Typemill\Events\OnItemLoaded;
@@ -45,6 +46,12 @@ class PageController extends Controller
 			{
 				$structure	= $this->getCachedStructure($cache);
 			}
+			else
+			{
+				# dispatch message that the cache has been refreshed 
+				$this->c->dispatcher->dispatch('onCacheUpdated', new OnCacheUpdated(false));
+			}
+
 			if(!isset($structure) OR !$structure) 
 			{
 				# if not, get a fresh structure of the content folder

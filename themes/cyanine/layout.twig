@@ -95,8 +95,7 @@
 				/*******************
 				**      COLORS    **
 				*******************/
-
-				body,.landingpagecontrast{
+				body,.landingpagecontrast,.account{
 					background: {{ settings.themes.cyanine.brandcolorprimary|default('lightseagreen') }};
 				}
 				main, footer, .landingpageintro, .landingpageinfo, .landingpageteaser, .landingpagenavi, .landingpagecontrast, .landingpagenews{
@@ -106,7 +105,8 @@
 					background: {{ settings.themes.cyanine.brandcolorprimary|default('lightseagreen') }};
 				}
 				body,.landingpagecontrast, a,
-				.landingpagecontrast a, .landingpagecontrast a:link, .landingpagecontrast a:visited{
+				.landingpagecontrast a, .landingpagecontrast a:link, .landingpagecontrast a:visited,
+				.account, .account a, .account a:link, .account a:hover, .account a:focus, .account a:visited{
 					color: {{ settings.themes.cyanine.fontcolorprimary|default('#F7F7F7') }};
 				}
 				.landingpagecontrast a, .landingpagecontrast a:link, .landingpagecontrast a:visited{
@@ -215,7 +215,25 @@
 		{% endblock %}
 	</head>
 	<body class="optimize-text pa2">
-		
+
+
+		{% if ( settings.themes.cyanine.accountButton ) and ( is_loggedin() ) %}
+			<svg style="position: absolute; width: 0; height: 0; overflow: hidden" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+				<defs>
+					<symbol id="icon-user" viewBox="0 0 20 28">
+						<path d="M20 21.859c0 2.281-1.5 4.141-3.328 4.141h-13.344c-1.828 0-3.328-1.859-3.328-4.141 0-4.109 1.016-8.859 5.109-8.859 1.266 1.234 2.984 2 4.891 2s3.625-0.766 4.891-2c4.094 0 5.109 4.75 5.109 8.859zM16 8c0 3.313-2.688 6-6 6s-6-2.688-6-6 2.688-6 6-6 6 2.688 6 6z"></path>
+					</symbol>
+				</defs>
+			</svg>
+			<div class="account fixed pb2 top-0 right-0 left-0">
+				<div class="account fixed h1 w2 w2 right-2">
+					<a href="{{base_url}}/tm/account"><div class="account fixed h2 w2 top-0 br-100 tc">
+						<svg class="icon baseline icon-user w1 h1 mt2"><use xlink:href="#icon-user"></use></svg>
+					</div></a>
+				</div>
+			</div>
+		{% endif %}
+
 		{% block content %}{% endblock %}
 			
 		{% include 'partials/footer.twig' %}

@@ -79,7 +79,7 @@ class Write
 		}
 		return false;
 	}
-	
+
 	public function getFile($folderName, $fileName)
 	{
 		if($this->checkFile($folderName, $fileName))
@@ -109,6 +109,25 @@ class Write
 		}
 		return false;
 	}
+
+	public function renameFile($folder, $oldname, $newname)
+	{
+
+		$oldFilePath = $this->basePath . $folder . DIRECTORY_SEPARATOR . $oldname;
+		$newFilePath = $this->basePath . $folder . DIRECTORY_SEPARATOR . $newname;
+
+		if(!file_exists($oldFilePath))
+		{
+			return false;
+		}
+
+		if(@rename($oldFilePath, $newFilePath))
+		{
+			return true;
+		}
+		
+		return false;
+	}	
 	
 	public function moveElement($item, $folderPath, $index, $date = null)
 	{
