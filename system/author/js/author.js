@@ -330,73 +330,6 @@
 		});
 	}
 
-	
-	/*************************************
-	**			COLOR PICKER			**
-	*************************************/
-	
-    var target = document.querySelectorAll('input[type=color]');
-    // set hooks for each target element
-
-    if(target)
-    {
-	    for (var i = 0, len = target.length; i < len; ++i)
-		{
-			var thisTarget = target[i];
-			
-			(function(thisTarget){
-				
-				/* hide the input field and show color box instead */
-				var box = document.createElement('div');
-
-				box.className = 'color-box';
-				box.style.backgroundColor = thisTarget.value;
-				box.setAttribute('data-color', thisTarget.value);
-				thisTarget.parentNode.insertBefore(box, thisTarget);
-				thisTarget.type = 'hidden';
-
-				var picker = new CP(box),
-					code = document.createElement('input');
-
-				picker.target.onclick = function(e)
-				{
-					e.preventDefault();
-				};
-				
-				code.className = 'color-code';
-				code.pattern = '^#[A-Fa-f0-9]{6}$';
-				code.type = 'text';
-				
-				picker.on("enter", function() {
-					code.value = '#' + CP._HSV2HEX(this.get());
-				});	
-
-
-				picker.on("change", function(color) {
-					thisTarget.value = '#' + color;
-					this.target.style.backgroundColor = '#' + color;
-					code.value = '#' + color;
-				});
-				
-				picker.picker.firstChild.appendChild(code);
-
-				function update() {
-					if (this.value.length) {
-						picker.set(this.value);
-						picker.trigger("change", [this.value.slice(1)]);
-					}
-				}
-
-				code.oncut = update;
-				code.onpaste = update;
-				code.onkeyup = update;
-				code.oninput = update;
-				
-				
-			})(thisTarget);		
-	    }
-    }
-	
 	/**
 	 * Element.closest() polyfill
 	 * https://developer.mozilla.org/en-US/docs/Web/API/Element/closest#Polyfill
@@ -416,5 +349,3 @@
 			return null;
 		};
 	}
-
-	

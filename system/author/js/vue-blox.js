@@ -1950,10 +1950,6 @@ let editor = new Vue({
 	        .catch(function (error)
 	        {
 				publishController.publishDisabled = false;
-	        	if(error.response.data.message)
-	        	{
-					publishController.errors.message = error.response.data.message;
-	        	}
 	        	if(error.response.data.errors.message)
 	        	{
 					publishController.errors.message = error.response.data.errors.message;

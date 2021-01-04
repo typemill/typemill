@@ -104,6 +104,9 @@ tr{
 th,td{
 	padding: .5em 1em;
 }
+p b, p strong{
+	font-weight: bold;
+}
 
 /************************************
 *  		STANDARD SUGGESTIONS 		*
@@ -320,7 +323,14 @@ button.play-video::after {
 .landingpageinfo h4{
 	font-size: 1.25rem;
 }
-
+.icon {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    stroke-width: 0;
+    stroke: currentColor;
+    fill: currentColor;
+}
 /************************************
 * 		TACHYONS ADDITIONS 			*
 ************************************/

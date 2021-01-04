@@ -60,6 +60,49 @@ class User extends WriteYaml
 		}
 		return $usermails;
 	}
+
+	public function findUserByEmail($email)
+	{
+		$userDir = __DIR__ . '/../../settings/users';
+				
+		/* check if users directory exists */
+		if(!is_dir($userDir)){ return array(); }
+		
+		/* get all user files */
+		$users = array_diff(scandir($userDir), array('..', '.'));
+		
+		$usermails	= array();
+
+		foreach($users as $key => $user)
+		{
+			if($user == '.logins'){ continue; }
+
+			$contents 	= file_get_contents($userDir . DIRECTORY_SEPARATOR . $user);
+
+			if($contents === false){ continue; }
+
+			$searchfor 	= 'email:';
+
+			# escape special characters in the query
+			$pattern 	= preg_quote($searchfor, '/');
+			
+			# finalise the regular expression, matching the whole line
+			$pattern 	= "/^.*$pattern.*\$/m";
+
+			# search, and store first occurence in $matches
+			if(preg_match($pattern, $contents, $match)){
+				$usermail = trim(str_replace("email:", "", $match[0]));
+
+				if($usermail == $email)
+				{
+					$user = \Symfony\Component\Yaml\Yaml::parse($contents);
+					unset($user['password']);
+					return $user;
+				}
+			}
+		}
+		return false;
+	}
 	
 	public function getUser($username)
 	{
