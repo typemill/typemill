@@ -615,7 +615,7 @@ class SettingsController extends Controller
 
 		# set navigation active
 		$navigation['Users']['active'] = true;
-			
+		
 		return $this->render($response, 'settings/user.twig', array(
 			'settings' 		=> $settings,
 			'acl' 			=> $this->c->acl, 
@@ -624,7 +624,7 @@ class SettingsController extends Controller
 			'userform' 		=> $userform, 			// field model, needed to generate frontend-field
 			'userdata' 		=> $userdata, 			// needed to fill form with data
 			'route' 		=> $route->getName()  	// needed to set link active
-		));		
+		));
 	}
 
 	public function listUser($request, $response)

@@ -58,8 +58,9 @@ class Validation
 		# checks if username is free when create new user
 		Validator::addRule('userAvailable', function($field, $value, array $params, array $fields) use ($user)
 		{
-			$userdata = $user->getUser($value);
-			if($userdata){ return false; }
+			$activeUser 	= $user->getUser($value);
+			$inactiveUser 	= $user->getUser("_" . $value);
+			if($activeUser OR $inactiveUser){ return false; }
 			return true;
 		}, 'taken');
 
