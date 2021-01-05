@@ -34,6 +34,15 @@
 								
 						{% endfor %}
 
+						{% if is_role('administrator') %}
+							<fieldset>
+								<div class="large">
+									<legend>Raw Userdata (readonly for admins)</legend>
+									<textarea readonly="readonly" rows="10">{{ userdata|json_encode(constant('JSON_PRETTY_PRINT')) }}</textarea>
+								</div>
+							</fieldset>
+						{% endif %}
+
 				</fieldset>
 
 			</section>
