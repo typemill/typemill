@@ -9,7 +9,7 @@ describe('Typemill Initial Frontend', function()
       cy.get('h1').contains("Typemill")
 
       /* has start and setup button */
-      cy.get('.cy-nav').find('a').should(($a) => {
+      cy.get('nav').find('a').should(($a) => {
         expect($a).to.have.length(10)
         expect($a[0].href).to.match(/welcome/)
         expect($a[1].href).to.match(/welcome\/setup/)
@@ -81,11 +81,11 @@ describe('Typemill Initial Frontend', function()
       /* check if toc exists */
       cy.get('.TOC').within(($toc) =>{
         /* check if a certain link in toc exists */
-        cy.get('a').eq(2).should('have.attr', 'href', '/typemillTest/welcome/markdown-test#headlines')
+        cy.get('a').eq(2).should('have.attr', 'href', '#h-headlines')
       })
       
       /* check if corresponding anchor exists */
-      cy.get('#headlines').should('exist')
+      cy.get('#h-headlines').should('exist')
 
       /* soft linebreaks */
       cy.get('br').should('exist')
@@ -106,7 +106,7 @@ describe('Typemill Initial Frontend', function()
 
       /* images */
       cy.get('img').eq(0).should('have.attr', 'alt', 'alt')
-      cy.get('img').eq(0).should('have.attr', 'src', 'media/files/markdown.png')
+      cy.get('img').eq(0).should('have.attr', 'src').should('include','media/files/markdown.png')
       cy.get('figure').eq(2).should('have.id', 'myid')
         .and('have.class', 'otherclass')
       cy.get('img').eq(2).should('have.attr', 'alt', 'alt-text')
@@ -124,7 +124,7 @@ describe('Typemill Initial Frontend', function()
       /* footnote */
       cy.get('sup').eq(0).should('have.id', 'fnref1:1')
       cy.get('sup').eq(0).within(($sup) =>{
-        cy.get('a').eq(0).should('have.attr', 'href', '/typemillTest/welcome/markdown-test#fn%3A1')
+        cy.get('a').eq(0).should('have.attr', 'href', '#fn%3A1')
           .and('have.class', 'footnote-ref')
       })
 
@@ -148,7 +148,7 @@ describe('Typemill Initial Frontend', function()
       cy.get('.footnotes').within(($footnotes) => {
         cy.get('li').eq(0).should('have.id', 'fn:1')
         cy.get('a').eq(0).should('have.class', 'footnote-backref')
-          .and('have.attr', 'href', '/typemillTest/welcome/markdown-test#fnref1%3A1')
+          .and('have.attr', 'href', '#fnref1%3A1')
           .and('have.attr', 'rev', 'footnote')
       })
     })

@@ -77,6 +77,106 @@ describe('Blox Editor', function()
     })
   })
 
+  it('edits paragraph', function()
+  {
+    cy.get('#blox').within(($blox) => {
+        /* Get Format Bar */
+        cy.get('.format-bar').within(($formats) => {
+
+          /* Edit Table */
+          cy.get("button").eq(0).click()
+          cy.get("textarea")
+           .type("This is a second paragraph.")
+
+          /* save table */
+          cy.get(".edit").click()
+          cy.get(".cancel").click()
+
+        })
+
+        cy.get('#blox-2').should("contain", "second paragraph")
+    })
+  })
+
+  it('edits headline', function()
+  {
+    cy.get('#blox').within(($blox) => {
+        /* Get Format Bar */
+        cy.get('.format-bar').within(($formats) => {
+
+          /* Edit Table */
+          cy.get("button").eq(1).click()
+          cy.get("input")
+           .type("Second Level Headline")
+
+          /* save block */
+          cy.get(".edit").click()
+
+          /* close new standard textarea */
+          cy.get(".cancel").click()
+
+        })
+
+        cy.get('#blox-3').should("contain", "Second Level Headline")
+    })
+  })
+
+  it('edits unordered list', function()
+  {
+    cy.get('#blox').within(($blox) => {
+        /* Get Format Bar */
+        cy.get('.format-bar').within(($formats) => {
+
+          /* Edit Table */
+          cy.get("button").eq(2).click()
+          cy.get("textarea")
+           .type("first list item{enter}second list item")
+
+          /* save block */
+          cy.get(".edit").click()
+
+          /* close new standard textarea */
+          cy.get(".cancel").click()
+
+        })
+
+        cy.get('#blox-4').within(($block) => {
+          cy.get("li").should(($lis) => {
+            expect($lis).to.have.length(2)
+            expect($lis.eq(0)).to.contain('first list item')
+          })
+        })
+    })
+  })
+
+  it('edits ordered list', function()
+  {
+    cy.get('#blox').within(($blox) => {
+        /* Get Format Bar */
+        cy.get('.format-bar').within(($formats) => {
+
+          /* Edit Table */
+          cy.get("button").eq(3).click()
+          cy.get("textarea")
+           .type("first ordered item{enter}second ordered item")
+
+          /* save block */
+          cy.get(".edit").click()
+
+          /* close new standard textarea */
+          cy.get(".cancel").click()
+
+        })
+
+        cy.get('#blox-5').within(($block) => {
+          cy.get("li").should(($lis) => {
+            expect($lis).to.have.length(2)
+            expect($lis.eq(0)).to.contain('first ordered item')
+          })
+        })
+    })
+  })
+
   it('edits table', function()
   {
     cy.get('#blox').within(($blox) => {
@@ -153,7 +253,7 @@ describe('Blox Editor', function()
 
         })
 
-        cy.get('#blox-2').should("contain", "Beautiful").click()
+        cy.get('#blox-6').should("contain", "Beautiful").click()
 
         cy.get('.editactive').within(($activeblock) => {
           cy.get('.component').should("contain", "Beautiful")
