@@ -58,11 +58,26 @@ meta:
       label: Hide
       checkboxlabel: Hide page from navigation
       class: medium
-#    roles:
-#      type: select
-#      label: Show page to
-#      class: medium
-#      options:
-#        public: Public (standard)
-#        members: Members only (logged in)
-#        customers: Customers only (paying)
+    allowedrole:
+      type: select
+      label: For access the user must have this minimum role
+      class: medium
+      options:
+        false: All
+        member: Member
+        author: Author
+        editor: Editor
+        administrator: Administrator
+      description: Select the lowest userrole. Higher roles will have access too.
+    alloweduser:
+      type: text
+      label: Only the following user has access
+      class: medium
+      description: Only this certain user will have access to this site.
+    contains:
+      type: radio
+      label: This folder contains
+      class: medium
+      options: 
+        pages: PAGES (sort in navigation with drag & drop)
+        posts: POSTS (sorted by publish date, for news or blogs)

@@ -19,6 +19,7 @@ use Typemill\Events\OnMetaLoaded;
 use Typemill\Events\OnMarkdownLoaded;
 use Typemill\Events\OnContentArrayLoaded;
 use Typemill\Events\OnHtmlLoaded;
+use Typemill\Events\OnRestrictionsLoaded;
 use Typemill\Extensions\ParsedownExtension;
 
 class PageController extends Controller
@@ -213,10 +214,50 @@ class PageController extends Controller
 		/* set safe mode to escape javascript and html in markdown */
 		$parsedown->setSafeMode(true);
 
+		# check access restriction here
+		$restricted 	= $this->checkRestrictions($metatabs['meta']);
+		if($restricted)
+		{
+			# convert markdown into array of markdown block-elements
+			$markdownBlocks = $parsedown->markdownToArrayBlocks($contentMD);
+
+			# infos that plugins need to add restriction content
+			$restrictions = [
+				'restricted' 		=> $restricted,
+				'defaultContent' 	=> true,
+				'markdownBlocks'	=> $markdownBlocks,
+			];
+
+			# dispatch the data
+			$restrictions 	= $this->c->dispatcher->dispatch('onRestrictionsLoaded', new OnRestrictionsLoaded( $restrictions ))->getData();
+
+			# use the returned markdown
+			$markdownBlocks = $restrictions['markdownBlocks'];
+
+			# if no plugin has disabled the default behavior
+			if($restrictions['defaultContent'])
+			{
+				# cut the restricted content
+				$shortenedPage = $this->cutRestrictedContent($markdownBlocks);
+
+				# check if there is customized content
+				$restrictionnotice = ( isset($this->settings['restrictionnotice']) && $this->settings['restrictionnotice'] != '' ) ? $this->settings['restrictionnotice'] : 'You are not allowed to access this content.';
+
+				# add notice to shortened content
+				$shortenedPage[] = $restrictionnotice;
+
+				# Use the shortened page
+				$markdownBlocks = $shortenedPage;
+			}
+
+			# finally transform the markdown blocks back to pure markdown text
+			$contentMD = $parsedown->arrayBlocksToMarkdown($markdownBlocks);
+		}
+
 		/* parse markdown-file to content-array */
 		$contentArray 	= $parsedown->text($contentMD);
 		$contentArray 	= $this->c->dispatcher->dispatch('onContentArrayLoaded', new OnContentArrayLoaded($contentArray))->getData();
-				
+
 		/* parse markdown-content-array to content-string */
 		$contentHTML	= $parsedown->markup($contentArray);
 		$contentHTML 	= $this->c->dispatcher->dispatch('onHtmlLoaded', new OnHtmlLoaded($contentHTML))->getData();
@@ -425,5 +466,77 @@ class PageController extends Controller
 		}
 		
 		return false;
+	}
+
+	# checks if a page has a restriction in meta and if the current user is blocked by that restriction
+	protected function checkRestrictions($meta)
+	{
+		# check if content restrictions are active
+		if(isset($this->settings['pageaccess']) && $this->settings['pageaccess'])
+		{
+
+			# check if page is restricted to certain user
+			if(isset($meta['alloweduser']) && $meta['alloweduser'] && $meta['alloweduser'] !== '' )
+			{
+				if(isset($_SESSION['user']) && $_SESSION['user'] == $meta['alloweduser'])
+				{
+					# user has access to the page, so there are no restrictions
+					return false;
+				}
+
+				# otherwise return array with type of restriction and allowed username
+				return [ 'alloweduser' => $meta['alloweduser'] ];
+			}
+
+			# check if page is restricted to certain userrole
+			if(isset($meta['allowedrole']) && $meta['allowedrole'] && $meta['allowedrole'] !== '' )
+			{
+				# var_dump($this->c->acl->inheritsRole('editor', 'member'));
+				# die();
+				if(
+					isset($_SESSION['role']) 
+					AND ( 
+						$_SESSION['role'] == 'administrator' 
+						OR $_SESSION['role'] == $meta['allowedrole'] 
+						OR $this->c->acl->inheritsRole($_SESSION['role'], $meta['allowedrole']) 
+					)
+				)
+				{
+					# role has access to page, so there are no restrictions 
+					return false;
+				}
+				
+				return [ 'allowedrole' => $meta['allowedrole'] ];
+			}
+
+		}
+		
+		return false;
+
+	}
+
+	protected function cutRestrictedContent($markdown)
+	{
+		#initially add only the title of the page.
+		$restrictedMarkdown = [$markdown[0]];
+		unset($markdown[0]);
+
+		if(isset($this->settings['hrdelimiter']) && $this->settings['hrdelimiter'] !== NULL )
+		{
+			foreach ($markdown as $block)
+			{
+				$firstCharacters = substr($block, 0, 3);
+				if($firstCharacters == '---' OR $firstCharacters == '***')
+				{
+					return $restrictedMarkdown;
+				}
+				$restrictedMarkdown[] = $block;
+			}
+
+			# no delimiter found, so use the title only
+			$restrictedMarkdown = [$restrictedMarkdown[0]];
+		}
+
+		return $restrictedMarkdown;
 	}
 }

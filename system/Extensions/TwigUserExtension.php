@@ -16,23 +16,12 @@ class TwigUserExtension extends \Twig_Extension
 	
 	public function isLoggedin()
 	{
-		// configure session
-		ini_set('session.cookie_httponly', 1 );
-		ini_set('session.use_strict_mode', 1);
-		ini_set('session.cookie_samesite', 'lax');
-		session_name('typemill-session');
-				
-		// start session
-		session_start();
-
-		if(isset($_SESSION['user']))
+		if(isset($_SESSION['login']) && $_SESSION['login'])
 		{
 			return true;
 		}
 		
-		session_destroy();
 		return false;
-
 	}
 
 	public function isRole($role)
