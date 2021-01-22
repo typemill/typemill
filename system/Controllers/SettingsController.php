@@ -51,9 +51,6 @@ class SettingsController extends Controller
 		# set navigation active
 		$navigation['System']['active'] = true;
 
-		# set option for registered website
-		$options = ['' => 'all', 'registered' => 'registered users only'];
-
 		return $this->render($response, 'settings/system.twig', array(
 			'settings' 		=> $settings,
 			'acl' 			=> $this->c->acl, 
@@ -62,7 +59,6 @@ class SettingsController extends Controller
 			'languages' 	=> $languages, 
 			'locale' 		=> $locale, 
 			'formats' 		=> $defaultSettings['formats'],
-			'access'		=> $options,
 			'route' 		=> $route->getName()
 		));
 	}
@@ -94,8 +90,11 @@ class SettingsController extends Controller
 					'language'				=> $newSettings['language'],
 					'langattr'				=> $newSettings['langattr'],
 					'editor' 				=> $newSettings['editor'],
-					'access'				=> $newSettings['access'],
 					'formats'				=> $newSettings['formats'],
+					'access'				=> isset($newSettings['access']) ? true : null,
+					'pageaccess'			=> isset($newSettings['pageaccess']) ? true : null,
+					'hrdelimiter'			=> isset($newSettings['hrdelimiter']) ? true : null,
+					'restrictionnotice'		=> $newSettings['restrictionnotice'],
 					'headlineanchors'		=> isset($newSettings['headlineanchors']) ? $newSettings['headlineanchors'] : null,
 					'displayErrorDetails'	=> isset($newSettings['displayErrorDetails']) ? true : null,
 					'twigcache'				=> isset($newSettings['twigcache']) ? true : null,

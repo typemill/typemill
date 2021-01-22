@@ -26,15 +26,17 @@ class MetaApiController extends ContentController
 
 		$metatabs = $writeYaml->getYaml('system' . DIRECTORY_SEPARATOR . 'author', 'metatabs.yaml');
 
-		# add radio buttons to choose posts or pages for folder.
-		if($folder)
+		# the fields for user or role based access
+		if(!isset($this->settings['pageaccess']) || $this->settings['pageaccess'] === NULL )
 		{
-			$metatabs['meta']['fields']['contains'] = [
-				'type' 		=> 'radio',
-				'label'		=> 'This folder contains:',
-				'options' 	=> ['pages' => 'PAGES (sort in navigation with drag & drop)', 'posts' => 'POSTS (sorted by publish date, for news or blogs)'],
-				'class'		=> 'medium'
-			];
+			unset($metatabs['meta']['fields']['alloweduser']);
+			unset($metatabs['meta']['fields']['allowedrole']);
+		}
+
+		# add radio buttons to choose posts or pages for folder.
+		if(!$folder)
+		{
+			unset($metatabs['meta']['fields']['contains']);
 		}
 
 		# loop through all plugins
@@ -352,6 +354,7 @@ class MetaApiController extends ContentController
 		return $response->withJson(array('metadata' => $metaInput, 'structure' => $structure, 'item' => $this->item, 'errors' => false));
 	}
 
+	# can be deleted ??
 	private function customfieldsPrepareForEdit($customfields)
 	{
 		# to edit fields in vue we have to transform the arrays in yaml into an array of objects like [{key: abc, value: xyz}{...}]
@@ -374,6 +377,7 @@ class MetaApiController extends ContentController
 		return $customfieldsForEdit;
 	}
 
+	# can be deleted?
 	private function customfieldsPrepareForSave($customfields, $arrayFeatureOn)
 	{
 		# we have to convert the incoming array of objects from vue [{key: abc, value: xyz}{...}] into key-value arrays for yaml. 

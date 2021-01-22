@@ -283,6 +283,8 @@ class Validation
 		$v->rule('in', 'editor', ['raw', 'visual']);
 		$v->rule('values_allowed', 'formats', $formats);
 		$v->rule('in', 'copyright', $copyright);
+		$v->rule('noHTML', 'restrictionnotice');
+		$v->rule('lengthBetween', 'restrictionnotice', 2, 1000 );
 		$v->rule('iplist', 'trustedproxies');
 
 		return $this->validationResult($v, $name);

@@ -181,11 +181,12 @@ $container['assets'] = function($c) use ($uri)
 ********************************/
 
 # if website is restricted to registered user
-if(isset($settings['settings']['access']) && $settings['settings']['access'] == 'registered')
+if( ( isset($settings['settings']['access']) && $settings['settings']['access'] ) || ( isset($settings['settings']['pageaccess']) && $settings['settings']['pageaccess'] ) )
 {
 	# activate session for all routes
 	$session_segments = [$uri->getPath()];
 }
+
 foreach($session_segments as $segment)
 {
 	if(substr( $uri->getPath(), 0, strlen($segment) ) === $segment)
