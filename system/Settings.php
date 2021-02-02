@@ -82,7 +82,7 @@ class Settings
 			'editor'								=> 'visual',
 			'formats'								=> ['markdown', 'headline', 'ulist', 'olist', 'table', 'quote', 'notice', 'image', 'video', 'file', 'toc', 'hr', 'definition', 'code'],
 			'contentFolder'							=> 'content',
-			'version'								=> '1.4.3',
+			'version'								=> '1.4.4',
 			'setup'									=> true,
 			'welcome'								=> true,
 			'images'								=> ['live' => ['width' => 820], 'thumbs' => ['width' => 250, 'height' => 150]],
@@ -162,6 +162,7 @@ class Settings
 									'pageaccess' => true,
 									'hrdelimiter' => true,
 									'restrictionnotice' => true,
+									'wraprestrictionnotice' => true,
 									'headlineanchors' => true,
 									'theme' => true,
 									'editor' => true,
@@ -236,10 +237,6 @@ class Settings
 			$acl->addResource(new Resource($resource));
 		}
 
-		# add administrator role
-		$acl->addRole(new Role('administrator'));
-		$acl->allow('administrator');
-
 		# add all other roles dynamically
 		foreach($roles as $role)
 		{
@@ -250,6 +247,10 @@ class Settings
 				$acl->allow($role['name'], $resource, $permissions);
 			}
 		}
+
+		# add administrator role
+		$acl->addRole(new Role('administrator'));
+		$acl->allow('administrator');
 
 		return $acl;
 	}

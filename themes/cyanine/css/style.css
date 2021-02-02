@@ -67,7 +67,7 @@ article h1, article h2, article h3, article h4, article h5, article h6{
 	line-height: 1em; 
 	position: relative;
 }
-article h1{ font-size: 2.2em; margin: 1.4em 0 0.6em; }
+article h1{ font-size: 2.2em; margin: 1.4em 0 0.6em; z-index:1; }
 article h2{ font-size: 1.6em; margin: 1.8em 0 0.6em; }
 article h3{	font-size: 1.3em; margin: 1.6em 0 0.6em; }
 article h4{	font-size: 1.1em; margin: 1.4em 0 0.6em; }
@@ -213,14 +213,19 @@ ul.TOC,.TOC ul{
     margin: 1em 0;
     padding: 10px 1em;
 }
-.notice3,
-.notice4,
-.notice5,
-.notice6 {
+.notice3{
     margin: 1em 0;
     padding: 10px 1em;
     background-color: #d4e0ff;
     border-left: 4px solid #3c7bf6;	
+}
+
+/* used for pro content box */
+.notice4{
+  position: relative;
+  text-align: center;
+  padding: 1em;
+  border: 1px solid;
 }
 
 /* Style the optional anchor-links for headlines */

@@ -129,6 +129,18 @@ class MetaApiController extends ContentController
 				$metascheme[$tabname][$fieldname] = true;
 				$metadata[$tabname][$fieldname] = isset($pagemeta[$tabname][$fieldname]) ? $pagemeta[$tabname][$fieldname] : null;
 
+				
+				# check if there is a selectfield for userroles
+				if(isset($fielddefinitions['type']) && ($fielddefinitions['type'] == 'select' ) && isset($fielddefinitions['dataset']) && ($fielddefinitions['dataset'] == 'userroles' ) )
+				{
+					$userroles = [null => null];
+					foreach($this->c->acl->getRoles() as $userrole)
+					{
+						$userroles[$userrole] = $userrole;
+					}
+					$metadefinitions[$tabname]['fields'][$fieldname]['options'] = $userroles;
+				}
+
 				/*
 				# special treatment for customfields
 				if(isset($fielddefinitions['type']) && ($fielddefinitions['type'] == 'customfields' ) && $metadata[$tabname][$fieldname] )
@@ -189,7 +201,7 @@ class MetaApiController extends ContentController
 		}
 
 		# if item is a folder
-		if($this->item->elementType == "folder")
+		if($this->item->elementType == "folder" && isset($this->item->contains))
 		{
 			$pagemeta['meta']['contains'] = isset($pagemeta['meta']['contains']) ? $pagemeta['meta']['contains'] : $this->item->contains;
 
@@ -217,6 +229,18 @@ class MetaApiController extends ContentController
 			}
 			else
 			{
+
+				if($fieldDefinition && isset($fieldDefinition['type']) && ($fieldDefinition['type'] == 'select' ) && isset($fieldDefinition['dataset']) && ($fieldDefinition['dataset'] == 'userroles' ) )
+				{
+					$userroles = [null => null];
+					foreach($this->c->acl->getRoles() as $userrole)
+					{
+						$userroles[$userrole] = $userrole;
+					}
+					$fieldDefinition['options'] = $userroles;
+				}
+
+
 				# validate user input for this field
 				$result = $validate->objectField($fieldName, $fieldValue, $objectName, $fieldDefinition);
 

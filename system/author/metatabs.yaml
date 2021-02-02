@@ -62,18 +62,14 @@ meta:
       type: select
       label: For access the user must have this minimum role
       class: medium
+      dataset: userroles
       options:
-        false: All
-        member: Member
-        author: Author
-        editor: Editor
-        administrator: Administrator
       description: Select the lowest userrole. Higher roles will have access too.
     alloweduser:
       type: text
-      label: Only the following user has access
+      label: Only the following users have access
       class: medium
-      description: Only this certain user will have access to this site.
+      description: Add one or more usernames separated with comma.
     contains:
       type: radio
       label: This folder contains

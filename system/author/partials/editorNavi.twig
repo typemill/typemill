@@ -1,7 +1,7 @@
 <nav id="sidebar-menu" class="sidebar-menu--content">
 	<div id="data-navi" data-homepage='{{ homepage|json_encode() }}' data-editormode="{{settings.editor}}"></div>
 	<div id="mobile-menu" class="menu-action">{{ __('Menu') }} <span class="button-arrow"></span></div>
-	<div id="navi" class="content-navi" v-model="freeze" v-cloak>
+	<div id="navi" class="content-navi" :value.sync="freeze" v-cloak>
 		<div class="navi-list">
 			<div class="navi-item folder">
 				<div class="status" :class="homepage.status"></div>

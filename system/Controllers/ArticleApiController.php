@@ -973,19 +973,24 @@ class ArticleApiController extends ContentController
 		# fix footnotes in parsedown, might break with complicated footnotes
 		$parsedown->setVisualMode();
 
+		# flag for TOC
+		$toc = false;
+
+		$tocMarkup = false;
+
 		# if content is not an array, then transform it
 		if(!is_array($content))
 		{
 			# turn markdown into an array of markdown-blocks
 			$content = $parsedown->markdownToArrayBlocks($content);
+
+			# build toc here to avoid duplicated toc for live content
+			$tocMarkup = $parsedown->buildTOC($parsedown->headlines);
 		}
 				
 		# needed for ToC links
 		$relurl = '/tm/content/' . $this->settings['editor'] . '/' . $this->item->urlRel;
 		
-		# flag for TOC
-		$toc = false;
-
 		# loop through mardkown-array and create html-blocks
 		foreach($content as $key => $block)
 		{
@@ -1003,7 +1008,11 @@ class ArticleApiController extends ContentController
 
 		if($toc)
 		{
-			$tocMarkup = $parsedown->buildTOC($parsedown->headlines);
+			if(!$tocMarkup)
+			{
+				$tocMarkup = $parsedown->buildTOC($parsedown->headlines);
+			}
+
 			$content[$toc] = ['id' => $toc, 'html' => $tocMarkup];
 		}
 

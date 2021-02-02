@@ -110,11 +110,14 @@
 					color: {{ settings.themes.cyanine.fontcolorprimary|default('#F7F7F7') }};
 				}
 				.landingpagecontrast a, .landingpagecontrast a:link, .landingpagecontrast a:visited{
-					border-color: {{ settings.themes.cyanine.fontcolorprimary|default('#F7F7F7') }};					
+					border-color: {{ settings.themes.cyanine.fontcolorprimary|default('#F7F7F7') }};
 				}
 
-				main, footer, .landingpageintro, .landingpageinfo, .landingpageteaser, .landingpagenavi, .landingpagenews,button.expander{
+				main, footer, .landingpageintro, .landingpageinfo, .landingpageteaser, .landingpagenavi, .landingpagenews,button.expander, .notice4{
 					background: {{ settings.themes.cyanine.brandcolorsecondary|default('#f7f7f7') }};
+				}
+				.notice4{
+					box-shadow: 0 -100px 80px 0px {{ settings.themes.cyanine.brandcolorsecondary|default('#f7f7f7') }};
 				}
 				main, footer, .landingpageintro, .landingpageinfo, .landingpageteaser, .landingpagenavi, .landingpagenews, .logo a, button.expander{
 					color: {{ settings.themes.cyanine.fontcolorsecondary|default('#333') }};					
@@ -158,7 +161,7 @@
 				.landingpagenews li a{
 					color: {{ settings.themes.cyanine.newscolor|default('#333') }};
 				}
-				.mainnavigation li, tr, hr{
+				.mainnavigation li, tr, hr, .notice4{
 					border-color: {{ settings.themes.cyanine.thinbordercolor|default('lightgray') }};
 				}
 				a.tm-download::before{
@@ -178,10 +181,7 @@
 					background-color: #fff3d4;
 					border-left: 4px solid #f6b73c;
 				}
-				.notice3,
-				.notice4,
-				.notice5,
-				.notice6 {
+				.notice3{
 				    background-color: #d4e0ff;
 				    border-left: 4px solid #3c7bf6;	
 				}
@@ -197,10 +197,7 @@
 						border-left: 10px solid #999;
 						color: #333;
 					}
-					.notice3,
-					.notice4,
-					.notice5,
-					.notice6 {
+					.notice3{
 						background-color: #444;
 						border-left: 10px solid #ccc;
 						color: #fff;
@@ -217,7 +214,7 @@
 	<body class="optimize-text pa2">
 
 
-		{% if ( settings.themes.cyanine.accountButton ) and ( is_loggedin() ) %}
+		{% if is_loggedin() %}
 			<svg style="position: absolute; width: 0; height: 0; overflow: hidden" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 				<defs>
 					<symbol id="icon-user" viewBox="0 0 20 28">

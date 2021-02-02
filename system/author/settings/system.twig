@@ -171,6 +171,13 @@
 							<span class="error">{{ errors.settings.restrictionnotice | first }}</span>
 						{% endif %}
 					</div>
+					<div class="large{{ errors.settings.wraprestrictionnotice ? ' error' : '' }}">
+						<label for="settings[wraprestrictionnotice]">{{ __('Page Restrictions - Wrap Notice into a Box') }}</label>
+						<label class="control-group">{{ __('Wrap the restriction notice above into a notice-4 element (which can be designed as special box)') }}
+							<input name="settings[wraprestrictionnotice]" type="checkbox" {% if (settings.wraprestrictionnotice or old.settings.wraprestrictionnotice) %} checked {% endif %}>
+							<span class="checkmark"></span>
+						</label>
+					</div>
 					<hr>
 					<header class="headline">
 						<h2>{{ __('Developer') }}</h2>

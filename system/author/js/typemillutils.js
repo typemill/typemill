@@ -19,13 +19,13 @@ let typemillUtilities = {
 
 	addYoutubePlayButton: function(element)
 	{
-		element.parentNode.classList.add("video-container");
-		
+		element.classList.add("video-container");
+
 		var youtubePlaybutton = document.createElement("button");
 		youtubePlaybutton.classList.add("play-video");
 		youtubePlaybutton.value = "Play";
 
-		element.parentNode.appendChild(youtubePlaybutton);
+		element.appendChild(youtubePlaybutton);
 	},
 
 	listenToClick: function(){
@@ -34,7 +34,7 @@ let typemillUtilities = {
 			/* listen to youtube */
 			if (event.target.matches('.play-video')) {
 
-				var youtubeID = event.target.parentNode.getElementsByClassName('youtube')[0].id;
+				var youtubeID = event.target.parentNode.id;
 
 				event.preventDefault();
 				event.stopPropagation();

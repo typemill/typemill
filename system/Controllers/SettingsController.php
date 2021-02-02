@@ -95,6 +95,7 @@ class SettingsController extends Controller
 					'pageaccess'			=> isset($newSettings['pageaccess']) ? true : null,
 					'hrdelimiter'			=> isset($newSettings['hrdelimiter']) ? true : null,
 					'restrictionnotice'		=> $newSettings['restrictionnotice'],
+					'wraprestrictionnotice'	=> isset($newSettings['wraprestrictionnotice']) ? true : null,
 					'headlineanchors'		=> isset($newSettings['headlineanchors']) ? $newSettings['headlineanchors'] : null,
 					'displayErrorDetails'	=> isset($newSettings['displayErrorDetails']) ? true : null,
 					'twigcache'				=> isset($newSettings['twigcache']) ? true : null,

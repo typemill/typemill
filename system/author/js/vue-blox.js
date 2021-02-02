@@ -1,5 +1,16 @@
 const eventBus = new Vue();
 
+Vue.filter('translate', function (value) {
+  if (!value) return ''
+  transvalue = value.replace(/[ ]/g,"_").replace(/[.]/g, "_").replace(/[,]/g, "_").replace(/[-]/g, "_").replace(/[,]/g,"_").toUpperCase()
+  translated_string = labels[transvalue]
+  if(!translated_string || translated_string.length === 0){
+    return value
+  } else {
+    return labels[transvalue]
+  }
+})
+
 const contentComponent = Vue.component('content-block', {
 	props: ['body', 'load'],
 	template: '<div ref="bloxcomponent" class="blox-editor" :class="newblock">' +
@@ -19,7 +30,7 @@ const contentComponent = Vue.component('content-block', {
 				    '<button class="cancel" :disabled="disabled" @click.prevent="cancel">{{ \'cancel\'|translate }}</button>' +
 				   '</div>' +
 				  '</div>' +
-				  '<div :class="preview" ref="preview"><slot><format-component></format-component></slot></div>' +
+				  '<div :class="preview" ref="preview"><slot></slot></div>' +
 				 '</div>' +
 				'</div>' +
 				'<div v-if="load" class="loadoverlay"><span class="load"></span></div>' +

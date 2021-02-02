@@ -4,6 +4,8 @@ Congratulations! If you see this page, then the setup of the system has worked s
 
 If you face any problems during the installation, then please make sure, that your system supports these features:
 
+---
+
 - PHP version 7+.
 - Apache server.
 - The module `mod_rewrite` and `htaccess`.

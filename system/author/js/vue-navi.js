@@ -1,6 +1,6 @@
 const navcomponent = Vue.component('navigation', {
 	template: '#navigation-template',
-	props: ['homepage', 'showForm', 'name', 'hide', 'newItem', 'parent', 'active', 'filetype', 'status', 'elementtype', 'contains', 'element', 'folder', 'level', 'url', 'root', 'freeze'],
+	props: ['homepage', 'name', 'hide', 'newItem', 'parent', 'active', 'filetype', 'status', 'elementtype', 'contains', 'element', 'folder', 'level', 'url', 'root', 'freeze'],
 	data: function () {
 		return {
 			showForm: false,
@@ -221,7 +221,7 @@ let navi = new Vue({
 		hideModal: function(e){
 			this.modalWindow = false;
 		},
-		toggleForm : function()
+		toggleForm: function()
 		{
 			this.showForm = !this.showForm;
 		},

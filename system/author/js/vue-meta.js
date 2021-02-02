@@ -13,13 +13,14 @@ Vue.filter('translate', function (value) {
 
 
 Vue.component('tab-meta', {
-	props: ['saved', 'errors', 'formdata', 'schema'],
+	props: ['saved', 'errors', 'formdata', 'schema', 'userroles'],
 	template: '<section><form>' +
 				'<component v-for="(field, index) in schema.fields"' +
             	    ':key="index"' +
                 	':is="selectComponent(field)"' +
                 	':errors="errors"' +
                 	':name="index"' +
+                	':userroles="userroles"' +
                 	'v-model="formdata[index]"' +
                 	'v-bind="field">' +
 				'</component>' + 
@@ -52,6 +53,7 @@ let meta = new Vue({
 			formErrors: {},
 			formErrorsReset: {},
 			item: false,
+			userroles: false,
 			saved: false,
 		}
 	},
@@ -96,6 +98,8 @@ let meta = new Vue({
 			self.formDefinitions = formdefinitions;
 
         	self.formData = response.data.metadata;
+
+        	self.userroles = response.data.userroles;
 
         	self.item = response.data.item;
         	if(self.item.elementType == "folder" && self.item.contains == "posts")

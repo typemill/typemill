@@ -257,7 +257,7 @@ Vue.component('component-color', {
 })
 
 Vue.component('component-select', {
-	props: ['class', 'id', 'description', 'readonly', 'required', 'disabled', 'label', 'name', 'type', 'options', 'value', 'errors'],
+	props: ['class', 'id', 'description', 'readonly', 'required', 'disabled', 'label', 'name', 'type', 'options', 'value', 'errors', 'dataset', 'userroles'],
 	template: '<div class="large">' +
 				'<label>{{ label|translate }}</label>' +
 			    '<select' + 

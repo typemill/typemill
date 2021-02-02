@@ -241,7 +241,7 @@ class PageController extends Controller
 				$shortenedPage = $this->cutRestrictedContent($markdownBlocks);
 
 				# check if there is customized content
-				$restrictionnotice = ( isset($this->settings['restrictionnotice']) && $this->settings['restrictionnotice'] != '' ) ? $this->settings['restrictionnotice'] : 'You are not allowed to access this content.';
+				$restrictionnotice = $this->prepareRestrictionNotice();
 
 				# add notice to shortened content
 				$shortenedPage[] = $restrictionnotice;
@@ -478,7 +478,8 @@ class PageController extends Controller
 			# check if page is restricted to certain user
 			if(isset($meta['alloweduser']) && $meta['alloweduser'] && $meta['alloweduser'] !== '' )
 			{
-				if(isset($_SESSION['user']) && $_SESSION['user'] == $meta['alloweduser'])
+				$alloweduser = array_map('trim', explode(",", $meta['alloweduser']));
+				if(isset($_SESSION['user']) && in_array($_SESSION['user'], $alloweduser))
 				{
 					# user has access to the page, so there are no restrictions
 					return false;
@@ -538,5 +539,38 @@ class PageController extends Controller
 		}
 
 		return $restrictedMarkdown;
+	}
+
+	protected function prepareRestrictionNotice()
+	{
+		if( isset($this->settings['restrictionnotice']) && $this->settings['restrictionnotice'] != '' )
+		{
+			$restrictionNotice = $this->settings['restrictionnotice'];
+		}
+		else
+		{
+			$restrictionNotice = 'You are not allowed to access this content.';
+		}
+
+		if( isset($this->settings['wraprestrictionnotice']) && $this->settings['wraprestrictionnotice'] )
+		{
+	        # standardize line breaks
+	        $text = str_replace(array("\r\n", "\r"), "\n", $restrictionNotice);
+
+	        # remove surrounding line breaks
+	        $text = trim($text, "\n");
+
+	        # split text into lines
+	        $lines = explode("\n", $text);
+
+	        $restrictionNotice = '';
+
+	        foreach($lines as $key => $line)
+	        {
+	        	$restrictionNotice .= "!!!! " . $line . "\n";
+	        }
+		}
+
+		return $restrictionNotice;
 	}
 }
