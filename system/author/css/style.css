@@ -701,7 +701,7 @@ a.openModal:link,a.openModal:active,a.openModal:visited{
 	display: block;
 	margin: auto;
 	text-align: center;
-	width: 100px;
+	width: 30%;
 }
 a.openModal:focus,a.openModal:hover{
 	text-decoration: underline;
@@ -2831,10 +2831,10 @@ footer a:focus, footer a:hover, footer a:active
 		margin: 0px;
 	}
 	.col.username,.col.email,.col.userrole{
-		width: 30%;
+		width: 28%;
 	}
 	.col.edit{
-		width: 10%;
+		width: 16%;
 	}
 	li.col.username{
 		border-top: 0px;
