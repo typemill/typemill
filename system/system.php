@@ -268,7 +268,7 @@ $container['view'] = function ($container) use ($uri)
 	/******************************
 	* LOAD TRANSLATIONS           *
 	******************************/
-    $pieces = explode('/',$uri->getPath());
+    $pieces = explode('/',trim($uri->getPath(),'/'));
     if( ($pieces[0] === 'tm' OR $pieces[0] === 'setup') )
   	{
     	# Admin environment labels
