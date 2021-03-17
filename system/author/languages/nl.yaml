@@ -150,6 +150,7 @@ RAW: rauw
 RAW_CONTENT_EDITOR: Raw Content Editor
 RAW_MARKDOWN_EDITOR: Raw Markdown Editor
 RAW_MODE: onbewerkte modus
+RAW_USERDATA_(READONLY_FOR_ADMINS): Raw Userdata (readonly for admins)
 READONLY: Alleen lezen
 REGISTERED_USERS_ONLY: Registered users only
 REMEMBER_TO_BOOKMARK_THIS_PAGE: vergeet deze pagina niet te bookmarken
@@ -187,6 +188,7 @@ UPDATE_USER: Gebruiker bijwerken
 UPLOAD: upload
 UPLOAD_AN_IMAGE: upload an image
 UPLOAD_FILE: Upload a file
+UPS__WRONG_PASSWORD_OR_USERNAME__PLEASE_TRY_AGAIN_: Ups, wrong password or username, please try again.
 USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Gebruikt als fallback als er geen handmatige datum is ingesteld.
 USER: Gebruiker
 USERNAME: Gebruikersnaam
@@ -229,10 +231,30 @@ TRENDSCHAU_DIGITAL: Trendschau Digital
 VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: Visit the author panel and setup your new website. You can configure the system, choose themes and add plugins.
 YOUR_ACCOUNT_HAS_BEEN_CREATED_AND_YOU_ARE_LOGGED_IN_NOW_: Your account has been created and you are logged in now.
 
+ACCESS_CONTROL: Access Control
+ACTIVATE_INDIVIDUAL_RESTRICTIONS_FOR_PAGES_IN_THE_META_TAB_OF_EACH_PAGE_: Activate individual restrictions for pages in the meta-tab of each page.
+ADD_ONE_OR_MORE_USERNAMES_SEPARATED_WITH_COMMA_: Add one or more usernames separated with comma.
+CUT_RESTRICTED_CONTENT_AFTER_THE_FIRST_HR_ELEMENT_ON_A_PAGE_(PER_DEFAULT_CONTENT_WILL_BE_CUT_AFTER_TITLE)_: Cut restricted content after the first hr-element on a page (per default content will be cut after title).
+FOR_ACCESS_THE_USER_MUST_HAVE_THIS_MINIMUM_ROLE: For access the user must have this minimum role
+LIMIT_THE_ACCESS_FOR_THE_WHOLE_WEBSITE_OR_FOR_EACH_PAGE_INDIVIDUALLY__IF_YOU_ACTIVATE_THE_WEBSITE_RESTRICTION_OR_THE_PAGE_RESTRICTIONS__THEN_SESSIONS_WILL_BE_USED_IN_FRONTEND_: Limit the access for the whole website or for each page individually. If you activate the website restriction or the page restrictions, then sessions will be used in frontend.
+ONLY_THE_FOLLOWING_USERS_HAVE_ACCESS: Only the following users have access
+PAGE_RESTRICTIONS___ACTIVATE: Page Restrictions - Activate
+PAGE_RESTRICTIONS___CUT_RESTRICTED_CONTENT: Page Restrictions - Cut Restricted Content
+PAGE_RESTRICTIONS___NOTICE: Page Restrictions - Notice
+PAGE_RESTRICTIONS___WRAP_NOTICE_INTO_A_BOX: Page Restrictions - Wrap Notice into a Box
+SELECT_THE_LOWEST_USERROLE__HIGHER_ROLES_WILL_HAVE_ACCESS_TOO_: Select the lowest userrole. Higher roles will have access too.
+SHOW_THE_WEBSITE_ONLY_TO_AUTHENTICATED_USERS_AND_REDIRECT_ALL_OTHER_USERS_TO_THE_LOGIN_PAGE_: Show the website only to authenticated users and redirect all other users to the login page.
+USE_MARKDOWN: use markdown
+WEBSITE_RESTRICTION: Website Restriction
+WRAP_THE_RESTRICTION_NOTICE_ABOVE_INTO_A_NOTICE_4_ELEMENT_(WHICH_CAN_BE_DESIGNED_AS_SPECIAL_BOX): Wrap the restriction notice above into a notice-4 element (which can be designed as special box)
+
 ACTIVATE_CACHE_FOR_TWIG_TEMPLATES: Activate Cache for Twig Templates
+ADD_MORE_URL_SCHEMES_FOR_EXTERNAL_LINKS_E_G__LIKE_DICT://_(COMMA_SEPARATED_LIST): Add more url schemes for external links e.g. like dict:// (comma separated list)
 CLEAR_CACHE: Clear Cache
 DELETE_ALL_CACHE_FILES: Delete all cache files
 DEVELOPER: Developer
+DISABLE_HEADERS: Disable Headers
+DISABLE_TYPEMILL_HEADERS_AND_SEND_YOUR_OWN: Disable Typemill Headers And Send Your Own
 DISPLAY_APPLICATION_ERRORS: Display Application Errors
 ERROR_REPORTING: Error Reporting
 IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT__THEN_THE_IMAGE_WILL_BE_CROPPED_: If you add a value for the height, then the image will be cropped.

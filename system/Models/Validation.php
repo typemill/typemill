@@ -39,8 +39,8 @@ class Validation
 		# checks if email is available if user is created
 		Validator::addRule('emailAvailable', function($field, $value, array $params, array $fields) use ($user)
 		{
-			$usermails = $user->getUserMails();
-			if(in_array(trim($value), $usermails)){ return false; }
+			$email = trim($value);
+			if($user->findUsersByEmail($email)){ return false; }
 			return true;
 		}, 'taken');
 
@@ -50,8 +50,8 @@ class Validation
 			$userdata = $user->getSecureUser($fields['username']);
 			if($userdata['email'] == $value){ return true; } # user has not updated his email
 
-			$usermails = $user->getUserMails();
-			if(in_array(trim($value), $usermails)){ return false; }
+			$email = trim($value);
+			if($user->findUsersByEmail($email)){ return false; }
 			return true;
 		}, 'taken');
 

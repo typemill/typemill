@@ -8,7 +8,7 @@
 		<section id="users" class="settings">
 
 			<header class="headline">
-				<h1>{{ __('All Users') }}</h1>
+				<h1>{{ __('All Users') }} </h1>
 			</header>
 			
 			<ul class="userlist">
@@ -41,4 +41,10 @@
 		
 	</div>
 	
+{% endblock %}
+
+{% block javascript %}
+
+	<script src="{{ base_url }}/system/author/js/vue-userlist.js"></script>
+
 {% endblock %}

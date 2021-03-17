@@ -762,6 +762,75 @@ li.col.edit:before{content:"Link: ";}
 	text-decoration: underline;
 }
 
+ul.pagination{
+	padding: 0;
+	margin: 10px 20px 30px;
+	list-style: none;	
+}
+li.userpage{
+	display: inline-block;
+}
+button.pagebutton{
+	border: 1px solid #eee;
+	margin: 1px;
+	background: #f9f8f6;
+	border-radius: 0px;
+	padding: 5px 8px;
+	font-family: inherit;
+	font-size: .9em;
+}
+button.filterbutton{
+	background: #f9f8f6;
+	border: 1px solid #f9f8f6;
+	padding: 10px;
+	margin-right: 2px;
+	font-family: inherit;
+	font-size: .9em;
+}
+button.pagebutton:hover,
+button.pagebutton:focus,
+button.pagebutton.active,
+button.filterbutton:hover,
+button.filterbutton:focus,
+button.filterbutton.active{
+	border: 1px solid #70c1b3;
+	background: #70c1b3;
+	color: #f9f8f6;
+}
+
+.usersearchbox{
+	margin: 10px 20px 30px;
+}
+.usersearchrow{
+	display: flex;
+	background: #70c1b3;
+	padding: 5px;
+}
+.usersearchrow input:focus{
+	outline: none;
+	box-shadow: none;
+}
+button.searchbutton{
+	border: 5px solid #f9f8f6;
+	color: #f9f8f6;
+	border-radius: 0;
+	outline: 0;
+	width: 10em;
+}
+button.searchbutton.search{
+	background: #70c1b3;
+}
+button.searchbutton.search:hover{
+	background: #66b0a3;
+}
+button.searchbutton.clear{
+	background: #e0474c;
+}
+button.searchbutton.clear:hover{
+	background: #cc4146;
+}
+
+
 /*********************
 **  WELCOME PAGE	**
 *********************/

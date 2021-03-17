@@ -1,0 +1,67 @@
+{% extends 'layouts/layout.twig' %}
+{% block title %}{{ __('User') }}{% endblock %}
+
+{% block content %}
+	
+	<div class="formWrapper">
+
+		<section id="users" class="settings">
+
+			<header class="headline">
+				<h1>{{ __('All Users') }} </h1>
+			</header>
+			
+			<div id="userlist" v-cloak>
+
+				<div class="usersearchbox">
+					<searchbox :error="error"></searchbox>
+				</div>
+
+				<ul class="userlist">
+					<li class="row header">
+						<ul>
+							<li class="col username">{{ __('Username') }}</li><li 
+								class="col userrole">{{ __('Role') }}</li><li 
+								class="col email">{{ __('E-Mail') }}</li><li 
+								class="col edit">{{ __('Edit') }}</li>
+						</ul>
+					</li>
+
+					<userrow
+					  v-for="user in userdata"
+					  v-bind:key="user.name"
+					  v-bind:user="user"
+					></userrow>
+				</ul>
+
+				<ul class="pagination" v-if="showpagination">
+					<pagination
+						v-for="page in pages"
+						v-bind:key="page"
+						v-bind:page="page"
+					></pagination>
+				</ul>
+
+			</div>
+			
+			<div class="medium">
+				<a class="button" href="{{ path_for('user.new') }}">{{ __('Create New User') }}</a>
+			</div>
+		</section>
+
+		<input id="path" type="hidden" value="{{ item.urlRel }}" required readonly />
+		{{ csrf_field() | raw }}
+		
+	</div>
+	
+{% endblock %}
+
+{% block javascript %}
+
+	<script>
+      		let usernames = {{ users|json_encode() }};
+      		let userroles = {{ userroles|json_encode() }};
+	</script>
+	<script src="{{ base_url }}/system/author/js/vue-userlist.js"></script>
+
+{% endblock %}

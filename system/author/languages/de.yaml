@@ -17,10 +17,10 @@ ADD_ROW_BELOW: + Reihe unterhalb
 ADMINISTRATOR: administrator
 ALL: All visitors
 ALL_USERS: Alle Nutzer
-ALTERNATIVE_TEXT_FOR_THE_HERO_IMAGE: Alternative Text for the hero image
+ALTERNATIVE_TEXT_FOR_THE_HERO_IMAGE: Alternativ-Text für das Hero-Image
 ALT_TEXT: Alt-Text
 AUTHOR: Autor
-AUTHOR_DESCRIPTION_(MARKDOWN): Author-Description (Markdown)
+AUTHOR_DESCRIPTION_(MARKDOWN): Autoren-Beschreibung (Markdown)
 BACK_TO_STARTPAGE: Zurück zur Startseite
 BOLD: fett
 BOTTOM: Unten
@@ -28,7 +28,7 @@ BROWSE: WÄHLEN
 BULLET_LIST: Auflistung
 BY: von
 CANCEL: abbrechen
-CAN_BE_USED_FOR_AUTHOR_LINE_IN_FRONTEND_: Can be used for author line in frontend.
+CAN_BE_USED_FOR_AUTHOR_LINE_IN_FRONTEND_: Kann als Autorenzeile im Frontend benutzt werden.
 CAPTION: Bild-Unterschrift
 CELL: Zelle
 CENTER: Mitte
@@ -40,8 +40,8 @@ CODE: Code
 COG: Einstellungen
 CONTENT: Inhalt
 COPYRIGHT: Copyright
-CREATED_AT_(READONLY): Created at (read only)
-CREATED_AT_(READ_ONLY): Created at (readonly)
+CREATED_AT_(READONLY): Erstellt am (nur lesend)
+CREATED_AT_(READ_ONLY): Erstellt am (nur lesend)
 CREATE_NEW_USER: + Neuen Nutzer
 CREATE_USER: + Nutzer
 CROSS: Kreuz
@@ -82,7 +82,7 @@ FRENCH: French
 GENERAL_PRESENTATION: Generelle Darstellung
 GERMAN: Deutsch
 GOOGLE_SITEMAP: Google Sitemap
-HAS_EDIT_RIGHTS_FOR_THIS_ARTICLE_: Has edit rights for this article.
+HAS_EDIT_RIGHTS_FOR_THIS_ARTICLE_: Hat Schreib-Rechte für diesen Artikel.
 HEAD: Kopf
 HEADLINE: Überschrift
 HEADLINE_ANCHORS: Überschriften-Anker
@@ -96,14 +96,14 @@ HR: Horizontale Linie
 IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: Wenn leer wird die Beschreibung vom Inhalt extrahiert.
 IMAGE: Bild
 IMAGES: Bilder
-IMAGE_URL: Image URL
-IMAGE_URL_(READ_ONLY): Image URL (read only)
+IMAGE_URL: Bild URL
+IMAGE_URL_(READ_ONLY): Bild URL (nur lesend)
 ITALIAN: Italienisch
 ITALIC: kursiv
-LANGUAGE: Language
+LANGUAGE: Sprache
 LANGUAGE_ADMIN: Sprache (Admin-UI)
 LANGUAGE_ATTR: Sprach-Attribut (website)
-LAST_MODIFIED_LIVE_(READONLY): Last modified live (readonly)
+LAST_MODIFIED_LIVE_(READONLY): Zuletzt live geändert (nur lesend)
 LAST_NAME: Zuname
 LEFT: Links
 LICENCE: Lizenz
@@ -114,8 +114,8 @@ LOGO: Logo
 LOGOUT: Abmelden
 MANUAL_DATE: Manuelles Datum
 MARKDOWN: Markdown
-MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB__HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES_: Maximum size for an image is 5 MB. Hero images are not supported by all themes.
-MEMBER: member
+MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB__HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES_: Die maximale Größe beträgt 5 MB. Hero-Images werden nicht von allen Themes unterstützt.
+MEMBER: Member
 MENU: Menü
 META: Meta
 META_DESCRIPTION: Meta description
@@ -133,8 +133,8 @@ NO_SETTINGS: Keine Einstellungen
 NUMBERED_LIST: Aufzählung
 OLIST: olist
 ONLINE: online
-ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: Nur die folgenden Sonderzeichen sind erlaubt:
-OWNER_(USERNAME): owner (username)
+ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: Nur die folgenden Sonderzeichen sind erlaubt
+OWNER_(USERNAME): Besitzer (username)
 PARAGRAPH: Absatz
 PASSWORD: Passwort
 PLEASE_CONFIRM: Bitte bestätigen
@@ -142,7 +142,7 @@ PLEASE_CORRECT_THE_ERRORS_ABOVE: Bitte korrigiere die Fehler oben
 PLUGINS: Plugins
 PLUGIN_STORE: Plugin Store
 POWER_OFF: Energie aus
-PROFILE_IMAGE: Profile image
+PROFILE_IMAGE: Profil-Bild
 PUBLISH: Publizieren
 QUOTE: Zitat
 QUOTES: Zitate
@@ -150,8 +150,9 @@ RAW: raw
 RAW_CONTENT_EDITOR: Raw Content Editor
 RAW_MARKDOWN_EDITOR: Raw Markdown Editor
 RAW_MODE: Raw Modus
+RAW_USERDATA_(READONLY_FOR_ADMINS): Raw Nutzerdaten (nur lesend für Admins)
 READONLY: Nur lesend
-REGISTERED_USERS_ONLY: Registered users only
+REGISTERED_USERS_ONLY: Nur registrierte Nutzer
 REMEMBER_TO_BOOKMARK_THIS_PAGE: Bookmark nicht vergessen
 REQUIRED: erforderlich
 RIGHT: Recht
@@ -187,10 +188,11 @@ UPDATE_USER: Nutzer aktualisieren
 UPLOAD: hochladen
 UPLOAD_AN_IMAGE: Bild hochladen
 UPLOAD_FILE: Datei hochladen
+UPS__WRONG_PASSWORD_OR_USERNAME__PLEASE_TRY_AGAIN_: Ups, wrong password or username, please try again.
 USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Wird alternativ zum manuellen Datum genutzt.
 USER: Nutzer
 USERNAME: Nutzername
-USERNAME_(READ_ONLY): Username (read only) 
+USERNAME_(READ_ONLY): Nutzername (nur lesend) 
 USERS: Nutzer
 USE_2_TO_20_CHARACTERS: 2 bis 20 Anschläge erlaubt.
 USE_2_TO_40_CHARACTERS: 2 to 40 Anschläge erlaubt.
@@ -205,8 +207,8 @@ VISUAL_MARKDOWN_EDITOR: Visueller Markdown Editor
 VISUAL_MODE: visueller Modus
 WAIT: warte
 WEB: Web
-WEBSITE_TITLE: WebseitenTitel
-WEBSITE_VISIBLE_FOR: Website visible for
+WEBSITE_TITLE: Webseiten-Titel
+WEBSITE_VISIBLE_FOR: Website sichtbar für
 WRITING: Schreiben
 YEAR: Jahr
 YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: Du kannst das CSS des Themes hier überschreiben.
@@ -222,25 +224,45 @@ GET_HELP: Hilfe erhalten
 GIVE_YOUR_NEW_WEBSITE_A_NAME__ADD_THE_AUTHOR_AND_CHOOSE_A_COPYRIGHT_: Konfiguriere das System.
 HURRA: Hurra
 IF_YOU_HAVE_ANY_QUESTIONS__PLEASE_READ_THE: Wenn du Fragen hast, lies bitte die
-NEXT_STEP: Nächster Schritt:
+NEXT_STEP: Nächster Schritt
 OR_OPEN_A_NEW_ISSUE_ON: oder erstelle ein neues Issue auf
 SETUP_WELCOME: Setup Willkommen
 TRENDSCHAU_DIGITAL: Trendschau Digital
 VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: Besuche die Autorenoberfläche und richte die Seite ein. Du kannst das System konfigurieren, Themes auswählen and Plugins hinzufügen.
 YOUR_ACCOUNT_HAS_BEEN_CREATED_AND_YOU_ARE_LOGGED_IN_NOW_: Dein Account wurde erstellt und du bist jetzt angemeldet.
 
-ACTIVATE_CACHE_FOR_TWIG_TEMPLATES: Activate Cache for Twig Templates
-CLEAR_CACHE: Clear Cache
-DELETE_ALL_CACHE_FILES: Delete all cache files
-DEVELOPER: Developer
-DISPLAY_APPLICATION_ERRORS: Display Application Errors
-ERROR_REPORTING: Error Reporting
-IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT__THEN_THE_IMAGE_WILL_BE_CROPPED_: If you add a value for the height, then the image will be cropped.
+ACCESS_CONTROL: Access Control
+ACTIVATE_INDIVIDUAL_RESTRICTIONS_FOR_PAGES_IN_THE_META_TAB_OF_EACH_PAGE_: Aktiviere die individuellen Seiten-Beschränkungen im Meta-Tab einer jeden Seite.
+ADD_ONE_OR_MORE_USERNAMES_SEPARATED_WITH_COMMA_: Ein oder mehrere Nutzernamen mit Komma getrennt.
+CUT_RESTRICTED_CONTENT_AFTER_THE_FIRST_HR_ELEMENT_ON_A_PAGE_(PER_DEFAULT_CONTENT_WILL_BE_CUT_AFTER_TITLE)_: Verberge den Inhalt nach dem ersten Trennstrich (andernfalls werden alle Inhalte nach dem Titel verborgen).
+FOR_ACCESS_THE_USER_MUST_HAVE_THIS_MINIMUM_ROLE: Für einen Zugriff muss der Nutzer diese minimale Rolle haben
+LIMIT_THE_ACCESS_FOR_THE_WHOLE_WEBSITE_OR_FOR_EACH_PAGE_INDIVIDUALLY__IF_YOU_ACTIVATE_THE_WEBSITE_RESTRICTION_OR_THE_PAGE_RESTRICTIONS__THEN_SESSIONS_WILL_BE_USED_IN_FRONTEND_: Begrenze den Zugriff auf die gesamte Webseite oder für jede Seite individuell. Wenn die Website-Beschränkungen oder die Seiten-Beschränkungen aktiviert werden, dann werden im Frontend Sessions genutzt.
+ONLY_THE_FOLLOWING_USERS_HAVE_ACCESS: Nur die folgenden Nutzer haben Zugriff
+PAGE_RESTRICTIONS___ACTIVATE: Seiten-Beschränkungen - Aktivieren
+PAGE_RESTRICTIONS___CUT_RESTRICTED_CONTENT: Seiten-Beschränkungen - Verberge die Inhalte
+PAGE_RESTRICTIONS___NOTICE: Seiten-Beschränkungen - Hinweis-Text
+PAGE_RESTRICTIONS___WRAP_NOTICE_INTO_A_BOX: Seiten-Beschränkungen - Hinweis in Box-Design
+SELECT_THE_LOWEST_USERROLE__HIGHER_ROLES_WILL_HAVE_ACCESS_TOO_: Wähle die niedrigste Nutzerrolle. Höhere Nutzerrollen haben ebenfalls Zugriff.
+SHOW_THE_WEBSITE_ONLY_TO_AUTHENTICATED_USERS_AND_REDIRECT_ALL_OTHER_USERS_TO_THE_LOGIN_PAGE_: Zeige die Webseite nur authentifizierten Nutzern und leite alle anderen Nutzer zur Login-Seite um.
+USE_MARKDOWN: Markdown erlaubt
+WEBSITE_RESTRICTION: Website Beschränkungen
+WRAP_THE_RESTRICTION_NOTICE_ABOVE_INTO_A_NOTICE_4_ELEMENT_(WHICH_CAN_BE_DESIGNED_AS_SPECIAL_BOX): Gestalte den Hinweis als Notiz-Box (das Design hängt vom Theme ab)
+
+ACTIVATE_CACHE_FOR_TWIG_TEMPLATES: Aktiviere den Cache für Twig-Templates
+ADD_MORE_URL_SCHEMES_FOR_EXTERNAL_LINKS_E_G__LIKE_DICT://_(COMMA_SEPARATED_LIST): URL Schemes für externe Links hinzufügen, z.B. dict:// (mit Komma getrennte Liste)
+CLEAR_CACHE: Cache reinigen
+DELETE_ALL_CACHE_FILES: Alle Dateien im Cache löschen
+DEVELOPER: Entwickler
+DISABLE_HEADERS: Header deaktivieren
+DISABLE_TYPEMILL_HEADERS_AND_SEND_YOUR_OWN: Typemill Header deaktivieren und eigene Header senden
+DISPLAY_APPLICATION_ERRORS: Zeige Fehler-Reports der Applikation
+ERROR_REPORTING: Fehler-Reports
+IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT__THEN_THE_IMAGE_WILL_BE_CROPPED_: Wenn eine Angabe für die Höhe gemacht wird, wird das Bild ausgeschnitten
 PROXY: Proxy
-STANDARD_HEIGHT_FOR_IMAGES: Standard height for images
-STANDARD_WIDTH_FOR_IMAGES: Standard width for images
-THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: The following options are only for developers and experienced administrators. Only change the options if you really understand them. For example: Never activate the error reporting for a live website, use this option only for bug-fixing.
-THIS_APPLIES_ONLY_FOR_FUTURE_IMAGES_IN_THE_CONTENT_AREA_: This applies only for future images in the content area.
-TRUSTED_IPS_FOR_PROXY_(COMMA_SEPARATED): Trusted IPs for proxy (comma separated)
+STANDARD_HEIGHT_FOR_IMAGES: Standard-Höhe für Bilder
+STANDARD_WIDTH_FOR_IMAGES: Standard-Breite für Bilder
+THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: Die folgenden Einstellungen sind nur für Entwickler und erfahrene Administratoren. Ändere nur Einstellungen, die du wirklich verstehst. Beispielsweise dürfen niemals die Fehler-Berichte im Frontend dauerhaft aktiviert werden, sondern nur für kurze Fehler-Analysen.
+THIS_APPLIES_ONLY_FOR_FUTURE_IMAGES_IN_THE_CONTENT_AREA_: Die Einstellung greift nur bei Bildern im Content-Bereich, die in der Zukunft hochgeladen werden.
+TRUSTED_IPS_FOR_PROXY_(COMMA_SEPARATED): Vertrauenswürdige IPs für Proxy (mit Komma getrennte Liste)
 TWIG_CACHE: Twig Cache
-USE_X_FORWARDED_HEADERS: Use X-Forwarded Headers
+USE_X_FORWARDED_HEADERS: Nutze die X-Forwarded Headers

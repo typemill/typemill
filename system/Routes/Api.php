@@ -11,6 +11,9 @@ use Typemill\Middleware\RestrictApiAccess;
 
 $app->get('/api/v1/themes', SettingsController::class . ':getThemeSettings')->setName('api.themes')->add(new RestrictApiAccess($container['router']));
 $app->delete('/api/v1/clearcache', SettingsController::class . ':clearCache')->setName('api.clearcache')->add(new RestrictApiAccess($container['router']));
+$app->get('/api/v1/users/getbynames', SettingsController::class . ':getUsersByNames')->setName('api.usersbynames')->add(new RestrictApiAccess($container['router']));
+$app->get('/api/v1/users/getbyemail', SettingsController::class . ':getUsersByEmail')->setName('api.usersbyemail')->add(new RestrictApiAccess($container['router']));
+$app->get('/api/v1/users/getbyrole', SettingsController::class . ':getUsersByRole')->setName('api.usersbyrole')->add(new RestrictApiAccess($container['router']));
 
 $app->post('/api/v1/article/markdown', ArticleApiController::class . ':getArticleMarkdown')->setName('api.article.markdown')->add(new RestrictApiAccess($container['router']));
 $app->post('/api/v1/article/html', ArticleApiController::class . ':getArticleHtml')->setName('api.article.html')->add(new RestrictApiAccess($container['router']));

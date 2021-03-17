@@ -222,7 +222,7 @@ class SettingsController extends Controller
 		$userSettings 	= $this->c->get('settings');
 		$themes 		= $this->getThemes();
 		$themedata		= array();
-		$fieldsModel	= new Fields();
+		$fieldsModel	= new Fields($this->c);
 
 		foreach($themes as $themeName)
 		{
@@ -297,7 +297,7 @@ class SettingsController extends Controller
 	{
 		$userSettings 	= $this->c->get('settings');
 		$plugins		= array();
-		$fieldsModel	= new Fields();
+		$fieldsModel	= new Fields($this->c);
 		$fields 		= array();
 
 		/* iterate through the plugins in the stored user settings */
@@ -543,7 +543,7 @@ class SettingsController extends Controller
 			$userdata 	= $user->getSecureUser($username);
 			
 			# instantiate field-builder
-			$fieldsModel	= new Fields();
+			$fieldsModel	= new Fields($this->c);
 
 			# get the field-definitions
 			$fieldDefinitions = $this->getUserFields($userdata['userrole']);
@@ -599,7 +599,7 @@ class SettingsController extends Controller
 		}
 			
 		# instantiate field-builder
-		$fieldsModel	= new Fields();
+		$fieldsModel	= new Fields($this->c);
 
 		# get the field-definitions
 		$fieldDefinitions = $this->getUserFields($userdata['userrole']);
@@ -639,20 +639,82 @@ class SettingsController extends Controller
 		# set navigation active
 		$navigation['Users']['active'] = true;
 
-		foreach($users as $username)
+		# set standard template
+		$template = 'settings/userlist.twig';
+
+		# use vue template for many users
+		$totalusers 	= count($users);
+
+		if($totalusers > 2)
 		{
-			$userdata[] = $user->getUser($username);
+			$template = 'settings/userlistvue.twig';
+		}
+		else
+		{
+			foreach($users as $username)
+			{
+				$newuser = $user->getSecureUser($username);
+				if($newuser)
+				{
+					$userdata[] = $newuser;
+				}
+			}
 		}
 		
-		return $this->render($response, 'settings/userlist.twig', array(
+		return $this->render($response, $template, array(
 			'settings' 		=> $settings,
 			'acl' 			=> $this->c->acl, 
 			'navigation' 	=> $navigation, 
-			'users' 		=> $users, 
-			'userdata' 		=> $userdata, 
+			'users' 		=> $users,
+			'userdata' 		=> $userdata,
+			'userroles' 	=> $this->c->acl->getRoles(),
 			'route' 		=> $route->getName() 
 		));
 	}
+
+	#returns userdata
+	public function getUsersByNames($request, $response, $args)
+	{
+		$params 		= $request->getParams();
+		$user			= new User();
+		$userdata 		= [];
+
+		if(isset($params['usernames']))
+		{
+			foreach($params['usernames'] as $username)
+			{				
+				$existinguser = $user->getSecureUser($username);
+				if($existinguser)
+				{
+					$userdata[] = $existinguser;
+				}
+			}
+		}
+
+		return $response->withJson(['userdata' => $userdata]);		
+	}
+
+	# returns userdata
+	public function getUsersByEmail($request, $response, $args)
+	{
+		$params 		= $request->getParams();
+		$user			= new User();
+
+		$userdata 		= $user->findUsersByEmail($params['email']);
+
+		return $response->withJson(['userdata' => $userdata ]);
+	}
+
+	#returns userdata
+	public function getUsersByRole($request, $response, $args)
+	{
+		$params 		= $request->getParams();
+		$user			= new User();
+
+		$userdata 		= $user->findUsersByRole($params['role']);
+
+		return $response->withJson(['userdata' => $userdata ]);
+	}	
 	
 	public function newUser($request, $response, $args)
 	{
@@ -1030,6 +1092,18 @@ class SettingsController extends Controller
 
 				if($fieldDefinition)
 				{
+
+					# check if the field is a select field with dataset = userroles 
+					if(isset($fieldDefinition['type']) && ($fieldDefinition['type'] == 'select' ) && isset($fieldDefinition['dataset']) && ($fieldDefinition['dataset'] == 'userroles' ) )
+					{
+						$userroles = [null => null];
+						foreach($this->c->acl->getRoles() as $userrole)
+						{
+							$userroles[$userrole] = $userrole;
+						}
+						$fieldDefinition['options'] = $userroles;
+					}
+
 					/* validate user input for this field */
 					$validate->objectField($fieldName, $fieldValue, $objectName, $fieldDefinition, $skiprequired);
 					

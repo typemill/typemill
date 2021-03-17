@@ -6,6 +6,14 @@ use Typemill\Models\Field;
 
 class Fields
 {
+
+	protected $c;
+
+	public function __construct($c = NULL)
+	{
+		$this->c = $c;
+	}	
+	
 	public function getFields($userSettings, $objectType, $objectName, $objectSettings, $formType = false)
 	{
 		# hold all fields in array 
@@ -43,6 +51,17 @@ class Fields
 				if(isset($fieldConfigurations['description']) && isset($userSettings[$objectType][$objectName][$fieldConfigurations['description']]))
 				{
 					$fieldConfigurations['description'] = $userSettings[$objectType][$objectName][$fieldConfigurations['description']];
+				}
+
+				# check if the field is a select field with dataset = userroles 
+				if(isset($this->c) && isset($fieldConfigurations['type']) && ($fieldConfigurations['type'] == 'select' ) && isset($fieldConfigurations['dataset']) && ($fieldConfigurations['dataset'] == 'userroles' ) )
+				{
+					$userroles = [null => null];
+					foreach($this->c->acl->getRoles() as $userrole)
+					{
+						$userroles[$userrole] = $userrole;
+					}
+					$fieldConfigurations['options'] = $userroles;
 				}
 
 				# for each field generate a new field object with the field name and the field configurations

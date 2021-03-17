@@ -31,6 +31,11 @@ class accessController
 			return $response->withRedirect($this->router->pathFor('auth.show'));
 		}
 
+		if(!$this->acl->hasRole($_SESSION['role']))
+		{
+			$_SESSION['role'] = 'member';
+		}
+
 		if(!$this->acl->isAllowed($_SESSION['role'], $this->resource, $this->privilege ))
 		{
 			# redirect to frontend startpage

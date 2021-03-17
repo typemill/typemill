@@ -133,7 +133,7 @@ NO_SETTINGS: No Settings
 NUMBERED_LIST: Numbered List
 OLIST: olist
 ONLINE: online
-ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: Only the following special characters are allowed:
+ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: Only the following special characters are allowed
 OWNER_(USERNAME): owner (username)
 PARAGRAPH: Paragraph
 PASSWORD: Password
@@ -261,7 +261,7 @@ IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT__THEN_THE_IMAGE_WILL_BE_CROPPED_: If you add a
 PROXY: Proxy
 STANDARD_HEIGHT_FOR_IMAGES: Standard height for images
 STANDARD_WIDTH_FOR_IMAGES: Standard width for images
-THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: The following options are only for developers and experienced administrators. Only change the options if you really understand them. For example: Never activate the error reporting for a live website, use this option only for bug-fixing.
+THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: The following options are only for developers and experienced administrators. Only change the options if you really understand them. For example, never activate the error reporting for a live website, use this option only for bug-fixing.
 THIS_APPLIES_ONLY_FOR_FUTURE_IMAGES_IN_THE_CONTENT_AREA_: This applies only for future images in the content area.
 TRUSTED_IPS_FOR_PROXY_(COMMA_SEPARATED): Trusted IPs for proxy (comma separated)
 TWIG_CACHE: Twig Cache

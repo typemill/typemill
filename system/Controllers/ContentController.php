@@ -451,12 +451,17 @@ abstract class ContentController
 		$writeMeta = new writeMeta();
 		$pagemeta = $writeMeta->getPageMeta($this->settings, $this->item);
 
-		# owner assertion, not 
-		if(isset($pagemeta['meta']['owner']) && $pagemeta['meta']['owner'] == $_SESSION['user'])
+		# check ownership
+		if(isset($pagemeta['meta']['owner']) && $pagemeta['meta']['owner'] && $pagemeta['meta']['owner'] !== '' )
 		{
-			$this->mycontent = true;
-			return true;
+			$allowedusers = array_map('trim', explode(",", $pagemeta['meta']['owner']));
+			if(isset($_SESSION['user']) && in_array($_SESSION['user'], $allowedusers))
+			{
+				$this->mycontent = true;
+				return true;
+			}
 		}
+
 		return false;
 	}		
 }
