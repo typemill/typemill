@@ -645,7 +645,7 @@ class SettingsController extends Controller
 		# use vue template for many users
 		$totalusers 	= count($users);
 
-		if($totalusers > 2)
+		if($totalusers > 10)
 		{
 			$template = 'settings/userlistvue.twig';
 		}

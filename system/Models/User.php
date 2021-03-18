@@ -8,14 +8,12 @@ class User extends WriteYaml
 	private $userDir = __DIR__ . '/../../settings/users';
 
 	public function getUsers()
-	{
-		$userDir = __DIR__ . '/../../settings/users';
-				
+	{				
 		/* check if users directory exists */
-		if(!is_dir($userDir)){ return array(); }
+		if(!is_dir($this->userDir)){ return array(); }
 		
 		/* get all user files */
-		$userfiles = array_diff(scandir($userDir), array('..', '.', '.logins', 'tmuserindex-mail.txt', 'tmuserindex-role.txt'));
+		$userfiles = array_diff(scandir($this->userDir), array('..', '.', '.logins', 'tmuserindex-mail.txt', 'tmuserindex-role.txt'));
 				
 		$usernames	= array();
 		foreach($userfiles as $key => $userfile)
@@ -143,8 +141,24 @@ class User extends WriteYaml
 	# accepts email with or without asterix and returns userdata
 	public function findUsersByEmail($email)
 	{
-		# get all user files
-		$usernames = $this->getUsers();
+		$usernames 	= [];
+		
+		# Make sure that we scan only the first 11 files even if there are some thousand users.
+		if ($dh = opendir($this->userDir))
+		{
+			$count 		= 1;
+			$exclude	= array('..', '.', '.logins', 'tmuserindex-mail.txt', 'tmuserindex-role.txt');
+
+		    while ( ($userfile = readdir($dh)) !== false && $count <= 11 ) 
+		    {
+		    	if(in_array($userfile, $exclude)){ continue; }
+
+				$usernames[] = str_replace('.yaml', '', $userfile);
+		    	$count++;
+		    }
+
+		    closedir($dh);
+		}
 
 		$countusers = count($usernames);
 
@@ -154,9 +168,9 @@ class User extends WriteYaml
 		}
 
 		# use a simple dirty search if there are less than 10 users (only in use for new user registrations)
-		if($countusers <= 4)
+		if($countusers <= 10)
 		{
-			foreach($usernames as $key => $username)
+			foreach($usernames as $username)
 			{
 				$userdata = $this->getSecureUser($username);
 
@@ -169,7 +183,7 @@ class User extends WriteYaml
 		}
 
 		# if there are more than 10 users, search with an index
-		$usermails = $this->getUserMailIndex($usernames);
+		$usermails = $this->getUserMailIndex();
 
 		# search with starting asterix, ending asterix or without asterix
 		if($email[0] == '*')
@@ -217,26 +231,25 @@ class User extends WriteYaml
 		return false;
 	}
 
-	public function getUserMailIndex($usernames)
+	public function getUserMailIndex()
 	{
-		$userDir = __DIR__ . '/../../settings/users';
-				
-		if(file_exists($userDir . DIRECTORY_SEPARATOR . 'tmuserindex-mail.txt'))
+		if(file_exists($this->userDir . DIRECTORY_SEPARATOR . 'tmuserindex-mail.txt'))
 		{
 			# read and return the file
-			$usermailindex = file($userDir . DIRECTORY_SEPARATOR . 'tmuserindex-mail.txt');
+			$usermailindex = file($this->userDir . DIRECTORY_SEPARATOR . 'tmuserindex-mail.txt');
 		}
 		
-		$usermailindex	= array();
+		$usernames 		= $this->getUsers();
+		$usermailindex	= [];
 
-		foreach($usernames as $key => $username)
+		foreach($usernames as $username)
 		{
 			$userdata = $this->getSecureUser($username);
 
 			$usermailindex[$userdata['email']] = $username;
 		}
 
-		file_put_contents($userDir . DIRECTORY_SEPARATOR . 'tmuserindex-mail.txt', var_export($usermailindex, TRUE));
+		file_put_contents($this->userDir . DIRECTORY_SEPARATOR . 'tmuserindex-mail.txt', var_export($usermailindex, TRUE));
 
 		return $usermailindex;
 	}
@@ -244,10 +257,11 @@ class User extends WriteYaml
 	# accepts email with or without asterix and returns usernames
 	public function findUsersByRole($role)
 	{
+
+/*
 		# get all user files
 		$usernames = $this->getUsers();
 
-/*
 		$countusers = count($usernames);
 
 		if($countusers == 0)
@@ -276,7 +290,7 @@ class User extends WriteYaml
 			return $userdata;
 		}
 */
-		$userroles = $this->getUserRoleIndex($usernames);
+		$userroles = $this->getUserRoleIndex();
 
 		if(isset($userroles[$role]))
 		{
@@ -286,26 +300,25 @@ class User extends WriteYaml
 		return false;
 	}
 
-	public function getUserRoleIndex($usernames)
+	public function getUserRoleIndex()
 	{
-		$userDir = __DIR__ . '/../../settings/users';
-				
-		if(file_exists($userDir . DIRECTORY_SEPARATOR . 'tmuserindex-role.txt'))
+		if(file_exists($this->userDir . DIRECTORY_SEPARATOR . 'tmuserindex-role.txt'))
 		{
 			# read and return the file
-			$userroleindex = file($userDir . DIRECTORY_SEPARATOR . 'tmuserindex-role.txt');
+			$userroleindex = file($this->userDir . DIRECTORY_SEPARATOR . 'tmuserindex-role.txt');
 		}
-		
-		$userroleindex = array();
 
-		foreach($usernames as $key => $username)
+		$usernames		= $this->getUsers();
+		$userroleindex 	= [];
+
+		foreach($usernames as $username)
 		{
 			$userdata = $this->getSecureUser($username);
 
 			$userroleindex[$userdata['userrole']][] = $username;
 		}
 
-		file_put_contents($userDir . DIRECTORY_SEPARATOR . 'tmuserindex-role.txt', var_export($userroleindex, TRUE));
+		file_put_contents($this->userDir . DIRECTORY_SEPARATOR . 'tmuserindex-role.txt', var_export($userroleindex, TRUE));
 
 		return $userroleindex;
 	}

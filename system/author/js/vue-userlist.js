@@ -120,7 +120,7 @@ let userlist = new Vue({
 			holduserdata: false,
 			userroles: userroles,
 			pagenumber: 1,
-			pagesize: 3,
+			pagesize: 10,
 			pages: 0,
 			root: document.getElementById("main").dataset.url,
 			error: false,
