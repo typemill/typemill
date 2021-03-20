@@ -7,6 +7,10 @@
 	{% if home and settings.themes.cyanine.landingpage %}
 	
 		{% include 'home.twig' %}
+
+	{% elseif home and settings.themes.cyanine.blog %}
+	
+		{% include 'blog.twig' %}
 		
 	{% else %}
 		

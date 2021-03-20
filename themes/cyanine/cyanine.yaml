@@ -26,9 +26,28 @@ forms:
         large: Large
         full: Full Width
 
+    blog:
+      type: checkbox
+      checkboxlabel: Activate a List of Posts on Homepage
+
+    blogdetails:
+      type: fieldset
+      legend: Configure List of Posts
+      fields:
+
+        blogintro:
+          type: checkbox
+          label: Intro Page
+          checkboxlabel: Show the content of the homepage before the list of posts
+
+        blogfolder:
+          type: text
+          label: Enter the folder path with the posts
+          placeholder: /blog
+
     landingpage:
       type: checkbox
-      checkboxlabel: Activate a landingpage
+      checkboxlabel: Activate a Landing Page on Homepage
 
     landingpageIntro:
       type: fieldset

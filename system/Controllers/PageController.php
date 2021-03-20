@@ -33,6 +33,7 @@ class PageController extends Controller
 		$item			= false;
 		$home			= false;
 		$breadcrumb 	= false;
+		$currentpage	= false;
 		$pathToContent	= $this->settings['rootPath'] . $this->settings['contentFolder'];
 		$cache 			= new WriteCache();
 		$uri 			= $request->getUri()->withUserInfo('');
@@ -111,6 +112,35 @@ class PageController extends Controller
 		{
 			# use the structure as navigation if there is no difference
 			$navigation = $structure;
+		}
+		
+		# start pagination
+		if(isset($args['params']))
+		{
+			$argSegments = explode("/", $args['params']);
+
+			# check if the last url segment is a number
+			$pageNumber = array_pop($argSegments);
+			if(is_numeric($pageNumber) && $pageNumber < 10000)
+			{
+				# then check if the segment before the page is a "p" that indicates a paginator
+				$pageIndicator = array_pop($argSegments);
+				if($pageIndicator == "p")
+				{
+					# use page number as current page variable
+					$currentpage = $pageNumber;
+
+					# set empty args for startpage
+					$args = [];
+
+					# if there are still params
+					if(!empty($argSegments))
+					{
+						# add them to the args again
+						$args['params'] = implode("/", $argSegments);
+					}
+				}
+			}
 		}
 
 		# if the user is on startpage
@@ -317,7 +347,8 @@ class PageController extends Controller
 			'base_url' 		=> $base_url, 
 			'image' 		=> $firstImage,
 			'logo'			=> $logo,
-			'favicon'		=> $favicon
+			'favicon'		=> $favicon,
+			'currentpage'	=> $currentpage
 		]);
 	}
 
