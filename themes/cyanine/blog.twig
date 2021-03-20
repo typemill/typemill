@@ -46,42 +46,46 @@
 			{% endif %}
 
 			{% set pagelist = getPageList(navigation, settings.themes.cyanine.blogfolder, base_url) %}
-			{% set pages = ( pagelist.folderContent|length / 2)|round(0, 'ceil') %}
+			{% set pagesize = 10 %}
+			{% set pages = ( pagelist.folderContent|length / pagesize)|round(0, 'ceil') %}
 			{% set currentpage = currentpage ? currentpage : 1 %}
-			{% set currentposts = (currentpage - 1) * 2 %}
+			{% set currentposts = (currentpage - 1) * pagesize %}
 
-			<ul class="post list pa0">
+			{% if pagelist.contains == "posts" %}
+				<ul class="post list pa0">
 
-				{% for element in pagelist.folderContent|slice(currentposts, 2) %}
+					{% for element in pagelist.folderContent|slice(currentposts, pagesize) %}
 
-					{% set post = getPageMeta(settings, element) %}
-					{% set date = element.order[0:4] ~ '-' ~ element.order[4:2] ~ '-' ~ element.order[6:2] %}
+						{% set post = getPageMeta(settings, element) %}
+						{% set date = element.order[0:4] ~ '-' ~ element.order[4:2] ~ '-' ~ element.order[6:2] %}
 
-					<li class="post-entry">
-						<header>
-							<a class="link f-link underline-hover" href="{{ element.urlAbs }}"><h2 class="mt4 mb2">{{ post.meta.title }}</h2></a>
-							<div class="mt3"><small><time datetime="{{date}}">{{ date | date("d.m.Y") }}</time> | {{ post.meta.author }}</small></div>
-						</header>
-						<p>{{ post.meta.description }}</p>
-					</li>
+						<li class="post-entry">
+							<header>
+								<a class="link f-link underline-hover" href="{{ element.urlAbs }}"><h2 class="mt4 mb2">{{ post.meta.title }}</h2></a>
+								<div class="mt3"><small><time datetime="{{date}}">{{ date | date("d.m.Y") }}</time> | {{ post.meta.author }}</small></div>
+							</header>
+							<p>{{ post.meta.description }}</p>
+						</li>
 
-				{% endfor %}
+					{% endfor %}
 
-				{% if pages > 1 %}
-					<hr class="mv4">
-					<p>Page: 
-						{% for i in 1 .. pages %}
-							{% if i == currentpage %}
-								{{i}}
-							{% else %}
-								<a class="page" href="{{ item.urlAbs }}/p/{{i}}">{{i}}</a>
-							{% endif %}
-						{% endfor %}
-					</p>
-				{% endif %}
+					{% if pages > 1 %}
+						<hr class="mv4">
+						<p>Page: 
+							{% for i in 1 .. pages %}
+								{% if i == currentpage %}
+									{{i}}
+								{% else %}
+									<a class="page" href="{{ item.urlAbs }}/p/{{i}}">{{i}}</a>
+								{% endif %}
+							{% endfor %}
+						</p>
+					{% endif %}
 
-			</ul>
-
+				</ul>
+			{% else %}
+				<p>The folder contains pages. To use the blog-feature on the startpage, please change the folder content to posts.</p>
+			{% endif %}
 		</div>
 
 		<aside class="grid-sidebar ph3 pv3">

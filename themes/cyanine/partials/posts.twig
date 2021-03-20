@@ -1,10 +1,11 @@
-{% set pages = ( item.folderContent|length / 2)|round(0, 'ceil') %}
+{% set pagesize = 10 %}
+{% set pages = ( item.folderContent|length / pagesize)|round(0, 'ceil') %}
 {% set currentpage = currentpage ? currentpage : 1 %}
-{% set currentposts = (currentpage - 1) * 2 %}
+{% set currentposts = (currentpage - 1) * pagesize %}
 
 <ul class="post list pa0">
 
-	{% for element in item.folderContent|slice(currentposts, 2) %}
+	{% for element in item.folderContent|slice(currentposts, pagesize) %}
 
 		{% set post = getPageMeta(settings, element) %}
 		{% set date = element.order[0:4] ~ '-' ~ element.order[4:2] ~ '-' ~ element.order[6:2] %}
