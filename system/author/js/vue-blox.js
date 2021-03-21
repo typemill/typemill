@@ -1853,7 +1853,7 @@ let editor = new Vue({
 		draftDisabled: true,
 		bloxOverlay: false,
 		sortdisabled: false,
-		showBlox: 'show',
+		showEditor: 'show',
 		formats: activeFormats
 	},
 	mounted: function(){

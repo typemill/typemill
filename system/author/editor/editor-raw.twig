@@ -23,6 +23,7 @@
 		  	:errors="formErrors[currentTab]" 
 		  	:schema="formDefinitions[currentTab]"
 		  	:formdata="formData[currentTab]"
+		  	:item="item"
 		  	v-on:saveform="saveForm">
 		  </component>
 
@@ -30,7 +31,8 @@
 
       {% endif %}		
 
-		<div id="editor" class="editor">
+		<div id="editor" class="editor" :class="showEditor">
+
 			<form action="#" v-cloak>
 			
 				<section>
@@ -53,6 +55,24 @@
 				
 			</form>
 		</div>
+		
+		{% if item.elementType == "folder" %}
+
+			<section id="posts" v-if="posts" :class="showPosts">
+				<div class="posts formWrapper">
+					<input v-model="posttitle" type="text" maxlength="60" name="title" placeholder="add a short title">
+					<button type="button" @click.prevent="createPost()" class="post-button">create new post</button>
+				</div>
+				<div>
+					<single-post
+					  v-for="post in posts"
+					  v-bind:key="post.keyPath"
+					  v-bind:post="post"
+					></single-post>
+				</div>
+			</section>
+
+		{% endif %}
 		
 		{% include 'editor/publish-controller.twig' %}
 

@@ -9,7 +9,8 @@ let editor = new Vue({
 		form: {
 			title: document.getElementById("title").value,
 			content: document.getElementById("content").value,
-		}
+		},
+		showEditor: 'show',
 	},
 	mounted: function(){
 		autosize(document.querySelector('textarea'));

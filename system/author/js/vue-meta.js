@@ -11,7 +11,6 @@ Vue.filter('translate', function (value) {
   }
 })
 
-
 Vue.component('tab-meta', {
 	props: ['saved', 'errors', 'formdata', 'schema', 'userroles'],
 	template: '<section><form>' +
@@ -61,12 +60,12 @@ let meta = new Vue({
 		currentTabComponent: function () {
 			if(this.currentTab == 'Content')
 			{
-				editor.showBlox = 'show';
+				editor.showEditor = 'show';
 				posts.showPosts = 'show';
 			}
 			else
 			{
-				editor.showBlox = 'hidden';
+				editor.showEditor = 'hidden';
 				posts.showPosts = 'hidden';
 			}
 	    	return 'tab-' + this.currentTab.toLowerCase()
