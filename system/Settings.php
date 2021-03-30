@@ -33,7 +33,9 @@ class Settings
 		if(!isset($settings['theme']) OR !file_exists($themefolder . $settings['theme']))
 		{
 			# scan theme folder and get the first theme
-			$themes = array_diff(scandir($themefolder), array('..', '.'));
+			$themes = array_filter(scandir($themefolder), function ($item) use($themefolder) {
+				return is_dir($themefolder . $item) && strpos($item, '.') !== 0;
+			});
 			$firsttheme = reset($themes);
 
 			# if there is a theme with an index.twig-file
