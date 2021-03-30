@@ -502,12 +502,12 @@ class Validation
 				else
 				{
 					$v->rule('noHTML', $fieldName);
-					$v->rule('lengthMax', $fieldName, 1000);
+					$v->rule('lengthMax', $fieldName, 10000);
 				}
 				break;
 			case "paragraph":
 				$v->rule('noHTML', $fieldName);
-				$v->rule('lengthMax', $fieldName, 1000);
+				$v->rule('lengthMax', $fieldName, 10000);
 				break;
 			case "password":
 				$v->rule('lengthMax', $fieldName, 100);
