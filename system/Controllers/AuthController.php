@@ -133,7 +133,7 @@ class AuthController extends Controller
 				}
 
 				# if user is allowed to view content-area
-				if($this->c->acl->isAllowed($userdata['userrole'], 'content', 'view'))
+				if($this->c->acl->hasRole($userdata['userrole']) && $this->c->acl->isAllowed($userdata['userrole'], 'content', 'view'))
 				{
 					$settings = $this->c->get('settings');
 					$editor = (isset($settings['editor']) && $settings['editor'] == 'visual') ? 'visual' : 'raw';

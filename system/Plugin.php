@@ -8,8 +8,12 @@ use Typemill\Models\WriteYaml;
 use Typemill\Extensions\ParsedownExtension;
 
 abstract class Plugin implements EventSubscriberInterface
-{	
+{
 	protected $container;
+
+	protected $path;
+
+	protected $adminpath = false;
 
     /**
      * Constructor
@@ -19,6 +23,13 @@ abstract class Plugin implements EventSubscriberInterface
     public function __construct($container)
     {
 		$this->container 	= $container;
+
+		$this->path 		= trim($this->container['request']->getUri()->getPath(),"/");
+
+		if(substr($this->path, 0, 3) === "tm/")
+		{
+			$this->adminpath = true;
+		}
     }
 
     protected function isXhr()

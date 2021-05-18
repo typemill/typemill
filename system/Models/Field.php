@@ -71,7 +71,8 @@ class Field
 									'min',
 									'max',
 									'class',
-									'pattern'
+									'pattern',
+									'steps'
 								);
 	
 	/* defines additional data, that are allowed for fields */

@@ -2,6 +2,8 @@
 
 Typemill is a simple Flat File Content Management System (CMS). We (the community) work hard to provide the best author experience with easy and intuitive authoring tools. But Typemill is still in early development and it is likely that not everything will work perfectly out of the box. If you miss something or if you have ideas for improvements, then post a new issue on [GitHub](https://github.com/typemill/typemill/issues).
 
+![youtube-video](media/live/youtube-6i2-uv88gke.jpeg "click to load video"){#6I2-uV88GkE .youtube}
+
 ## The Navigation
 
 You can create, structure and reorder all pages with the navigation on the left side. To structure your content, you can create new folders and files with the "add item" button. To reorder the pages, just drag an item and drop it wherever you want. Play around with it and you will notice, that it works pretty similar to the folder- and file-system of your laptop. And in fact, this is exactly what Typemill does in the background: It stores your content in files and folders on the server.

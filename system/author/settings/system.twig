@@ -16,10 +16,11 @@
 
 				<header class="headline">
 					<h1>{{ __('System') }} <span class="version-number">v. {{settings.version}}</span></h1>
+					<p>New here? Then watch the <a class="link tm-red underline-hover" href="https://www.youtube.com/watch?v=7yvlwXJL9dc" target="_blank">video-tutorial</a> about configurations for typemill on YouTube.</p>				
 				</header>
 				
 				<div id="typemill" class="fc-system-version update-banner">{{ settings.version ? settings.version : 'Unknown' }}</div>
-				
+							
 				<fieldset>
 				
 					<div class="medium{{ errors.settings.title ? ' error' : '' }}">
@@ -142,6 +143,7 @@
 					<header class="headline">
 						<h2>{{ __('Access Control') }}</h2>
 						<p>{{ __('Limit the access for the whole website or for each page individually. If you activate the website restriction or the page restrictions, then sessions will be used in frontend.') }}</p>
+						<p>New here? Then watch the <a class="link tm-red underline-hover" href="https://www.youtube.com/watch?v=UW_m-4g1kAA" target="_blank">video-tutorial</a> about access rights for typemill on YouTube.</p>
 					</header>
 					<div class="large{{ errors.settings.access ? ' error' : '' }}">
 						<label for="settings[access]">{{ __('Website Restriction') }}</label>

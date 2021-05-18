@@ -4,8 +4,6 @@ Vue.component('searchbox', {
 	  return {
 	    filter: 'username',
 	    searchterm: '',
-	    searchmode: true,
-	    clearmode: false,
 	    userroles: userroles,
 	  }
 	},
@@ -20,8 +18,8 @@ Vue.component('searchbox', {
 						'<option v-for="role in userroles">{{role}}</option>' +
 					'</select>' +
 	  				'<input v-else type="text" class="usersearch" v-model="searchterm">' +
-					'<button v-if="searchmode" class="searchbutton search" @click.prevent="startSearch()">Search</button>' +
-					'<button v-if="clearmode" class="searchbutton clear" @click.prevent="clearSearch()">Clear</button>' +
+					'<button class="searchbutton search" @click.prevent="startSearch()">Search</button>' +
+					'<button class="searchbutton clear" @click.prevent="clearSearch()">Clear</button>' +
 				  '</div>' +
 				  '<div v-if="error" class="error pt1 f6">{{error}}</div>' +
 				  '<div v-if="this.filter == \'usermail\'" class="description pt1">You can use the asterisk (*) wildcard to search for name@* or *@domain.com.</div>' +
@@ -38,8 +36,6 @@ Vue.component('searchbox', {
     				this.$root.error = 'Please enter at least 3 characters';
     				return;
     			}
-	    		this.searchmode = false;
-	    		this.clearmode = true;
 	    		this.$root.search(this.searchterm, this.filter);
     		}
     	},
@@ -47,14 +43,11 @@ Vue.component('searchbox', {
     	{
     		this.$root.error = false;
     		this.searchterm = '';
-    		this.searchmode = true;
-    		this.clearmode = false;
     		this.$root.clear(this.filter);
     	},
     	setFilter: function(filter)
     	{
-    		this.clearSearch();
-
+    		this.searchterm = '';
     		this.filter = filter;
     		if(filter == 'userrole')
     		{
@@ -72,16 +65,22 @@ Vue.component('searchbox', {
     }
 })
 
-Vue.component('userrow', {
-  	props: ['user'],
-  	template: '<li class="row">' +
-					'<ul>' +
-						'<li class="col username">{{ user.username }}</li>' +
-						'<li class="col userrole">{{ user.userrole }}</li>' + 
-						'<li class="col email">{{ user.email }}</li>' +
-						'<li class="col edit"><a :href="getEditLink(user.username)">edit</a></li>' +
-					'</ul>' +
-				'</li>',
+Vue.component('usertable', {
+  	props: ['userdata'],
+   	template: '<table class="w-100 mw8" cellspacing="0">' +
+				'<tr class="white">' +
+					'<th class="pa3 bg-tm-green ba b--white normal tl">Username</th>' +
+					'<th class="pa3 bg-tm-green ba b--white normal tl">Userrole</th>' +
+					'<th class="pa3 bg-tm-green ba b--white normal tl">E-Mail</th>' +
+					'<th class="pa3 bg-tm-green ba b--white normal tl">Edit</th>' +
+				'</tr>' + 
+  				'<tr v-for="user,index in userdata" key="username">' +
+	  				'<td class="pa3 bg-tm-gray ba b--white tl">{{ user.username }}</td>' +
+	  				'<td class="pa3 bg-tm-gray ba b--white tl">{{ user.userrole }}</td>' +
+	  				'<td class="pa3 bg-tm-gray ba b--white tl">{{ user.email }}</td>' +
+	  				'<td class="pa3 bg-tm-gray ba b--white tl"><a :href="getEditLink(user.username)" class="link tm-red no-underline underline-hover">edit</a></td>' +
+			 	'</tr>' +
+			 '</table>', 	
     methods: {
     	getEditLink: function(username){
 			return this.$root.$data.root + '/tm/user/' + username;
@@ -191,7 +190,7 @@ let userlist = new Vue({
 		{
 			if(filter == 'username')
 			{
-				let result = this.filterItems(this.usernames, term);
+				let result = this.filterItems(this.holdusernames, term);
 				
 				this.usernames = result;
 

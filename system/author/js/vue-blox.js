@@ -1633,7 +1633,7 @@ const imageComponent = Vue.component('image-component', {
 								publishController.errors.message = "Looks like you are logged out. Please login and try again.";
 							}
 							*/
-				            if(error.response.data.errors.message)
+				            if(error.response)
 				            {
 				            	publishController.errors.message = error.response.data.errors.message;
 				            }
@@ -1809,7 +1809,7 @@ const fileComponent = Vue.component('file-component', {
 				        })
 				        .catch(function (error)
 				        {
-				            if(error.response.data.errors.message)
+				            if(error.response)
 				            {
 				            	publishController.errors.message = error.response.data.errors.message;
 				            }
@@ -1960,8 +1960,9 @@ let editor = new Vue({
 	        })
 	        .catch(function (error)
 	        {
+	        	if(error)
 				publishController.publishDisabled = false;
-	        	if(error.response.data.errors.message)
+	        	if(error.response)
 	        	{
 					publishController.errors.message = error.response.data.errors.message;
 	        	}

@@ -11,6 +11,7 @@ use Typemill\Models\ProcessFile;
 use Typemill\Models\ProcessImage;
 use Typemill\Events\OnUserfieldsLoaded;
 use Typemill\Events\OnSystemnaviLoaded;
+use Typemill\Events\OnUserDeleted;
 
 class SettingsController extends Controller
 {	
@@ -479,8 +480,24 @@ class SettingsController extends Controller
 				}
 				else
 				{
+					# fetch the original settings from the folder to get the field definitions
+					$originalSettings = \Typemill\Settings::getObjectSettings('plugins', $pluginName);
+
+					# check if the plugin has dependencies
+					if(isset($userInput[$pluginName]['active']) && isset($originalSettings['dependencies']))
+					{
+						foreach($originalSettings['dependencies'] as $dependency)
+						{
+							if(!isset($userInput[$dependency]['active']) OR !$userInput[$dependency]['active'])
+							{
+								$this->c->flash->addMessage('error', 'Activate the plugin ' . $dependency . ' before you activate the plugin ' . $pluginName);
+								return $response->withRedirect($this->c->router->pathFor('plugins.show'));
+							}
+						}
+					}
+
 					/* validate the user-input */
-					$imageFields = $this->validateInput('plugins', $pluginName, $userInput[$pluginName], $validate);
+					$imageFields = $this->validateInput('plugins', $pluginName, $userInput[$pluginName], $validate, $originalSettings);
 
 					/* use the input data */
 					$pluginSettings[$pluginName] = $userInput[$pluginName];
@@ -615,6 +632,11 @@ class SettingsController extends Controller
 
 		# set navigation active
 		$navigation['Users']['active'] = true;
+
+		if(isset($userdata['lastlogin']))
+		{
+			$userdata['lastlogin'] = date("d.m.Y H:i:s", $userdata['lastlogin']);
+		}
 		
 		return $this->render($response, 'settings/user.twig', array(
 			'settings' 		=> $settings,
@@ -876,12 +898,21 @@ class SettingsController extends Controller
 				if($_SESSION['user'] !== $params['username'])
 				{
 					return $response->withRedirect($this->c->router->pathFor('user.account'));
-				}				
+				}
 			}
 			
 			if($validate->username($params['username']))
 			{
+				$userdata = $user->getSecureUser($params['username']);
+				if(!$userdata)
+				{
+					$this->c->flash->addMessage('error', 'Ups, we did not find that user');
+					return $response->withRedirect($this->c->router->pathFor('user.show', ['username' => $params['username']]));
+				}
+
 				$user->deleteUser($params['username']);
+
+				$this->c->dispatcher->dispatch('onUserDeleted', new OnUserDeleted($userdata));
 
 				# if user deleted his own account
 				if($_SESSION['user'] == $params['username'])
@@ -894,7 +925,7 @@ class SettingsController extends Controller
 				return $response->withRedirect($this->c->router->pathFor('user.list'));
 			}
 			
-			$this->c->flash->addMessage('error', 'Ups, we did not find that user');
+			$this->c->flash->addMessage('error', 'Ups, it is not a valid username');
 			return $response->withRedirect($this->c->router->pathFor('user.show', ['username' => $params['username']]));			
 		}
 	}
@@ -937,6 +968,12 @@ class SettingsController extends Controller
 
 	private function getUserFields($role)
 	{
+		# if a plugin with a role has been deactivated, then users with the role throw an error, so set them back to member...
+		if(!$this->c->acl->hasRole($role))
+		{
+			$role = 'member';
+		}
+
 		$fields = [];
 		$fields['username'] 	= ['label' => 'Username (read only)', 'type' => 'text', 'readonly' => true];
 		$fields['firstname'] 	= ['label' => 'First Name', 'type' => 'text'];

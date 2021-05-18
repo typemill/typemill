@@ -16,77 +16,77 @@ ADD_ROW_ABOVE: add row above
 ADD_ROW_BELOW: add row below
 ADMINISTRATOR: administrator
 ALL: all
-ALL_USERS: All users
-ALTERNATIVE_TEXT_FOR_THE_HERO_IMAGE: Alternative Text for the hero image
-ALT_TEXT: Alt-Text
-AUTHOR: Author
-AUTHOR_DESCRIPTION_(MARKDOWN): Author-Description (Markdown)
+ALL_USERS: all users
+ALTERNATIVE_TEXT_FOR_THE_HERO_IMAGE: alternative text for the hero image
+ALT_TEXT: alt-text
+AUTHOR: author
+AUTHOR_DESCRIPTION_(MARKDOWN): author-description (markdown)
 BACK_TO_STARTPAGE: back to startpage
 BOLD: bold
-BOTTOM: Bottom
+BOTTOM: bottom
 BROWSE: BROWSE
-BULLET_LIST: Bullet List
+BULLET_LIST: bullet list
 BY: by
 CANCEL: cancel
 CAN_BE_USED_FOR_AUTHOR_LINE_IN_FRONTEND_: Can be used for author line in frontend.
-CAPTION: Caption
+CAPTION: caption
 CELL: cell
-CENTER: Center
+CENTER: center
 CHECK: check
-CHOOSE_FILE: Choose file
-CLASS: Class
-CLOSE_LIBRARY: Close Library
-CODE: Code
+CHOOSE_FILE: choose file
+CLASS: class
+CLOSE_LIBRARY: close library
+CODE: code
 COG: cog
-CONTENT: Content
-COPYRIGHT: Copyright
+CONTENT: content
+COPYRIGHT: copyright
 CREATED_AT_(READONLY): Created at (read only)
 CREATED_AT_(READ_ONLY): Created at (readonly)
-CREATE_NEW_USER: Create New User
-CREATE_USER: Create User
+CREATE_NEW_USER: Create new user
+CREATE_USER: Create user
 CROSS: cross
 CUSTOM_CSS: Custom CSS
-DEFINITION: Definition List
-DEFINITION_LIST: Definition List
+DEFINITION: definition list
+DEFINITION_LIST: definition list
 DELETE: delete
 DELETE_CLOSE: delete/close
 DELETE_COLUMN: delete column
 DELETE_CONTENT_BLOCK: delete content-block
-DELETE_PAGE: Delete page
+DELETE_PAGE: delete page
 DELETE_ROW: delete row
-DELETE_USER: Delete User
+DELETE_USER: delete user
 DESCRIPTION: description
-DISCARD: Discard
-DISCARD_CHANGES: Discard Changes
+DISCARD: discard
+DISCARD_CHANGES: discard changes
 DO_YOU_REALLY_WANT_TO_DELETE_THE_USER: Do you really want to delete the user
 DO_YOU_REALLY_WANT_TO_DELETE_THIS_PAGE: Do you really want to delete this page?
 DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES_AND_SET_THE_CONTENT_BACK_TO_THE_LIVE_VERSION: Do you want to discard your changes and set the content back to the live version?
-DRAFT: Draft
+DRAFT: draft
 DRAG_A_PICTURE_OR_CLICK_TO_SELECT: upload an image
 DUTCH__FLEMISH: Dutch, Flemish
 EDIT: edit
 EDITOR: editor
-EDIT_USER: Edit User
+EDIT_USER: edit user
 ENGLISH: English
 EXTERNAL_LINK: external-link
 E_G_: e.g.
-E_MAIL: E-Mail
-FAVICON: Favicon
-FILE: File
+E_MAIL: e-mail
+FAVICON: favicon
+FILE: file
 FILES: Files
-FIRST_NAME: First Name
+FIRST_NAME: first name
 FOLDER: folder
-FORGOT_PASSWORD: Forgot password
-FORMAT: Format
+FORGOT_PASSWORD: forgot password
+FORMAT: format
 FRENCH: French
 GENERAL_PRESENTATION: General Presentation
 GERMAN: German
-GOOGLE_SITEMAP: Google Sitemap
+GOOGLE_SITEMAP: google sitemap
 HAS_EDIT_RIGHTS_FOR_THIS_ARTICLE_: Has edit rights for this article.
 HEAD: Head
 HEADLINE: Headline
-HEADLINE_ANCHORS: Headline Anchors
-HERO_IMAGE: Hero Image
+HEADLINE_ANCHORS: Headline anchors
+HERO_IMAGE: Hero image
 HIDE: Hide
 HIDE_PAGE_FROM_NAVIGATION: Hide page from navigation
 HOME: home

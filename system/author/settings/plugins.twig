@@ -41,6 +41,15 @@
 								</ul>
 							</div>
 						<div class="cardInner cardFields{{ errors[pluginName] ? ' open' : '' }}">
+
+							{% if plugin.dependencies %}
+								<div class="w-100 mt3 pa3 pb4 bg-tm-green white">
+									<p>Please make sure that you have installed and activated the following plugins:</p>
+									{% for dependency in plugin.dependencies %}
+										<span class="pa2 mr2 br1 bg-tm-gray black">{{ dependency }}</span> 
+									{% endfor %}
+								</div>
+							{% endif %}
 						
 							{% for field in plugin.forms.fields %}
 								

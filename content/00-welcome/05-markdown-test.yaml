@@ -1,0 +1,15 @@
+meta:
+    title: 'Markdown Reference and Test Page'
+    description: 'Markdown is a simple and universal syntax for text formatting. More and more writers switch to markdown, because they can format their text during the writing process without using any format-buttons. '
+    author: 'Sebastian Schürmanns'
+    manualdate: '2020-02-22'
+    modified: '2020-01-20'
+    created: null
+    time: 04-40-32
+    navtitle: ''
+    hide: false
+ebooks:
+    layout: electric
+    content:
+        -
+            name: 'markdown test'

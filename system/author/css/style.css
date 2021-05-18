@@ -73,8 +73,32 @@ a, a:link, a:visited, a:focus, a:hover, a:active, .link, button, .button, .tab-b
 .hover-bg-white.active{
 	background-color: #fff;
 }
+.tm-gray{
+	color:#f9f8f6;
+}
+.bg-tm-gray{
+	background:#f9f8f6;
+}
+.b--tm-gray{
+	border-color:#f9f8f6;
+}
+.hover-tm-gray:hover{
+	color:#f9f8f6;
+}
+.hover-bg-tm-gray:hover{
+	background:#f9f8f6;
+}
+.hover-b--tm-gray:hover,.hover-b--tm-gray.active{
+	border-color:#f9f8f6;
+}
+
+/*
 .w-100{
 	width:100%!important;
+}
+*/
+.w-100{
+	width:100%;
 }
 .w-15{
 	width: 15%;

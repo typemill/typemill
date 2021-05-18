@@ -21,6 +21,9 @@ class User extends WriteYaml
 			$usernames[] = str_replace('.yaml', '', $userfile);
 		}
 
+
+		usort($usernames, 'strnatcasecmp');
+
 		return $usernames;
 	}
 	
@@ -235,8 +238,13 @@ class User extends WriteYaml
 	{
 		if(file_exists($this->userDir . DIRECTORY_SEPARATOR . 'tmuserindex-mail.txt'))
 		{
-			# read and return the file
-			$usermailindex = file($this->userDir . DIRECTORY_SEPARATOR . 'tmuserindex-mail.txt');
+			# unserialize and return the file
+			$usermailindex = unserialize(file_get_contents($this->userDir . DIRECTORY_SEPARATOR . 'tmuserindex-mail.txt'));
+
+			if($usermailindex)
+			{
+				return $usermailindex;
+			}
 		}
 		
 		$usernames 		= $this->getUsers();
@@ -249,7 +257,7 @@ class User extends WriteYaml
 			$usermailindex[$userdata['email']] = $username;
 		}
 
-		file_put_contents($this->userDir . DIRECTORY_SEPARATOR . 'tmuserindex-mail.txt', var_export($usermailindex, TRUE));
+		file_put_contents($this->userDir . DIRECTORY_SEPARATOR . 'tmuserindex-mail.txt', serialize($usermailindex));
 
 		return $usermailindex;
 	}
@@ -304,8 +312,12 @@ class User extends WriteYaml
 	{
 		if(file_exists($this->userDir . DIRECTORY_SEPARATOR . 'tmuserindex-role.txt'))
 		{
-			# read and return the file
-			$userroleindex = file($this->userDir . DIRECTORY_SEPARATOR . 'tmuserindex-role.txt');
+			# unserialize and return the file
+			$userroleindex = unserialize(file_get_contents($this->userDir . DIRECTORY_SEPARATOR . 'tmuserindex-role.txt'));
+			if($userroleindex)
+			{
+				return $userroleindex;
+			}
 		}
 
 		$usernames		= $this->getUsers();
@@ -318,7 +330,7 @@ class User extends WriteYaml
 			$userroleindex[$userdata['userrole']][] = $username;
 		}
 
-		file_put_contents($this->userDir . DIRECTORY_SEPARATOR . 'tmuserindex-role.txt', var_export($userroleindex, TRUE));
+		file_put_contents($this->userDir . DIRECTORY_SEPARATOR . 'tmuserindex-role.txt', serialize($userroleindex));
 
 		return $userroleindex;
 	}
