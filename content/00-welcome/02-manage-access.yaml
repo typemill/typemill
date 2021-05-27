@@ -1,9 +1,9 @@
 meta:
-    title: 'restrict access'
+    title: 'manage access'
     description: 'Typemill has a build-in system to restrict access to pages or to the whole websites. You can activate both features in the system settings under the section "access rights". If you activate one of the features, then Typemill will use session cookies on all frontend pages.'
     owner: trendschau
     author: 'Sebastian Schürmanns'
-    created: '2021-05-12'
-    time: 21-04-29
-    navtitle: 'restrict access'
-    modified: '2021-05-12'
+    created: '2021-05-27'
+    time: 20-59-06
+    navtitle: 'manage access'
+    modified: '2021-05-27'
