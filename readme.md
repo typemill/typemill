@@ -1,14 +1,14 @@
 # About TYPEMILL
 
-TYPEMILL is a small flat file cms created for editors and writers. It provides an author-friendly dashboard and a visual-block-editor for markdown based on vue.js. Use TYPEMILL for manuals, documentations, web-books and similar publications. The website http://typemill.net itself is an example for TYPEMILL.
+TYPEMILL is a lightweight flat file cms for micro-publishers. You can use it for documentations, manuals, special interest websites, and any other information-driven web-project. You can also enhance Typemill with plugins and generate professional e-books in pdf-format with it. The website http://typemill.net runs with Typemill.
 
 ![TYPEMILL Screenshot](https://typemill.net/media/tm-demo.gif)
 
 ## Features
 
 * Website with markdown-files.
-* Flexible drag & drop navigation.
 * Visual markdown editor (VUE.js) and raw markdown mode.
+* Flexible drag & drop navigation.
 * Markdown extras with
   * table of contents (TOC)
   * tables
@@ -22,8 +22,15 @@ TYPEMILL is a small flat file cms created for editors and writers. It provides a
 * System configurations.
 * User management.
 * Flexible form management with YAML-files.
-* Plugins (with symfony event dispatcher).
+* Flexible access rights.
 * Themes (with TWIG).
+* Plugins (with symfony event dispatcher).
+
+Some plugin highlights are:
+
+* **Ebooks**: Generate one or many professional pdf books from your typemill website.
+* **Register**: Let users register to your website and give them access to pro-content.
+* **Subscribe** (in work): Sell subscriptions for premium content with traditional pdf-invoices.
 
 ## Requirements
 
@@ -62,7 +69,7 @@ You can use your ftp-software for that.
 
 ## Setup
 
-You will be redirected to the `/setup` page, please create an initial user and configure your system in the author panel. 
+If you visit your website first, then you will be redirected to the `/setup` page. Please create an initial user and configure your system in the author panel. 
 
 ## Login
 
@@ -91,39 +98,38 @@ TYPEMILL is published under MIT licence. Please check the licence of the include
 
 ## IMPORTANT: How to Contribute
 
-Typemill is still in an early stage and contributions are highly welcome. Please follow these rules:
+Contributions are highly welcome. Please follow these rules:
 
 * If you plan bigger changes, then please create an issue first so we can discuss it.
 * Fork the "DEVELOP" branch from typemill. Never use the master branch, because it is protected and only contains tested releases.
 * Do your changes.
-* Before your request, please pull the recent develop branch again to get latest changes. 
-* Then make a pull request for the DEVELOP branch again.
+* After that pull the recent develop branch again to get the latest changes. 
+* Then make a pull request for the DEVELOP branch.
 
 You can check the [roadmap for Typemill](https://github.com/typemill/typemill/issues/35) and scroll through the issues. I will mark issues in future that are easy to start with or where help is highly appreciated.
 
 Here are some contribution-ideas for non-coder:
 
-* Share typemill with social media.
-* Write about typemill.
+* Share Typemill with social media.
+* Write about Typemill.
 * Improve the documentation.
 * Find bugs and errors (open a new issue on github for it).
 * Describe some missing features and explain, why they are important for other users.
 
-Some ideas for devs (please fork this repository make your changes and create a pull request):
+Some ideas for devs:
 
 * Fix a bug.
 * Create or port a theme, especially for documentations, knowlegde bases or web-books.
 * Create a fancy plugin.
-* An auto-update functionality for core system, plugins and themes is highly needed.
+* An auto-update functionality for the core system, for plugins and for themes is highly welcome.
 * Improve the accessibility of html and css.
-* Implement user roles and rights with RBAC or ACL.
 * Write autotests with Cypress.
 
 For hints, questions, problems and support, please open up a new issue on GitHub.
 
 ## Support
 
-This is an open source project. I love it and I spend about 20 hours a week on it (starting in 2017). There is no business model right now, but you can support this project with a donation or simply hire me for implementations.
+This is an open source project. I love it and I spend about 20 hours a week on it (starting in 2017). There is no business model right now, but you can support this project with a donation or simply [hire me](https://trendschau.net) for implementations.
 
 Donate: https://www.paypal.me/typemill
 

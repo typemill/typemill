@@ -76,6 +76,12 @@ class AuthController extends Controller
 	
 	public function login(Request $request, Response $response)
 	{
+	    if( ( null !== $request->getattribute('csrf_result') ) OR ( $request->getattribute('csrf_result') === false ) )
+	    {
+			$this->c->flash->addMessage('error', 'The form has a timeout, please try again.');
+			return $response->withRedirect($this->c->router->pathFor('auth.show'));				
+	    }
+
 		/* log user attemps to authenticate */
 		$yaml 			= new WriteYaml();
 		$logins 		= $yaml->getYaml('settings/users', '.logins');

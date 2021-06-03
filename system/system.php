@@ -210,7 +210,12 @@ foreach($session_segments as $segment)
 		{
 			$guard = new \Slim\Csrf\Guard();
 			$guard->setPersistentTokenMode(true);
-			
+			$guard->setfailurecallable(function ($request, $response, $next)
+			{
+				$request = $request->withattribute("csrf_result", false);
+				return $next($request, $response);
+			});
+
 			return $guard;
 		};
 		

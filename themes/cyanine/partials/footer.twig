@@ -1,7 +1,7 @@
 {% set nowYear = "now"|date("Y") %}
 
 <footer class="w-100 bl br bb lh-copy">
-	<div class="mw8 center pv3 flex-l">
+	<div class="grid-container center pv3 flex-l">
 		{% for column,key in settings.themes.cyanine.footercolumns %}
 			{% if settings.themes.cyanine[column] %}
 				<div class="w-100 pv3 ph3 ph4-l">
@@ -10,7 +10,7 @@
 			{% endif %}
 		{% endfor %}
 	</div>
-	<div class="mw8 center pv3 tc-l w100">
+	<div class="center pv3 tc-l w100">
 		{% if settings.year is empty or settings.year == nowYear %}
 		    {% set copyrightYears = nowYear %}
 		{% else %}

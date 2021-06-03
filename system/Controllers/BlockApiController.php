@@ -325,7 +325,6 @@ class BlockApiController extends ContentController
 		{
 			return $response->withJson(['errors' => ['message' => 'Could not write to file. Please check if the file is writable']], 404);
 		}
-	
 
 		/* parse markdown-file to content-array, if title parse title. */
 		if($this->params['block_id'] == 0)

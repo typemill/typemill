@@ -124,8 +124,10 @@ article a:hover, article a:focus, article a:active,
 footer a:hover, footer a:focus, footer a:active{ 
 	text-decoration: none;
 }
-/* Fix background for hightlight plugin */
+
+/* Fix background for hightlight plugin 
 code.hljs{ background: transparent; }
+*/
 
 /* For definition list */
 dt::after{

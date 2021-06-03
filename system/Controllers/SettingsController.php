@@ -67,7 +67,14 @@ class SettingsController extends Controller
 	public function saveSettings($request, $response, $args)
 	{
 		if($request->isPost())
-		{			
+		{
+
+		    if( $request->getattribute('csrf_result') === false )
+		    {
+				$this->c->flash->addMessage('error', 'The form has a timeout, please try again.');
+				return $response->withRedirect($this->c->router->pathFor('settings.show'));				
+		    }
+
 			$settings 			= \Typemill\Settings::getUserSettings();
 			$defaultSettings	= \Typemill\Settings::getDefaultSettings();
 			$params 			= $request->getParams();
@@ -378,7 +385,13 @@ class SettingsController extends Controller
 	public function saveThemes($request, $response, $args)
 	{
 		if($request->isPost())
-		{	
+		{
+		    if( $request->getattribute('csrf_result') === false )
+		    {
+				$this->c->flash->addMessage('error', 'The form has a timeout, please try again.');
+				return $response->withRedirect($this->c->router->pathFor('themes.show'));				
+		    }
+
 			$userSettings 	= \Typemill\Settings::getUserSettings();
 			$params 		= $request->getParams();
 			$themeName		= isset($params['theme']) ? $params['theme'] : false;
@@ -465,6 +478,13 @@ class SettingsController extends Controller
 	{
 		if($request->isPost())
 		{
+
+		    if( $request->getattribute('csrf_result') === false )
+		    {
+				$this->c->flash->addMessage('error', 'The form has a timeout, please try again.');
+				return $response->withRedirect($this->c->router->pathFor('plugins.show'));
+		    }
+
 			$userSettings 	= \Typemill\Settings::getUserSettings();
 			$pluginSettings	= array();
 			$userInput 		= $request->getParams();
@@ -764,6 +784,12 @@ class SettingsController extends Controller
 	{
 		if($request->isPost())
 		{
+		    if( $request->getattribute('csrf_result') === false )
+		    {
+				$this->c->flash->addMessage('error', 'The form has a timeout, please try again.');
+				return $response->withRedirect($this->c->router->pathFor('user.new'));				
+		    }
+
 			$params 		= $request->getParams();
 			$user 			= new User();
 			$validate		= new Validation();
@@ -793,6 +819,12 @@ class SettingsController extends Controller
 
 		if($request->isPost())
 		{
+		    if( $request->getattribute('csrf_result') === false )
+		    {
+				$this->c->flash->addMessage('error', 'The form has a timeout, please try again.');
+				return $response->withRedirect($this->c->router->pathFor('user.account'));
+		    }
+
 			$params 		= $request->getParams();
 			$userdata 		= $params['user'];
 			$user 			= new User();
@@ -886,7 +918,13 @@ class SettingsController extends Controller
 	public function deleteUser($request, $response, $args)
 	{
 		if($request->isPost())
-		{			
+		{
+		    if( $request->getattribute('csrf_result') === false )
+		    {
+				$this->c->flash->addMessage('error', 'The form has a timeout, please try again.');
+				return $response->withRedirect($this->c->router->pathFor('user.account'));				
+		    }
+
 			$params 		= $request->getParams();
 			$validate		= new Validation();
 			$user			= new User();

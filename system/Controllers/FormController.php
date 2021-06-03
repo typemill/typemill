@@ -14,11 +14,18 @@ class FormController extends Controller
 	public function savePublicForm($request, $response, $args)
 	{
 		if($request->isPost())
-		{	
+		{
 			$params 			= $request->getParams();
 			reset($params);
 			$pluginName 		= key($params);
 			$referer			= $request->getHeader('HTTP_REFERER');
+
+			# check csrf protection
+		    if($request->getattribute('csrf_result') === false )
+		    {
+				$this->c->flash->addMessage('error', 'The form has a timeout. Please try again.');
+				return $response->withRedirect($referer[0]);
+		    }
 
 			# simple bot check with honeypot
 			if(isset($params[$pluginName]['personal-mail']))

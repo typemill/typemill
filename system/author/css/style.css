@@ -226,7 +226,7 @@ h3{	font-size: 1em; margin: 0.6em 0 0.6em; text-transform: uppercase; font-weigh
 }
 section{
 	background: #FFFFFF; 
-	box-shadow: 0 0 4px #ddd; 
+	box-shadow: 0 4px 4px #ddd; 
 	position: relative;
 	margin-bottom: 40px;
 	padding: 20px 5px 40px;
@@ -949,7 +949,7 @@ header a.button{
 	position: absolute;
 	width: 100%;
 	margin-top: -35px;
-	z-index: 1;	
+/*	z-index: 1;	*/
 }
 .tab-button{
 	font-size: 0.9em;
@@ -968,7 +968,7 @@ header a.button{
 	outline: none;
 }
 section.tab{
-	z-index: -1;
+/*	z-index: -1; */
 	padding: 40px;
 }
 /********************
@@ -2358,16 +2358,18 @@ button.format-item.close:hover{
 	display: inline-block;
 	margin-top: 15px;
 }
-input.definitionTerm{
+.definitionTerm{
 	width: 29%;
+	display: inline-block;
+	vertical-align: top;
+}
+.definitionDescription{
+	width: 60%;
 	display: inline-block;
 	vertical-align: top;
 	background: #fff;
 }
-textarea.definitionDescription{
-	width: 60%;
-	display: inline-block;
-	vertical-align: top;
+.definitionRow input, .definitionRow textarea{
 	background: #fff;
 }
 button.addDL,

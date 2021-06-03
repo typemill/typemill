@@ -2,7 +2,9 @@
 
 		<div class="mw7 pb7 ph3 center">
 			<header class="mt6">
-				{% if settings.themes.cyanine.introTitle %}
+				{% if logo %}
+					<img src="{{ base_url }}/{{ logo }}" class="logo-image"/>
+				{% elseif settings.themes.cyanine.introTitle %}
 					<h1 class="f-large f-headline-ns lh-title mv2 pt5-ns">{{ settings.themes.cyanine.introTitle }}</h1>
 				{% else %}
 					<h1 class="f-large f-headline-ns lh-title mv2 pt5-ns">{{ title }}</h1>

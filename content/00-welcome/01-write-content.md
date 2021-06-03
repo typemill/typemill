@@ -1,6 +1,6 @@
 # Write Content
 
-Typemill is a simple Flat File Content Management System (CMS). We (the community) work hard to provide the best author experience with easy and intuitive authoring tools. But Typemill is still in early development and it is likely that not everything will work perfectly out of the box. If you miss something or if you have ideas for improvements, then post a new issue on [GitHub](https://github.com/typemill/typemill/issues).
+Typemill provides easy and intuitive authoring tools and we work hard to create a good author experience. With the interactive navigation you can create pages and structure your websites. The visual markdown editor will help you to create content in a wysiwyg mode. The publish bar gives you full control over the status of each page. Watch the following video tutorial to learn all the details.
 
 ![youtube-video](media/live/youtube-6i2-uv88gke.jpeg "click to load video"){#6I2-uV88GkE .youtube}
 

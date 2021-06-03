@@ -718,33 +718,60 @@ const codeComponent = Vue.component('code-component', {
 	template: '<div>' + 
 				'<input type="hidden" ref="markdown" :value="compmarkdown" :disabled="disabled" @input="updatemarkdown" />' +	
 				'<div class="contenttype"><svg class="icon icon-embed"><use xlink:href="#icon-embed"></use></svg></div>' +
+				'<div class="w-100 pa2 white bg-tm-green dib">' +
+				  '<label for="language" class="w-10">{{ \'Language\'|translate }}: </label>' + 
+				  '<input class="pa1 w-90 min-h-100" name="language" type="text" v-model="language" :disabled="disabled" @input="createlanguage">' + 
+				'</div>' +
 				'<textarea class="mdcontent" ref="markdown" v-model="codeblock" :disabled="disabled" @input="createmarkdown"></textarea>' + 
 				'</div>',
 	data: function(){
 		return {
-			codeblock: ''
+			prefix: '```',
+			language: '',
+			codeblock: '',
 		}
 	},
 	mounted: function(){
 		this.$refs.markdown.focus();
 		if(this.compmarkdown)
 		{
-			var codeblock = this.compmarkdown.replace("````\n", "");
-			codeblock = codeblock.replace("```\n", "");
-			codeblock = codeblock.replace("\n````", "");
-			codeblock = codeblock.replace("\n```", "");
-			codeblock = codeblock.replace("\n\n", "\n");
-			this.codeblock = codeblock;
+			var codelines 	= this.compmarkdown.split(/\r\n|\n\r|\n|\r/);
+			var linelength 	= codelines.length;
+			var codeblock	= '';
+
+			for(i=0;i<linelength;i++)
+			{
+				if(codelines[i].substring(0,3) == '```')
+				{
+					if(i==0)
+					{
+						var prefixlength	= (codelines[i].match(/`/g)).length;						
+						this.prefix 		= codelines[i].slice(0, prefixlength);
+						this.language 		= codelines[i].replace(/`/g, '');
+					}
+				}
+				else
+				{
+					this.codeblock += codelines[i] + "\n";
+				}
+			}
+			this.codeblock = this.codeblock.replace(/^\s+|\s+$/g, '');
 		}
 		this.$nextTick(function () {
 			autosize(document.querySelectorAll('textarea'));
+			this.$parent.setComponentSize();
 		});	
 	},
 	methods: {
+		createlanguage: function()
+		{
+			var codeblock = this.prefix + this.language + '\n' + this.codeblock + '\n' + this.prefix;
+			this.updatemarkdown(codeblock);
+		},
 		createmarkdown: function(event)
 		{
 			this.codeblock = event.target.value;
-			var codeblock = '````\n' + event.target.value + '\n````';
+			var codeblock = this.prefix + this.language + '\n' + this.codeblock + '\n' + this.prefix;
 			this.updatemarkdown(codeblock);
 		},
 		updatemarkdown: function(codeblock)
@@ -1243,43 +1270,76 @@ const definitionComponent = Vue.component('definition-component', {
 		}
 	},
 	template: '<div class="definitionList">' +
-				'<div class="contenttype"><svg class="icon icon-dots-two-vertical"><use xlink:href="#icon-dots-two-vertical"></use></svg></div>' +
-				'<draggable v-model="definitionList" :animation="150" @end="moveDefinition">' +
-	  			    '<div class="definitionRow" v-for="(definition, dindex) in definitionList" :key="definition.id">' +
-						'<svg class="icon icon-arrows-v"><use xlink:href="#icon-arrows-v"></use></svg>' +
-						'<input type="text" class="definitionTerm" v-bind:placeholder="\'term\'|translate" :value="definition.term" :disabled="disabled" @input="updateterm($event,dindex)" @blur="updateMarkdown">' +
-			  		  	'<svg class="icon icon-dots-two-vertical"><use xlink:href="#icon-dots-two-vertical"></use></svg>' + 
-		  			  	'<textarea class="definitionDescription" v-bind:placeholder="\'description\'|translate" v-html="definition.description" :disabled="disabled" @input="updatedescription($event, dindex)" @keydown.13.prevent="enter" @blur="updateMarkdown"></textarea>' +
-						'<button class="delDL" @click.prevent="deleteDefinition(dindex)"><svg class="icon icon-minus"><use xlink:href="#icon-minus"></use></svg></button>' +
-					'</div>' +
-				'</draggable>' +
-				'<button class="addDL" @click.prevent="addDefinition()"><svg class="icon icon-plus"><use xlink:href="#icon-plus"></use></svg> {{ \'add definition\'|translate }}</button>' +
-				'<div v-if="load" class="loadwrapper"><span class="load"></span></div>' +
-				'</div>',
+							'<div class="contenttype"><svg class="icon icon-dots-two-vertical"><use xlink:href="#icon-dots-two-vertical"></use></svg></div>' +
+							'<draggable v-model="definitionList" :animation="150" @end="moveDefinition">' +
+	  			    	'<div class="definitionRow relative" v-for="(definition, dtindex) in definitionList" :key="definition.id">' +
+									'<div class="definitionTerm">' + 
+										'<svg class="icon icon-arrows-v"><use xlink:href="#icon-arrows-v"></use></svg>' +
+										'<input type="text" class="w-90" v-bind:placeholder="\'term\'|translate" :value="definition.term" :disabled="disabled" @input="updateterm($event,dtindex)" @blur="updateMarkdown">' +
+			  		  		'</div>' +
+			  		  		'<div class="dib w-60">' +
+				  		  		'<div class="flex" v-for="(description,ddindex) in definition.descriptions">' +
+					  		  		'<svg class="icon icon-dots-two-vertical"><use xlink:href="#icon-dots-two-vertical"></use></svg>' + 
+				  			  		'<textarea class="w-90" v-bind:placeholder="\'description\'|translate" v-html="definition.descriptions[ddindex]" :disabled="disabled" @input="updatedescription($event, dtindex, ddindex)" @keydown.13.prevent="enter" @blur="updateMarkdown"></textarea>' +
+					  					'<button title="delete description" class="ba bw1 b--tm-gray white bg-tm-red w2 h2 f7 lh-solid dim" @click.prevent="deleteItem(dtindex,ddindex)"><svg class="icon icon-minus baseline"><use xlink:href="#icon-minus"></use></svg></button>' +
+				  					'</div>' +
+				  					'<button title="add description" class="ml3 ba bw1 b--tm-gray white bg-tm-green w2 h2 f7 lh-solid dim" @click.prevent="addItem(dtindex)"><svg class="icon icon-plus"><use xlink:href="#icon-plus"></use></svg></button>' +
+			  					'</div>' +
+									'<button title="delete definition" class="absolute top-1 right-2 bottom-1 tc pa2 ba br1 b--tm-red tm-red bg-tm-gray hover-bg-tm-red hover-white" @click.prevent="deleteDefinition(dtindex)">x</button>' +
+								'<hr></div>' +
+							'</draggable>' +
+							'<button class="ml3 mb3 mr1 ba bw1 b--tm-gray white bg-tm-green w2 h2 f7 lh-solid dim" @click.prevent="addDefinition()"><svg class="icon icon-plus"><use xlink:href="#icon-plus"></use></svg></button><span class="f6">{{ \'add definition\'|translate }}</span>' +
+							'<div v-if="load" class="loadwrapper"><span class="load"></span></div>' +
+						'</div>',
 	mounted: function(){
 		if(this.compmarkdown)
 		{
-			var definitionList = this.compmarkdown.replace("\r\n", "\n");
-			definitionList = definitionList.replace("\r", "\n");
-			definitionList = definitionList.split("\n\n");
+			var definitionList 	= this.compmarkdown.replace("\r\n", "\n");
+			definitionList 			= definitionList.replace("\r", "\n");
+			definitionList 			= definitionList.split("\n\n");
 
 			for(var i=0; i < definitionList.length; i++)
 			{
-				var definition = definitionList[i].split("\n");
-				
-				var term = definition[0];
-				var description = definition[1];
-				var id = i;
+				var definitionBlock 	= definitionList[i].split("\n");
+				var term 							= definitionBlock[0];
+				var descriptions 			= [];
+				var description 			= false;
 
-				if(description && description.substring(0, 2) == ": ")
+				/* parse one or more descriptions */
+				for(var y=0; y < definitionBlock.length; y++)
 				{
-					this.definitionList.push({'term': term ,'description': description.substring(2), 'id': id});
+					if(y == 0)
+					{
+						continue;
+					}
+
+					if(definitionBlock[y].substring(0, 2) == ": ")
+					{
+						/* if there is another description in the loop, then push that first then start a new one */
+						if(description)
+						{
+							descriptions.push(description);
+						}
+						var cleandefinition = definitionBlock[y].substr(1).trim();
+						var description = cleandefinition;
+					}
+					else
+					{
+						description += "\n" + definitionBlock[y];
+					}
 				}
+
+				if(description)
+				{
+					descriptions.push(description);
+				}
+				this.definitionList.push({'term': term ,'descriptions': descriptions, 'id': i});					
 			}
+			console.info(this.definitionList);
 		}
 		else
 		{
-			this.definitionList.push({'term': '', 'description': '', 'id': 0});
+			this.addDefinition();
 		}
 	},
 	methods: {
@@ -1287,23 +1347,31 @@ const definitionComponent = Vue.component('definition-component', {
 		{
 			return false;
 		},
-		updateterm: function(event, dindex)
+		updateterm: function(event, dtindex)
 		{
-			this.definitionList[dindex].term = event.target.value;
+			this.definitionList[dtindex].term = event.target.value;
 		},
-		updatedescription: function(event, dindex)
+		updatedescription: function(event, dtindex, ddindex)
 		{
-			this.definitionList[dindex].description = event.target.value;
+			this.definitionList[dtindex].descriptions[ddindex] = event.target.value;
 		},
 		addDefinition: function()
 		{
 			var id = this.definitionList.length;
-			this.definitionList.push({'term': '', 'description': '', 'id': id});
+			this.definitionList.push({'term': '', 'descriptions': [''], 'id': id});
+		},
+		deleteDefinition: function(dtindex)
+		{
+			this.definitionList.splice(dtindex,1);
 			this.updateMarkdown();
 		},
-		deleteDefinition: function(dindex)
+		addItem: function(dtindex)
 		{
-			this.definitionList.splice(dindex,1);
+			this.definitionList[dtindex].descriptions.push('');
+		},
+		deleteItem: function(dtindex,ddindex)
+		{
+			this.definitionList[dtindex].descriptions.splice(ddindex,1);
 			this.updateMarkdown();
 		},
 		moveDefinition: function(evt)
@@ -1312,11 +1380,18 @@ const definitionComponent = Vue.component('definition-component', {
 		},
 		updateMarkdown: function()
 		{
-			var length = this.definitionList.length;
+			var dllength = this.definitionList.length;
 			var markdown = '';
-			for(i = 0; i < length; i++)
+
+			for(i = 0; i < dllength; i++)
 			{
-				markdown = markdown + this.definitionList[i].term + "\n: " + this.definitionList[i].description + "\n\n";
+				markdown = markdown + this.definitionList[i].term;
+				var ddlength 	= this.definitionList[i].descriptions.length;
+				for(y = 0; y < ddlength; y++)
+				{
+					markdown = markdown + "\n:   " + this.definitionList[i].descriptions[y];
+				}
+				markdown = markdown + "\n\n";
 			}
 			this.$emit('updatedMarkdown', markdown);
 		},

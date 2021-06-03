@@ -14,10 +14,10 @@
 	</div>
 	<div class="dn dib-l">
 		{% if item.prevItem %}
-			<a class="link pr1 f-link underline-hover" href="{{ item.prevItem.urlRel }}">&lsaquo;&nbsp; {{ __('previous') }}</a>
+			<a class="link pr1 f-link underline-hover" href="{{ item.prevItem.urlRel }}">&lsaquo;&nbsp; {{ settings.themes.cyanine.previous|default('previous') }}</a>
 		{% endif %}
 		{% if item.nextItem %}
-			<a class="link pl1 f-link underline-hover" href="{{ item.nextItem.urlRel }}">{{ __('next') }} &nbsp;&rsaquo;</a>
+			<a class="link pl1 f-link underline-hover" href="{{ item.nextItem.urlRel }}">{{ settings.themes.cyanine.next|default('next') }} &nbsp;&rsaquo;</a>
 		{% endif %}					
 	</div>
 </div>

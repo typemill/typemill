@@ -242,7 +242,10 @@
 			
 			{% if settings.themes.cyanine.collapseNav %}
 				<script>
-					var expandButton = document.getElementById("expander");
+					var expandButton 	= document.getElementById("expander");
+					var expandLabel		= expandButton.dataset.expandlabel;
+					var collapseLabel	= expandButton.dataset.collapselabel;
+					
 					if(expandButton)
 					{
 						expandButton.addEventListener('click', function(e)
@@ -253,11 +256,11 @@
 
 							if(contentnav.classList.contains("collapse"))
 							{
-								expandButton.innerHTML = "expand navigation";
+								expandButton.innerHTML = expandLabel;
 							}
 							else
 							{
-								expandButton.innerHTML = "collapse navigation";
+								expandButton.innerHTML = collapseLabel;
 							}
 						});
 					}

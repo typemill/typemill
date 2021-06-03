@@ -193,6 +193,14 @@ let publishController = new Vue({
 				self.handleErrors(error);
 			});
 		},
+		checkUnsafedContent(event){
+			console.info(this.draftDisabled);
+			if(!this.draftDisabled)
+			{
+				event.preventDefault();
+				this.showModal('unsafed');
+			}
+		},
 		showModal: function(type){
 			this.modalType 		= type;
 			this.modalWindow 	= true;
