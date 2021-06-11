@@ -33,6 +33,7 @@
 				:contains="item.contains"
 				:filetype="item.fileType" 
 				:status="item.status"
+				:collapse="false"
 				:folder="item.folderContent"
 			></navigation>
 		</draggable>
@@ -58,9 +59,10 @@
 {% verbatim %}
 	<template id="navigation-template">
 		<li class="navi-item" :class="elementtype">
+			<div v-if="folder" class="foldertoggle" @click="collapse = !collapse"><svg v-if="!collapse" class="icon icon-shrink2"><use xlink:href="#icon-shrink2"></use></svg><svg v-else class="icon icon-enlarge2"><use xlink:href="#icon-enlarge2"></use></svg></div>
 			<div class="status" :class="status"></div>
 			<a v-bind:href="getUrl(root, url)" :class="checkActive(active,parent)"><span class="iconwrapper"><svg class="icon" :class="getIconClass(elementtype, filetype, hide)"><use :xlink:href="getIcon(elementtype, filetype, hide)"></use></svg></span><span :class="getLevel(level)">{{ name }}</span><span class="movewrapper"><span class="movewrapper"><svg class="icon icon-arrows-v"><use xlink:href="#icon-arrows-v"></use></svg></span></a>
-			<draggable v-if="folder" class="navi-list" tag="ul" 
+			<draggable v-if="folder" v-show="!collapse" class="navi-list" tag="ul" 
 				@start="onStart" 
 				@end="onEnd"
 				:list="folder" 
@@ -86,6 +88,7 @@
 					:status="item.status" 
 					:elementtype="item.elementType"
 					:contains="item.contains" 
+					:collapse="false"
 					:folder="item.folderContent"
 				></navigation>
 			</draggable>

@@ -243,11 +243,12 @@
 			{% if settings.themes.cyanine.collapseNav %}
 				<script>
 					var expandButton 	= document.getElementById("expander");
-					var expandLabel		= expandButton.dataset.expandlabel;
-					var collapseLabel	= expandButton.dataset.collapselabel;
 					
-					if(expandButton)
+					if(expandButton !== null)
 					{
+						var expandLabel		= expandButton.dataset.expandlabel;
+						var collapseLabel	= expandButton.dataset.collapselabel;
+
 						expandButton.addEventListener('click', function(e)
 						{
 							var contentnav = document.getElementById("contentnav");

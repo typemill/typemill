@@ -1,6 +1,6 @@
 const navcomponent = Vue.component('navigation', {
 	template: '#navigation-template',
-	props: ['homepage', 'name', 'hide', 'newItem', 'parent', 'active', 'filetype', 'status', 'elementtype', 'contains', 'element', 'folder', 'level', 'url', 'root', 'freeze'],
+	props: ['homepage', 'name', 'hide', 'newItem', 'parent', 'active', 'filetype', 'status', 'elementtype', 'contains', 'element', 'folder', 'level', 'url', 'root', 'freeze', 'collapse'],
 	data: function () {
 		return {
 			showForm: false,

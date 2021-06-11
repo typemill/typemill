@@ -1,0 +1,13 @@
+.landingpageintro h1{
+display: inline-block;
+background: white;
+padding: 4px 10px;
+margin: 5px;
+}
+
+.landingpageintro p{
+display: inline;
+background: white;
+line-height: 2.1rem;
+padding: 6px 4px 4px;
+}

@@ -1,30 +1,33 @@
 	<section class="landingpageintro w-100 dib tc bt bl br bb">
 
-		<div class="mw7 pb7 ph3 center">
-			<header class="mt6">
-				{% if logo %}
-					<img src="{{ base_url }}/{{ logo }}" class="logo-image"/>
-				{% elseif settings.themes.cyanine.introTitle %}
-					<h1 class="f-large f-headline-ns lh-title mv2 pt5-ns">{{ settings.themes.cyanine.introTitle }}</h1>
-				{% else %}
-					<h1 class="f-large f-headline-ns lh-title mv2 pt5-ns">{{ title }}</h1>
-				{% endif %}
-			</header>
+  		<div class="cover bg-left bg-center-l" {% if settings.themes.cyanine.introImage %}style="background-image: url({{image.img_url}});background-color:rgba(255,255,255,{{settings.themes.cyanine.introImageOpacity|default('0.8')}});background-blend-mode: lighten;" {% endif%} >
 
-			<div class="f5 f4-ns fw3 lh-copy">
-				{% if settings.themes.cyanine.introMarkdown %}
-					{{ markdown(settings.themes.cyanine.introMarkdown) }}
-				{% else %}
-					{{ content }}
-				{% endif %}
+			<div class="mw7 pb7 pt6 ph3 center">
+				<div class="introbg pa4">
+					<header>
+						{% if logo %}
+							<img src="{{ base_url }}/{{ logo }}" class="logo-image"/>
+						{% elseif settings.themes.cyanine.introTitle %}
+							<h1 class="f-large lh-title mv2">{{ settings.themes.cyanine.introTitle }}</h1>
+						{% else %}
+							<h1 class="f-large lh-title mv2">{{ title }}</h1>
+						{% endif %}
+					</header>
+
+					<div class="f5 f4-ns fw3 lh-copy">
+						{% if settings.themes.cyanine.introMarkdown %}
+							{{ markdown(settings.themes.cyanine.introMarkdown) }}
+						{% else %}
+							{{ content }}
+						{% endif %}
+					</div>
+
+					{% if settings.themes.cyanine.introButtonLink %}
+
+						<a class="button link dim ph4 pv3 mt3 ba dib" href="{{ settings.themes.cyanine.introButtonLink }}">{{ settings.themes.cyanine.introButtonLabel }}</a>
+
+					{% endif %}
+				</div>
 			</div>
-
-			{% if settings.themes.cyanine.introButtonLink %}
-
-				<a class="button link dim ph4 pv3 mt3 ba dib" href="{{ settings.themes.cyanine.introButtonLink }}">{{ settings.themes.cyanine.introButtonLabel }}</a>
-
-			{% endif %}
-
-		</div>
-		
+		</div>		
 	</section>

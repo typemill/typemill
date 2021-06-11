@@ -469,6 +469,13 @@ li.menu-item{
 .status.unpublished{
 	background:#cc4146;
 }
+.foldertoggle{
+	position: absolute;
+	left: -55px;
+	padding: 8px 5px 5px;
+	top: 1px;
+	color: #ccc;
+}
 .navi-item .movewrapper {
 	position: absolute;
 	right: 4px;

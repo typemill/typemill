@@ -28,26 +28,28 @@ forms:
 
     blog:
       type: checkbox
-      checkboxlabel: Activate a List of Posts on Homepage
+      checkboxlabel: Activate a List of Posts on the Homepage
 
     blogdetails:
       type: fieldset
       legend: Configure List of Posts
       fields:
-
         blogintro:
           type: checkbox
           label: Intro Page
           checkboxlabel: Show the content of the homepage before the list of posts
-
         blogfolder:
           type: text
           label: Enter the folder path with the posts
           placeholder: /blog
+        blogimage:
+          type: checkbox
+          label: Post-Images
+          checkboxlabel: Display the hero images from meta in the list of blog-posts
 
     landingpage:
       type: checkbox
-      checkboxlabel: Activate a Landing Page on Homepage
+      checkboxlabel: Activate a Landing Page on the Homepage
 
     landingpageIntro:
       type: fieldset
@@ -74,6 +76,14 @@ forms:
           type: text
           label: Label for startbutton
           placeholder: my label
+        introImage:
+          type: checkbox
+          label: Background Image
+          checkboxlabel: Use the hero-image from the homepage as background image
+        introImageOpacity:
+          type: text
+          label: Opacity for background image
+          placeholder: 0.8
 
     landingpageInfo:
       type: fieldset
