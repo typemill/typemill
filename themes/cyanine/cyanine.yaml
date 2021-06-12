@@ -26,30 +26,35 @@ forms:
         large: Large
         full: Full Width
 
+    posts:
+      type: fieldset
+      legend: Configure Posts
+      fields:
+        blogimage:
+          type: checkbox
+          label: Post-Images
+          checkboxlabel: Generally show hero images in all lists of posts
+
     blog:
       type: checkbox
-      checkboxlabel: Activate a List of Posts on the Homepage
+      checkboxlabel: Activate a list of posts on the homepage
 
-    blogdetails:
+    bloghomepage:
       type: fieldset
-      legend: Configure List of Posts
+      legend: Posts on Homepage
       fields:
         blogintro:
           type: checkbox
-          label: Intro Page
-          checkboxlabel: Show the content of the homepage before the list of posts
+          label: Intro Content
+          checkboxlabel: Show the content of the homepage before the posts get listed
         blogfolder:
           type: text
           label: Enter the folder path with the posts
           placeholder: /blog
-        blogimage:
-          type: checkbox
-          label: Post-Images
-          checkboxlabel: Display the hero images from meta in the list of blog-posts
 
     landingpage:
       type: checkbox
-      checkboxlabel: Activate a Landing Page on the Homepage
+      checkboxlabel: Activate a landing page with segments on the homepage
 
     landingpageIntro:
       type: fieldset
@@ -292,7 +297,7 @@ forms:
           options:
             footer1: Column 1
             footer2: Column 2
-            footer3: Column 3     
+            footer3: Column 3
         footer1:
           type: textarea
           label: footer column 1 (use markdown)
@@ -302,6 +307,19 @@ forms:
         footer3:
           type: textarea
           label: footer column 3 (use markdown)
+
+
+    fieldsetcopyrightline:
+      type: fieldset
+      legend: Copyright Line
+      fields:
+        copyrightline:
+          type: checkbox
+          checkboxlabel: Overwrite the copyright line
+        copyrightlinetext:
+          type: textarea
+          label: Overwrite Copyright Line (use markdown)
+          description: If overwrite the copyright line with the link to typemill, then please support Typemill e.g. with a link in the imprint, a blog-post, a social media mention or a recommendation.
 
     fieldsetFonts:
       type: fieldset

@@ -1,13 +1,42 @@
 const navcomponent = Vue.component('navigation', {
 	template: '#navigation-template',
-	props: ['homepage', 'name', 'hide', 'newItem', 'parent', 'active', 'filetype', 'status', 'elementtype', 'contains', 'element', 'folder', 'level', 'url', 'root', 'freeze', 'collapse'],
+	props: ['homepage', 'name', 'hide', 'newItem', 'parent', 'active', 'filetype', 'status', 'elementtype', 'contains', 'element', 'folder', 'level', 'url', 'root', 'freeze'],
 	data: function () {
 		return {
 			showForm: false,
 			revert: false,
+			collapse: [],
+		}
+	},
+	mounted: function(){
+		collapse = localStorage.getItem('collapse');
+		if(collapse !== null)
+		{
+			this.collapse = collapse.split(',');
 		}
 	},
 	methods: {
+		toggleCollapse: function(name)
+		{
+			var index = this.collapse.indexOf(name);
+			if (index > -1)
+			{
+				this.collapse.splice(index, 1);
+			}
+			else
+			{
+				this.collapse.push(name);
+			}
+			localStorage.setItem("collapse", this.collapse.toString());
+		},
+		isCollapsed: function(name)
+		{
+			if(this.collapse.indexOf(name) > -1)
+			{
+				return true;
+			}
+			return false;
+		},
 		checkMove : function(evt)
 		{
 			if(evt.dragged.classList.contains('folder') && evt.from.parentNode.id != evt.to.parentNode.id)

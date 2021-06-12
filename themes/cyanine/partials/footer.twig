@@ -20,5 +20,9 @@
 </footer>
 
 <div class="w-100 center f6">
-	<p class="f6">{{ settings.copyright }} {{ __('by') }} {{ settings.author }}, {{ copyrightYears }}. {{ __('All Rights Reserved') }}. {{ __('Built with') }} <a class="link underline f-secondary" href="https://typemill.net">Typemill</a>.</p>
+	{% if settings.themes.cyanine.copyrightline %}
+		{{ markdown(settings.themes.cyanine.copyrightlinetext) }}
+	{% else %}
+		<p class="f6">{{ settings.copyright }} {{ __('by') }} {{ settings.author }}, {{ copyrightYears }}. {{ __('All Rights Reserved') }}. {{ __('Built with') }} <a class="link underline f-secondary" href="https://typemill.net">Typemill</a>.</p>
+	{% endif %}
 </div>

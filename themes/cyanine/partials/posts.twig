@@ -12,6 +12,11 @@
 
 		<li class="post-entry">
 			<header>
+				{% if settings.themes.cyanine.blogimage and post.meta.heroimage != '' %}
+					<figure>
+						<img src="{{ assets.image(post.meta.heroimage).resize(820,500).src() }}"{% if post.meta.heroimage != '' %} alt="{{ post.meta.heroimage }}"{% endif %} />
+					</figure>
+				{% endif %}
 				<a class="link f-link underline-hover" href="{{ element.urlAbs }}"><h2 class="mt4 mb2">{{ post.meta.title }}</h2></a>
 				<div class="mt3"><small><time datetime="{{date}}">{{ date | date("d.m.Y") }}</time> | {{ post.meta.author }}</small></div>
 			</header>
