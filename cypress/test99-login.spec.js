@@ -43,22 +43,6 @@ describe('Typemill Login', function()
         cy.contains('Logout').click()
         cy.url().should('include', '/tm/login')
     })
-
-    it('fails without CSRF-token', function ()
-    {
-      cy.request({
-        method: 'POST',
-        url: '/tm/login', // baseUrl is prepended to url
-        form: true, // indicates the body should be form urlencoded and sets Content-Type: application/x-www-form-urlencoded headers
-        failOnStatusCode: false,
-        body: {
-          username: 'trendschau', 
-          password: 'password'
-        }
-      })
-        .its('body')
-        .should('include', 'Failed CSRF check')
-    })
  
     it('blocks after 3 fails', function ()
     {
@@ -82,6 +66,6 @@ describe('Typemill Login', function()
          cy.get('form').submit()
          cy.get('#flash-message').should('contain', 'Too many bad logins')
          cy.contains('wait')        
-         cy.contains('Forgot password')
+         cy.contains('forgot password')
     })
 })

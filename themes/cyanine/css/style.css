@@ -510,3 +510,52 @@ button.play-video::after {
 		max-height: inherit;
 	}
 }
+
+@media print {
+	#contentnav, #bottompager{
+		display:  none;
+	}
+	.grid-main{
+	    margin-top: -10px!important;
+	    padding-top: 0px!important;
+	}
+	.logo a[href]:after {
+		content: "Homepage: " attr(href);
+		display:  block;
+		margin:  1rem 0;
+		font-size:  14px;
+		font-weight:  normal;
+	}
+	body{
+//		padding: 3rem 3rem 3rem 5rem!important;
+	}
+	main{
+		padding-bottom: 0!important;
+	}
+	aside{
+		padding-top: 0!important;
+		padding-bottom: 0!important;
+	}
+	main,footer{
+		border:  0px!important;
+	}
+	footer .ph3
+	{
+		padding-top: 0;
+		padding-bottom: 0;
+	}
+	body, .landingpagecontrast, .account, main, footer, .landingpageintro, .landingpageinfo, .landingpageteaser, .landingpagenavi, .landingpagenews, button.expander, .notice4{
+		background: #fff!important;
+		color:  black!important;
+	}
+	article a[href]{
+		color: black;
+		text-decoration: underline;
+	}
+	article a[href]:after {
+		content: " (" attr(href) ")";
+	}
+	nav .mw6{
+		width:  100%;
+	}
+}

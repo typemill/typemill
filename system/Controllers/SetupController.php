@@ -62,10 +62,10 @@ class SetupController extends Controller
 	{
 		if($request->isPost())
 		{
-		    if( $request->getattribute('csrf_result') === false )
+		    if( ( null !== $request->getattribute('csrf_result') ) OR ( $request->getattribute('csrf_result') === false ) )
 		    {
 				$this->c->flash->addMessage('error', 'The form has a timeout, please try again.');
-				return $response->withRedirect($this->c->router->pathFor('setup.welcome'));				
+				return $response->withRedirect($this->c->router->pathFor('setup.show'));
 		    }
 
 			$params 		= $request->getParams();

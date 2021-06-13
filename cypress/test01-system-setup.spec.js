@@ -31,6 +31,7 @@ describe('Typemill Setup', function()
       cy.get('.error').should('contain', 'Length between 5 - 20')
     })
 
+/*
     it('fails without CSRF-token', function ()
     {
       cy.request({
@@ -45,8 +46,26 @@ describe('Typemill Setup', function()
         }
       })
         .its('body')
-        .should('include', 'Failed CSRF check')
+        .should('include', 'The form has a timeout')
     })
+*/
+    it('fails without CSRF-token', function () 
+    {
+      cy.visit('/setup')
+
+      // enter correct data
+      cy.get('input[name="username"]').clear().type('trendschau')
+      cy.get('input[name="email"]').clear().type('trendschau@gmail.com')
+      cy.get('input[name="password"]').clear().type('password')
+      cy.get('#csrf_value').then(elem => {
+          elem.val('wrongvalue');
+      });
+
+      // submit and get validation errors
+      cy.get('form').submit()
+      cy.get('#flash-message').should('contain', 'form has a timeout')  
+    })
+
 
     it('submits valid form data and visit welcome and settings page', function () 
     {
