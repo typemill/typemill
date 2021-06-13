@@ -229,7 +229,6 @@ class MetaApiController extends ContentController
 			}
 			else
 			{
-
 				if($fieldDefinition && isset($fieldDefinition['type']) && ($fieldDefinition['type'] == 'select' ) && isset($fieldDefinition['dataset']) && ($fieldDefinition['dataset'] == 'userroles' ) )
 				{
 					$userroles = [null => null];
@@ -291,7 +290,9 @@ class MetaApiController extends ContentController
 				if($this->item->elementType == "file" && strlen($this->item->order) == 12)
 				{
 					# create file-prefix with date
-					$datetime 	= $metaInput['manualdate'] . '-' . $metaInput['time'];
+					$metadate 	= $metaInput['manualdate'];
+					if($metadate == ''){ $metadate = $metaPage['meta']['created']; } 
+					$datetime 	= $metadate . '-' . $metaInput['time'];
 					$datetime 	= implode(explode('-', $datetime));
 					$datetime	= substr($datetime,0,12);
 
