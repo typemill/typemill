@@ -23,11 +23,13 @@
 			</header>
 
 			{% if widgets %}
+				<div class="widgetcontainer">
 				{% for index,widget in widgets %}
 					<div id="{{ index }}" class="mt4-l mt3">
 						{{ widget }}
 					</div>
 				{% endfor %}
+				</div>
 			{% endif %}
 
 		</aside>
@@ -53,12 +55,14 @@
 									<adress class="pr2">{{ settings.themes.cyanine.authorIntro }} {{ metatabs.meta.author|default(settings.author) }}</adress>
 								{% endif %}
 							</div>
-							{% if settings.themes.cyanine.gitPosition.top %}
-								<a class="link" title="edit on github" href="{{ settings.themes.cyanine.gitLink }}{{ item.path }}">{% if settings.themes.cyanine.editIcon %}<svg class="icon baseline icon-edit"><use xlink:href="#icon-edit"></use></svg>{% else %}{{ settings.themes.cyanine.editText }}{% endif %}</a>
-							{% endif %}
-							{% if settings.themes.cyanine.printPosition.top %}
-								<a class="link" title="open printer dialogue" href="#" onclick="if (window.print) {window.print();}">{% if settings.themes.cyanine.printIcon %}<svg class="icon baseline icon-printer"><use xlink:href="#icon-printer"></use></svg>{% else %}{{ settings.themes.cyanine.printText }}{% endif %}</a>
-							{% endif %}
+							<div class="funcicons">
+								{% if settings.themes.cyanine.gitPosition.top %}
+									<a class="link" title="edit on github" href="{{ settings.themes.cyanine.gitLink }}{{ item.path }}">{% if settings.themes.cyanine.editIcon %}<svg class="icon baseline icon-edit"><use xlink:href="#icon-edit"></use></svg>{% else %}{{ settings.themes.cyanine.editText }}{% endif %}</a>
+								{% endif %}
+								{% if settings.themes.cyanine.printPosition.top %}
+									<a class="link" title="open printer dialogue" href="#" onclick="if (window.print) {window.print();}">{% if settings.themes.cyanine.printIcon %}<svg class="icon baseline icon-printer"><use xlink:href="#icon-printer"></use></svg>{% else %}{{ settings.themes.cyanine.printText }}{% endif %}</a>
+								{% endif %}
+							</div>
 						</div>
 					{% endif %}
 				</header>
@@ -75,12 +79,14 @@
 								<adress class="pr2">{{ settings.themes.cyanine.authorIntro }} {{ metatabs.meta.author|default(settings.author) }}</adress>
 							{% endif %}
 						</div>
+						<div class="funcicons">
 							{% if settings.themes.cyanine.gitPosition.bottom %}
 								<a class="link" title="edit on github" href="{{ settings.themes.cyanine.gitLink }}{{ item.path }}">{% if settings.themes.cyanine.editIcon %}<svg class="icon baseline icon-edit"><use xlink:href="#icon-edit"></use></svg>{% else %}{{ settings.themes.cyanine.editText }}{% endif %}</a>
 							{% endif %}
 							{% if settings.themes.cyanine.printPosition.bottom %}
 								<a class="link" title="open printer dialogue" href="#" onclick="if (window.print) {window.print();}">{% if settings.themes.cyanine.printIcon %}<svg class="icon baseline icon-printer"><use xlink:href="#icon-printer"></use></svg>{% else %}{{ settings.themes.cyanine.printText }}{% endif %}</a>
 							{% endif %}
+						</div>
 					</div>
 				{% endif %}
 

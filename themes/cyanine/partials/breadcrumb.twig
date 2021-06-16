@@ -1,14 +1,14 @@
 <div class="f6 pv3 w-100 flex-l justify-between">
 
 	<div class="mw6">
-		<a class="link f-link underline-hover" href="{{ base_url }}">{{ settings.title|title }}</a>
+		<a class="link f-link underline-hover" href="{{ base_url }}">{{ settings.title }}</a>
 
 		{% for crumb in breadcrumb %}
 			&nbsp; &#x203A; &nbsp;  
 			{% if loop.last %}
-				{{ crumb.name|title }}
+				{{ crumb.name }}
 			{% else %}
-				<a class="link f-link underline-hover" href="{{ crumb.urlRel }}">{{ crumb.name|title }}</a>
+				<a class="link f-link underline-hover" href="{{ crumb.urlRel }}">{{ crumb.name }}</a>
 			{% endif %}
 		{% endfor %}
 	</div>

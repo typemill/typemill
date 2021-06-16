@@ -512,7 +512,7 @@ button.play-video::after {
 }
 
 @media print {
-	#contentnav, #bottompager{
+	#contentnav, #bottompager,.widgetcontainer,.funcicons,.account,footer{
 		display:  none;
 	}
 	.grid-main{
@@ -526,9 +526,9 @@ button.play-video::after {
 		font-size:  14px;
 		font-weight:  normal;
 	}
-	body{
-//		padding: 3rem 3rem 3rem 5rem!important;
-	}
+	.logo-image{
+		max-width: 200px;
+	}	
 	main{
 		padding-bottom: 0!important;
 	}
