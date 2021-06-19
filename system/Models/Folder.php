@@ -5,7 +5,7 @@ namespace Typemill\Models;
 use \URLify;
 
 class Folder
-{	
+{
 
 	/*
 	* scans content of a folder (without recursion)
@@ -363,42 +363,83 @@ class Folder
 				
 		if($item->elementType == 'folder')
 		{
-			/* get the first element in the folder */
+			# get the first element in the folder
 			$item->nextItem = isset($item->folderContent[0]) ? clone($item->folderContent[0]) : false;
 		}
 		
+		# the item is a file or an empty folder
 		if(!$item->nextItem)
 		{
+			# walk to the next file in the same hierarchy
 			$nextItemArray[$keyPos]++;
-			$item->nextItem = self::getItemWithKeyPath($content, $nextItemArray);
+
+			# get the key of the last element in this hierarchy level
+			# if there is no chapter, then it is probably an empty first-level-folder. Count content to get the number of first level items
+			$lastKey = $item->thisChapter ? array_key_last($item->thisChapter->folderContent) : count($content);
+
+			# as long as the nextItemArray is smaller than the last key in this hierarchy level, search for the next item
+			# this ensures that it does not stop if key is missing (e.g. if the next page is hidden)
+			while( ($nextItemArray[$keyPos] <= $lastKey) && !$item->nextItem = self::getItemWithKeyPath($content, $nextItemArray) )
+			{
+				$nextItemArray[$keyPos]++;
+			}
 		}
 		
+		# there is no next file or folder in this level, so walk up the hierarchy to the next folder or file
 		while(!$item->nextItem)
 		{
+			# delete the array level with the current item, so you are in the parent folder
 			array_pop($nextItemArray);
+
+			# if the array is empty now, then you where in the base level already, so break
 			if(empty($nextItemArray)) break; 
+
+			# define the key position where you are right now
 			$newKeyPos = count($nextItemArray)-1;
+
+			# go to the next position
 			$nextItemArray[$newKeyPos]++;
-			$item->nextItem = self::getItemWithKeyPath($content, $nextItemArray);
+
+			# search for 5 items in case there are some hidden elements
+			$maxlength = $nextItemArray[$newKeyPos]+5;
+			while( ($nextItemArray[$newKeyPos] <= $maxlength) && !$item->nextItem = self::getItemWithKeyPath($content, $nextItemArray) )
+			{
+				$nextItemArray[$newKeyPos]++;
+			}
 		}
 
 		/************************
 		* 	ADD PREVIOUS ITEM	*
 		************************/
 		
-		if($prevItemArray[$keyPos] > 0)
+		# check if element is the first in the array
+		$first = ($prevItemArray[$keyPos] == 0) ? true : false;
+
+		if(!$first)
 		{
 			$prevItemArray[$keyPos]--;
-			$item->prevItem = self::getItemWithKeyPath($content, $prevItemArray);
 			
-			if($item->prevItem && $item->prevItem->elementType == 'folder' && !empty($item->prevItem->folderContent))
+			while($prevItemArray[$keyPos] >= 0 && !$item->prevItem = self::getItemWithKeyPath($content, $prevItemArray))
 			{
-				/* get last item in folder */
+				$prevItemArray[$keyPos]--;
+			}
+			
+			# if no item is found, then all previous items are hidden, so set first item to true and it will walk up the array later
+			if(!$item->prevItem)
+			{
+				$first = true;
+			}
+			elseif($item->prevItem && $item->prevItem->elementType == 'folder' && !empty($item->prevItem->folderContent))
+			{
+				# if the previous item is a folder, the get the last item of that folder
 				$item->prevItem = self::getLastItemOfFolder($item->prevItem);
 			}
 		}
-		else
+
+		# if it is the first item in the folder (or all other files are hidden)
+		if($first)
 		{
+			# then the previous item is the containing chapter
 			$item->prevItem = $item->thisChapter;
 		}
 		
@@ -501,7 +542,9 @@ class Folder
 		return $structure;
 	}
 	
-	/* get breadcrumb as copied array, set elements active in original and mark parent element in original */
+	# get breadcrumb as copied array, 
+	# set elements active in original 
+	# mark parent element in original
 	public static function getBreadcrumb($content, $searchArray, $i = NULL, $breadcrumb = NULL)
 	{
 		# if it is the first round, create an empty array
@@ -522,6 +565,7 @@ class Folder
 			{
 				$item->activeParent = true;
 			}
+
 			/*
 			$item->active = true;
 			if($i == count($searchArray)-2)

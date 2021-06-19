@@ -106,11 +106,12 @@ class PageController extends Controller
 			$favicon = true;
 		}
 
-		# get the cached navigation here (structure without hidden files )
+
+		# the navigation is a copy of the structure without the hidden pages
 		$navigation = $cache->getCache('cache', 'navigation.txt');
 		if(!$navigation)
 		{
-			# use the structure as navigation if there is no difference
+			# use the structure if there is no cached navigation
 			$navigation = $structure;
 		}
 		
@@ -147,8 +148,8 @@ class PageController extends Controller
 		$home = false;
 		if(empty($args))
 		{
-			$home = true;
-			$item = Folder::getItemForUrl($navigation, $uri->getBasePath(), $uri->getBaseUrl(), NULL, $home);
+			$home 	= true;
+			$item 	= Folder::getItemForUrl($navigation, $uri->getBasePath(), $uri->getBaseUrl(), NULL, $home);
 			$urlRel = $uri->getBasePath();
 		}
 		else
@@ -159,6 +160,13 @@ class PageController extends Controller
 			# find the url in the content-item-tree and return the item-object for the file
 			# important to use the structure here so it is found, even if the item is hidden.
 			$item = Folder::getItemForUrl($structure, $urlRel, $uri->getBasePath());
+
+			# if the item is a folder and if that folder is not hidden
+			if($item && isset($item->hide) && !$item->hide)
+			{
+				# use the navigation instead of the structure so that hidden elements are erased
+				$item = Folder::getItemForUrl($navigation, $urlRel, $uri->getBaseUrl(), NULL, $home);
+			}
 
 			# if there is still no item, return a 404-page
 			if(!$item)
@@ -177,29 +185,32 @@ class PageController extends Controller
 					'favicon'		=> $favicon
 				)); 
 			}
+		}
 
-			if(!$item->hide)
-			{
+
+		if(isset($item->hide)) 
+		{
+			# if it is a hidden page
+ 			if($item->hide)
+ 			{
 				# get breadcrumb for page and set pages active
-				# use navigation, the hidden pages won't get a breadcrumb
-				$breadcrumb = Folder::getBreadcrumb($navigation, $item->keyPathArray);
+				# use structure here because the hidden item is not part of the navigation
+				$breadcrumb = Folder::getBreadcrumb($structure, $item->keyPathArray);
 				$breadcrumb = $this->c->dispatcher->dispatch('onBreadcrumbLoaded', new OnBreadcrumbLoaded($breadcrumb))->getData();
 
-				# set pages active for navigation again
-				# Folder::getBreadcrumb($navigation, $item->keyPathArray);
+				# add the paging to the item
+				$item = Folder::getPagingForItem($structure, $item);
+ 			}
+			else
+			{
+				# get breadcrumb for page and set pages active
+				# use navigation, because it is used for frontend
+				$breadcrumb = Folder::getBreadcrumb($navigation, $item->keyPathArray);
+				$breadcrumb = $this->c->dispatcher->dispatch('onBreadcrumbLoaded', new OnBreadcrumbLoaded($breadcrumb))->getData();
 				
 				# add the paging to the item
 				$item = Folder::getPagingForItem($navigation, $item);
 			}
-		}
-
-		if(isset($item->hide) && $item->hide) 
-		{
-			# delete the paging elements
-			$item->thisChapter = false;
-			$item->nextItem = false;
-			$item->prevItem = false;
-			$breadcrumb = false;
 		}
 
 		# dispatch the item
@@ -212,13 +223,6 @@ class PageController extends Controller
 		if($item->elementType == 'folder')
 		{
 			$filePath 	= $filePath . DIRECTORY_SEPARATOR . 'index.md';
-
-			# if folder is not hidden
-			if(isset($item->hide) && !$item->hide)
-			{
-				# use the navigation instead of the structure so that hidden elements are erased
-				$item = Folder::getItemForUrl($navigation, $urlRel, $uri->getBaseUrl(), NULL, $home);
-			}
 		}
 
 		# read the content of the file
@@ -373,7 +377,7 @@ class PageController extends Controller
 		$extended = $yaml->getYaml('cache', 'structure-extended.yaml');
 
 		# create an array of object with the whole content of the folder
-		$structure = Folder::getFolderContentDetails($pagetree, $extended, $uri->getBaseUrl(), $uri->getBasePath());
+		# $structure = Folder::getFolderContentDetails($pagetree, $extended, $uri->getBaseUrl(), $uri->getBasePath());		
 
 		# now update the extended structure
 		if(!$extended)
@@ -385,9 +389,16 @@ class PageController extends Controller
 				$yaml->updateYaml('cache', 'structure-extended.yaml', $extended);
 
 				# we have to update the structure with extended again
-				$structure = Folder::getFolderContentDetails($pagetree, $extended, $uri->getBaseUrl(), $uri->getBasePath());
+				# $structure = Folder::getFolderContentDetails($pagetree, $extended, $uri->getBaseUrl(), $uri->getBasePath());
+			}
+			else
+			{
+				$extended = false;
 			}
 		}
+
+		# create an array of object with the whole content of the folder
+		$structure = Folder::getFolderContentDetails($pagetree, $extended, $uri->getBaseUrl(), $uri->getBasePath());		
 		
 		# cache structure
 		$cache->updateCache('cache', 'structure.txt', 'lastCache.txt', $structure);
@@ -410,6 +421,8 @@ class PageController extends Controller
 		return 	$this->getCachedStructure($cache);
 	}
 	
+	# creates a file that holds all hide flags and navigation titles 
+	# reads all meta-files and creates an array with url => ['hide' => bool, 'navtitle' => 'bla']
 	protected function createExtended($contentPath, $yaml, $structure, $extended = NULL)
 	{
 		if(!$extended)
@@ -439,6 +452,7 @@ class PageController extends Controller
 		return $extended;
 	}
 
+	# checks if there is a hidden page, returns true on first find
 	protected function containsHiddenPages($extended)
 	{
 		foreach($extended as $element)
