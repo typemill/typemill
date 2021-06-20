@@ -445,32 +445,70 @@ class ParsedownExtension extends \ParsedownExtra
         return $markup;
     }
 
+
     #
     # Footnote Marker
-    # add absolute url
+
+    public $spanFootnotes = false;
+    public $footnoteCount = 0;
 
     protected function inlineFootnoteMarker($Excerpt)
     {
-
-        $element = parent::inlineFootnoteMarker($Excerpt);
-
-        if ( ! isset($element))
+        if (preg_match('/^\[\^(.+?)\]/', $Excerpt['text'], $matches))
         {
-            return null;
+            $name = $matches[1];
+
+            if ( ! isset($this->DefinitionData['Footnote'][$name]))
+            {
+                return;
+            }
+
+            $this->DefinitionData['Footnote'][$name]['count'] ++;
+
+            if ( ! isset($this->DefinitionData['Footnote'][$name]['number']))
+            {
+                $this->DefinitionData['Footnote'][$name]['number'] = ++ $this->footnoteCount; # » &
+            }
+
+            # Optionally use w3c inline footnote markup for books
+            if($this->spanFootnotes)
+            {
+                $Element = array(
+                    'name' => 'span',
+                    'attributes' => array('class' => 'footnote'),
+                    'text' => $this->DefinitionData['Footnote'][$name]['text'],
+                );
+            }
+            else
+            {
+                $Element = array(
+                    'name' => 'sup',
+                    'attributes' => array('id' => 'fnref'.$this->DefinitionData['Footnote'][$name]['count'].':'.$name),
+                    'element' => array(
+                        'name' => 'a',
+                        'attributes' => array('href' => '#fn:'.$name, 'class' => 'footnote-ref'),
+                        'text' => $this->DefinitionData['Footnote'][$name]['number'],
+                    ),
+                );
+            }
+
+            return array(
+                'extent' => strlen($matches[0]),
+                'element' => $Element,
+            );
         }
-   
-        $href = $element['element']['element']['attributes']['href'];
-
-#        $element['element']['element']['attributes']['href'] = $this->relurl . $href;
-        $element['element']['element']['attributes']['href'] = $href;
-
-        return $element;
     }
     
-    public $footnoteCount = 0;
-    
+    # still has a fix for visual editor mode
     public function buildFootnoteElement()
     {
+
+        # we do not need a footnote element if we use w3c inline style with spans for footnotes
+        if($this->spanFootnotes)
+        {
+            return [];
+        }
+
         $Element = array(
             'name' => 'div',
             'attributes' => array('class' => 'footnotes'),
@@ -515,7 +553,6 @@ class ParsedownExtension extends \ParsedownExtra
                 $backLinkElements[] = array(
                     'name' => 'a',
                     'attributes' => array(
-#                        'href' => $this->relurl . "#fnref$number:$definitionId",
                         'href'  => "#fnref$number:$definitionId",
                         'rev'   => 'footnote',
                         'class' => 'footnote-backref',
@@ -571,7 +608,6 @@ class ParsedownExtension extends \ParsedownExtra
 
         return $Element;
     }
-
     
     # Inline Math
     # check https://github.com/BenjaminHoegh/ParsedownMath
@@ -1113,5 +1149,4 @@ class ParsedownExtension extends \ParsedownExtra
         return $Link;
 
     }
-
 }
