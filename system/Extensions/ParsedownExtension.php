@@ -61,19 +61,13 @@ class ParsedownExtension extends \ParsedownExtra
 
     public function text($text, $relurl = null)
     {
- #       $this->relurl = $relurl ? $relurl : '';
-
         $Elements = $this->textElements($text);
         
         return $Elements;
     }
     
     public function markup($Elements)
-    {
-
-        # make relurl available for other functions
-#        $this->relurl = $relurl;
-        
+    {        
         # convert to markup
         $markup = $this->elements($Elements);
 
@@ -101,20 +95,6 @@ class ParsedownExtension extends \ParsedownExtra
         return $markup;
     }
     
-
-    public function getFootnotes()
-    {
-        # add footnotes
-        if (isset($this->DefinitionData['Footnote']))
-        {
-            $Element = $this->buildFootnoteElement();
-
-            $footnotes = "\n" . $this->element($Element);
-        }
-
-        return $footnotes;
-    }
-
     # BlockImages with html5 figure and figcaption
     # No, this is not the most elegant code on planet earth!!
     protected function blockImage($line, $block)
@@ -333,20 +313,10 @@ class ParsedownExtension extends \ParsedownExtra
         }
     }
 
-    # TableOfContents
 
-    protected function blockTableOfContents($line, $block)
-    {
-        if ($line['text'] == '[TOC]')
-        {
-            $this->DefinitionData['TableOfContents'] = true;
-        }
-    }
-
-    # Header
-    
+    # Headlines
     public $headlines = array();
-    
+
     protected function blockHeader($Line)
     {
         if (isset($Line['text'][1]))
@@ -385,7 +355,6 @@ class ParsedownExtension extends \ParsedownExtra
                             array(
                                 'name' => 'a',
                                 'attributes' => array(
-#                                    'href' => $this->relurl . "#" . $headline,
                                     'href'     =>  "#h-" . $headline,
                                     'class'    => 'tm-heading-anchor',
                                 ),
@@ -403,8 +372,18 @@ class ParsedownExtension extends \ParsedownExtra
         }
     }
     
-    # build the markup for table of contents 
-    
+
+    # TableOfContents
+    protected function blockTableOfContents($line, $block)
+    {
+        if ($line['text'] == '[TOC]')
+        {
+            $this->DefinitionData['TableOfContents'] = true;
+        }
+    }
+
+
+    # build the markup for table of contents     
     public function buildTOC($headlines)
     {
         $markup = '<ul class="TOC">';
@@ -420,7 +399,6 @@ class ParsedownExtension extends \ParsedownExtra
                 $markup .= '<ul>';
             }
             
-#            $markup .= '<li class="' . $headline['name'] . '"><a href="' . $this->relurl . '#' . $headline['attribute'] . '">' . $headline['text'] . '</a>';
             $markup .= '<li class="' . $headline['name'] . '"><a href="#' . $headline['attribute'] . '">' . $headline['text'] . '</a>';
             
             if($thisLevel == $nextLevel )
@@ -447,10 +425,29 @@ class ParsedownExtension extends \ParsedownExtra
 
 
     #
-    # Footnote Marker
-
-    public $spanFootnotes = false;
+    # Footnotes
+    protected $spanFootnotes = false;
     public $footnoteCount = 0;
+
+    # set spanFootnotes (W3C style) to true
+    public function withSpanFootnotes()
+    {
+        $this->spanFootnotes = true;
+    }
+
+    # used for ???
+    public function getFootnotes()
+    {
+        # add footnotes
+        if (isset($this->DefinitionData['Footnote']))
+        {
+            $Element = $this->buildFootnoteElement();
+
+            $footnotes = "\n" . $this->element($Element);
+        }
+
+        return $footnotes;
+    }
 
     protected function inlineFootnoteMarker($Excerpt)
     {
@@ -499,7 +496,7 @@ class ParsedownExtension extends \ParsedownExtra
         }
     }
     
-    # still has a fix for visual editor mode
+    # has a fix for visual editor mode and option for spanFootnotes
     public function buildFootnoteElement()
     {
 
