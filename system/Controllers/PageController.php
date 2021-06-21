@@ -377,7 +377,7 @@ class PageController extends Controller
 		$extended = $yaml->getYaml('cache', 'structure-extended.yaml');
 
 		# create an array of object with the whole content of the folder
-		# $structure = Folder::getFolderContentDetails($pagetree, $extended, $uri->getBaseUrl(), $uri->getBasePath());		
+		$structure = Folder::getFolderContentDetails($pagetree, $extended, $uri->getBaseUrl(), $uri->getBasePath());
 
 		# now update the extended structure
 		if(!$extended)
@@ -389,16 +389,13 @@ class PageController extends Controller
 				$yaml->updateYaml('cache', 'structure-extended.yaml', $extended);
 
 				# we have to update the structure with extended again
-				# $structure = Folder::getFolderContentDetails($pagetree, $extended, $uri->getBaseUrl(), $uri->getBasePath());
+				$structure = Folder::getFolderContentDetails($pagetree, $extended, $uri->getBaseUrl(), $uri->getBasePath());
 			}
 			else
 			{
 				$extended = false;
 			}
 		}
-
-		# create an array of object with the whole content of the folder
-		$structure = Folder::getFolderContentDetails($pagetree, $extended, $uri->getBaseUrl(), $uri->getBasePath());		
 		
 		# cache structure
 		$cache->updateCache('cache', 'structure.txt', 'lastCache.txt', $structure);

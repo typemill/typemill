@@ -337,6 +337,12 @@ class Folder
 
 	public static function getPagingForItem($content, $item)
 	{
+		# if page is home
+		if(trim($item->pathWithoutType, "/") == 'index')
+		{
+			return $item;			
+		}
+
 		$keyPos 			= count($item->keyPathArray)-1;
 		$thisChapArray		= $item->keyPathArray;
 		$nextItemArray 		= $item->keyPathArray;

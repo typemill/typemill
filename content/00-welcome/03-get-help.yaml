@@ -6,14 +6,13 @@ meta:
     owner: null
     author: 'Sebastian Schürmanns'
     manualdate: null
-    modified: '2020-11-19'
+    modified: '2021-06-13'
     created: null
     time: null
     navtitle: ''
-    hide: false
-    mycustom:
-        product: car
-        price: '123,20'
+    hide: true
+    allowedrole: null
+    alloweduser: null
 seo:
     heroimage: media/live/bildschirmfoto-zu-2019-08-30-20-46-29.png
     heroimagealt: Alt-Text
