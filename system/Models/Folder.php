@@ -338,9 +338,9 @@ class Folder
 	public static function getPagingForItem($content, $item)
 	{
 		# if page is home
-		if(trim($item->pathWithoutType, "/") == 'index')
+		if(trim($item->pathWithoutType, DIRECTORY_SEPARATOR) == 'index')
 		{
-			return $item;			
+			return $item;
 		}
 
 		$keyPos 			= count($item->keyPathArray)-1;
