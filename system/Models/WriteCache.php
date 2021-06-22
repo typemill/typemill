@@ -11,7 +11,7 @@ class WriteCache extends Write
 	 */
 	public function validate($folderName, $fileName, $duration)
 	{
-		if(isset($_SERVER['HTTP_CACHE_CONTROL']) && $_SERVER['HTTP_CACHE_CONTROL'] == 'max-age=0')
+		if(isset($_SERVER['HTTP_CACHE_CONTROL']) && ( $_SERVER['HTTP_CACHE_CONTROL'] == 'max-age=0' OR $_SERVER['HTTP_CACHE_CONTROL'] == 'no-cache' ))
 		{
 			return false;
 		}
