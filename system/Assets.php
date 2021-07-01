@@ -16,7 +16,7 @@ class Assets
 		$this->inlineJS			= array();
 		$this->inlineCSS		= array();
 		$this->editorJS 		= array();
-		$this->editorCSS 		= array();		
+		$this->editorCSS 		= array();
 		$this->editorInlineJS 	= array();
 		$this->svgSymbols		= array();
 		$this->imageUrl 		= false;
@@ -136,7 +136,12 @@ class Assets
 
 	public function src()
 	{
-		return $this->baseUrl . '/' . $this->imageUrl;
+		# when we finish it, we shoud reset all settings
+		$imagePath 				= $this->baseUrl . '/' . $this->imageUrl;
+		$this->imageUrl 		= false;
+		$this->imageFolder 		= 'original';
+
+		return $imagePath;
 	}
 
 	public function addCSS($CSS)

@@ -10,18 +10,28 @@
 		{% set post = getPageMeta(settings, element) %}
 		{% set date = element.order[0:4] ~ '-' ~ element.order[4:2] ~ '-' ~ element.order[6:2] %}
 
-		<li class="post-entry">
-			<header>
-				{% if settings.themes.cyanine.blogimage and post.meta.heroimage != '' %}
-					<figure>
-						<img src="{{ assets.image(post.meta.heroimage).resize(820,500).src() }}"{% if post.meta.heroimage != '' %} alt="{{ post.meta.heroimage }}"{% endif %} />
-					</figure>
-				{% endif %}
-				<a class="link f-link underline-hover" href="{{ element.urlAbs }}"><h2 class="mt4 mb2">{{ post.meta.title }}</h2></a>
-				<div class="mt3"><small><time datetime="{{date}}">{{ date | date("d.m.Y") }}</time> | {{ post.meta.author }}</small></div>
-			</header>
-			<p>{{ post.meta.description }}</p>
-		</li>
+		{% if settings.themes.cyanine.blogimage and post.meta.heroimage != '' %}
+			<li class="post-entry newsbox dib list pa0 w-100 mh0 mv4">
+				<figure class="ma0">
+					<img src="{{ assets.image(post.meta.heroimage).resize(820,500).src() }}"{% if post.meta.heroimagealt and post.meta.heroimagealt != '' %} alt="{{ post.meta.heroimagealt }}"{% endif %} />
+				</figure>
+				<div class="pa2 ph4-ns pb4-ns">
+					<header>
+						<a class="link f-link underline-hover" href="{{ element.urlAbs }}"><h2 class="mt4 mb2">{{ post.meta.title }}</h2></a>
+						<div class="mt3"><small><time datetime="{{date}}">{{ date | date("d.m.Y") }}</time> | {{ post.meta.author }}</small></div>
+					</header>
+					<p>{{ post.meta.description }}</p>
+				</div>
+			</li>
+		{% else %}
+			<li class="post-entry">
+				<header>
+					<a class="link f-link underline-hover" href="{{ element.urlAbs }}"><h2 class="mt4 mb2">{{ post.meta.title }}</h2></a>
+					<div class="mt3"><small><time datetime="{{date}}">{{ date | date("d.m.Y") }}</time> | {{ post.meta.author }}</small></div>
+				</header>
+				<p>{{ post.meta.description }}</p>
+			</li>
+		{% endif %}
 
 	{% endfor %}
 
