@@ -865,6 +865,13 @@ const noticeComponent = Vue.component('notice-component', {
 		noticedown: function()
 		{
 			this.prefix = this.getNoticePrefix(this.compmarkdown);
+			
+			/* initially it is empty string, so we add it here if user clicks downgrade button */
+			if(this.prefix == '')
+			{
+				this.prefix = '!';
+			}
+
 			this.prefix = this.prefix + '!';
 			if(this.prefix.length > 3)
 			{
@@ -876,11 +883,16 @@ const noticeComponent = Vue.component('notice-component', {
 		getNoticePrefix: function(str)
 		{
 			var prefix = '';
-			for(var i = 0; i < str.length; i++){
+			if(str === undefined)
+			{
+				return prefix;
+			}
+			for(var i = 0; i < str.length; i++)
+			{
 				if(str[i] != '!'){ return prefix }
 				prefix += '!';
 			}
-		  	return prefix;
+		  return prefix;
 		},
 		updatemarkdown: function(value)
 		{
