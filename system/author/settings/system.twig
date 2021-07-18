@@ -64,6 +64,7 @@
 					</div><div class="medium{{ errors.settings.langattr ? ' error' : '' }}">
 						<label for="langattr">{{ __('Language_attr') }}</label>
 						<input type="text" name="settings[langattr]" id="langattr" value="{{ old.settings.langattr ? old.settings.langattr : settings.langattr }}" pattern="[a-z]{2}" title="{{ __('Use a valid language attribute') }}, {{ __('e.g.') }} en" />
+						<div class="description">Please use <a target="_blank" href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes">ISO 639-1 codes</a> like "en"</div>
 						{% if errors.settings.langattr %}
 							<span class="error">{{ errors.settings.langattr | first }}</span>
 						{% endif %}

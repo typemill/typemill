@@ -873,7 +873,7 @@ const noticeComponent = Vue.component('notice-component', {
 			}
 
 			this.prefix = this.prefix + '!';
-			if(this.prefix.length > 3)
+			if(this.prefix.length > 4)
 			{
 				this.prefix = '!';
 			}

@@ -281,6 +281,10 @@ button.note3{
     background-color: #08e;
 	color: #fff;
 }
+button.note4{
+    background-color: #00ee67;
+	color: #fff;	
+}
 
 .blox-editor textarea.pl-notice{
 	padding-left: 40px;
@@ -297,16 +301,20 @@ button.note3{
     background-color: #fffbf0;
     border-left: 10px solid #fb0;
 }
-.notice3,
+.notice3{
+    margin: 1em 0;
+    padding: 10px 1em;
+    background-color: #f0f8fe;
+    border-left: 10px solid #08e;	
+}
 .notice4,
 .notice5,
 .notice6 {
     margin: 1em 0;
     padding: 10px 1em;
-    background-color: #f0f8fe;
-    border-left: 10px solid #08e;
+    background-color: #f1fff7;
+    border-left: 10px solid #00ee67;
 }
-
 
 /********************
 * 		NAVI 		*

@@ -259,10 +259,10 @@ h6:hover > .tm-heading-anchor{
 	text-decoration: none;
 }
 
-/* style the typemill download-button for files */
+/* style the typemill download-button for files 
 a.tm-download
 {
-	line-height: 35px;
+	line-height: 35px; 
 	margin-left: 40px;
 }
 a.tm-download::before{
@@ -276,6 +276,22 @@ a.tm-download::before{
 	font-weight: 900;	
 	border-radius: 50%;
 	text-align: center;
+	text-decoration: none;
+}
+a.tm-download:hover::before{
+	text-decoration: none;
+}
+*/
+
+/* style the typemill download-button for files */
+a.tm-download
+{
+	margin-left: 40px;
+}
+a.tm-download::before{
+	content: url("data:image/svg+xml; utf8, <svg width='24' viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'><path d='M23 14l-8 8-8-8h5v-12h6v12zM15 22h-15v8h30v-8h-15zM28 26h-4v-2h4v2z'></path></svg>");
+	position: absolute;
+	margin-left: -40px;
 	text-decoration: none;
 }
 a.tm-download:hover::before{
