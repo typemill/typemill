@@ -94,6 +94,7 @@ const contentComponent = Vue.component('content-block', {
 			this.edit = true;
 			this.unsafed = true;
 			this.compmarkdown = $event;
+			console.info(this.compmarkdown);
 			this.setComponentSize();
 		},
 		setComponentSize: function()
@@ -1462,6 +1463,7 @@ const imageComponent = Vue.component('image-component', {
 					'<label for="imgcaption">{{ \'Caption\'|translate }}: </label><input title="imgcaption" type="text" placeholder="caption" v-model="imgcaption" @input="createmarkdown" max="140" />' +
 					'<label for="imgurl">{{ \'Link\'|translate }}: </label><input title="imgurl" type="url" placeholder="url" v-model="imglink" @input="createmarkdown" />' +
 					'<label for="imgclass">{{ \'Class\'|translate }}: </label><select title="imgclass" v-model="imgclass" @change="createmarkdown"><option value="center">{{ \'Center\'|translate }}</option><option value="left">{{ \'Left\'|translate }}</option><option value="right">{{ \'Right\'|translate }}</option></select>' +
+					'<label v-if="showresize" class="control-group imgcheckmark" for="imgclass">{{ \'Do not resize\'|translate }}:<input title="saveoriginal" class="checkbox" type="checkbox" v-model="noresize" @change="createmarkdown" /><span class="checkmark"></span></label>' +
 					'<input title="imgid" type="hidden" placeholder="id" v-model="imgid" @input="createmarkdown" max="140" />' +
 				'</div></div>',
 	data: function(){
@@ -1479,6 +1481,8 @@ const imageComponent = Vue.component('image-component', {
 			imgid: '',
 			imgattr: '',
 			imgfile: '',
+			showresize: true,
+			noresize: false,
 		}
 	},
 	mounted: function(){
@@ -1487,6 +1491,8 @@ const imageComponent = Vue.component('image-component', {
 
 		if(this.compmarkdown)
 		{
+			this.showresize = false;
+
 			this.imgmeta = true;
 			
 			var imgmarkdown = this.compmarkdown;
@@ -1555,6 +1561,8 @@ const imageComponent = Vue.component('image-component', {
 	methods: {
 		openmedialib: function()
 		{
+			this.showresize 	= false;
+			this.noresize 		= false;
 			this.showmedialib = true;
 		},
 		isChecked: function(classname)
@@ -1653,6 +1661,11 @@ const imageComponent = Vue.component('image-component', {
 					errors = 'Maximum size of image caption is 140 characters';
 				}
 			}
+			
+			if(this.noresize === true)
+			{
+				imgmarkdown = imgmarkdown + '|noresize';
+			}
 
 			if(errors)
 			{
@@ -1686,8 +1699,10 @@ const imageComponent = Vue.component('image-component', {
 					self = this;
 					
 					self.$parent.freezePage();
-					self.$root.$data.file = true;
-					self.load = true;
+					self.$root.$data.file 	= true;
+					self.load 							= true;
+					self.showresize 				= true;
+					self.noresize 					= false;
 
 					let reader = new FileReader();
 					reader.readAsDataURL(imageFile);
@@ -1695,14 +1710,16 @@ const imageComponent = Vue.component('image-component', {
 
 						self.imgpreview = e.target.result;
 						
-				        myaxios.post('/api/v1/image',{
+						self.createmarkdown();
+
+				    myaxios.post('/api/v1/image',{
 							'url':				document.getElementById("path").value,
 							'image':			e.target.result,
 							'name': 			imageFile.name, 
 							'csrf_name': 		document.getElementById("csrf_name").value,
 							'csrf_value':		document.getElementById("csrf_value").value,
 						})
-				        .then(function (response) {
+				    .then(function (response) {
 							
 							self.load = false;
 							self.$parent.activatePage();
@@ -1710,21 +1727,23 @@ const imageComponent = Vue.component('image-component', {
 							self.imgmeta = true;
 							self.imgfile = response.data.name;
 							self.$emit('updatedMarkdown', '![]('+ response.data.name +')');								
-				        })
-				        .catch(function (error)
-				        {
-				        	/*
+				    })
+				    .catch(function (error)
+				    {
+				      /*
 							if(httpStatus == 400)
 							{
 								self.activatePage();
 								publishController.errors.message = "Looks like you are logged out. Please login and try again.";
 							}
 							*/
-				            if(error.response)
-				            {
-				            	publishController.errors.message = error.response.data.errors.message;
-				            }
-				        });
+				      
+				      if(error.response)
+				      {
+				        publishController.errors.message = error.response.data.errors.message;
+				      }
+
+				    });
 					}
 				}
 			}

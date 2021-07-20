@@ -161,7 +161,17 @@ class MediaApiController extends ContentController
 			return $response->withJson(['errors' => 'Please check if your media-folder exists and all folders inside are writable.'], 500);
 		}
 		
-		if($imageProcessor->publishImage())
+		# check the resize modifier in the image markdown, set it to true and delete it from markdown
+		$noresize = false;
+		$markdown = isset($params['markdown']) ? $params['markdown'] : false;
+
+	    if($markdown && (strlen($markdown) > 9) && (substr($markdown, -9) == '|noresize') )
+	    {
+	    	$noresize = true;
+	    	$params['markdown'] = substr($markdown,0,-9);
+	    }
+
+		if($imageProcessor->publishImage($noresize))
 		{
 			$request 	= $request->withParsedBody($params);
 		

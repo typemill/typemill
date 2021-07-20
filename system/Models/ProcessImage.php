@@ -66,7 +66,7 @@ class ProcessImage extends ProcessAssets
 		return false;
 	}
 	
-	public function publishImage()
+	public function publishImage($noresize = NULL)
 	{
 		# name is stored in temporary folder as name of the .txt-file
 		foreach(glob($this->tmpFolder . '*.txt') as $imagename)
@@ -97,11 +97,22 @@ class ProcessImage extends ProcessAssets
 				
 				if($tmpfilename[0] == 'original')
 				{
+					if($noresize)
+					{
+						$success = copy($this->tmpFolder . $file, $this->liveFolder . $name . '.' . $tmpfilename[1]);
+					}
 					$success = rename($this->tmpFolder . $file, $this->originalFolder . $name . '.' . $tmpfilename[1]);
 				}
 				if($tmpfilename[0] == 'live')
 				{
-					$success = rename($this->tmpFolder . $file, $this->liveFolder . $name . '.' . $tmpfilename[1]);
+					if($noresize)
+					{
+						$success = unlink($this->tmpFolder . $file);
+					}
+					else
+					{
+						$success = rename($this->tmpFolder . $file, $this->liveFolder . $name . '.' . $tmpfilename[1]);
+					}
 				}
 				if($tmpfilename[0] == 'thumbs')
 				{

@@ -48,6 +48,8 @@ class ProcessAssets
 		$this->fileFolder 		= $this->mediaFolder . 'files' . DIRECTORY_SEPARATOR;
 
 		$this->desiredSizes 	= $desiredSizes;
+
+		ini_set('memory_limit', '1024M');
 	}
 
 	public function checkFolders($forassets = null)
