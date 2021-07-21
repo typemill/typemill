@@ -31,6 +31,8 @@ class ProcessAssets
 
 	public function __construct($desiredSizes = NULL)
 	{
+		ini_set('memory_limit', '512M');
+
 		$this->baseFolder		= getcwd() . DIRECTORY_SEPARATOR;
 
 		$this->mediaFolder		= $this->baseFolder . 'media' . DIRECTORY_SEPARATOR;
@@ -48,8 +50,6 @@ class ProcessAssets
 		$this->fileFolder 		= $this->mediaFolder . 'files' . DIRECTORY_SEPARATOR;
 
 		$this->desiredSizes 	= $desiredSizes;
-
-		ini_set('memory_limit', '1024M');
 	}
 
 	public function checkFolders($forassets = null)

@@ -1594,12 +1594,6 @@ select{
 	padding-left:  0;
 	font-size:  .9em;
 }
-.control-group.imgcheckmark input{
-	width:  0;
-	margin: 0;
-	left: 100%;
-	z-index:  9;
-}
 .imgcheckmark .checkmark{
 	left:  100%;
 }

@@ -1463,7 +1463,7 @@ const imageComponent = Vue.component('image-component', {
 					'<label for="imgcaption">{{ \'Caption\'|translate }}: </label><input title="imgcaption" type="text" placeholder="caption" v-model="imgcaption" @input="createmarkdown" max="140" />' +
 					'<label for="imgurl">{{ \'Link\'|translate }}: </label><input title="imgurl" type="url" placeholder="url" v-model="imglink" @input="createmarkdown" />' +
 					'<label for="imgclass">{{ \'Class\'|translate }}: </label><select title="imgclass" v-model="imgclass" @change="createmarkdown"><option value="center">{{ \'Center\'|translate }}</option><option value="left">{{ \'Left\'|translate }}</option><option value="right">{{ \'Right\'|translate }}</option></select>' +
-					'<label v-if="showresize" class="control-group imgcheckmark" for="imgclass">{{ \'Do not resize\'|translate }}:<input title="saveoriginal" class="checkbox" type="checkbox" v-model="noresize" @change="createmarkdown" /><span class="checkmark"></span></label>' +
+					'<label v-if="showresize" class="control-group imgcheckmark">{{ \'Do not resize\'|translate }}:<input title="saveoriginal" class="checkbox" type="checkbox" v-model="noresize" @change="createmarkdown" /><span class="checkmark"></span></label>' +
 					'<input title="imgid" type="hidden" placeholder="id" v-model="imgid" @input="createmarkdown" max="140" />' +
 				'</div></div>',
 	data: function(){
