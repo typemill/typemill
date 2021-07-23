@@ -126,13 +126,43 @@ class MediaApiController extends ContentController
 		$this->uri 		= $request->getUri()->withUserInfo('');
 
 		# make sure only allowed filetypes are uploaded
-		$finfo = finfo_open( FILEINFO_MIME_TYPE );
-		$mtype = finfo_file( $finfo, $this->params['file'] );
-		finfo_close( $finfo );
-		$allowedMimes = $this->getAllowedMtypes();
-		if(!in_array($mtype, $allowedMimes))
+
+
+		if (!isset($this->params['file']))
 		{
-			return $response->withJson(array('errors' => 'File-type is not allowed'));
+			return $response->withJson(['errors' => 'No file found.'],404);
+		}
+
+		$size 		= (int) (strlen(rtrim($this->params['file'], '=')) * 3 / 4);
+		$extension 	= pathinfo($this->params['name'], PATHINFO_EXTENSION);
+		$finfo 		= finfo_open( FILEINFO_MIME_TYPE );
+		$mtype 		= finfo_file( $finfo, $this->params['file'] );
+		finfo_close( $finfo );
+
+		if ($size === 0)
+		{
+			return $response->withJson(['errors' => 'File is empty.'],422);
+		}
+
+		# 20 MB (1 byte * 1024 * 1024 * 20 (for 20 MB))
+		if ($size > 20971520)
+		{
+			return $response->withJson(['errors' => 'File is bigger than 20MB.'],422);
+		}
+
+		$allowedMimes = $this->getAllowedMtypes();
+
+		if(!isset($allowedMimes[$mtype]))
+		{
+			return $response->withJson(['errors' => 'The mime-type is not allowed'],422);
+		}
+
+		if( 
+			(is_array($allowedMimes[$mtype]) && !in_array($allowedMimes[$mtype],$extension)) OR
+			(!is_array($allowedMimes[$mtype]) && $allowedMimes[$mtype] != $extension )
+		)
+		{
+			return $response->withJson(['errors' => 'The file-extension is not allowed or wrong'],422);
 		}
 
 		$fileProcessor	= new ProcessFile();
@@ -349,64 +379,100 @@ class MediaApiController extends ContentController
 
 	# https://www.sitepoint.com/mime-types-complete-list/
 	# https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
+	# https://wiki.selfhtml.org/wiki/MIME-Type/%C3%9Cbersicht
+	# http://www.mime-type.net/application/x-latex/
 	private function getAllowedMtypes()
 	{
 		return array(
-		   	'application/zip',
-		   	'application/gzip',
-		   	'application/x-gzip',
-		   	'application/x-compressed',
-		   	'application/x-zip-compressed',
-		   	'application/vnd.rar',
-		   	'application/x-7z-compressed',
-			'application/x-visio',
-			'application/vnd.visio',
-			'application/excel',
-			'application/x-excel',
-			'application/x-msexcel',
-			'application/vnd.ms-excel',
-			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-			'application/powerpoint',
-			'application/mspowerpoint',
-			'application/x-mspowerpoint',
-			'application/vnd.ms-powerpoint',
-			'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-			'application/msword',
-			'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-			'application/x-project',
-			'application/vnd.ms-project',			
-			'application/vnd.apple.keynote',
-			'application/vnd.apple.mpegurl',
-			'application/vnd.apple.numbers',
-			'application/vnd.apple.pages',
-			'application/vnd.amazon.mobi8-ebook',
-			'application/epub+zip',
-			'application/pdf',
-			'application/x-latex',
-		   	'image/png',
-		   	'image/jpeg',
-		   	'image/gif',
-		   	'image/tiff',
-		   	'image/x-tiff',
-		   	'image/svg+xml',
-		   	'image/x-icon',
-		   	'text/plain',
-		   	'application/plain',
-		   	'text/richtext',
-		   	'text/vnd.rn-realtext',
-		   	'application/rtf',
-		   	'application/x-rtf',
-		   	'font/*',
-		   	'audio/mpeg',
-		   	'audio/mp4',
-		   	'audio/ogg',
-		   	'audio/3gpp',
-		   	'audio/3gpp2',
-		   	'video/mpeg',
-		   	'video/mp4',
-		   	'video/ogg',
-		   	'video/3gpp',
-		   	'video/3gpp2',
+			'application/vnd.oasis.opendocument.chart' 									=> 'odc',
+			'application/vnd.oasis.opendocument.formula' 								=> 'odf',
+			'application/vnd.oasis.opendocument.graphics' 								=> 'odg',
+			'application/vnd.oasis.opendocument.image' 									=> 'odi',
+			'application/vnd.oasis.opendocument.presentation' 							=> 'odp',
+			'application/vnd.oasis.opendocument.spreadsheet' 							=> 'ods',
+			'application/vnd.oasis.opendocument.text' 									=> 'odt',
+			'application/vnd.oasis.opendocument.text-master' 							=> 'odm',
+
+			'application/powerpoint'													=> 'ppt',
+			'application/mspowerpoint' 													=> ['ppt','ppz','pps','pot'],
+			'application/x-mspowerpoint'												=> 'ppt',
+			'application/vnd.ms-powerpoint'												=> 'ppt',
+			'application/vnd.openxmlformats-officedocument.presentationml.presentation' => 'pptx',
+
+			'application/x-visio'														=> ['vsd','vst','msw'],
+			'application/vnd.visio'														=> ['vsd','vst','msw'],
+			'application/x-project'														=> ['mpc','mpt','mpv','mpx'],
+			'application/vnd.ms-project'												=> 'mpp',
+
+			'application/excel'															=> ['xla','xlb','xlc','xld','xlk','xll','xlm','xls','xlt','xlv','xlw'],
+			'application/msexcel' 														=> ['xls','xla'],
+			'application/x-excel'														=> ['xla','xlb','xlc','xld','xlk','xll','xlm','xls','xlt','xlv','xlw'],
+			'application/x-msexcel'														=> ['xls', 'xla','xlw'],
+			'application/vnd.ms-excel'													=> ['xlb','xlc','xll','xlm','xls','xlw'],
+			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet ' 		=> 'xlsx', 
+
+			'application/mshelp' 														=> ['hlp','chm'],
+			'application/msword' 														=> ['doc','dot'],
+			'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 	=> 'docx',
+
+			'application/vnd.apple.keynote'												=> 'key',
+			'application/vnd.apple.numbers'												=> 'numbers',
+			'application/vnd.apple.pages'												=> 'pages',
+
+			'application/x-latex' 														=> ['ltx','latex'],
+			'application/pdf'															=> 'pdf',
+
+			'application/vnd.amazon.mobi8-ebook'										=> 'azw3',
+			'application/x-mobipocket-ebook'											=> 'mobi',
+			'application/epub+zip'														=> 'epub',
+
+			'application/x-gtar' 														=> 'gtar',
+			'application/x-tar' 														=> 'tar',
+			'application/zip' 															=> 'zip',
+			'application/gzip'															=> 'gz',
+		   	'application/x-gzip'														=> ['gz', 'gzip'],
+		   	'application/x-compressed'													=> ['gz','tgz','z','zip'],
+		   	'application/x-zip-compressed'												=> 'zip',
+		   	'application/vnd.rar'														=> 'rar',
+		   	'application/x-7z-compressed'												=> '7z',
+
+		   	'application/rtf'															=> 'rtf',
+		   	'application/x-rtf'															=> 'rtf',
+
+			'text/calendar' 															=> 'ics',
+			'text/comma-separated-values' 												=> 'csv',
+			'text/css' 																	=> 'css',
+			'text/plain' 																=> 'txt',
+			'text/richtext' 															=> 'rtx',
+			'text/rtf' 																	=> 'rtf',
+
+			'audio/basic' 																=> ['au','snd'],
+			'audio/mpeg' 																=> 'mp3',
+			'audio/mp4' 																=> 'mp4',
+			'audio/ogg' 																=> 'ogg',
+			'audio/wav' 																=> 'wav',
+			'audio/x-aiff' 																=> ['aif','aiff','aifc'],
+			'audio/x-midi' 																=> ['mid','midi'],
+			'audio/x-mpeg' 																=> 'mp2',
+			'audio/x-pn-realaudio' 														=> ['ram','ra'],
+
+		   	'image/png'																	=> 'png',
+		   	'image/jpeg' 																=> ['jpeg','jpe','jpg'],
+		   	'image/gif'																	=> 'gif',
+		   	'image/tiff' 																=> ['tiff','tif'],
+		   	'image/svg+xml'																=> 'svg',
+		   	'image/x-icon'																=> 'ico',
+		   	'image/webp' 																=> 'webp',
+
+			'video/mpeg' 																=> ['mpeg','mpg','mpe'],
+			'video/mp4' 																=> 'mp4',
+			'video/ogg' 																=> ['ogg','ogv'],
+			'video/quicktime' 															=> ['qt','mov'],
+			'video/vnd.vivo' 															=> ['viv','vivo'],
+			'video/webm' 																=> 'webm',
+			'video/x-msvideo' 															=> 'avi',
+			'video/x-sgi-movie' 														=> 'movie',
+			'video/3gpp'  																=> '3gp',
 		);
 	}	
 }

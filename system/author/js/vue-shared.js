@@ -292,7 +292,7 @@ Vue.component('component-checkbox', {
 					' :disabled="disabled"' +
 				    ' :name="name"' + 
 				    ' v-model="value"' +
-				    ' @change="update($event, value, name)">' +				
+				    ' @change="update($event, value, name)">' +
 			  	  '<span class="checkmark"></span>' +
 			  	  '<span v-if="errors[name]" class="error">{{ errors[name] }}</span>' +
 				  '<span v-else class="fielddescription"><small>{{ description|translate }}</small></span>' +

@@ -94,7 +94,6 @@ const contentComponent = Vue.component('content-block', {
 			this.edit = true;
 			this.unsafed = true;
 			this.compmarkdown = $event;
-			console.info(this.compmarkdown);
 			this.setComponentSize();
 		},
 		setComponentSize: function()
@@ -1348,7 +1347,6 @@ const definitionComponent = Vue.component('definition-component', {
 				}
 				this.definitionList.push({'term': term ,'descriptions': descriptions, 'id': i});					
 			}
-			console.info(this.definitionList);
 		}
 		else
 		{
@@ -1896,14 +1894,14 @@ const fileComponent = Vue.component('file-component', {
 					reader.readAsDataURL(uploadedFile);
 					reader.onload = function(e) {
 						
-				        myaxios.post('/api/v1/file',{
+				    myaxios.post('/api/v1/file',{
 							'url':				document.getElementById("path").value,
 							'file':				e.target.result,
 							'name': 			uploadedFile.name, 
 							'csrf_name': 		document.getElementById("csrf_name").value,
 							'csrf_value':		document.getElementById("csrf_value").value,
 						})
-				        .then(function (response) {
+				    .then(function (response) {
 							self.load = false;
 							self.$parent.activatePage();
 								
@@ -1912,14 +1910,16 @@ const fileComponent = Vue.component('file-component', {
 							self.fileextension = response.data.info.extension;
 							self.fileurl = response.data.info.url;
 							self.createmarkdown();
-				        })
-				        .catch(function (error)
-				        {
-				            if(error.response)
-				            {
-				            	publishController.errors.message = error.response.data.errors.message;
-				            }
-				        });
+				    })
+				    .catch(function (error)
+				    {
+							self.load = false;
+							self.$parent.activatePage();
+				      if(error.response)
+				      {
+				        publishController.errors.message = error.response.data.errors;
+				      }
+				    });
 					}
 				}
 			}
