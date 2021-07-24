@@ -2322,7 +2322,19 @@ button.format-item.close:hover{
 	color: #ccc; 
 	background: #f9f8f6; 
 	font-weight: 300;
-	padding: 0;
+	padding: 5px 0 0;
+}
+.blox-editor tr:first-child:hover td.noteditable:first-child{
+    cursor: default;
+	color: #ccc; 
+	background: #f9f8f6; 
+}
+.blox-editor td.noteditable{
+	cursor: pointer;
+}
+.blox-editor td.noteditable:hover{
+	background: #ccc;
+	color: #fff;
 }
 .blox-editor .columnaction, .blox-editor .rowaction{
 	position: absolute;

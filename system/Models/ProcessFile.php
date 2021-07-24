@@ -143,7 +143,7 @@ class ProcessFile extends ProcessAssets
 
 
 	public function getFileDetails($name, $structure)
-	{		
+	{
 		$name = basename($name);
 
 		if (!in_array($name, array(".","..")) && file_exists($this->fileFolder . $name))

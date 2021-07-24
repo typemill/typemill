@@ -341,11 +341,14 @@ class ParsedownExtension extends \ParsedownExtra
             $Block = array(
                 'element' => array(
                     'name' => 'h' . min(6, $level),
-                    'text' => $text,
-                    'handler' => 'line',
                     'attributes' => array(
-                        'id' => "h-$headline"
-                    )
+                       'id' => "h-$headline"
+                    ),
+                    'handler' => array(
+                        'function' => 'lineElements',
+                        'argument' => $text,
+                        'destination' => 'elements',
+                    ),
                 )
             );
 
@@ -371,7 +374,7 @@ class ParsedownExtension extends \ParsedownExtra
             return $Block;
         }
     }
-    
+  
 
     # TableOfContents
     protected function blockTableOfContents($line, $block)
