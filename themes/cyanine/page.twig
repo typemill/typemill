@@ -34,7 +34,7 @@
 
 		</aside>
 
-		<div class="grid-main ph3 ph4-l pv3 lh-copy f4 fw3">
+		<div class="grid-main ph3 ph4-l pv3 lh-copy f4-l f5 fw3">
 
 			<nav id="breadcrumb">
 				{% include 'partials/breadcrumb.twig' %}
@@ -111,7 +111,7 @@
 
 			{% if item.elementType == 'folder' and item.contains == 'pages' %}
 
-				<nav class="f4">				
+				<nav class="f4-l f5">
 					{% include 'partials/navigationFlat.twig'  with {'flatnavi': item.folderContent} %}
 				</nav>
 

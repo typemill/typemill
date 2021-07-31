@@ -6,6 +6,8 @@ Typemill provides detailed settings, and you have access to nearly all settings 
 
 You will find all configurations and settings under the main navigation point `settings` with the following sub-navigation:
 
+[favicon io (ZIP, 21.53 KB)](media/files/favicon-io.zip){.tm-download file-zip}
+
 * System settings
 * Theme settings
 * Plugin settings
