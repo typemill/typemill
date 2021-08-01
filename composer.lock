@@ -291,16 +291,16 @@
         },
         {
             "name": "laminas/laminas-zendframework-bridge",
-            "version": "1.2.0",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-zendframework-bridge.git",
-                "reference": "6cccbddfcfc742eb02158d6137ca5687d92cee32"
+                "reference": "13af2502d9bb6f7d33be2de4b51fb68c6cdb476e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-zendframework-bridge/zipball/6cccbddfcfc742eb02158d6137ca5687d92cee32",
-                "reference": "6cccbddfcfc742eb02158d6137ca5687d92cee32",
+                "url": "https://api.github.com/repos/laminas/laminas-zendframework-bridge/zipball/13af2502d9bb6f7d33be2de4b51fb68c6cdb476e",
+                "reference": "13af2502d9bb6f7d33be2de4b51fb68c6cdb476e",
                 "shasum": ""
             },
             "require": {
@@ -349,7 +349,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2021-02-25T21:54:58+00:00"
+            "time": "2021-06-24T12:49:22+00:00"
         },
         {
             "name": "nikic/fast-route",
@@ -1135,19 +1135,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/vlucas/valitron.git",
-                "reference": "f7e662e3c0c1c465d548542672e08862fbb601d9"
+                "reference": "5ebd5d7af82cc0a9d798e816a2ecad63f1b59ceb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vlucas/valitron/zipball/f7e662e3c0c1c465d548542672e08862fbb601d9",
-                "reference": "f7e662e3c0c1c465d548542672e08862fbb601d9",
+                "url": "https://api.github.com/repos/vlucas/valitron/zipball/5ebd5d7af82cc0a9d798e816a2ecad63f1b59ceb",
+                "reference": "5ebd5d7af82cc0a9d798e816a2ecad63f1b59ceb",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.2"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8.35 || ^5.5 || ^6.5"
+                "phpunit/phpunit": ">=4.8.35"
             },
             "suggest": {
                 "ext-mbstring": "It can support the multiple bytes string length."
@@ -1167,11 +1167,11 @@
                 {
                     "name": "Vance Lucas",
                     "email": "vance@vancelucas.com",
-                    "homepage": "http://www.vancelucas.com"
+                    "homepage": "https://www.vancelucas.com"
                 }
             ],
             "description": "Simple, elegant, stand-alone validation library with NO dependencies",
-            "homepage": "http://github.com/vlucas/valitron",
+            "homepage": "https://github.com/vlucas/valitron",
             "keywords": [
                 "valid",
                 "validation",
@@ -1179,7 +1179,7 @@
             ],
             "support": {
                 "issues": "https://github.com/vlucas/valitron/issues",
-                "source": "https://github.com/vlucas/valitron/tree/master"
+                "source": "https://github.com/vlucas/valitron/tree/v1.4.10"
             },
             "funding": [
                 {
@@ -1187,7 +1187,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-05-12T19:47:47+00:00"
+            "time": "2021-07-08T16:18:03+00:00"
         }
     ],
     "packages-dev": [],
