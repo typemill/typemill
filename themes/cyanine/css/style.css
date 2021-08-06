@@ -487,6 +487,10 @@ button.play-video::after {
 	background: #333;
 }
 
+.logo-image{
+	max-width: 200px;
+}
+
 @media screen and (min-width:30em){
 	h1,h2,h3,h4,h5,h6{ hyphens: manual; }
 }
@@ -512,6 +516,9 @@ button.play-video::after {
 		grid-area: gridSidebar;
 	}
 
+	.logo-image{
+		max-width: 100%;
+	}
 
 	#burger:checked ~ .burgerbutton {
 		color: inherit;

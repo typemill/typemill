@@ -96,12 +96,12 @@
 
 				{% if item.prevItem or item.nextItem %}
 
-					<div id="bottompager" class="f5 pv5 flex justify-between {{ settings.themes.cyanine.fontnavi|default('tm-sans-serif') }}">
+					<div id="bottompager" class="f5 pv5 flex-l flex-m justify-between {{ settings.themes.cyanine.fontnavi|default('tm-sans-serif') }}">
 						{% if item.prevItem %}
-							<a class="navigation link pv2 ph3 ba dim" href="{{ item.prevItem.urlRel }}">&lsaquo;&nbsp; {{ item.prevItem.name }}</a>
+							<a class="navigation link w-100 w-40-l w-40-m mv1 pv2 ph3 ba dim dib" href="{{ item.prevItem.urlRel }}">&lsaquo;&nbsp; {{ item.prevItem.name }}</a>
 						{% endif %}
 						{% if item.nextItem %}
-							<a class="navigation link pv2 ph3 ba dim" href="{{ item.nextItem.urlRel }}">{{ item.nextItem.name }} &nbsp;&rsaquo;</a>
+							<a class="navigation link w-100 w-40-l w-40-m mv1 pv2 ph3 dib ba dim tr" href="{{ item.nextItem.urlRel }}">{{ item.nextItem.name }} &nbsp;&rsaquo;</a>
 						{% endif %}
 					</div>
 
