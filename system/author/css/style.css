@@ -1021,6 +1021,17 @@ fieldset{
 	border: none;
 	padding: 0;	
 }
+fieldset.fs-formbuilder{
+    padding: 20px;
+    border: 1px solid #ddd;
+    margin: 20px;
+    width: auto;
+}
+fieldset.fs-formbuilder legend{
+	float: none;
+    font-weight: bold;
+    font-size: 1.2em;
+}
 label,.label{
 	display: inline-block;
 	width: 100%;

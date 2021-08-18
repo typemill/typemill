@@ -1,6 +1,6 @@
 Vue.component('component-text', {
-	props: ['class', 'id', 'description', 'maxlength', 'hidden', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
-	template: '<div class="large">' +
+	props: ['id', 'description', 'maxlength', 'hidden', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
+	template: '<div>' +
 				'<label>{{ label|translate }}</label>' +
 				'<input type="text"' + 
 					' :id="id"' +
@@ -25,7 +25,7 @@ Vue.component('component-text', {
 })
 
 Vue.component('component-hidden', {
-	props: ['class', 'id', 'maxlength', 'required', 'disabled', 'name', 'type', 'value', 'errors'],
+	props: ['id', 'maxlength', 'required', 'disabled', 'name', 'type', 'value', 'errors'],
 	template: '<div class="hidden">' +
 				'<input type="hidden"' + 
 					' :id="id"' +
@@ -43,13 +43,13 @@ Vue.component('component-hidden', {
 })
 
 Vue.component('component-textarea', {
-	props: ['class', 'id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
+	props: ['id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
 	data: function () {
 		return {
 			textareaclass: ''
 		 }
 	},
-	template: '<div class="large">' +
+	template: '<div>' +
 				'<label>{{ label|translate }}</label>' +
 				'<textarea rows="8" ' +
 					' :id="id"' +
@@ -82,8 +82,8 @@ Vue.component('component-textarea', {
 })
 
 Vue.component('component-url', {
-	props: ['class', 'id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
-	template: '<div class="large">' +
+	props: ['id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
+	template: '<div>' +
 				'<label>{{ label|translate }}</label>' +
 				'<input type="url"' + 
 					' :id="id"' +
@@ -107,8 +107,8 @@ Vue.component('component-url', {
 })
 
 Vue.component('component-number', {
-	props: ['class', 'id', 'description', 'min', 'max', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
-	template: '<div class="large">' +
+	props: ['id', 'description', 'min', 'max', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
+	template: '<div>' +
 				'<label>{{ label|translate }}</label>' +
 				'<input type="number"' + 
 					' :id="id"' +
@@ -134,8 +134,8 @@ Vue.component('component-number', {
 })
 
 Vue.component('component-email', {
-	props: ['class', 'id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
-	template: '<div class="large">' +
+	props: ['id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
+	template: '<div>' +
 				'<label>{{ label|translate }}</label>' +
 				'<input type="email"' + 
 					' :id="id"' +
@@ -159,8 +159,8 @@ Vue.component('component-email', {
 })
 
 Vue.component('component-tel', {
-	props: ['class', 'id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
-	template: '<div class="large">' +
+	props: ['id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
+	template: '<div>' +
 				'<label>{{ label|translate }}</label>' +
 				'<input type="tel"' + 
 					' :id="id"' +
@@ -184,8 +184,8 @@ Vue.component('component-tel', {
 })
 
 Vue.component('component-password', {
-	props: ['class', 'id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
-	template: '<div class="large">' +
+	props: ['id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
+	template: '<div>' +
 				'<label>{{ label|translate }}</label>' +
 				'<input type="password"' + 
 					' :id="id"' +
@@ -209,8 +209,8 @@ Vue.component('component-password', {
 })
 
 Vue.component('component-date', {
-	props: ['class', 'id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
-	template: '<div class="large">' +
+	props: ['id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
+	template: '<div>' +
 				'<label>{{ label|translate }}</label>' +
 				'<input type="date" ' +
 					' :id="id"' +
@@ -233,8 +233,8 @@ Vue.component('component-date', {
 })
 
 Vue.component('component-color', {
-	props: ['class', 'id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
-	template: '<div class="large">' +
+	props: ['id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
+	template: '<div>' +
 				'<label>{{ label|translate }}</label>' +
 				'<input type="color" ' +
 					' :id="id"' +
@@ -257,8 +257,8 @@ Vue.component('component-color', {
 })
 
 Vue.component('component-select', {
-	props: ['class', 'id', 'description', 'readonly', 'required', 'disabled', 'label', 'name', 'type', 'options', 'value', 'errors', 'dataset', 'userroles'],
-	template: '<div class="large">' +
+	props: ['id', 'description', 'readonly', 'required', 'disabled', 'label', 'name', 'type', 'options', 'value', 'errors', 'dataset', 'userroles'],
+	template: '<div>' +
 				'<label>{{ label|translate }}</label>' +
 			    '<select' + 
 					' :id="id"' +
@@ -281,8 +281,8 @@ Vue.component('component-select', {
 })
 
 Vue.component('component-checkbox', {
-	props: ['class', 'id', 'description', 'readonly', 'required', 'disabled', 'label', 'checkboxlabel', 'name', 'type', 'value', 'errors'],
-	template: '<div class="large">' +
+	props: ['id', 'description', 'readonly', 'required', 'disabled', 'label', 'checkboxlabel', 'name', 'type', 'value', 'errors'],
+	template: '<div>' +
 				'<label>{{ label|translate }}</label>' +
 				'<label class="control-group">{{ checkboxlabel|translate }}' +
 				  '<input type="checkbox"' + 
@@ -307,8 +307,8 @@ Vue.component('component-checkbox', {
 })
 
 Vue.component('component-checkboxlist', {
-	props: ['class', 'description', 'readonly', 'required', 'disabled', 'label', 'checkboxlabel', 'options', 'name', 'type', 'value', 'errors'],
-	template: '<div class="large">' +
+	props: ['description', 'readonly', 'required', 'disabled', 'label', 'checkboxlabel', 'options', 'name', 'type', 'value', 'errors'],
+	template: '<div>' +
 				'<label>{{ label|translate }}</label>' +
 				'<label v-for="option, optionvalue in options" class="control-group">{{ option }}' +
 				  '<input type="checkbox"' + 
@@ -335,8 +335,8 @@ Vue.component('component-checkboxlist', {
 })
 
 Vue.component('component-radio', {
-	props: ['class', 'id', 'description', 'readonly', 'required', 'disabled', 'options', 'label', 'name', 'type', 'value', 'errors'],
-	template: '<div class="large">' +
+	props: ['id', 'description', 'readonly', 'required', 'disabled', 'options', 'label', 'name', 'type', 'value', 'errors'],
+	template: '<div>' +
 				'<label>{{ label|translate }}</label>' +
 				'<label v-for="option,optionvalue in options" class="control-group">{{ option }}' +
 				  '<input type="radio"' + 
@@ -362,7 +362,7 @@ Vue.component('component-radio', {
 })
 
 Vue.component('component-customfields', {
-	props: ['class', 'id', 'description', 'readonly', 'required', 'disabled', 'options', 'label', 'name', 'type', 'value', 'errors'],
+	props: ['id', 'description', 'readonly', 'required', 'disabled', 'options', 'label', 'name', 'type', 'value', 'errors'],
 	data: function () {
 		return {
 			fielderrors: false,
@@ -371,7 +371,7 @@ Vue.component('component-customfields', {
 			cfvalue: [{}]
 		 }
 	},
-	template: '<div class="large">' +
+	template: '<div>' +
 				'<label class="mb2">{{ label|translate }}</label>' +
 			  	'<div class="fielddescription mb2 f7">{{ description|translate }}</div>' +
 			  	'<div v-if="errors[name]" class="error mb2 f7">{{ errors[name] }}</div>' +
@@ -489,7 +489,7 @@ Vue.component('component-customfields', {
 })
 
 Vue.component('component-image', {
-	props: ['class', 'id', 'description', 'maxlength', 'hidden', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
+	props: ['id', 'description', 'maxlength', 'hidden', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
 	template: '<div class="large img-component">' +
 				'<label>{{ label|translate }}</label>' +
 				'<div class="flex flex-wrap item-start">' +

@@ -1,75 +1,95 @@
 meta:
   fields:
-    title:
-      type: text
-      label: Meta title
-      maxlength: 60
-      class: large
-    description:
-      type: textarea
-      label: Meta description
-      size: 160
-      class: large
-      description: If not filled, the description is extracted from content.
-    heroimage:
-      type: image
-      label: Hero Image
-      description: Maximum size for an image is 5 MB. Hero images are not supported by all themes.
-    heroimagealt:
-      type: text
-      label: Alternative Text for the hero image
-    owner:
-      type: text
-      label: owner (username)
-      class: medium
-      description: Has edit rights for this article.
-    author:
-      type: text
-      label: author
-      class: medium
-      description: Can be used for author line in frontend.
-    manualdate:
-      type: date
-      label: Manual date
-    modified:
-      type: date
-      label: Last modified live (readonly)
-      readonly: readonly
-      class: medium
-      description: Used as fallback when no manual date is set.
-    created:
-      type: date
-      label: Created at (read only)
-      readonly: readonly
-      class: medium
-    time:
-      type: text
-      readonly: readonly
-      hidden: true
-      class: hidden
-      pattern: '[0-9][0-9]-[0-9][0-9]-[0-9][0-9]'
-    navtitle:
-      type: text
-      label: Navigation Title
-      class: medium
-      maxlength: 60
-    hide:
-      type: checkbox
-      label: Hide
-      checkboxlabel: Hide page from navigation
-      class: medium
-    allowedrole:
-      type: select
-      label: For access the user must have this minimum role
-      class: medium
-      dataset: userroles
-      options:
-      description: Select the lowest userrole. Higher roles will have access too.
-    alloweduser:
-      type: text
-      label: Only the following users have access
-      class: medium
-      description: Add one or more usernames separated with comma.
+    fieldsetcontent:
+      type: fieldset
+      legend: Meta-Content
+      fields:
+        title:
+          type: text
+          label: Meta title
+          maxlength: 60
+          class: large
+        description:
+          type: textarea
+          label: Meta description
+          size: 160
+          class: large
+          description: If not filled, the description is extracted from content.
+        heroimage:
+          type: image
+          label: Hero Image
+          description: Maximum size for an image is 5 MB. Hero images are not supported by all themes.
+        heroimagealt:
+          type: text
+          label: Alternative Text for the hero image
+    fieldsetauthor:
+      type: fieldset
+      legend: Author
+      fields:
+        owner:
+          type: text
+          label: owner (username)
+          class: medium
+          description: Has edit rights for this article.
+        author:
+          type: text
+          label: author
+          class: medium
+          description: Can be used for author line in frontend.
+    fieldsetrights:
+      type: fieldset
+      legend: Access & Rights
+      fields:
+        allowedrole:
+          type: select
+          label: For access the user must have this minimum role
+          class: medium
+          dataset: userroles
+          options:
+          description: Select the lowest userrole. Higher roles will have access too.
+        alloweduser:
+          type: text
+          label: Only the following users have access
+          class: medium
+          description: Add one or more usernames separated with comma.
+    fieldsetpubdate:
+      type: fieldset
+      legend: Article Date
+      fields:
+        manualdate:
+          type: date
+          label: Manual date
+        modified:
+          type: date
+          label: Last modified live (readonly)
+          readonly: readonly
+          class: medium
+          description: Used as fallback when no manual date is set.
+        created:
+          type: date
+          label: Created at (read only)
+          readonly: readonly
+          class: medium
+        time:
+          type: text
+          readonly: readonly
+          hidden: true
+          class: hidden
+          pattern: '[0-9][0-9]-[0-9][0-9]-[0-9][0-9]'
+    fieldsetnavi:
+      type: fieldset
+      legend: Navigation
+      fields:
+        navtitle:
+          type: text
+          label: Navigation Title
+          class: medium
+          maxlength: 60
+        hide:
+          type: checkbox
+          label: Hide
+          checkboxlabel: Hide page from navigation
+          class: medium
     contains:
       type: radio
       label: This folder contains

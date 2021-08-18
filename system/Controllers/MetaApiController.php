@@ -29,8 +29,7 @@ class MetaApiController extends ContentController
 		# the fields for user or role based access
 		if(!isset($this->settings['pageaccess']) || $this->settings['pageaccess'] === NULL )
 		{
-			unset($metatabs['meta']['fields']['alloweduser']);
-			unset($metatabs['meta']['fields']['allowedrole']);
+			unset($metatabs['meta']['fields']['fieldsetrights']);
 		}
 
 		# add radio buttons to choose posts or pages for folder.
@@ -124,11 +123,12 @@ class MetaApiController extends ContentController
 		{
 			$metadata[$tabname] 	= [];
 
-			foreach($tab['fields'] as $fieldname => $fielddefinitions)
+			$tab = $this->flattenTabFields($tab['fields'],[]);
+
+			foreach($tab as $fieldname => $fielddefinitions)
 			{
 				$metascheme[$tabname][$fieldname] = true;
 				$metadata[$tabname][$fieldname] = isset($pagemeta[$tabname][$fieldname]) ? $pagemeta[$tabname][$fieldname] : null;
-
 				
 				# check if there is a selectfield for userroles
 				if(isset($fielddefinitions['type']) && ($fielddefinitions['type'] == 'select' ) && isset($fielddefinitions['dataset']) && ($fielddefinitions['dataset'] == 'userroles' ) )
@@ -214,6 +214,8 @@ class MetaApiController extends ContentController
 			$metaDefinitions = $this->aggregateMetaDefinitions();
 		}
 
+		$tabFieldDefinitions = $this->flattenTabFields($metaDefinitions[$tab]['fields'], []);
+
 		# create validation object
 		$validate 		= $this->getValidator();
 
@@ -221,7 +223,7 @@ class MetaApiController extends ContentController
 		foreach($metaInput as $fieldName => $fieldValue)
 		{
 			# get the corresponding field definition from original plugin settings */
-			$fieldDefinition = isset($metaDefinitions[$tab]['fields'][$fieldName]) ? $metaDefinitions[$tab]['fields'][$fieldName] : false;
+			$fieldDefinition = isset($tabFieldDefinitions[$fieldName]) ? $tabFieldDefinitions[$fieldName] : false;
 
 			if(!$fieldDefinition)
 			{
@@ -378,6 +380,24 @@ class MetaApiController extends ContentController
 		# return with the new metadata
 		return $response->withJson(array('metadata' => $metaInput, 'structure' => $structure, 'item' => $this->item, 'errors' => false));
 	}
+
+	# we have to flatten field definitions for tabs if there are fieldsets in it
+	public function flattenTabFields($tabfields, $flattab)
+	{
+		foreach($tabfields as $name => $field)
+		{
+			if($field['type'] == 'fieldset')
+			{
+				$flattab = $this->flattenTabFields($field['fields'], $flattab);
+			}
+			else
+			{
+				$flattab[$name] = $field;
+			}
+		}
+		return $flattab;
+	}
+
 
 	# can be deleted ??
 	private function customfieldsPrepareForEdit($customfields)
