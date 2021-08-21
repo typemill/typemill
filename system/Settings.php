@@ -84,7 +84,7 @@ class Settings
 			'editor'								=> 'visual',
 			'formats'								=> ['markdown', 'headline', 'ulist', 'olist', 'table', 'quote', 'notice', 'image', 'video', 'file', 'toc', 'hr', 'definition', 'code'],
 			'contentFolder'							=> 'content',
-			'version'								=> '1.4.7',
+			'version'								=> '1.4.8',
 			'setup'									=> true,
 			'welcome'								=> true,
 			'images'								=> ['live' => ['width' => 820], 'thumbs' => ['width' => 250, 'height' => 150]],
