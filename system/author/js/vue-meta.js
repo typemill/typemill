@@ -11,42 +11,13 @@ Vue.filter('translate', function (value) {
   }
 })
 
-Vue.component('tab-metaoriginal', {
-	props: ['saved', 'errors', 'formdata', 'schema', 'userroles'],
-	template: '<section><form>original' +
-				'<component v-for="(field, index) in schema.fields"' +
-            	    ':key="index"' +
-                	':is="selectComponent(field)"' +
-                	':errors="errors"' +
-                	':name="index"' +
-                	':userroles="userroles"' +
-                	'v-model="formdata[index]"' +
-                	'v-bind="field">' +
-				'</component>' + 
-				'<div v-if="saved" class="metaLarge"><div class="metaSuccess">{{ \'Saved successfully\'|translate }}</div></div>' +
-				'<div v-if="errors" class="metaLarge"><div class="metaErrors">{{ \'Please correct the errors above\'|translate }}</div></div>' +
-				'<div class="large"><input type="submit" @click.prevent="saveInput" :value="\'save\'|translate"></input></div>' +
-			  '</form></section>',
-	methods: {
-		selectComponent: function(field)
-		{
-			return 'component-'+field.type;
-		},
-		saveInput: function()
-		{
-  			this.$emit('saveform');
-		},
-	}
-})
-
 Vue.component('tab-meta', {
 	props: ['saved', 'errors', 'formdata', 'schema', 'userroles'],
 	template: '<section><form>' +
-				'<div v-for="(field, index) in schema.fields" :class="getFieldClass(field)">' +
-					'<fieldset class="fs-formbuilder" v-if="field.type == \'fieldset\'"><legend>{{field.legend}}</legend>' + 
+				'<div v-for="(field, index) in schema.fields">' +
+					'<fieldset v-if="field.type == \'fieldset\'" class="fs-formbuilder"><legend>{{field.legend}}</legend>' + 
 						'<component v-for="(subfield, index) in field.fields "' +
 		            	    ' :key="index"' +
-		            	    ' :class="getFieldClass(subfield)"' +
 		                	' :is="selectComponent(subfield)"' +
 		                	' :errors="errors"' +
 		                	' :name="index"' +
@@ -77,23 +48,6 @@ Vue.component('tab-meta', {
 		saveInput: function()
 		{
   			this.$emit('saveform');
-		},
-		getFieldClass: function(field)
-		{
-			if(field.type == 'fieldset')
-			{ 
-				return; 
-			}
-			else if(field.class === undefined )
-			{
-				return 'large';
-			}
-			else
-			{
-				var fieldclass = field.class;
-				delete field.class;
-				return fieldclass;
-			}
 		},
 	}
 })

@@ -987,6 +987,14 @@ section.tab{
 /*	z-index: -1; */
 	padding: 40px;
 }
+/* fix medium fields next together due to fieldset-logic */
+.tab > form > div{
+	display: inline;
+}
+.fs-formbuilder > div{
+	padding: 18px 20px;
+}
+
 /********************
 *		Forms 		*
 ********************/

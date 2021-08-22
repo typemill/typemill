@@ -138,7 +138,15 @@ class MetaApiController extends ContentController
 					{
 						$userroles[$userrole] = $userrole;
 					}
-					$metadefinitions[$tabname]['fields'][$fieldname]['options'] = $userroles;
+
+					if(isset($fielddefinitions['fieldset']))
+					{
+						$metadefinitions[$tabname]['fields'][$fielddefinitions['fieldset']]['fields'][$fieldname]['options'] = $userroles;
+					}
+					else
+					{
+						$metadefinitions[$tabname]['fields'][$fieldname]['options'] = $userroles;
+					}
 				}
 
 				/*
@@ -240,7 +248,6 @@ class MetaApiController extends ContentController
 					}
 					$fieldDefinition['options'] = $userroles;
 				}
-
 
 				# validate user input for this field
 				$result = $validate->objectField($fieldName, $fieldValue, $objectName, $fieldDefinition);
@@ -382,16 +389,21 @@ class MetaApiController extends ContentController
 	}
 
 	# we have to flatten field definitions for tabs if there are fieldsets in it
-	public function flattenTabFields($tabfields, $flattab)
+	public function flattenTabFields($tabfields, $flattab, $fieldset = null)
 	{
 		foreach($tabfields as $name => $field)
 		{
 			if($field['type'] == 'fieldset')
 			{
-				$flattab = $this->flattenTabFields($field['fields'], $flattab);
+				$flattab = $this->flattenTabFields($field['fields'], $flattab, $name);
 			}
 			else
 			{
+				# add the name of the fieldset so we know to which fieldset it belongs for references
+				if($fieldset)
+				{
+					$field['fieldset'] = $fieldset;
+				}
 				$flattab[$name] = $field;
 			}
 		}
