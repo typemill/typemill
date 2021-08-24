@@ -994,6 +994,10 @@ section.tab{
 .fs-formbuilder > div{
 	padding: 18px 20px;
 }
+.tab .metasubmit{
+	display: block;
+	padding:  10px 20px;
+}
 
 /********************
 *		Forms 		*

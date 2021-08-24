@@ -36,9 +36,9 @@ Vue.component('tab-meta', {
 		                	' v-bind="field">' +
 						'</component>' + 
 				'</div>' +
-				'<div v-if="saved" class="metaLarge"><div class="metaSuccess">{{ \'Saved successfully\'|translate }}</div></div>' +
-				'<div v-if="errors" class="metaLarge"><div class="metaErrors">{{ \'Please correct the errors above\'|translate }}</div></div>' +
-				'<div class="large"><input type="submit" @click.prevent="saveInput" :value="\'save\'|translate"></input></div>' +
+				'<div v-if="saved" class="metasubmit"><div class="metaSuccess">{{ \'Saved successfully\'|translate }}</div></div>' +
+				'<div v-if="errors" class="metasubmit"><div class="metaErrors">{{ \'Please correct the errors above\'|translate }}</div></div>' +
+				'<div class="metasubmit"><input type="submit" @click.prevent="saveInput" :value="\'save\'|translate"></input></div>' +
 			  '</form></section>',
 	methods: {
 		selectComponent: function(field)
