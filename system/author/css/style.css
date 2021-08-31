@@ -487,7 +487,7 @@ li.menu-item{
 .navi-item .movewrapper {
 	position: absolute;
 	right: 4px;
-	top: 4px;
+	top: 8px;
 	color: #f9f8f6;
 	color: #444;
 	background: transparent;
@@ -616,6 +616,7 @@ footer{
 .math{
 	white-space: pre;
 }
+
 /********************
 *  	SETUP FORM 	    *
 ********************/
@@ -2311,6 +2312,10 @@ button.format-item.close:hover{
 	overflow-x: auto;
 	border-left: 4px solid #e0474c;
 }
+.blox code.language-pagebreak::after{
+  	content: '---pagebreak with the eBook plugin---';
+}
+
 .blox table{
 	width: 100%;
 	border-collapse: collapse;
@@ -2855,6 +2860,10 @@ footer a:focus, footer a:hover, footer a:active
 		width: 80%;
 		display: inline-block;
 		vertical-align: top;
+	}
+	article a{
+		text-decoration: none;
+		color: #e0474c;
 	}
 	aside.sidebar{
 		width: 19%;

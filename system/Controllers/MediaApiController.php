@@ -125,9 +125,6 @@ class MediaApiController extends ContentController
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri()->withUserInfo('');
 
-		# make sure only allowed filetypes are uploaded
-
-
 		if (!isset($this->params['file']))
 		{
 			return $response->withJson(['errors' => 'No file found.'],404);
@@ -150,6 +147,7 @@ class MediaApiController extends ContentController
 			return $response->withJson(['errors' => 'File is bigger than 20MB.'],422);
 		}
 
+		# make sure only allowed filetypes are uploaded
 		$allowedMimes = $this->getAllowedMtypes();
 
 		if(!isset($allowedMimes[$mtype]))
@@ -158,7 +156,7 @@ class MediaApiController extends ContentController
 		}
 
 		if( 
-			(is_array($allowedMimes[$mtype]) && !in_array($allowedMimes[$mtype],$extension)) OR
+			(is_array($allowedMimes[$mtype]) && !in_array($extension, $allowedMimes[$mtype])) OR
 			(!is_array($allowedMimes[$mtype]) && $allowedMimes[$mtype] != $extension )
 		)
 		{
@@ -409,7 +407,7 @@ class MediaApiController extends ContentController
 			'application/x-excel'														=> ['xla','xlb','xlc','xld','xlk','xll','xlm','xls','xlt','xlv','xlw'],
 			'application/x-msexcel'														=> ['xls', 'xla','xlw'],
 			'application/vnd.ms-excel'													=> ['xlb','xlc','xll','xlm','xls','xlw'],
-			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet ' 		=> 'xlsx', 
+			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 		=> 'xlsx', 
 
 			'application/mshelp' 														=> ['hlp','chm'],
 			'application/msword' 														=> ['doc','dot'],

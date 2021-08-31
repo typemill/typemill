@@ -535,7 +535,7 @@ Vue.component('component-image', {
 			  '</div>',
 	data: function(){
 		return {
-			maxsize: 5, // megabyte
+			maxsize: 10, // megabyte
 			imgpreview: false,
 			showmedialib: false,
 			load: false,
