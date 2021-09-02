@@ -220,6 +220,13 @@
 							<span class="error">{{ errors.settings.images.live.height | first }}</span>
 						{% endif %}
 					</div>
+					<div class="large{{ errors.settings.svg ? ' error' : '' }}">
+						<label for="settings[svg]">{{ __('Upload svg images') }}</label>
+						<label class="control-group">{{ __('Allow upload of svg images (on your own risk, has security implications)') }}
+							<input name="settings[svg]" type="checkbox" {% if (settings.svg or old.settings.svg) %} checked {% endif %}>
+							<span class="checkmark"></span>
+						</label>
+					</div>
 					<div class="medium{{ errors.settings.proxy ? ' error' : '' }}">
 						<label for="settings[proxy]">{{ __('Proxy') }}</label>
 						<label class="control-group">{{ __('Use X-Forwarded Headers') }}

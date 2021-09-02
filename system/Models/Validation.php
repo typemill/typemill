@@ -29,12 +29,12 @@ class Validation
 
 		Validator::addRule('image_types', function($field, $value, array $params, array $fields) use ($user)
 		{
-    		$allowed 	= ['jpg', 'jpeg', 'png', 'webp'];
+    		$allowed 	= ['jpg', 'jpeg', 'png', 'webp', 'svg'];
 			$pathinfo	= pathinfo($value);
 			$extension 	= strtolower($pathinfo['extension']);
 			if(in_array($extension, $allowed)){ return true; }
 			return false;
-		}, 'only jpg, jpeg, png, webp, allowed');
+		}, 'only jpg, jpeg, png, webp, svg allowed');
 
 		# checks if email is available if user is created
 		Validator::addRule('emailAvailable', function($field, $value, array $params, array $fields) use ($user)

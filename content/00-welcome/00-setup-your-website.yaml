@@ -1,15 +1,15 @@
 meta:
     title: 'Setup Your Website'
     description: 'Typemill provides detailed settings, and you have access to nearly all settings in the author panel. Learn the basics in this short video:'
-    heroimage: ''
+    heroimage: media/live/1528492471.svg
     heroimagealt: null
     owner: trendschau
     author: 'Sebastian Schürmanns'
+    allowedrole: null
+    alloweduser: null
     manualdate: null
-    modified: '2021-05-27'
+    modified: '2021-09-02'
     created: '2021-05-27'
     time: 21-02-24
     navtitle: 'setup your website'
     hide: false
-    allowedrole: null
-    alloweduser: null

@@ -99,24 +99,57 @@ class MediaApiController extends ContentController
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri()->withUserInfo('');
 		
-		$imageProcessor	= new ProcessImage($this->settings['images']);
-		
+		$imageProcessor	= new ProcessImage($this->settings['images']);		
+
 		if(!$imageProcessor->checkFolders('images'))
 		{
-			return $response->withJson(['errors' => 'Please check if your media-folder exists and all folders inside are writable.'], 500);
-		}	
+			return $response->withJson(['errors' => ['message' => 'Please check if your media-folder exists and all folders inside are writable.']], 500);
+		}
 
-		if($imageProcessor->createImage($this->params['image'], $this->params['name'], $this->settings['images']))
+        $imageParts 	= explode(";base64,", $this->params['image']);
+        $imageType		= explode("/", $imageParts[0]);
+
+		if(!isset($imageType[1]))
 		{
+			return $response->withJson(['errors' => ['message' => 'We did not find an image type, the file might be corrupted.']], 422);
+		}
+
+		$acceptedTypes	= [
+			'png'		=> true,
+			'jpg'		=> true,
+			'jpeg'		=> true,
+			'gif'		=> true,
+			'webp'		=> true,
+		];
+
+		if(isset($this->settings['svg']) && $this->settings['svg'])
+		{
+			$acceptedTypes['svg+xml'] = true;
+		}
+
+		if(!isset($acceptedTypes[$imageType[1]]))
+		{
+			return $response->withJson(['errors' => ['message' => 'The image type is not supported.']], 422);
+		}
+
+		$imageResult = $imageProcessor->createImage($this->params['image'], $this->params['name'], $this->settings['images']);
+
+		if($imageResult)
+		{
+			if(is_array($imageResult) && isset($imageResult['errors']))
+			{
+				return $response->withJson($imageResult,422);
+			}
+
 			# publish image directly, used for example by image field for meta-tabs
 			if($this->params['publish'])
 			{
 				$imageProcessor->publishImage();
 			}
-			return $response->withJson(['name' => 'media/live/' . $imageProcessor->getFullName(),'errors' => false]);	
+			return $response->withJson(['name' => 'media/live/' . $imageProcessor->getFullName(),'errors' => false]);
 		}
 
-		return $response->withJson(['errors' => 'could not store image to temporary folder']);	
+		return $response->withJson(['errors' => 'could not store image to temporary folder'],422);
 	}
 
 	public function uploadFile(Request $request, Response $response, $args)

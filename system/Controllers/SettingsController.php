@@ -111,6 +111,7 @@ class SettingsController extends Controller
 					'trustedproxies'		=> $newSettings['trustedproxies'],
 					'headersoff'			=> isset($newSettings['headersoff']) ? true : null,
 					'urlschemes'			=> $newSettings['urlschemes'],
+					'svg'					=> isset($newSettings['svg']) ? true : null,
 				);
 
 				# https://www.slimframework.com/docs/v3/cookbook/uploading-files.html; 

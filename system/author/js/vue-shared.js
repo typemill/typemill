@@ -618,7 +618,7 @@ Vue.component('component-image', {
 
 								if(result.errors)
 								{
-									publishController.errors.message = result.errors;
+									publishController.errors.message = result.errors.message;
 								}
 								else
 								{
@@ -837,8 +837,8 @@ const medialib = Vue.component('medialib', {
 	            });
             }
             return filteredFiles;
-        }        
-    },	
+        }
+    },
 	methods: {
 		isImagesActive: function()
 		{

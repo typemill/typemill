@@ -2151,12 +2151,14 @@ button.post-button:hover{
 	padding: 0 0 0 20px;
 	font-size: 0.9em;
 	line-height: 30px;
+	height: 30px;
     background: #66b0a1;
     margin-bottom: 2px;
     color: #fff;
 }
 .newblock-close{
 	line-height: 30px;
+	height: 30px;
 	border: 0px;
 	color: #fff;
 	background: #e0474c;
