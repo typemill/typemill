@@ -5,14 +5,14 @@ meta:
     heroimagealt: null
     owner: null
     author: 'Sebastian Schürmanns'
+    allowedrole: null
+    alloweduser: null
     manualdate: null
     modified: '2021-06-13'
     created: null
     time: null
     navtitle: ''
-    hide: true
-    allowedrole: null
-    alloweduser: null
+    hide: false
 seo:
     heroimage: media/live/bildschirmfoto-zu-2019-08-30-20-46-29.png
     heroimagealt: Alt-Text

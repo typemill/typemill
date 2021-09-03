@@ -162,7 +162,7 @@ class PageController extends Controller
 			$item = Folder::getItemForUrl($structure, $urlRel, $uri->getBasePath());
 
 			# if the item is a folder and if that folder is not hidden
-			if($item && isset($item->hide) && !$item->hide)
+			if($item && $item->elementType == 'folder' && isset($item->hide) && !$item->hide)
 			{
 				# use the navigation instead of the structure so that hidden elements are erased
 				$item = Folder::getItemForUrl($navigation, $urlRel, $uri->getBaseUrl(), NULL, $home);
@@ -396,7 +396,7 @@ class PageController extends Controller
 				$extended = false;
 			}
 		}
-		
+
 		# cache structure
 		$cache->updateCache('cache', 'structure.txt', 'lastCache.txt', $structure);
 
@@ -415,7 +415,9 @@ class PageController extends Controller
 		}
 		
 		# load and return the cached structure, because might be manipulated with navigation....
-		return 	$this->getCachedStructure($cache);
+		$structure = $this->getCachedStructure($cache);
+
+		return $structure;
 	}
 	
 	# creates a file that holds all hide flags and navigation titles 

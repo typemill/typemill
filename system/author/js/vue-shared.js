@@ -522,6 +522,9 @@ Vue.component('component-image', {
 									' :value="value"' +
 									'@input="update($event, name)">' +
 							'</div>' +
+							'<div class="dib w-100 mt2">' +
+								'<button class="w-100 pointer ba br1 b--tm-green bg--tm-gray black pa2 ma0 tc" @click.prevent="switchQuality()">{{ getQualityLabel() }}</button>' +
+							'</div>' +							
 						'</div>' +
 					  	'<div v-if="description" class="w-100 dib"><p>{{ description|translate }}</p></div>' +
 					  	'<div v-if="errors[name]" class="error">{{ errors[name] }}</div>' +
@@ -539,12 +542,21 @@ Vue.component('component-image', {
 			imgpreview: false,
 			showmedialib: false,
 			load: false,
+			quality: false,
 		}
 	},
 	mounted: function(){
 		if(this.value !== null && this.value !== '')
 		{
 			this.imgpreview = myaxios.defaults.baseURL + '/' + this.value;
+			if(this.value.indexOf("media/live") > -1 )
+			{
+				this.quality = 'live';
+			}
+			else if(this.value.indexOf("media/original") > -1)
+			{
+				this.quality = 'original';
+			}
 		}
 	},
 	methods: {
@@ -566,6 +578,29 @@ Vue.component('component-image', {
 		{
 			this.imgpreview = false;
 			this.update('');
+		},
+		getQualityLabel: function()
+		{
+			if(this.quality == 'live')
+			{
+				return 'switch quality to: original';
+			}
+			return 'switch quality to: resized';
+		},
+		switchQuality: function()
+		{
+			if(this.quality == 'live')
+			{
+				var newUrl = this.value.replace("media/live", "media/original");
+				this.update(newUrl);
+				this.quality = 'original';
+			}
+			else
+			{
+				var newUrl = this.value.replace("media/original", "media/live");
+				this.update(newUrl);
+				this.quality = 'live';
+			}
 		},
 		openmedialib: function()
 		{
