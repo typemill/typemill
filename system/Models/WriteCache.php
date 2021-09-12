@@ -2,6 +2,8 @@
 
 namespace Typemill\Models;
 
+use Typemill\Models\WriteYaml;
+
 class WriteCache extends Write
 {
 	/**
@@ -73,17 +75,159 @@ class WriteCache extends Write
 		return false;		
 	}
 
-    /**
-	  * @todo Create a function to clear a specific cache file
-     */	
-	public function clearCache($name)
+	public function getCachedStructure()
 	{
+		return $this->getCache('cache', 'structure.txt');
 	}
 	
     /**
 	  * @todo Create a function to clear all cache files
      */		
-	public function clearAllCacheFiles()
+	public function deleteCacheFiles($dir)
 	{
+		$iterator 	= new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS);
+		$files 		= new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::CHILD_FIRST);
+		
+		$error = false;
+
+		foreach($files as $file)
+		{
+		    if ($file->isDir())
+		    {
+		    	if(!rmdir($file->getRealPath()))
+		    	{
+		    		$error = 'Could not delete some folders.';
+		    	}
+		    }
+		    elseif($file->getExtension() !== 'css')
+		    {
+				if(!unlink($file->getRealPath()) )
+				{
+					$error = 'Could not delete some files.';
+				}
+		    }
+		}
+
+		return $error;
+	}
+	
+	public function getFreshStructure($contentPath, $uri)
+	{
+		# scan the content of the folder
+		$pagetree = Folder::scanFolder('content');
+
+		# if there is no content, render an empty page
+		if(count($pagetree) == 0)
+		{
+			return false;
+		}
+
+		# get the extended structure files with changes like navigation title or hidden pages
+		$yaml = new writeYaml();
+		$extended = $yaml->getYaml('cache', 'structure-extended.yaml');
+
+		# create an array of object with the whole content of the folder
+		$structure = Folder::getFolderContentDetails($pagetree, $extended, $uri->getBaseUrl(), $uri->getBasePath());
+
+		# now update the extended structure
+		if(!$extended)
+		{
+			$extended = $this->createExtended($contentPath, $yaml, $structure);
+
+			if(!empty($extended))
+			{
+				$yaml->updateYaml('cache', 'structure-extended.yaml', $extended);
+
+				# we have to update the structure with extended again
+				$structure = Folder::getFolderContentDetails($pagetree, $extended, $uri->getBaseUrl(), $uri->getBasePath());
+			}
+			else
+			{
+				$extended = false;
+			}
+		}
+
+		# cache structure
+		$this->updateCache('cache', 'structure.txt', 'lastCache.txt', $structure);
+
+		if($extended && $this->containsHiddenPages($extended))
+		{
+			# generate the navigation (delete empty pages)
+			$navigation = $this->createNavigationFromStructure($structure);
+
+			# cache navigation
+			$this->updateCache('cache', 'navigation.txt', false, $navigation);
+		}
+		else
+		{
+			# make sure no separate navigation file is set
+			$this->deleteFileWithPath('cache' . DIRECTORY_SEPARATOR . 'navigation.txt');
+		}
+		
+		# load and return the cached structure, because might be manipulated with navigation....
+		$structure = $this->getCachedStructure();
+
+		return $structure;
+	}
+	
+	# creates a file that holds all hide flags and navigation titles 
+	# reads all meta-files and creates an array with url => ['hide' => bool, 'navtitle' => 'bla']
+	public function createExtended($contentPath, $yaml, $structure, $extended = NULL)
+	{
+		if(!$extended)
+		{
+			$extended = [];
+		}
+
+		foreach ($structure as $key => $item)
+		{
+			# $filename = ($item->elementType == 'folder') ? DIRECTORY_SEPARATOR . 'index.yaml' : $item->pathWithoutType . '.yaml';
+			$filename = $item->pathWithoutType . '.yaml';
+
+			if(file_exists($contentPath . $filename))
+			{				
+				# read file
+				$meta = $yaml->getYaml('content', $filename);
+
+				$extended[$item->urlRelWoF]['hide'] = isset($meta['meta']['hide']) ? $meta['meta']['hide'] : false;
+				$extended[$item->urlRelWoF]['navtitle'] = isset($meta['meta']['navtitle']) ? $meta['meta']['navtitle'] : '';
+			}
+
+			if ($item->elementType == 'folder')
+			{
+				$extended 	= $this->createExtended($contentPath, $yaml, $item->folderContent, $extended);
+			}
+		}
+		return $extended;
+	}
+
+	public function createNavigationFromStructure($navigation)
+	{
+		foreach ($navigation as $key => $element)
+		{
+			if($element->hide === true)
+			{
+				unset($navigation[$key]);
+			}
+			elseif(isset($element->folderContent))
+			{
+				$navigation[$key]->folderContent = $this->createNavigationFromStructure($element->folderContent);
+			}
+		}
+		
+		return $navigation;
+	}
+
+	# checks if there is a hidden page, returns true on first find
+	protected function containsHiddenPages($extended)
+	{
+		foreach($extended as $element)
+		{
+			if(isset($element['hide']) && $element['hide'] === true)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 }

@@ -4,6 +4,7 @@ namespace Typemill\Controllers;
 
 use \Symfony\Component\Yaml\Yaml;
 use Typemill\Models\Write;
+use Typemill\Models\WriteCache;
 use Typemill\Models\Fields;
 use Typemill\Models\Validation;
 use Typemill\Models\User;
@@ -971,38 +972,24 @@ class SettingsController extends Controller
 
 	public function clearCache($request, $response, $args)
 	{
-		$settings 	= $this->c->get('settings');
-		$dir 		= $settings['basePath'] . 'cache';
-		$iterator 	= new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS);
-		$files 		= new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::CHILD_FIRST);
+		$settings 		= $this->c->get('settings');
+		$dir 			= $settings['basePath'] . 'cache';
+		$uri 			= $request->getUri()->withUserInfo('');
+		$pathToContent	= $settings['rootPath'] . $settings['contentFolder'];
 		
-		$error = false;
+		$writeCache = new writeCache();
 
-		foreach($files as $file)
-		{
-		    if ($file->isDir())
-		    {
-		    	if(!rmdir($file->getRealPath()))
-		    	{
-		    		$error = 'Could not delete some folders.';
-		    	}
-		    }
-		    elseif($file->getExtension() !== 'css')
-		    {
-				if(!unlink($file->getRealPath()) )
-				{
-					$error = 'Could not delete some files.';
-				}
-		    }
-		}
+		$error 		= $writeCache->deleteCacheFiles($dir);
 
 		if($error)
 		{
 			return $response->withJson(['errors' => $error], 500);
 		}
 
-		return $response->withJson(array('errors' => false));
+		# this recreates the cache for structure, structure-extended and navigation
+		$writeCache->getFreshStructure($pathToContent, $uri);
 
+		return $response->withJson(array('errors' => false));
 	}
 
 	private function getUserFields($role)

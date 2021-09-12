@@ -8,6 +8,7 @@ use Typemill\Models\Folder;
 use Typemill\Models\Write;
 use Typemill\Models\WriteYaml;
 use Typemill\Models\WriteMeta;
+use Typemill\Models\WriteCache;
 use Typemill\Extensions\ParsedownExtension;
 use Typemill\Events\OnPagePublished;
 use Typemill\Events\OnPageUnpublished;
@@ -406,6 +407,78 @@ class ArticleApiController extends ContentController
 		{
 			return $response->withJson(['errors' => ['message' => 'Could not write to file. Please check if the file is writable']], 404);
 		}
+	}
+
+	public function renameArticle(Request $request, Response $response, $args)
+	{
+		# get params from call
+		$this->params 	= $request->getParams();
+		$this->uri 		= $request->getUri()->withUserInfo('');
+		$dir 			= $this->settings['basePath'] . 'cache';
+		$pathToContent	= $this->settings['rootPath'] . $this->settings['contentFolder'];
+
+		# minimum permission is that user is allowed to update his own content
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'mycontent', 'update'))
+		{
+			return $response->withJson(array('data' => false, 'errors' => 'You are not allowed to update content.'), 403);
+		}
+
+		# validate input
+		if(!preg_match("/^[a-z0-9\-]*$/", $this->params['slug']))
+		{
+			return $response->withJson(['errors' => ['message' => 'the slug contains invalid characters.' ]],422);
+		}
+		
+		# set structure
+		if(!$this->setStructure($draft = true)){ return $response->withJson($this->errors, 404); }
+
+		# set information for homepage
+		$this->setHomepage($args = false);
+
+		# set item 
+		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
+
+		# validate input part 2
+		if($this->params['slug'] == $this->item->slug OR $this->params['slug'] == '')
+		{
+			return $response->withJson(['errors' => ['message' => 'the slug is empty or the same as the old one.' ]],422);
+		}
+
+		# if user has no right to update content from others (eg admin or editor)
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'content', 'update'))
+		{
+			# check ownership. This code should nearly never run, because there is no button/interface to trigger it.
+			if(!$this->checkContentOwnership())
+			{
+				return $response->withJson(array('data' => $this->structure, 'errors'  => 'You are not allowed to move that content.'), 403);
+			}
+		}
+
+		# get the folder where file lives in
+		$pathWithoutFile = str_replace($this->item->originalName, '', $this->item->path);
+		
+		# create the new file name with the updated slug
+		$newPathWithoutType = $pathWithoutFile . $this->item->order . '-' . $this->params['slug'];
+
+		# rename the file
+		$write = new WriteCache();
+		$write->renamePost($this->item->pathWithoutType, $newPathWithoutType);
+
+		# delete the cache
+		$error 		= $write->deleteCacheFiles($dir);
+		if($error)
+		{
+			return $response->withJson(['errors' => $error], 500);
+		}
+
+		# recreates the cache for structure, structure-extended and navigation
+		$write->getFreshStructure($pathToContent, $this->uri);
+
+		$newUrlRel =  str_replace($this->item->slug, $this->params['slug'], $this->item->urlRelWoF);
+
+		$url = $this->uri->getBaseUrl() . '/tm/content/' . $this->settings['editor'] . $newUrlRel;
+		
+		return $response->withJson(array('data' => false, 'errors' => false, 'url' => $url));
 	}
 	
 	public function sortArticle(Request $request, Response $response, $args)

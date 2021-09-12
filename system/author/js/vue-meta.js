@@ -13,7 +13,19 @@ Vue.filter('translate', function (value) {
 
 Vue.component('tab-meta', {
 	props: ['saved', 'errors', 'formdata', 'schema', 'userroles'],
+	data: function () {
+		return {
+			slug: false,
+			originalSlug: false,
+			slugerror: false,
+			disabled: "disabled",
+		}
+	},
 	template: '<section><form>' +
+				'<div><div class="large relative">' +
+					'<label>Slug / Name in URL</label><input type="text" v-model="slug" @input="changeSlug()"><button @click.prevent="storeSlug()" :disabled="disabled" class="button slugbutton bn br2 bg-tm-green white absolute">change slug</button>' +
+					'<div v-if="slugerror" class="f6 tm-red mt1">{{ slugerror }}</div>' +
+				'</div></div>' +
 				'<div v-for="(field, index) in schema.fields">' +
 					'<fieldset v-if="field.type == \'fieldset\'" class="fs-formbuilder"><legend>{{field.legend}}</legend>' + 
 						'<component v-for="(subfield, index) in field.fields "' +
@@ -40,6 +52,11 @@ Vue.component('tab-meta', {
 				'<div v-if="errors" class="metasubmit"><div class="metaErrors">{{ \'Please correct the errors above\'|translate }}</div></div>' +
 				'<div class="metasubmit"><input type="submit" @click.prevent="saveInput" :value="\'save\'|translate"></input></div>' +
 			  '</form></section>',
+	mounted: function()
+	{
+		this.slug =	this.$parent.item.slug;
+		this.originalSlug = this.slug;
+	},
 	methods: {
 		selectComponent: function(field)
 		{
@@ -49,6 +66,52 @@ Vue.component('tab-meta', {
 		{
   			this.$emit('saveform');
 		},
+		changeSlug: function()
+		{
+			if(this.slug == this.originalSlug)
+			{
+				this.slugerror = false;
+				this.disabled = "disabled";
+				return;
+			}
+
+			if(this.slug.match(/^[a-z0-9\-]*$/))
+			{
+				this.slugerror = false;
+				this.disabled = false;
+			}
+			else
+			{
+				this.slugerror = 'Only lowercase a-z and 0-9 and "-" is allowed for slugs.';
+				this.disabled = "disabled";
+			}
+		},
+		storeSlug: function()
+		{
+
+			if(this.slug.match(/^[a-z0-9\-]*$/) && this.slug != this.originalSlug)
+			{
+				var self = this;
+
+		    myaxios.post('/api/v1/article/rename',{
+						'url':				document.getElementById("path").value,
+						'csrf_name': 	document.getElementById("csrf_name").value,
+						'csrf_value':	document.getElementById("csrf_value").value,
+						'slug': 			this.slug,
+				})
+		    .then(function (response)
+		    {
+					window.location.replace(response.data.url);
+				})
+		    .catch(function (error)
+		    {
+		      if(error.response.data.errors.message)
+		      {
+		        publishController.errors.message = error.response.data.errors.message;
+		      }
+		    });
+		  }			
+		}
 	}
 })
 

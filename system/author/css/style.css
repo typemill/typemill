@@ -2,22 +2,22 @@
 *  		TRANSITION	  *
 **********************/
 
-a, a:link, a:visited, a:focus, a:hover, a:active, .link, button, .button, .tab-button, input, .control-group, .sidebar-menu, .sidebar-menu--content, .menu-action, .button-arrow{
-	-webkit-transition: color 0.2s ease;
-	-moz-transition: color 0.2s ease;
-	-o-transition: color 0.2s ease;
-	-ms-transition: color 0.2s ease;
-	transition: color 0.2s ease;
-	-webkit-transition: background-color 0.2s ease;
-	-moz-transition: background-color 0.2s ease;
-	-o-transition: background-color 0.2s ease;
-	-ms-transition: background-color 0.2s ease;
-	transition: border-color 0.2s ease;	
-	-webkit-transition: border-color 0.2s ease;
-	-moz-transition: border-color 0.2s ease;
-	-o-transition: border-color 0.2s ease;
-	-ms-transition: border-color 0.2s ease;
-	transition: border-color 0.2s ease;		
+a, a:link, a:visited, a:focus, a:hover, a:active, .blox, .link, button, .button, .tab-button, input, .control-group, .sidebar-menu, .sidebar-menu--content, .menu-action, .button-arrow{
+	-webkit-transition: color 0.2s ease,
+						background-color 0.2s ease,
+						border-color 0.2s ease;
+	-moz-transition: 	color 0.2s ease,
+						background-color 0.2s ease,
+						border-color 0.2s ease;
+	-o-transition: 		color 0.2s ease,
+						background-color 0.2s ease,
+						border-color 0.2s ease;
+	-ms-transition: 	color 0.2s ease,
+						background-color 0.2s ease,
+						border-color 0.2s ease;
+	transition: 		color 0.2s ease,
+						background-color 0.2s ease,
+						border-color 0.2s ease;
 }
 .navi-item a, 
 .navi-item.file a .iconwrapper,
@@ -239,7 +239,7 @@ aside.sidebar{
 	display: block;
 	width: 100%;
 	background: #fff;
-	margin-bottom: 10px;
+	margin-bottom: 50px;
 	box-sizing: border-box;
 }
 .right{
@@ -449,7 +449,7 @@ li.menu-item{
 	position: relative;
 }
 .navi-item .iconwrapper{
-	display: inline-block;
+	display: none;
 	position: absolute;
 	top: 0px;
 	background: transparent;
@@ -459,6 +459,7 @@ li.menu-item{
 	width: 20px;
 	height: 16px;
 }
+
 .navi-item .status{
 	position: absolute;
 	width: 4px;
@@ -2700,6 +2701,11 @@ footer a:focus, footer a:hover, footer a:active
 
 .mbfix{ margin-bottom: 0px!important; }
 
+.slugbutton{
+    right: 20px;
+    height: 52px;
+    width: 150px;
+}
 
 @media only screen and (min-width: 600px) {
 	section{
@@ -2900,7 +2906,10 @@ footer a:focus, footer a:hover, footer a:active
 	}	
 	.navi-item .status{
 		left: -30px;
-	}	
+	}
+	.navi-item .iconwrapper{
+	    display: block;
+	 }		
 	.navi-item a .movewrapper, 
 	.navi-item a:link .movewrapper, 
 	.navi-item a:visited .movewrapper{
