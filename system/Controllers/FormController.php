@@ -12,7 +12,7 @@ class FormController extends Controller
 	*************************************/
 
 	public function savePublicForm($request, $response, $args)
-	{
+	{ 
 		if($request->isPost())
 		{
 			$params 			= $request->getParams();
@@ -26,46 +26,6 @@ class FormController extends Controller
 				$this->c->flash->addMessage('error', 'The form has a timeout. Please try again.');
 				return $response->withRedirect($referer[0]);
 		    }
-
-			# simple bot check with honeypot
-			if(isset($params[$pluginName]['personal-mail']))
-			{
-				if($params[$pluginName]['personal-mail'] != '')
-				{
-					$this->c->flash->addMessage('publicform', 'bot');
-					return $response->withRedirect($referer[0]);			
-				}
-				unset($params[$pluginName]['personal-mail']);
-			}
-
-			#recaptcha check
-			if(isset($params['g-recaptcha-response']))
-			{
-				$recaptchaApi 		= 'https://www.google.com/recaptcha/api/siteverify';
-				$settings			= $this->c->get('settings');
-				$secret				= isset($settings['plugins'][$pluginName]['recaptcha_secretkey']) ? $settings['plugins'][$pluginName]['recaptcha_secretkey'] : false;
-				$recaptchaRequest 	= ['secret' => $secret, 'response' => $params['g-recaptcha-response']];
-
-				# use key 'http' even if you send the request to https://...
-				$options = array(
-					'http' => array(
-						'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
-						'method'  => 'POST',
-						'content' => http_build_query($recaptchaRequest),
-						'timeout' => 5
-					)
-				);
-
-				$context  	= stream_context_create($options);
-				$result 	= file_get_contents($recaptchaApi, false, $context);
-				$result		= json_decode($result);
-				
-				if ($result === FALSE || $result->success === FALSE)
-				{
-					$this->c->flash->addMessage('publicform', 'bot');
-					return $response->withRedirect($referer[0]);			
-				}
-			}
 			
 			if(isset($params[$pluginName]))
 			{

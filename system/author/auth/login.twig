@@ -26,22 +26,34 @@
 							<span class="error">{{ errors.password | first }}</span>
 						{% endif %}
 					</div>
+					<div class="personal-mail">
+						<label>Personal Mail</label>
+						<input type="text" name="personal-honey-mail">
+					</div>
+
+					{{ captcha(old) }}
+
 				</fieldset>
 
 				<div class="loginarea" id="loginarea">			
 					<input type="submit" value="{{ __('Login') }}" id="loginbutton" class="loginbutton" />
-					{{ csrf_field() | raw }}
-					
-					{% if messages.time %}
-						<div id="counter" class="counter">{{ __('wait') }} <span id="wait">{{ messages.time }}</span> sec</div>
-						<div class="forgotpw"><a href="https://typemill.net/writers/forgot-password" target="_blank">{{ __('Forgot password') }}?</a></div>
-					{% endif %}			
+					{{ csrf_field() | raw }}					
 				</div>
 			</form>		
 		</div>
-		<div class="setupContent">
-			<p><a href="{{ base_url() }}">{{ __('back to startpage') }}</a></p>
-		</div>
+			
+			{% if settings.recoverpw %}
+				
+				<p><span class="left"><a href="{{ base_url() }}">{{ __('back to startpage') }}</a></span><span class="right"><a href="{{ base_url() }}/tm/recoverpw">{{ __('forgot password') }}</a></span></p>
+			
+			{% else %}
+
+				<div class="setupContent">
+					<p><a href="{{ base_url() }}">{{ __('back to startpage') }}</a></p>
+				</div>
+			
+			{% endif %}
+					
 	</div>
 	<footer></footer>
 {% endblock %}

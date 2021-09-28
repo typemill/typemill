@@ -8,6 +8,7 @@ use Slim\Http\Response;
 use Typemill\Models\Validation;
 use Typemill\Models\User;
 use Typemill\Models\WriteYaml;
+use Typemill\Extensions\ParsedownExtension;
 
 class AuthController extends Controller
 {
@@ -34,36 +35,10 @@ class AuthController extends Controller
 	*/
 	
 	public function show(Request $request, Response $response, $args)
-	{	
-		$data 			= array();
+	{
+		$settings = $this->c->get('settings');
 
-		/* check previous login attemps */		
-		$yaml 			= new WriteYaml();
-		$logins 		= $yaml->getYaml('settings/users', '.logins');
-		$userIP 		= $this->getUserIP();
-		$userLogins		= isset($logins[$userIP]) ? count($logins[$userIP]) : false;
-		
-		if($userLogins)
-		{
-			/* get the latest */
-			$lastLogin = intval($logins[$userIP][$userLogins-1]);
-			
-			/* if last login is longer than 60 seconds ago, clear it. */
-			if(time() - $lastLogin > 60)
-			{
-				unset($logins[$userIP]);
-				$yaml->updateYaml('settings/users', '.logins', $logins);
-			}
-			
-			/* Did the user made three login attemps that failed? */
-			elseif($userLogins >= 3)
-			{
-				$timeleft 			= 60 - (time() - $lastLogin);
-				$data['messages'] 	= array('time' => $timeleft, 'error' => array( 'Too many bad logins. Please wait.')); 
-			}
-		}
-
-		return $this->render($response, '/auth/login.twig', $data);
+		return $this->render($response, '/auth/login.twig', ['settings' => $settings]);
 	}
 	
 	/**
@@ -79,41 +54,13 @@ class AuthController extends Controller
 	    if( ( null !== $request->getattribute('csrf_result') ) OR ( $request->getattribute('csrf_result') === false ) )
 	    {
 			$this->c->flash->addMessage('error', 'The form has a timeout, please try again.');
-			return $response->withRedirect($this->c->router->pathFor('auth.show'));				
+			return $response->withRedirect($this->c->router->pathFor('auth.show'));
 	    }
 
-		/* log user attemps to authenticate */
-		$yaml 			= new WriteYaml();
-		$logins 		= $yaml->getYaml('settings/users', '.logins');
-		$userIP 		= $this->getUserIP();
-		$userLogins		= isset($logins[$userIP]) ? count($logins[$userIP]) : false;
-
-		/* if there have been user logins before. You have to do this again, because user does not always refresh the login page and old login attemps are stored. */
-		if($userLogins)
-		{
-			/* get the latest */
-			$lastLogin = intval($logins[$userIP][$userLogins-1]);
-			
-			/* if last login is longer than 60 seconds ago, clear it and add this attempt */
-			if(time() - $lastLogin > 60)
-			{
-				unset($logins[$userIP]);
-				$yaml->updateYaml('settings/users', '.logins', $logins);
-			}
-			
-			/* Did the user made three login attemps that failed? */
-			elseif($userLogins >= 2)
-			{
-				$logins[$userIP][] = time();
-				$yaml->updateYaml('settings/users', '.logins', $logins);
-				
-				return $response->withRedirect($this->c->router->pathFor('auth.show'));
-			}	
-		}
-
-		/* authentication */		
+		/* authentication */
 		$params	 		= $request->getParams();
 		$validation		= new Validation();
+		$settings 		= $this->c->get('settings');
 		
 		if($validation->signin($params))
 		{
@@ -131,13 +78,6 @@ class AuthController extends Controller
 
 				$user->login($userdata['username']);
 
-				/* clear the user login attemps */
-				if($userLogins)
-				{
-					unset($logins[$userIP]);
-					$yaml->updateYaml('settings/users', '.logins', $logins);					
-				}
-
 				# if user is allowed to view content-area
 				if($this->c->acl->hasRole($userdata['userrole']) && $this->c->acl->isAllowed($userdata['userrole'], 'content', 'view'))
 				{
@@ -149,11 +89,12 @@ class AuthController extends Controller
 				return $response->withRedirect($this->c->router->pathFor('user.account'));
 			}
 		}
-
-		/* if authentication failed, add attempt to log file */
-		$logins[$userIP][] = time();
-		$yaml->updateYaml('settings/users', '.logins', $logins);
 		
+		if(isset($this->settings['securitylog']) && $this->settings['securitylog'])
+		{
+			\Typemill\Models\Helpers::addLogEntry('wrong login');
+		}
+
 		$this->c->flash->addMessage('error', 'Ups, wrong password or username, please try again.');
 		return $response->withRedirect($this->c->router->pathFor('auth.show'));
 	}
@@ -176,25 +117,225 @@ class AuthController extends Controller
 		return $response->withRedirect($this->c->router->pathFor('auth.show'));
 	}
 
-	private function getUserIP()
+	public function showRecoverPassword(Request $request, Response $response, $args)
 	{
-		$client  = @$_SERVER['HTTP_CLIENT_IP'];
-		$forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
-		$remote  = $_SERVER['REMOTE_ADDR'];
+		$data 			= array();
+		
+		return $this->render($response, '/auth/recoverpw.twig', $data);
+	}
 
-		if(filter_var($client, FILTER_VALIDATE_IP))
+	public function recoverPassword(Request $request, Response $response, $args)
+	{
+		$params	 		= $request->getParams();
+		$validation		= new Validation();
+		$settings 		= $this->c->get('settings');
+		$uri 			= $request->getUri()->withUserInfo('');
+		$base_url		= $uri->getBaseUrl();
+
+		if(!isset($params['email']) OR filter_var($params['email'], \FILTER_VALIDATE_EMAIL) === false )
 		{
-			$ip = $client;
+			$this->c->flash->addMessage('error', 'Please enter a valid email.');
+			return $response->withRedirect($this->c->router->pathFor('auth.recoverpwshow'));
 		}
-		elseif(filter_var($forward, FILTER_VALIDATE_IP))
+
+		$user = new User();
+		$requiredUser = $user->findUsersByEmail($params['email']);
+
+		if(!$requiredUser)
 		{
-			$ip = $forward;
+			$this->c->flash->addMessage('error', 'The email address is unknown.');
+			return $response->withRedirect($this->c->router->pathFor('auth.recoverpwshow'));			
+		}
+
+		$requiredUser = $user->getSecureUser($requiredUser[0]);
+		
+		$requiredUser['recoverdate'] 	= date("Y-m-d H:i:s");
+		$requiredUser['recovertoken'] 	= bin2hex(random_bytes(32));
+
+		$url 	= $base_url . '/tm/recoverpwnew?username=' . $requiredUser['username'] . '&recovertoken=' . $requiredUser['recovertoken'];
+		$link 	= '<a href="'. $url . '">' . $url . '</a>';
+
+		# define the headers
+		$headers 	= 'Content-Type: text/html; charset=utf-8' . "\r\n";
+		$headers 	.= 'Content-Transfer-Encoding: base64' . "\r\n";
+		if(isset($settings['recoverfrom']) && $settings['recoverfrom'] != '')
+		{
+			$headers 	.= 'From: ' . $settings['recoverfrom'];
+		}
+
+		$subjectline 	= (isset($settings['recoversubject']) && ($settings['recoversubject'] != '') )  ? $settings['recoversubject'] : 'Recover your password';
+		$subject 		= '=?UTF-8?B?' . base64_encode($subjectline) . '?=';
+
+		$messagetext	= "Dear user,<br/><br/>please use the following link to set a new password:";
+		if(isset($settings['recovermessage']) && ($settings['recovermessage'] != ''))
+		{
+			$parsedown 		= new ParsedownExtension($base_url);
+			$parsedown->setSafeMode(true);
+
+			$contentArray 	= $parsedown->text($settings['recovermessage']);
+			$messagetext	= $parsedown->markup($contentArray);
+		}
+
+		$message 		= base64_encode($messagetext . "<br/><br/>" . $link);
+
+		# store user
+		$user->updateUser($requiredUser);
+
+		$send = mail($requiredUser['email'], $subject, $message, $headers);
+
+		if(!$send)
+		{
+			$data = [
+				'title' => 'We could not send the email',
+				'message' => 'Dear ' . $requiredUser['username'] . ', we could not send the email with the password instructions to your address. You can try it again but chances are low that it will work next time. Please contact the website owner and ask for help.',
+			];
 		}
 		else
 		{
-			$ip = $remote;
+			# store user
+			$user->updateUser($requiredUser);
+
+			$data = [
+				'title' => 'Please check your inbox',
+				'message' => 'Dear ' . $requiredUser['username'] . ', please check the inbox of your email account. We have sent you some short instructions how to recover your password. Do not forget to check your spam-folder if your inbox is empty.',
+			];
+		}
+		
+		return $this->render($response, '/auth/recoverpwsend.twig', $data);
+	}
+
+	public function showRecoverPasswordNew(Request $request, Response $response, $args)
+	{
+		$params	 		= $request->getParams();
+
+		if(!isset($params['username']) OR !isset($params['recovertoken']))
+		{
+			$this->c->flash->addMessage('error', 'Ups, you tried to open the password recovery page but the link was invalid.');
+			return $response->withRedirect($this->c->router->pathFor('auth.show'));
 		}
 
-		return $ip;
+		$user = new user();
+
+		$requiredUser = $user->getSecureUser($params['username']);
+
+		if(!$requiredUser)
+		{
+			$this->c->flash->addMessage('error', 'Ups, you tried to open the password recovery page but the link was invalid.');
+			return $response->withRedirect($this->c->router->pathFor('auth.show'));	
+		}
+
+		if(!isset($requiredUser['recovertoken']) OR $requiredUser['recovertoken'] != $params['recovertoken'] )
+		{
+			$this->c->flash->addMessage('error', 'Ups, you tried to open the password recovery page but the link was invalid.');
+			return $response->withRedirect($this->c->router->pathFor('auth.show'));
+		}
+
+		$recoverdate 	= isset($requiredUser['recoverdate']) ? $requiredUser['recoverdate'] : false;
+
+		if(!$recoverdate )
+		{
+			$user->unsetFromUser($requiredUser['username'], ['recovertoken']);
+
+			$this->c->flash->addMessage('error', 'The link to recover the password was too old. Please create a new one.');
+			return $response->withRedirect($this->c->router->pathFor('auth.show'));
+		}
+
+		$now 			= new \DateTime('NOW');
+		$recoverdate 	= new \DateTime($recoverdate);
+
+		if(!$recoverdate)
+		{
+			$user->unsetFromUser($requiredUser['username'], ['recovertoken', 'recoverdate']);
+
+			$this->c->flash->addMessage('error', 'The link to recover the password was too old. Please create a new one.');
+			return $response->withRedirect($this->c->router->pathFor('auth.show'));
+		}
+
+		$validDate 		= $recoverdate->add(new \DateInterval('P1D'));
+
+		if($validDate <= $now)
+		{
+			$user->unsetFromUser($requiredUser['username'], ['recovertoken', 'recoverdate']);
+
+			$this->c->flash->addMessage('error', 'The link to recover the password was too old. Please create a new one.');
+			return $response->withRedirect($this->c->router->pathFor('auth.show'));			
+		}
+
+		return $this->render($response, '/auth/recoverpwnew.twig', ['recovertoken' => $params['recovertoken'],'username' => $requiredUser['username']]);
+	}
+
+	public function createRecoverPasswordNew(Request $request, Response $response, $args)
+	{
+		$params	 		= $request->getParams();
+
+		if(!isset($params['username']) OR !isset($params['recovertoken']))
+		{
+			$this->c->flash->addMessage('error', 'Ups, you tried to set a new password but username or token was invalid.');
+			return $response->withRedirect($this->c->router->pathFor('auth.show'));
+		}
+
+		$validation		= new Validation();
+		
+		if(!$validation->recoverPassword($params))
+		{
+			$this->c->flash->addMessage('error', 'Please check your input.');
+			return $response->withRedirect($this->c->router->pathFor('auth.recoverpwshownew',[], ['username' => $params['username'], 'recovertoken' => $params['recovertoken']]));
+		}
+
+		$user = new user();
+
+		$requiredUser = $user->getSecureUser($params['username']);
+
+		if(!$requiredUser)
+		{
+			$this->c->flash->addMessage('error', 'Ups, you tried to create a new password but the username was invalid.');
+			return $response->withRedirect($this->c->router->pathFor('auth.show'));	
+		}
+
+		if(!isset($requiredUser['recovertoken']) OR $requiredUser['recovertoken'] != $params['recovertoken'] )
+		{
+			$this->c->flash->addMessage('error', 'Ups, you tried to create a new password but the token was invalid.');
+			return $response->withRedirect($this->c->router->pathFor('auth.show'));
+		}
+
+		$recoverdate 	= isset($requiredUser['recoverdate']) ? $requiredUser['recoverdate'] : false;
+
+		if(!$recoverdate )
+		{
+			$user->unsetFromUser($requiredUser['username'], ['recovertoken']);
+
+			$this->c->flash->addMessage('error', 'The date for the password reset was invalid. Please create a new one.');
+			return $response->withRedirect($this->c->router->pathFor('auth.show'));
+		}
+
+		$now 			= new \DateTime('NOW');
+		$recoverdate 	= new \DateTime($recoverdate);
+
+		if(!$recoverdate)
+		{
+			$user->unsetFromUser($requiredUser['username'], ['recovertoken', 'recoverdate']);
+
+			$this->c->flash->addMessage('error', 'The date for the password reset was too old. Please create a new one.');
+			return $response->withRedirect($this->c->router->pathFor('auth.show'));
+		}
+
+		$validDate 		= $recoverdate->add(new \DateInterval('P1D'));
+
+		if($validDate <= $now)
+		{
+			$user->unsetFromUser($requiredUser['username'], ['recovertoken', 'recoverdate']);
+
+			$this->c->flash->addMessage('error', 'The link to recover the password was too old. Please create a new one.');
+			return $response->withRedirect($this->c->router->pathFor('auth.show'));
+		}
+
+		$requiredUser['password'] = $params['password'];
+		$user->updateUser($requiredUser);
+		$user->unsetFromUser($requiredUser['username'], ['recovertoken', 'recoverdate']);
+
+		unset($_SESSION['old']);
+
+		$this->c->flash->addMessage('info', 'A new password has been created. Please login.');
+		return $response->withRedirect($this->c->router->pathFor('auth.show'));
 	}
 }

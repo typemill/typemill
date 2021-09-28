@@ -1,0 +1,39 @@
+{% extends 'layouts/layoutAuth.twig' %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+	<div class="setupWrapper">
+		
+		<div class="authformWrapper">
+			<form method="POST" action="{{ path_for("auth.recoverpw") }}" autocomplete="off">
+			
+				<fieldset class="auth">
+					<div class="formElement{{ errors.email ? ' errors' : '' }}">
+						<label for="email">{{ __('email') }} <abbr title="{{ __('required') }}">*</abbr></label>
+						<input type="text" name="email" value="{{ old.email }}" required>
+						{% if errors.email %}
+							<span class="error">{{ errors.email | first }}</span>
+						{% endif %}
+					</div>
+					<div class="personal-mail">
+						<label>Personal Mail</label>
+						<input type="text" name="personal-honey-mail">
+					</div>					
+
+					{{ captcha(true) }}
+
+				</fieldset>
+
+				<div class="loginarea" id="loginarea">
+					<input type="submit" value="{{ __('Recover password') }}" id="loginbutton" class="loginbutton" />
+					{{ csrf_field() | raw }}					
+				</div>
+			</form>		
+		</div>
+		<div class="setupContent">
+			<p><a href="{{ base_url() }}/tm/login">{{ __('back to login') }}</a></p>
+		</div>
+	</div>
+	<footer></footer>
+{% endblock %}

@@ -2,27 +2,51 @@
 
 namespace Typemill\Models;
 
+use Typemill\Models\Write;
+
 class Helpers{
 
-	public static function printTimer($timer)
+	public static function getUserIP()
 	{
-		$lastTime = NULL;
-		$table = '<html><body><table>';
-		$table .= '<tr><th>Breakpoint</th><th>Time</th><th>Duration</th></tr>';
-		foreach($timer as $breakpoint => $time)
+		$client  = @$_SERVER['HTTP_CLIENT_IP'];
+		$forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
+		$remote  = $_SERVER['REMOTE_ADDR'];
+
+		if(filter_var($client, FILTER_VALIDATE_IP))
 		{
-			$duration = $time - $lastTime;
-			
-			$table .= '<tr>';
-			$table .= '<td>' . $breakpoint . '</td>';
-			$table .= '<td>' . $time . '</td>';
-			$table .= '<td>' . $duration . '</td>';
-			$table .= '</tr>';
-			
-			$lastTime = $time;
+			$ip = $client;
 		}
-		$table .= '</table></body></html>';
-		echo $table;
+		elseif(filter_var($forward, FILTER_VALIDATE_IP))
+		{
+			$ip = $forward;
+		}
+		else
+		{
+			$ip = $remote;
+		}
+
+		return $ip;
+	}
+
+	public static function addLogEntry($action)
+	{
+		$line 		= self::getUserIP();
+		$line 		.= ';' . date("Y-m-d H:i:s");
+		$line 		.= ';' . $action;
+
+		$write 		= new Write();
+		$logfile 	= $write->getFile('cache', 'securitylog.txt');
+
+		if($logfile)
+		{
+			$logfile .= $line . PHP_EOL;
+		}
+		else
+		{
+			$logfile = $line . PHP_EOL;
+		}
+		
+		$write->writeFile('cache', 'securitylog.txt', $logfile);
 	}
 
 	public static function array_sort($array, $on, $order=SORT_ASC)
@@ -59,4 +83,25 @@ class Helpers{
 
 		return $new_array;
 	}
+
+	public static function printTimer($timer)
+	{
+		$lastTime = NULL;
+		$table = '<html><body><table>';
+		$table .= '<tr><th>Breakpoint</th><th>Time</th><th>Duration</th></tr>';
+		foreach($timer as $breakpoint => $time)
+		{
+			$duration = $time - $lastTime;
+			
+			$table .= '<tr>';
+			$table .= '<td>' . $breakpoint . '</td>';
+			$table .= '<td>' . $time . '</td>';
+			$table .= '<td>' . $duration . '</td>';
+			$table .= '</tr>';
+			
+			$lastTime = $time;
+		}
+		$table .= '</table></body></html>';
+		echo $table;
+	}	
 }

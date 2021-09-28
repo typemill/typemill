@@ -203,13 +203,11 @@ abstract class Plugin implements EventSubscriberInterface
 		$pluginDefinitions 	= \Typemill\Settings::getObjectSettings('plugins', $pluginName);
 		$settings 			= $this->getSettings();
 		$buttonlabel		= isset($settings['plugins'][$pluginName]['button_label']) ? $settings['plugins'][$pluginName]['button_label'] : false;
+		$captchaoptions		= isset($settings['plugins'][$pluginName]['captchaoptions']) ? $settings['plugins'][$pluginName]['captchaoptions'] : false;
 		$recaptcha			= isset($settings['plugins'][$pluginName]['recaptcha']) ? $settings['plugins'][$pluginName]['recaptcha_webkey'] : false;
-		
+
 		if(isset($pluginDefinitions['public']['fields']))
-		{
-			# add simple honeypot spam protection
-			$pluginDefinitions['public']['fields']['personal-mail'] = ['type' => 'text', 'class' => 'personal-mail'];
-			
+		{			
 			# get all the fields and prefill them with the dafault-data, the user-data or old input data
 			$fields = $fieldsModel->getFields($settings, 'plugins', $pluginName, $pluginDefinitions, 'public');
 
@@ -217,7 +215,14 @@ abstract class Plugin implements EventSubscriberInterface
 			$twig 	= $this->getTwig();
 
 			# render each field and add it to the form
-			$form = $twig->fetch('/partials/form.twig', ['fields' => $fields, 'itemName' => $pluginName, 'object' => 'plugins', 'recaptcha_webkey' => $recaptcha, 'buttonlabel' => $buttonlabel]);
+			$form = $twig->fetch('/partials/form.twig', [	
+				'fields' 			=> $fields, 
+				'itemName' 			=> $pluginName, 
+				'object' 			=> 'plugins', 
+				'buttonlabel' 		=> $buttonlabel,
+				'captchaoptions'	=> $captchaoptions,
+				'recaptcha_webkey' 	=> $recaptcha, 
+			]);
 		}
 		
 		return $form;

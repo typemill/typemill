@@ -22,7 +22,7 @@ Vue.component('tab-meta', {
 		}
 	},
 	template: '<section><form>' +
-				'<div><div class="large relative">' +
+				'<div v-if="slug"><div class="large relative">' +
 					'<label>Slug / Name in URL</label><input type="text" v-model="slug" @input="changeSlug()"><button @click.prevent="storeSlug()" :disabled="disabled" class="button slugbutton bn br2 bg-tm-green white absolute">change slug</button>' +
 					'<div v-if="slugerror" class="f6 tm-red mt1">{{ slugerror }}</div>' +
 				'</div></div>' +
@@ -54,8 +54,11 @@ Vue.component('tab-meta', {
 			  '</form></section>',
 	mounted: function()
 	{
-		this.slug =	this.$parent.item.slug;
-		this.originalSlug = this.slug;
+		if(this.$parent.item.slug != '')
+		{
+			this.slug =	this.$parent.item.slug;
+			this.originalSlug = this.slug;
+		}
 	},
 	methods: {
 		selectComponent: function(field)

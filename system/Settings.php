@@ -186,6 +186,11 @@ class Settings
 									'headersoff' => true,
 									'urlschemes' => true,
 									'svg' => true,
+									'recoverpw' => true,
+									'recoversubject' => true,
+									'recovermessage' => true,
+									'recoverfrom' => true,
+									'securitylog' => true,
 								];
 
 			# cleanup the existing usersettings

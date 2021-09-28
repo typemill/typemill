@@ -74,7 +74,7 @@
 					</div>
 					<hr>
 					<header class="headline">
-						<h2>{{ __('General Presentation') }}</h2>
+						<h2>{{ __('Media') }}</h2>
 					</header>
 					<div class="medium{{ errors.settings.logo ? ' error' : '' }}">
 						<label for="settings[logo]">{{ __('Logo') }} <small>(jpg,jpeg,png,svg)</small></label>
@@ -104,10 +104,27 @@
 						{% if errors.settings.favicon %}
 							<span class="error">{{ errors.settings.favicon | first }}</span>
 						{% endif %}
-					</div><div class="medium{{ errors.settings.headlineanchors ? ' error' : '' }}">
-						<label for="settings[headlineanchors]">{{ __('Headline Anchors') }} *</label>
-						<label class="control-group">{{ __('Show anchors next to headlines') }}
-							<input name="settings[headlineanchors]" type="checkbox" {% if (settings.headlineanchors or old.settings.headlineanchors) %} checked {% endif %}>
+					</div>
+					<div class="medium{{ errors.settings.images.live.width ? ' error' : '' }}">
+						<label for="imagewidth">{{ __('Standard width for images') }}</label>
+						<input type="text" name="settings[images][live][width]" id="imagewidth" value="{{ old.settings.images.live.width ? old.settings.images.live.width : settings.images.live.width }}" title="{{ __('Use a valid number') }}" />
+						<div class="description">{{ __('This applies only for future images in the content area.') }}</div>
+						{% if errors.settings.images.live.width %}
+							<span class="error">{{ errors.settings.images.live.width | first }}</span>
+						{% endif %}
+					</div>
+					<div class="medium{{ errors.settings.images.live.height ? ' error' : '' }}">
+						<label for="imageheight">{{ __('Standard height for images') }}</label>
+						<input type="text" name="settings[images][live][height]" id="imageheight" value="{{ old.settings.images.live.height ? old.settings.images.live.height : settings.images.live.height }}" title="{{ __('Use a valid number') }}" />
+						<div class="description">{{ __('If you add a value for the height, then the image will be cropped.') }}</div>
+						{% if errors.settings.images.live.height %}
+							<span class="error">{{ errors.settings.images.live.height | first }}</span>
+						{% endif %}
+					</div>					
+					<div class="large{{ errors.settings.svg ? ' error' : '' }}">
+						<label for="settings[svg]">{{ __('Upload svg images') }}</label>
+						<label class="control-group">{{ __('Allow upload of svg images (on your own risk, has security implications)') }}
+							<input name="settings[svg]" type="checkbox" {% if (settings.svg or old.settings.svg) %} checked {% endif %}>
 							<span class="checkmark"></span>
 						</label>
 					</div>
@@ -139,6 +156,18 @@
 							</label>
 
 						{% endfor %}
+					</div><div class="medium{{ errors.settings.headlineanchors ? ' error' : '' }}">
+						<label for="settings[headlineanchors]">{{ __('Headline Anchors') }} *</label>
+						<label class="control-group">{{ __('Show anchors next to headlines in frontend') }}
+							<input name="settings[headlineanchors]" type="checkbox" {% if (settings.headlineanchors or old.settings.headlineanchors) %} checked {% endif %}>
+							<span class="checkmark"></span>
+						</label>
+					</div><div class="large{{ errors.settings.urlschemes ? ' error' : '' }}">
+						<label for="urlschemes">{{ __('Add more url schemes for external links e.g. like dict:// (comma separated list)') }}</label>
+						<input type="text" name="settings[urlschemes]" id="urlschemes" placeholder="dict://" value="{{ old.settings.urlschemes ? old.settings.urlschemes : settings.urlschemes }}" title="{{ __('Comma separated list additional schemes') }}" />
+						{% if errors.settings.urlschemes %}
+							<span class="error">{{ errors.settings.urlschemes | first }}</span>
+						{% endif %}
 					</div>
 					<hr>
 					<header class="headline">
@@ -183,6 +212,38 @@
 					</div>
 					<hr>
 					<header class="headline">
+						<h2>{{ __('Password Recovery') }}</h2>
+						<p>{{ __('Activate the password recovery only if it is really needed. If possible use your password manager instead.') }}</p>
+					</header>
+					<div class="large{{ errors.settings.recoverpw ? ' error' : '' }}">
+						<label for="settings[recoverpw]">{{ __('Recover Passwords') }}</label>
+						<label class="control-group">{{ __('Activate the recover password function') }}
+							<input name="settings[recoverpw]" type="checkbox" {% if (settings.recoverpw or old.settings.recoverpw) %} checked {% endif %}>
+							<span class="checkmark"></span>
+						</label>
+					</div><div class="large{{ errors.settings.recoverfrom ? ' error' : '' }}">
+						<label for="recoverfrom">{{ __('Sender email') }}</label>
+						<input type="text" name="settings[recoverfrom]" id="recoverfrom" placeholder="your@email.com" value="{{ old.settings.recoverfrom ? old.settings.recoverfrom : settings.recoverfrom }}" />
+						{% if errors.settings.recoverfrom %}
+							<span class="error">{{ errors.settings.recoverfrom | first }}</span>
+						{% endif %}
+					</div>
+					<div class="large{{ errors.settings.recoversubject ? ' error' : '' }}">
+						<label for="recoversubject">{{ __('Subject') }}</label>
+						<input type="text" name="settings[recoversubject]" id="recoversubject" placeholder="Recover your password" value="{{ old.settings.recoversubject ? old.settings.recoversubject : settings.recoversubject }}" />
+						{% if errors.settings.recoversubject %}
+							<span class="error">{{ errors.settings.recoversubject | first }}</span>
+						{% endif %}
+					</div>
+					<div class="large{{ errors.settings.recovermessage ? ' error' : '' }}">
+						<label for="settings[recovermessage]">{{ __('Text before the recover link in the email message') }} <small>({{ __('use markdown') }})</small></label>
+						<textarea id="recovermessage" rows="8" name="settings[recovermessage]" placeholder="Dear user,&#10;&#10;please use the following link to create a new password. The link is valid for 24 hours: ">{{ old.settings.recovermessage ? old.settings.recovermessage : settings.recovermessage }}</textarea>
+						{% if errors.settings.recovermessage %}
+							<span class="error">{{ errors.settings.recovermessage | first }}</span>
+						{% endif %}
+					</div>					
+					<hr>
+					<header class="headline">
 						<h2>{{ __('Developer') }}</h2>
 						<p>{{ __('The following options are only for developers') }}</p>
 					</header>
@@ -190,6 +251,13 @@
 						<label for="settings[displayErrorDetails]">{{ __('Error Reporting') }}</label>
 						<label class="control-group">{{ __('Display Application Errors') }}
 							<input name="settings[displayErrorDetails]" type="checkbox" {% if (settings.displayErrorDetails or old.settings.displayErrorDetails) %} checked {% endif %}>
+							<span class="checkmark"></span>
+						</label>
+					</div>
+					<div class="large{{ errors.settings.securitylog ? ' error' : '' }}">
+						<label for="settings[securitylog]">{{ __('Security Log') }}</label>
+						<label class="control-group">{{ __('Create a logfile in the cache folder to track spam and suspicious actions') }}
+							<input name="settings[securitylog]" type="checkbox" {% if (settings.securitylog or old.settings.securitylog) %} checked {% endif %}>
 							<span class="checkmark"></span>
 						</label>
 					</div>
@@ -203,29 +271,6 @@
 					<div class="medium">
 						<div class="label">{{ __('Recreate cached files') }}</div>
 						<button id="clearcache" class="link bg-tm-green white dim bn br1 ph3 pv2 f6">{{ __('Recreate Cache') }}</button><div id="cacheresult" class="dib ph3 pv2"></div>
-					</div>
-					<div class="medium{{ errors.settings.images.live.width ? ' error' : '' }}">
-						<label for="imagewidth">{{ __('Standard width for images') }}</label>
-						<input type="text" name="settings[images][live][width]" id="imagewidth" value="{{ old.settings.images.live.width ? old.settings.images.live.width : settings.images.live.width }}" title="{{ __('Use a valid number') }}" />
-						<div class="description">{{ __('This applies only for future images in the content area.') }}</div>
-						{% if errors.settings.images.live.width %}
-							<span class="error">{{ errors.settings.images.live.width | first }}</span>
-						{% endif %}
-					</div>
-					<div class="medium{{ errors.settings.images.live.height ? ' error' : '' }}">
-						<label for="imageheight">{{ __('Standard height for images') }}</label>
-						<input type="text" name="settings[images][live][height]" id="imageheight" value="{{ old.settings.images.live.height ? old.settings.images.live.height : settings.images.live.height }}" title="{{ __('Use a valid number') }}" />
-						<div class="description">{{ __('If you add a value for the height, then the image will be cropped.') }}</div>
-						{% if errors.settings.images.live.height %}
-							<span class="error">{{ errors.settings.images.live.height | first }}</span>
-						{% endif %}
-					</div>
-					<div class="large{{ errors.settings.svg ? ' error' : '' }}">
-						<label for="settings[svg]">{{ __('Upload svg images') }}</label>
-						<label class="control-group">{{ __('Allow upload of svg images (on your own risk, has security implications)') }}
-							<input name="settings[svg]" type="checkbox" {% if (settings.svg or old.settings.svg) %} checked {% endif %}>
-							<span class="checkmark"></span>
-						</label>
 					</div>
 					<div class="medium{{ errors.settings.proxy ? ' error' : '' }}">
 						<label for="settings[proxy]">{{ __('Proxy') }}</label>
@@ -247,13 +292,6 @@
 							<input name="settings[headersoff]" type="checkbox" {% if (settings.headersoff or old.settings.headersoff) %} checked {% endif %}>
 							<span class="checkmark"></span>
 						</label>
-					</div>
-					<div class="large{{ errors.settings.urlschemes ? ' error' : '' }}">
-						<label for="urlschemes">{{ __('Add more url schemes for external links e.g. like dict:// (comma separated list)') }}</label>
-						<input type="text" name="settings[urlschemes]" id="urlschemes" value="{{ old.settings.urlschemes ? old.settings.urlschemes : settings.urlschemes }}" title="{{ __('Comma separated list additional schemes') }}" />
-						{% if errors.settings.urlschemes %}
-							<span class="error">{{ errors.settings.urlschemes | first }}</span>
-						{% endif %}
 					</div>
 				</fieldset>
 			</section>

@@ -27,13 +27,30 @@
 			{% endif %}
 
 		{% endfor %}
-				
+		
+		<div class="personal-mail">
+			<label>Personal Mail</label>
+			<input type="text" name="personal-honey-mail">
+		</div>
+
 		{{ csrf_field() | raw }}
-				
+
+		{% if captchaoptions == 'disabled' %}
+			
+		{% elseif captchaoptions == 'aftererror' %}
+
+			{{ captcha(old) }}
+
+		{% else %}
+
+			{{ captcha(true) }}
+
+		{% endif %}
+		
 		{% if recaptcha_webkey %}
 			<p><div class="g-recaptcha" data-sitekey="{{ recaptcha_webkey }}"></div></p>
 		{% endif %}
-		
+
 		<input type="submit" value="{{ buttonlabel ? buttonlabel : 'send' }}" />
 		
 		<style>.personal-mail{display:none}</style>

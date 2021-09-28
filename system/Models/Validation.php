@@ -262,6 +262,23 @@ class Validation
 	}
 
 	/**
+	* validation for password recovery
+	* 
+	* @param array $params with form data.
+	* @return obj $v the validation object passed to a result method.
+	*/
+	
+	public function recoverPassword(array $params)
+	{
+		$v = new Validator($params);
+		$v->rule('required', ['password', 'passwordrepeat']);
+		$v->rule('lengthBetween', 'password', 5, 20);
+		$v->rule('equals', 'passwordrepeat', 'password');
+		
+		return $this->validationResult($v);
+	}
+
+	/**
 	* validation for system settings
 	* 
 	* @param array $params with form data.
@@ -285,6 +302,11 @@ class Validation
 		$v->rule('in', 'copyright', $copyright);
 		$v->rule('noHTML', 'restrictionnotice');
 		$v->rule('lengthBetween', 'restrictionnotice', 2, 1000 );
+		$v->rule('email', 'recoverfrom');
+		$v->rule('noHTML', 'recoversubject');
+		$v->rule('lengthBetween', 'recoversubject', 2, 80 );
+		$v->rule('noHTML', 'recovermessage');
+		$v->rule('lengthBetween', 'recovermessage', 2, 1000 );
 		$v->rule('iplist', 'trustedproxies');
 
 		return $this->validationResult($v, $name);

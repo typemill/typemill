@@ -639,6 +639,9 @@ footer{
 	margin-left: auto;
 	margin-right: auto;
 }
+.setupWrapper.extrawidth{
+	max-width: 500px;
+}
 .setupWrapper input[type="submit"]
 {
 	border-radius: 0px;
@@ -652,6 +655,13 @@ footer{
 .setupWrapper .formElement{
 	margin: 0 0 30px 0;
 }
+
+/* honeypot field */
+.personal-mail{ display:none; }
+
+/* captcha image */
+img.captcha{ margin: 10px 0; }
+
 
 /************************
 *  	OPEN-CLOSE BUTTON	*
@@ -2688,12 +2698,12 @@ footer a:focus, footer a:hover, footer a:active
 { 
 	text-decoration: underline;
 }
-.setupContent a, .setupContent a:link, .setupContent a:visited
+.setupWrapper a, .setupWrapper a:link, .setupWrapper a:visited
 {
 	text-decoration: none;
 	color: #444;
 }
-.setupContent a:focus, .setupContent a:hover, .setupContent a:active
+.setupWrapper a:focus, .setupWrapper a:hover, .setupWrapper a:active
 {
 	color: #e0474c; 
 }

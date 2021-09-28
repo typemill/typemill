@@ -113,6 +113,11 @@ class SettingsController extends Controller
 					'headersoff'			=> isset($newSettings['headersoff']) ? true : null,
 					'urlschemes'			=> $newSettings['urlschemes'],
 					'svg'					=> isset($newSettings['svg']) ? true : null,
+					'recoverpw'				=> isset($newSettings['recoverpw']) ? true : null,
+					'recoverfrom'			=> $newSettings['recoverfrom'],
+					'recoversubject'		=> $newSettings['recoversubject'],
+					'recovermessage'		=> $newSettings['recovermessage'],
+					'securitylog'			=> isset($newSettings['securitylog']) ? true : null,
 				);
 
 				# https://www.slimframework.com/docs/v3/cookbook/uploading-files.html; 
@@ -348,15 +353,7 @@ class SettingsController extends Controller
 			
 			/* if the plugin defines forms and fields, so that the user can edit the plugin settings in the frontend */
 			if(isset($pluginOriginalSettings['forms']['fields']))
-			{
-				# if the plugin defines frontend fields
-				if(isset($pluginOriginalSettings['public']))
-				{
-					$pluginOriginalSettings['forms']['fields']['recaptcha'] = ['type' => 'checkbox', 'label' => 'Google Recaptcha', 'checkboxlabel' => 'Activate Recaptcha' ];
-					$pluginOriginalSettings['forms']['fields']['recaptcha_webkey'] = ['type' => 'text', 'label' => 'Recaptcha Website Key', 'help' => 'Add the recaptcha website key here. You can get the key from the recaptcha website.', 'description' => 'The website key is mandatory if you activate the recaptcha field'];
-					$pluginOriginalSettings['forms']['fields']['recaptcha_secretkey'] = ['type' => 'text', 'label' => 'Recaptcha Secret Key', 'help' => 'Add the recaptcha secret key here. You can get the key from the recaptcha website.', 'description' => 'The secret key is mandatory if you activate the recaptcha field'];
-				}
-				
+			{				
 				/* get all the fields and prefill them with the dafault-data, the user-data or old input data */
 				$fields = $fieldsModel->getFields($userSettings, 'plugins', $pluginName, $pluginOriginalSettings);
 				
@@ -1132,14 +1129,6 @@ class SettingsController extends Controller
 				}
 			}
 			
-			# if the plugin defines frontend fields
-			if(isset($originalSettings['public']))
-			{
-				$originalFields['recaptcha'] = ['type' => 'checkbox', 'label' => 'Google Recaptcha', 'checkboxlabel' => 'Activate Recaptcha' ];
-				$originalFields['recaptcha_webkey'] = ['type' => 'text', 'label' => 'Recaptcha Website Key', 'help' => 'Add the recaptcha website key here. You can get the key from the recaptcha website.', 'description' => 'The website key is mandatory if you activate the recaptcha field'];
-				$originalFields['recaptcha_secretkey'] = ['type' => 'text', 'label' => 'Recaptcha Secret Key', 'help' => 'Add the recaptcha secret key here. You can get the key from the recaptcha website.', 'description' => 'The secret key is mandatory if you activate the recaptcha field'];
-			}
-
 			# if plugin is not active, then skip required
 			$skiprequired = false;
 			if($objectType == 'plugins' && !isset($userInput['active']))
