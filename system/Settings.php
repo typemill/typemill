@@ -191,6 +191,8 @@ class Settings
 									'recovermessage' => true,
 									'recoverfrom' => true,
 									'securitylog' => true,
+									'oldslug' => true,
+									'refreshcache' => true,
 								];
 
 			# cleanup the existing usersettings

@@ -7,7 +7,7 @@ use Typemill\Models\Validation;
 use Typemill\Models\User;
 use Typemill\Models\Write;
 
-class SetupController extends Controller
+class ControllerFrontendSetup extends ControllerShared
 {
 
 	# redirect if visit /setup route

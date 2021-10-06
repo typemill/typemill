@@ -261,6 +261,13 @@
 							<span class="checkmark"></span>
 						</label>
 					</div>
+					<div class="large{{ errors.settings.oldslug ? ' error' : '' }}">
+						<label for="settings[oldslug]">{{ __('Old Slug Logic') }}</label>
+						<label class="control-group">{{ __('Use the old logic from versions < 1.5.0 to create the slug') }}
+							<input name="settings[oldslug]" type="checkbox" {% if (settings.oldslug or old.settings.oldslug) %} checked {% endif %}>
+							<span class="checkmark"></span>
+						</label>
+					</div>
 					<div class="medium{{ errors.settings.twigcache ? ' error' : '' }}">
 						<label for="settings[twigcache]">{{ __('Twig Cache') }}</label>
 						<label class="control-group">{{ __('Activate Cache for Twig Templates') }}
@@ -271,6 +278,13 @@
 					<div class="medium">
 						<div class="label">{{ __('Recreate cached files') }}</div>
 						<button id="clearcache" class="link bg-tm-green white dim bn br1 ph3 pv2 f6">{{ __('Recreate Cache') }}</button><div id="cacheresult" class="dib ph3 pv2"></div>
+					</div>
+					<div class="large{{ errors.settings.refreshcache ? ' error' : '' }}">
+						<label for="settings[refreshcache]">{{ __('Refresh Cache') }}</label>
+						<label class="control-group">{{ __('Refresh the cache after 10 minutes. Use this if you change content files manually e.g. with FTP.') }}
+							<input name="settings[refreshcache]" type="checkbox" {% if (settings.refreshcache or old.settings.refreshcache) %} checked {% endif %}>
+							<span class="checkmark"></span>
+						</label>
 					</div>
 					<div class="medium{{ errors.settings.proxy ? ' error' : '' }}">
 						<label for="settings[proxy]">{{ __('Proxy') }}</label>

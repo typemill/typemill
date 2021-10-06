@@ -10,7 +10,7 @@ use Typemill\Models\User;
 use Typemill\Models\WriteYaml;
 use Typemill\Extensions\ParsedownExtension;
 
-class AuthController extends Controller
+class ControllerFrontendAuth extends ControllerShared
 {
 	# redirect if visit /setup route
 	public function redirect(Request $request, Response $response)

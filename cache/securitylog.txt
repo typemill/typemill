@@ -1,5 +1,0 @@
-127.0.0.1;2021-09-26 12:01:24;wrong captcha http://localhost/typemill/tm/recoverpw
-127.0.0.1;2021-09-26 12:06:16;wrong captcha http://localhost/typemill/tm/recoverpw
-127.0.0.1;2021-09-27 23:44:57;wrong captcha http://localhost/typemill/tm/recoverpw
-127.0.0.1;2021-09-27 23:51:19;wrong captcha http://localhost/typemill/tm/recoverpw
-127.0.0.1;2021-09-27 23:51:30;wrong captcha http://localhost/typemill/tm/recoverpw

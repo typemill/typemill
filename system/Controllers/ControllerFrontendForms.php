@@ -5,11 +5,8 @@ namespace Typemill\Controllers;
 use Typemill\Models\Validation;
 use Typemill\Models\WriteYaml;
 
-class FormController extends Controller
+class ControllerFrontendForms extends ControllerShared
 {
-	/*************************************
-	**	SAVE THEME- AND PLUGIN-SETTINGS	**
-	*************************************/
 
 	public function savePublicForm($request, $response, $args)
 	{ 

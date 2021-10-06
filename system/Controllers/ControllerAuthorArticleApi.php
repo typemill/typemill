@@ -5,19 +5,15 @@ namespace Typemill\Controllers;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Typemill\Models\Folder;
-use Typemill\Models\Write;
 use Typemill\Models\WriteYaml;
 use Typemill\Models\WriteMeta;
-use Typemill\Models\WriteCache;
 use Typemill\Extensions\ParsedownExtension;
 use Typemill\Events\OnPagePublished;
 use Typemill\Events\OnPageUnpublished;
 use Typemill\Events\OnPageDeleted;
 use Typemill\Events\OnPageSorted;
-use \URLify;
 
-
-class ArticleApiController extends ContentController
+class ControllerAuthorArticleApi extends ControllerAuthor
 {
 	public function publishArticle(Request $request, Response $response, $args)
 	{
@@ -38,7 +34,7 @@ class ArticleApiController extends ContentController
 		}
 
 		# set structure
-		if(!$this->setStructure($draft = true)){ return $response->withJson($this->errors, 404); }
+		if(!$this->setStructureDraft()){ return $response->withJson($this->errors, 404); }
 
 		# set information for homepage
 		$this->setHomepage($args = false);
@@ -87,16 +83,22 @@ class ArticleApiController extends ContentController
 		$this->setItemPath('md');
 		
 		# update the file
-		if($this->write->writeFile($this->settings['contentFolder'], $this->path, $this->content))
+		if($this->writeCache->writeFile($this->settings['contentFolder'], $this->path, $this->content))
 		{
 			# update the file
 			$delete = $this->deleteContentFiles(['txt']);
 			
 			# update the internal structure
-			$this->setStructure($draft = true, $cache = false);
+			$this->setFreshStructureDraft();
 			
 			# update the public structure
-			$this->setStructure($draft = false, $cache = false);
+			$this->setFreshStructureLive();
+
+			# update the navigation
+			$this->setFreshNavigation();
+
+			# update the sitemap
+			$this->updateSitemap();
 
 			# complete the page meta if title or description not set
 			$writeMeta = new WriteMeta();
@@ -127,7 +129,7 @@ class ArticleApiController extends ContentController
 		}
 
 		# set structure
-		if(!$this->setStructure($draft = true)){ return $response->withJson($this->errors, 404); }
+		if(!$this->setStructureDraft()){ return $response->withJson($this->errors, 404); }
 
 		# set information for homepage
 		$this->setHomepage($args = false);
@@ -151,7 +153,7 @@ class ArticleApiController extends ContentController
 		# check if draft exists, if not, create one.
 		if(!$this->item->drafted)
 		{
-			# set path for the file (or folder)
+			# set path for the live file (or folder)
 			$this->setItemPath('md');
 			
 			# set content of markdown-file
@@ -166,11 +168,11 @@ class ArticleApiController extends ContentController
 			# encode the content into json
 			$contentJson = json_encode($contentArray);
 
-			# set path for the file (or folder)
+			# set path for the draft file (or folder)
 			$this->setItemPath('txt');
 			
-			/* update the file */
-			if(!$this->write->writeFile($this->settings['contentFolder'], $this->path, $contentJson))
+			# update the file
+			if(!$this->writeCache->writeFile($this->settings['contentFolder'], $this->path, $contentJson))
 			{
 				return $response->withJson(['errors' => ['message' => 'Could not create a draft of the page. Please check if the folder is writable']], 404);
 			}
@@ -189,16 +191,22 @@ class ArticleApiController extends ContentController
 			}
 		}
 
-		# update the file
+		# delete the live file
 		$delete = $this->deleteContentFiles(['md']);
 		
 		if($delete)
 		{
 			# update the internal structure
-			$this->setStructure($draft = true, $cache = false);
+			$this->setFreshStructureDraft();
 			
 			# update the live structure
-			$this->setStructure($draft = false, $cache = false);
+			$this->setFreshStructureLive();
+
+			# update the navigation
+			$this->setFreshNavigation();
+
+			# update the sitemap
+			$this->updateSitemap();
 
 			# dispatch event
 			$this->c->dispatcher->dispatch('onPageUnpublished', new OnPageUnpublished($this->item));
@@ -224,7 +232,7 @@ class ArticleApiController extends ContentController
 		}
 
 		# set structure
-		if(!$this->setStructure($draft = true)){ return $response->withJson($this->errors, 404); }
+		if(!$this->setStructureDraft()){ return $response->withJson($this->errors, 404); }
 
 		# set information for homepage
 		$this->setHomepage($args = false);
@@ -242,9 +250,6 @@ class ArticleApiController extends ContentController
 			}
 		}
 
-		# remove the unpublished changes
-		$delete = $this->deleteContentFiles(['txt']);
-
 		# set redirect url to edit page
 		$url = $this->uri->getBaseUrl() . '/tm/content/' . $this->settings['editor'];
 		if(isset($this->item->urlRelWoF) && $this->item->urlRelWoF != '/' )
@@ -258,13 +263,13 @@ class ArticleApiController extends ContentController
 		if($delete)
 		{
 			# update the backend structure
-			$this->setStructure($draft = true, $cache = false);
+			$this->setFreshStructureDraft();
 			
-			return $response->withJson(['data' => $this->structure, 'errors' => false, 'url' => $url], 200);
+			return $response->withJson(['data' => $this->structureDraft, 'errors' => false, 'url' => $url], 200);
 		}
 		else
 		{
-			return $response->withJson(['data' => $this->structure, 'errors' => $this->errors], 404); 
+			return $response->withJson(['data' => $this->structureDraft, 'errors' => $this->errors], 404); 
 		}
 	}
 
@@ -284,7 +289,7 @@ class ArticleApiController extends ContentController
 		$url = $this->uri->getBaseUrl() . '/tm/content/' . $this->settings['editor'];
 		
 		# set structure
-		if(!$this->setStructure($draft = true)){ return $response->withJson($this->errors, 404); }
+		if(!$this->setStructureDraft()){ return $response->withJson($this->errors, 404); }
 
 		# set information for homepage
 		$this->setHomepage($args = false);
@@ -317,7 +322,7 @@ class ArticleApiController extends ContentController
 			if(count($this->item->keyPathArray) > 1)
 			{
 				# get the parent item
-				$parentItem = Folder::getParentItem($this->structure, $this->item->keyPathArray);
+				$parentItem = Folder::getParentItem($this->structureDraft, $this->item->keyPathArray);
 
 				if($parentItem)
 				{
@@ -327,18 +332,24 @@ class ArticleApiController extends ContentController
 			}
 			
 			# update the live structure
-			$this->setStructure($draft = false, $cache = false);
+			$this->setFreshStructureDraft();
 
 			# update the backend structure
-			$this->setStructure($draft = true, $cache = false);
+			$this->setFreshStructureLive();
 
 			# check if page is in extended structure and delete it
 			$this->deleteFromExtended();
 
+			# update the navigation
+			$this->setFreshNavigation();
+
+			# update the sitemap
+			$this->updateSitemap();
+
 			# dispatch event
 			$this->c->dispatcher->dispatch('onPageDeleted', new OnPageDeleted($this->item));
 			
-			return $response->withJson(array('data' => $this->structure, 'errors' => false, 'url' => $url), 200);
+			return $response->withJson(array('data' => $this->structureDraft, 'errors' => false, 'url' => $url), 200);
 		}
 		else
 		{
@@ -362,7 +373,7 @@ class ArticleApiController extends ContentController
 		if(!$this->validateEditorInput()){ return $response->withJson($this->errors,422); }
 		
 		# set structure
-		if(!$this->setStructure($draft = true)){ return $response->withJson($this->errors, 404); }
+		if(!$this->setStructureDraft()){ return $response->withJson($this->errors, 404); }
 
 		# set information for homepage
 		$this->setHomepage($args = false);
@@ -380,7 +391,7 @@ class ArticleApiController extends ContentController
 			}
 		}
 
-		# set path for the file (or folder)
+		# set draft path for the file (or folder)
 		$this->setItemPath('txt');
 
 		# merge title with content for complete markdown document
@@ -395,11 +406,11 @@ class ArticleApiController extends ContentController
 		# encode the content into json
 		$contentJson = json_encode($contentArray);		
 				
-		/* update the file */
-		if($this->write->writeFile($this->settings['contentFolder'], $this->path, $contentJson))
+		# update the file
+		if($this->writeCache->writeFile($this->settings['contentFolder'], $this->path, $contentJson))
 		{
-			# update the internal structure
-			$this->setStructure($draft = true, $cache = false);
+			# update the internal structure to show that this page has drafted changes now
+			$this->setFreshStructureDraft();
 			
 			return $response->withJson(['success'], 200);
 		}
@@ -423,14 +434,14 @@ class ArticleApiController extends ContentController
 			return $response->withJson(array('data' => false, 'errors' => 'You are not allowed to update content.'), 403);
 		}
 
-		# validate input
+		# validate input 1: check if valid characters
 		if(!preg_match("/^[a-z0-9\-]*$/", $this->params['slug']))
 		{
 			return $response->withJson(['errors' => ['message' => 'the slug contains invalid characters.' ]],422);
 		}
 		
 		# set structure
-		if(!$this->setStructure($draft = true)){ return $response->withJson($this->errors, 404); }
+		if(!$this->setStructureDraft()){ return $response->withJson($this->errors, 404); }
 
 		# set information for homepage
 		$this->setHomepage($args = false);
@@ -438,7 +449,7 @@ class ArticleApiController extends ContentController
 		# set item 
 		if(!$this->setItem()){ return $response->withJson($this->errors, 404); }
 
-		# validate input part 2
+		# validate input part 2: check if slug has changed or is empty
 		if($this->params['slug'] == $this->item->slug OR $this->params['slug'] == '')
 		{
 			return $response->withJson(['errors' => ['message' => 'the slug is empty or the same as the old one.' ]],422);
@@ -460,19 +471,54 @@ class ArticleApiController extends ContentController
 		# create the new file name with the updated slug
 		$newPathWithoutType = $pathWithoutFile . $this->item->order . '-' . $this->params['slug'];
 
-		# rename the file
-		$write = new WriteCache();
-		$write->renamePost($this->item->pathWithoutType, $newPathWithoutType);
-
-		# delete the cache
-		$error 		= $write->deleteCacheFiles($dir);
-		if($error)
+		# validate input part 3: check if name is taken already
+		$parentKey = $this->item->keyPathArray;
+		array_pop($parentKey);
+		if(!empty($parentKey))
 		{
-			return $response->withJson(['errors' => $error], 500);
+			$parentFolder = Folder::getItemWithKeyPath($this->structureDraft, $parentKey);
+
+			foreach($parentFolder->folderContent as $item)
+			{
+				if($item->slug == $this->params['slug'])
+				{
+					return $response->withJson(['errors' => ['message' => 'There is already a page with that slug' ]],422);
+				}
+			}
+		}
+		else
+		{
+			foreach($this->structureDraft as $baseItem)
+			{
+				if($baseItem->slug == $this->params['slug'])
+				{
+					return $response->withJson(['errors' => ['message' => 'There is already a page with that slug' ]],422);
+				}				
+			}
 		}
 
-		# recreates the cache for structure, structure-extended and navigation
-		$write->getFreshStructure($pathToContent, $this->uri);
+		# rename the file
+		if($this->item->elementType == 'file')
+		{
+			$this->writeCache->renamePost($this->item->pathWithoutType, $newPathWithoutType);
+		}
+		elseif($this->item->elementType == 'folder')
+		{
+			$this->writeCache->renameFile('content', $this->item->path, $newPathWithoutType);
+		}
+
+		# delete the cache
+		$error 		= $this->writeCache->deleteCacheFiles($dir);
+		if($error)
+		{
+			return $response->withJson(['errors' => $errors], 500);
+		}
+
+		# recreates the cache for structure, structure-extended, navigation, sitemap
+		$this->setFreshStructureDraft();
+		$this->setFreshStructureLive();
+		$this->setFreshNavigation();
+		$this->updateSitemap();
 
 		$newUrlRel =  str_replace($this->item->slug, $this->params['slug'], $this->item->urlRelWoF);
 
@@ -497,10 +543,10 @@ class ArticleApiController extends ContentController
 		$url 			= false;
 		
 		# set structure
-		if(!$this->setStructure($draft = true)){ return $response->withJson(array('data' => false, 'errors' => $this->errors, 'url' => $url), 404); }
+		if(!$this->setStructureDraft()){ return $response->withJson(array('data' => false, 'errors' => $this->errors, 'url' => $url), 404); }
 		
 		# validate input
-		if(!$this->validateNavigationSort()){ return $response->withJson(array('data' => $this->structure, 'errors' => 'Data not valid. Please refresh the page and try again.', 'url' => $url), 422); }
+		if(!$this->validateNavigationSort()){ return $response->withJson(array('data' => $this->structureDraft, 'errors' => 'Data not valid. Please refresh the page and try again.', 'url' => $url), 422); }
 		
 		# get the ids (key path) for item, old folder and new folder
 		$itemKeyPath 	= explode('.', $this->params['item_id']);
@@ -508,9 +554,9 @@ class ArticleApiController extends ContentController
 		$parentKeyTo	= explode('.', $this->params['parent_id_to']);
 		
 		# get the item from structure
-		$item 			= Folder::getItemWithKeyPath($this->structure, $itemKeyPath);
+		$item 			= Folder::getItemWithKeyPath($this->structureDraft, $itemKeyPath);
 
-		if(!$item){ return $response->withJson(array('data' => $this->structure, 'errors' => 'We could not find this page. Please refresh and try again.', 'url' => $url), 404); }
+		if(!$item){ return $response->withJson(array('data' => $this->structureDraft, 'errors' => 'We could not find this page. Please refresh and try again.', 'url' => $url), 404); }
 		
 		# needed for acl check
 		$this->item = $item;
@@ -521,7 +567,7 @@ class ArticleApiController extends ContentController
 			# check ownership. This code should nearly never run, because there is no button/interface to trigger it.
 			if(!$this->checkContentOwnership())
 			{
-				return $response->withJson(array('data' => $this->structure, 'errors'  => 'You are not allowed to move that content.'), 403);
+				return $response->withJson(array('data' => $this->structureDraft, 'errors'  => 'You are not allowed to move that content.'), 403);
 			}
 		}
 
@@ -531,12 +577,12 @@ class ArticleApiController extends ContentController
 			# create empty and default values so that the logic below still works
 			$newFolder 			=  new \stdClass();
 			$newFolder->path	= '';
-			$folderContent		= $this->structure;
+			$folderContent		= $this->structureDraft;
 		}
 		else
 		{
 			# get the target folder from structure
-			$newFolder 		= Folder::getItemWithKeyPath($this->structure, $parentKeyTo);
+			$newFolder 		= Folder::getItemWithKeyPath($this->structureDraft, $parentKeyTo);
 			
 			# get the content of the target folder
 			$folderContent	= $newFolder->folderContent;
@@ -570,42 +616,41 @@ class ArticleApiController extends ContentController
 		# initialize index
 		$index = 0;
 		
-		# initialise write object
-		$write = new Write();
-
 		# iterate through the whole content of the new folder to rename the files
 		$writeError = false;
 		foreach($folderContent as $folderItem)
 		{
-			if(!$write->moveElement($folderItem, $newFolder->path, $index))
+			if(!$this->writeCache->moveElement($folderItem, $newFolder->path, $index))
 			{
 				$writeError = true;
 			}
 			$index++;
 		}
-		if($writeError){ return $response->withJson(array('data' => $this->structure, 'errors' => ['message' => 'Something went wrong. Please refresh the page and check, if all folders and files are writable.'], 'url' => $url), 404); }
+		if($writeError){ return $response->withJson(array('data' => $this->structureDraft, 'errors' => ['message' => 'Something went wrong. Please refresh the page and check, if all folders and files are writable.'], 'url' => $url), 404); }
 
 		# update the structure for editor
-		$this->setStructure($draft = true, $cache = false);
+		$this->setFreshStructureDraft();
 		
 		# get item for url and set it active again
 		if(isset($this->params['url']))
 		{
-			$activeItem = Folder::getItemForUrl($this->structure, $this->params['url'], $this->uri->getBaseUrl());
+			$activeItem = Folder::getItemForUrl($this->structureDraft, $this->params['url'], $this->uri->getBaseUrl());
 		}
-		
-		# keep the internal structure for response
-		$internalStructure = $this->structure;
-		
+
 		# update the structure for website
-		$this->setStructure($draft = false, $cache = false);
+		$this->setFreshStructureLive();
+
+		# update the navigation
+		$this->setFreshNavigation();
+
+		# update the sitemap
+		$this->updateSitemap();
 		
 		# dispatch event
 		$this->c->dispatcher->dispatch('onPageSorted', new OnPageSorted($this->params));
 
-		return $response->withJson(array('data' => $internalStructure, 'errors' => false, 'url' => $url));
+		return $response->withJson(array('data' => $this->structureDraft, 'errors' => false, 'url' => $url));
 	}
-
 
 	public function createPost(Request $request, Response $response, $args)
 	{
@@ -623,41 +668,41 @@ class ArticleApiController extends ContentController
 		$url 			= false;
 		
 		# set structure
-		if(!$this->setStructure($draft = true)){ return $response->withJson(array('data' => false, 'errors' => $this->errors, 'url' => $url), 404); }
-		
+		if(!$this->setStructureDraft()){ return $response->withJson(array('data' => false, 'errors' => $this->errors, 'url' => $url), 404); }
+
 		# validate input
-		if(!$this->validateNaviItem()){ return $response->withJson(array('data' => $this->structure, 'errors' => ['message' => 'Special Characters not allowed. Length between 1 and 60 chars.'], 'url' => $url), 422); }
+		if(!$this->validateNaviItem()){ return $response->withJson(array('data' => $this->structureDraft, 'errors' => ['message' => 'Special Characters not allowed. Length between 1 and 60 chars.'], 'url' => $url), 422); }
 		
 		# get the ids (key path) for item, old folder and new folder
 		$folderKeyPath 	= explode('.', $this->params['folder_id']);
 		
 		# get the item from structure
-		$folder			= Folder::getItemWithKeyPath($this->structure, $folderKeyPath);
+		$folder			= Folder::getItemWithKeyPath($this->structureDraft, $folderKeyPath);
 
-		if(!$folder){ return $response->withJson(array('data' => $this->structure, 'errors' => ['message' => 'We could not find this page. Please refresh and try again.'], 'url' => $url), 404); }
-				
+		if(!$folder){ return $response->withJson(array('data' => $this->structureDraft, 'errors' => ['message' => 'We could not find this page. Please refresh and try again.'], 'url' => $url), 404); }
+		
 		$name 		= $this->params['item_name'];
-		$slug 		= URLify::filter(iconv(mb_detect_encoding($this->params['item_name'], mb_detect_order(), true), "UTF-8", $this->params['item_name']));
+		$slug 		= Folder::createSlug($this->params['item_name'], $this->settings);
 		$namePath 	= date("YmdHi") . '-' . $slug;
 		$folderPath	= 'content' . $folder->path;
 		$content 	= json_encode(['# ' . $name, 'Content']);
 
 		# initialise write object
-		$write 		= new WriteYaml();
+		$writeYaml 	= new WriteYaml();
 		
 		# check, if name exists
-		if($write->checkFile($folderPath, $namePath . '.txt') OR $write->checkFile($folderPath, $namePath . '.md'))
+		if($writeYaml->checkFile($folderPath, $namePath . '.txt') OR $writeYaml->checkFile($folderPath, $namePath . '.md'))
 		{
-			return $response->withJson(array('data' => $this->structure, 'errors' => 'There is already a page with this name. Please choose another name.', 'url' => $url), 404);
+			return $response->withJson(array('data' => $this->structureDraft, 'errors' => 'There is already a page with this name. Please choose another name.', 'url' => $url), 404);
 		}
 		
-		if(!$write->writeFile($folderPath, $namePath . '.txt', $content))
+		if(!$writeYaml->writeFile($folderPath, $namePath . '.txt', $content))
 		{
-			return $response->withJson(array('data' => $this->structure, 'errors' => 'We could not create the file. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404);
+			return $response->withJson(array('data' => $this->structureDraft, 'errors' => 'We could not create the file. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404);
 		}
 
 		# get extended structure
-		$extended 	= $write->getYaml('cache', 'structure-extended.yaml');
+		$extended 	= $writeYaml->getYaml('cache', 'structure-extended.yaml');
 
 		# create the url for the item
 		$urlWoF 	= $folder->urlRelWoF . '/' . $slug;
@@ -666,17 +711,17 @@ class ArticleApiController extends ContentController
 		$extended[$urlWoF] = ['hide' => false, 'navtitle' => $name];
 
 		# store the extended structure
-		$write->updateYaml('cache', 'structure-extended.yaml', $extended);
+		$writeYaml->updateYaml('cache', 'structure-extended.yaml', $extended);
 
 		# update the structure for editor
-		$this->setStructure($draft = true, $cache = false);
+		$this->setFreshStructureDraft();
 
-		$folder	= Folder::getItemWithKeyPath($this->structure, $folderKeyPath);
+		$folder	= Folder::getItemWithKeyPath($this->structureYaml, $folderKeyPath);
 
 		# activate this if you want to redirect after creating the page...
 		# $url = $this->uri->getBaseUrl() . '/tm/content/' . $this->settings['editor'] . $folder->urlRelWoF . '/' . $slug;
 		
-		return $response->withJson(array('posts' => $folder, $this->structure, 'errors' => false, 'url' => $url));
+		return $response->withJson(array('posts' => $folder, $this->structureDraft, 'errors' => false, 'url' => $url));
 	}
 	
 	public function createArticle(Request $request, Response $response, $args)
@@ -695,36 +740,31 @@ class ArticleApiController extends ContentController
 		$url 			= false;
 		
 		# set structure
-		if(!$this->setStructure($draft = true)){ return $response->withJson(array('data' => false, 'errors' => $this->errors, 'url' => $url), 404); }
+		if(!$this->setStructureDraft()){ return $response->withJson(array('data' => false, 'errors' => $this->errors, 'url' => $url), 404); }
 		
 		# validate input
-		if(!$this->validateNaviItem()){ return $response->withJson(array('data' => $this->structure, 'errors' => 'Special Characters not allowed. Length between 1 and 60 chars.', 'url' => $url), 422); }
+		if(!$this->validateNaviItem()){ return $response->withJson(array('data' => $this->structureDraft, 'errors' => 'Special Characters not allowed. Length between 1 and 60 chars.', 'url' => $url), 422); }
 		
 		# get the ids (key path) for item, old folder and new folder
 		$folderKeyPath 	= explode('.', $this->params['folder_id']);
 		
 		# get the item from structure
-		$folder			= Folder::getItemWithKeyPath($this->structure, $folderKeyPath);
+		$folder			= Folder::getItemWithKeyPath($this->structureDraft, $folderKeyPath);
 
-		if(!$folder){ return $response->withJson(array('data' => $this->structure, 'errors' => 'We could not find this page. Please refresh and try again.', 'url' => $url), 404); }
+		if(!$folder){ return $response->withJson(array('data' => $this->structureDraft, 'errors' => 'We could not find this page. Please refresh and try again.', 'url' => $url), 404); }
 		
 		# Rename all files within the folder to make sure, that namings and orders are correct
 		# get the content of the target folder
 		$folderContent	= $folder->folderContent;
 		
 		$name 		= $this->params['item_name'];
-		$slug 		= URLify::filter(iconv(mb_detect_encoding($this->params['item_name'], mb_detect_order(), true), "UTF-8", $this->params['item_name']));
-
-		# create the name for the new item
-		# $nameParts 	= Folder::getStringParts($this->params['item_name']);
-		# $name 		= implode("-", $nameParts);
-		# $slug		= $name;
+		$slug 		= Folder::createSlug($this->params['item_name'], $this->settings);
 
 		# initialize index
 		$index = 0;
 		
 		# initialise write object
-		$write = new WriteYaml();
+		$writeYaml = new WriteYaml();
 
 		# iterate through the whole content of the new folder
 		$writeError = false;
@@ -734,17 +774,17 @@ class ArticleApiController extends ContentController
 			# check, if the same name as new item, then return an error
 			if($folderItem->slug == $slug)
 			{
-				return $response->withJson(array('data' => $this->structure, 'errors' => 'There is already a page with this name. Please choose another name.', 'url' => $url), 404);
+				return $response->withJson(array('data' => $this->structureDraft, 'errors' => 'There is already a page with this name. Please choose another name.', 'url' => $url), 404);
 			}
 			
-			if(!$write->moveElement($folderItem, $folder->path, $index))
+			if(!$writeYaml->moveElement($folderItem, $folder->path, $index))
 			{
 				$writeError = true;
 			}
 			$index++;
 		}
 
-		if($writeError){ return $response->withJson(array('data' => $this->structure, 'errors' => 'Something went wrong. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404); }
+		if($writeError){ return $response->withJson(array('data' => $this->structureDraft, 'errors' => 'Something went wrong. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404); }
 
 		# add prefix number to the name
 		$namePath 	= $index > 9 ? $index . '-' . $slug : '0' . $index . '-' . $slug;
@@ -755,18 +795,18 @@ class ArticleApiController extends ContentController
 		
 		if($this->params['type'] == 'file')
 		{
-			if(!$write->writeFile($folderPath, $namePath . '.txt', $content))
+			if(!$writeYaml->writeFile($folderPath, $namePath . '.txt', $content))
 			{
-				return $response->withJson(array('data' => $this->structure, 'errors' => 'We could not create the file. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404);
+				return $response->withJson(array('data' => $this->structureDraft, 'errors' => 'We could not create the file. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404);
 			}
 		}
 		elseif($this->params['type'] == 'folder')
 		{
-			if(!$write->checkPath($folderPath . DIRECTORY_SEPARATOR . $namePath))
+			if(!$writeYaml->checkPath($folderPath . DIRECTORY_SEPARATOR . $namePath))
 			{
-				return $response->withJson(array('data' => $this->structure, 'errors' => 'We could not create the folder. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404);
+				return $response->withJson(array('data' => $this->structureDraft, 'errors' => 'We could not create the folder. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404);
 			}
-			$write->writeFile($folderPath . DIRECTORY_SEPARATOR . $namePath, 'index.txt', $content);
+			$this->writeCache->writeFile($folderPath . DIRECTORY_SEPARATOR . $namePath, 'index.txt', $content);
 
 			# always redirect to a folder
 			$url = $this->uri->getBaseUrl() . '/tm/content/' . $this->settings['editor'] . $folder->urlRelWoF . '/' . $slug;
@@ -774,7 +814,7 @@ class ArticleApiController extends ContentController
 		}
 		
 		# get extended structure
-		$extended = $write->getYaml('cache', 'structure-extended.yaml');
+		$extended = $writeYaml->getYaml('cache', 'structure-extended.yaml');
 
 		# create the url for the item
 		$urlWoF = $folder->urlRelWoF . '/' . $slug;
@@ -783,21 +823,21 @@ class ArticleApiController extends ContentController
 		$extended[$urlWoF] = ['hide' => false, 'navtitle' => $name];
 
 		# store the extended structure
-		$write->updateYaml('cache', 'structure-extended.yaml', $extended);
+		$writeYaml->updateYaml('cache', 'structure-extended.yaml', $extended);
 
 		# update the structure for editor
-		$this->setStructure($draft = true, $cache = false);
+		$this->setFreshStructureDraft();
 
 		# get item for url and set it active again
 		if(isset($this->params['url']))
 		{
-			$activeItem = Folder::getItemForUrl($this->structure, $this->params['url'], $this->uri->getBaseUrl());
+			$activeItem = Folder::getItemForUrl($this->structureDraft, $this->params['url'], $this->uri->getBaseUrl());
 		}
 
 		# activate this if you want to redirect after creating the page...
 		# $url = $this->uri->getBaseUrl() . '/tm/content/' . $this->settings['editor'] . $folder->urlRelWoF . '/' . $slug;
 		
-		return $response->withJson(array('data' => $this->structure, 'errors' => false, 'url' => $url));
+		return $response->withJson(array('data' => $this->structureDraft, 'errors' => false, 'url' => $url));
 	}
 
 	public function createBaseItem(Request $request, Response $response, $args)
@@ -816,67 +856,61 @@ class ArticleApiController extends ContentController
 		$url 			= false;
 		
 		# set structure
-		if(!$this->setStructure($draft = true)){ return $response->withJson(array('data' => false, 'errors' => $this->errors, 'url' => $url), 404); }
+		if(!$this->setStructureDraft()){ return $response->withJson(array('data' => false, 'errors' => $this->errors, 'url' => $url), 404); }
 		
 		# validate input
-		if(!$this->validateBaseNaviItem()){ return $response->withJson(array('data' => $this->structure, 'errors' => 'Special Characters not allowed. Length between 1 and 20 chars.', 'url' => $url), 422); }
-				
-		# create the name for the new item
-#		$nameParts 	= Folder::getStringParts($this->params['item_name']);		
-#		$name 		= implode("-", $nameParts);
-#		$slug		= $name;
+		if(!$this->validateBaseNaviItem()){ return $response->withJson(array('data' => $this->structureDraft, 'errors' => 'Special Characters not allowed. Length between 1 and 20 chars.', 'url' => $url), 422); }
 
 		$name 		= $this->params['item_name'];
-		$slug 		= URLify::filter(iconv(mb_detect_encoding($this->params['item_name'], mb_detect_order(), true), "UTF-8", $this->params['item_name']));
+		$slug 		= Folder::createSlug($this->params['item_name'], $this->settings);
 
 		# initialize index
-		$index = 0;		
+		$index = 0;
 		
 		# initialise write object
-		$write = new WriteYaml();
+		$writeYaml = new WriteYaml();
 
 		# iterate through the whole content of the new folder
 		$writeError = false;
 
-		foreach($this->structure as $item)
+		foreach($this->structureDraft as $item)
 		{
 			# check, if the same name as new item, then return an error
 			if($item->slug == $slug)
 			{
-				return $response->withJson(array('data' => $this->structure, 'errors' => 'There is already a page with this name. Please choose another name.', 'url' => $url), 422);
+				return $response->withJson(array('data' => $this->structureDraft, 'errors' => 'There is already a page with this name. Please choose another name.', 'url' => $url), 422);
 			}
 			
-			if(!$write->moveElement($item, '', $index))
+			if(!$writeYaml->moveElement($item, '', $index))
 			{
 				$writeError = true;
 			}
 			$index++;
 		}
 
-		if($writeError){ return $response->withJson(array('data' => $this->structure, 'errors' => 'Something went wrong. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 422); }
+		if($writeError){ return $response->withJson(array('data' => $this->structureDraft, 'errors' => 'Something went wrong. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 422); }
 
 		# add prefix number to the name
 		$namePath 	= $index > 9 ? $index . '-' . $slug : '0' . $index . '-' . $slug;
 		$folderPath	= 'content';
 		
 		# create default content
-#		$content = json_encode(['# Add Title', 'Add Content']);
 		$content = json_encode(['# ' . $name, 'Content']);
 		
 		if($this->params['type'] == 'file')
 		{
-			if(!$write->writeFile($folderPath, $namePath . '.txt', $content))
+			if(!$writeYaml->writeFile($folderPath, $namePath . '.txt', $content))
 			{
-				return $response->withJson(array('data' => $this->structure, 'errors' => 'We could not create the file. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 422);
+				return $response->withJson(array('data' => $this->structureDraft, 'errors' => 'We could not create the file. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 422);
 			}
 		}
 		elseif($this->params['type'] == 'folder')
 		{
-			if(!$write->checkPath($folderPath . DIRECTORY_SEPARATOR . $namePath))
+			if(!$this->writeCache->checkPath($folderPath . DIRECTORY_SEPARATOR . $namePath))
 			{
-				return $response->withJson(array('data' => $this->structure, 'errors' => 'We could not create the folder. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 422);
+				return $response->withJson(array('data' => $this->structureDraft, 'errors' => 'We could not create the folder. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 422);
 			}
-			$write->writeFile($folderPath . DIRECTORY_SEPARATOR . $namePath, 'index.txt', $content);
+			$writeYaml->writeFile($folderPath . DIRECTORY_SEPARATOR . $namePath, 'index.txt', $content);
 
 			# activate this if you want to redirect after creating the page...
 			$url = $this->uri->getBaseUrl() . '/tm/content/' . $this->settings['editor'] . '/' . $slug;			
@@ -884,7 +918,7 @@ class ArticleApiController extends ContentController
 
 
 		# get extended structure
-		$extended = $write->getYaml('cache', 'structure-extended.yaml');
+		$extended = $writeYaml->getYaml('cache', 'structure-extended.yaml');
 
 		# create the url for the item
 		$urlWoF = '/' . $slug;
@@ -893,20 +927,21 @@ class ArticleApiController extends ContentController
 		$extended[$urlWoF] = ['hide' => false, 'navtitle' => $name];
 
 		# store the extended structure
-		$write->updateYaml('cache', 'structure-extended.yaml', $extended);
+		$writeYaml->updateYaml('cache', 'structure-extended.yaml', $extended);
 
 		# update the structure for editor
-		$this->setStructure($draft = true, $cache = false);
+		$this->setFreshStructureDraft();
 
 		# get item for url and set it active again
 		if(isset($this->params['url']))
 		{
-			$activeItem = Folder::getItemForUrl($this->structure, $this->params['url'], $this->uri->getBaseUrl());
+			$activeItem = Folder::getItemForUrl($this->structureDraft, $this->params['url'], $this->uri->getBaseUrl());
 		}
 
-		return $response->withJson(array('data' => $this->structure, 'errors' => false, 'url' => $url));
+		return $response->withJson(array('data' => $this->structureDraft, 'errors' => false, 'url' => $url));
 	}
 
+	# get the backend navigation
 	public function getNavigation(Request $request, Response $response, $args)
 	{
 		# get params from call
@@ -914,7 +949,7 @@ class ArticleApiController extends ContentController
 		$this->uri 		= $request->getUri()->withUserInfo('');
 
 		# set structure
-		if(!$this->setStructure($draft = true, $cache = false)){ return $response->withJson(array('data' => false, 'errors' => $this->errors, 'url' => $url), 404); }
+		if(!$this->setStructureDraft()){ return $response->withJson(array('data' => false, 'errors' => $this->errors, 'url' => $url), 404); }
 
 		# set information for homepage
 		$this->setHomepage($args = false);
@@ -922,10 +957,10 @@ class ArticleApiController extends ContentController
 		# get item for url and set it active again
 		if(isset($this->params['url']))
 		{
-			$activeItem = Folder::getItemForUrl($this->structure, $this->params['url'], $this->uri->getBaseUrl());
+			$activeItem = Folder::getItemForUrl($this->structureDraft, $this->params['url'], $this->uri->getBaseUrl());
 		}
 
-		return $response->withJson(array('data' => $this->structure, 'homepage' => $this->homepage, 'errors' => false));
+		return $response->withJson(array('data' => $this->structureDraft, 'homepage' => $this->homepage, 'errors' => false));
 	}
 
 	public function getArticleMarkdown(Request $request, Response $response, $args)
@@ -941,7 +976,7 @@ class ArticleApiController extends ContentController
 		}
 
 		# set structure
-		if(!$this->setStructure($draft = true)){ return $response->withJson(array('data' => false, 'errors' => $this->errors), 404); }
+		if(!$this->setStructureDraft()){ return $response->withJson(array('data' => false, 'errors' => $this->errors), 404); }
 
 		# set information for homepage
 		$this->setHomepage($args = false);
@@ -1006,7 +1041,7 @@ class ArticleApiController extends ContentController
 		}
 
 		# set structure
-		if(!$this->setStructure($draft = true)){ return $response->withJson(array('data' => false, 'errors' => $this->errors), 404); }
+		if(!$this->setStructureDraft()){ return $response->withJson(array('data' => false, 'errors' => $this->errors), 404); }
 
 		# set information for homepage
 		$this->setHomepage($args = false);

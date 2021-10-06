@@ -7,9 +7,8 @@ use Slim\Http\Response;
 use Typemill\Models\ProcessImage;
 use Typemill\Models\ProcessFile;
 use Typemill\Controllers\BlockApiController;
-use \URLify;
 
-class MediaApiController extends ContentController
+class ControllerAuthorMediaApi extends ControllerAuthor
 {
 	public function getMediaLibImages(Request $request, Response $response, $args)
 	{
@@ -51,7 +50,7 @@ class MediaApiController extends ContentController
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri()->withUserInfo('');
 
-		$this->setStructure($draft = true, $cache = false);
+		$this->setStructureDraft();
 
 		$imageProcessor	= new ProcessImage($this->settings['images']);
 		if(!$imageProcessor->checkFolders('images'))
@@ -59,7 +58,7 @@ class MediaApiController extends ContentController
 			return $response->withJson(['errors' => 'Please check if your media-folder exists and all folders inside are writable.'], 500);
 		}
 
-		$imageDetails 	= $imageProcessor->getImageDetails($this->params['name'], $this->structure);
+		$imageDetails 	= $imageProcessor->getImageDetails($this->params['name'], $this->structureDraft);
 		
 		if($imageDetails)
 		{
@@ -75,7 +74,7 @@ class MediaApiController extends ContentController
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri()->withUserInfo('');
 
-		$this->setStructure($draft = true, $cache = false);
+		$this->setStructureDraft();
 
 		$fileProcessor	= new ProcessFile();
 		if(!$fileProcessor->checkFolders())
@@ -83,7 +82,7 @@ class MediaApiController extends ContentController
 			return $response->withJson(['errors' => 'Please check if your media-folder exists and all folders inside are writable.'], 500);
 		}
 
-		$fileDetails 	= $fileProcessor->getFileDetails($this->params['name'], $this->structure);
+		$fileDetails 	= $fileProcessor->getFileDetails($this->params['name'], $this->structureDraft);
 
 		if($fileDetails)
 		{

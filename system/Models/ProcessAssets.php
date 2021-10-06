@@ -1,7 +1,7 @@
 <?php
 namespace Typemill\Models;
 
-use \URLify;
+use Typemill\Models\Folder;
 
 class ProcessAssets
 {
@@ -107,7 +107,7 @@ class ProcessAssets
 		$pathinfo			= pathinfo($originalname);
 		
 		$this->extension 	= strtolower($pathinfo['extension']);
-		$this->filename 	= URLify::filter(iconv(mb_detect_encoding($pathinfo['filename'], mb_detect_order(), true), "UTF-8", $pathinfo['filename']));
+		$this->filename 	= Folder::createSlug($pathinfo['filename']);
 
 		$filename = $this->filename;
 

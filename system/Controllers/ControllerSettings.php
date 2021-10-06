@@ -14,7 +14,7 @@ use Typemill\Events\OnUserfieldsLoaded;
 use Typemill\Events\OnSystemnaviLoaded;
 use Typemill\Events\OnUserDeleted;
 
-class SettingsController extends Controller
+class ControllerSettings extends ControllerShared
 {	
 
 	public function showBlank($request, $response, $args)
@@ -22,7 +22,7 @@ class SettingsController extends Controller
 		$user				= new User();
 		$settings 			= $this->c->get('settings');
 		$route 				= $request->getAttribute('route');
-		$navigation 		= $this->getNavigation();
+		$navigation 		= $this->getMainNavigation();
 
 		$content 			= '<h1>Hello</h1><p>I am the showBlank method from the settings controller</p><p>In most cases I have been called from a plugin. But if you see this content, then the plugin does not work or has forgotten to inject its own content.</p>';
 
@@ -48,7 +48,7 @@ class SettingsController extends Controller
 		$languages			= $this->getLanguages();
 		$locale				= isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? substr($_SERVER["HTTP_ACCEPT_LANGUAGE"],0,2) : 'en';
 		$route 				= $request->getAttribute('route');
-		$navigation 		= $this->getNavigation();
+		$navigation 		= $this->getMainNavigation();
 
 		# set navigation active
 		$navigation['System']['active'] = true;
@@ -118,6 +118,8 @@ class SettingsController extends Controller
 					'recoversubject'		=> $newSettings['recoversubject'],
 					'recovermessage'		=> $newSettings['recovermessage'],
 					'securitylog'			=> isset($newSettings['securitylog']) ? true : null,
+					'oldslug'				=> isset($newSettings['oldslug']) ? true : null,
+					'refreshcache'			=> isset($newSettings['refreshcache']) ? true : null,
 				);
 
 				# https://www.slimframework.com/docs/v3/cookbook/uploading-files.html; 
@@ -294,7 +296,7 @@ class SettingsController extends Controller
 		
 		/* add the users for navigation */
 		$route 	= $request->getAttribute('route');
-		$navigation = $this->getNavigation();
+		$navigation = $this->getMainNavigation();
 
 		# set navigation active
 		$navigation['Themes']['active'] = true;
@@ -363,7 +365,7 @@ class SettingsController extends Controller
 		}
 		
 		$route 	= $request->getAttribute('route');
-		$navigation = $this->getNavigation();
+		$navigation = $this->getMainNavigation();
 
 		# set navigation active
 		$navigation['Plugins']['active'] = true;
@@ -591,7 +593,7 @@ class SettingsController extends Controller
 			$userform = $fieldsModel->getFields($userSettings, 'users', 'user', $fieldDefinitions);
 
 			$route = $request->getAttribute('route');
-			$navigation = $this->getNavigation();
+			$navigation = $this->getMainNavigation();
 
 			# set navigation active
 			$navigation['Account']['active'] = true;
@@ -647,7 +649,7 @@ class SettingsController extends Controller
 		$userform = $fieldsModel->getFields($userSettings, 'users', 'user', $fieldDefinitions);
 
 		$route = $request->getAttribute('route');
-		$navigation = $this->getNavigation();
+		$navigation = $this->getMainNavigation();
 
 		# set navigation active
 		$navigation['Users']['active'] = true;
@@ -675,7 +677,7 @@ class SettingsController extends Controller
 		$userdata 		= array();
 		$route 			= $request->getAttribute('route');
 		$settings 		= $this->c->get('settings');
-		$navigation 	= $this->getNavigation();
+		$navigation 	= $this->getMainNavigation();
 		
 		# set navigation active
 		$navigation['Users']['active'] = true;
@@ -764,7 +766,7 @@ class SettingsController extends Controller
 		$userroles 		= $this->c->acl->getRoles();
 		$route 			= $request->getAttribute('route');
 		$settings 		= $this->c->get('settings');
-		$navigation 	= $this->getNavigation();
+		$navigation 	= $this->getMainNavigation();
 
 		# set navigation active
 		$navigation['Users']['active'] = true;
@@ -969,22 +971,26 @@ class SettingsController extends Controller
 
 	public function clearCache($request, $response, $args)
 	{
-		$settings 		= $this->c->get('settings');
-		$dir 			= $settings['basePath'] . 'cache';
-		$uri 			= $request->getUri()->withUserInfo('');
-		$pathToContent	= $settings['rootPath'] . $settings['contentFolder'];
-		
-		$writeCache = new writeCache();
+		$this->uri 			= $request->getUri()->withUserInfo('');
+		$dir 				= $this->settings['basePath'] . 'cache';
 
-		$error 		= $writeCache->deleteCacheFiles($dir);
-
+		$error 				= $this->writeCache->deleteCacheFiles($dir);
 		if($error)
 		{
 			return $response->withJson(['errors' => $error], 500);
 		}
 
-		# this recreates the cache for structure, structure-extended and navigation
-		$writeCache->getFreshStructure($pathToContent, $uri);
+		# create a new draft structure
+		$this->setFreshStructureDraft();
+
+		# create a new draft structure
+		$this->setFreshStructureLive();
+
+		# create a new draft structure
+		$this->setFreshNavigation();
+
+		# update the sitemap
+		$this->updateSitemap();
 
 		return $response->withJson(array('errors' => false));
 	}
@@ -1083,7 +1089,7 @@ class SettingsController extends Controller
 		);
 	}
 
-	private function getNavigation()
+	private function getMainNavigation()
 	{
 		$navigation = [
 			'System'	=> ['routename' => 'settings.show', 'icon' => 'icon-wrench', 'aclresource' => 'system', 'aclprivilege' => 'view'],

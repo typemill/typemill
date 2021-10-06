@@ -2,13 +2,15 @@
 
 namespace Typemill\Extensions;
 
-use \URLify;
+use Typemill\Models\Folder;
 
 class ParsedownExtension extends \ParsedownExtra
 {
     function __construct($baseUrl = '', $settings = NULL)
     {
         parent::__construct();
+
+        $this->settings = $settings;
 
         # show anchor next to headline? 
         $this->showAnchor = isset($settings['headlineanchors']) ? $settings['headlineanchors'] : false;
@@ -329,7 +331,7 @@ class ParsedownExtension extends \ParsedownExtra
             }
 
             $text = trim($Line['text'], '#');
-            $headline = URLify::filter($Line['text']);
+            $headline = Folder::createSlug($Line['text'], $this->settings);
 
             if ($this->strictMode and isset($text[0]) and $text[0] !== ' ')
             {

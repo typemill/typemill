@@ -3,14 +3,8 @@
 namespace Typemill\Controllers;
 
 use Typemill\Models\Folder;
-use Typemill\Models\WriteCache;
-use Typemill\Models\WriteSitemap;
-use Typemill\Models\WriteYaml;
 use Typemill\Models\WriteMeta;
-use \Symfony\Component\Yaml\Yaml;
-use Typemill\Models\VersionCheck;
-use Typemill\Models\Markdown;
-use Typemill\Events\OnCacheUpdated;
+use Typemill\Extensions\ParsedownExtension;
 use Typemill\Events\OnPagetreeLoaded;
 use Typemill\Events\OnBreadcrumbLoaded;
 use Typemill\Events\OnItemLoaded;
@@ -20,78 +14,59 @@ use Typemill\Events\OnMarkdownLoaded;
 use Typemill\Events\OnContentArrayLoaded;
 use Typemill\Events\OnHtmlLoaded;
 use Typemill\Events\OnRestrictionsLoaded;
-use Typemill\Extensions\ParsedownExtension;
 
-class PageController extends Controller
+class ControllerFrontendWebsite extends ControllerShared
 {
 	public function index($request, $response, $args)
-	{	
+	{
+		# Initiate Variables
+		$contentHTML			= false;
+		$item					= false;
+		$home					= false;
+		$breadcrumb 			= false;
+		$currentpage			= false;
+		$this->pathToContent	= $this->settings['rootPath'] . $this->settings['contentFolder'];
+		$this->uri 				= $request->getUri()->withUserInfo('');
+		$this->base_url 		= $this->uri->getBaseUrl();
 
-		/* Initiate Variables */
-		$structure		= false;
-		$contentHTML	= false;
-		$item			= false;
-		$home			= false;
-		$breadcrumb 	= false;
-		$currentpage	= false;
-		$pathToContent	= $this->settings['rootPath'] . $this->settings['contentFolder'];
-		$cache 			= new WriteCache();
-		$uri 			= $request->getUri()->withUserInfo('');
-		$base_url		= $uri->getBaseUrl();
-
-		$this->pathToContent = $pathToContent;
-
-		try
+		# if there is no structure at all, the content folder is probably empty
+		if(!$this->setStructureLive())
 		{
-			# if the cached structure is still valid, use it
-			if($cache->validate('cache', 'lastCache.txt', 600))
-			{
-				$structure	= $cache->getCachedStructure();
-			}
-			else
-			{
-				# dispatch message that the cache has been refreshed 
-				$this->c->dispatcher->dispatch('onCacheUpdated', new OnCacheUpdated(false));
-			}
+			return $this->render($response, '/index.twig', array( 'content' => '<h1>No Content</h1><p>Your content folder is empty.</p>' ));
+		}
 
-			if(!isset($structure) OR !$structure) 
-			{
-				# if not, get a fresh structure of the content folder
-				$structure 	= $cache->getFreshStructure($pathToContent, $uri);
+		# we can create an initial sitemap here, but makes no sense for every pagecall. Sitemap will be created on first author interaction (publish/delete/channge page).
+		# $this->checkSitemap();
 
-				# if there is no structure at all, the content folder is probably empty
-				if(!$structure)
-				{
-					$content = '<h1>No Content</h1><p>Your content folder is empty.</p>'; 
+		# if the admin activated to refresh the cache automatically each 10 minutes (e.g. use without admin area)
+		if(isset($this->settings['refreshcache']) && $this->settings['refreshcache'] && !$this->writeCache->validate('cache', 'lastCache.txt', 600))
+		{
+			# delete the cache
+			$dir = $this->settings['basePath'] . 'cache';
+			$this->writeCache->deleteCacheFiles($dir);
 
-					return $this->render($response, '/index.twig', array( 'content' => $content ));
-				}
-				elseif(!$cache->validate('cache', 'lastSitemap.txt', 86400))
-				{
-					# update sitemap
-					$sitemap = new WriteSitemap();
-					$sitemap->updateSitemap('cache', 'sitemap.xml', 'lastSitemap.txt', $structure, $uri->getBaseUrl());
-				}
-			}
+			# update the internal structure
+			$this->setFreshStructureDraft();
 			
-			# dispatch event and let others manipulate the structure
-			$structure = $this->c->dispatcher->dispatch('onPagetreeLoaded', new OnPagetreeLoaded($structure))->getData();
-		}
-		catch (Exception $e)
-		{
-			echo $e->getMessage();
-			exit(1);
+			# update the public structure
+			$this->setFreshStructureLive();
+
+			# update the navigation
+			$this->setFreshNavigation();
+
+			# update the sitemap
+			$this->updateSitemap();
 		}
 
-		# get meta-Information
-		$writeMeta 		= new WriteMeta();
-		$theme 			= $this->settings['theme'];
+		# dispatch event and let others manipulate the structure
+		$this->structureLive = $this->c->dispatcher->dispatch('onPagetreeLoaded', new OnPagetreeLoaded($this->structureLive))->getData();
 
 		# check if there is a custom theme css
-		$customcss = $writeMeta->checkFile('cache', $theme . '-custom.css');
+		$theme = $this->settings['theme'];
+		$customcss = $this->writeCache->checkFile('cache', $theme . '-custom.css');
 		if($customcss)
 		{
-			$this->c->assets->addCSS($base_url . '/cache/' . $theme . '-custom.css');
+			$this->c->assets->addCSS($this->base_url . '/cache/' . $theme . '-custom.css');
 		}
 
 		$logo = false;
@@ -106,13 +81,13 @@ class PageController extends Controller
 			$favicon = true;
 		}
 
-
 		# the navigation is a copy of the structure without the hidden pages
-		$navigation = $cache->getCache('cache', 'navigation.txt');
+		# hint: if the navigation has been deleted from the cache, then we do not recreate it here to save performace. Instead you have to recreate cache in admin or change a page (publish/unpublish/delete/move)
+		$navigation = $this->writeCache->getCache('cache', 'navigation.txt');
 		if(!$navigation)
 		{
 			# use the structure if there is no cached navigation
-			$navigation = $structure;
+			$navigation = $this->structureLive;
 		}
 		
 		# start pagination
@@ -149,23 +124,23 @@ class PageController extends Controller
 		if(empty($args))
 		{
 			$home 	= true;
-			$item 	= Folder::getItemForUrl($navigation, $uri->getBasePath(), $uri->getBaseUrl(), NULL, $home);
-			$urlRel = $uri->getBasePath();
+			$item 	= Folder::getItemForUrl($navigation, $this->uri->getBasePath(), $this->uri->getBaseUrl(), NULL, $home);
+			$urlRel = $this->uri->getBasePath();
 		}
 		else
 		{
 			# get the request url, trim args so physical folders have no trailing slash
-			$urlRel = $uri->getBasePath() . '/' . trim($args['params'], "/");
+			$urlRel = $this->uri->getBasePath() . '/' . trim($args['params'], "/");
 
 			# find the url in the content-item-tree and return the item-object for the file
 			# important to use the structure here so it is found, even if the item is hidden.
-			$item = Folder::getItemForUrl($structure, $urlRel, $uri->getBasePath());
+			$item = Folder::getItemForUrl($this->structureLive, $urlRel, $this->uri->getBasePath());
 
 			# if the item is a folder and if that folder is not hidden
 			if($item && $item->elementType == 'folder' && isset($item->hide) && !$item->hide)
 			{
 				# use the navigation instead of the structure so that hidden elements are erased
-				$item = Folder::getItemForUrl($navigation, $urlRel, $uri->getBaseUrl(), NULL, $home);
+				$item = Folder::getItemForUrl($navigation, $urlRel, $this->uri->getBaseUrl(), NULL, $home);
 			}
 
 			# if there is still no item, return a 404-page
@@ -174,7 +149,7 @@ class PageController extends Controller
 				return $this->render404($response, array( 
 					'navigation'	=> $navigation, 
 					'settings' 		=> $this->settings,  
-					'base_url' 		=> $base_url,
+					'base_url' 		=> $this->base_url,
 					'title' 		=> false,
 					'content' 		=> false, 
 					'item' 			=> false,
@@ -187,7 +162,6 @@ class PageController extends Controller
 			}
 		}
 
-
 		if(isset($item->hide)) 
 		{
 			# if it is a hidden page
@@ -195,11 +169,11 @@ class PageController extends Controller
  			{
 				# get breadcrumb for page and set pages active
 				# use structure here because the hidden item is not part of the navigation
-				$breadcrumb = Folder::getBreadcrumb($structure, $item->keyPathArray);
+				$breadcrumb = Folder::getBreadcrumb($this->structureLive, $item->keyPathArray);
 				$breadcrumb = $this->c->dispatcher->dispatch('onBreadcrumbLoaded', new OnBreadcrumbLoaded($breadcrumb))->getData();
 
 				# add the paging to the item
-				$item = Folder::getPagingForItem($structure, $item);
+				$item = Folder::getPagingForItem($this->structureLive, $item);
  			}
 			else
 			{
@@ -217,7 +191,7 @@ class PageController extends Controller
 		$item 			= $this->c->dispatcher->dispatch('onItemLoaded', new OnItemLoaded($item))->getData();
 
 		# set the filepath
-		$filePath 	= $pathToContent . $item->path;
+		$filePath 		= $this->pathToContent . $item->path;
 		
 		# check if url is a folder and add index.md 
 		if($item->elementType == 'folder')
@@ -230,6 +204,9 @@ class PageController extends Controller
 
 		# dispatch the original content without plugin-manipulations for case anyone wants to use it
 		$this->c->dispatcher->dispatch('onOriginalLoaded', new OnOriginalLoaded($contentMD));
+
+		# initiate object for metadata
+		$writeMeta 		= new WriteMeta();
 		
 		# makes sure that you always have the full meta with title, description and all the rest.
 		$metatabs 		= $writeMeta->completePageMeta($contentMD, $this->settings, $item);
@@ -243,7 +220,7 @@ class PageController extends Controller
 		$itemUrl 		= isset($item->urlRel) ? $item->urlRel : false;
 
 		/* initialize parsedown */
-		$parsedown 		= new ParsedownExtension($base_url, $this->settings);
+		$parsedown 		= new ParsedownExtension($this->base_url, $this->settings);
 		
 		/* set safe mode to escape javascript and html in markdown */
 		$parsedown->setSafeMode(true);
@@ -334,21 +311,21 @@ class PageController extends Controller
 		$firstImage = false;
 		if($img_url)
 		{
-			$firstImage = array('img_url' => $base_url . '/' . $img_url, 'img_alt' => $img_alt);
+			$firstImage = array('img_url' => $this->base_url . '/' . $img_url, 'img_alt' => $img_alt);
 		}
 		
 		$route = empty($args) && isset($this->settings['themes'][$theme]['cover']) ? '/cover.twig' : '/index.twig';
 
 		return $this->render($response, $route, [
 			'home'			=> $home,
-			'navigation' 	=> $navigation, 
+			'navigation' 	=> $navigation,
 			'title' 		=> $title,
 			'content' 		=> $contentHTML, 
 			'item' 			=> $item,
 			'breadcrumb' 	=> $breadcrumb, 
 			'settings' 		=> $this->settings,
+			'base_url' 		=> $this->base_url, 
 			'metatabs'		=> $metatabs,
-			'base_url' 		=> $base_url, 
 			'image' 		=> $firstImage,
 			'logo'			=> $logo,
 			'favicon'		=> $favicon,
