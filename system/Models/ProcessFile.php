@@ -3,7 +3,6 @@ namespace Typemill\Models;
 
 use Slim\Http\UploadedFile;
 use Typemill\Models\Helpers;
-use \URLify;
 
 class ProcessFile extends ProcessAssets
 {

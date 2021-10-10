@@ -4,11 +4,10 @@ namespace Typemill\Controllers;
 
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Slim\Views\Twig;
 use Typemill\Models\Folder;
 use Typemill\Extensions\ParsedownExtension;
 
-class ContentBackendController extends ContentController
+class ControllerAuthorEditor extends ControllerAuthor
 {
 	/**
 	* Show Content for raw editor
@@ -25,7 +24,7 @@ class ContentBackendController extends ContentController
 		$this->params	= isset($args['params']) ? ['url' => $this->uri->getBasePath() . '/' . $args['params']] : ['url' => $this->uri->getBasePath()];
 		
 		# set structure
-		if(!$this->setStructure($draft = true)){ return $this->renderIntern404($response, array( 'navigation' => true, 'content' => $this->errors )); }
+		if(!$this->setStructureDraft()){ return $this->renderIntern404($response, array( 'navigation' => true, 'content' => $this->errors )); }
 		
 		# set information for homepage
 		$this->setHomepage($args);
@@ -37,7 +36,7 @@ class ContentBackendController extends ContentController
 		$this->checkContentOwnership();
 		
 		# get the breadcrumb (here we need it only to mark the actual item active in navigation)
-		$breadcrumb = isset($this->item->keyPathArray) ? Folder::getBreadcrumb($this->structure, $this->item->keyPathArray) : false;
+		$breadcrumb = isset($this->item->keyPathArray) ? Folder::getBreadcrumb($this->structureDraft, $this->item->keyPathArray) : false;
 		
 		# set the status for published and drafted
 		$this->setPublishStatus();
@@ -78,10 +77,10 @@ class ContentBackendController extends ContentController
 			}
 		}
 
-		return $this->render($response, 'editor/editor-raw.twig', array(
+		return $this->renderIntern($response, 'editor/editor-raw.twig', array(
 			'acl'			=> $this->c->acl,
 			'mycontent'		=> $this->mycontent,
-			'navigation' 	=> $this->structure, 
+			'navigation' 	=> $this->structureDraft, 
 			'homepage' 		=> $this->homepage, 
 			'title' 		=> $title, 
 			'content' 		=> $content, 
@@ -105,13 +104,13 @@ class ContentBackendController extends ContentController
 		$this->params	= isset($args['params']) ? ['url' => $this->uri->getBasePath() . '/' . $args['params']] : ['url' => $this->uri->getBasePath()];
 
 		# set structure
-		if(!$this->setStructure($draft = true)){ return $this->renderIntern404($response, array( 'navigation' => true, 'content' => $this->errors )); }
+		if(!$this->setStructureDraft()){ return $this->renderIntern404($response, array( 'navigation' => true, 'content' => $this->errors )); }
 
 		# set information for homepage
 		$this->setHomepage($args);
 
 		# set item
-		if(!$this->setItem()){ return $this->renderIntern404($response, array( 'navigation' => $this->structure, 'settings' => $this->settings, 'content' => $this->errors )); }
+		if(!$this->setItem()){ return $this->renderIntern404($response, array( 'navigation' => $this->structureDraft, 'settings' => $this->settings, 'content' => $this->errors )); }
 
 		# we have to check ownership here to use it for permission-check in tempates
 		$this->checkContentOwnership();
@@ -168,20 +167,15 @@ class ContentBackendController extends ContentController
 			unset($content[0]);			
 		}
 
-		return $this->render($response, 'editor/editor-blox.twig', array(
+		return $this->renderIntern($response, 'editor/editor-blox.twig', array(
 			'acl'			=> $this->c->acl, 
 			'mycontent'		=> $this->mycontent,
-			'navigation' 	=> $this->structure,
-			'homepage' 		=> $this->homepage, 
+			'navigation' 	=> $this->structureDraft,
+			'homepage' 		=> $this->homepage,
 			'title' 		=> $title, 
 			'content' 		=> $content, 
-			'item' 			=> $this->item, 
+			'item' 			=> $this->item,
 			'settings' 		=> $this->settings 
 		));
-	}
-	
-	public function showEmpty(Request $request, Response $response, $args)
-	{		
-		return $this->renderIntern404($response, array( 'settings' => $this->settings ));	
 	}
 }

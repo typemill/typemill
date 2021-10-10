@@ -29,12 +29,12 @@ class Validation
 
 		Validator::addRule('image_types', function($field, $value, array $params, array $fields) use ($user)
 		{
-    		$allowed 	= ['jpg', 'jpeg', 'png', 'webp'];
+    		$allowed 	= ['jpg', 'jpeg', 'png', 'webp', 'svg'];
 			$pathinfo	= pathinfo($value);
 			$extension 	= strtolower($pathinfo['extension']);
 			if(in_array($extension, $allowed)){ return true; }
 			return false;
-		}, 'only jpg, jpeg, png, webp, allowed');
+		}, 'only jpg, jpeg, png, webp, svg allowed');
 
 		# checks if email is available if user is created
 		Validator::addRule('emailAvailable', function($field, $value, array $params, array $fields) use ($user)
@@ -262,6 +262,23 @@ class Validation
 	}
 
 	/**
+	* validation for password recovery
+	* 
+	* @param array $params with form data.
+	* @return obj $v the validation object passed to a result method.
+	*/
+	
+	public function recoverPassword(array $params)
+	{
+		$v = new Validator($params);
+		$v->rule('required', ['password', 'passwordrepeat']);
+		$v->rule('lengthBetween', 'password', 5, 20);
+		$v->rule('equals', 'passwordrepeat', 'password');
+		
+		return $this->validationResult($v);
+	}
+
+	/**
 	* validation for system settings
 	* 
 	* @param array $params with form data.
@@ -285,6 +302,11 @@ class Validation
 		$v->rule('in', 'copyright', $copyright);
 		$v->rule('noHTML', 'restrictionnotice');
 		$v->rule('lengthBetween', 'restrictionnotice', 2, 1000 );
+		$v->rule('email', 'recoverfrom');
+		$v->rule('noHTML', 'recoversubject');
+		$v->rule('lengthBetween', 'recoversubject', 2, 80 );
+		$v->rule('noHTML', 'recovermessage');
+		$v->rule('lengthBetween', 'recovermessage', 2, 1000 );
 		$v->rule('iplist', 'trustedproxies');
 
 		return $this->validationResult($v, $name);

@@ -21,12 +21,11 @@ class User extends WriteYaml
 			$usernames[] = str_replace('.yaml', '', $userfile);
 		}
 
-
 		usort($usernames, 'strnatcasecmp');
 
 		return $usernames;
 	}
-	
+
 	public function getUser($username)
 	{
 		$user = $this->getYaml('settings/users', $username . '.yaml');
@@ -39,7 +38,7 @@ class User extends WriteYaml
 		unset($user['password']);
 		return $user;
 	}
-	
+
 	public function createUser($params)
 	{
 		$params['password'] = $this->generatePassword($params['password']);
@@ -52,6 +51,34 @@ class User extends WriteYaml
 		}
 		return false;
 	}
+
+	public function unsetFromUser($username, $keys)
+	{
+		if(empty($keys))
+		{
+			return false;
+		}
+
+		$userdata = $this->getUser($username);
+
+		if(!$userdata)
+		{
+			return false;
+		}
+		
+		foreach($keys as $key)
+		{
+			if(isset($userdata[$key]))
+			{
+				unset($userdata[$key]);
+			}
+		}
+	
+		$this->updateYaml('settings/users', $userdata['username'] . '.yaml', $userdata);
+		
+		return true;
+	}
+
 	
 	public function updateUser($params)
 	{
@@ -74,7 +101,6 @@ class User extends WriteYaml
 		$update = array_merge($userdata, $params);
 
 		# cleanup data here
-		
 		
 		$this->updateYaml('settings/users', $userdata['username'] . '.yaml', $update);
 
@@ -110,12 +136,11 @@ class User extends WriteYaml
 	
 	public function login($username)
 	{
-		$user = $this->getUser($username);
+		$user = $this->getSecureUser($username);
 
 		if($user)
 		{
 			$user['lastlogin'] = time();
-			unset($user['password']);
 
 			$_SESSION['user'] 	= $user['username'];
 			$_SESSION['role'] 	= $user['userrole'];
@@ -132,6 +157,11 @@ class User extends WriteYaml
 			
 			# update user last login
 			$this->updateUser($user);
+
+			if(isset($user['recovertoken']) OR isset($user['recoverdate']))
+			{
+				$this->unsetFromUser($user['username'], ['recovertoken', 'recoverdate']);
+			}
 		}
 	}
 	

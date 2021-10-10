@@ -1,0 +1,41 @@
+{% extends 'layouts/layoutAuth.twig' %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+	<div class="setupWrapper">
+		
+		<div class="authformWrapper">
+			<form method="POST" action="{{ path_for("auth.recoverpwnew") }}" autocomplete="off">
+			
+				<fieldset class="auth">
+					<div class="formElement{{ errors.password ? ' errors' : '' }}">
+						<label for="password">{{ __('New password') }} <abbr title="{{ __('required') }}">*</abbr></label>
+						<input type="password" name="password" value="" required>
+						{% if errors.password %}
+							<span class="error">{{ errors.password | first }}</span>
+						{% endif %}
+					</div>
+					<div class="formElement{{ errors.passwordrepeat ? ' errors' : '' }}">
+						<label for="passwordrepeat">{{ __('Repeat password') }} <abbr title="{{ __('required') }}">*</abbr></label>
+						<input type="password" name="passwordrepeat" value="" required>
+						{% if errors.passwordrepeat %}
+							<span class="error">{{ errors.passwordrepeat | first }}</span>
+						{% endif %}
+					</div>
+				</fieldset>
+
+				<div class="loginarea" id="loginarea">
+					<input type="submit" value="{{ __('Create new password') }}" id="loginbutton" class="loginbutton" />
+					{{ csrf_field() | raw }}
+					<input type="hidden" name="recovertoken" value="{{recovertoken}}">
+					<input type="hidden" name="username" value="{{username}}">
+				</div>
+			</form>		
+		</div>
+		<div class="setupContent">
+			<p><a href="{{ base_url() }}/tm/login">{{ __('back to login') }}</a></p>
+		</div>
+	</div>
+	<footer></footer>
+{% endblock %}

@@ -2,6 +2,8 @@
 
 namespace Typemill\Models;
 
+use Typemill\Models\WriteYaml;
+
 class WriteCache extends Write
 {
 	/**
@@ -73,17 +75,39 @@ class WriteCache extends Write
 		return false;		
 	}
 
-    /**
-	  * @todo Create a function to clear a specific cache file
-     */	
-	public function clearCache($name)
+	public function getCachedStructure()
 	{
+		return $this->getCache('cache', 'structure.txt');
 	}
 	
     /**
 	  * @todo Create a function to clear all cache files
      */		
-	public function clearAllCacheFiles()
+	public function deleteCacheFiles($dir)
 	{
+		$iterator 	= new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS);
+		$files 		= new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::CHILD_FIRST);
+		
+		$error = false;
+
+		foreach($files as $file)
+		{
+		    if ($file->isDir())
+		    {
+		    	if(!rmdir($file->getRealPath()))
+		    	{
+		    		$error = 'Could not delete some folders.';
+		    	}
+		    }
+		    elseif($file->getExtension() !== 'css')
+		    {
+				if(!unlink($file->getRealPath()) )
+				{
+					$error = 'Could not delete some files.';
+				}
+		    }
+		}
+
+		return $error;
 	}
 }

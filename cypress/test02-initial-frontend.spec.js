@@ -54,17 +54,6 @@ describe('Typemill Initial Frontend', function()
       })
     })
 
-    it('has sitemap xml', function ()
-    {
-      cy.request({
-        url: '/cache/sitemap.xml',
-      })
-      .then((resp) => {
-          /* should return xml-format */
-          expect(resp.headers).to.have.property('content-type','application/xml')
-      })
-    })
-
     it('has no access to dashboard', function ()
     {
       cy.visit('/tm/settings')

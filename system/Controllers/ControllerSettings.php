@@ -4,6 +4,7 @@ namespace Typemill\Controllers;
 
 use \Symfony\Component\Yaml\Yaml;
 use Typemill\Models\Write;
+use Typemill\Models\WriteCache;
 use Typemill\Models\Fields;
 use Typemill\Models\Validation;
 use Typemill\Models\User;
@@ -13,7 +14,7 @@ use Typemill\Events\OnUserfieldsLoaded;
 use Typemill\Events\OnSystemnaviLoaded;
 use Typemill\Events\OnUserDeleted;
 
-class SettingsController extends Controller
+class ControllerSettings extends ControllerShared
 {	
 
 	public function showBlank($request, $response, $args)
@@ -21,7 +22,7 @@ class SettingsController extends Controller
 		$user				= new User();
 		$settings 			= $this->c->get('settings');
 		$route 				= $request->getAttribute('route');
-		$navigation 		= $this->getNavigation();
+		$navigation 		= $this->getMainNavigation();
 
 		$content 			= '<h1>Hello</h1><p>I am the showBlank method from the settings controller</p><p>In most cases I have been called from a plugin. But if you see this content, then the plugin does not work or has forgotten to inject its own content.</p>';
 
@@ -47,7 +48,7 @@ class SettingsController extends Controller
 		$languages			= $this->getLanguages();
 		$locale				= isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? substr($_SERVER["HTTP_ACCEPT_LANGUAGE"],0,2) : 'en';
 		$route 				= $request->getAttribute('route');
-		$navigation 		= $this->getNavigation();
+		$navigation 		= $this->getMainNavigation();
 
 		# set navigation active
 		$navigation['System']['active'] = true;
@@ -111,6 +112,14 @@ class SettingsController extends Controller
 					'trustedproxies'		=> $newSettings['trustedproxies'],
 					'headersoff'			=> isset($newSettings['headersoff']) ? true : null,
 					'urlschemes'			=> $newSettings['urlschemes'],
+					'svg'					=> isset($newSettings['svg']) ? true : null,
+					'recoverpw'				=> isset($newSettings['recoverpw']) ? true : null,
+					'recoverfrom'			=> $newSettings['recoverfrom'],
+					'recoversubject'		=> $newSettings['recoversubject'],
+					'recovermessage'		=> $newSettings['recovermessage'],
+					'securitylog'			=> isset($newSettings['securitylog']) ? true : null,
+					'oldslug'				=> isset($newSettings['oldslug']) ? true : null,
+					'refreshcache'			=> isset($newSettings['refreshcache']) ? true : null,
 				);
 
 				# https://www.slimframework.com/docs/v3/cookbook/uploading-files.html; 
@@ -287,7 +296,7 @@ class SettingsController extends Controller
 		
 		/* add the users for navigation */
 		$route 	= $request->getAttribute('route');
-		$navigation = $this->getNavigation();
+		$navigation = $this->getMainNavigation();
 
 		# set navigation active
 		$navigation['Themes']['active'] = true;
@@ -346,15 +355,7 @@ class SettingsController extends Controller
 			
 			/* if the plugin defines forms and fields, so that the user can edit the plugin settings in the frontend */
 			if(isset($pluginOriginalSettings['forms']['fields']))
-			{
-				# if the plugin defines frontend fields
-				if(isset($pluginOriginalSettings['public']))
-				{
-					$pluginOriginalSettings['forms']['fields']['recaptcha'] = ['type' => 'checkbox', 'label' => 'Google Recaptcha', 'checkboxlabel' => 'Activate Recaptcha' ];
-					$pluginOriginalSettings['forms']['fields']['recaptcha_webkey'] = ['type' => 'text', 'label' => 'Recaptcha Website Key', 'help' => 'Add the recaptcha website key here. You can get the key from the recaptcha website.', 'description' => 'The website key is mandatory if you activate the recaptcha field'];
-					$pluginOriginalSettings['forms']['fields']['recaptcha_secretkey'] = ['type' => 'text', 'label' => 'Recaptcha Secret Key', 'help' => 'Add the recaptcha secret key here. You can get the key from the recaptcha website.', 'description' => 'The secret key is mandatory if you activate the recaptcha field'];
-				}
-				
+			{				
 				/* get all the fields and prefill them with the dafault-data, the user-data or old input data */
 				$fields = $fieldsModel->getFields($userSettings, 'plugins', $pluginName, $pluginOriginalSettings);
 				
@@ -364,7 +365,7 @@ class SettingsController extends Controller
 		}
 		
 		$route 	= $request->getAttribute('route');
-		$navigation = $this->getNavigation();
+		$navigation = $this->getMainNavigation();
 
 		# set navigation active
 		$navigation['Plugins']['active'] = true;
@@ -592,7 +593,7 @@ class SettingsController extends Controller
 			$userform = $fieldsModel->getFields($userSettings, 'users', 'user', $fieldDefinitions);
 
 			$route = $request->getAttribute('route');
-			$navigation = $this->getNavigation();
+			$navigation = $this->getMainNavigation();
 
 			# set navigation active
 			$navigation['Account']['active'] = true;
@@ -648,7 +649,7 @@ class SettingsController extends Controller
 		$userform = $fieldsModel->getFields($userSettings, 'users', 'user', $fieldDefinitions);
 
 		$route = $request->getAttribute('route');
-		$navigation = $this->getNavigation();
+		$navigation = $this->getMainNavigation();
 
 		# set navigation active
 		$navigation['Users']['active'] = true;
@@ -676,7 +677,7 @@ class SettingsController extends Controller
 		$userdata 		= array();
 		$route 			= $request->getAttribute('route');
 		$settings 		= $this->c->get('settings');
-		$navigation 	= $this->getNavigation();
+		$navigation 	= $this->getMainNavigation();
 		
 		# set navigation active
 		$navigation['Users']['active'] = true;
@@ -765,7 +766,7 @@ class SettingsController extends Controller
 		$userroles 		= $this->c->acl->getRoles();
 		$route 			= $request->getAttribute('route');
 		$settings 		= $this->c->get('settings');
-		$navigation 	= $this->getNavigation();
+		$navigation 	= $this->getMainNavigation();
 
 		# set navigation active
 		$navigation['Users']['active'] = true;
@@ -970,38 +971,28 @@ class SettingsController extends Controller
 
 	public function clearCache($request, $response, $args)
 	{
-		$settings 	= $this->c->get('settings');
-		$dir 		= $settings['basePath'] . 'cache';
-		$iterator 	= new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS);
-		$files 		= new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::CHILD_FIRST);
-		
-		$error = false;
+		$this->uri 			= $request->getUri()->withUserInfo('');
+		$dir 				= $this->settings['basePath'] . 'cache';
 
-		foreach($files as $file)
-		{
-		    if ($file->isDir())
-		    {
-		    	if(!rmdir($file->getRealPath()))
-		    	{
-		    		$error = 'Could not delete some folders.';
-		    	}
-		    }
-		    elseif($file->getExtension() !== 'css')
-		    {
-				if(!unlink($file->getRealPath()) )
-				{
-					$error = 'Could not delete some files.';
-				}
-		    }
-		}
-
+		$error 				= $this->writeCache->deleteCacheFiles($dir);
 		if($error)
 		{
 			return $response->withJson(['errors' => $error], 500);
 		}
 
-		return $response->withJson(array('errors' => false));
+		# create a new draft structure
+		$this->setFreshStructureDraft();
 
+		# create a new draft structure
+		$this->setFreshStructureLive();
+
+		# create a new draft structure
+		$this->setFreshNavigation();
+
+		# update the sitemap
+		$this->updateSitemap();
+
+		return $response->withJson(array('errors' => false));
 	}
 
 	private function getUserFields($role)
@@ -1098,7 +1089,7 @@ class SettingsController extends Controller
 		);
 	}
 
-	private function getNavigation()
+	private function getMainNavigation()
 	{
 		$navigation = [
 			'System'	=> ['routename' => 'settings.show', 'icon' => 'icon-wrench', 'aclresource' => 'system', 'aclprivilege' => 'view'],
@@ -1144,14 +1135,6 @@ class SettingsController extends Controller
 				}
 			}
 			
-			# if the plugin defines frontend fields
-			if(isset($originalSettings['public']))
-			{
-				$originalFields['recaptcha'] = ['type' => 'checkbox', 'label' => 'Google Recaptcha', 'checkboxlabel' => 'Activate Recaptcha' ];
-				$originalFields['recaptcha_webkey'] = ['type' => 'text', 'label' => 'Recaptcha Website Key', 'help' => 'Add the recaptcha website key here. You can get the key from the recaptcha website.', 'description' => 'The website key is mandatory if you activate the recaptcha field'];
-				$originalFields['recaptcha_secretkey'] = ['type' => 'text', 'label' => 'Recaptcha Secret Key', 'help' => 'Add the recaptcha secret key here. You can get the key from the recaptcha website.', 'description' => 'The secret key is mandatory if you activate the recaptcha field'];
-			}
-
 			# if plugin is not active, then skip required
 			$skiprequired = false;
 			if($objectType == 'plugins' && !isset($userInput['active']))

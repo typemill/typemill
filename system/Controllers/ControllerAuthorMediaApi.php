@@ -7,9 +7,8 @@ use Slim\Http\Response;
 use Typemill\Models\ProcessImage;
 use Typemill\Models\ProcessFile;
 use Typemill\Controllers\BlockApiController;
-use \URLify;
 
-class MediaApiController extends ContentController
+class ControllerAuthorMediaApi extends ControllerAuthor
 {
 	public function getMediaLibImages(Request $request, Response $response, $args)
 	{
@@ -51,7 +50,7 @@ class MediaApiController extends ContentController
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri()->withUserInfo('');
 
-		$this->setStructure($draft = true, $cache = false);
+		$this->setStructureDraft();
 
 		$imageProcessor	= new ProcessImage($this->settings['images']);
 		if(!$imageProcessor->checkFolders('images'))
@@ -59,7 +58,7 @@ class MediaApiController extends ContentController
 			return $response->withJson(['errors' => 'Please check if your media-folder exists and all folders inside are writable.'], 500);
 		}
 
-		$imageDetails 	= $imageProcessor->getImageDetails($this->params['name'], $this->structure);
+		$imageDetails 	= $imageProcessor->getImageDetails($this->params['name'], $this->structureDraft);
 		
 		if($imageDetails)
 		{
@@ -75,7 +74,7 @@ class MediaApiController extends ContentController
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri()->withUserInfo('');
 
-		$this->setStructure($draft = true, $cache = false);
+		$this->setStructureDraft();
 
 		$fileProcessor	= new ProcessFile();
 		if(!$fileProcessor->checkFolders())
@@ -83,7 +82,7 @@ class MediaApiController extends ContentController
 			return $response->withJson(['errors' => 'Please check if your media-folder exists and all folders inside are writable.'], 500);
 		}
 
-		$fileDetails 	= $fileProcessor->getFileDetails($this->params['name'], $this->structure);
+		$fileDetails 	= $fileProcessor->getFileDetails($this->params['name'], $this->structureDraft);
 
 		if($fileDetails)
 		{
@@ -99,24 +98,57 @@ class MediaApiController extends ContentController
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri()->withUserInfo('');
 		
-		$imageProcessor	= new ProcessImage($this->settings['images']);
-		
+		$imageProcessor	= new ProcessImage($this->settings['images']);		
+
 		if(!$imageProcessor->checkFolders('images'))
 		{
-			return $response->withJson(['errors' => 'Please check if your media-folder exists and all folders inside are writable.'], 500);
-		}	
+			return $response->withJson(['errors' => ['message' => 'Please check if your media-folder exists and all folders inside are writable.']], 500);
+		}
 
-		if($imageProcessor->createImage($this->params['image'], $this->params['name'], $this->settings['images']))
+        $imageParts 	= explode(";base64,", $this->params['image']);
+        $imageType		= explode("/", $imageParts[0]);
+
+		if(!isset($imageType[1]))
 		{
+			return $response->withJson(['errors' => ['message' => 'We did not find an image type, the file might be corrupted.']], 422);
+		}
+
+		$acceptedTypes	= [
+			'png'		=> true,
+			'jpg'		=> true,
+			'jpeg'		=> true,
+			'gif'		=> true,
+			'webp'		=> true,
+		];
+
+		if(isset($this->settings['svg']) && $this->settings['svg'])
+		{
+			$acceptedTypes['svg+xml'] = true;
+		}
+
+		if(!isset($acceptedTypes[$imageType[1]]))
+		{
+			return $response->withJson(['errors' => ['message' => 'The image type is not supported.']], 422);
+		}
+
+		$imageResult = $imageProcessor->createImage($this->params['image'], $this->params['name'], $this->settings['images']);
+
+		if($imageResult)
+		{
+			if(is_array($imageResult) && isset($imageResult['errors']))
+			{
+				return $response->withJson($imageResult,422);
+			}
+
 			# publish image directly, used for example by image field for meta-tabs
 			if($this->params['publish'])
 			{
 				$imageProcessor->publishImage();
 			}
-			return $response->withJson(['name' => 'media/live/' . $imageProcessor->getFullName(),'errors' => false]);	
+			return $response->withJson(['name' => 'media/live/' . $imageProcessor->getFullName(),'errors' => false]);
 		}
 
-		return $response->withJson(['errors' => 'could not store image to temporary folder']);	
+		return $response->withJson(['errors' => 'could not store image to temporary folder'],422);
 	}
 
 	public function uploadFile(Request $request, Response $response, $args)
@@ -124,9 +156,6 @@ class MediaApiController extends ContentController
 		# get params from call
 		$this->params 	= $request->getParams();
 		$this->uri 		= $request->getUri()->withUserInfo('');
-
-		# make sure only allowed filetypes are uploaded
-
 
 		if (!isset($this->params['file']))
 		{
@@ -150,6 +179,7 @@ class MediaApiController extends ContentController
 			return $response->withJson(['errors' => 'File is bigger than 20MB.'],422);
 		}
 
+		# make sure only allowed filetypes are uploaded
 		$allowedMimes = $this->getAllowedMtypes();
 
 		if(!isset($allowedMimes[$mtype]))
@@ -158,7 +188,7 @@ class MediaApiController extends ContentController
 		}
 
 		if( 
-			(is_array($allowedMimes[$mtype]) && !in_array($allowedMimes[$mtype],$extension)) OR
+			(is_array($allowedMimes[$mtype]) && !in_array($extension, $allowedMimes[$mtype])) OR
 			(!is_array($allowedMimes[$mtype]) && $allowedMimes[$mtype] != $extension )
 		)
 		{
@@ -409,7 +439,7 @@ class MediaApiController extends ContentController
 			'application/x-excel'														=> ['xla','xlb','xlc','xld','xlk','xll','xlm','xls','xlt','xlv','xlw'],
 			'application/x-msexcel'														=> ['xls', 'xla','xlw'],
 			'application/vnd.ms-excel'													=> ['xlb','xlc','xll','xlm','xls','xlw'],
-			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet ' 		=> 'xlsx', 
+			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 		=> 'xlsx', 
 
 			'application/mshelp' 														=> ['hlp','chm'],
 			'application/msword' 														=> ['doc','dot'],

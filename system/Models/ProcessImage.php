@@ -22,6 +22,19 @@ class ProcessImage extends ProcessAssets
 		$imageData		= $imageDecoded["image"];
 		$imageType		= $imageDecoded["type"];
 		
+		if($imageType == 'svg+xml')
+		{
+			# store the original name as txt-file
+			$tmpname = fopen($this->tmpFolder . $this->getName() . ".svg.txt", "w");
+
+			# store the same svg file for original, live and thumb.
+			$this->saveOriginal($this->tmpFolder, $imageData, $name = 'original', 'svg');
+			$this->saveOriginal($this->tmpFolder, $imageData, $name = 'live', 'svg');
+			$this->saveOriginal($this->tmpFolder, $imageData, $name = 'thumbs', 'svg');
+
+			return true;
+		}
+
 		$this->setExtension($imageType);
 
 		# transform image-stream into image
@@ -325,17 +338,34 @@ class ProcessImage extends ProcessAssets
 		{
 			$imageinfo 		= getimagesize($this->liveFolder . $name);
 
-			$imagedetails = [
-				'name' 		=> $name,
-				'timestamp'	=> filemtime($this->liveFolder . $name),
-				'bytes' 	=> filesize($this->liveFolder . $name),
-				'width'		=> $imageinfo[0],
-				'height'	=> $imageinfo[1],
-				'type'		=> $imageinfo['mime'],
-				'src_thumb'	=> 'media/thumbs/' . $name,
-				'src_live'	=> 'media/live/' . $name,
-				'pages'		=> $this->findPagesWithUrl($structure, $name, $result = [])
-			];
+			if(!$imageinfo && pathinfo($this->liveFolder . $name, PATHINFO_EXTENSION) == 'svg')
+			{
+				$imagedetails = [
+					'name' 		=> $name,
+					'timestamp'	=> filemtime($this->liveFolder . $name),
+					'bytes' 	=> filesize($this->liveFolder . $name),
+					'width'		=> '---',
+					'height'	=> '---',
+					'type'		=> 'svg',
+					'src_thumb'	=> 'media/thumbs/' . $name,
+					'src_live'	=> 'media/live/' . $name,
+					'pages'		=> $this->findPagesWithUrl($structure, $name, $result = [])
+				];				
+			}
+			else
+			{
+				$imagedetails = [
+					'name' 		=> $name,
+					'timestamp'	=> filemtime($this->liveFolder . $name),
+					'bytes' 	=> filesize($this->liveFolder . $name),
+					'width'		=> $imageinfo[0],
+					'height'	=> $imageinfo[1],
+					'type'		=> $imageinfo['mime'],
+					'src_thumb'	=> 'media/thumbs/' . $name,
+					'src_live'	=> 'media/live/' . $name,
+					'pages'		=> $this->findPagesWithUrl($structure, $name, $result = [])
+				];
+			}
 
 			return $imagedetails;
 		}

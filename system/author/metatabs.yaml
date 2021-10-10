@@ -1,5 +1,19 @@
 meta:
   fields:
+    fieldsetnavi:
+      type: fieldset
+      legend: Navigation
+      fields:
+        navtitle:
+          type: text
+          label: Navigation Title
+          class: medium
+          maxlength: 60
+        hide:
+          type: checkbox
+          label: Hide
+          checkboxlabel: Hide page from navigation
+          class: medium
     fieldsetcontent:
       type: fieldset
       legend: Meta-Content
@@ -76,20 +90,6 @@ meta:
           hidden: true
           class: hidden
           pattern: '[0-9][0-9]-[0-9][0-9]-[0-9][0-9]'
-    fieldsetnavi:
-      type: fieldset
-      legend: Navigation
-      fields:
-        navtitle:
-          type: text
-          label: Navigation Title
-          class: medium
-          maxlength: 60
-        hide:
-          type: checkbox
-          label: Hide
-          checkboxlabel: Hide page from navigation
-          class: medium
     contains:
       type: radio
       label: This folder contains

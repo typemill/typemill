@@ -9,7 +9,7 @@ use Typemill\Models\WriteMeta;
 use Typemill\Models\Folder;
 use Typemill\Events\OnMetaDefinitionsLoaded;
 
-class MetaApiController extends ContentController
+class ControllerAuthorMetaApi extends ControllerAuthor
 {
 	# get the standard meta-definitions and the meta-definitions from plugins (same for all sites)
 	public function getMetaDefinitions(Request $request, Response $response, $args)
@@ -75,7 +75,7 @@ class MetaApiController extends ContentController
 		$this->uri 		= $request->getUri()->withUserInfo('');
 
 		# set structure
-		if(!$this->setStructure($draft = true)){ return $response->withJson($this->errors, 404); }
+		if(!$this->setStructureDraft()){ return $response->withJson($this->errors, 404); }
 
 		# set information for homepage
 		$this->setHomepage($args = false);
@@ -148,16 +148,6 @@ class MetaApiController extends ContentController
 						$metadefinitions[$tabname]['fields'][$fieldname]['options'] = $userroles;
 					}
 				}
-
-				/*
-				# special treatment for customfields
-				if(isset($fielddefinitions['type']) && ($fielddefinitions['type'] == 'customfields' ) && $metadata[$tabname][$fieldname] )
-				{
-
-					$metadata[$tabname][$fieldname] = $this->customfieldsPrepareForEdit($metadata[$tabname][$fieldname]);
-
-				}
-				*/
 			}
 		}
 
@@ -190,7 +180,7 @@ class MetaApiController extends ContentController
 		}
 
 		# set structure
-		if(!$this->setStructure($draft = true)){ return $response->withJson($this->errors, 404); }
+		if(!$this->setStructureDraft()){ return $response->withJson($this->errors, 404); }
 
 		# set information for homepage
 		$this->setHomepage($args = false);
@@ -256,20 +246,6 @@ class MetaApiController extends ContentController
 				{
 					$errors[$tab][$fieldName] = $result[$fieldName][0];
 				}
-
-				/*
-				# special treatment for customfields 
-				if($fieldDefinition && isset($fieldDefinition['type']) && ($fieldDefinition['type'] == 'customfields' ) )
-				{
-					$arrayFeatureOn = false;
-					if(isset($fieldDefinition['data']) && ($fieldDefinition['data'] == 'array'))
-					{
-						$arrayFeatureOn = true;
-					}
-
-					$metaInput[$fieldName] = $this->customfieldsPrepareForSave($metaInput[$fieldName], $arrayFeatureOn);
-				}
-				*/
 			}
 		}
 
@@ -312,7 +288,7 @@ class MetaApiController extends ContentController
 					$writeMeta->renamePost($this->item->pathWithoutType, $newPathWithoutType);
 
 					# recreate the draft structure
-					$this->setStructure($draft = true, $cache = false);
+					$this->setFreshStructureDraft();
 
 					# update item
 					$this->setItem();
@@ -372,16 +348,25 @@ class MetaApiController extends ContentController
 			$writeMeta->updateYaml('cache', 'structure-extended.yaml', $extended);
 
 			# recreate the draft structure
-			$this->setStructure($draft = true, $cache = false);
+			$this->setFreshStructureDraft();
+
+			# recreate the live structure
+			$this->setFreshStructureLive();
+
+			# recreate the navigation
+			$this->setFreshNavigation();
+
+			# update the sitemap
+			$this->updateSitemap();			
 
 			# update item
 			$this->setItem();
 
 			# set item in navigation active again
-			$activeItem = Folder::getItemForUrl($this->structure, $this->item->urlRel, $this->uri->getBaseUrl());
+			$activeItem = Folder::getItemForUrl($this->structureDraft, $this->item->urlRel, $this->uri->getBaseUrl());
 
 			# send new structure to frontend
-			$structure = $this->structure;
+			$structure = $this->structureDraft;
 		}
 
 		# return with the new metadata
@@ -408,75 +393,6 @@ class MetaApiController extends ContentController
 			}
 		}
 		return $flattab;
-	}
-
-
-	# can be deleted ??
-	private function customfieldsPrepareForEdit($customfields)
-	{
-		# to edit fields in vue we have to transform the arrays in yaml into an array of objects like [{key: abc, value: xyz}{...}]
-
-		$customfieldsForEdit = [];
-
-		foreach($customfields as $key => $value)
-		{
-			$valuestring = $value;
-
-			# and make sure that arrays are transformed back into strings
-			if(isset($value) && is_array($value))
-			{
-				$valuestring = '- ' . implode(PHP_EOL . '- ', $value);
-			}
-
-			$customfieldsForEdit[] = ['key' => $key, 'value' => $valuestring];
-		}
-
-		return $customfieldsForEdit;
-	}
-
-	# can be deleted?
-	private function customfieldsPrepareForSave($customfields, $arrayFeatureOn)
-	{
-		# we have to convert the incoming array of objects from vue [{key: abc, value: xyz}{...}] into key-value arrays for yaml. 
-
-		$customfieldsForSave = [];
-
-		foreach($customfields as $valuePair)
-		{
-			# doupbe check, not really needed because it is validated already
-			if(!isset($valuePair['key']) OR ($valuePair['key'] == ''))
-			{
-				# do not use data without valid keys
-				continue;
-			}
-
-			$key 	= $valuePair['key'];
-			$value 	= '';
-
-			if(isset($valuePair['value']))
-			{
-				$value = $valuePair['value'];
-
-				# check if value is formatted as a list, then transform it into an array
-				if($arrayFeatureOn)
-				{
-					# normalize line breaks, php-eol does not work here
-					$cleanvalue = str_replace(array("\r\n", "\r"), "\n", $valuePair['value']);
-					$cleanvalue = trim($cleanvalue, "\n");
-
-					$arrayValues = explode("\n- ",$cleanvalue);
-					
-					if(count($arrayValues) > 1)
-					{
-						$value = array_map(function($item) { return trim($item, '- '); }, $arrayValues);
-					}
-				}
-			}
-
-			$customfieldsForSave[$key] = $value;
-		}
-
-		return $customfieldsForSave;
 	}
 
 	protected function hasChanged($input, $page, $field)

@@ -6,7 +6,7 @@ use Slim\Interfaces\RouterInterface;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class accessController
+class accessMiddleware
 {
 	protected $router;
 	
@@ -29,6 +29,12 @@ class accessController
 		if(!isset($_SESSION['login']))
 		{
 			return $response->withRedirect($this->router->pathFor('auth.show'));
+		}
+
+		# make sure logged in users do not have captchas
+		if(isset($_SESSION['captcha']))
+		{
+			unset($_SESSION['captcha']);
 		}
 
 		if(!$this->acl->hasRole($_SESSION['role']))

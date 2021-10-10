@@ -69,7 +69,7 @@ class Folder
 					
 					if($fileType == 'md')
 					{
-						$folderContent[] 			= $item;					
+						$folderContent[] 			= $item;		
 					}
 					
 					if($draft === true && $fileType == 'txt')
@@ -97,7 +97,7 @@ class Folder
 	* returns: array of objects. Each object contains information about an item (file or folder).
 	*/
 
-	public static function getFolderContentDetails(array $folderContent, $extended, $baseUrl, $fullSlugWithFolder = NULL, $fullSlugWithoutFolder = NULL, $fullPath = NULL, $keyPath = NULL, $chapter = NULL)
+	public static function getFolderContentDetails(array $folderContent, $extended, $settings, $baseUrl, $fullSlugWithFolder = NULL, $fullSlugWithoutFolder = NULL, $fullPath = NULL, $keyPath = NULL, $chapter = NULL)
 	{
 		$contentDetails 	= [];
 		$iteration 			= 0;
@@ -130,14 +130,14 @@ class Folder
 
 				$item->originalName 	= $key;
 				$item->elementType		= 'folder';
-				$item->contains			= self::getFolderContentType($name, $fullPath . DIRECTORY_SEPARATOR . $key . DIRECTORY_SEPARATOR . 'index.yaml');				
+				$item->contains			= self::getFolderContentType($name, $fullPath . DIRECTORY_SEPARATOR . $key . DIRECTORY_SEPARATOR . 'index.yaml');
 				$item->status			= $status;
 				$item->fileType			= $fileType;
 				$item->order 			= count($nameParts) > 1 ? array_shift($nameParts) : NULL;
 				$item->name 			= implode(" ",$nameParts);
 				$item->name				= iconv(mb_detect_encoding($item->name, mb_detect_order(), true), "UTF-8", $item->name);
 				$item->slug				= implode("-",$nameParts);
-				$item->slug				= URLify::filter(iconv(mb_detect_encoding($item->slug, mb_detect_order(), true), "UTF-8", $item->slug));
+				$item->slug				= self::createSlug($item->slug, $settings);
 				$item->path				= $fullPath . DIRECTORY_SEPARATOR . $key;
 				$item->pathWithoutType	= $fullPath . DIRECTORY_SEPARATOR . $key . DIRECTORY_SEPARATOR . 'index';
 				$item->urlRelWoF		= $fullSlugWithoutFolder . '/' . $item->slug;
@@ -164,7 +164,7 @@ class Folder
 					rsort($name);
 				}
 
-				$item->folderContent = self::getFolderContentDetails($name, $extended, $baseUrl, $item->urlRel, $item->urlRelWoF, $item->path, $item->keyPath, $item->chapter);
+				$item->folderContent = self::getFolderContentDetails($name, $extended, $settings, $baseUrl, $item->urlRel, $item->urlRelWoF, $item->path, $item->keyPath, $item->chapter);
 			}
 			elseif($name)
 			{
@@ -200,7 +200,7 @@ class Folder
 				$item->name 			= implode(" ",$nameParts);
 				$item->name				= iconv(mb_detect_encoding($item->name, mb_detect_order(), true), "UTF-8", $item->name);				
 				$item->slug				= implode("-",$nameParts);
-				$item->slug				= URLify::filter(iconv(mb_detect_encoding($item->slug, mb_detect_order(), true), "UTF-8", $item->slug));
+				$item->slug				= self::createSlug($item->slug, $settings);
 				$item->path				= $fullPath . DIRECTORY_SEPARATOR . $name;
 				$item->pathWithoutType	= $fullPath . DIRECTORY_SEPARATOR . $nameWithoutType;
 				$item->key				= $iteration;
@@ -637,4 +637,31 @@ class Folder
 		$parts = preg_split('/\./',$fileName);
 		return $parts[0];
 	}
+
+	public static function createSlug($name, $settings = NULL)
+	{
+		$name = iconv(mb_detect_encoding($name, mb_detect_order(), true), "UTF-8", $name);
+
+		# prior version 1.5.0 settings was no language and remove stop words from slug
+		$language = "";
+		$use_remove_list = true;
+
+		# if user has not activated the old slug logig < version 1.5.0 style
+		if($settings && ( !isset($settings['oldslug']) OR !$settings['oldslug'] ) )
+		{
+			# then use the language attr and do not remove stop words as default behavior
+			$language = isset($settings['langattr']) ? $settings['langattr'] : "";
+			$use_remove_list = false; 
+		}
+
+		return URLify::filter(
+						$name,
+						$length = 60, 
+						$language, 
+						$file_name = false, 
+						$use_remove_list,
+						$lower_case = true, 
+						$treat_underscore_as_space = true 
+					);	
+	}	
 }

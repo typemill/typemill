@@ -522,6 +522,9 @@ Vue.component('component-image', {
 									' :value="value"' +
 									'@input="update($event, name)">' +
 							'</div>' +
+							'<div class="dib w-100 mt2">' +
+								'<button class="w-100 pointer ba br1 b--tm-green bg--tm-gray black pa2 ma0 tc" @click.prevent="switchQuality()">{{ qualitylabel }}</button>' +
+							'</div>' +							
 						'</div>' +
 					  	'<div v-if="description" class="w-100 dib"><p>{{ description|translate }}</p></div>' +
 					  	'<div v-if="errors[name]" class="error">{{ errors[name] }}</div>' +
@@ -535,16 +538,28 @@ Vue.component('component-image', {
 			  '</div>',
 	data: function(){
 		return {
-			maxsize: 5, // megabyte
+			maxsize: 10, // megabyte
 			imgpreview: false,
 			showmedialib: false,
 			load: false,
+			quality: false,
+			qualitylabel: false,
 		}
 	},
 	mounted: function(){
 		if(this.value !== null && this.value !== '')
 		{
 			this.imgpreview = myaxios.defaults.baseURL + '/' + this.value;
+			if(this.value.indexOf("media/live") > -1 )
+			{
+				this.quality = 'live';
+				this.qualitylabel = 'switch quality to: original';
+			}
+			else if(this.value.indexOf("media/original") > -1)
+			{
+				this.quality = 'original';
+				this.qualitylabel = 'switch quality to: live';
+			}
 		}
 	},
 	methods: {
@@ -566,6 +581,23 @@ Vue.component('component-image', {
 		{
 			this.imgpreview = false;
 			this.update('');
+		},
+		switchQuality: function()
+		{
+			if(this.quality == 'live')
+			{
+				var newUrl = this.value.replace("media/live", "media/original");
+				this.update(newUrl);
+				this.quality = 'original';
+				this.qualitylabel = 'switch quality to: live';
+			}
+			else
+			{
+				var newUrl = this.value.replace("media/original", "media/live");
+				this.update(newUrl);
+				this.quality = 'live';
+				this.qualitylabel = 'switch quality to: original';
+			}
 		},
 		openmedialib: function()
 		{
@@ -618,7 +650,7 @@ Vue.component('component-image', {
 
 								if(result.errors)
 								{
-									publishController.errors.message = result.errors;
+									publishController.errors.message = result.errors.message;
 								}
 								else
 								{
@@ -837,8 +869,8 @@ const medialib = Vue.component('medialib', {
 	            });
             }
             return filteredFiles;
-        }        
-    },	
+        }
+    },
 	methods: {
 		isImagesActive: function()
 		{

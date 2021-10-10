@@ -1772,7 +1772,7 @@ const fileComponent = Vue.component('file-component', {
 				'</div></div>',
 	data: function(){
 		return {
-			maxsize: 5, // megabyte
+			maxsize: 20, // megabyte
 			showmedialib: false,
 			load: false,
 			filemeta: false,

@@ -42,7 +42,7 @@ article pre, article code{
 }
 article pre{
 	white-space: pre;
-	padding: 1em;
+	padding: 0em;
 	display: block;
 	max-width: 100%;
 	overflow-x: auto;
@@ -55,7 +55,11 @@ article code{
 }
 pre > code{
 	font-size: 0.8em;
-	padding: 0;
+	padding: 1em;
+	display: inline-block;
+}
+pre > code.language-pagebreak{
+	display: none;
 }
 dl{}
 dt{}

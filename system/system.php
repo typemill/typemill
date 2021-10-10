@@ -249,9 +249,6 @@ $container['view'] = function ($container) use ($uri)
     # Instantiate and add Slim specific extension
     $router = $container->get('router');
 
-#    $basePath = rtrim(str_ireplace('index.php', '', $uri->getBasePath()), '/');
-#    $view->addExtension(new Slim\Views\TwigExtension($container['router'], $basePath));
-
     $view->addExtension(new Slim\Views\TwigExtension($router, $uri));
 	$view->addExtension(new Twig_Extension_Debug());
     $view->addExtension(new Typemill\Extensions\TwigUserExtension());
@@ -259,15 +256,12 @@ $container['view'] = function ($container) use ($uri)
 	$view->addExtension(new Typemill\Extensions\TwigMetaExtension());	
 	$view->addExtension(new Typemill\Extensions\TwigPagelistExtension());	
 
-	# use {{ base_url() }} in twig templates
-#	$view['base_url']	 = $uri->getBaseUrl();
-#	$view['current_url'] = $uri->getPath();
-
 	# if session route, add flash messages and csrf-protection
 	if($container['flash'])
 	{
 		$view->getEnvironment()->addGlobal('flash', $container->flash);
 		$view->addExtension(new Typemill\Extensions\TwigCsrfExtension($container['csrf']));
+		$view->addExtension(new Typemill\Extensions\TwigCaptchaExtension());
 	}
 
 	/******************************
@@ -289,17 +283,6 @@ $container['view'] = function ($container) use ($uri)
 	return $view;
 };
 
-# $container->dispatcher->dispatch('onTwigLoaded');
-
-/***************************
-* 	ADD NOT FOUND HANDLER  *
-***************************/
-
-$container['notFoundHandler'] = function($c)
-{
-	return new \Typemill\Handlers\NotFoundHandler($c['view']);
-};
-
 /************************
 * 	ADD MIDDLEWARE  	*
 ************************/
@@ -317,6 +300,7 @@ foreach($middleware as $pluginMiddleware)
 if($container['flash'])
 {
 	$app->add(new \Typemill\Middleware\ValidationErrorsMiddleware($container['view']));
+	$app->add(new \Typemill\Middleware\SecurityMiddleware($container['router'], $container['settings'], $container['flash']));
 	$app->add(new \Typemill\Middleware\OldInputMiddleware($container['view']));
 	$app->add($container->get('csrf'));	
 }

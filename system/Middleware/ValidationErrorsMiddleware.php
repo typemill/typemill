@@ -23,6 +23,13 @@ class ValidationErrorsMiddleware
 			
 			unset($_SESSION['errors']);
 		}
+
+		if(isset($_SESSION['phrase']))
+		{
+			$this->view->getEnvironment()->addGlobal('errors', ['captcha' => 'the captcha is wrong, please try again']);
+			
+			unset($_SESSION['phrase']);
+		}
 		
 		return $next($request, $response);
 	}
