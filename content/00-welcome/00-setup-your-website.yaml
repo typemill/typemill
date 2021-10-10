@@ -5,11 +5,11 @@ meta:
     heroimagealt: null
     owner: trendschau
     author: 'Sebastian Schürmanns'
+    allowedrole: null
+    alloweduser: null
     manualdate: null
-    modified: '2021-05-27'
+    modified: '2021-08-01'
     created: '2021-05-27'
     time: 21-02-24
     navtitle: 'setup your website'
     hide: false
-    allowedrole: null
-    alloweduser: null
