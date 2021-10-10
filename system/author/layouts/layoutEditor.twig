@@ -16,8 +16,8 @@
 		<link rel="apple-touch-icon" sizes="144x144" href="{{ base_url }}/system/author/img/favicon-144.png" />
 		<link rel="apple-touch-icon" sizes="180x180" href="{{ base_url }}/system/author/img/favicon-180.png" />
 
-		<link rel="stylesheet" href="{{ base_url }}/system/author/css/tachyons.min.css?20210901" />
-		<link rel="stylesheet" href="{{ base_url }}/system/author/css/style.css?20210901" />
+		<link rel="stylesheet" href="{{ base_url }}/system/author/css/tachyons.min.css?20211010" />
+		<link rel="stylesheet" href="{{ base_url }}/system/author/css/style.css?20211010" />
 
 		{{ assets.renderCSS() }}
 
@@ -41,15 +41,15 @@
 			</article>
 			<footer></footer>
 		</div>
-		<script src="{{ base_url }}/system/author/js/axios.min.js?20210901"></script>
+		<script src="{{ base_url }}/system/author/js/axios.min.js?20211010"></script>
 		<script>
 			const myaxios = axios.create();
 			myaxios.defaults.baseURL =  "{{ base_url }}";
 		</script>
-		<script src="{{ base_url }}/system/author/js/vue.min.js?20210901"></script>
-		<script src="{{ base_url }}/system/author/js/autosize.min.js?20210901"></script>
-		<script src="{{ base_url }}/system/author/js/author.js?20210901"></script>
-		<script src="{{ base_url }}/system/author/js/vue-publishcontroller.js?20210901"></script>
+		<script src="{{ base_url }}/system/author/js/vue.min.js?20211010"></script>
+		<script src="{{ base_url }}/system/author/js/autosize.min.js?20211010"></script>
+		<script src="{{ base_url }}/system/author/js/author.js?20211010"></script>
+		<script src="{{ base_url }}/system/author/js/vue-publishcontroller.js?20211010"></script>
 	    <script>
     	  	let language = {{ settings.language|json_encode() }};
             let labels = {{ translations|json_encode() }};
@@ -58,13 +58,13 @@
     
 		{{ assets.renderEditorJS() }}		
 		
-		<script src="{{ base_url }}/system/author/js/vue-editor.js?20210901"></script>
-		<script src="{{ base_url }}/system/author/js/vue-posts.js?20210901"></script>		
-		<script src="{{ base_url }}/system/author/js/sortable.min.js?20210901"></script>
-		<script src="{{ base_url }}/system/author/js/vuedraggable.umd.min.js?20210901"></script>
-		<script src="{{ base_url }}/system/author/js/vue-navi.js?20210901"></script>
-		<script src="{{ base_url }}/system/author/js/vue-shared.js?20210901"></script>
-		<script src="{{ base_url }}/system/author/js/vue-meta.js?20210901"></script>
+		<script src="{{ base_url }}/system/author/js/vue-editor.js?20211010"></script>
+		<script src="{{ base_url }}/system/author/js/vue-posts.js?20211010"></script>		
+		<script src="{{ base_url }}/system/author/js/sortable.min.js?20211010"></script>
+		<script src="{{ base_url }}/system/author/js/vuedraggable.umd.min.js?20211010"></script>
+		<script src="{{ base_url }}/system/author/js/vue-navi.js?20211010"></script>
+		<script src="{{ base_url }}/system/author/js/vue-shared.js?20211010"></script>
+		<script src="{{ base_url }}/system/author/js/vue-meta.js?20211010"></script>
 
 		{{ assets.renderJS() }}
 		

@@ -1255,16 +1255,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.44.4",
+            "version": "v1.44.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "4d400421528e9fa40caaffcf7824c172526dd99d"
+                "reference": "dd4353357c5a116322e92a00d16043a31881a81e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/4d400421528e9fa40caaffcf7824c172526dd99d",
-                "reference": "4d400421528e9fa40caaffcf7824c172526dd99d",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/dd4353357c5a116322e92a00d16043a31881a81e",
+                "reference": "dd4353357c5a116322e92a00d16043a31881a81e",
                 "shasum": ""
             },
             "require": {
@@ -1317,7 +1317,7 @@
             ],
             "support": {
                 "issues": "https://github.com/twigphp/Twig/issues",
-                "source": "https://github.com/twigphp/Twig/tree/v1.44.4"
+                "source": "https://github.com/twigphp/Twig/tree/v1.44.5"
             },
             "funding": [
                 {
@@ -1329,7 +1329,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-05-16T12:11:20+00:00"
+            "time": "2021-09-17T08:35:19+00:00"
         },
         {
             "name": "vlucas/valitron",

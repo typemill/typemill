@@ -262,6 +262,31 @@ describe('Blox Editor', function()
     })
   })
 
+  it('Publishes new page', function()
+  {
+    cy.visit('/tm/content/visual/welcome/testpage')
+    cy.url().should('include','/tm\/content\/visual\/welcome\/testpage')
+
+    cy.get('#publish').click().wait(500)
+
+    cy.visit('/welcome/testpage')
+    cy.url().should('include','/welcome/testpage')
+
+    cy.get('.cy-nav')
+      .should('contain', 'Testpage')
+  })  
+
+  it('has sitemap xml', function ()
+  {
+    cy.request({
+      url: '/cache/sitemap.xml',
+    })
+    .then((resp) => {
+        /* should return xml-format */
+        expect(resp.headers).to.have.property('content-type','application/xml')
+    })
+  })
+
   it('Deletes new page', function()
   {
     cy.visit('/tm/content/visual/welcome/testpage')

@@ -44,7 +44,7 @@ describe('Typemill Login', function()
         cy.url().should('include', '/tm/login')
     })
  
-    it('blocks after 3 fails', function ()
+    it('captcha after 1 fail', function ()
     {
         cy.visit('/tm/login')
 
@@ -55,17 +55,16 @@ describe('Typemill Login', function()
         cy.get('#flash-message').should('contain', 'wrong password or username')
         cy.get('input[name="username"]').should('have.value', 'wrong')
         cy.get('input[name="password"]').should('have.value', '')
+        cy.get('input[name="captcha"]').should('have.value', '')
 
-        // validation fails second
-        cy.get('input[name="password"]').clear().type('pass')
+        // captcha fails first
+        cy.get('input[name="username"]').clear().type('trendschau')
+        cy.get('input[name="password"]').clear().type('password')
+        cy.get('input[name="captcha"]').clear().type('wrong')
         cy.get('form').submit()
-        cy.get('#flash-message').should('contain', 'wrong password or username')
-
-         // validation fails third and login is blocked
-         cy.get('input[name="password"]').clear().type('pass')
-         cy.get('form').submit()
-         cy.get('#flash-message').should('contain', 'Too many bad logins')
-         cy.contains('wait')        
-         cy.contains('forgot password')
+        cy.get('#flash-message').should('contain', 'Captcha is wrong')
+        cy.get('input[name="username"]').should('have.value', 'trendschau')
+        cy.get('input[name="password"]').should('have.value', '')
+        cy.get('input[name="captcha"]').should('have.value', '')
     })
 })
