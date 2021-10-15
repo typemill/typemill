@@ -6,7 +6,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Typemill\Models\ProcessImage;
 use Typemill\Models\ProcessFile;
-use Typemill\Controllers\BlockApiController;
+use Typemill\Controllers\ControllerAuthorBlockApi;
 
 class ControllerAuthorMediaApi extends ControllerAuthor
 {
@@ -235,7 +235,7 @@ class ControllerAuthorMediaApi extends ControllerAuthor
 		{
 			$request 	= $request->withParsedBody($params);
 		
-			$block = new BlockApiController($this->c);
+			$block = new ControllerAuthorBlockApi($this->c);
 			if($params['new'])
 			{
 				return $block->addBlock($request, $response, $args);
@@ -260,7 +260,7 @@ class ControllerAuthorMediaApi extends ControllerAuthor
 		{
 			$request 	= $request->withParsedBody($params);
 		
-			$block = new BlockApiController($this->c);
+			$block = new ControllerAuthorBlockApi($this->c);
 			if($params['new'])
 			{
 				return $block->addBlock($request, $response, $args);
@@ -396,7 +396,7 @@ class ControllerAuthorMediaApi extends ControllerAuthor
 
 			$request 	= $request->withParsedBody($this->params);
 			
-			$block = new BlockApiController($this->c);
+			$block = new ControllerAuthorBlockApi($this->c);
 			if($params['new'])
 			{
 				return $block->addBlock($request, $response, $args);
