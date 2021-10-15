@@ -3,7 +3,7 @@
 	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
 {% endif %}
-<form method="POST" action="{{ path_for('form.save') }}" enctype="multipart/form-data">
+<form method="POST" action="{{ path_for(routename) }}" enctype="multipart/form-data">
 
 	<fieldset class="card{{ errors[itemName] ? ' errors' : '' }}">
 

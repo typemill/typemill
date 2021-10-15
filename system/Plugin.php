@@ -5,6 +5,7 @@ namespace Typemill;
 use \Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Typemill\Models\Fields;
 use Typemill\Models\WriteYaml;
+use Typemill\Models\Validation;
 use Typemill\Extensions\ParsedownExtension;
 
 abstract class Plugin implements EventSubscriberInterface
@@ -196,15 +197,24 @@ abstract class Plugin implements EventSubscriberInterface
 		return false;
 	}
 	
-	protected function generateForm($pluginName)
+	protected function generateForm($pluginName, $routename)
 	{
 		$fieldsModel = new Fields();
 		
-		$pluginDefinitions 	= \Typemill\Settings::getObjectSettings('plugins', $pluginName);
 		$settings 			= $this->getSettings();
+
+		$pluginDefinitions 	= \Typemill\Settings::getObjectSettings('plugins', $pluginName);
+		if(isset($settings['plugins'][$pluginName]['publicformdefinitions']))
+		{
+			$arrayFromYaml = \Symfony\Component\Yaml\Yaml::parse($settings['plugins'][$pluginName]['publicformdefinitions']);
+			$pluginDefinitions['public']['fields'] = $arrayFromYaml;
+		}
+
 		$buttonlabel		= isset($settings['plugins'][$pluginName]['button_label']) ? $settings['plugins'][$pluginName]['button_label'] : false;
 		$captchaoptions		= isset($settings['plugins'][$pluginName]['captchaoptions']) ? $settings['plugins'][$pluginName]['captchaoptions'] : false;
 		$recaptcha			= isset($settings['plugins'][$pluginName]['recaptcha']) ? $settings['plugins'][$pluginName]['recaptcha_webkey'] : false;
+
+		$fieldsModel = new Fields();
 
 		if(isset($pluginDefinitions['public']['fields']))
 		{			
@@ -216,6 +226,7 @@ abstract class Plugin implements EventSubscriberInterface
 
 			# render each field and add it to the form
 			$form = $twig->fetch('/partials/form.twig', [	
+				'routename'			=> $routename,
 				'fields' 			=> $fields, 
 				'itemName' 			=> $pluginName, 
 				'object' 			=> 'plugins', 
@@ -226,5 +237,74 @@ abstract class Plugin implements EventSubscriberInterface
 		}
 		
 		return $form;
+	}
+
+	protected function validateParams($params)
+	{
+		$pluginName = key($params);
+
+		if(isset($params[$pluginName]))
+		{
+			$userInput 			= $params[$pluginName];
+			$settings 			= $this->getSettings();
+
+			# get settings and start validation
+			$originalSettings 	= \Typemill\Settings::getObjectSettings('plugins', $pluginName);
+			if(isset($settings['plugins'][$pluginName]['publicformdefinitions']))
+			{
+				$arrayFromYaml 	= \Symfony\Component\Yaml\Yaml::parse($settings['plugins'][$pluginName]['publicformdefinitions']);
+				$originalSettings['public']['fields'] = $arrayFromYaml;
+			}
+
+			$validate			= new Validation();
+
+			if(isset($originalSettings['public']['fields']))
+			{
+				# flaten the multi-dimensional array with fieldsets to a one-dimensional array
+				$originalFields = array();
+				foreach($originalSettings['public']['fields'] as $fieldName => $fieldValue)
+				{
+					if(isset($fieldValue['fields']))
+					{
+						foreach($fieldValue['fields'] as $subFieldName => $subFieldValue)
+						{
+							$originalFields[$subFieldName] = $subFieldValue;
+						}
+					}
+					else
+					{
+						$originalFields[$fieldName] = $fieldValue;
+					}
+				}
+
+				# take the user input data and iterate over all fields and values
+				foreach($userInput as $fieldName => $fieldValue)
+				{
+					# get the corresponding field definition from original plugin settings
+					$fieldDefinition = isset($originalFields[$fieldName]) ? $originalFields[$fieldName] : false;
+
+					if($fieldDefinition)
+					{
+						# validate user input for this field
+						$validate->objectField($fieldName, $fieldValue, $pluginName, $fieldDefinition);
+					}
+					if(!$fieldDefinition && $fieldName != 'active')
+					{
+						$_SESSION['errors'][$pluginName][$fieldName] = array('This field is not defined!');
+					}
+				}
+
+				if(isset($_SESSION['errors']))
+				{
+					$this->container->flash->addMessage('error', 'Please correct the errors');
+					return false;
+				}
+
+				return $params[$pluginName];
+			}
+		}
+
+		$this->container->flash->addMessage('error', 'The data from the form was invalid (missing or not defined)');
+		return false;
 	}
 }
