@@ -37,7 +37,7 @@
 
 		{% if field.type == 'textarea' %}
 
-			<textarea id="{{ itemName }}[{{ field.name }}]" name="{{ itemName }}[{{ field.name }}]"{{field.getAttributeValues() }}{{ field.getAttributes() }}>{{ field.getContent() }}</textarea>
+			<textarea id="{{ itemName }}[{{ field.name }}]" {{ (field.name == 'publicformdefinitions') ? 'class="publicformdefinitions"' : '' }} name="{{ itemName }}[{{ field.name }}]"{{field.getAttributeValues() }}{{ field.getAttributes() }}>{{ field.getContent() }}</textarea>
 
 		{% elseif field.type == 'paragraph' %}
 			
