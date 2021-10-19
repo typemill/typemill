@@ -37,7 +37,16 @@
 
 		{% if field.type == 'textarea' %}
 
-			<textarea id="{{ itemName }}[{{ field.name }}]" {{ (field.name == 'publicformdefinitions') ? 'class="publicformdefinitions"' : '' }} name="{{ itemName }}[{{ field.name }}]"{{field.getAttributeValues() }}{{ field.getAttributes() }}>{{ field.getContent() }}</textarea>
+			{% if field.name == 'publicformdefinitions' %}
+
+				<textarea id="{{ itemName }}[{{ field.name }}]" class="codearea yaml" name="{{ itemName }}[{{ field.name }}]"{{field.getAttributeValues() }}{{ field.getAttributes() }}>{{ field.getContent() }}</textarea>
+<!--				<button class="formpreview formpreview bg-tm-green white pa2 right bn dim">preview form</button> -->
+	
+			{% else %}
+			
+				<textarea id="{{ itemName }}[{{ field.name }}]" name="{{ itemName }}[{{ field.name }}]"{{field.getAttributeValues() }}{{ field.getAttributes() }}>{{ field.getContent() }}</textarea>
+
+			{% endif %}
 
 		{% elseif field.type == 'paragraph' %}
 			

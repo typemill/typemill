@@ -67,7 +67,7 @@ class ControllerAuthorBlockApi extends ControllerAuthor
 		}
 
 		# initialize parsedown extension
-		$parsedown = new ParsedownExtension($this->uri->getBaseUrl());
+		$parsedown = new ParsedownExtension($this->uri->getBaseUrl(), $settings = false, $this->c->dispatcher);
 
 		# if content is not an array, then transform it
 		if(!is_array($pageMarkdown))
@@ -265,7 +265,7 @@ class ControllerAuthorBlockApi extends ControllerAuthor
 		}
 
 		# initialize parsedown extension
-		$parsedown = new ParsedownExtension($this->uri->getBaseUrl());
+		$parsedown = new ParsedownExtension($this->uri->getBaseUrl(), $settings = false, $this->c->dispatcher);
 		$parsedown->setVisualMode();
 
 		# if content is not an array, then transform it

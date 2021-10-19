@@ -1,3 +1,10 @@
+@font-face {
+  font-family: 'visiblecontrol';
+  src: url('visiblecontrol.woff') format('woff'),
+       url('visiblecontrol.woff2') format('woff2');
+  unicode-range: U+0020;
+}
+
 /**********************
 *  		TRANSITION	  *
 **********************/
@@ -1349,7 +1356,7 @@ ul.cardInfo{
 	background-color: #FFF;
 }
 textarea.codearea, .cardField textarea.codearea{
-    font-family: monospace;
+    font-family: visiblecontrol,monospace;
     background: #333;
     color: #fff;
 }

@@ -89,8 +89,19 @@ class Fields
 				}
 			
 				# Now prepopulate the field object with the value */
-				if($field->getType() == "textarea" || $field->getType() == "paragraph")
+				if($field->getType() == "textarea")
 				{
+					if($userValue)
+					{
+						$field->setContent($userValue);
+					}
+				}
+				elseif($field->getType() == 'paragraph')
+				{
+					if(isset($fieldConfigurations['value']))
+					{
+						$field->setContent($fieldConfigurations['value']);
+					}
 					if($userValue)
 					{
 						$field->setContent($userValue);

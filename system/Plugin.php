@@ -202,9 +202,10 @@ abstract class Plugin implements EventSubscriberInterface
 		$fieldsModel = new Fields();
 		
 		$settings 			= $this->getSettings();
+		$form 				= false;
 
 		$pluginDefinitions 	= \Typemill\Settings::getObjectSettings('plugins', $pluginName);
-		if(isset($settings['plugins'][$pluginName]['publicformdefinitions']))
+		if(isset($settings['plugins'][$pluginName]['publicformdefinitions']) && $settings['plugins'][$pluginName]['publicformdefinitions'] != '')
 		{
 			$arrayFromYaml = \Symfony\Component\Yaml\Yaml::parse($settings['plugins'][$pluginName]['publicformdefinitions']);
 			$pluginDefinitions['public']['fields'] = $arrayFromYaml;
@@ -213,6 +214,12 @@ abstract class Plugin implements EventSubscriberInterface
 		$buttonlabel		= isset($settings['plugins'][$pluginName]['button_label']) ? $settings['plugins'][$pluginName]['button_label'] : false;
 		$captchaoptions		= isset($settings['plugins'][$pluginName]['captchaoptions']) ? $settings['plugins'][$pluginName]['captchaoptions'] : false;
 		$recaptcha			= isset($settings['plugins'][$pluginName]['recaptcha']) ? $settings['plugins'][$pluginName]['recaptcha_webkey'] : false;
+
+		if($captchaoptions == 'disabled')
+		{
+			# in case a captcha has failed on another page like login, the captcha-session must be deleted, otherwise it will not pass the security middleware
+			unset($_SESSION['captcha']);			
+		}
 
 		$fieldsModel = new Fields();
 

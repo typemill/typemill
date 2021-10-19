@@ -3,14 +3,18 @@
 namespace Typemill\Extensions;
 
 use Typemill\Models\Folder;
+use Typemill\Events\OnShortcodeFound;
+
 
 class ParsedownExtension extends \ParsedownExtra
 {
-    function __construct($baseUrl = '', $settings = NULL)
+    function __construct($baseUrl = '', $settings = NULL, $dispatcher = NULL)
     {
         parent::__construct();
 
         $this->settings = $settings;
+
+        $this->dispatcher = $dispatcher;
 
         # show anchor next to headline? 
         $this->showAnchor = isset($settings['headlineanchors']) ? $settings['headlineanchors'] : false;
@@ -34,6 +38,7 @@ class ParsedownExtension extends \ParsedownExtra
         
         $this->InlineTypes['\\'][] = 'Math';
         $this->InlineTypes['$'][] = 'Math';
+        $this->InlineTypes['['][] = 'Shortcode';
         $this->inlineMarkerList .= '\\';
         $this->inlineMarkerList .= '$';
 
@@ -42,7 +47,10 @@ class ParsedownExtension extends \ParsedownExtra
 
         $this->visualMode = false;
 
-        # identify Table Of contents after footnotes and links      
+        # identify Shortcodes after footnotes and links
+        array_unshift($this->BlockTypes['['], 'Shortcode');
+
+        # identify Table Of contents after footnotes and links and shortcodes
         array_unshift($this->BlockTypes['['], 'TableOfContents');
     }
 
@@ -715,6 +723,176 @@ class ParsedownExtension extends \ParsedownExtra
     {
         return $Block;
     }
+
+    protected function blockShortcode($Line)
+    {
+        if ($this->dispatcher && preg_match('/^\[:.*:\]/', $Line['text'], $matches))
+        {
+            return $this->createShortcodeArray($matches);
+        }
+        else
+        {
+            return;
+        }
+    }
+
+    protected function inlineShortcode($Excerpt)
+    {
+        $remainder = $Excerpt['text'];
+
+        if ($this->dispatcher && preg_match('/\[:.*:\]/', $remainder, $matches))
+        {
+            return $this->createShortcodeArray($matches);
+        }
+        else
+        {
+            return;
+        }
+    }
+
+    protected function createShortcodeArray($matches)
+    {
+        $shortcodeString     = substr($matches[0], 2, -2);
+        $shortcodeArray      = explode(' ', $shortcodeString, 2);
+        $shortcode           = [];
+
+        $shortcode['name']   = $shortcodeArray[0];
+        $shortcode['params'] = false;
+
+        # are there params?
+        if(isset($shortcodeArray[1]))
+        {
+            $shortcode['params'] = [];
+
+            # see: https://www.thetopsites.net/article/58136180.shtml
+            $pattern = '/(\\w+)\s*=\\s*("[^"]*"|\'[^\']*\'|[^"\'\\s>]*)/';
+            preg_match_all($pattern, $shortcodeArray[1], $attributes, PREG_SET_ORDER);
+
+            foreach($attributes as $attribute)
+            {
+                if(isset($attribute[1]) && isset($attribute[2]))
+                {
+                    $shortcode['params'][$attribute[1]] = trim($attribute[2], " \"");
+                }
+            }
+        }
+
+        $html = $this->dispatcher->dispatch('onShortcodeFound', new OnShortcodeFound($shortcode))->getData();
+
+        # if no shortcode has been processed, add the original string
+        if(is_array($html) OR is_object($html))
+        {
+            $html = '<span class="shortcode-alert">No shortcode found.</span>';
+        }
+
+        return array(
+            'element' => array(
+                'rawHtml' => $html,
+                'allowRawHtmlInSafeMode' => true,
+            ),
+            'extent' => strlen($matches[0]),
+        );      
+    }
+
+    protected function inlineLink($Excerpt)
+    {
+        $Element = array(
+            'name' => 'a',
+            'handler' => array(
+                'function' => 'lineElements',
+                'argument' => null,
+                'destination' => 'elements',
+            ),
+            'nonNestables' => array('Url', 'Link'),
+            'attributes' => array(
+                'href' => null,
+                'title' => null,
+            ),
+        );
+
+        $extent = 0;
+
+        $remainder = $Excerpt['text'];
+
+        if (preg_match('/\[((?:[^][]++|(?R))*+)\]/', $remainder, $matches))
+        {
+            $Element['handler']['argument'] = $matches[1];
+
+            $extent += strlen($matches[0]);
+
+            $remainder = substr($remainder, $extent);
+        }
+        else
+        {
+            return;
+        }
+
+        if (preg_match('/^[(]\s*+((?:[^ ()]++|[(][^ )]+[)])++)(?:[ ]+("[^"]*+"|\'[^\']*+\'))?\s*+[)]/', $remainder, $matches))
+        {
+            # start typemill: if relative link or media-link
+            $href = $matches[1];
+            if($href[0] == '/')
+            {
+                $href = $this->baseUrl . $href;
+            }
+            elseif(substr( $href, 0, 6 ) === "media/")
+            {
+                $href = $this->baseUrl . '/' . $href;
+            }
+            # end typemill
+            
+            $Element['attributes']['href'] = $href;
+
+            if (isset($matches[2]))
+            {
+                $Element['attributes']['title'] = substr($matches[2], 1, - 1);
+            }
+
+            $extent += strlen($matches[0]);
+        }
+        else
+        {
+            if (preg_match('/^\s*\[(.*?)\]/', $remainder, $matches))
+            {
+                $definition = strlen($matches[1]) ? $matches[1] : $Element['handler']['argument'];
+                $definition = strtolower($definition);
+
+                $extent += strlen($matches[0]);
+            }
+            else
+            {
+                $definition = strtolower($Element['handler']['argument']);
+            }
+
+            if ( ! isset($this->DefinitionData['Reference'][$definition]))
+            {
+                return;
+            }
+
+            $Definition = $this->DefinitionData['Reference'][$definition];
+
+            $Element['attributes']['href'] = $Definition['url'];
+            $Element['attributes']['title'] = $Definition['title'];
+        }
+
+        $Link = array(
+            'extent' => $extent,
+            'element' => $Element,
+        );
+
+        # Parsedown Extra
+        $remainder = $Link !== null ? substr($Excerpt['text'], $Link['extent']) : '';
+
+        if (preg_match('/^[ ]*{('.$this->regexAttribute.'+)}/', $remainder, $matches))
+        {
+            $Link['element']['attributes'] += $this->parseAttributeData($matches[1]);
+
+            $Link['extent'] += strlen($matches[0]);
+        }
+
+        return $Link;
+
+    }
         
     # advanced attribute data, check parsedown extra plugin: https://github.com/tovic/parsedown-extra-plugin
     protected function parseAttributeData($text) {
@@ -770,8 +948,6 @@ class ParsedownExtension extends \ParsedownExtra
     }
 
     protected $regexAttribute = '(?:[#.][-\w:\\\]+[ ]*|[-\w:\\\]+(?:=(?:["\'][^\n]*?["\']|[^\s]+)?)?[ ]*)';
-
-
 
     # ++
     # blocks that belong to a "magneticType" would "merge" if they are next to each other
@@ -1049,106 +1225,5 @@ class ParsedownExtension extends \ParsedownExtra
             return false;
         }
         return false;
-    }
-
-
-    protected function inlineLink($Excerpt)
-    {
-        $Element = array(
-            'name' => 'a',
-            'handler' => array(
-                'function' => 'lineElements',
-                'argument' => null,
-                'destination' => 'elements',
-            ),
-            'nonNestables' => array('Url', 'Link'),
-            'attributes' => array(
-                'href' => null,
-                'title' => null,
-            ),
-        );
-
-        $extent = 0;
-
-        $remainder = $Excerpt['text'];
-
-        if (preg_match('/\[((?:[^][]++|(?R))*+)\]/', $remainder, $matches))
-        {
-            $Element['handler']['argument'] = $matches[1];
-
-            $extent += strlen($matches[0]);
-
-            $remainder = substr($remainder, $extent);
-        }
-        else
-        {
-            return;
-        }
-
-        if (preg_match('/^[(]\s*+((?:[^ ()]++|[(][^ )]+[)])++)(?:[ ]+("[^"]*+"|\'[^\']*+\'))?\s*+[)]/', $remainder, $matches))
-        {
-            # start typemill: if relative link or media-link
-            $href = $matches[1];
-            if($href[0] == '/')
-            {
-                $href = $this->baseUrl . $href;
-            }
-            elseif(substr( $href, 0, 6 ) === "media/")
-            {
-                $href = $this->baseUrl . '/' . $href;
-            }
-            # end typemill
-            
-            $Element['attributes']['href'] = $href;
-
-            if (isset($matches[2]))
-            {
-                $Element['attributes']['title'] = substr($matches[2], 1, - 1);
-            }
-
-            $extent += strlen($matches[0]);
-        }
-        else
-        {
-            if (preg_match('/^\s*\[(.*?)\]/', $remainder, $matches))
-            {
-                $definition = strlen($matches[1]) ? $matches[1] : $Element['handler']['argument'];
-                $definition = strtolower($definition);
-
-                $extent += strlen($matches[0]);
-            }
-            else
-            {
-                $definition = strtolower($Element['handler']['argument']);
-            }
-
-            if ( ! isset($this->DefinitionData['Reference'][$definition]))
-            {
-                return;
-            }
-
-            $Definition = $this->DefinitionData['Reference'][$definition];
-
-            $Element['attributes']['href'] = $Definition['url'];
-            $Element['attributes']['title'] = $Definition['title'];
-        }
-
-        $Link = array(
-            'extent' => $extent,
-            'element' => $Element,
-        );
-
-        # Parsedown Extra
-        $remainder = $Link !== null ? substr($Excerpt['text'], $Link['extent']) : '';
-
-        if (preg_match('/^[ ]*{('.$this->regexAttribute.'+)}/', $remainder, $matches))
-        {
-            $Link['element']['attributes'] += $this->parseAttributeData($matches[1]);
-
-            $Link['extent'] += strlen($matches[0]);
-        }
-
-        return $Link;
-
     }
 }

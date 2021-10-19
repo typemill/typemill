@@ -1076,7 +1076,7 @@ class ControllerAuthorArticleApi extends ControllerAuthor
 		}
 		
 		# initialize parsedown extension
-		$parsedown = new ParsedownExtension($this->uri->getBaseUrl());
+		$parsedown = new ParsedownExtension($this->uri->getBaseUrl(), $settings = false, $this->c->dispatcher);
 
 		# fix footnotes in parsedown, might break with complicated footnotes
 		$parsedown->setVisualMode();

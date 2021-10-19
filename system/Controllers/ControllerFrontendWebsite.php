@@ -220,7 +220,7 @@ class ControllerFrontendWebsite extends ControllerShared
 		$itemUrl 		= isset($item->urlRel) ? $item->urlRel : false;
 
 		/* initialize parsedown */
-		$parsedown 		= new ParsedownExtension($this->base_url, $this->settings);
+		$parsedown 		= new ParsedownExtension($this->base_url, $this->settings, $this->c->dispatcher);
 		
 		/* set safe mode to escape javascript and html in markdown */
 		$parsedown->setSafeMode(true);
