@@ -1604,7 +1604,7 @@ const imageComponent = Vue.component('image-component', {
 				imgmarkdown = imgmarkdown + '(' + this.imgfile + ')';		
 			}
 			
-			var imgattr = '';
+			var imgattr = 'loading="lazy" ';
 			if(this.imgid != '')
 			{
 				if(this.imgid.length < 100)

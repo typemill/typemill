@@ -20,7 +20,7 @@
 				</header>
 				
 				<div id="typemill" class="fc-system-version update-banner">{{ settings.version ? settings.version : 'Unknown' }}</div>
-							
+
 				<fieldset>
 				
 					<div class="medium{{ errors.settings.title ? ' error' : '' }}">
@@ -71,6 +71,13 @@
 					</div><div class="medium">
 						<label for="settings[sitemap]">{{ __('Google Sitemap') }} <small>({{ __('Readonly') }})</small></label>
 						<input type="text" name="settings[sitemap]" id="sitemap" readonly value="{{ base_url }}/cache/sitemap.xml" />
+						<div class="description">You can ping the sitemap with the following links to <a target="_blank" href="https://www.google.com/ping?sitemap={{ (base_url ~ '/cache/sitemap.xml')|url_encode }}">google</a> and <a target="_blank" href="http://www.bing.com/ping?sitemap={{ (base_url ~ '/cache/sitemap.xml')|url_encode }}">bing</a>.</div>
+					</div><div class="medium{{ errors.settings.pingsitemap ? ' error' : '' }}">
+						<label for="settings[pingsitemap]">{{ __('Ping sitemap automatically') }}</label>
+						<label class="control-group">{{ __('Ping sitemap automatically after publishing a page.') }}
+							<input name="settings[pingsitemap]" type="checkbox" {% if (settings.pingsitemap or old.settings.pingsitemap) %} checked {% endif %}>
+							<span class="checkmark"></span>
+						</label>
 					</div>
 					<hr>
 					<header class="headline">

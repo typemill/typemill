@@ -200,6 +200,20 @@ class ParsedownExtension extends \ParsedownExtra
         return $block;
     }
 
+    protected function inlineImage($excerpt)
+    {
+        $image = parent::inlineImage($excerpt);
+
+        if ( ! isset($image))
+        {
+            return null;
+        }
+
+        $image['element']['attributes']['loading'] = "lazy";
+
+        return $image;
+    }
+    
     protected function blockTable($Line, array $Block = null)
     {
 

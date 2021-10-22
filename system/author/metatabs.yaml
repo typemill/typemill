@@ -1,19 +1,10 @@
 meta:
   fields:
-    fieldsetnavi:
-      type: fieldset
-      legend: Navigation
-      fields:
-        navtitle:
-          type: text
-          label: Navigation Title
-          class: medium
-          maxlength: 60
-        hide:
-          type: checkbox
-          label: Hide
-          checkboxlabel: Hide page from navigation
-          class: medium
+    navtitle:
+      type: text
+      label: Navigation Title
+      class: large
+      maxlength: 60
     fieldsetcontent:
       type: fieldset
       legend: Meta-Content
@@ -36,6 +27,20 @@ meta:
         heroimagealt:
           type: text
           label: Alternative Text for the hero image
+    fieldsetvisibility:
+      type: fieldset
+      legend: Visibility
+      fields:
+        hide:
+          type: checkbox
+          label: Hide
+          checkboxlabel: Hide page from navigation
+          class: medium
+        nofollow:
+          type: checkbox
+          label: Nofollow
+          checkboxlabel: Add no-follow and exclude from sitemap
+          class: medium
     fieldsetauthor:
       type: fieldset
       legend: Author

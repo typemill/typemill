@@ -98,7 +98,7 @@ class ControllerAuthorArticleApi extends ControllerAuthor
 			$this->setFreshNavigation();
 
 			# update the sitemap
-			$this->updateSitemap();
+			$this->updateSitemap($ping = true);
 
 			# complete the page meta if title or description not set
 			$writeMeta = new WriteMeta();
@@ -518,7 +518,7 @@ class ControllerAuthorArticleApi extends ControllerAuthor
 		$this->setFreshStructureDraft();
 		$this->setFreshStructureLive();
 		$this->setFreshNavigation();
-		$this->updateSitemap();
+		$this->updateSitemap($ping = true);
 
 		$newUrlRel =  str_replace($this->item->slug, $this->params['slug'], $this->item->urlRelWoF);
 
@@ -591,6 +591,9 @@ class ControllerAuthorArticleApi extends ControllerAuthor
 		# if the item has been moved within the same folder
 		if($this->params['parent_id_from'] == $this->params['parent_id_to'])
 		{
+			# no need to ping search engines
+			$ping = false;
+
 			# get key of item
 			$itemKey = end($itemKeyPath);
 			reset($itemKeyPath);
@@ -600,6 +603,9 @@ class ControllerAuthorArticleApi extends ControllerAuthor
 		}
 		else
 		{
+			# let us ping search engines
+			$ping = true;
+
 			# rename links in extended file
 			$this->renameExtended($item, $newFolder);
 
@@ -644,7 +650,7 @@ class ControllerAuthorArticleApi extends ControllerAuthor
 		$this->setFreshNavigation();
 
 		# update the sitemap
-		$this->updateSitemap();
+		$this->updateSitemap($ping);
 		
 		# dispatch event
 		$this->c->dispatcher->dispatch('onPageSorted', new OnPageSorted($this->params));

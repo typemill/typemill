@@ -8,3 +8,5 @@ Do you need professional help, an individual theme or a special plugin? You can 
 
 [Contributions](https://github.com/typemill/typemill#contributors--supporters), [donations](https://www.paypal.me/typemill) and [feedback](https://github.com/typemill/typemill/issues) for this open source project are always welcome.
 
+![alt](media/live/youtube-6i2-uv88gke.jpeg){.center loading="lazy"}
+

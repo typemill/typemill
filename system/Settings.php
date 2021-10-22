@@ -193,6 +193,7 @@ class Settings
 									'securitylog' => true,
 									'oldslug' => true,
 									'refreshcache' => true,
+									'pingsitemap' => true,
 								];
 
 			# cleanup the existing usersettings

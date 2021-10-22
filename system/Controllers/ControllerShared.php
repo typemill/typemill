@@ -275,7 +275,7 @@ abstract class ControllerShared
 		return true;
 	}
 
-	public function updateSitemap()
+	public function updateSitemap($ping = false)
 	{
 		$sitemap 	= '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
 		$sitemap 	.= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
@@ -284,6 +284,27 @@ abstract class ControllerShared
 		$sitemap 	.= '</urlset>';
 		
 		$this->writeCache->writeFile('cache', 'sitemap.xml', $sitemap);
+
+		if($ping && isset($this->settings['pingsitemap']) && $this->settings['pingsitemap'])
+		{
+			$sitemapUrl			= $this->uri->getBaseUrl() . '/cache/sitemap.xml';
+
+			$pingGoogleUrl		= 'http://www.google.com/ping?sitemap=' . urlencode($sitemapUrl);
+			$pingBingUrl		= 'http://www.bing.com/ping?sitemap=' . urlencode($sitemapUrl);
+
+			$opts = array(
+			  'http'=>array(
+			    'method'=>"GET",
+			    'timeout' => 5
+			  )
+			);
+
+			$context 		= stream_context_create($opts);
+
+			$resultBing 	= file_get_contents($pingBingUrl, false, $context);
+			$resultGoogle 	= file_get_contents($pingGoogleUrl, false, $context);
+		}
+
 	}
 
 	public function generateUrlSets($structureLive)
