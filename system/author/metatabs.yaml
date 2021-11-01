@@ -36,10 +36,10 @@ meta:
           label: Hide
           checkboxlabel: Hide page from navigation
           class: medium
-        nofollow:
+        noindex:
           type: checkbox
-          label: Nofollow
-          checkboxlabel: Add no-follow and exclude from sitemap
+          label: Noindex
+          checkboxlabel: Add noindex tag and exclude from sitemap
           class: medium
     fieldsetauthor:
       type: fieldset

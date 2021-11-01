@@ -180,7 +180,7 @@ class ControllerAuthorArticleApi extends ControllerAuthor
 		
 		# check if it is a folder and if the folder has published pages.
 		$message = false;
-		if($this->item->elementType == 'folder')
+		if($this->item->elementType == 'folder' && isset($this->item->folderContent))
 		{
 			foreach($this->item->folderContent as $folderContent)
 			{

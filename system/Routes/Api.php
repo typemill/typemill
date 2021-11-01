@@ -36,7 +36,7 @@ $app->post('/api/v1/block', ControllerAuthorBlockApi::class . ':addBlock')->setN
 $app->put('/api/v1/block', ControllerAuthorBlockApi::class . ':updateBlock')->setName('api.block.update')->add(new RestrictApiAccess($container['router']));
 $app->delete('/api/v1/block', ControllerAuthorBlockApi::class . ':deleteBlock')->setName('api.block.delete')->add(new RestrictApiAccess($container['router']));
 $app->put('/api/v1/moveblock', ControllerAuthorBlockApi::class . ':moveBlock')->setName('api.block.move')->add(new RestrictApiAccess($container['router']));
-$app->post('/api/v1/video', ControllerAuthorBlockApi::class . ':saveVideoImage')->setName('api.video.save')->add(new RestrictApiAccess($container['router']));
+$app->post('/api/v1/video', ControllerAuthorMediaApi::class . ':saveVideoImage')->setName('api.video.save')->add(new RestrictApiAccess($container['router']));
 
 $app->get('/api/v1/medialib/images', ControllerAuthorMediaApi::class . ':getMediaLibImages')->setName('api.medialibimg.get')->add(new RestrictApiAccess($container['router']));
 $app->get('/api/v1/medialib/files', ControllerAuthorMediaApi::class . ':getMediaLibFiles')->setName('api.medialibfiles.get')->add(new RestrictApiAccess($container['router']));
@@ -44,6 +44,8 @@ $app->get('/api/v1/image', ControllerAuthorMediaApi::class . ':getImage')->setNa
 $app->post('/api/v1/image', ControllerAuthorMediaApi::class . ':createImage')->setName('api.image.create')->add(new RestrictApiAccess($container['router']));
 $app->put('/api/v1/image', ControllerAuthorMediaApi::class . ':publishImage')->setName('api.image.publish')->add(new RestrictApiAccess($container['router']));
 $app->delete('/api/v1/image', ControllerAuthorMediaApi::class . ':deleteImage')->setName('api.image.delete')->add(new RestrictApiAccess($container['router']));
+$app->get('/api/v1/filerestrictions', ControllerAuthorMediaApi::class . ':getFileRestrictions')->setName('api.file.getrestrictions')->add(new RestrictApiAccess($container['router']));
+$app->post('/api/v1/filerestrictions', ControllerAuthorMediaApi::class . ':updateFileRestrictions')->setName('api.file.updaterestrictions')->add(new RestrictApiAccess($container['router']));
 $app->get('/api/v1/file', ControllerAuthorMediaApi::class . ':getFile')->setName('api.file.get')->add(new RestrictApiAccess($container['router']));
 $app->post('/api/v1/file', ControllerAuthorMediaApi::class . ':uploadFile')->setName('api.file.upload')->add(new RestrictApiAccess($container['router']));
 $app->put('/api/v1/file', ControllerAuthorMediaApi::class . ':publishFile')->setName('api.file.publish')->add(new RestrictApiAccess($container['router']));

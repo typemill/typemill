@@ -313,6 +313,7 @@ class ControllerAuthorMetaApi extends ControllerAuthor
 			# normalize the meta-input
 			$metaInput['navtitle'] 	= (isset($metaInput['navtitle']) && $metaInput['navtitle'] !== null )? $metaInput['navtitle'] : '';
 			$metaInput['hide'] 		= (isset($metaInput['hide']) && $metaInput['hide'] !== null) ? $metaInput['hide'] : false;
+			$metaInput['noindex'] 	= (isset($metaInput['noindex']) && $metaInput['noindex'] !== null) ? $metaInput['noindex'] : false;
 
 			# input values are empty but entry in structure exists
 			if(!$metaInput['hide'] && $metaInput['navtitle'] == "" && isset($extended[$this->item->urlRelWoF]))
@@ -327,10 +328,12 @@ class ControllerAuthorMetaApi extends ControllerAuthor
 				($this->hasChanged($metaInput, $metaPage['meta'], 'navtitle'))
 				OR 
 				($this->hasChanged($metaInput, $metaPage['meta'], 'hide'))
+				OR
+				($this->hasChanged($metaInput, $metaPage['meta'], 'noindex'))				
 			)
 			{
 				# add new file data. Also makes sure that the value is set.
-				$extended[$this->item->urlRelWoF] = ['hide' => $metaInput['hide'], 'navtitle' => $metaInput['navtitle']];
+				$extended[$this->item->urlRelWoF] = ['hide' => $metaInput['hide'], 'navtitle' => $metaInput['navtitle'], 'noindex' => $metaInput['noindex']];
 
 				$structure = true;
 			}

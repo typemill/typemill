@@ -17,7 +17,7 @@ const contentComponent = Vue.component('content-block', {
 				'<div v-if="newblock" class="newblock-info">Choose a content-type <button class="newblock-close" @click.prevent="closeNewBlock($event)">close</button></div>' +	
 				'<div class="blox-wrapper" :class="{ editactive: edit }">' +
 				 '<div class="sideaction" slot="header" v-if="body">' + 
- 					'<button class="add" :disabled="disabled" :title="\'add content-block\'|translate" @mousedown.prevent="disableSort()" @click.prevent="addNewBlock($event)"><svg class="icon icon-plus"><use xlink:href="#icon-plus"></use></svg></button>' +
+ 						'<button class="add" :disabled="disabled" :title="\'add content-block\'|translate" @mousedown.prevent="disableSort()" @click.prevent="addNewBlock($event)"><svg class="icon icon-plus"><use xlink:href="#icon-plus"></use></svg></button>' +
 				  	'<button class="delete" :disabled="disabled" :title="\'delete content-block\'|translate" @mousedown.prevent="disableSort()" @click.prevent="deleteBlock($event)"><svg class="icon icon-close"><use xlink:href="#icon-close"></use></svg></button>' +
 				 '</div>' + 
 				 '<div class="background-helper" @keyup.enter="submitBlock" @click="getData">' +
@@ -1769,7 +1769,12 @@ const fileComponent = Vue.component('file-component', {
 				  '<label for="filetitle">{{ \'Title\'|translate }}: </label>' + 
 				  '<input name="filetitle" type="text" placeholder="Add a title for the download-link" v-model="filetitle" @input="createmarkdown" max="64" />' + 
 				  '<input title="fileid" type="hidden" placeholder="id" v-model="fileid" @input="createmarkdown" max="140" />' +
-				'</div></div>',
+				  '<label for="filerestriction">{{ \'Access for\'|translate }}: </label>' +
+				  '<select name="filerestriction" v-model="selectedrole" @change="updaterestriction">' +
+				  	'<option disabled value="">{{ \'Please select\'|translate }}</option>' +
+						'<option v-for="role in userroles">{{ role }}</option>' +
+					'</select>' +
+  			'</div></div>',
 	data: function(){
 		return {
 			maxsize: 20, // megabyte
@@ -1779,7 +1784,9 @@ const fileComponent = Vue.component('file-component', {
 			filetitle: '',
 			fileextension: '',
 			fileurl: '',
-			fileid: ''
+			fileid: '',
+			userroles: ['all'],
+			selectedrole: '',
 		}
 	},
 	mounted: function(){
@@ -1814,6 +1821,27 @@ const fileComponent = Vue.component('file-component', {
 				this.fileurl = fileurl[0].slice(1,-1);
 			}
 		}
+
+		self = this;
+
+    myaxios.get('/api/v1/filerestrictions',{
+      params: {
+				'url':			document.getElementById("path").value,
+				'csrf_name': 	document.getElementById("csrf_name").value,
+				'csrf_value':	document.getElementById("csrf_value").value,
+				'filename': this.fileurl,
+      }
+		})
+    .then(function (response) {
+    	self.userroles 		= self.userroles.concat(response.data.userroles);
+    	self.selectedrole	= response.data.restriction;
+    })
+    .catch(function (error)
+    {
+      if(error.response)
+      {
+      }
+    });
 	},
 	methods: {
 		openmedialib: function()
@@ -1830,6 +1858,27 @@ const fileComponent = Vue.component('file-component', {
 		updatemarkdown: function(event)
 		{
 			this.$emit('updatedMarkdown', event.target.value);
+		},
+		updaterestriction: function()
+		{
+	    myaxios.post('/api/v1/filerestrictions',{
+					'url':			document.getElementById("path").value,
+					'csrf_name': 	document.getElementById("csrf_name").value,
+					'csrf_value':	document.getElementById("csrf_value").value,
+					'filename': this.fileurl,
+					'role': this.selectedrole,
+			})
+	    .then(function (response) {
+	    	
+	    })
+	    .catch(function (error)
+	    {
+	      if(error.response)
+	      {
+	      }
+	    });
+
+			console.info(this.selectedrole);
 		},
 		createmarkdown: function()
 		{
@@ -1939,9 +1988,8 @@ for(var i = 0; i < formatConfig.length; i++)
 }
 
 let editor = new Vue({  
-    delimiters: ['${', '}'],
+	delimiters: ['${', '}'],
 	el: '#blox',
-/*	components: componentList, */
 	data: {
 		errors: [],
 		root: document.getElementById("main").dataset.url,
@@ -1960,7 +2008,7 @@ let editor = new Vue({
 		bloxOverlay: false,
 		sortdisabled: false,
 		showEditor: 'show',
-		formats: activeFormats
+		formats: activeFormats,
 	},
 	mounted: function(){
 
@@ -1969,110 +2017,109 @@ let editor = new Vue({
 		var self = this;
 
 	    myaxios.post('/api/v1/article/html',{
-			'url':				document.getElementById("path").value,
-			'csrf_name': 		document.getElementById("csrf_name").value,
-			'csrf_value':		document.getElementById("csrf_value").value,
-		})
-	    .then(function (response) {
-	        
-			var contenthtml 	= response.data.data;
-			self.title 			= contenthtml[0];
-			self.html 			= contenthtml;
-			var initialcontent 	= document.getElementById("initial-content");
+				'url':				document.getElementById("path").value,
+				'csrf_name': 		document.getElementById("csrf_name").value,
+				'csrf_value':		document.getElementById("csrf_value").value,
+			})
+	    .then(function (response){
+				var contenthtml 	= response.data.data;
+				self.title 			= contenthtml[0];
+				self.html 			= contenthtml;
+				var initialcontent 	= document.getElementById("initial-content");
 			
-			initialcontent.parentNode.removeChild(initialcontent);
-	        
+				initialcontent.parentNode.removeChild(initialcontent);  
 	    })
 	   	.catch(function (error)
 	    {
-	       	if(error.response)
-	       	{
-				self.errors.title = error.response.errors;
+	    	if(error.response)
+	      {
+					self.errors.title = error.response.errors;
 	    	}
 	   	});
 
 	    myaxios.post('/api/v1/article/markdown',{
-			'url':				document.getElementById("path").value,
-			'csrf_name': 		document.getElementById("csrf_name").value,
-			'csrf_value':		document.getElementById("csrf_value").value,
-		})
+				'url':				document.getElementById("path").value,
+				'csrf_name': 		document.getElementById("csrf_name").value,
+				'csrf_value':		document.getElementById("csrf_value").value,
+			})
 	    .then(function (response) {
-	        
-			self.markdown = response.data.data;
-					
-			/* activate math plugin */		
-			if (typeof renderMathInElement === "function") { 
-				self.$nextTick(function () {
-					renderMathInElement(document.getElementById("blox"));
-				});
-			}
-
-			/* check for youtube videos */
-			if (typeof typemillUtilities !== "undefined") {
-				setTimeout(function(){ 
+				self.markdown = response.data.data;
+			
+				/* activate math plugin */		
+				if (typeof renderMathInElement === "function") { 
 					self.$nextTick(function () {
-						typemillUtilities.start();
+						renderMathInElement(document.getElementById("blox"));
 					});
-				}, 200);
-			}
+				}
+
+				/* check for youtube videos */
+				if (typeof typemillUtilities !== "undefined") {
+					setTimeout(function(){ 
+						self.$nextTick(function () {
+							typemillUtilities.start();
+						});
+					}, 200);
+				}
 	    })
 	   	.catch(function (error)
 	    {
-	       	if(error.response)
-	       	{
-				self.errors.title = error.response.errors;
+	    	if(error.response)
+	      {
+					self.errors.title = error.response.errors;
 	    	}
 	   	});		
-	},
-	methods: {
-		onStart: function()
-		{
-
 		},
-		moveBlock: function(evt)
-		{
-			publishController.errors.message = false;
+		methods: {
+			onStart: function()
+			{
 
-			var self = this;			
+			},
+			moveBlock: function(evt)
+			{
+				publishController.errors.message = false;
 
-	        myaxios.put('/api/v1/moveblock',{
-				'url':			document.getElementById("path").value,
-				'old_index': 	evt.oldIndex,
-				'new_index':	evt.newIndex,
-				'csrf_name': 	document.getElementById("csrf_name").value,
-				'csrf_value':	document.getElementById("csrf_value").value,
-			})
-	        .then(function (response) {
+				var self = this;			
+
+	    	myaxios.put('/api/v1/moveblock',{
+					'url':			document.getElementById("path").value,
+					'old_index': 	evt.oldIndex,
+					'new_index':	evt.newIndex,
+					'csrf_name': 	document.getElementById("csrf_name").value,
+					'csrf_value':	document.getElementById("csrf_value").value,
+				})
+	      .then(function (response) {
 				
-				self.freeze = false;
+					self.freeze = false;
 				
-				self.markdown = response.data.markdown;
-				self.blockMarkdown = '';
-				self.blockType = '';
+					self.markdown = response.data.markdown;
+					self.blockMarkdown = '';
+					self.blockType = '';
 
-				if(response.data.toc)
-				{
-					self.html.splice(response.data.toc.id, 1, response.data.toc);
-				}
+					if(response.data.toc)
+					{
+						self.html.splice(response.data.toc.id, 1, response.data.toc);
+					}
 						
-				publishController.publishDisabled = false;
-				publishController.publishResult = "";
+					publishController.publishDisabled = false;
+					publishController.publishResult = "";
 
-				/* update the navigation and mark navigation item as modified */
-				navi.getNavi();
+					/* update the navigation and mark navigation item as modified */
+					navi.getNavi();
 
-				/* update the math if plugin is there */
-				self.checkMath(params.new_index+1);
-	        })
-	        .catch(function (error)
+					/* update the math if plugin is there */
+					self.checkMath(params.new_index+1);
+	     	})
+	     	.catch(function (error)
+	     	{
+	      	if(error)
+	      	{
+						publishController.publishDisabled = false;
+	      	}
+	        if(error.response)
 	        {
-	        	if(error)
-				publishController.publishDisabled = false;
-	        	if(error.response)
-	        	{
-					publishController.errors.message = error.response.data.errors.message;
-	        	}
-	        });
+						publishController.errors.message = error.response.data.errors.message;
+	        }
+	    	});
 		},
 		setData: function(event, blocktype, body)
 		{

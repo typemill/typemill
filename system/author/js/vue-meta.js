@@ -119,7 +119,7 @@ Vue.component('tab-meta', {
 })
 
 let meta = new Vue({
-    delimiters: ['${', '}'],
+ 	delimiters: ['${', '}'],
 	el: '#metanav',	
 	data: function () {
 		return {

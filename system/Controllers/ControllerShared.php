@@ -177,7 +177,7 @@ abstract class ControllerShared
 		$pagetreeLive = Folder::scanFolder($this->settings['rootPath'] . $this->settings['contentFolder'], $draft = false );
 
 		# if there is content, then get the content details
-		if(count($pagetreeLive) > 0)
+		if($pagetreeLive && count($pagetreeLive) > 0)
 		{
 			# get the extended structure files with changes like navigation title or hidden pages
 			$yaml = new writeYaml();
@@ -295,28 +295,37 @@ abstract class ControllerShared
 			$opts = array(
 			  'http'=>array(
 			    'method'=>"GET",
+				'ignore_errors' => true,
 			    'timeout' => 5
 			  )
 			);
 
-			$context 		= stream_context_create($opts);
+			$context 			= stream_context_create($opts);
 
-			$resultBing 	= file_get_contents($pingBingUrl, false, $context);
-			$resultGoogle 	= file_get_contents($pingGoogleUrl, false, $context);
+			$responseBing 		= file_get_contents($pingBingUrl, false, $context);
+			$responseGoogle 	= file_get_contents($pingGoogleUrl, false, $context);
 		}
 
 	}
 
 	public function generateUrlSets($structureLive)
-	{		
+	{
 		$urlset = '';
-		
+
 		foreach($structureLive as $item)
 		{
-			if($item->elementType == 'folder')
+			if($item->elementType == 'folder' && isset($item->noindex) && $item->noindex === true)
+			{
+				$urlset .= $this->generateUrlSets($item->folderContent, $urlset);
+			}
+			elseif($item->elementType == 'folder')
 			{
 				$urlset = $this->addUrlSet($urlset, $item->urlAbs);
-				$urlset .= $this->generateUrlSets($item->folderContent, $urlset);
+				$urlset .= $this->generateUrlSets($item->folderContent, $urlset);				
+			}
+			elseif(isset($item->noindex) && $item->noindex === true )
+			{
+				continue;
 			}
 			else
 			{

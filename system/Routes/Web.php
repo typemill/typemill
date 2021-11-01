@@ -1,6 +1,7 @@
 <?php
 use Typemill\Controllers\ControllerAuthorEditor;
 use Typemill\Controllers\ControllerSettings;
+use Typemill\Controllers\ControllerDownload;
 use Typemill\Controllers\ControllerFrontendWebsite;
 use Typemill\Controllers\ControllerFrontendForms;
 use Typemill\Controllers\ControllerFrontendAuth;
@@ -63,6 +64,8 @@ $app->get('/tm/users', ControllerSettings::class . ':listUser')->setName('user.l
 $app->get('/tm/content/raw[/{params:.*}]', ControllerAuthorEditor::class . ':showContent')->setName('content.raw')->add(new accessMiddleware($container['router'], $container['acl'], 'content', 'view'));
 $app->get('/tm/content/visual[/{params:.*}]', ControllerAuthorEditor::class . ':showBlox')->setName('content.visual')->add(new accessMiddleware($container['router'], $container['acl'], 'content', 'view'));
 $app->get('/tm/content[/{params:.*}]', ControllerAuthorEditor::class . ':showEmpty')->setName('content.empty')->add(new accessMiddleware($container['router'], $container['acl'], 'content', 'view'));
+
+$app->get('/media/files[/{params:.*}]', ControllerDownload::class . ':download')->setName('download.file');
 
 foreach($routes as $pluginRoute)
 {

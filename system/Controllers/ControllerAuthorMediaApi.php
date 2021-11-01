@@ -6,6 +6,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use Typemill\Models\ProcessImage;
 use Typemill\Models\ProcessFile;
+use Typemill\Models\WriteYaml;
 use Typemill\Controllers\ControllerAuthorBlockApi;
 
 class ControllerAuthorMediaApi extends ControllerAuthor
@@ -90,6 +91,69 @@ class ControllerAuthorMediaApi extends ControllerAuthor
 		}
 
 		return $response->withJson(['errors' => 'file not found or file name invalid'],404);
+	}
+
+	public function getFileRestrictions(Request $request, Response $response, $args)
+	{
+		# get params from call 
+		$this->params 	= $request->getParams();
+		$this->uri 		= $request->getUri()->withUserInfo('');
+		$restriction 	= 'all';
+
+		$userroles 		= $this->c->acl->getRoles();
+
+		if(isset($this->params['filename']) && $this->params['filename'] != '')
+		{
+			$writeYaml		= new WriteYaml();
+			$restrictions 	= $writeYaml->getYaml('media' . DIRECTORY_SEPARATOR . 'files', 'filerestrictions.yaml');
+			if(isset($restrictions[$this->params['filename']]))
+			{
+				$restriction = $restrictions[$this->params['filename']];
+			}
+		}
+
+		return $response->withJson(['userroles' => $userroles, 'restriction' => $restriction]);
+	}
+
+	public function updateFileRestrictions(Request $request, Response $response, $args)
+	{
+		# get params from call 
+		$this->params 	= $request->getParams();
+		$this->uri 		= $request->getUri()->withUserInfo('');
+		$filename 		= isset($this->params['filename']) ? $this->params['filename'] : false;
+		$role 			= isset($this->params['role']) ? $this->params['role'] : false;
+
+		if(!$filename OR !$role)
+		{
+			return $response->withJson(['errors' => ['message' => 'Filename or userrole is missing.']], 422);
+		}
+
+		$userroles 		= $this->c->acl->getRoles();
+
+		if($role != 'all' AND !in_array($role, $userroles))
+		{
+			return $response->withJson(['errors' => ['message' => 'Userrole is unknown.']], 422);
+		}
+
+		$writeYaml		= new WriteYaml();
+		$restrictions 	= $writeYaml->getYaml('media' . DIRECTORY_SEPARATOR . 'files', 'filerestrictions.yaml');
+		if(!$restrictions)
+		{
+			$restrictions = [];
+		}
+
+		if($role == 'all')
+		{
+			unset($restrictions[$filename]);
+		}
+		else
+		{
+			$restrictions[$filename] = $role;
+		}
+
+		$writeYaml->updateYaml('media' . DIRECTORY_SEPARATOR . 'files', 'filerestrictions.yaml', $restrictions);
+
+		return $response->withJson(['restrictions' => $restrictions]);
 	}
 
 	public function createImage(Request $request, Response $response, $args)
@@ -382,14 +446,14 @@ class ControllerAuthorMediaApi extends ControllerAuthor
 			return $response->withJson(['errors' => ['message' => 'Please check if your media-folder exists and all folders inside are writable.']], 500);
 		}
 
-		$tmpImage		= $imageProcessor->createImage($imageData64, $desiredSizes);
+		$tmpImage		= $imageProcessor->createImage($imageData64, $videoID, $desiredSizes);
 		
 		if(!$tmpImage)
 		{
 			return $response->withJson(array('errors' => 'could not create temporary image'));			
 		}
 		
-		$imageUrl 		= $imageProcessor->publishImage($desiredSizes, $videoID);
+		$imageUrl 		= $imageProcessor->publishImage();
 		if($imageUrl)
 		{
 			$this->params['markdown'] = '![' . $class . '-video](' . $imageUrl . ' "click to load video"){#' . $videoID. ' .' . $class . '}';

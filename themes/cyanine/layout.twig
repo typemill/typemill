@@ -9,6 +9,10 @@
 		<meta name="author" content="{{ metatabs.meta.author }}" />
 		<meta name="generator" content="TYPEMILL" />
 		<meta name="msapplication-TileColor" content="#F9F8F6" />
+
+		{% if metatabs.meta.noindex %}
+			<meta name="robots" content="noindex">
+		{% endif %}
 		
 		{% if favicon %}
 			<meta name="msapplication-TileColor" content="#F9F8F6" />

@@ -154,8 +154,9 @@ class Folder
 				# check if there are extended information
 				if($extended && isset($extended[$item->urlRelWoF]))
 				{
-					$item->name = ($extended[$item->urlRelWoF]['navtitle'] != '') ? $extended[$item->urlRelWoF]['navtitle'] : $item->name;
-					$item->hide = ($extended[$item->urlRelWoF]['hide'] === true) ? true : false;
+					$item->name 		= ($extended[$item->urlRelWoF]['navtitle'] != '') ? $extended[$item->urlRelWoF]['navtitle'] : $item->name;
+					$item->hide 		= ($extended[$item->urlRelWoF]['hide'] === true) ? true : false;
+					$item->noindex		= (isset($extended[$item->urlRelWoF]['noindex']) && $extended[$item->urlRelWoF]['noindex'] === true) ? true : false;
 				}
 
 				# sort posts in descending order
@@ -217,8 +218,9 @@ class Folder
 				# check if there are extended information
 				if($extended && isset($extended[$item->urlRelWoF]))
 				{
-					$item->name = ($extended[$item->urlRelWoF]['navtitle'] != '') ? $extended[$item->urlRelWoF]['navtitle'] : $item->name;
-					$item->hide = ($extended[$item->urlRelWoF]['hide'] === true) ? true : false;
+					$item->name 		= ($extended[$item->urlRelWoF]['navtitle'] != '') ? $extended[$item->urlRelWoF]['navtitle'] : $item->name;
+					$item->hide 		= ($extended[$item->urlRelWoF]['hide'] === true) ? true : false;
+					$item->noindex		= (isset($extended[$item->urlRelWoF]['noindex']) && $extended[$item->urlRelWoF]['noindex'] === true) ? true : false;
 				}
 			}
 

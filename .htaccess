@@ -64,7 +64,7 @@ RewriteRule ^(system\/author\/img\/) - [L]
 RewriteRule ^(system\/author\/js\/) - [L]
 
 # redirect all other direct requests to the following physical folders to the index.php so pages with same name work
-RewriteRule ^(system|content|data|settings) index.php [QSA,L]
+RewriteRule ^(system|content|data|settings|(media\/files\/)) index.php [QSA,L]
 
 # disallow browsing other folders generally
 Options -Indexes
