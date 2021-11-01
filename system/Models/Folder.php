@@ -48,7 +48,7 @@ class Folder
 
 		foreach ($folderItems as $key => $item)
 		{
-			if (!in_array($item, array(".","..")))
+			if (!in_array($item, array(".","..")) && substr($item, 0, 1) != '.')
 			{
 				if (is_dir($folderPath . DIRECTORY_SEPARATOR . $item))
 				{
