@@ -124,7 +124,7 @@ class ProcessFile extends ProcessAssets
 
 		foreach ($files as $key => $name)
 		{
-			if (!in_array($name, array(".","..")) && file_exists($this->fileFolder . $name))
+			if (!in_array($name, array(".","..","filerestrictions.yaml")) && file_exists($this->fileFolder . $name))
 			{
 				$filelist[] = [
 					'name' 		=> $name,

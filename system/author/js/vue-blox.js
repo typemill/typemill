@@ -98,7 +98,7 @@ const contentComponent = Vue.component('content-block', {
 		},
 		setComponentSize: function()
 		{
-			if(this.componentType == 'image-component')
+			if(this.componentType == 'image-component' || this.componentType == 'file-component')
 			{
 				myself = this;
 				setTimeout(function(){ 
@@ -1822,26 +1822,7 @@ const fileComponent = Vue.component('file-component', {
 			}
 		}
 
-		self = this;
-
-    myaxios.get('/api/v1/filerestrictions',{
-      params: {
-				'url':			document.getElementById("path").value,
-				'csrf_name': 	document.getElementById("csrf_name").value,
-				'csrf_value':	document.getElementById("csrf_value").value,
-				'filename': this.fileurl,
-      }
-		})
-    .then(function (response) {
-    	self.userroles 		= self.userroles.concat(response.data.userroles);
-    	self.selectedrole	= response.data.restriction;
-    })
-    .catch(function (error)
-    {
-      if(error.response)
-      {
-      }
-    });
+		this.getrestriction();
 	},
 	methods: {
 		openmedialib: function()
@@ -1855,30 +1836,10 @@ const fileComponent = Vue.component('file-component', {
 				return ' checked';
 			}
 		},
-		updatemarkdown: function(event)
+		updatemarkdown: function(event, url)
 		{
 			this.$emit('updatedMarkdown', event.target.value);
-		},
-		updaterestriction: function()
-		{
-	    myaxios.post('/api/v1/filerestrictions',{
-					'url':			document.getElementById("path").value,
-					'csrf_name': 	document.getElementById("csrf_name").value,
-					'csrf_value':	document.getElementById("csrf_value").value,
-					'filename': this.fileurl,
-					'role': this.selectedrole,
-			})
-	    .then(function (response) {
-	    	
-	    })
-	    .catch(function (error)
-	    {
-	      if(error.response)
-	      {
-	      }
-	    });
-
-			console.info(this.selectedrole);
+			this.getrestriction(url);
 		},
 		createmarkdown: function()
 		{
@@ -1920,6 +1881,55 @@ const fileComponent = Vue.component('file-component', {
 				this.$emit('updatedMarkdown', filemarkdown);
 			}
 		},
+		getrestriction: function(url)
+		{
+			var fileurl = this.fileurl;
+			if(url)
+			{
+				fileurl = url;
+			}
+
+			var myself = this;
+
+	    myaxios.get('/api/v1/filerestrictions',{
+	      params: {
+					'url':			document.getElementById("path").value,
+					'csrf_name': 	document.getElementById("csrf_name").value,
+					'csrf_value':	document.getElementById("csrf_value").value,
+					'filename': fileurl,
+	      }
+			})
+	    .then(function (response) {
+	    	myself.userroles 		= ['all'];
+	    	myself.userroles 		= myself.userroles.concat(response.data.userroles);
+	    	myself.selectedrole	= response.data.restriction;
+	    })
+	    .catch(function (error)
+	    {
+	      if(error.response)
+	      {
+	      }
+	    });
+		},
+		updaterestriction: function()
+		{
+	    myaxios.post('/api/v1/filerestrictions',{
+					'url':			document.getElementById("path").value,
+					'csrf_name': 	document.getElementById("csrf_name").value,
+					'csrf_value':	document.getElementById("csrf_value").value,
+					'filename': this.fileurl,
+					'role': this.selectedrole,
+			})
+	    .then(function (response) {
+	    	
+	    })
+	    .catch(function (error)
+	    {
+	      if(error.response)
+	      {
+	      }
+	    });
+		},
 		onFileChange: function( e )
 		{
 			if(e.target.files.length > 0)
@@ -1954,10 +1964,12 @@ const fileComponent = Vue.component('file-component', {
 							self.load = false;
 							self.$parent.activatePage();
 								
-							self.filemeta = true;
-							self.filetitle = response.data.info.title;
-							self.fileextension = response.data.info.extension;
-							self.fileurl = response.data.info.url;
+							self.filemeta 			= true;
+							self.filetitle 			= response.data.info.title;
+							self.fileextension 	= response.data.info.extension;
+							self.fileurl 				= response.data.info.url;
+							self.selectedrole 	= '';
+							
 							self.createmarkdown();
 				    })
 				    .catch(function (error)

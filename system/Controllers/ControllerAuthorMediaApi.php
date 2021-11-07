@@ -267,8 +267,15 @@ class ControllerAuthorMediaApi extends ControllerAuthor
 		}
 	
 		$fileinfo = $fileProcessor->storeFile($this->params['file'], $this->params['name']);
+		
 		if($fileinfo)
 		{
+			# publish file directly, used for example by file field for meta-tabs
+			if(isset($this->params['publish']) && $this->params['publish'])
+			{
+				$fileProcessor->publishFile();
+			}
+			
 			return $response->withJson(['errors' => false, 'info' => $fileinfo]);
 		}
 

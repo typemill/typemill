@@ -35,7 +35,8 @@ class ControllerDownload extends ControllerShared
 
 			if(!isset($_SESSION['role']))
 			{
-				die("You have to be an authenticated $allowedrole to download this file.");
+				$this->c->flash->addMessage('error', "You have to be an authenticated $allowedrole to download this file.");
+				return $response->withRedirect($this->c->router->pathFor('auth.show'));
 			}
 			elseif(
 				$_SESSION['role'] != 'administrator'
@@ -43,7 +44,8 @@ class ControllerDownload extends ControllerShared
 				AND !$this->c->acl->inheritsRole($_SESSION['role'], $allowedrole)
 			)
 			{
-				die("You have to be a $allowedrole to download this file.");
+				$this->c->flash->addMessage('error', "You have to be a $allowedrole to download this file.");
+				return $response->withRedirect($this->c->router->pathFor('auth.show'));
 			}
 		}
 
@@ -129,10 +131,11 @@ class ControllerDownload extends ControllerShared
 
 		header('Pragma: public');
 		header('Content-Encoding: none');
-		header('Expires: 0');
 		header('Accept-Ranges: bytes');  # Allow support for download resume
+		header('Expires: 0');
 		header('Last-Modified: ' . gmdate('D, d M Y H:i:s', filemtime($file)) . ' GMT');
-		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+		header_remove("Last-Modified");
+		header('Cache-Control: max-age=0, no-cache, no-store, must-revalidate');
 		header('Cache-Control: private', false); # required for some browsers
 		header('Content-Type: application/zip');
 		header('Content-Disposition: attachment; filename="'.basename($file).'";'); # Make the browser display the Save As dialog

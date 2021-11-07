@@ -627,42 +627,213 @@ Vue.component('component-image', {
 					reader.onload = function(e) 
 					{
 						sharedself.imgpreview = e.target.result;
-						
-						/* load image to server */
-						var url = sharedself.$root.$data.root + '/api/v1/image';
-						
-						var params = {
+
+					    myaxios.post('/api/v1/image',{
 							'url':				document.getElementById("path").value,
 							'image':			e.target.result,
 							'name': 			imageFile.name,
 							'publish':  		true,
 							'csrf_name': 		document.getElementById("csrf_name").value,
 							'csrf_value':		document.getElementById("csrf_value").value,
-						};
-
-						var method 	= 'POST';
-
-						sendJson(function(response, httpStatus)
-						{
-							if(response)
-							{
-								var result = JSON.parse(response);
-
-								if(result.errors)
-								{
-									publishController.errors.message = result.errors.message;
-								}
-								else
-								{
-									sharedself.update(result.name);
-								}
-							}
-						}, method, url, params);
+						})
+					    .then(function (response) {
+							sharedself.update(response.data.name);
+					    })
+					    .catch(function (error)
+					    {
+							sharedself.load = false;
+					    	if(error.response)
+					    	{
+					        	publishController.errors.message = error.response.data.errors;
+					      	}
+					    });
 					}
 				}
 			}
 		}
 	},
+})
+
+Vue.component('component-file', {
+	props: ['id', 'description', 'maxlength', 'hidden', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
+	template: '<div class="large">' +
+				'<transition name="fade-editor">' +
+					'<div v-if="showmedialib" class="modalWindow">' +
+						'<medialib parentcomponent="files"></medialib>' + 
+					'</div>' +
+				'</transition>' +
+				'<label>{{ label|translate }}</label>' +
+				'<div v-if="load" class="loadwrapper"><span class="load"></span></div>' +
+				'<div class="ba b--moon-gray">' +
+					'<div class="medium">' +
+						'<label>{{ \'File URL (read only)\'|translate }}</label>' +
+						'<div class="flex">' +
+							'<button @click.prevent="deleteFile()" class="w-10 bn hover-bg-tm-red hover-white">x</button>' +
+							'<input class="w-90" type="text"' + 
+									' :id="id"' +
+									' :maxlength="maxlength"' +
+									' readonly="readonly"' +
+									' :hidden="hidden"' +
+									' :required="required"' +
+									' :disabled="disabled"' +
+									' :name="name"' +
+									' :placeholder="placeholder"' +
+									' :value="value"' +
+									'@input="update($event, name)">' +
+						'</div>' +
+						'<div class="flex">' +
+							'<div class="relative dib w-100 br b--white bg-tm-green dim">' + 
+								'<input type="file" accept="*" name="file" @change="onFileChange( $event )" class="absolute o-0 w-100 top-0 z-1 pointer h2" />' + 
+								'<p class="relative w-100 bn br1 white pa1 h2 ma0 tc"><svg class="icon icon-upload baseline"><use xlink:href="#icon-upload"></use></svg>  {{ \'upload\'|translate }}</p>' +
+							'</div>' + 
+							'<div class="dib w-100 bl b--white">' + 
+								'<button @click.prevent="openmedialib()" class="w-100 pointer bn bg-tm-green white pa0 h2 ma0 tc dim"><svg class="icon icon-paperclip baseline"><use xlink:href="#icon-paperclip"></use></svg> {{ \'medialib\'|translate }}</button>' + 
+							'</div>' + 
+						'</div>' +
+					'</div>' +
+					'<div class="medium">' +
+						'<input title="fileid" type="hidden" placeholder="id" v-model="fileid" @input="createmarkdown" max="140" />' +
+						'<label for="filerestriction">{{ \'Access for\'|translate }}: </label>' +
+						'<select name="filerestriction" v-model="selectedrole" @change="updaterestriction">' +
+					  		'<option disabled value="">{{ \'Please select\'|translate }}</option>' +
+							'<option v-for="role in userroles">{{ role }}</option>' +
+						'</select>' +
+					'</div>' +
+				'</div>' +
+			  '</div>',
+	data: function(){
+		return {
+			maxsize: 20, // megabyte
+			showmedialib: false,
+			fileid: '',
+			load: false,
+			userroles: ['all'],
+			selectedrole: '',
+		}
+	},
+	mounted: function(){
+		this.getrestriction();
+	},
+	methods: {
+		update: function(value)
+		{
+			FormBus.$emit('forminput', {'name' : this.name, 'value' : value});
+		},
+		updatemarkdown: function(markdown, url)
+		{
+			/* is called from child component medialib if file has been selected */
+			this.update(url);
+			this.getrestriction(url);
+		},
+		createmarkdown: function(url)
+		{
+			/* is called from child component medialib */
+			this.update(url);
+		},
+		openmedialib: function()
+		{
+			this.showmedialib = true;
+		},
+		deleteFile: function()
+		{
+			this.update('');
+			this.selectedrole = 'all';
+		},
+		getrestriction: function(url)
+		{
+			var filename = this.value;
+			if(url)
+			{
+				filename = url;
+			}
+
+			var myself = this;
+
+		    myaxios.get('/api/v1/filerestrictions',{
+		      params: {
+						'url':			document.getElementById("path").value,
+						'csrf_name': 	document.getElementById("csrf_name").value,
+						'csrf_value':	document.getElementById("csrf_value").value,
+						'filename': 	filename,
+		      }
+			})
+		    .then(function (response) {
+		    	myself.userroles 		= ['all'];
+	    		myself.userroles 		= myself.userroles.concat(response.data.userroles);
+	    		myself.selectedrole		= response.data.restriction;
+		    })
+		    .catch(function (error)
+		    {
+		      if(error.response)
+		      {
+		      }
+		    });
+		},
+		updaterestriction: function()
+		{
+		    myaxios.post('/api/v1/filerestrictions',{
+						'url':			document.getElementById("path").value,
+						'csrf_name': 	document.getElementById("csrf_name").value,
+						'csrf_value':	document.getElementById("csrf_value").value,
+						'filename': 	this.value,
+						'role': 		this.selectedrole,
+			})
+		    .then(function (response) {
+		    	
+		    })
+		    .catch(function (error)
+		    {
+		      if(error.response)
+		      {
+		      }
+		    });
+		},
+		onFileChange: function( e )
+		{
+			if(e.target.files.length > 0)
+			{
+				let uploadedFile = e.target.files[0];
+				let size = uploadedFile.size / 1024 / 1024;
+				
+				if (size > this.maxsize)
+				{
+					publishController.errors.message = "The maximal size of a file is " + this.maxsize + " MB";
+				}
+				else
+				{
+					sharedself = this;
+					
+					sharedself.load = true;
+
+					let reader = new FileReader();
+					reader.readAsDataURL(uploadedFile);
+					reader.onload = function(e) {				
+					    myaxios.post('/api/v1/file',{
+							'url':				document.getElementById("path").value,
+							'file':				e.target.result,
+							'name': 			uploadedFile.name, 
+							'publish':  		true,
+							'csrf_name': 		document.getElementById("csrf_name").value,
+							'csrf_value':		document.getElementById("csrf_value").value,
+						})
+					    .then(function (response) {
+							sharedself.load = false;
+							sharedself.selectedrole = 'all';
+							sharedself.update(response.data.info.url);
+					    })
+					    .catch(function (error)
+					    {
+							sharedself.load = false;
+					    	if(error.response)
+					    	{
+					        	publishController.errors.message = error.response.data.errors;
+					      	}
+					    });
+					}
+				}
+			}
+		}
+	}
 })
 
 const medialib = Vue.component('medialib', {
