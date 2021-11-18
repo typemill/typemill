@@ -69,7 +69,6 @@ article h1, article h2, article h3, article h4, article h5, article h6{
 	line-height: 1.15em;
 	font-weight: 700; 
 	line-height: 1em; 
-	position: relative;
 }
 h1,h2,h3,h4,h5,h6{ word-wrap: break-word; hyphens: auto; }
 article h1{ font-size: 2.2em; margin: 1.4em 0 0.6em; z-index:1; }
@@ -237,9 +236,8 @@ ul.TOC,.TOC ul{
 
 /* Style the optional anchor-links for headlines */
 a.tm-heading-anchor {
-    position: absolute;
-    top: 0;
-	left: -0.8em;
+	display:  inline-block;
+	margin-left:  -0.8em;
 	width: 0.8em;
 	font-weight: 300;
     opacity: 0;

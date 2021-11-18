@@ -77,10 +77,11 @@ class ParsedownExtension extends \ParsedownExtra
     }
     
     public function markup($Elements)
-    {        
+    {
         # convert to markup
         $markup = $this->elements($Elements);
 
+ #       die();
         # trim line breaks
         $markup = trim($markup, "\n");
 
@@ -362,6 +363,11 @@ class ParsedownExtension extends \ParsedownExtra
 
             $text = trim($text, ' ');
 
+            if($this->showAnchor && $level > 1)
+            {
+                $text = "[#](#h-$headline){.tm-heading-anchor}" . $text;
+            }
+
             $Block = array(
                 'element' => array(
                     'name' => 'h' . min(6, $level),
@@ -375,23 +381,6 @@ class ParsedownExtension extends \ParsedownExtra
                     ),
                 )
             );
-
-            if($this->showAnchor && $level > 1)
-            {
-                $Block['element']['elements'] = array(
-                            array(
-                                'name' => 'a',
-                                'attributes' => array(
-                                    'href'     =>  "#h-" . $headline,
-                                    'class'    => 'tm-heading-anchor',
-                                ),
-                                'text' => '#',
-                            ),
-                            array(
-                                'text' => $text,
-                            )
-                        );
-            }
 
             $this->headlines[]  = array('level' => $level, 'name' => $Block['element']['name'], 'attribute' => $Block['element']['attributes']['id'], 'text' => $text);
 
