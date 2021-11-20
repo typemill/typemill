@@ -2,9 +2,6 @@
 
 Typemill has a build-in system to restrict access to pages or to the whole websites. You can activate both features in the system settings under the section "access rights". If you activate one of the features, then Typemill will use session cookies on all frontend pages. Learn all the details in the following video tutorial:
 
-```pagebreak
-```
-
 ![youtube-video](media/live/youtube-uw-m-4g1kaa.jpeg "click to load video"){#UW_m-4g1kAA .youtube}
 
 ## Restrict Access for the Website

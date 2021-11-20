@@ -91,6 +91,10 @@ class Fields
 				# Now prepopulate the field object with the value */
 				if($field->getType() == "textarea")
 				{
+					if($fieldName == "publicformdefinitions" && $userValue == '')
+					{
+						$userValue = $objectSettings['settings'][$fieldName];
+					}					
 					if($userValue)
 					{
 						$field->setContent($userValue);

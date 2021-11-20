@@ -257,9 +257,14 @@ abstract class Plugin implements EventSubscriberInterface
 
 			# get settings and start validation
 			$originalSettings 	= \Typemill\Settings::getObjectSettings('plugins', $pluginName);
-			if(isset($settings['plugins'][$pluginName]['publicformdefinitions']))
+			if(isset($settings['plugins'][$pluginName]['publicformdefinitions']) && $settings['plugins'][$pluginName]['publicformdefinitions'] != '')
 			{
 				$arrayFromYaml 	= \Symfony\Component\Yaml\Yaml::parse($settings['plugins'][$pluginName]['publicformdefinitions']);
+				$originalSettings['public']['fields'] = $arrayFromYaml;
+			}
+			elseif(isset($originalSettings['settings']['publicformdefinitions']))
+			{
+				$arrayFromYaml 	= \Symfony\Component\Yaml\Yaml::parse($originalSettings['settings']['publicformdefinitions']);
 				$originalSettings['public']['fields'] = $arrayFromYaml;
 			}
 

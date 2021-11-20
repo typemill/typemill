@@ -137,7 +137,7 @@ class ControllerDownload extends ControllerShared
 		header_remove("Last-Modified");
 		header('Cache-Control: max-age=0, no-cache, no-store, must-revalidate');
 		header('Cache-Control: private', false); # required for some browsers
-		header('Content-Type: application/zip');
+		header('Content-Type: ' . $mimetype);
 		header('Content-Disposition: attachment; filename="'.basename($file).'";'); # Make the browser display the Save As dialog
 		header('Content-Transfer-Encoding: binary');
 		header('Content-Length: '.filesize($file));
