@@ -45,7 +45,8 @@
 						</div>
 						<div class="large" :class="{'error' : errors.content}">
 							<label for="content">{{ __('Content') }}*</label>
-								<textarea id="content" v-model="form.content" @input="changeContent" required>{{ content }}</textarea>
+							<textarea @input="changeContent" v-model="form.content" required></textarea>
+							<div id="content" style="display:none" v-pre>{{ content }}</div>
 							<span class="error" v-if="errors.content">${ errors.content }</span>
 						</div>
 						<input id="path" type="hidden" value="{{ item.urlRel }}" required readonly />

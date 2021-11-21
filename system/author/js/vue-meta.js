@@ -146,8 +146,8 @@ let meta = new Vue({
 			{
 				editor.showEditor = 'hidden';
 				posts.showPosts = 'hidden';
-			}
 	    	return 'tab-' + this.currentTab.toLowerCase()
+			}
 		}
 	},
 	mounted: function(){

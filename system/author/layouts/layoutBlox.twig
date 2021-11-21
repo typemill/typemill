@@ -62,7 +62,11 @@
 		{{ assets.renderEditorJS() }}
 
 		<script src="{{ base_url }}/system/author/js/vue-blox.js?20211010"></script>
-		<script src="{{ base_url }}/system/author/js/vue-posts.js?20211010"></script>
+		{% if item.elementType == "folder" %}
+			<script src="{{ base_url }}/system/author/js/vue-posts.js?20211010"></script>
+		{% else %}
+      		<script>let posts = false;</script>
+		{% endif %}
 		<script src="{{ base_url }}/system/author/js/sortable.min.js?20211010"></script>
 		<script src="{{ base_url }}/system/author/js/vuedraggable.umd.min.js?20211010"></script>
 		<script src="{{ base_url }}/system/author/js/vue-navi.js?20211010"></script>

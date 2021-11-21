@@ -722,7 +722,7 @@ class ControllerAuthorArticleApi extends ControllerAuthor
 		# update the structure for editor
 		$this->setFreshStructureDraft();
 
-		$folder	= Folder::getItemWithKeyPath($this->structureYaml, $folderKeyPath);
+		$folder	= Folder::getItemWithKeyPath($this->structureDraft, $folderKeyPath);
 
 		# activate this if you want to redirect after creating the page...
 		# $url = $this->uri->getBaseUrl() . '/tm/content/' . $this->settings['editor'] . $folder->urlRelWoF . '/' . $slug;
@@ -1031,7 +1031,6 @@ class ControllerAuthorArticleApi extends ControllerAuthor
 		{
 			$content[0] = trim($content[0], "# ");
 		}
-		
 		return $response->withJson(array('data' => $content, 'errors' => false));
 	}
 	

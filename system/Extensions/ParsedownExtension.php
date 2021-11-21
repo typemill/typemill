@@ -994,6 +994,11 @@ class ParsedownExtension extends \ParsedownExtra
                     );
                 }
 
+                # keep empty lines in pre-tags
+                if($CurrentBlock['type'] == 'FencedCode' && isset($current['text']))
+                {
+                    $current['text'] .= "\n";
+                }
                 continue;
             }
 
@@ -1050,7 +1055,6 @@ class ParsedownExtension extends \ParsedownExtra
 
             # current block failed to "eat" current line
             # let's see if we can start a new block
-
             $marker = $text[0];
 
             # ~
