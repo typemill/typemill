@@ -363,6 +363,8 @@ class ParsedownExtension extends \ParsedownExtra
 
             $text = trim($text, ' ');
 
+            $tocText = $text;
+
             if($this->showAnchor && $level > 1)
             {
                 $text = "[#](#h-$headline){.tm-heading-anchor}" . $text;
@@ -382,7 +384,7 @@ class ParsedownExtension extends \ParsedownExtra
                 )
             );
 
-            $this->headlines[]  = array('level' => $level, 'name' => $Block['element']['name'], 'attribute' => $Block['element']['attributes']['id'], 'text' => $text);
+            $this->headlines[]  = array('level' => $level, 'name' => $Block['element']['name'], 'attribute' => $Block['element']['attributes']['id'], 'text' => $tocText);
 
             return $Block;
         }
