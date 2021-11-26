@@ -7,6 +7,7 @@ use Typemill\Models\Folder;
 use Typemill\Models\WriteCache;
 use Typemill\Models\WriteYaml;
 use Typemill\Events\OnPageReady;
+use Typemill\Events\OnPagetreeLoaded;
 
 abstract class ControllerShared
 {
@@ -226,7 +227,7 @@ abstract class ControllerShared
 				$this->setStructureLive();
 			}
 
-			$structureLive = $this->structureLive;
+			$structureLive = $this->c->dispatcher->dispatch('onPagetreeLoaded', new OnPagetreeLoaded($this->structureLive))->getData();
 			$this->navigation = $this->createNavigation($structureLive);
 
 			# cache navigation
