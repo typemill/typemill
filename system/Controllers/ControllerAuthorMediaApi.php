@@ -466,9 +466,8 @@ class ControllerAuthorMediaApi extends ControllerAuthor
 			$this->params['markdown'] = '![' . $class . '-video](' . $imageUrl . ' "click to load video"){#' . $videoID. ' .' . $class . '}';
 
 			$request 	= $request->withParsedBody($this->params);
-			
 			$block = new ControllerAuthorBlockApi($this->c);
-			if($params['new'])
+			if($this->params['new'])
 			{
 				return $block->addBlock($request, $response, $args);
 			}
