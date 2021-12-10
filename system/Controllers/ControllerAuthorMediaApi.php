@@ -229,8 +229,7 @@ class ControllerAuthorMediaApi extends ControllerAuthor
 		$size 		= (int) (strlen(rtrim($this->params['file'], '=')) * 3 / 4);
 		$extension 	= pathinfo($this->params['name'], PATHINFO_EXTENSION);
 		$finfo 		= finfo_open( FILEINFO_MIME_TYPE );
-		$mtype 		= finfo_file( $finfo, $this->params['file'] );
-		finfo_close( $finfo );
+		$mtype 		= @finfo_file( $finfo, $this->params['file'] );
 
 		if ($size === 0)
 		{
@@ -243,20 +242,24 @@ class ControllerAuthorMediaApi extends ControllerAuthor
 			return $response->withJson(['errors' => 'File is bigger than 20MB.'],422);
 		}
 
-		# make sure only allowed filetypes are uploaded
-		$allowedMimes = $this->getAllowedMtypes();
-
-		if(!isset($allowedMimes[$mtype]))
+		# in some environments the finfo_file does not work with a base64 string. In future we should store upload as temporary file and use that.
+		if($mtype)
 		{
-			return $response->withJson(['errors' => 'The mime-type is not allowed'],422);
-		}
+			# make sure only allowed filetypes are uploaded
+			$allowedMimes = $this->getAllowedMtypes();
 
-		if( 
-			(is_array($allowedMimes[$mtype]) && !in_array($extension, $allowedMimes[$mtype])) OR
-			(!is_array($allowedMimes[$mtype]) && $allowedMimes[$mtype] != $extension )
-		)
-		{
-			return $response->withJson(['errors' => 'The file-extension is not allowed or wrong'],422);
+			if(!isset($allowedMimes[$mtype]))
+			{
+				return $response->withJson(['errors' => 'The mime-type is not allowed'],422);
+			}
+
+			if(
+				(is_array($allowedMimes[$mtype]) && !in_array($extension, $allowedMimes[$mtype])) OR
+				(!is_array($allowedMimes[$mtype]) && $allowedMimes[$mtype] != $extension )
+			)
+			{
+				return $response->withJson(['errors' => 'The file-extension is not allowed or wrong'],422);
+			}
 		}
 
 		$fileProcessor	= new ProcessFile();
