@@ -292,7 +292,8 @@ class Validation
 		$v->rule('required', ['title', 'author', 'copyright', 'year', 'editor']);
 		$v->rule('lengthBetween', 'title', 2, 20);
 		$v->rule('lengthBetween', 'author', 2, 40);
-		$v->rule('regex', 'title', '/^[\pL0-9_ \-]*$/u');
+		$v->rule('noHTML', 'title');
+		# $v->rule('regex', 'title', '/^[\pL0-9_ \-]*$/u');
 		$v->rule('regex', 'author', '/^[\pL_ \-]*$/u');
 		$v->rule('integer', 'year');
 		$v->rule('length', 'year', 4);
