@@ -1,5 +1,5 @@
 name: Cyanine Theme
-version: 1.1.9
+version: 1.1.10
 description: Cyanine is a modern and flexible multi-purpose theme and the standard theme for typemill. 
 author: Trendschau
 homepage: https://trendschau.net
@@ -81,6 +81,10 @@ forms:
           type: text
           label: Label for startbutton
           placeholder: my label
+        introFullsize:
+          type: checkbox
+          label: Full Screen
+          checkboxlabel: Use full screen for the intro segment
         introImage:
           type: checkbox
           label: Background Image

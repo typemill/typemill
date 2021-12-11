@@ -6,8 +6,6 @@ Typemill provides detailed settings, and you have access to nearly all settings 
 
 You will find all configurations and settings under the main navigation point `settings` with the following sub-navigation:
 
-[favicon io (ZIP, 21.53 KB)](media/files/favicon-io.zip){.tm-download file-zip}
-
 * System settings
 * Theme settings
 * Plugin settings
@@ -15,9 +13,15 @@ You will find all configurations and settings under the main navigation point `s
 
 All settings are stored in the `\settings` folder of Typemill. It is not recommended to edit the settings manually, because it might crash the system if done wrong.
 
+[:replace text="hallo" color="green":]
+
+[:replace text="hallo" color="red":]
+
 ## Developer Settings
 
 As of version 1.4.0 you will find some advanced developer settings in the author panel under `settings`. See the details below. 
+
+[:ebookproduct id="unknown":]
 
 ! **Only for devs**
 ! 

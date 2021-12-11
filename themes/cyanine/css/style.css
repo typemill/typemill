@@ -108,8 +108,8 @@ tr{
 th,td{
 	padding: .5em 1em;
 }
-p b, p strong{
-	font-weight: bold;
+main b, main strong{
+	font-weight: 600;
 }
 
 /************************************

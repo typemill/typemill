@@ -1,28 +1,29 @@
-{% set nowYear = "now"|date("Y") %}
+{% if (settings.themes.cyanine.footercolumns.footer1 or settings.themes.cyanine.footercolumns.footer2 or settings.themes.cyanine.footercolumns.footer3) %}
 
-<footer class="w-100 bl br bb lh-copy">
-	<div class="grid-container center pv3 flex-l">
-		{% for column,key in settings.themes.cyanine.footercolumns %}
-			{% if settings.themes.cyanine[column] %}
-				<div class="w-100 pv3 ph3 ph4-l">
-					{{ markdown(settings.themes.cyanine[column]) }}
-				</div>
-			{% endif %}
-		{% endfor %}
-	</div>
-	<div class="center pv3 tc-l w100">
-		{% if settings.year is empty or settings.year == nowYear %}
-		    {% set copyrightYears = nowYear %}
-		{% else %}
-		    {% set copyrightYears = settings.year ~ ' - ' ~ nowYear %}
-		{% endif %}
-	</div>
-</footer>
+	<footer class="w-100 bl br bb lh-copy">
+		<div class="grid-container center pv3 flex-l">
+			{% for column,key in settings.themes.cyanine.footercolumns %}
+				{% if settings.themes.cyanine[column] %}
+					<div class="w-100 pv3 ph3 ph4-l">
+						{{ markdown(settings.themes.cyanine[column]) }}
+					</div>
+				{% endif %}
+			{% endfor %}
+		</div>
+	</footer>
+
+{% endif %}
 
 <div class="w-100 center f6">
 	{% if settings.themes.cyanine.copyrightline %}
 		{{ markdown(settings.themes.cyanine.copyrightlinetext) }}
 	{% else %}
+		{% set nowYear = "now"|date("Y") %}
+		{% if settings.year is empty or settings.year == nowYear %}
+		    {% set copyrightYears = nowYear %}
+		{% else %}
+		    {% set copyrightYears = settings.year ~ ' - ' ~ nowYear %}
+		{% endif %}
 		<p class="f6">{{ settings.copyright }} {{ __('by') }} {{ settings.author }}, {{ copyrightYears }}. {{ __('All Rights Reserved') }}. {{ __('Built with') }} <a class="link underline f-secondary" href="https://typemill.net">Typemill</a>.</p>
 	{% endif %}
 </div>
