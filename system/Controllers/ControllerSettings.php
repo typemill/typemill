@@ -82,7 +82,7 @@ class ControllerSettings extends ControllerShared
 			$files 				= $request->getUploadedFiles();
 			$newSettings		= isset($params['settings']) ? $params['settings'] : false;
 			$validate			= new Validation();
-			$processFiles		= new ProcessFile();
+			$processImage		= new ProcessImage();
 
 			if($newSettings)
 			{
@@ -151,7 +151,7 @@ class ControllerSettings extends ControllerShared
 				return $response->withRedirect($this->c->router->pathFor('settings.show'));
 			}
 
-			if(!$processFiles->checkFolders())
+			if(!$processImage->checkFolders())
 			{
 					$this->c->flash->addMessage('error', 'Please make sure that your media folder exists and is writable.');
 					return $response->withRedirect($this->c->router->pathFor('settings.show'));
@@ -159,9 +159,9 @@ class ControllerSettings extends ControllerShared
 
 			# handle single input with single file upload
     		$logo = $files['settings']['logo'];
+    		$allowed = ['jpg', 'jpeg', 'png', 'svg'];
     		if($logo->getError() === UPLOAD_ERR_OK) 
     		{
-    			$allowed = ['jpg', 'jpeg', 'png', 'svg'];
     			$extension = pathinfo($logo->getClientFilename(), PATHINFO_EXTENSION);
     			if(!in_array(strtolower($extension), $allowed))
     			{
@@ -170,12 +170,20 @@ class ControllerSettings extends ControllerShared
 					return $response->withRedirect($this->c->router->pathFor('settings.show'));
     			}
 
-    			$processFiles->deleteFileWithName('logo');
-		        $newSettings['logo'] = $processFiles->moveUploadedFile($logo, $overwrite = true, $name = 'logo');
+    			foreach($allowed as $logoextension)
+    			{
+	    			$processImage->deleteImage('logo.' . $logoextension);
+    			}
+
+		        $newSettings['logo'] = $processImage->moveUploadedImage($logo, $overwrite = true, $name = 'logo');
+		        $processImage->copyImage('logo.' . $logoextension, $processImage->liveFolder, $processImage->thumbFolder);
 		    }
 		    elseif(isset($params['settings']['deletelogo']) && $params['settings']['deletelogo'] == 'delete')
 		    {
-		    	$processFiles->deleteFileWithName('logo');
+    			foreach($allowed as $logoextension)
+    			{
+	    			$processImage->deleteImage('logo.' . $logoextension);
+    			}
 		    	$newSettings['logo'] = '';
 		    }
 		    else
@@ -195,7 +203,7 @@ class ControllerSettings extends ControllerShared
 					return $response->withRedirect($this->c->router->pathFor('settings.show'));
     			}
 
-    			$processImage = new ProcessImage([
+    			$processFavImage = new ProcessImage([
     				'16' => ['width' => 16, 'height' => 16], 
     				'32' => ['width' => 32, 'height' => 32],
     				'72' => ['width' => 72, 'height' => 72],
@@ -203,19 +211,19 @@ class ControllerSettings extends ControllerShared
     				'144' => ['width' => 144, 'height' => 144],
     				'180' => ['width' => 180, 'height' => 180],
     			]);
-    			$favicons = $processImage->generateSizesFromImageFile('favicon.png', $favicon->file);
+    			$favicons = $processFavImage->generateSizesFromImageFile('favicon.png', $favicon->file);
 
     			foreach($favicons as $key => $favicon)
     			{
-    				imagepng( $favicon, $processFiles->fileFolder . 'favicon-' . $key . '.png' );
-					# $processFiles->moveUploadedFile($favicon, $overwrite = true, $name = 'favicon-' . $key);
+    				imagepng( $favicon, $processFavImage->fileFolder . 'favicon-' . $key . '.png' );
     			}
 
 		        $newSettings['favicon'] = 'favicon';
 		    }
 		    elseif(isset($params['settings']['deletefav']) && $params['settings']['deletefav'] == 'delete')
 		    {
-		    	$processFiles->deleteFileWithName('favicon');
+		    	$processFiles = new ProcessFile();
+		    	$processFiles->deleteFileWithName('favicon-*.png');
 		    	$newSettings['favicon'] = '';
 		    }
 		    else

@@ -13,7 +13,7 @@ class ProcessFile extends ProcessAssets
 	 * @param UploadedFile $uploadedFile file uploaded file to move
 	 * @return string filename of moved file
 	 */
-	public function moveUploadedFile(UploadedFile $uploadedFile, $overwrite = false, $name = false)
+	public function moveUploadedFile(UploadedFile $uploadedFile, $overwrite = false, $name = false, $folder = NULL)
 	{
 		$this->setFileName($uploadedFile->getClientFilename(), 'file');
 		
@@ -104,7 +104,7 @@ class ProcessFile extends ProcessAssets
 
 		if($name != '' && !in_array($name, array(".","..")))
 		{
-			foreach(glob($this->fileFolder . $name . '.*') as $file)
+			foreach(glob($this->fileFolder . $name) as $file)
 			{
 				unlink($file);
 			}

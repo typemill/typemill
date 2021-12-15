@@ -72,7 +72,15 @@ class ControllerFrontendWebsite extends ControllerShared
 		$logo = false;
 		if(isset($this->settings['logo']) && $this->settings['logo'] != '')
 		{
-			$logo = 'media/files/' . $this->settings['logo'];
+			# check if logo exists
+			if(file_exists($this->settings['rootPath'] . 'media/live/' . $this->settings['logo']))
+			{
+				$logo = 'media/live/' . $this->settings['logo'];
+			}
+			elseif(file_exists($this->settings['rootPath'] . 'media/files/' . $this->settings['logo']))
+			{
+				$logo = 'media/files/' . $this->settings['logo'];				
+			}
 		}
 
 		$favicon = false;

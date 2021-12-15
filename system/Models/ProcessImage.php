@@ -1,6 +1,7 @@
 <?php
 namespace Typemill\Models;
 
+use Slim\Http\UploadedFile;
 use Typemill\Models\Helpers;
 
 class ProcessImage extends ProcessAssets
@@ -261,6 +262,32 @@ class ProcessImage extends ProcessAssets
 		
 		return false;
 	}
+
+	/**
+	 * Moves the uploaded file to the upload directory. Only used for settings / NON VUE.JS uploads
+	 *
+	 * @param string $directory directory to which the file is moved
+	 * @param UploadedFile $uploadedFile file uploaded file to move
+	 * @return string filename of moved file
+	 */
+	public function moveUploadedImage(UploadedFile $uploadedFile, $overwrite = false, $name = false, $folder = NULL)
+	{
+		$this->setFileName($uploadedFile->getClientFilename(), 'file');
+		
+		if($name)
+		{
+			$this->setFileName($name . '.' . $this->extension, 'file', $overwrite);
+		}
+
+		if(!$folder)
+		{
+			$folder = $this->liveFolder;
+		}	
+
+	    $uploadedFile->moveTo($folder . $this->getFullName());
+
+	    return $this->getFullName();
+	}	
 	
 	public function deleteImage($name)
 	{
@@ -299,6 +326,35 @@ class ProcessImage extends ProcessAssets
 		}
 		
 		return $result;
+	}
+
+
+	public function deleteImageWithName($name)
+	{
+		# e.g. delete $name = 'logo...';
+
+		$name = basename($name);
+
+		if($name != '' && !in_array($name, array(".","..")))
+		{
+			foreach(glob($this->liveFolder . $name) as $file)
+			{
+				unlink($file);
+			}
+			foreach(glob($this->originalFolder . $name) as $file)
+			{
+				unlink($file);
+			}
+			foreach(glob($this->thumbFolder . $name) as $file)
+			{
+				unlink($file);
+			}
+		}
+	}
+
+	public function copyImage($name,$sourcefolder,$targetfolder)
+	{
+		copy($sourcefolder . $name, $targetfolder . $name);
 	}
 
 	/*
