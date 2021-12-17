@@ -19,6 +19,7 @@ class Assets
 		$this->editorCSS 		= array();
 		$this->editorInlineJS 	= array();
 		$this->svgSymbols		= array();
+		$this->meta 			= array();
 		$this->imageUrl 		= false;
 		$this->imageFolder 		= 'original';
 	}
@@ -211,21 +212,6 @@ class Assets
 		$this->svgSymbols[] = $symbol;
 	}
 
-	public function renderCSS()
-	{
-		return implode("\n", $this->CSS) . implode("\n", $this->inlineCSS);
-	}
-	
-	public function renderJS()
-	{
-		return implode("\n", $this->JS) . implode("\n", $this->inlineJS);
-	}
-
-	public function renderSvg()
-	{
-		return implode('', $this->svgSymbols);
-	}
-
 	# add JS to enhance the blox-editor in author area
 	public function addEditorJS($JS)
 	{
@@ -252,6 +238,11 @@ class Assets
 		}
 	}
 
+	public function addMeta($key,$meta)
+	{
+		$this->meta[$key] = $meta;
+	}
+
 	public function renderEditorJS()
 	{
 		return implode("\n", $this->editorJS) . implode("\n", $this->editorInlineJS);
@@ -262,6 +253,31 @@ class Assets
 		return implode("\n", $this->editorCSS);
 	}
 
+	public function renderCSS()
+	{
+		return implode("\n", $this->CSS) . implode("\n", $this->inlineCSS);
+	}
+	
+	public function renderJS()
+	{
+		return implode("\n", $this->JS) . implode("\n", $this->inlineJS);
+	}
+
+	public function renderSvg()
+	{
+		return implode('', $this->svgSymbols);
+	}
+
+	public function renderMeta()
+	{
+		$metaLines = '';
+		foreach($this->meta as $meta)
+		{
+			$metaLines .= "\n";
+			$metaLines .= $meta;
+		}
+		return $metaLines;
+	}
 	/**
 	 * Checks, if a string is a valid internal or external ressource like js-file or css-file
 	 * @params $path string

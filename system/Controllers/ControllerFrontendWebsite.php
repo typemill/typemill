@@ -87,7 +87,15 @@ class ControllerFrontendWebsite extends ControllerShared
 		if(isset($this->settings['favicon']) && $this->settings['favicon'] != '')
 		{
 			$favicon = true;
-		}
+			$this->c->assets->addMeta('tilecolor','<meta name="msapplication-TileColor" content="#F9F8F6" />');
+			$this->c->assets->addMeta('tileimage','<meta name="msapplication-TileImage" content="' . $this->base_url . '/media/files/favicon-144.png" />');
+			$this->c->assets->addMeta('icon16','<link rel="icon" type="image/png" href="' . $this->base_url . '/media/files/favicon-16.png" sizes="16x16" />');
+			$this->c->assets->addMeta('icon32','<link rel="icon" type="image/png" href="' . $this->base_url . '/media/files/favicon-32.png" sizes="32x32" />');
+			$this->c->assets->addMeta('icon72','<link rel="apple-touch-icon" sizes="72x72" href="' . $this->base_url . '/media/files/favicon-72.png" />');
+			$this->c->assets->addMeta('icon114','<link rel="apple-touch-icon" sizes="114x114" href="' . $this->base_url . '/media/files/favicon-114.png" />');
+			$this->c->assets->addMeta('icon144','<link rel="apple-touch-icon" sizes="144x144" href="' . $this->base_url . '/media/files/favicon-144.png" />');
+			$this->c->assets->addMeta('icon180','<link rel="apple-touch-icon" sizes="180x180" href="' . $this->base_url . '/media/files/favicon-180.png" />');
+		}		
 
 		# the navigation is a copy of the structure without the hidden pages
 		# hint: if the navigation has been deleted from the cache, then we do not recreate it here to save performace. Instead you have to recreate cache in admin or change a page (publish/unpublish/delete/move)
@@ -219,6 +227,18 @@ class ControllerFrontendWebsite extends ControllerShared
 		# makes sure that you always have the full meta with title, description and all the rest.
 		$metatabs 		= $writeMeta->completePageMeta($contentMD, $this->settings, $item);
 
+		# write meta
+		if(isset($metatabs['meta']['noindex']) && $metatabs['meta']['noindex'])
+		{
+			$this->c->assets->addMeta('noindex','<meta name="robots" content="noindex">');
+		}
+
+		$this->c->assets->addMeta('og_site_name','<meta property="og:site_name" content="' . $this->settings['title'] . '">');
+		$this->c->assets->addMeta('og_title','<meta property="og:title" content="' . $metatabs['meta']['title'] . '">');
+		$this->c->assets->addMeta('og_description','<meta property="og:description" content="' . $metatabs['meta']['description'] . '">');
+		$this->c->assets->addMeta('og_type','<meta property="og:type" content="article">');
+		$this->c->assets->addMeta('og_url','<meta property="og:url" content="' . $item->urlAbs . '">');
+
 		# dispatch meta 
 		$metatabs 		= $this->c->dispatcher->dispatch('onMetaLoaded', new OnMetaLoaded($metatabs))->getData();
 
@@ -320,6 +340,10 @@ class ControllerFrontendWebsite extends ControllerShared
 		if($img_url)
 		{
 			$firstImage = array('img_url' => $this->base_url . '/' . $img_url, 'img_alt' => $img_alt);
+
+			$this->c->assets->addMeta('og_image','<meta property="og:image" content="' . $img_url . '">');
+			$this->c->assets->addMeta('twitter_image_alt','<meta name="twitter:image:alt" content="' . $img_alt. '">');
+			$this->c->assets->addMeta('twitter_card','<meta name="twitter:card" content="summary_large_image">');
 		}
 		
 		$route = empty($args) && isset($this->settings['themes'][$theme]['cover']) ? '/cover.twig' : '/index.twig';
