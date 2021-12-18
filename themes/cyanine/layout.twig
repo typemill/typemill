@@ -13,6 +13,8 @@
 		{{ assets.renderMeta() }}
 
 		{% block stylesheets %}
+
+			{{ assets.activateTachyons() }}
     
 			<link rel="stylesheet" href="{{ base_url }}/themes/cyanine/css/style.css??20210821" />
 			
@@ -176,7 +178,6 @@
 
 			</style>
 
-			{{ assets.activateTachyons() }}
 			{{ assets.renderCSS() }}
 			
 		{% endblock %}

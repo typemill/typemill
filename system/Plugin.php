@@ -150,6 +150,16 @@ abstract class Plugin implements EventSubscriberInterface
 		$this->container->assets->addEditorCSS($CSS);
 	}
 
+	protected function getMeta()
+	{
+		return $this->container->assets->meta;
+	}
+
+	public function addMeta($key,$meta)
+	{
+		$this->container->assets->addMeta($key, $meta);
+	}
+
 	protected function activateAxios()
 	{
 		$this->container->assets->activateAxios();		
