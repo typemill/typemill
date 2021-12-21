@@ -82,7 +82,7 @@ class Settings
 			'userPath'								=> $rootPath . 'settings' . DIRECTORY_SEPARATOR . 'users',
 			'authorPath'							=> __DIR__ . DIRECTORY_SEPARATOR . 'author' . DIRECTORY_SEPARATOR,
 			'editor'								=> 'visual',
-			'formats'								=> ['markdown', 'headline', 'ulist', 'olist', 'table', 'quote', 'notice', 'image', 'video', 'file', 'toc', 'hr', 'definition', 'code'],
+			'formats'								=> ['markdown', 'headline', 'ulist', 'olist', 'table', 'quote', 'notice', 'image', 'video', 'file', 'toc', 'hr', 'definition', 'code', 'shortcode'],
 			'contentFolder'							=> 'content',
 			'version'								=> '1.5.1.1',
 			'setup'									=> true,

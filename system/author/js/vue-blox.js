@@ -781,6 +781,132 @@ const codeComponent = Vue.component('code-component', {
 	},
 })
 
+const shortcodeComponent = Vue.component('shortcode-component', {
+	props: ['compmarkdown', 'disabled'],
+	data: function(){
+		return {
+			shortcodedata: false,
+			shortcodename: '',
+			markdown: '',
+			searchresults: [],
+		}
+	},
+	template: '<div>' + 
+				'<div class="contenttype"><svg class="icon icon-square-brackets"><use xlink:href="#icon-square-brackets"></use></svg></div>' +
+				'<div v-if="shortcodedata" class="pa4 bg-tm-gray" ref="markdown">' +
+					'<label class="w-20 dib" for="shortcodename">{{ \'Shortcode\'|translate }}: </label>' + 
+					'<select class="w-80 dib bg-white" title="shortcodename" v-model="shortcodename"><option v-for="shortcode,name in shortcodedata" :value="name">{{ name }}</option></select>' +
+					'<div class="mt1 mb1" v-for="key,attribute in shortcodedata[shortcodename]">' +
+						'<label class="w-20 dib" for="key">{{ attribute }}: </label>' + 
+						'<input class="w-80 dib bg-white" type="text" v-model="shortcodedata[shortcodename][attribute].value" @input="createmarkdown(shortcodename,attribute)">' +
+						'<div class="w-20 dib v-top tr"> </div>' +
+						'<div class="w-80 dib mb1 bg-white">' + 
+						  '<span class="db bt b--light-gray pa2 hover-bg-near-white pointer" v-for="item in searchresults" @click="selectsearch(item,attribute)">{{item}}</span>' + 
+						 '</div>' +
+					'</div>' +
+				'</div>' +
+				'<textarea v-else class="mdcontent" ref="markdown" placeholder="No shortcodes are registered" disabled></textarea>' +
+				'</div>',
+	mounted: function(){
+
+		var myself = this;
+		
+		myaxios.get('/api/v1/shortcodedata',{
+	  	params: {
+				'url':			document.getElementById("path").value,
+				'csrf_name': 	document.getElementById("csrf_name").value,
+				'csrf_value':	document.getElementById("csrf_value").value,
+			}
+		})
+		.then(function (response) {
+			if(response.data.shortcodedata !== false)
+			{
+				myself.shortcodedata = response.data.shortcodedata;
+				myself.parseshortcode();
+			}
+		})
+		.catch(function (error)
+		{
+			if(error.response)
+	    {
+
+	   	}
+		});
+	},
+	methods: {
+		parseshortcode: function()
+		{
+			if(this.compmarkdown)
+			{
+				var shortcodestring 	= this.compmarkdown.trim();
+				shortcodestring 			= shortcodestring.slice(2,-2);
+				this.shortcodename 		= shortcodestring.substr(0,shortcodestring.indexOf(' '));
+
+				var regexp 						= /(\w+)\s*=\s*("[^"]*"|\'[^\']*\'|[^"\'\\s>]*)/g;
+				var matches 					= shortcodestring.matchAll(regexp);
+				matches 							= Array.from(matches);
+				matchlength 					= matches.length;
+				
+				if(matchlength > 0)
+				{
+					for(var i=0;i<matchlength;i++)
+					{
+						var attribute 			= matches[i][1];
+						var attributeValue 	= matches[i][2].replaceAll('"','');
+				
+						this.shortcodedata[this.shortcodename][attribute].value = attributeValue;
+					}
+				}
+			}
+		},
+		createmarkdown: function(shortcodename,attribute)
+		{
+
+			/* search */
+			this.searchresults = [];
+
+			if(this.shortcodedata[shortcodename][attribute].content !== undefined && this.shortcodedata[shortcodename][attribute].value != '')
+			{
+				var searchterm = this.shortcodedata[shortcodename][attribute].value;
+				var searchitems = this.shortcodedata[shortcodename][attribute].content;
+
+				for(var item in searchitems)
+				{
+						if(searchitems[item].indexOf(searchterm) > -1 && searchitems[item] !== searchterm)
+						{
+							this.searchresults.push(searchitems[item]);
+							if(this.searchresults.length > 4){ break; }
+						}
+				}
+			}
+
+			/* markdown */
+			var attributes = '';
+			for (var attribute in this.shortcodedata[shortcodename])
+			{
+				if(this.shortcodedata[shortcodename].hasOwnProperty(attribute))
+				{
+			    attributes += ' ' + attribute + '="' +  this.shortcodedata[shortcodename][attribute].value + '"';
+				}
+			}
+
+			this.markdown = '[:' + shortcodename + attributes + ' :]';
+
+			this.$emit('updatedMarkdown', this.markdown);
+		},
+		selectsearch: function(item,attribute)
+		{
+			/* check if still reactive */
+			this.shortcodedata[this.shortcodename][attribute].value = item;
+			this.createmarkdown(this.shortcodename,attribute);
+		},
+		updatemarkdown: function(event)
+		{
+			this.$emit('updatedMarkdown', event.target.value);
+		},
+	},
+})
+
 const quoteComponent = Vue.component('quote-component', {
 	props: ['compmarkdown', 'disabled'],
 	template: '<div>' + 

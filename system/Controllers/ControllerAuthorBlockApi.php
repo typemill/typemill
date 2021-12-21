@@ -5,6 +5,7 @@ namespace Typemill\Controllers;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Typemill\Extensions\ParsedownExtension;
+use Typemill\Events\OnShortcodeFound;
 
 class ControllerAuthorBlockApi extends ControllerAuthor
 {
@@ -569,5 +570,28 @@ class ControllerAuthorBlockApi extends ControllerAuthor
 		}
 
 		return $response->withJson(array('markdown' => $pageMarkdown, 'toc' => $toc, 'errors' => $errors));
+	}
+
+	public function getShortcodeData(Request $request, Response $response, $args)
+	{
+		/* get params from call */
+		$this->params 	= $request->getParams();
+		$this->uri 		= $request->getUri()->withUserInfo('');
+		$errors			= false;
+
+		# minimum permission is that user is allowed to update his own content
+		if(!$this->c->acl->isAllowed($_SESSION['role'], 'mycontent', 'update'))
+		{
+			return $response->withJson(array('data' => false, 'errors' => ['message' => 'You are not allowed to delete this content.']), 403);
+		}
+
+        $shortcodeData = $this->c->dispatcher->dispatch('onShortcodeFound', new OnShortcodeFound(['name' => 'registershortcode', 'data' => []]))->getData();
+
+        if(empty($shortcodeData['data']))
+        {
+			return $response->withJson(array('shortcodedata' => false));
+        }
+
+		return $response->withJson(array('shortcodedata' => $shortcodeData['data']));
 	}
 }

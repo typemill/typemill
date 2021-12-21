@@ -36,6 +36,7 @@ $app->post('/api/v1/block', ControllerAuthorBlockApi::class . ':addBlock')->setN
 $app->put('/api/v1/block', ControllerAuthorBlockApi::class . ':updateBlock')->setName('api.block.update')->add(new RestrictApiAccess($container['router']));
 $app->delete('/api/v1/block', ControllerAuthorBlockApi::class . ':deleteBlock')->setName('api.block.delete')->add(new RestrictApiAccess($container['router']));
 $app->put('/api/v1/moveblock', ControllerAuthorBlockApi::class . ':moveBlock')->setName('api.block.move')->add(new RestrictApiAccess($container['router']));
+$app->get('/api/v1/shortcodedata', ControllerAuthorBlockApi::class . ':getShortcodeData')->setName('api.shortcodedata.get')->add(new RestrictApiAccess($container['router']));
 $app->post('/api/v1/video', ControllerAuthorMediaApi::class . ':saveVideoImage')->setName('api.video.save')->add(new RestrictApiAccess($container['router']));
 
 $app->get('/api/v1/medialib/images', ControllerAuthorMediaApi::class . ':getMediaLibImages')->setName('api.medialibimg.get')->add(new RestrictApiAccess($container['router']));

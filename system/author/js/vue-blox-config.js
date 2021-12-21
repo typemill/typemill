@@ -63,6 +63,13 @@ let determiner = {
 		}
 		return false;
 	},
+	shortcode: function(block,lines,firstChar,secondChar,thirdChar){
+		if( firstChar == '[' && secondChar == ':')
+		{
+			return "shortcode-component";
+		}
+		return false;
+	},
 	notice: function(block,lines,firstChar,secondChar,thirdChar){
 		if( firstChar == '!' && ( secondChar == '!' || secondChar == ' ') )
 		{
@@ -94,4 +101,5 @@ let bloxFormats = {
 			hr: { label: '<svg class="icon icon-pagebreak"><use xlink:href="#icon-pagebreak"></use></svg>', title: 'Horizontal Line', component: 'hr-component' },
 			definition: { label: '<svg class="icon icon-dots-two-vertical"><use xlink:href="#icon-dots-two-vertical"></use></svg>', title: 'Definition List', component: 'definition-component' },
 			code: { label: '<svg class="icon icon-embed"><use xlink:href="#icon-embed"></use></svg>', title: 'Code', component: 'code-component' },
+			shortcode: { label: '<svg class="icon icon-square-brackets"><use xlink:href="#icon-square-brackets"></use></svg>', title: 'Shortcode', component: 'shortcode-component' },
 };
