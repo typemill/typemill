@@ -788,7 +788,6 @@ const shortcodeComponent = Vue.component('shortcode-component', {
 			shortcodedata: false,
 			shortcodename: '',
 			markdown: '',
-			searchresults: [],
 		}
 	},
 	template: '<div>' + 
@@ -798,11 +797,10 @@ const shortcodeComponent = Vue.component('shortcode-component', {
 					'<select class="w-80 dib bg-white" title="shortcodename" v-model="shortcodename"><option v-for="shortcode,name in shortcodedata" :value="name">{{ name }}</option></select>' +
 					'<div class="mt1 mb1" v-for="key,attribute in shortcodedata[shortcodename]">' +
 						'<label class="w-20 dib" for="key">{{ attribute }}: </label>' + 
-						'<input class="w-80 dib bg-white" type="text" v-model="shortcodedata[shortcodename][attribute].value" @input="createmarkdown(shortcodename,attribute)">' +
-						'<div class="w-20 dib v-top tr"> </div>' +
-						'<div class="w-80 dib mb1 bg-white">' + 
-						  '<span class="db bt b--light-gray pa2 hover-bg-near-white pointer" v-for="item in searchresults" @click="selectsearch(item,attribute)">{{item}}</span>' + 
-						 '</div>' +
+						'<input class="w-80 dib bg-white" type="search" list="shortcodedata[shortcodename][attribute]" v-model="shortcodedata[shortcodename][attribute].value" @input="createmarkdown(shortcodename,attribute)">' +
+						'<datalist id="shortcodedata[shortcodename][attribute]">' + 
+						  '<option v-for="item in shortcodedata[shortcodename][attribute].content" @click="selectsearch(item,attribute)" :value="item"></option>' + 
+						'</datalist>' +
 					'</div>' +
 				'</div>' +
 				'<textarea v-else class="mdcontent" ref="markdown" placeholder="No shortcodes are registered" disabled></textarea>' +
@@ -861,26 +859,6 @@ const shortcodeComponent = Vue.component('shortcode-component', {
 		},
 		createmarkdown: function(shortcodename,attribute)
 		{
-
-			/* search */
-			this.searchresults = [];
-
-			if(this.shortcodedata[shortcodename][attribute].content !== undefined && this.shortcodedata[shortcodename][attribute].value != '')
-			{
-				var searchterm = this.shortcodedata[shortcodename][attribute].value;
-				var searchitems = this.shortcodedata[shortcodename][attribute].content;
-
-				for(var item in searchitems)
-				{
-						if(searchitems[item].indexOf(searchterm) > -1 && searchitems[item] !== searchterm)
-						{
-							this.searchresults.push(searchitems[item]);
-							if(this.searchresults.length > 4){ break; }
-						}
-				}
-			}
-
-			/* markdown */
 			var attributes = '';
 			for (var attribute in this.shortcodedata[shortcodename])
 			{
