@@ -129,10 +129,6 @@ footer a:hover, footer a:focus, footer a:active{
 	text-decoration: none;
 }
 
-/* Fix background for hightlight plugin 
-code.hljs{ background: transparent; }
-*/
-
 /* For definition list */
 dt::after{
 	content: ":";
@@ -147,15 +143,10 @@ figure{
 	margin: 2em auto;
 	padding: 0;
 }
-figure.left{
-	width: auto;
-	float: left;
-	margin: 0 2em 2em 0;
-}
-figure.right{
-	width: auto;
-	float: right;
-	margin: 0 0 2em 2em;
+figure.right, figure.left {
+    width: auto;
+    float: none;
+    margin: auto auto;
 }
 figure img{
 	display: block;
@@ -242,6 +233,7 @@ a.tm-heading-anchor {
 	font-weight: 300;
     opacity: 0;
     text-decoration: none;
+    float: right;
 }
 a.tm-heading-anchor:hover,a.tm-heading-anchor:focus {
     opacity: 1;
@@ -260,30 +252,6 @@ h6:hover > .tm-heading-anchor{
 	opacity: .5;
 	text-decoration: none;
 }
-
-/* style the typemill download-button for files 
-a.tm-download
-{
-	line-height: 35px; 
-	margin-left: 40px;
-}
-a.tm-download::before{
-	content: '\2193';
-	position: absolute;
-	margin-left: -40px;
-	width: 30px;
-	height: 30px;
-	font-family: Courier, Calibri, "Segoe UI", Roboto, Helvetica, -apple-system, BlinkMacSystemFont, sans-serif, Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-	font-size: 1em;
-	font-weight: 900;	
-	border-radius: 50%;
-	text-align: center;
-	text-decoration: none;
-}
-a.tm-download:hover::before{
-	text-decoration: none;
-}
-*/
 
 /* style the typemill download-button for files */
 a.tm-download{}
@@ -497,6 +465,19 @@ button.play-video::after {
 	h1,h2,h3,h4,h5,h6{ hyphens: manual; }
 }
 
+@media (min-width: 40em) {
+	figure.right {
+	    width: auto;
+	    float: right;
+	    margin: 0 0 2em 2em;
+	}
+	figure.left {
+	    width: auto;
+	    float: left;
+	    margin: 0 2em 2em 0;
+	}
+}
+
 @media screen and (min-width:50em) {
 	.grid-container{
 		display: grid;
@@ -543,6 +524,9 @@ button.play-video::after {
 		font-size: inherit;
 		max-height: inherit;
 	}
+	a.tm-heading-anchor {
+		float: left;
+	}
 }
 
 @media print {
@@ -553,14 +537,6 @@ button.play-video::after {
 	    margin-top: -10px!important;
 	    padding-top: 0px!important;
 	}
-/*	.logo a[href]:after {
-		content: "Homepage: " attr(href);
-		display:  block;
-		margin:  1rem 0;
-		font-size:  14px;
-		font-weight:  normal;
-	}
-*/
 	.logo-image{
 		max-width: 150px;
 	}	
@@ -595,5 +571,8 @@ button.play-video::after {
 	}
 	nav .mw6{
 		width:  100%;
+	}
+	a.tm-heading-anchor {
+		display: none;
 	}
 }

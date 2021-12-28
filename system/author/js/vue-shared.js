@@ -495,7 +495,7 @@ Vue.component('component-image', {
 				'<div class="flex flex-wrap item-start">' +
 					'<div class="w-50">' +
 						'<div class="w6 h6 bg-black-40 dtc v-mid bg-chess">' +
-							'<img v-if="imgpreview" :src="imgpreview" class="mw6 max-h6 dt center">' +
+							'<img :src="getimagesrc(value)" class="mw6 max-h6 dt center">' +
 						'</div>' +
 					'</div>' +
 					'<div class="w-50 ph3 lh-copy f6 relative">' +
@@ -523,7 +523,7 @@ Vue.component('component-image', {
 									'@input="update($event, name)">' +
 							'</div>' +
 							'<div class="dib w-100 mt2">' +
-								'<button class="w-100 pointer ba br1 b--tm-green bg--tm-gray black pa2 ma0 tc" @click.prevent="switchQuality()">{{ qualitylabel }}</button>' +
+								'<button class="w-100 pointer ba br1 b--tm-green bg--tm-gray black pa2 ma0 tc" @click.prevent="switchQuality(value)">{{ qualitylabel }}</button>' +
 							'</div>' +							
 						'</div>' +
 					  	'<div v-if="description" class="w-100 dib"><p>{{ description|translate }}</p></div>' +
@@ -546,23 +546,25 @@ Vue.component('component-image', {
 			qualitylabel: false,
 		}
 	},
-	mounted: function(){
-		if(this.value !== null && this.value !== '')
-		{
-			this.imgpreview = myaxios.defaults.baseURL + '/' + this.value;
-			if(this.value.indexOf("media/live") > -1 )
-			{
-				this.quality = 'live';
-				this.qualitylabel = 'switch quality to: original';
-			}
-			else if(this.value.indexOf("media/original") > -1)
-			{
-				this.quality = 'original';
-				this.qualitylabel = 'switch quality to: live';
-			}
-		}
-	},
 	methods: {
+		getimagesrc: function(value)
+		{
+			if(value !== null && value !== '')
+			{
+				var imgpreview = myaxios.defaults.baseURL + '/' + value;
+				if(value.indexOf("media/live") > -1 )
+				{
+					this.quality = 'live';
+					this.qualitylabel = 'switch quality to: original';
+				}
+				else if(value.indexOf("media/original") > -1)
+				{
+					this.quality = 'original';
+					this.qualitylabel = 'switch quality to: live';
+				}
+				return imgpreview;
+			}
+		},
 		update: function(value)
 		{
 			FormBus.$emit('forminput', {'name' : this.name, 'value' : value});
@@ -582,21 +584,24 @@ Vue.component('component-image', {
 			this.imgpreview = false;
 			this.update('');
 		},
-		switchQuality: function()
+		switchQuality: function(value)
 		{
-			if(this.quality == 'live')
+			if(value !== null && value !== '')
 			{
-				var newUrl = this.value.replace("media/live", "media/original");
-				this.update(newUrl);
-				this.quality = 'original';
-				this.qualitylabel = 'switch quality to: live';
-			}
-			else
-			{
-				var newUrl = this.value.replace("media/original", "media/live");
-				this.update(newUrl);
-				this.quality = 'live';
-				this.qualitylabel = 'switch quality to: original';
+				if(this.quality == 'live')
+				{
+					var newUrl = value.replace("media/live", "media/original");
+					this.update(newUrl);
+					this.quality = 'original';
+					this.qualitylabel = 'switch quality to: live';
+				}
+				else
+				{
+					var newUrl = value.replace("media/original", "media/live");
+					this.update(newUrl);
+					this.quality = 'live';
+					this.qualitylabel = 'switch quality to: original';
+				}
 			}
 		},
 		openmedialib: function()
