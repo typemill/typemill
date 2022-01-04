@@ -159,6 +159,13 @@ input.upload{
   opacity: 0;
 }
 
+.imgsizes::after{
+	content: "px";
+	margin-left: -30px;
+	color: #ddd;
+	font-weight: bold;
+}
+
 /* fix wrong text-align/family */
 input, textarea, button {font-family: arial, sans-serif}
 
@@ -2605,6 +2612,7 @@ button.delDL i:hover{
 	display: block;
 	margin: auto;
 	max-width: 100%;
+	height: auto;
 }
 .blox img.youtube{
 	position: relative;

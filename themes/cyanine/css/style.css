@@ -136,7 +136,9 @@ dt::after{
 
 /* Make images and image captions look good */
 img, figure,figure img{
-	max-width: 100%;	
+	max-width: 100%;
+	height: auto;
+	aspect-ratio: attr(width) / attr(height);
 }
 figure{
 	display: table;

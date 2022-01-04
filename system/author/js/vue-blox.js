@@ -1565,6 +1565,7 @@ const imageComponent = Vue.component('image-component', {
 					'<label for="imgcaption">{{ \'Caption\'|translate }}: </label><input title="imgcaption" type="text" placeholder="caption" v-model="imgcaption" @input="createmarkdown" max="140" />' +
 					'<label for="imgurl">{{ \'Link\'|translate }}: </label><input title="imgurl" type="url" placeholder="url" v-model="imglink" @input="createmarkdown" />' +
 					'<label for="imgclass">{{ \'Class\'|translate }}: </label><select title="imgclass" v-model="imgclass" @change="createmarkdown"><option value="center">{{ \'Center\'|translate }}</option><option value="left">{{ \'Left\'|translate }}</option><option value="right">{{ \'Right\'|translate }}</option></select>' +
+					'<label for="imgsizes">{{ \'width/height\'|translate }}: </label><div class="imgsizes dib w-40"><input style="width:100%" title="imgwidth" type="text" :placeholder="originalwidth" v-model="imgwidth" @input="changewidth" max="6" /></div><div class="imgsizes dib w-40"><input style="width:100%" title="imgheight" type="text" :placeholder="originalheight" v-model="imgheight" @input="changeheight" max="6" /></div>'+
 					'<label v-if="showresize" class="control-group imgcheckmark">{{ \'Do not resize\'|translate }}:<input title="saveoriginal" class="checkbox" type="checkbox" v-model="noresize" @change="createmarkdown" /><span class="checkmark"></span></label>' +
 					'<input title="imgid" type="hidden" placeholder="id" v-model="imgid" @input="createmarkdown" max="140" />' +
 				'</div></div>',
@@ -1581,6 +1582,11 @@ const imageComponent = Vue.component('image-component', {
 			imglink: '',
 			imgclass: 'center',
 			imgid: '',
+			imgwidth: 0,
+			imgheight: 0,
+			originalwidth: 0,
+			originalheight: 0,
+			imgloading: 'lazy',
 			imgattr: '',
 			imgfile: '',
 			showresize: true,
@@ -1593,57 +1599,77 @@ const imageComponent = Vue.component('image-component', {
 
 		if(this.compmarkdown)
 		{
-			this.showresize = false;
+			this.showresize 		= false;
 
-			this.imgmeta = true;
+			this.imgmeta 				= true;
 			
-			var imgmarkdown = this.compmarkdown;
-									
-			var imgcaption = imgmarkdown.match(/\*.*?\*/);
-			if(imgcaption){
-				this.imgcaption = imgcaption[0].slice(1,-1);
-				imgmarkdown = imgmarkdown.replace(this.imgcaption,'');
-				imgmarkdown = imgmarkdown.replace(/\r?\n|\r/g,'');
+			var imgmarkdown 		= this.compmarkdown;
+
+			var imgcaption 			= imgmarkdown.match(/\*.*?\*/);
+			if(imgcaption)
+			{
+				this.imgcaption 	= imgcaption[0].slice(1,-1);
+				
+				imgmarkdown 			= imgmarkdown.replace(this.imgcaption,'');
+				imgmarkdown 			= imgmarkdown.replace(/\r?\n|\r/g,'');
+			
 			}
-			
+
 			if(this.compmarkdown[0] == '[')
 			{
-				var imglink = this.compmarkdown.match(/\(.*?\)/g);
+				var imglink 			= this.compmarkdown.match(/\(.*?\)/g);
 				if(imglink[1])
 				{
-					this.imglink = imglink[1].slice(1,-1);
-					imgmarkdown = imgmarkdown.replace(imglink[1],'');
-					imgmarkdown = imgmarkdown.slice(1, -1);
+					this.imglink 		= imglink[1].slice(1,-1);
+					
+					imgmarkdown 		= imgmarkdown.replace(imglink[1],'');
+					imgmarkdown 		= imgmarkdown.slice(1, -1);
+					
 				}
 			}
-
-			var imgtitle = imgmarkdown.match(/\".*?\"/);
-			if(imgtitle)
-			{
-				this.imgtitle = imgtitle[0].slice(1,-1);
-				imgmarkdown = imgmarkdown.replace(imgtitle[0], '');
-			}
-			
-			var imgalt = imgmarkdown.match(/\[.*?\]/);
+						
+			var imgalt 					= imgmarkdown.match(/\[.*?\]/);
 			if(imgalt)
 			{
-				this.imgalt = imgalt[0].slice(1,-1);
+				this.imgalt 			= imgalt[0].slice(1,-1);
 			}
-
-			var imgattr = imgmarkdown.match(/\{.*?\}/);
+			
+			var imgattr 				= imgmarkdown.match(/\{.*?\}/);
 			if(imgattr)
 			{
-				imgattr = imgattr[0].slice(1,-1);
-				imgattr = imgattr.split(' ');
+				imgattr 					= imgattr[0].slice(1,-1);
+				imgattr 					= imgattr.trim();
+				imgattr 					= imgattr.split(' ');
+				
+				var widthpattern 	= /width=\"?([0-9]*)[a-zA-Z%]*\"?/;
+				var heightpattern	= /height=\"?([0-9]*)[a-zA-Z%]*\"?/;
+				var lazypattern 	= /loading=\"?([0-9a-zA-Z]*)\"?/;
+
 				for (var i = 0; i < imgattr.length; i++)
 				{
+					var widthattr 	= imgattr[i].match(widthpattern);
+					var heightattr 	= imgattr[i].match(heightpattern);
+					var lazyattr 		= imgattr[i].match(lazypattern);
+
 					if(imgattr[i].charAt(0) == '.')
 					{
-						this.imgclass = imgattr[i].slice(1);
+						this.imgclass		= imgattr[i].slice(1);
 					}
 					else if(imgattr[i].charAt(0)  == '#')
 					{
-						this.imgid = imgattr[i].slice(1);
+						this.imgid 			= imgattr[i].slice(1);
+					}
+					else if(widthattr)
+					{
+						this.imgwidth		= parseInt(widthattr[1]);
+					}
+					else if(heightattr)
+					{
+						this.imgheight 	= parseInt(heightattr[1]);
+					}
+					else if(lazyattr && lazyattr[1] != '')
+					{
+						this.imgloading	= lazyattr[1];
 					}
 					else
 					{
@@ -1652,15 +1678,92 @@ const imageComponent = Vue.component('image-component', {
 				}
 			}
 
-			var imgfile = imgmarkdown.match(/\(.*?\)/);
+			var imgfile 				= imgmarkdown.match(/\(.*?\)/);
 			if(imgfile)
 			{
-				this.imgfile = imgfile[0].slice(1,-1);
-				this.imgpreview = this.$root.$data.root + '/' + this.imgfile;
+				imgfilestring 		= imgfile[0];
+				var imgtitle 			= imgfilestring.match(/\".*?\"/);
+				if(imgtitle)
+				{
+					this.imgtitle 	= imgtitle[0].slice(1,-1);
+					imgfilestring 	= imgfilestring.replace(imgtitle[0], '');
+				}
+
+				this.imgfile 			= imgfilestring.slice(1,-1).trim();
+				this.imgpreview 	= this.$root.$data.root + '/' + this.imgfile;
 			}
+			
+			this.createmarkdown();
 		}
 	},
 	methods: {
+		createmarkdown: function()
+		{
+			if(this.imgpreview)
+			{
+				var img = new Image();
+				img.src = this.imgpreview;
+
+				var self = this;
+
+				img.onload = function(){
+
+					  self.originalwidth 		= img.width;
+					  self.originalheight 	= img.height;
+					  self.originalratio 		= self.originalwidth / self.originalheight;
+
+					  self.calculatewidth();
+					  self.calculateheight();
+						self.createmarkdownimageloaded();
+				}
+			}
+			else
+			{
+				this.createmarkdownimageloaded();
+			}
+		},
+		calculatewidth: function()
+		{
+			this.setdefaultsize();
+			if(this.imgheight && this.imgheight > 0)
+			{
+				this.imgwidth = Math.round(this.imgheight * this.originalratio);
+			}
+			else
+			{
+				this.imgwidth = '';
+			}
+		},
+		calculateheight: function()
+		{
+			this.setdefaultsize();
+			if(this.imgwidth && this.imgwidth > 0)
+			{
+				this.imgheight = Math.round(this.imgwidth / this.originalratio);
+			}
+			else
+			{
+				this.imgheight = '';
+			}
+		},
+		setdefaultsize: function()
+		{
+			if(this.imgheight == 0 && this.imgwidth == 0)
+			{
+				this.imgwidth = this.originalwidth;
+				this.imgheight = this.originalheight;
+			}
+		},
+		changewidth: function()
+		{
+			this.calculateheight();
+			this.createmarkdownimageloaded();
+		},
+		changeheight: function()
+		{
+			this.calculatewidth();
+			this.createmarkdownimageloaded();
+		},
 		openmedialib: function()
 		{
 			this.showresize 	= false;
@@ -1677,8 +1780,8 @@ const imageComponent = Vue.component('image-component', {
 		updatemarkdown: function(event)
 		{
 			this.$emit('updatedMarkdown', event.target.value);
-		},
-		createmarkdown: function()
+		},		
+		createmarkdownimageloaded: function()
 		{
 			var errors = false;
 			
@@ -1708,12 +1811,13 @@ const imageComponent = Vue.component('image-component', {
 				imgmarkdown = imgmarkdown + '(' + this.imgfile + ')';		
 			}
 			
-			var imgattr = 'loading="lazy" ';
+			var imgattr = '';
+
 			if(this.imgid != '')
 			{
 				if(this.imgid.length < 100)
 				{
-					imgattr = imgattr + '#' + this.imgid + ' '; 
+					imgattr = imgattr + ' #' + this.imgid; 
 				}
 				else
 				{
@@ -1724,20 +1828,32 @@ const imageComponent = Vue.component('image-component', {
 			{
 				if(this.imgclass.length < 100)
 				{
-					imgattr = imgattr + '.' + this.imgclass; 
+					imgattr = imgattr + ' .' + this.imgclass; 
 				}
 				else
 				{
 					errors = 'Maximum size of image class is 100 characters';
 				}
 			}
+			if(this.imgloading != '')
+			{
+				imgattr = imgattr + ' loading="' + this.imgloading + '"';
+			}			
+			if(this.imgwidth != '')
+			{
+				imgattr = imgattr + ' width="' + this.imgwidth + '"';
+			}
+			if(this.imgheight != '')
+			{
+				imgattr = imgattr + ' height="' + this.imgheight + '"';
+			}			
 			if(this.imgattr != '')
 			{
 				imgattr += this.imgattr;
 			}
 			if(imgattr != '')
 			{
-				imgmarkdown = imgmarkdown + '{' + imgattr + '}';
+				imgmarkdown = imgmarkdown + '{' + imgattr.trim() + '}';
 			}
 			
 			if(this.imglink != '')
@@ -1751,7 +1867,7 @@ const imageComponent = Vue.component('image-component', {
 					errors = 'Maximum size of image link is 100 characters';
 				}
 			}
-						
+
 			if(this.imgcaption != '')
 			{
 				if(this.imgcaption.length < 140)
@@ -1776,6 +1892,7 @@ const imageComponent = Vue.component('image-component', {
 			}
 			else
 			{
+				console.info(imgmarkdown);
 				publishController.errors.message = false;
 				this.$parent.activatePage();
 				this.$emit('updatedMarkdown', imgmarkdown);

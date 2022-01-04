@@ -549,7 +549,7 @@ Vue.component('component-image', {
 	methods: {
 		getimagesrc: function(value)
 		{
-			if(value !== null && value !== '')
+			if(value !== undefined && value !== null && value !== '')
 			{
 				var imgpreview = myaxios.defaults.baseURL + '/' + value;
 				if(value.indexOf("media/live") > -1 )
