@@ -1,1 +1,0 @@
-127.0.0.1;2021-10-21 16:41:00;wrong captcha http://localhost/typemill/tm/login

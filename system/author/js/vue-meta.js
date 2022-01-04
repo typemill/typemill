@@ -22,8 +22,8 @@ Vue.component('tab-meta', {
 		}
 	},
 	template: '<section><form>' +
-				'<div v-if="slug"><div class="large relative">' +
-					'<label>Slug / Name in URL</label><input type="text" v-model="slug" @input="changeSlug()"><button @click.prevent="storeSlug()" :disabled="disabled" class="button slugbutton bn br2 bg-tm-green white absolute">change slug</button>' +
+				'<div v-if="slug !== false"><div class="large relative">' +
+					'<label>Slug / Name in URL</label><input type="text" v-model="slug" pattern="[a-z0-9\- ]" @input="changeSlug()"><button @click.prevent="storeSlug()" :disabled="disabled" class="button slugbutton bn br2 bg-tm-green white absolute">change slug</button>' +
 					'<div v-if="slugerror" class="f6 tm-red mt1">{{ slugerror }}</div>' +
 				'</div></div>' +
 				'<div v-for="(field, index) in schema.fields">' +
@@ -77,6 +77,14 @@ Vue.component('tab-meta', {
 				this.disabled = "disabled";
 				return;
 			}
+			if(this.slug == '')
+			{
+				this.slugerror = 'empty slugs are not allowed';
+				this.disabled = "disabled";
+				return;
+			}
+
+			this.slug = this.slug.replace(/ /g, '-');
 
 			if(this.slug.match(/^[a-z0-9\-]*$/))
 			{
