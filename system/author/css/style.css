@@ -169,6 +169,10 @@ input.upload{
 /* fix wrong text-align/family */
 input, textarea, button {font-family: arial, sans-serif}
 
+.shortcode-alert{
+	color: red;
+}
+
 /****************************
 *  	download-commponent		*
 ****************************/

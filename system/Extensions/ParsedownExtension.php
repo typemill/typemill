@@ -733,7 +733,7 @@ class ParsedownExtension extends \ParsedownExtra
     {
         if ($this->dispatcher && preg_match('/^\[:.*:\]/', $Line['text'], $matches))
         {
-            return $this->createShortcodeArray($matches);
+            return $this->createShortcodeArray($matches,$block = true);
         }
         else
         {
@@ -747,7 +747,7 @@ class ParsedownExtension extends \ParsedownExtra
 
         if ($this->dispatcher && preg_match('/\[:.*:\]/', $remainder, $matches))
         {
-            return $this->createShortcodeArray($matches);
+            return $this->createShortcodeArray($matches, $block = false);
         }
         else
         {
@@ -755,7 +755,7 @@ class ParsedownExtension extends \ParsedownExtra
         }
     }
 
-    protected function createShortcodeArray($matches)
+    protected function createShortcodeArray($matches, $block)
     {
         $shortcodeString     = substr($matches[0], 2, -2);
         $shortcodeArray      = explode(' ', $shortcodeString, 2);
@@ -787,7 +787,14 @@ class ParsedownExtension extends \ParsedownExtra
         # if no shortcode has been processed, add the original string
         if(is_array($html) OR is_object($html))
         {
-            $html = '<span class="shortcode-alert">No shortcode found.</span>';
+            if($block)
+            {
+                $html = '<p class="shortcode-alert">No shortcode found.</p>';
+            }
+            else
+            {
+                $html = '<span class="shortcode-alert">No shortcode found.</span>';
+            }
         }
 
         return array(
