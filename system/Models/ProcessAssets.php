@@ -105,8 +105,7 @@ class ProcessAssets
 	public function setFileName($originalname, $type, $overwrite = NULL)
 	{
 		$pathinfo			= pathinfo($originalname);
-		
-		$this->extension 	= strtolower($pathinfo['extension']);
+		$this->extension 	= isset($pathinfo['extension']) ? strtolower($pathinfo['extension']) : null;
 		$this->filename 	= Folder::createSlug($pathinfo['filename']);
 
 		$filename = $this->filename;
