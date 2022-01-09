@@ -1053,6 +1053,7 @@ form .hidden{
 }
 .large.img-component img, .large .img-upload img{
 	width: auto;
+	max-width: 100%;
 }
 fieldset{
 	display: block;
