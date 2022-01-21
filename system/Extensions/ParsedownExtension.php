@@ -81,7 +81,6 @@ class ParsedownExtension extends \ParsedownExtra
         # convert to markup
         $markup = $this->elements($Elements);
 
- #       die();
         # trim line breaks
         $markup = trim($markup, "\n");
 
@@ -755,14 +754,31 @@ class ParsedownExtension extends \ParsedownExtra
         }
     }
 
+    protected $allowedShortcodes = false;
+
+    public function setAllowedShortcodes(array $shortcodelist)
+    {
+        $this->allowedShortcodes = $shortcodelist;
+    }
+
     protected function createShortcodeArray($matches, $block)
     {
+        if(is_array($this->allowedShortcodes) && empty($this->allowedShortcodes))
+        {
+            return false;
+        }
+
         $shortcodeString     = substr($matches[0], 2, -2);
         $shortcodeArray      = explode(' ', $shortcodeString, 2);
         $shortcode           = [];
 
         $shortcode['name']   = $shortcodeArray[0];
         $shortcode['params'] = false;
+
+        if(is_array($this->allowedShortcodes) && !in_array($shortcode['name'], $this->allowedShortcodes))
+        {
+            return false;
+        }
 
         # are there params?
         if(isset($shortcodeArray[1]))
