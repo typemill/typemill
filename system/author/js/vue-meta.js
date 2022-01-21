@@ -1,5 +1,3 @@
-const FormBus = new Vue();
-
 Vue.filter('translate', function (value) {
   if (!value) return ''
   transvalue = value.replace(/[ ]/g,"_").replace(/[.]/g, "_").replace(/[,]/g, "_").replace(/[-]/g, "_").replace(/[,]/g,"_").toUpperCase()

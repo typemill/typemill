@@ -341,8 +341,8 @@ class ControllerFrontendWebsite extends ControllerShared
 		{
 			$firstImage = array('img_url' => $this->base_url . '/' . $img_url, 'img_alt' => $img_alt);
 
-			$this->c->assets->addMeta('og_image','<meta property="og:image" content="' . $firstImage . '">');
-			$this->c->assets->addMeta('twitter_image_alt','<meta name="twitter:image:alt" content="' . $img_alt. '">');
+			$this->c->assets->addMeta('og_image','<meta property="og:image" content="' . $this->base_url . '/' . $img_url . '">');
+			$this->c->assets->addMeta('twitter_image_alt','<meta name="twitter:image:alt" content="' . $img_alt . '">');
 			$this->c->assets->addMeta('twitter_card','<meta name="twitter:card" content="summary_large_image">');
 		}
 		

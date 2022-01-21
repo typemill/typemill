@@ -1021,6 +1021,13 @@ section.tab{
 .tab > form > div{
 	display: inline;
 }
+.tab > form > div.large{
+	display:  block;
+}
+.tab > form > div.medium{
+	display: inline-block;
+	width: 49.5%;
+}
 .fs-formbuilder > div{
 	padding: 18px 20px;
 }
