@@ -104,6 +104,13 @@ class ParsedownExtension extends \ParsedownExtra
         }
         return $markup;
     }
+
+    protected $imageAttributes = true;
+
+    public function withoutImageAttributes()
+    {
+        $this->imageAttributes = false;
+    }
     
     # BlockImages with html5 figure and figcaption
     # No, this is not the most elegant code on planet earth!!
@@ -152,7 +159,7 @@ class ParsedownExtension extends \ParsedownExtra
 
                 $attributeString = trim(str_replace('  ', ' ', $attributeString));
                 $line['text'] = substr($line['text'], 0, $matches[0][1]);
-                if(str_replace(' ', '', $attributeString) != '')
+                if(str_replace(' ', '', $attributeString) != '' && $this->imageAttributes)
                 {
                     $line['text'] .= '{' . $attributeString . '}';
                 }
