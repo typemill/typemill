@@ -85,7 +85,7 @@ abstract class Plugin implements EventSubscriberInterface
 	
 	protected function getDispatcher()
 	{
-		return $this->$container['dispatcher'];
+		return $this->container['dispatcher'];
 	}
 	
 	protected function getTwig()
