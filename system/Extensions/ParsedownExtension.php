@@ -772,7 +772,7 @@ class ParsedownExtension extends \ParsedownExtra
     {
         if(is_array($this->allowedShortcodes) && empty($this->allowedShortcodes))
         {
-            return false;
+            return array('element' => array());
         }
 
         $shortcodeString     = substr($matches[0], 2, -2);
@@ -784,7 +784,7 @@ class ParsedownExtension extends \ParsedownExtra
 
         if(is_array($this->allowedShortcodes) && !in_array($shortcode['name'], $this->allowedShortcodes))
         {
-            return false;
+            return array('element' => array());
         }
 
         # are there params?
