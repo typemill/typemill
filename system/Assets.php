@@ -285,7 +285,8 @@ class Assets
 	 */
 	public function getFileUrl($path)
 	{
-		$internalFile = __DIR__ . '/../plugins' . $path;
+		# check system path of file without parameter for fingerprinting
+		$internalFile = __DIR__ . '/../plugins' . strtok($path, "?");
 		
 		if(file_exists($internalFile))
 		{
