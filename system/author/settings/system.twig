@@ -25,13 +25,13 @@
 				
 					<div class="medium{{ errors.settings.title ? ' error' : '' }}">
 						<label for="settings[title]">{{ __('Website Title') }} *</label>
-						<input type="text" name="settings[title]" id="title" pattern=".{2,20}" required title="{{ __('Use 2 to 20 characters') }}" value="{{ old.settings.title ? old.settings.title : settings.title }}" />
+						<input type="text" name="settings[title]" id="title" pattern=".{2,50}" required title="{{ __('Use 2 to 50 characters') }}" value="{{ old.settings.title ? old.settings.title : settings.title }}" />
 						{% if errors.settings.title %}
 							<span class="error">{{ errors.settings.title | first }}</span>
 						{% endif %}
 					</div><div class="medium{{ errors.settings.author ? ' error' : '' }}">
 						<label for="settings[author]">{{ __('Author') }}</label>
-						<input type="text" name="settings[author]" id="author" pattern="[^()/><\]\{\}\?\$@#!*%§=[\\\x22;:|]{2,40}" value="{{ old.settings.author ? old.settings.author : settings.author }}" title="{{ __('Use 2 to 40 characters') }} {{ __('Only the following special characters are allowed') }} a,b a.b a-b a_b a&b a+b" />
+						<input type="text" name="settings[author]" id="author" pattern="[^()/><\]\{\}\?\$@#!*%§=[\\\x22;:|]{2,50}" value="{{ old.settings.author ? old.settings.author : settings.author }}" title="{{ __('Use 2 to 40 characters') }} {{ __('Only the following special characters are allowed') }} a,b a.b a-b a_b a&b a+b" />
 						{% if errors.settings.author %}
 							<span class="error">{{ errors.settings.author | first }}</span>
 						{% endif %}

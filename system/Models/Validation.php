@@ -290,8 +290,8 @@ class Validation
 		$v = new Validator($params);
 		
 		$v->rule('required', ['title', 'author', 'copyright', 'year', 'editor']);
-		$v->rule('lengthBetween', 'title', 2, 20);
-		$v->rule('lengthBetween', 'author', 2, 40);
+		$v->rule('lengthBetween', 'title', 2, 50);
+		$v->rule('lengthBetween', 'author', 2, 50);
 		$v->rule('noHTML', 'title');
 		# $v->rule('regex', 'title', '/^[\pL0-9_ \-]*$/u');
 		$v->rule('regex', 'author', '/^[\pL_ \-]*$/u');
