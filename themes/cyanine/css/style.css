@@ -480,6 +480,55 @@ button.play-video::after {
 	}
 }
 
+/**************
+* 	Forms 	  *
+**************/
+
+form{
+	width: 100%;
+	max-width:  800px;
+	border: none;
+	margin: 20px 0 20px 0;
+	padding: 0 0 0 0;
+}
+form fieldset{
+	width: 100%;
+	border: none;
+	margin: 0 0 0 0;
+	padding: 0 0 0 0;
+}
+form label{
+	width: 100%;
+	display: block;
+	color: #333;
+	margin-top: 1.5em;
+}
+form input, form textarea{
+	width: 100%;
+	display: block;
+	border: 1px solid #ddd;
+	padding: 15px;
+	margin: 0 0 20px 0;
+	background: #f5f5f5;
+}
+form input:focus,form select:focus,form textarea:focus{
+	outline: none;
+	border: 1px solid rgba(229, 226, 211, 1);
+	box-shadow: 0 0 2px #D73B00;;
+}
+form input[type="submit"],form button,form .button{
+	cursor: pointer;
+	font-size: 1em;
+	border: 0;
+	margin-top: 1.5em;
+	color: #fff;
+	background: rgba(0,0,0);
+}
+form input[type="submit"]:hover,form button:hover,.button:hover{
+	background: rgba(0, 0, 0, 0.8);
+}
+
+
 @media screen and (min-width:50em) {
 	.grid-container{
 		display: grid;
