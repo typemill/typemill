@@ -794,7 +794,7 @@ const shortcodeComponent = Vue.component('shortcode-component', {
 				'<div class="contenttype"><svg class="icon icon-square-brackets"><use xlink:href="#icon-square-brackets"></use></svg></div>' +
 				'<div v-if="shortcodedata" class="pa4 bg-tm-gray" ref="markdown">' +
 					'<label class="w-20 dib" for="shortcodename">{{ \'Shortcode\'|translate }}: </label>' + 
-					'<select class="w-80 dib bg-white" title="shortcodename" v-model="shortcodename"><option v-for="shortcode,name in shortcodedata" :value="name">{{ name }}</option></select>' +
+					'<select class="w-80 dib bg-white" title="shortcodename" v-model="shortcodename" @change="createmarkdown(shortcodename)"><option v-for="shortcode,name in shortcodedata" :value="name">{{ name }}</option></select>' +
 					'<div class="mt1 mb1" v-for="key,attribute in shortcodedata[shortcodename]">' +
 						'<label class="w-20 dib" for="key">{{ attribute }}: </label>' + 
 						'<input class="w-80 dib bg-white" type="search" list="shortcodedata[shortcodename][attribute]" v-model="shortcodedata[shortcodename][attribute].value" @input="createmarkdown(shortcodename,attribute)">' +
@@ -857,14 +857,18 @@ const shortcodeComponent = Vue.component('shortcode-component', {
 				}
 			}
 		},
-		createmarkdown: function(shortcodename,attribute)
+		createmarkdown: function(shortcodename,attribute = false)
 		{
+
 			var attributes = '';
-			for (var attribute in this.shortcodedata[shortcodename])
+			if(attribute)
 			{
-				if(this.shortcodedata[shortcodename].hasOwnProperty(attribute))
+				for (var attribute in this.shortcodedata[shortcodename])
 				{
-			    attributes += ' ' + attribute + '="' +  this.shortcodedata[shortcodename][attribute].value + '"';
+					if(this.shortcodedata[shortcodename].hasOwnProperty(attribute))
+					{
+				    attributes += ' ' + attribute + '="' +  this.shortcodedata[shortcodename][attribute].value + '"';
+					}
 				}
 			}
 
