@@ -23,6 +23,7 @@ module.exports = (on, config) => {
     resetSetup() {
       const users = "settings/users";
       const settings = "settings/settings.yaml";
+      // of course files need to exist in order to perform a delete
       if (fs.existsSync(settings) && fs.existsSync(users)) {
         fs.rmSync(users, { recursive: true, force: true });
         fs.rmSync(settings);
