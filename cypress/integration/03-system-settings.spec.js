@@ -10,6 +10,10 @@ describe("Typemill System Settings", function () {
     Cypress.Cookies.preserveOnce("typemill-session");
   });
 
+  after(function () {
+    cy.logoutTypemill();
+  });
+
   it("validates the form", function () {
     // fill out valid data
     cy.get('input[name="settings[title]"]')
