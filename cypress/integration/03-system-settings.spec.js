@@ -1,101 +1,93 @@
-describe("Typemill System Settings", function() {
-    before(function() {
-        cy.visit("/tm/login");
-        cy.url().should("include", "/tm/login");
+describe("Typemill System Settings", function () {
+  before(function () {
+    cy.loginTypemill();
 
-        cy.get('input[name="username"]').type("trendschau");
-        cy.get('input[name="password"]').type("password");
+    cy.visit("/tm/settings");
+    cy.url().should("include", "/tm/settings");
+  });
 
-        cy.get("form").submit();
-        cy.url().should("include", "/tm/content");
-        cy.getCookie("typemill-session").should("exist");
+  beforeEach(function () {
+    Cypress.Cookies.preserveOnce("typemill-session");
+  });
 
-        cy.visit("/tm/settings");
-        cy.url().should("include", "/tm/settings");
-    });
+  it("validates the form", function () {
+    // fill out valid data
+    cy.get('input[name="settings[title]"]')
+      .clear()
+      .type("Cypress<?")
+      .should("have.value", "Cypress<?")
+      .and("have.attr", "required");
 
-    beforeEach(function() {
-        Cypress.Cookies.preserveOnce("typemill-session");
-    });
+    // fill out valid data
+    cy.get('input[name="settings[author]"]')
+      .clear()
+      .type("trendschau")
+      .should("have.value", "trendschau");
 
-    it("validates the form", function() {
-        // fill out valid data
-        cy.get('input[name="settings[title]"]')
-            .clear()
-            .type("Cypress<?")
-            .should("have.value", "Cypress<?")
-            .and("have.attr", "required");
+    // fill out copyright data
+    cy.get('select[name="settings[copyright]"]')
+      .select("CC-BY")
+      .should("have.value", "CC-BY");
 
-        // fill out valid data
-        cy.get('input[name="settings[author]"]')
-            .clear()
-            .type("trendschau")
-            .should("have.value", "trendschau");
+    // fill out valid data
+    cy.get('input[name="settings[year]"]')
+      .clear()
+      .type("2017")
+      .should("have.value", "2017")
+      .and("have.attr", "required");
 
-        // fill out copyright data
-        cy.get('select[name="settings[copyright]"]')
-            .select("CC-BY")
-            .should("have.value", "CC-BY");
+    // fill out copyright data
+    cy.get('select[name="settings[language]"]')
+      .select("German")
+      .should("have.value", "de");
 
-        // fill out valid data
-        cy.get('input[name="settings[year]"]')
-            .clear()
-            .type("2017")
-            .should("have.value", "2017")
-            .and("have.attr", "required");
+    // submit form
+    cy.get("form").submit();
+    cy.get("#flash-message").should("contain", "Please correct the errors");
+  });
 
-        // fill out copyright data
-        cy.get('select[name="settings[language]"]')
-            .select("German")
-            .should("have.value", "de");
+  it("changes default values", function () {
+    // fill out valid data
+    cy.get('input[name="settings[title]"]')
+      .clear()
+      .type("Cypress")
+      .should("have.value", "Cypress")
+      .and("have.attr", "required");
 
-        // submit form
-        cy.get("form").submit();
-        cy.get("#flash-message").should("contain", "Please correct the errors");
-    });
+    // fill out valid data
+    cy.get('input[name="settings[author]"]')
+      .clear()
+      .type("robot")
+      .should("have.value", "robot");
 
-    it("changes default values", function() {
-        // fill out valid data
-        cy.get('input[name="settings[title]"]')
-            .clear()
-            .type("Cypress")
-            .should("have.value", "Cypress")
-            .and("have.attr", "required");
+    cy.get('select[name="settings[copyright]"]')
+      .select("CC-BY-ND")
+      .should("have.value", "CC-BY-ND");
 
-        // fill out valid data
-        cy.get('input[name="settings[author]"]')
-            .clear()
-            .type("robot")
-            .should("have.value", "robot");
+    // fill out copyright data
+    cy.get('select[name="settings[language]"]')
+      .select("English")
+      .should("have.value", "en");
 
-        cy.get('select[name="settings[copyright]"]')
-            .select("CC-BY-ND")
-            .should("have.value", "CC-BY-ND");
+    cy.get("form").submit();
+    cy.get("#flash-message").should("contain", "Settings are stored");
 
-        // fill out copyright data
-        cy.get('select[name="settings[language]"]')
-            .select("English")
-            .should("have.value", "en");
+    // fill out valid data
+    cy.get('input[name="settings[title]"]').should("have.value", "Cypress");
 
-        cy.get("form").submit();
-        cy.get("#flash-message").should("contain", "Settings are stored");
+    // fill out valid data
+    cy.get('input[name="settings[author]"]').should("have.value", "robot");
 
-        // fill out valid data
-        cy.get('input[name="settings[title]"]').should("have.value", "Cypress");
+    // fill out copyright data
+    cy.get('select[name="settings[copyright]"]').should(
+      "have.value",
+      "CC-BY-ND"
+    );
 
-        // fill out valid data
-        cy.get('input[name="settings[author]"]').should("have.value", "robot");
+    // fill out valid data
+    cy.get('input[name="settings[year]"]').should("have.value", "2017");
 
-        // fill out copyright data
-        cy.get('select[name="settings[copyright]"]').should(
-            "have.value",
-            "CC-BY-ND"
-        );
-
-        // fill out valid data
-        cy.get('input[name="settings[year]"]').should("have.value", "2017");
-
-        // fill out copyright data
-        cy.get('select[name="settings[language]"]').should("have.value", "en");
-    });
+    // fill out copyright data
+    cy.get('select[name="settings[language]"]').should("have.value", "en");
+  });
 });

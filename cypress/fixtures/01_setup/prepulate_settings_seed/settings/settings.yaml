@@ -1,129 +1,51 @@
 setup: false
 language: en
 welcome: false
-title: Cypress
-author: robot
-copyright: CC-BY-ND
-year: '2017'
+title: TYPEMILL
+author: Unknown
+copyright: ©
+year: "2022"
 langattr: en
 editor: visual
 formats:
-    - markdown
-    - headline
-    - ulist
-    - olist
-    - table
-    - quote
-    - notice
-    - image
-    - video
-    - file
-    - toc
-    - hr
-    - definition
-    - code
-    - shortcode
+  - markdown
+  - headline
+  - ulist
+  - olist
+  - table
+  - quote
+  - notice
+  - image
+  - video
+  - file
+  - toc
+  - hr
+  - definition
+  - code
+  - shortcode
 access: null
 pageaccess: null
 hrdelimiter: null
-restrictionnotice: ''
+restrictionnotice: ""
 wraprestrictionnotice: null
 headlineanchors: null
 displayErrorDetails: null
 twigcache: null
 proxy: null
-trustedproxies: ''
+trustedproxies: ""
 headersoff: null
-urlschemes: ''
+urlschemes: ""
 svg: null
 recoverpw: null
-recoverfrom: ''
-recoversubject: ''
-recovermessage: ''
+recoverfrom: ""
+recoversubject: ""
+recovermessage: ""
 securitylog: null
 oldslug: null
 refreshcache: null
 pingsitemap: null
 images:
-    live:
-        width: '820'
-logo: ''
-favicon: ''
-theme: cyanine
-themes:
-    cyanine:
-        layoutsize: standard
-        blogfolder: ''
-        landingpage: 'on'
-        landingpageIntro: '1'
-        introTitle: ''
-        introMarkdown: ''
-        introButtonLink: 'https://typemill.net'
-        introButtonLabel: Typemill
-        introImageOpacity: ''
-        landingpageInfo: ''
-        infoMarkdown: ''
-        landingpageTeaser: ''
-        teaser1title: ''
-        teaser1text: ''
-        teaser1link: ''
-        teaser1label: ''
-        teaser2title: ''
-        teaser2text: ''
-        teaser2link: ''
-        teaser2label: ''
-        teaser3title: ''
-        teaser3text: ''
-        teaser3link: ''
-        teaser3label: ''
-        landingpageContrast: ''
-        contrastTitle: ''
-        contrastText: ''
-        contrastLink: ''
-        contrastLabel: ''
-        landingpageNavi: '2'
-        naviTitle: 'Get Started'
-        naviDepth: ''
-        landingpageNews: ''
-        newsHeadline: ''
-        newsFolder: ''
-        newsLabel: ''
-        authorPosition:
-            top: 'on'
-        authorIntro: Writer
-        datePosition:
-            bottom: 'on'
-        dateIntro: 'Final update'
-        dateFormat: m/d/Y
-        gitPosition:
-            top: 'on'
-        gitLink: 'https://github.com/typemill/docs'
-        editText: ''
-        printText: ''
-        chapnum: 'on'
-        expand: ''
-        collapse: ''
-        next: ''
-        previous: ''
-        footer1: ''
-        footer2: ''
-        footer3: ''
-        copyrightlinetext: ''
-        font: 'BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif'
-        fontheadline: 'BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif'
-        fontnavi: 'BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif'
-        brandcolorprimary: ''
-        fontcolorprimary: ''
-        newsbackground: ''
-        newscolor: ''
-        brandcolortertiary: ''
-        fontcolortertiary: ''
-        bordercolortertiary: ''
-        fontcolorlink: ''
-        brandcolorsecondary: ''
-        fontcolorsecondary: ''
-        codebackground: ''
-        codecolor: ''
-        contentnavihoverbackground: ''
-        contentnavihovercolor: ''
-        thinbordercolor: ''
+  live:
+    width: "820"
+logo: ""
+favicon: ""
