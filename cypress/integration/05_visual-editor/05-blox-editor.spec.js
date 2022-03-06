@@ -16,7 +16,7 @@ describe("Blox Editor", function () {
     /* Check dublicates cannot be made */
 
     /* Check new page can be created */
-    cy.get(".addNaviForm").within(($naviform) => {
+    cy.get(".addNaviForm").within((naviform) => {
       /* add Testpage into input */
       cy.get("input").clear().type("Testpage").should("have.value", "Testpage");
 
@@ -28,9 +28,9 @@ describe("Blox Editor", function () {
       .should("contain", "Testpage")
       .eq(2)
       .find("a")
-      .should(($a) => {
-        expect($a).to.have.length(6);
-        expect($a[5].href).to.include("/welcome/testpage");
+      .should((a) => {
+        expect(a).to.have.length(6);
+        expect(a[5].href).to.include("/welcome/testpage");
       });
   });
 
@@ -38,7 +38,7 @@ describe("Blox Editor", function () {
     cy.visit("/tm/content/visual/welcome/testpage");
     cy.url().should("include", "/tm/content/visual/welcome/testpage");
 
-    cy.get("#blox").within(($blox) => {
+    cy.get("#blox").within((blox) => {
       /* Change Title */
       cy.get("#blox-0").click();
       cy.get("input").clear().type("This is my Testpage");
@@ -58,9 +58,9 @@ describe("Blox Editor", function () {
   });
 
   it("edits paragraph", function () {
-    cy.get("#blox").within(($blox) => {
+    cy.get("#blox").within((blox) => {
       /* Get Format Bar */
-      cy.get(".format-bar").within(($formats) => {
+      cy.get(".format-bar").within((formats) => {
         /* Edit Table */
         cy.get("button").eq(0).click();
         cy.get("textarea").type("This is a second paragraph.");
@@ -75,9 +75,9 @@ describe("Blox Editor", function () {
   });
 
   it("edits headline", function () {
-    cy.get("#blox").within(($blox) => {
+    cy.get("#blox").within((blox) => {
       /* Get Format Bar */
-      cy.get(".format-bar").within(($formats) => {
+      cy.get(".format-bar").within((formats) => {
         /* Edit Table */
         cy.get("button").eq(1).click();
         cy.get("input").type("Second Level Headline");
@@ -94,9 +94,9 @@ describe("Blox Editor", function () {
   });
 
   it("edits unordered list", function () {
-    cy.get("#blox").within(($blox) => {
+    cy.get("#blox").within((blox) => {
       /* Get Format Bar */
-      cy.get(".format-bar").within(($formats) => {
+      cy.get(".format-bar").within((formats) => {
         /* Edit Table */
         cy.get("button").eq(2).click();
         cy.get("textarea").type("first list item{enter}second list item");
@@ -108,19 +108,19 @@ describe("Blox Editor", function () {
         cy.get(".cancel").click();
       });
 
-      cy.get("#blox-4").within(($block) => {
-        cy.get("li").should(($lis) => {
-          expect($lis).to.have.length(2);
-          expect($lis.eq(0)).to.contain("first list item");
+      cy.get("#blox-4").within((block) => {
+        cy.get("li").should((lis) => {
+          expect(lis).to.have.length(2);
+          expect(lis.eq(0)).to.contain("first list item");
         });
       });
     });
   });
 
   it("edits ordered list", function () {
-    cy.get("#blox").within(($blox) => {
+    cy.get("#blox").within((blox) => {
       /* Get Format Bar */
-      cy.get(".format-bar").within(($formats) => {
+      cy.get(".format-bar").within((formats) => {
         /* Edit Table */
         cy.get("button").eq(3).click();
         cy.get("textarea").type("first ordered item{enter}second ordered item");
@@ -132,26 +132,26 @@ describe("Blox Editor", function () {
         cy.get(".cancel").click();
       });
 
-      cy.get("#blox-5").within(($block) => {
-        cy.get("li").should(($lis) => {
-          expect($lis).to.have.length(2);
-          expect($lis.eq(0)).to.contain("first ordered item");
+      cy.get("#blox-5").within((block) => {
+        cy.get("li").should((lis) => {
+          expect(lis).to.have.length(2);
+          expect(lis.eq(0)).to.contain("first ordered item");
         });
       });
     });
   });
 
   it("edits table", function () {
-    cy.get("#blox").within(($blox) => {
+    cy.get("#blox").within((blox) => {
       /* Get Format Bar */
-      cy.get(".format-bar").within(($formats) => {
+      cy.get(".format-bar").within((formats) => {
         /* Edit Table */
         cy.get("button").eq(4).click();
-        cy.get("table").within(($table) => {
+        cy.get("table").within((table) => {
           /* edit table head */
           cy.get("tr")
             .eq(1)
-            .within(($row) => {
+            .within((row) => {
               cy.get("th").eq(1).click().clear().type("first Headline");
               cy.get("th").eq(2).click().clear().type("Second Headline");
             });
@@ -159,7 +159,7 @@ describe("Blox Editor", function () {
           /* edit first content row */
           cy.get("tr")
             .eq(2)
-            .within(($row) => {
+            .within((row) => {
               cy.get("td").eq(1).click().clear().type("Some");
               cy.get("td").eq(2).click().clear().type("More");
             });
@@ -167,7 +167,7 @@ describe("Blox Editor", function () {
           /* edit second content row */
           cy.get("tr")
             .eq(3)
-            .within(($row) => {
+            .within((row) => {
               cy.get("td").eq(1).click().clear().type("Beautiful");
               cy.get("td").eq(2).click().clear().type("Content");
             });
@@ -175,31 +175,31 @@ describe("Blox Editor", function () {
           /* add new column on the right */
           cy.get("tr")
             .eq(0)
-            .within(($row) => {
+            .within((row) => {
               cy.get("td").eq(2).click();
               cy.get(".actionline").eq(0).click();
             });
         });
 
-        cy.get("table").within(($table) => {
+        cy.get("table").within((table) => {
           /* edit second new column head */
           cy.get("tr")
             .eq(1)
-            .within(($row) => {
+            .within((row) => {
               cy.get("th").eq(3).click().clear().type("New Head");
             });
 
           /* edit second new column head */
           cy.get("tr")
             .eq(2)
-            .within(($row) => {
+            .within((row) => {
               cy.get("td").eq(3).click().clear().type("With");
             });
 
           /* edit second new column head */
           cy.get("tr")
             .eq(3)
-            .within(($row) => {
+            .within((row) => {
               cy.get("td").eq(3).click().clear().type("new Content");
             });
         });
@@ -210,7 +210,7 @@ describe("Blox Editor", function () {
 
       cy.get("#blox-6").should("contain", "Beautiful").click();
 
-      cy.get(".editactive").within(($activeblock) => {
+      cy.get(".editactive").within((activeblock) => {
         cy.get(".component").should("contain", "Beautiful");
       });
     });
@@ -243,7 +243,7 @@ describe("Blox Editor", function () {
 
     cy.get(".danger").click();
 
-    cy.get("#modalWindow").within(($modal) => {
+    cy.get("#modalWindow").within((modal) => {
       cy.get("button").click();
     });
 
@@ -252,8 +252,8 @@ describe("Blox Editor", function () {
       .not("contain", "Testpage")
       .eq(2)
       .find("a")
-      .should(($a) => {
-        expect($a).to.have.length(5);
+      .should((a) => {
+        expect(a).to.have.length(5);
       });
   });
 });
