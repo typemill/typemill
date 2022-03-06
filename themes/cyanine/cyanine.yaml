@@ -1,6 +1,6 @@
 name: Cyanine Theme
 version: 1.1.11
-description: Cyanine is a modern and flexible multi-purpose theme and the standard theme for typemill.
+description: Cyanine is a modern and flexible multi-purpose theme and the standard theme for typemill. 
 author: Trendschau
 homepage: https://trendschau.net
 licence: MIT
@@ -17,6 +17,7 @@ settings:
 
 forms:
   fields:
+
     layoutsize:
       type: select
       label: Layout Size
@@ -100,7 +101,7 @@ forms:
         landingpageInfo:
           type: number
           label: Position of Info Segment
-          description: Use 0 to disable the section
+          description: Use 0 to disable the section          
         infoMarkdown:
           type: textarea
           label: Use Markdown
@@ -163,7 +164,7 @@ forms:
         landingpageContrast:
           type: number
           label: Position of Contrast Segment
-          description: Use 0 to disable the section
+          description: Use 0 to disable the section          
         contrastTitle:
           type: text
           label: Title
@@ -184,7 +185,7 @@ forms:
         landingpageNavi:
           type: number
           label: Position of Navi Segment
-          description: Use 0 to disable the section
+          description: Use 0 to disable the section          
         naviTitle:
           type: text
           label: Title for navigation
@@ -194,12 +195,12 @@ forms:
 
     landingpageNews:
       type: fieldset
-      legend: Landingpage News Segment
+      legend: Landingpage News Segment      
       fields:
         landingpageNews:
           type: number
           label: Position of News Segment
-          description: Use 0 to disable the section
+          description: Use 0 to disable the section          
         newsHeadline:
           type: text
           label: Headline for news-segment
@@ -250,8 +251,8 @@ forms:
           type: select
           label: Date format
           options:
-            "m/d/Y": 01/20/2020
-            "d.m.Y": 20.01.2020
+            'm/d/Y': 01/20/2020
+            'd.m.Y': 20.01.2020
 
     fieldsetGitHub:
       type: fieldset
@@ -351,6 +352,7 @@ forms:
           type: textarea
           label: footer column 3 (use markdown)
 
+
     fieldsetcopyrightline:
       type: fieldset
       legend: Copyright Line
@@ -377,7 +379,7 @@ forms:
             courier,sans-serif: courier (sans-serif)
             helvetica,sans-serif: helvetica (sans-serif)
             avenir,sans-serif: avenir (sans-serif)
-            athelas,serif: athelas (serif)
+            athelas,serif: athelas (serif) 
             georgia,serif: georgia (serif)
             times,serif: times (serif)
             bodoni,serif: bodoni (serif)
@@ -394,7 +396,7 @@ forms:
             courier,sans-serif: courier (sans-serif)
             helvetica,sans-serif: helvetica (sans-serif)
             avenir,sans-serif: avenir (sans-serif)
-            athelas,serif: athelas (serif)
+            athelas,serif: athelas (serif) 
             georgia,serif: georgia (serif)
             times,serif: times (serif)
             bodoni,serif: bodoni (serif)
@@ -411,7 +413,7 @@ forms:
             courier,sans-serif: courier (sans-serif)
             helvetica,sans-serif: helvetica (sans-serif)
             avenir,sans-serif: avenir (sans-serif)
-            athelas,serif: athelas (serif)
+            athelas,serif: athelas (serif) 
             georgia,serif: georgia (serif)
             times,serif: times (serif)
             bodoni,serif: bodoni (serif)
@@ -425,77 +427,77 @@ forms:
         brandcolorprimary:
           type: text
           label: Background color for body
-          placeholder: "leightseagreen"
+          placeholder: 'leightseagreen'
           fieldsize: half
         fontcolorprimary:
           type: text
           label: Font color for body
-          placeholder: "white"
+          placeholder: 'white'
           fieldsize: half
         newsbackground:
           type: text
           label: Background color for news-box
-          placeholder: "white"
+          placeholder: 'white'
           fieldsize: half
         newscolor:
           type: text
           label: Font color for news-box
-          placeholder: "#333"
+          placeholder: '#333'
           fieldsize: half
         brandcolortertiary:
           type: text
           label: Background color for buttons
-          placeholder: "lightseagreen"
+          placeholder: 'lightseagreen'
           fieldsize: half
         fontcolortertiary:
           type: text
           label: Font color for buttons
-          placeholder: "#F7F7F7"
+          placeholder: '#F7F7F7'
           fieldsize: half
         bordercolortertiary:
           type: text
           label: Border color for buttons
-          placeholder: "#F7F7F7"
+          placeholder: '#F7F7F7'
           fieldsize: half
         fontcolorlink:
           type: text
           label: Font color for content links
-          placeholder: "#007F7F"
+          placeholder: '#007F7F'
           fieldsize: half
         brandcolorsecondary:
           type: text
           label: Background color for content
-          placeholder: "#f7f7f7"
+          placeholder: '#f7f7f7'
           fieldsize: half
         fontcolorsecondary:
           type: text
           label: Font color for content
-          placeholder: "#333"
+          placeholder: '#333'
           fieldsize: half
         codebackground:
           type: text
           label: Background color for code
-          placeholder: "#ddd"
+          placeholder: '#ddd'
           fieldsize: half
         codecolor:
           type: text
           label: Font color for code
-          placeholder: "#333"
+          placeholder: '#333'
           fieldsize: half
         contentnavihoverbackground:
           type: text
           label: Background color for hover of content navigation
-          placeholder: "lightseagreen"
+          placeholder: 'lightseagreen'
           fieldsize: half
         contentnavihovercolor:
           type: text
           label: Font color for hover of content navigation
-          placeholder: "white"
+          placeholder: 'white'
           fieldsize: half
         thinbordercolor:
           type: text
           label: Thin border color
-          placeholder: "lightgray"
+          placeholder: 'lightgray'
           description: Used for content navigation, table and horizontal line
           fieldsize: half
         noticecolors:
