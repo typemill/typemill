@@ -1,4 +1,4 @@
-const fs = require("fs");
+const fs = require("fs-extra");
 
 /// <reference types="cypress" />
 // ***********************************************************
@@ -32,6 +32,15 @@ module.exports = (on, config) => {
           "settings/settings.yaml"
         );
       }
+
+      return null;
+    },
+    prepopulateSetup() {
+      const settings = "settings";
+      const settingsFixture =
+        "cypress/fixtures/01_setup/prepulate_settings_seed/settings";
+      // of course files need to exist in order to perform a delete
+      fs.copySync(settingsFixture, settings);
 
       return null;
     },
