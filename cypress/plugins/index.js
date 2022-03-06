@@ -19,16 +19,20 @@ const fs = require("fs");
  */
 // eslint-disable-next-line no-unused-vars
 module.exports = (on, config) => {
-    on("task", {
-        resetSetup() {
-            fs.rmSync("settings/users", { recursive: true, force: true });
-            fs.rmSync("settings/settings.yaml");
-            fs.copyFileSync(
-                "cypress/fixtures/01_setup/default-settings.yaml",
-                "settings/settings.yaml"
-            );
+  on("task", {
+    resetSetup() {
+      const users = "settings/users";
+      const settings = "settings/settings.yaml";
+      if (fs.existsSync(settings) && fs.existsSync(users)) {
+        fs.rmSync(users, { recursive: true, force: true });
+        fs.rmSync(settings);
+        fs.copyFileSync(
+          "cypress/fixtures/01_setup/default-settings.yaml",
+          "settings/settings.yaml"
+        );
+      }
 
-            return null;
-        },
-    });
+      return null;
+    },
+  });
 };

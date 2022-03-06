@@ -1,0 +1,19 @@
+{
+    "name": "typemill",
+    "version": "1.0.0",
+    "description": "TYPEMILL is a lightweight flat file cms for micro-publishers. You can use it for documentations, manuals, special interest websites, and any other information-driven web-project. You can also enhance Typemill with plugins and generate professional e-books in pdf-format with it. The website http://typemill.net runs with Typemill.",
+    "main": "index.js",
+    "scripts": {
+        "e2e": "composer update && cypress open --project ."
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/typemill/typemill.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/typemill/typemill/issues"
+    },
+    "homepage": "https://github.com/typemill/typemill#readme"
+}
