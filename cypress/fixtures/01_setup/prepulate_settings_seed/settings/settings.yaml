@@ -1,0 +1,51 @@
+setup: false
+language: en
+welcome: false
+title: TYPEMILL
+author: Unknown
+copyright: ©
+year: "2022"
+langattr: en
+editor: visual
+formats:
+  - markdown
+  - headline
+  - ulist
+  - olist
+  - table
+  - quote
+  - notice
+  - image
+  - video
+  - file
+  - toc
+  - hr
+  - definition
+  - code
+  - shortcode
+access: null
+pageaccess: null
+hrdelimiter: null
+restrictionnotice: ""
+wraprestrictionnotice: null
+headlineanchors: null
+displayErrorDetails: null
+twigcache: null
+proxy: null
+trustedproxies: ""
+headersoff: null
+urlschemes: ""
+svg: null
+recoverpw: null
+recoverfrom: ""
+recoversubject: ""
+recovermessage: ""
+securitylog: null
+oldslug: null
+refreshcache: null
+pingsitemap: null
+images:
+  live:
+    width: "820"
+logo: ""
+favicon: ""

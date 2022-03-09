@@ -23,3 +23,19 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add("loginTypemill", () => {
+  cy.visit("/tm/login");
+  cy.url().should("include", "/tm/login");
+
+  cy.get('input[name="username"]').type("trendschau");
+  cy.get('input[name="password"]').type("password");
+
+  cy.get("form").submit();
+  cy.url().should("include", "/tm/content");
+  cy.getCookie("typemill-session").should("exist");
+});
+
+Cypress.Commands.add("logoutTypemill", () => {
+  cy.visit("/tm/logout");
+});
