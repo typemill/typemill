@@ -102,7 +102,7 @@ ITALIAN: Italian
 ITALIC: cursief
 LANGUAGE: Taal
 LANGUAGE_ADMIN: Taal (admin-ui)
-LANGUAGE_ATTR: Language Attribute (website)
+LANGUAGE_ATTR: Taal Attribute (website)
 LAST_MODIFIED_LIVE_(READONLY): Last modified live (readonly)
 LAST_NAME: achternaam
 LEFT: Links
@@ -115,17 +115,17 @@ LOGOUT: Uitloggen
 MANUAL_DATE: Handmatige datum
 MARKDOWN: Markdown
 MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB__HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES_: Maximum size for an image is 5 MB. Hero images are not supported by all themes.
-MEMBER: member
+MEMBER: Lid
 MENU: Menu
-META: meta
+META: Meta
 META_DESCRIPTION: Metabeschrijving
 META_TITLE: Metatitel
 MISSING_REQUIREMENTS: ontbrekende vereisten
 MOVE_VERTICAL: verplaats verticaal
 NAVIGATION_TITLE: Navigation Title
 NEW_PASSWORD: Nieuw wachtwoord
-NONE: None
-NOTICE: Notice
+NONE: Geen
+NOTICE: Opmerking
 NOT_EDITABLE: niet bewerkbaar
 NO_DESCRIPTION: Geen beschrijving
 NO_PREVIEW: Geen voorbeeld
@@ -142,31 +142,31 @@ PLEASE_CORRECT_THE_ERRORS_ABOVE: Corrigeer bovenstaande fouten
 PLUGINS: plug-ins
 PLUGIN_STORE: Plugin Store
 POWER_OFF: power-off
-PROFILE_IMAGE: Profile image
+PROFILE_IMAGE: Profiel afbeelding
 PUBLISH: Publiceren
-QUOTE: Citeren
+QUOTE: Citeer
 QUOTES: Citeren
 RAW: rauw
-RAW_CONTENT_EDITOR: Raw Content Editor
-RAW_MARKDOWN_EDITOR: Raw Markdown Editor
+RAW_CONTENT_EDITOR: Ruwe Content Editor
+RAW_MARKDOWN_EDITOR: Ruwe Markdown Editor
 RAW_MODE: onbewerkte modus
-RAW_USERDATA_(READONLY_FOR_ADMINS): Raw Userdata (readonly for admins)
+RAW_USERDATA_(READONLY_FOR_ADMINS): Ruwe Gebruikersdata (alleen lezen voor admins)
 READONLY: Alleen lezen
-REGISTERED_USERS_ONLY: Registered users only
+REGISTERED_USERS_ONLY: Alleen geregistreerde gebruikers
 REMEMBER_TO_BOOKMARK_THIS_PAGE: vergeet deze pagina niet te bookmarken
 REQUIRED: verplicht
 RIGHT: Rechts
 ROLE: rol
-RUSSIAN: Russian
+RUSSIAN: Russisch
 SAVE: Opslaan
-SAVED_SUCCESSFULLY: succesvol opgeslagen
-SAVE_ALL_SETTINGS: sla alle instellingen op
+SAVED_SUCCESSFULLY: Succesvol opgeslagen
+SAVE_ALL_SETTINGS: Sla alle instellingen op
 SAVE_THEME: Thema opslaan
-SELECT_FROM_MEDIALIB: select from medialib
+SELECT_FROM_MEDIALIB: Selecteer uit medialib 
 SETTINGS: Instellingen
-SETTINGS_ARE_STORED: Settings are stored
-SETUP: Setup
-SHOW_ANCHORS_NEXT_TO_HEADLINES: Show anchors next to headlines
+SETTINGS_ARE_STORED: Instellingen zijn opgeslagen
+SETUP: Instellen
+SHOW_ANCHORS_NEXT_TO_HEADLINES: Ankers naast koppen weergeven
 STANDARD_EDITOR_MODE: Standaardeditormodus
 START: Start
 SYSTEM: Systeem
@@ -179,24 +179,24 @@ THEMES: Themes
 THEME_STORE: Theme Store
 THE_FORMAT_BUTTONS: De opmaakknoppen
 TITLE: Titel
-TOC: toc
+TOC: Toc
 TOP: Top
 TYPEMILL_DESCRIPTION: Het standaardthema voor typemill. Responsief, minimaal en zonder afhankelijkheden. Het gebruikt de systeemlettertypen Calibri en Helvetica. Er is geen JavaScript gebruikt.
 ULIST: ulist
 UNKNOWN: onbekend
 UPDATE_USER: Gebruiker bijwerken
-UPLOAD: upload
-UPLOAD_AN_IMAGE: upload an image
-UPLOAD_FILE: Upload a file
-UPS__WRONG_PASSWORD_OR_USERNAME__PLEASE_TRY_AGAIN_: Ups, wrong password or username, please try again.
+UPLOAD: Upload
+UPLOAD_AN_IMAGE: Upload een afbeelding
+UPLOAD_FILE: Upload een bestand
+UPS__WRONG_PASSWORD_OR_USERNAME__PLEASE_TRY_AGAIN_: Oops, verkeerd wachtwoord of gebruikersnaam, probeer het opnieuw.
 USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Gebruikt als fallback als er geen handmatige datum is ingesteld.
 USER: Gebruiker
 USERNAME: Gebruikersnaam
-USERNAME_(READ_ONLY): Username (read only) 
+USERNAME_(READ_ONLY): Gebruikersnaam (alleen lezen) 
 USERS: Gebruikers
-USE_2_TO_20_CHARACTERS: Use 2 to 20 characters.
-USE_2_TO_40_CHARACTERS: gebruik 2 tot 40 tekens.
-USE_A_VALID_LANGUAGE_ATTRIBUTE: Use a valid language attribute
+USE_2_TO_20_CHARACTERS: Gebruik 2 tot 20 tekens.
+USE_2_TO_40_CHARACTERS: Gebruik 2 tot 40 tekens.
+USE_A_VALID_LANGUAGE_ATTRIBUTE: Gebruik een geldig taalkenmerk 
 USE_A_VALID_YEAR: Gebruik een geldig jaar
 VIDEO: Video
 VIEW_SITE: Site bekijken
@@ -209,60 +209,60 @@ WAIT: wacht
 WEB: Web
 WEBSITE_TITLE: Titel van de website
 WEBSITE_VISIBLE_FOR: Website visible for
-WRITING: schrijven
+WRITING: Schrijven
 YEAR: Jaar
-YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: You can overwrite the theme-css with your own css here.
+YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: Je kunt de thema-css hier overschrijven met je eigen css. 
 
-ADD_NEW_FEATURES_TO_YOUR_WEBSITE_WITH_PLUGINS_AND_CONFIGURE_THEM_: Add new features to your website with plugins and configure them.
-BY_THE: by the
-CHOOSE_A_THEME_FOR_YOUR_WEBSITE_AND_CONFIGURE_THE_THEME_DETAILS_: Choose a theme for your website and configure the theme details.
-CODED_WITH: Coded with
-COMMUNITY: community
-CONFIGURE_YOUR_WEBSITE: Configure your website
-DOCS: docs
-GET_HELP: Get help
-GIVE_YOUR_NEW_WEBSITE_A_NAME__ADD_THE_AUTHOR_AND_CHOOSE_A_COPYRIGHT_: Give your new website a name, add the author and choose a copyright.
-HURRA: Hurra
-IF_YOU_HAVE_ANY_QUESTIONS__PLEASE_READ_THE: If you have any questions, please read the
-NEXT_STEP: Next step
-OR_OPEN_A_NEW_ISSUE_ON: or open a new issue on
-SETUP_WELCOME: Setup Welcome
+ADD_NEW_FEATURES_TO_YOUR_WEBSITE_WITH_PLUGINS_AND_CONFIGURE_THEM_: Voeg nieuwe functies toe aan uw website met plug-ins en configureer ze. 
+BY_THE: door de
+CHOOSE_A_THEME_FOR_YOUR_WEBSITE_AND_CONFIGURE_THE_THEME_DETAILS_: Kies een thema voor uw website en configureer de themadetails. 
+CODED_WITH: Geprogrammeerd met
+COMMUNITY: gemeenschap
+CONFIGURE_YOUR_WEBSITE: Configureer uw website 
+DOCS: Documentatie
+GET_HELP: Krijg hulp
+GIVE_YOUR_NEW_WEBSITE_A_NAME__ADD_THE_AUTHOR_AND_CHOOSE_A_COPYRIGHT_: Geef je nieuwe website een naam, voeg de auteur toe en kies een copyright.
+HURRA: Hoera
+IF_YOU_HAVE_ANY_QUESTIONS__PLEASE_READ_THE: Als je vragen hebt, lees dan de
+NEXT_STEP: Volgende stap
+OR_OPEN_A_NEW_ISSUE_ON: of open een nieuw issue op
+SETUP_WELCOME: Installatie Welkom
 TRENDSCHAU_DIGITAL: Trendschau Digital
-VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: Visit the author panel and setup your new website. You can configure the system, choose themes and add plugins.
-YOUR_ACCOUNT_HAS_BEEN_CREATED_AND_YOU_ARE_LOGGED_IN_NOW_: Your account has been created and you are logged in now.
+VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: Ga naar het auteurspaneel en stel uw nieuwe website in. U kunt het systeem configureren, thema's kiezen en plug-ins toevoegen.
+YOUR_ACCOUNT_HAS_BEEN_CREATED_AND_YOU_ARE_LOGGED_IN_NOW_: Uw account is aangemaakt en u bent nu ingelogd.
 
-ACCESS_CONTROL: Access Control
-ACTIVATE_INDIVIDUAL_RESTRICTIONS_FOR_PAGES_IN_THE_META_TAB_OF_EACH_PAGE_: Activate individual restrictions for pages in the meta-tab of each page.
-ADD_ONE_OR_MORE_USERNAMES_SEPARATED_WITH_COMMA_: Add one or more usernames separated with comma.
-CUT_RESTRICTED_CONTENT_AFTER_THE_FIRST_HR_ELEMENT_ON_A_PAGE_(PER_DEFAULT_CONTENT_WILL_BE_CUT_AFTER_TITLE)_: Cut restricted content after the first hr-element on a page (per default content will be cut after title).
-FOR_ACCESS_THE_USER_MUST_HAVE_THIS_MINIMUM_ROLE: For access the user must have this minimum role
-LIMIT_THE_ACCESS_FOR_THE_WHOLE_WEBSITE_OR_FOR_EACH_PAGE_INDIVIDUALLY__IF_YOU_ACTIVATE_THE_WEBSITE_RESTRICTION_OR_THE_PAGE_RESTRICTIONS__THEN_SESSIONS_WILL_BE_USED_IN_FRONTEND_: Limit the access for the whole website or for each page individually. If you activate the website restriction or the page restrictions, then sessions will be used in frontend.
-ONLY_THE_FOLLOWING_USERS_HAVE_ACCESS: Only the following users have access
-PAGE_RESTRICTIONS___ACTIVATE: Page Restrictions - Activate
-PAGE_RESTRICTIONS___CUT_RESTRICTED_CONTENT: Page Restrictions - Cut Restricted Content
-PAGE_RESTRICTIONS___NOTICE: Page Restrictions - Notice
-PAGE_RESTRICTIONS___WRAP_NOTICE_INTO_A_BOX: Page Restrictions - Wrap Notice into a Box
-SELECT_THE_LOWEST_USERROLE__HIGHER_ROLES_WILL_HAVE_ACCESS_TOO_: Select the lowest userrole. Higher roles will have access too.
-SHOW_THE_WEBSITE_ONLY_TO_AUTHENTICATED_USERS_AND_REDIRECT_ALL_OTHER_USERS_TO_THE_LOGIN_PAGE_: Show the website only to authenticated users and redirect all other users to the login page.
-USE_MARKDOWN: use markdown
-WEBSITE_RESTRICTION: Website Restriction
-WRAP_THE_RESTRICTION_NOTICE_ABOVE_INTO_A_NOTICE_4_ELEMENT_(WHICH_CAN_BE_DESIGNED_AS_SPECIAL_BOX): Wrap the restriction notice above into a notice-4 element (which can be designed as special box)
+ACCESS_CONTROL: Toegangscontrole
+ACTIVATE_INDIVIDUAL_RESTRICTIONS_FOR_PAGES_IN_THE_META_TAB_OF_EACH_PAGE_: Activeer individuele beperkingen voor pagina's in de meta-tab van elke pagina. 
+ADD_ONE_OR_MORE_USERNAMES_SEPARATED_WITH_COMMA_: Voeg een of meer gebruikersnamen toe, gescheiden door komma's. 
+CUT_RESTRICTED_CONTENT_AFTER_THE_FIRST_HR_ELEMENT_ON_A_PAGE_(PER_DEFAULT_CONTENT_WILL_BE_CUT_AFTER_TITLE)_: Beperkte inhoud knippen na het eerste hr-element op een pagina (standaard wordt inhoud na titel geknipt). 
+FOR_ACCESS_THE_USER_MUST_HAVE_THIS_MINIMUM_ROLE: Voor toegang moet de gebruiker deze minimale rol hebben
+LIMIT_THE_ACCESS_FOR_THE_WHOLE_WEBSITE_OR_FOR_EACH_PAGE_INDIVIDUALLY__IF_YOU_ACTIVATE_THE_WEBSITE_RESTRICTION_OR_THE_PAGE_RESTRICTIONS__THEN_SESSIONS_WILL_BE_USED_IN_FRONTEND_: Beperk de toegang voor de hele website of voor elke pagina afzonderlijk. Als u de websitebeperking of de paginabeperkingen activeert, worden sessies in de frontend gebruikt.
+ONLY_THE_FOLLOWING_USERS_HAVE_ACCESS: Alleen de volgende gebruikers hebben toegang
+PAGE_RESTRICTIONS___ACTIVATE: Paginabeperkingen - Activeren 
+PAGE_RESTRICTIONS___CUT_RESTRICTED_CONTENT: Paginabeperkingen - Beperkte inhoud knippen 
+PAGE_RESTRICTIONS___NOTICE: Paginabeperkingen - Kennisgeving 
+PAGE_RESTRICTIONS___WRAP_NOTICE_INTO_A_BOX: Paginabeperkingen - Verpak kennisgeving in een doos 
+SELECT_THE_LOWEST_USERROLE__HIGHER_ROLES_WILL_HAVE_ACCESS_TOO_: Selecteer de laagste gebruikersrol. Hogere rollen hebben ook toegang. 
+SHOW_THE_WEBSITE_ONLY_TO_AUTHENTICATED_USERS_AND_REDIRECT_ALL_OTHER_USERS_TO_THE_LOGIN_PAGE_: Toon de website alleen aan geverifieerde gebruikers en stuur alle andere gebruikers door naar de inlogpagina. 
+USE_MARKDOWN: gebruik markdown
+WEBSITE_RESTRICTION: Websitebeperking
+WRAP_THE_RESTRICTION_NOTICE_ABOVE_INTO_A_NOTICE_4_ELEMENT_(WHICH_CAN_BE_DESIGNED_AS_SPECIAL_BOX): Wikkel de beperkingskennisgeving hierboven in een bericht-4-element (dat kan worden ontworpen als een speciaal vak) 
 
-ACTIVATE_CACHE_FOR_TWIG_TEMPLATES: Activate Cache for Twig Templates
-ADD_MORE_URL_SCHEMES_FOR_EXTERNAL_LINKS_E_G__LIKE_DICT://_(COMMA_SEPARATED_LIST): Add more url schemes for external links e.g. like dict:// (comma separated list)
-CLEAR_CACHE: Clear Cache
-DELETE_ALL_CACHE_FILES: Delete all cache files
-DEVELOPER: Developer
-DISABLE_HEADERS: Disable Headers
-DISABLE_TYPEMILL_HEADERS_AND_SEND_YOUR_OWN: Disable Typemill Headers And Send Your Own
-DISPLAY_APPLICATION_ERRORS: Display Application Errors
-ERROR_REPORTING: Error Reporting
-IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT__THEN_THE_IMAGE_WILL_BE_CROPPED_: If you add a value for the height, then the image will be cropped.
+ACTIVATE_CACHE_FOR_TWIG_TEMPLATES: Cache activeren voor Twig-sjablonen 
+ADD_MORE_URL_SCHEMES_FOR_EXTERNAL_LINKS_E_G__LIKE_DICT://_(COMMA_SEPARATED_LIST): Voeg meer url-schema's toe voor externe links, b.v. zoals dict:// (door komma's gescheiden lijst) 
+CLEAR_CACHE: Cache wissen
+DELETE_ALL_CACHE_FILES: Alle cachebestanden verwijderen
+DEVELOPER: Ontwikkelaar 
+DISABLE_HEADERS: Headers uitschakelen
+DISABLE_TYPEMILL_HEADERS_AND_SEND_YOUR_OWN: Schakel Typemill-headers uit en verzend uw eigen
+DISPLAY_APPLICATION_ERRORS: Applicatiefouten weergeven
+ERROR_REPORTING: Foutmelding
+IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT__THEN_THE_IMAGE_WILL_BE_CROPPED_: Als u een waarde voor de hoogte toevoegt, wordt de afbeelding bijgesneden.
 PROXY: Proxy
-STANDARD_HEIGHT_FOR_IMAGES: Standard height for images
-STANDARD_WIDTH_FOR_IMAGES: Standard width for images
-THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: The following options are only for developers and experienced administrators. Only change the options if you really understand them. For example: Never activate the error reporting for a live website, use this option only for bug-fixing.
-THIS_APPLIES_ONLY_FOR_FUTURE_IMAGES_IN_THE_CONTENT_AREA_: This applies only for future images in the content area.
-TRUSTED_IPS_FOR_PROXY_(COMMA_SEPARATED): Trusted IPs for proxy (comma separated)
+STANDARD_HEIGHT_FOR_IMAGES: Standaard hoogte voor afbeeldingen
+STANDARD_WIDTH_FOR_IMAGES: Standaardbreedte voor afbeeldingen 
+THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: De volgende opties zijn alleen voor ontwikkelaars en ervaren beheerders. Wijzig de opties alleen als u ze echt begrijpt. Bijvoorbeeld: Activeer nooit de foutrapportage voor een live website, gebruik deze optie alleen voor het oplossen van fouten.
+THIS_APPLIES_ONLY_FOR_FUTURE_IMAGES_IN_THE_CONTENT_AREA_: Dit geldt alleen voor toekomstige afbeeldingen in het inhoudsgebied.
+TRUSTED_IPS_FOR_PROXY_(COMMA_SEPARATED): Vertrouwde IP's voor proxy (gescheiden door komma's) 
 TWIG_CACHE: Twig Cache
-USE_X_FORWARDED_HEADERS: Use X-Forwarded Headers
+USE_X_FORWARDED_HEADERS: Gebruik X-Forwarded Headers
