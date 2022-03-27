@@ -230,6 +230,7 @@ class ControllerAuthorMediaApi extends ControllerAuthor
 		$extension 	= pathinfo($this->params['name'], PATHINFO_EXTENSION);
 		$finfo 		= finfo_open( FILEINFO_MIME_TYPE );
 		$mtype 		= @finfo_file( $finfo, $this->params['file'] );
+		finfo_close($finfo);
 
 		if ($size === 0)
 		{
@@ -242,23 +243,19 @@ class ControllerAuthorMediaApi extends ControllerAuthor
 			return $response->withJson(['errors' => 'File is bigger than 20MB.'],422);
 		}
 
-		# in some environments the finfo_file does not work with a base64 string. In future we should store upload as temporary file and use that.
+		# check extension first
+		if (!$this->checkAllowedExtensions($extension))
+		{
+			return $response->withJson(['errors' => 'File is not allowed.'],422);
+		}
+
+		# check mimetype and extension if there is a mimetype. 
+		# in some environments the finfo_file does not work with a base64 string. 
 		if($mtype)
 		{
-			# make sure only allowed filetypes are uploaded
-			$allowedMimes = $this->getAllowedMtypes();
-
-			if(!isset($allowedMimes[$mtype]))
+			if(!$this->checkAllowedMimeTypes($mtype, $extension))
 			{
-				return $response->withJson(['errors' => 'The mime-type is not allowed'],422);
-			}
-
-			if(
-				(is_array($allowedMimes[$mtype]) && !in_array($extension, $allowedMimes[$mtype])) OR
-				(!is_array($allowedMimes[$mtype]) && $allowedMimes[$mtype] != $extension )
-			)
-			{
-				return $response->withJson(['errors' => 'The file-extension is not allowed or wrong'],422);
+				return $response->withJson(['errors' => 'The mime-type or file extension is not allowed.'],422);
 			}
 		}
 
@@ -270,9 +267,26 @@ class ControllerAuthorMediaApi extends ControllerAuthor
 		}
 	
 		$fileinfo = $fileProcessor->storeFile($this->params['file'], $this->params['name']);
-		
+
 		if($fileinfo)
 		{
+			# if the previous check of the mtype with the base64 string failed, then do it now again with the temporary file
+			if(!$mtype)
+			{
+				$filePath 	= str_replace('media/files', 'media/tmp', $fileinfo['url']);
+				$fullPath 	= $this->settings['rootPath'] . $filePath;
+				$finfo 		= finfo_open( FILEINFO_MIME_TYPE );
+				$mtype 		= @finfo_file( $finfo, $fullPath );
+				finfo_close($finfo);
+
+				if(!$mtype OR !$this->checkAllowedMimeTypes($mtype, $extension))
+				{
+					$fileProcessor->clearTempFolder();
+
+					return $response->withJson(['errors' => 'The mime-type is missing, not allowed or does not fit to the file extension.'],422);
+				}
+			}
+
 			# publish file directly, used for example by file field for meta-tabs
 			if(isset($this->params['publish']) && $this->params['publish'])
 			{
@@ -577,5 +591,49 @@ class ControllerAuthorMediaApi extends ControllerAuthor
 			'video/x-sgi-movie' 														=> 'movie',
 			'video/3gpp'  																=> '3gp',
 		);
-	}	
+	}
+
+	protected function checkAllowedMimeTypes($mtype, $extension)
+	{
+		$allowedMimes = $this->getAllowedMtypes();
+
+		if(!isset($allowedMimes[$mtype]))
+		{
+			return false;
+		}
+
+		if(
+			(is_array($allowedMimes[$mtype]) && !in_array($extension, $allowedMimes[$mtype])) OR
+			(!is_array($allowedMimes[$mtype]) && $allowedMimes[$mtype] != $extension )
+		)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	protected function checkAllowedExtensions($extension)
+	{	
+		$mtypes = $this->getAllowedMtypes();
+		foreach($mtypes as $mtExtension)
+		{
+			if(is_array($mtExtension))
+			{
+				if(in_array($extension, $mtExtension))
+				{
+					return true;
+				}
+			}
+			else
+			{
+				if($extension == $mtExtension)
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
 }

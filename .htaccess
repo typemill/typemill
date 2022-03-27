@@ -47,13 +47,15 @@ RewriteRule ^(.*)?\.yml$ - [F,L]
 Rewriterule ^(.*)?\.yaml$ - [F,L]
 RewriteRule ^(.*)?\.txt$ - [F,L]
 RewriteRule ^(.*)?\.example$ - [F,L]
-RewriteRule ^(.*/)?\.git+ - [F,L]
-RewriteRule ^(.*/)?\.md - [F,L]
-RewriteRule ^(.*/)?\.php - [F,L]
-RewriteRule ^(.*/)?\.twig - [F,L]
+RewriteRule ^(.*)?\.git+ - [F,L]
+RewriteRule ^(.*)?\.md - [F,L]
+RewriteCond %{REQUEST_URI} !/index\.php
+RewriteRule ^(.*)?\.ph - [F,L]
+RewriteRule ^(.*)?\.twig - [F,L]
+RewriteRule ^(media\/tmp\/) - [F,L]
 
 # Block access to specific files in the root folder
-RewriteRule ^(licence\.md|readme\.md|composer\.lock|composer\.json|\.htaccess)$ error [F,L]
+RewriteRule ^(composer\.lock|composer\.json|\.htaccess)$ error [F,L]
 
 # block files and folders starting with a dot except for the .well-known folder (Let's Encrypt)
 RewriteRule (^|/)\.(?!well-known\/) index.php [L]
