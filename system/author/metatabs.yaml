@@ -12,7 +12,7 @@ meta:
         title:
           type: text
           label: Meta title
-          maxlength: 60
+          maxlength: 100
           class: large
         description:
           type: textarea
