@@ -258,9 +258,10 @@ class WriteMeta extends WriteYaml
 		return $description;
 	}
 
-	public function transformPagesToPosts($folder){
-
+	public function transformPagesToPosts($folder)
+	{		
 		$filetypes			= array('md', 'txt', 'yaml');
+		$result 			= true;
 
 		foreach($folder->folderContent as $page)
 		{
@@ -294,13 +295,11 @@ class WriteMeta extends WriteYaml
 			# create new file-name without filetype
 			$newFile 	= $this->basePath . 'content' . $folder->path . DIRECTORY_SEPARATOR . $datetime . '-' . $page->slug;
 
-			$result 	= true;
-
 			foreach($filetypes as $filetype)
 			{
 				$oldFilePath = $oldFile . '.' . $filetype;
 				$newFilePath = $newFile . '.' . $filetype;
-				
+							
 				#check if file with filetype exists and rename
 				if($oldFilePath != $newFilePath && file_exists($oldFilePath))
 				{
@@ -315,12 +314,15 @@ class WriteMeta extends WriteYaml
 				}
 			}
 		}
+
+		return $result;
 	}
 
-	public function transformPostsToPages($folder){
-
+	public function transformPostsToPages($folder)
+	{
 		$filetypes			= array('md', 'txt', 'yaml');
 		$index				= 0;
+		$result 			= true;
 
 		foreach($folder->folderContent as $page)
 		{
@@ -336,8 +338,6 @@ class WriteMeta extends WriteYaml
 
 			# create new file-name without filetype
 			$newFile 	= $this->basePath . 'content' . $folder->path . DIRECTORY_SEPARATOR . $order . '-' . $page->slug;
-
-			$result 	= true;
 
 			foreach($filetypes as $filetype)
 			{
@@ -360,5 +360,20 @@ class WriteMeta extends WriteYaml
 
 			$index++;
 		}
+
+		return $result;
+	}
+
+	public function folderContainsFolders($folder)
+	{
+		foreach($folder->folderContent as $page)
+		{
+			if($page->elementType == 'folder')
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

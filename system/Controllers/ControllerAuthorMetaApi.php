@@ -296,17 +296,28 @@ class ControllerAuthorMetaApi extends ControllerAuthor
 			}
 
 			# if folder has changed and contains pages instead of posts or posts instead of pages
-			if($this->item->elementType == "folder" && isset($metaInput['contains']) && $this->hasChanged($metaInput, $metaPage['meta'], 'contains'))
+			if($this->item->elementType == "folder" && isset($metaInput['contains']) && isset($metaPage['meta']['contains']) && $this->hasChanged($metaInput, $metaPage['meta'], 'contains'))
 			{
 				$structure = true;
+		
+				if($writeMeta->folderContainsFolders($this->item))
+				{
+					return $response->withJson(array('errors' => ['message' => 'The folder contains another folder so we cannot transform it. Please make sure there are only files in this folder.']),422);
+				}
 
 				if($metaInput['contains'] == "posts")
 				{
-					$writeMeta->transformPagesToPosts($this->item);
+					if(!$writeMeta->transformPagesToPosts($this->item))
+					{
+						return $response->withJson(array('errors' => ['message' => 'One or more files could not be transformed.']),422);
+					}
 				}
 				if($metaInput['contains'] == "pages")
 				{
-					$writeMeta->transformPostsToPages($this->item);
+					if(!$writeMeta->transformPostsToPages($this->item))
+					{
+						return $response->withJson(array('errors' => ['message' => 'One or more files could not be transformed.']),422);
+					}
 				}
 			}
 
