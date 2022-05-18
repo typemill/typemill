@@ -19,6 +19,10 @@ RUN chmod +x /var/www/html/docker-utils/install-composer && \
     chmod +x /var/www/html/docker-utils/init-server
 
 VOLUME /var/www/html/settings
+VOLUME /var/www/html/content
+VOLUME /var/www/html/media
+VOLUME /var/www/html/themes
+VOLUME /var/www/html/cache
 
 # Run the server
 CMD ["/var/www/html/docker-utils/init-server"]
