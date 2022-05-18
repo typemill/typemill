@@ -1,3 +1,5 @@
 #!/bin/sh
+find /var/www/html/content -type d -empty -exec cp -R /var/www/html/content.default/* /var/www/html/content \;
+find /var/www/html/themes -type d -empty -exec cp -R /var/www/html/themes.default/* /var/www/html/themes \;
 chown -R www-data:www-data /var/www/html/
 apache2-foreground
