@@ -1,0 +1,17 @@
+#!/bin/sh
+
+chown -R www-data:www-data /var/www/html
+find /var/www/html -type d -exec chmod 570 {} \;
+find /var/www/html -type f -exec chmod 460 {} \;
+chown -R www-data:www-data /var/www/html/cache
+find /var/www/html/cache -type d -exec chmod 770 {} \;
+find /var/www/html/cache -type f -exec chmod 660 {} \;
+chown -R www-data:www-data /var/www/html/content
+find /var/www/html/content -type d -exec chmod 770 {} \;
+find /var/www/html/content -type f -exec chmod 660 {} \;
+chown -R www-data:www-data /var/www/html/media
+find /var/www/html/media -type d -exec chmod 770 {} \;
+find /var/www/html/media -type f -exec chmod 660 {} \;
+chown -R www-data:www-data /var/www/html/settings
+find /var/www/html/settings -type d -exec chmod 770 {} \;
+find /var/www/html/settings -type f -exec chmod 660 {} \;

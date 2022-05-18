@@ -29,7 +29,7 @@ $settings = Typemill\Settings::loadSettings();
 /****************************
 * HANDLE DISPLAY ERRORS 	  *
 ****************************/
-
+$settings['settings']['displayErrorDetails'] = true;
 if(isset($settings['settings']['displayErrorDetails']) && $settings['settings']['displayErrorDetails']) 
 {
 	ini_set('display_errors', 1);
