@@ -8,10 +8,7 @@
 !composer*
 !index.php
 
-!cmd.sh
-!init_content.sh
-
-# Allow example files and directories
+# Allow content files and directories
 !cache/
 !content/
 !data/
