@@ -1,8 +1,9 @@
 #!/bin/sh
 
-chown -R www-data:www-data /var/www/html
-find /var/www/html -type d -exec chmod 570 {} \;
-find /var/www/html -type f -exec chmod 460 {} \;
+#chown -R www-data:www-data /var/www/html
+#find /var/www/html -type d -exec chmod 570 {} \;
+#find /var/www/html -type f -exec chmod 460 {} \;
+echo TestMBO1
 chown -R www-data:www-data /var/www/html/cache
 find /var/www/html/cache -type d -exec chmod 770 {} \;
 find /var/www/html/cache -type f -exec chmod 660 {} \;

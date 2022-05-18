@@ -12,34 +12,40 @@ RUN docker-php-ext-install gd
 
 COPY docker-utils /usr/local/bin
 
-WORKDIR /src
+#WORKDIR /src
+#
+#COPY system ./system
+#COPY .htaccess \
+#     composer* \
+#     index.php \
+#     /src/
+#COPY cache ./cache
+#COPY data ./data
+#COPY media ./media
+#COPY settings ./settings
+#COPY themes ./themes
 
-COPY system ./system
-COPY .htaccess \
-     composer* \
-     index.php \
-     /src/
-COPY cache ./cache
-COPY data ./data
-COPY media ./media
-COPY settings ./settings
-COPY themes ./themes
+#WORKDIR /tmp
+#
+#COPY content ./content
+
+WORKDIR /var/www/html
+COPY . /src/
+COPY . .
 
 RUN chmod +x /usr/local/bin/install-composer && \
     /usr/local/bin/install-composer && \
     ./composer.phar update && \
-    chmod +x /usr/local/bin/init-server && \
-    chmod +x /usr/local/bin/adjust-rights
+    chmod +x /usr/local/bin/init-server
+#    chmod +x /usr/local/bin/adjust-rights && \
+#    /usr/local/bin/adjust-rights
 
-WORKDIR /tmp
-
-COPY content ./content
 
 # Create a non-root user to own the files and run our server
-WORKDIR /var/www/html
+#WORKDIR /var/www/html
 
 # Expose single volume of data to simplify maintenance
-VOLUME /var/www/html
+#VOLUME /var/www/html/content
 
 #RUN cp -R /src/* /var/www/html/
 #RUN cp -R /tmp/* /var/www/html/

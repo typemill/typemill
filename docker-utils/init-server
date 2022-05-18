@@ -1,16 +1,17 @@
 #!/bin/sh
 
-find /var/www/html -type d -empty -exec cp -R /tmp/* /var/www/html/ \;
+#usermod -u $PUID www-data
+#groupmod -g $PGID www-data
+#find /var/www/html -type d -empty -exec cp -R /tmp/* /var/www/html/ \;
+#
+#cp -R /src/* /var/www/html/
+#cp -R /tmp/* /var/www/html/
 
-cp -R /src/* /var/www/html/
-cp -R /tmp/* /var/www/html/
+#/usr/local/bin/install-composer && \
+#./composer.phar update
 
-/usr/local/bin/install-composer && \
-./composer.phar update
 
-usermod -u $PUID www-data
-groupmod -g $PGID www-data
-
-/usr/local/bin/adjust-rights
+chown www-data:www-data /var/www/html/
+#/usr/local/bin/adjust-rights
 
 apache2-foreground
