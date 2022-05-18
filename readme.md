@@ -41,6 +41,7 @@ Some plugin highlights are:
 If you run a linux system, then please double check that mod_rewrite and htaccess are active!!!
 
 ## Installation
+### Bare-metal installation
 
 Download TYPEMILL from the [TYPEMILL website](http://typemill.net), unzip the files and you are done.
 
@@ -56,7 +57,7 @@ If you did not use composer before, please go to the [composer website](http://g
 
 To run TYPEMILL on a **live** system, simply upload the files to your server
 
-## Make Folders Writable.
+#### Make Folders Writable.
 
 Make sure that the following folders and all their files are writable (permission 774 recursively):
 
@@ -66,6 +67,9 @@ Make sure that the following folders and all their files are writable (permissio
 * settings
 
 You can use your ftp-software for that.
+
+### Docker installation
+
 
 ## Setup
 

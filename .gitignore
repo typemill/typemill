@@ -24,3 +24,5 @@ plugins/demo
 zips
 build.php
 node_modules
+.idea
+dist
