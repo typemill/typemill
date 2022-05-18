@@ -4,7 +4,7 @@
 #groupmod -g $PGID www-data
 #find /var/www/html -type d -empty -exec cp -R /tmp/* /var/www/html/ \;
 #
-#cp -R /src/* /var/www/html/
+cp -R /src/* /var/www/html/
 #cp -R /tmp/* /var/www/html/
 
 #/usr/local/bin/install-composer && \

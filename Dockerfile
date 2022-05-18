@@ -40,6 +40,15 @@ RUN chmod +x /usr/local/bin/install-composer && \
 #    chmod +x /usr/local/bin/adjust-rights && \
 #    /usr/local/bin/adjust-rights
 
+RUN chown -R www-data:www-data /var/www/html \
+    && find /var/www/html -type d -exec chmod 570 {} \; \
+	&& find /var/www/html -type f -exec chmod 460 {} \;
+RUN cp -R /var/www/html/content /var/www/html/content.orig
+COPY cmd.sh /
+COPY init_content.sh /
+RUN chown root:root /cmd.sh ; chmod 0700 /cmd.sh
+RUN chown root:root /init_content.sh ; chmod 0700 /init_content.sh
+CMD ["/cmd.sh"]
 
 # Create a non-root user to own the files and run our server
 #WORKDIR /var/www/html
@@ -73,4 +82,4 @@ RUN chmod +x /usr/local/bin/install-composer && \
 #USER www-data
 
 # Run the server
-CMD ["/usr/local/bin/init-server"]
+#CMD ["/usr/local/bin/init-server"]
