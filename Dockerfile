@@ -18,5 +18,7 @@ RUN chmod +x /var/www/html/docker-utils/install-composer && \
     ./composer.phar update && \
     chmod +x /var/www/html/docker-utils/init-server
 
+VOLUME /var/www/html/settings
+
 # Run the server
 CMD ["/var/www/html/docker-utils/init-server"]
