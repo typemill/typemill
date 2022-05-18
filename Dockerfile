@@ -10,76 +10,13 @@ RUN a2enmod rewrite \
 # Install PHP ext-gd
 RUN docker-php-ext-install gd
 
-COPY docker-utils /usr/local/bin
-
-#WORKDIR /src
-#
-#COPY system ./system
-#COPY .htaccess \
-#     composer* \
-#     index.php \
-#     /src/
-#COPY cache ./cache
-#COPY data ./data
-#COPY media ./media
-#COPY settings ./settings
-#COPY themes ./themes
-
-#WORKDIR /tmp
-#
-#COPY content ./content
-
 WORKDIR /var/www/html
-COPY . /src/
 COPY . .
 
-RUN chmod +x /usr/local/bin/install-composer && \
-    /usr/local/bin/install-composer && \
+RUN chmod +x /var/www/html/docker-utils/install-composer && \
+    /var/www/html/docker-utils/install-composer && \
     ./composer.phar update && \
-    chmod +x /usr/local/bin/init-server
-#    chmod +x /usr/local/bin/adjust-rights && \
-#    /usr/local/bin/adjust-rights
-
-RUN chown -R www-data:www-data /var/www/html \
-    && find /var/www/html -type d -exec chmod 570 {} \; \
-	&& find /var/www/html -type f -exec chmod 460 {} \;
-RUN cp -R /var/www/html/content /var/www/html/content.orig
-COPY cmd.sh /
-COPY init_content.sh /
-RUN chown root:root /cmd.sh ; chmod 0700 /cmd.sh
-RUN chown root:root /init_content.sh ; chmod 0700 /init_content.sh
-CMD ["/cmd.sh"]
-
-# Create a non-root user to own the files and run our server
-#WORKDIR /var/www/html
-
-# Expose single volume of data to simplify maintenance
-#VOLUME /var/www/html/content
-
-#RUN cp -R /src/* /var/www/html/
-#RUN cp -R /tmp/* /var/www/html/
-#ARG UNAME=www-data
-#ARG UGROUP=www-data
-#ENV UID=1000
-#ENV GID=1000
-#RUN usermod  --uid $UID $UNAME && \
-#    groupmod --gid $GID $UGROUP
-
-# Install PHP dependencies
-#RUN /usr/local/bin/install-composer && \
-#    ./composer.phar update && \
-#    rm -rf composer* Dockerfile docker-utils/install-composer
-#
-## Adjust rights for www-data, a non-root user, to own the files and run our server
-#RUN /usr/local/bin/adjust-rights && \
-#    rm -rf Dockerfile
-
-
-#RUN sed -i 's/^exec /chown www-data:www-data \/var\/www\/html/\n\nexec /' /usr/local/bin/apache2-foreground
-#
-### Use our non-root user
-#RUN chown -R www-data:www-data /var/www/html/
-#USER www-data
+    chmod +x /var/www/html/docker-utils/init-server
 
 # Run the server
-#CMD ["/usr/local/bin/init-server"]
+CMD ["/var/www/html/docker-utils/init-server"]
