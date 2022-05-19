@@ -95,6 +95,7 @@ docker run -d \
     -v $(pwd)/typemill_data/settings/:/var/www/html/settings/ \
     -v $(pwd)/typemill_data/media/:/var/www/html/media/ \
     -v $(pwd)/typemill_data/cache/:/var/www/html/cache/ \
+    -v $(pwd)/typemill_data/plugins/:/var/www/html/plugins/ \
     -v $(pwd)/typemill_data/content/:/var/www/html/content/ \
     -v $(pwd)/typemill_data/themes/:/var/www/html/themes/ \
     typemill:local
@@ -105,6 +106,7 @@ docker run -d \
 - `settings` : persists users profiles, site configuration, etc. (empty by default)
 - `media` : persists media files (empty by default)
 - `cache` : persists cache files for performance purpose (optional and empty by default)
+- `plugins` : persists installed plugins (optional and empty by default)
 - `content` : persists content published (will be initialized with default examples if the binded volume is empty)
 - `themes` : persists installed themes (will be initialized with default examples if the binded volume is empty)
 

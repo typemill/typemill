@@ -25,6 +25,7 @@ RUN chmod +x /var/www/html/docker-utils/install-composer && \
 VOLUME /var/www/html/settings
 VOLUME /var/www/html/media
 VOLUME /var/www/html/cache
+VOLUME /var/www/html/plugins
 
 # Create a default copy of content and theme in case of empty directories binding
 RUN mkdir -p /var/www/html/content.default/ && \
