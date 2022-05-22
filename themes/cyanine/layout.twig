@@ -75,10 +75,10 @@
 				/*******************
 				**      COLORS    **
 				*******************/
-				body,.landingpagecontrast,.account{
+				body,.landingpagecontrast,.account,form input[type="submit"],from button,form .button{
 					background: {{ settings.themes.cyanine.brandcolorprimary|default('lightseagreen') }};
 				}
-				main, footer, .landingpageintro, .landingpageinfo, .landingpageteaser, .landingpagenavi, .landingpagecontrast, .landingpagenews{
+				main, footer, .landingpageintro, .landingpageinfo, .landingpageteaser, .landingpagenavi, .landingpagecontrast, .landingpagenews,form input[type="submit"],from button,form .button{
 					border-color: {{ settings.themes.cyanine.brandcolorprimary|default('lightseagreen') }};
 				}
 				.landingpagecontrast a, .landingpagecontrast a:link, .landingpagecontrast a:visited{
@@ -86,7 +86,8 @@
 				}
 				body,.landingpagecontrast, a,
 				.landingpagecontrast a, .landingpagecontrast a:link, .landingpagecontrast a:visited,
-				.account, .account a, .account a:link, .account a:hover, .account a:focus, .account a:visited{
+				.account, .account a, .account a:link, .account a:hover, .account a:focus, .account a:visited,
+				form input[type="submit"],from button,form .button{
 					color: {{ settings.themes.cyanine.fontcolorprimary|default('#F7F7F7') }};
 				}
 				.landingpagecontrast a, .landingpagecontrast a:link, .landingpagecontrast a:visited{

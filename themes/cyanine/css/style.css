@@ -521,11 +521,11 @@ form input[type="submit"],form button,form .button{
 	font-size: 1em;
 	border: 0;
 	margin-top: 1.5em;
-	color: #fff;
-	background: rgba(0,0,0);
+	width: 100%;
+	padding: 15px;
 }
 form input[type="submit"]:hover,form button:hover,.button:hover{
-	background: rgba(0, 0, 0, 0.8);
+	opacity: .8;
 }
 
 
