@@ -505,3 +505,15 @@ forms:
           label: Color for notices
           checkboxlabel: Use grayscale color schema for notices
           fieldsize: half
+
+metatabs:
+  meta:
+    fields:
+      fieldsetGlossary:
+        type: fieldset
+        legend: Glossary Style
+        fields:
+          glossary:
+            type: checkbox
+            label: Glossary List (only for folders)
+            checkboxlabel: List pages or posts of this folder as glossary (only for folders)

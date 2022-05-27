@@ -10,7 +10,7 @@
     },
     "require": {
         "slim/slim": "~3.7",
-        "twig/twig": "~1.18",		
+        "twig/twig": "^2.0",
         "slim/twig-view": "~2.3",
         "slim/flash": "~0.4",
         "slim/csrf": "~0.8",		

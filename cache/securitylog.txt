@@ -1,0 +1,2 @@
+127.0.0.1;2022-05-26 22:14:00;wrong login
+127.0.0.1;2022-05-26 22:14:07;wrong captcha http://localhost/typemill/tm/login
