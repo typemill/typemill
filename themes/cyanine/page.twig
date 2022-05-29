@@ -109,15 +109,19 @@
 			
 			{% endif %}
 
-			{% if item.elementType == 'folder' and item.contains == 'pages' %}
+			{% if item.elementType == 'folder' and metatabs.meta.glossary %}
+
+				<nav class="f4-l f5">
+					{% include 'partials/navigationGlossary.twig'  with {'glossary': item.folderContent} %}
+				</nav>
+
+			{% elseif item.elementType == 'folder' and item.contains == 'pages' %}
 
 				<nav class="f4-l f5">
 					{% include 'partials/navigationFlat.twig'  with {'flatnavi': item.folderContent} %}
 				</nav>
 
-			{% endif %}
-
-			{% if item.elementType == 'folder' and item.contains == 'posts' %}
+			{% elseif item.elementType == 'folder' and item.contains == 'posts' %}
 
 				{% include 'partials/posts.twig' %}
 
