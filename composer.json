@@ -9,6 +9,7 @@
         "vendor-dir": "system/vendor"
     },
     "require": {
+        "php": "^7.4|^8.0",
         "slim/slim": "~3.7",
         "twig/twig": "^2.0",
         "slim/twig-view": "~2.3",
