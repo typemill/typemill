@@ -239,7 +239,7 @@ IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT__THEN_THE_IMAGE_WILL_BE_CROPPED_: Se aggiungi 
 PROXY: Proxy
 STANDARD_HEIGHT_FOR_IMAGES: Altezza standard per le immagini
 STANDARD_WIDTH_FOR_IMAGES: Larghezza standard per le immagini
-THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: Le seguenti opzioni sono solo per sviluppatori e amministratori esperti. Cambia le opzioni solo se le capisci davvero. Ad esempio: non attivare mai la segnalazione degli errori per un sito Web live, utilizzare questa opzione solo per la correzione dei bug.
+THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: "Le seguenti opzioni sono solo per sviluppatori e amministratori esperti. Cambia le opzioni solo se le capisci davvero. Ad esempio: non attivare mai la segnalazione degli errori per un sito Web live, utilizzare questa opzione solo per la correzione dei bug."
 THIS_APPLIES_ONLY_FOR_FUTURE_IMAGES_IN_THE_CONTENT_AREA_: Questo vale solo per le immagini future nell'area del contenuto.
 TRUSTED_IPS_FOR_PROXY_(COMMA_SEPARATED): IP affidabili per proxy (separati da virgole)
 TWIG_CACHE: Twig Cache
