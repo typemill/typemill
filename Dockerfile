@@ -1,4 +1,4 @@
-FROM php:8-apache
+FROM php:8.0-apache
 
 # Install OS dependencies required
 RUN apt-get update && apt-get upgrade -y && apt-get install git unzip zlib1g-dev libpng-dev -y
