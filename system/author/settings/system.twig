@@ -127,13 +127,21 @@
 						{% if errors.settings.images.live.height %}
 							<span class="error">{{ errors.settings.images.live.height | first }}</span>
 						{% endif %}
-					</div>					
+					</div>
 					<div class="large{{ errors.settings.svg ? ' error' : '' }}">
 						<label for="settings[svg]">{{ __('Upload svg images') }}</label>
 						<label class="control-group">{{ __('Allow upload of svg images (on your own risk, has security implications)') }}
 							<input name="settings[svg]" type="checkbox" {% if (settings.svg or old.settings.svg) %} checked {% endif %}>
 							<span class="checkmark"></span>
 						</label>
+					</div>
+					<div class="medium{{ errors.settings.maxuploadsize ? ' error' : '' }}">
+						<label for="maxuploadsize">{{ __('Maximum size for file-uploads in MB') }}</label>
+						<input type="text" name="settings[maxuploadsize]" id="maxuploadsize" value="{{ old.settings.maxuploadsize ? old.settings.maxuploadsize : settings.maxuploadsize }}" title="{{ __('Use a valid number') }}" />
+						<div class="description">{{ __('The maximum file size might be limited by your server settings.') }}</div>
+						{% if errors.settings.maxuploadsize %}
+							<span class="error">{{ errors.settings.maxuploadsize | first }}</span>
+						{% endif %}
 					</div>
 					<hr>
 					<header class="headline">

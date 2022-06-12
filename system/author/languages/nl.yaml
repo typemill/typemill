@@ -133,7 +133,7 @@ NO_SETTINGS: Geen instellingen
 NUMBERED_LIST: Genummerde lijst
 OLIST: olist
 ONLINE: online
-ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: alleen de volgende speciale tekens zijn toegestaan:
+ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: "alleen de volgende speciale tekens zijn toegestaan:"
 OWNER_(USERNAME): owner (username)
 PARAGRAPH: Paragraaf
 PASSWORD: Wachtwoord
@@ -261,7 +261,7 @@ IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT__THEN_THE_IMAGE_WILL_BE_CROPPED_: Als u een wa
 PROXY: Proxy
 STANDARD_HEIGHT_FOR_IMAGES: Standaard hoogte voor afbeeldingen
 STANDARD_WIDTH_FOR_IMAGES: Standaardbreedte voor afbeeldingen 
-THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: De volgende opties zijn alleen voor ontwikkelaars en ervaren beheerders. Wijzig de opties alleen als u ze echt begrijpt. Bijvoorbeeld: Activeer nooit de foutrapportage voor een live website, gebruik deze optie alleen voor het oplossen van fouten.
+THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: "De volgende opties zijn alleen voor ontwikkelaars en ervaren beheerders. Wijzig de opties alleen als u ze echt begrijpt. Bijvoorbeeld: Activeer nooit de foutrapportage voor een live website, gebruik deze optie alleen voor het oplossen van fouten."
 THIS_APPLIES_ONLY_FOR_FUTURE_IMAGES_IN_THE_CONTENT_AREA_: Dit geldt alleen voor toekomstige afbeeldingen in het inhoudsgebied.
 TRUSTED_IPS_FOR_PROXY_(COMMA_SEPARATED): Vertrouwde IP's voor proxy (gescheiden door komma's) 
 TWIG_CACHE: Twig Cache

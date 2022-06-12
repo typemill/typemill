@@ -87,6 +87,7 @@ class Settings
 			'version'								=> '1.5.3.2',
 			'setup'									=> true,
 			'welcome'								=> true,
+			'maxuploadsize'							=> 20,
 			'images'								=> ['live' => ['width' => 820], 'thumbs' => ['width' => 250, 'height' => 150]],
 		];
 	}
@@ -194,6 +195,7 @@ class Settings
 									'oldslug' => true,
 									'refreshcache' => true,
 									'pingsitemap' => true,
+									'maxuploadsize' => true,
 								];
 
 			# cleanup the existing usersettings
