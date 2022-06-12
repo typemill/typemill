@@ -84,7 +84,7 @@ class Settings
 			'editor'								=> 'visual',
 			'formats'								=> ['markdown', 'headline', 'ulist', 'olist', 'table', 'quote', 'notice', 'image', 'video', 'file', 'toc', 'hr', 'definition', 'code', 'shortcode'],
 			'contentFolder'							=> 'content',
-			'version'								=> '1.5.3.2',
+			'version'								=> '1.5.3.3',
 			'setup'									=> true,
 			'welcome'								=> true,
 			'maxuploadsize'							=> 20,
