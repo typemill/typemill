@@ -34,7 +34,7 @@ Some plugin highlights are:
 
 ## Requirements
 
-* PHP 7+
+* PHP 7.4 or PHP 8.0 (does NOT run with PHP 8.1)
 * Apache server
 * mod_rewrite and htaccess
 
@@ -47,7 +47,7 @@ Download TYPEMILL from the [TYPEMILL website](http://typemill.net), unzip the fi
 
 If you are a developer, you can also clone this repository. To do so, open your command line, go to your project folder (e.g. htdocs) and type:
 
-    git clone git://github.com/trendschau/typemill.git
+    git clone git://github.com/typemill/typemill.git
 
 The GitHub-version has no vendor-folder, so you have to update and include all libraries and dependencies with composer. To do so, open your command line, go to your TYPEMILL folder and type:
 
