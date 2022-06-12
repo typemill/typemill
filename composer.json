@@ -9,13 +9,14 @@
         "vendor-dir": "system/vendor"
     },
     "require": {
+        "php": "^7.4|^8.0",
         "slim/slim": "~3.7",
-        "twig/twig": "~1.18",		
+        "twig/twig": "^2.0",
         "slim/twig-view": "~2.3",
         "slim/flash": "~0.4",
         "slim/csrf": "~0.8",		
-        "symfony/yaml": "~2.8",
-        "symfony/event-dispatcher": "~3.3",		
+        "symfony/yaml": "~5.0",
+        "symfony/event-dispatcher": "~4.0",		
         "erusev/parsedown": "~1.4",
         "erusev/parsedown-extra": "dev-master",
         "jbroadway/urlify": "1.1.3",

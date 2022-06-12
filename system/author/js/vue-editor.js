@@ -8,7 +8,7 @@ let editor = new Vue({
 		},
 		form: {
 			title: document.getElementById("title").value,
-			content: document.getElementById("content").innerHTML,
+			content: document.getElementById("content").textContent,
 		},
 		showEditor: 'show',
 	},

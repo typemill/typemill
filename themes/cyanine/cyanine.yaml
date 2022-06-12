@@ -1,5 +1,5 @@
 name: Cyanine Theme
-version: 1.1.11
+version: 1.1.12
 description: Cyanine is a modern and flexible multi-purpose theme and the standard theme for typemill. 
 author: Trendschau
 homepage: https://trendschau.net
@@ -505,3 +505,15 @@ forms:
           label: Color for notices
           checkboxlabel: Use grayscale color schema for notices
           fieldsize: half
+
+metatabs:
+  meta:
+    fields:
+      fieldsetGlossary:
+        type: fieldset
+        legend: Glossary Style
+        fields:
+          glossary:
+            type: checkbox
+            label: Glossary List (only for folders)
+            checkboxlabel: List pages or posts of this folder as glossary (only for folders)
