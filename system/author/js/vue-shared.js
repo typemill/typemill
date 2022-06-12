@@ -708,7 +708,7 @@ Vue.component('component-file', {
 			  '</div>',
 	data: function(){
 		return {
-			maxsize: 20, // megabyte
+			maxsize: maxuploadsize, // megabyte
 			showmedialib: false,
 			fileid: '',
 			load: false,

@@ -2002,7 +2002,7 @@ const fileComponent = Vue.component('file-component', {
   			'</div></div>',
 	data: function(){
 		return {
-			maxsize: 20, // megabyte
+			maxsize: maxuploadsize, // megabyte
 			showmedialib: false,
 			load: false,
 			filemeta: false,
@@ -2015,7 +2015,6 @@ const fileComponent = Vue.component('file-component', {
 		}
 	},
 	mounted: function(){
-		
 		this.$refs.markdown.focus();
 
 		if(this.compmarkdown)

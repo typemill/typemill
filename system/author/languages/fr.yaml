@@ -249,7 +249,7 @@ WEBSITE_RESTRICTION: Restriction sur le site
 WRAP_THE_RESTRICTION_NOTICE_ABOVE_INTO_A_NOTICE_4_ELEMENT_(WHICH_CAN_BE_DESIGNED_AS_SPECIAL_BOX): Insérer l'avis de restriction ci-dessus dans un élément notice-4 (qui peut être conçu comme special box)
 
 ACTIVATE_CACHE_FOR_TWIG_TEMPLATES: Activer le cache pour les templates Twig
-ADD_MORE_URL_SCHEMES_FOR_EXTERNAL_LINKS_E_G__LIKE_DICT://_(COMMA_SEPARATED_LIST): Ajouter d'autres schémas d'url pour les liens externes. ex: dict:// (liste séparée par des virgules)
+ADD_MORE_URL_SCHEMES_FOR_EXTERNAL_LINKS_E_G__LIKE_DICT://_(COMMA_SEPARATED_LIST): "Ajouter d'autres schémas d'url pour les liens externes. ex: dict:// (liste séparée par des virgules)"
 CLEAR_CACHE: Vider le cache
 DELETE_ALL_CACHE_FILES: Vider tous les fichiers de cache
 DEVELOPER: Développeur

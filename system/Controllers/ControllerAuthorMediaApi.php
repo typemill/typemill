@@ -237,10 +237,12 @@ class ControllerAuthorMediaApi extends ControllerAuthor
 			return $response->withJson(['errors' => 'File is empty.'],422);
 		}
 
+		$maxUploadSize = (isset($this->settings['maxuploadsize']) && is_numeric($this->settings['maxuploadsize']) ) ? ( $this->settings['maxuploadsize'] * 1024 * 1024) : 20971520;
+
 		# 20 MB (1 byte * 1024 * 1024 * 20 (for 20 MB))
-		if ($size > 20971520)
+		if ($size > $maxUploadSize)
 		{
-			return $response->withJson(['errors' => 'File is bigger than 20MB.'],422);
+			return $response->withJson(['errors' => 'File is bigger than '. ($maxUploadSize / 1024 / 1024) .'MB.'],422);
 		}
 
 		# check extension first

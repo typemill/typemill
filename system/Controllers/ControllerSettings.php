@@ -121,6 +121,7 @@ class ControllerSettings extends ControllerShared
 					'oldslug'				=> isset($newSettings['oldslug']) ? true : null,
 					'refreshcache'			=> isset($newSettings['refreshcache']) ? true : null,
 					'pingsitemap'			=> isset($newSettings['pingsitemap']) ? true : null,
+					'maxuploadsize'			=> $newSettings['maxuploadsize'],
 				);
 
 				# https://www.slimframework.com/docs/v3/cookbook/uploading-files.html; 

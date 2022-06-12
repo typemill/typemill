@@ -57,6 +57,7 @@
 		<script src="{{ base_url }}/system/author/js/vue-blox-config.js?v={{ settings.version }}"></script>
 		<script>
 			let formatConfig = {{ settings.formats|json_encode() }};
+			let maxuploadsize = {{ settings.maxuploadsize }};
       		let language = {{ settings.language|json_encode() }};
           	let labels = {{ translations|json_encode() }};
       		let navigation = {{ navigation|json_encode() }};
