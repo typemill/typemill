@@ -205,7 +205,7 @@ class ControllerAuthorMediaApi extends ControllerAuthor
 			}
 
 			# publish image directly, used for example by image field for meta-tabs
-			if($this->params['publish'])
+			if(isset($this->params['publish']) && $this->params['publish'])
 			{
 				$imageProcessor->publishImage();
 			}

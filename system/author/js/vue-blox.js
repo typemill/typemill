@@ -1591,6 +1591,7 @@ const imageComponent = Vue.component('image-component', {
 			originalwidth: 0,
 			originalheight: 0,
 			imgloading: 'lazy',
+			imagestandardwidth: 820,
 			imgattr: '',
 			imgfile: '',
 			showresize: true,
@@ -1598,6 +1599,11 @@ const imageComponent = Vue.component('image-component', {
 		}
 	},
 	mounted: function(){
+
+		if(this.isInt(imagestandardwidth))
+		{
+			this.imagestandardwidth = imagestandardwidth;
+		}
 		
 		this.$refs.markdown.focus();
 
@@ -1701,6 +1707,11 @@ const imageComponent = Vue.component('image-component', {
 		}
 	},
 	methods: {
+		isInt: function(value) {
+		  return !isNaN(value) && 
+		         parseInt(Number(value)) == value && 
+		         !isNaN(parseInt(value, 10));
+		},
 		createmarkdown: function()
 		{
 			if(this.imgpreview)
@@ -1718,6 +1729,11 @@ const imageComponent = Vue.component('image-component', {
 
 					  self.calculatewidth();
 					  self.calculateheight();
+					  if(self.imgwidth > self.imagestandardwidth)
+					  {
+					  	self.imgwidth = self.imagestandardwidth;
+					  	self.calculateheight();
+					  }
 						self.createmarkdownimageloaded();
 				}
 			}
@@ -1896,7 +1912,6 @@ const imageComponent = Vue.component('image-component', {
 			}
 			else
 			{
-				console.info(imgmarkdown);
 				publishController.errors.message = false;
 				this.$parent.activatePage();
 				this.$emit('updatedMarkdown', imgmarkdown);

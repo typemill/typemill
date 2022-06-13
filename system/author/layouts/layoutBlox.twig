@@ -58,6 +58,7 @@
 		<script>
 			let formatConfig = {{ settings.formats|json_encode() }};
 			let maxuploadsize = {{ settings.maxuploadsize }};
+			let imagestandardwidth 	= {{ settings.images.live.width }};
       		let language = {{ settings.language|json_encode() }};
           	let labels = {{ translations|json_encode() }};
       		let navigation = {{ navigation|json_encode() }};
