@@ -1,0 +1,36 @@
+version: '2.0.0'
+setup: true
+welcome: true
+title: 'Typemill'
+author: 'Unknown'
+copyright: 'Copyright'
+language: 'en'
+langattr: 'en'
+themeFolder: 'themes'
+settingsFolder: 'settings'
+contentFolder: 'content'
+authorFolder: '/system/typemill/author'
+adminSegment: 'tm'
+editor: 'visual'
+formats:
+  - 'markdown'
+  - 'headline'
+  - 'ulist'
+  - 'olist'
+  - 'table'
+  - 'quote'
+  - 'notice'
+  - 'image'
+  - 'video'
+  - 'file'
+  - 'toc'
+  - 'hr'
+  - 'definition'
+  - 'code'
+  - 'shortcode'
+images:
+  live:
+    width: 820
+  thumbs:
+    width: 250
+    height: 150

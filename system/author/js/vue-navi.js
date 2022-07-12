@@ -1,33 +1,18 @@
+const naviBus = new Vue();
+
 const navcomponent = Vue.component('navigation', {
 	template: '#navigation-template',
-	props: ['homepage', 'name', 'hide', 'newItem', 'parent', 'active', 'filetype', 'status', 'elementtype', 'contains', 'element', 'folder', 'level', 'url', 'root', 'freeze'],
+	props: ['homepage', 'name', 'hide', 'newItem', 'parent', 'active', 'filetype', 'status', 'elementtype', 'contains', 'element', 'folder', 'level', 'url', 'root', 'freeze', 'collapse'],
 	data: function () {
 		return {
 			showForm: false,
 			revert: false,
-			collapse: [],
-		}
-	},
-	mounted: function(){
-		collapse = localStorage.getItem('collapse');
-		if(collapse !== null)
-		{
-			this.collapse = collapse.split(',');
 		}
 	},
 	methods: {
-		toggleCollapse: function(name)
+		callToggle: function(name)
 		{
-			var index = this.collapse.indexOf(name);
-			if (index > -1)
-			{
-				this.collapse.splice(index, 1);
-			}
-			else
-			{
-				this.collapse.push(name);
-			}
-			localStorage.setItem("collapse", this.collapse.toString());
+			naviBus.$emit('toggleNavi', name);
 		},
 		isCollapsed: function(name)
 		{
@@ -222,9 +207,46 @@ let navi = new Vue({
 			folderName: '',
 			showForm: false,
 			newItem: '',
+			collapse: [],
 		}
 	},
+	mounted: function(){
+		var collapse = localStorage.getItem('collapse');
+		if(collapse !== null)
+		{
+			var collapseArray = collapse.split(',');
+			var collapseLength = collapseArray.length;
+			var cleanCollapseArray = [];
+			for(var i = 0; i < collapseLength; i++)
+			{
+				if(typeof collapseArray[i] === 'string' && collapseArray[i] != '')
+				{
+					cleanCollapseArray.push(collapseArray[i]);
+				}
+			}
+			this.collapse = collapse.split(',');
+		}
+		naviBus.$on('toggleNavi', this.toggleNavigation);
+	},	
 	methods:{
+		clearToggle: function()
+		{
+			this.collapse = [];
+			localStorage.removeItem('collapse');
+		},
+		toggleNavigation: function(name)
+		{
+			var index = this.collapse.indexOf(name);
+			if (index > -1)
+			{
+				this.collapse.splice(index, 1);
+			}
+			else
+			{
+				this.collapse.push(name);
+			}
+			localStorage.setItem("collapse", this.collapse.toString());
+		},
 		checkMove: function(evt){
 /*			this.$refs.draggit[0].checkMove(evt);		*/
 			if(evt.dragged.classList.contains('folder') && evt.from.parentNode.id != evt.to.parentNode.id)

@@ -1,82 +1,428 @@
 <?php
+
+# included from /public/index.php
+
 use DI\Container;
-use Psr\Http\Message\ResponseInterface as Response;
+#use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Middleware\ErrorMiddleware;
-use Slim\Psr7\Response as NewResponse;
+use Slim\Psr7\Response as Response;
 use Slim\Factory\AppFactory;
-use Slim\Views\Twig;
-use Slim\Views\TwigMiddleware;
 use Slim\Csrf\Guard;
-use Slim\Flash\Messages;
-use Nquire\Middleware\ValidationErrors;
-use Nquire\Middleware\FlashMessages;
-use Nquire\Middleware\JsonBodyParser;
+use Typemill\Events\OnSettingsLoaded;
+use Typemill\Events\OnPluginsLoaded;
+use Typemill\Events\OnSessionSegmentsLoaded;
+use Typemill\Events\OnRolesPermissionsLoaded;
+use Typemill\Events\OnResourcesLoaded;
+use Typemill\Middleware\JsonBodyParser;
+use Typemill\Middleware\CreateSession;
+use Typemill\Middleware\TwigView;
+use Typemill\Middleware\CsrfProtection;
+use Typemill\Middleware\CsrfProtectionToMiddleware;
+use Typemill\Middleware\FlashMessages;
+#use Typemill\Middleware\ValidationErrors;
 
 require __DIR__  . '/../vendor/autoload.php';
 
+$timer = [];
+$timer['start'] = microtime(true);
+
 /****************************
-* HIDE ERRORS BY DEFAULT      *
+* HIDE ERRORS BY DEFAULT    *
 ****************************/
 
-ini_set('display_errors', 0);
-ini_set('display_startup_errors', 0);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+
 /****************************
-*      CONTAINER            *
+* LOAD SETTINGS							*
+****************************/
+
+$settings = Typemill\Static\Settings::loadSettings($rootpath);
+
+
+/****************************
+* HANDLE DISPLAY ERRORS 	  *
+****************************/
+
+if(isset($settings['displayErrorDetails']) && $settings['displayErrorDetails'])
+{
+	ini_set('display_errors', 1);
+	ini_set('display_startup_errors', 1);	
+}
+
+$timer['settings'] = microtime(true);
+
+/****************************
+* CREATE CONTAINER      		*
 ****************************/
 
 # https://www.slimframework.com/docs/v4/start/upgrade.html#changes-to-container
-
 $container 				= new Container();
 AppFactory::setContainer($container);
+
 $app 							= AppFactory::create();
 $container 				= $app->getContainer();
 
 $responseFactory 	= $app->getResponseFactory();
 $routeParser 			= $app->getRouteCollector()->getRouteParser();
 
+# add route parser to conatiner to use named routes in controller
+$container->set('routeParser', $routeParser);
+
+$timer['container'] = microtime(true);
+
 /****************************
-*     BASE PATH            *
+* BASE URL AND ROOT PATH  	*
 ****************************/
 
-# basepath must always be set in slim 4
-$basepath = preg_replace('/(.*)\/.*/', '$1', $_SERVER['SCRIPT_NAME']);
+$uriFactory = new \Slim\Psr7\Factory\UriFactory();
+$uri 				= $uriFactory->createFromGlobals($_SERVER);
+$uripath 		= $uri->getPath();
+$basepath 	= preg_replace('/(.*)\/.*/', '$1', $_SERVER['SCRIPT_NAME']);
+$routepath 	= str_replace($basepath, '', $uripath);
 
-$container->set('basePath', $basepath);
-
+# in slim 4 you alsways have to set application basepath
 $app->setBasePath($basepath);
 
-die('hello Typemill V2');
+$container->set('basePath', $basepath);
+$container->set('rootPath', $rootpath);
+$container->set('uriPath', $uripath);
+$container->set('routePath', $routepath);
 
 
 /****************************
-*     SETTINGS            	*
+* CREATE EVENT DISPATCHER		*
 ****************************/
-$settings = require __DIR__ . '/settings/settings.php';
 
-$container->set('settings', function() use ($settings)
+$dispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
+
+
+/****************************
+* LOAD & UPDATE PLUGINS			*
+****************************/
+
+$plugins 					= Typemill\Static\Plugins::loadPlugins($rootpath);
+$pluginSettings 	= $routes = $middleware	= [];
+
+# if there are less plugins in the scan than in the settings, then a plugin has been removed
+if(count($plugins) < count($settings['plugins']))
 {
-	return $settings;
-});
+	$updateSettings = true;
+}
 
-
-# create a session
-ini_set('session.cookie_httponly', 1 );
-ini_set('session.use_strict_mode', 1);
-ini_set('session.cookie_samesite', 'lax');
-if(isset($_SERVER['HTTPS']))
+foreach($plugins as $plugin)
 {
-	ini_set('session.cookie_secure', 1);
-	session_name('__Secure-nquire-session');
+	$pluginName			= $plugin['name'];
+	$className			= $plugin['className'];
+
+	# if plugin is not in the settings already
+	if(!isset($settings['plugins'][$pluginName]))
+	{
+		# it is a new plugin. Add it and set active to false
+		$settings['plugins'][$pluginName] = ['active' => false];
+		
+		# and set flag to refresh the settings
+		$updateSettings = true;
+	}
+
+	# if the plugin is activated, add routes/middleware and add plugin as event subscriber
+	if($settings['plugins'][$pluginName]['active'])
+	{
+		$routes 			= Typemill\Static\Plugins::getNewRoutes($className, $routes);
+		$middleware		= Typemill\Static\Plugins::getNewMiddleware($className, $middleware);
+		
+		$dispatcher->addSubscriber(new $className($container));
+	}
+}
+
+# if plugins have been added or removed
+if(isset($updateSettings))
+{	
+	# update stored settings file
+	Typemill\settings::updateSettings($settings);
+}
+
+# add final settings to the container
+$container->set('settings', function() use ($settings){ return $settings; });
+
+# dispatch the event onPluginsLoaded
+$dispatcher->dispatch(new OnPluginsLoaded($plugins), 'onPluginsLoaded');
+
+# dispatch settings event and get all setting-updates from plugins
+$dispatcher->dispatch(new OnSettingsLoaded($settings), 'onSettingsLoaded')->getData();
+
+$timer['plugins'] = microtime(true);
+
+
+/****************************
+* LOAD ROLES & PERMISSIONS	*
+****************************/
+
+# load roles and permissions
+$rolesAndPermissions = Typemill\Static\Permissions::loadRolesAndPermissions($settings['defaultSettingsPath']);
+
+# dispatch roles so plugins can enhance them
+$rolesAndPermissions = $dispatcher->dispatch(new OnRolesPermissionsLoaded($rolesAndPermissions), 'onRolesPermissionsLoaded')->getData();
+
+# load resources
+$resources = Typemill\Static\Permissions::loadResources($settings['defaultSettingsPath']);
+
+# dispatch roles so plugins can enhance them
+$resources = $dispatcher->dispatch(new OnResourcesLoaded($resources), 'onResourcesLoaded')->getData();
+
+# create acl-object
+$acl = Typemill\Static\Permissions::createAcl($rolesAndPermissions, $resources);
+
+# add acl to container
+$container->set('acl', function() use ($acl){ return $acl; });
+
+$timer['permissions'] = microtime(true);
+
+
+/****************************
+* SEGMENTS WITH SESSION			*
+****************************/
+
+# if website is restricted to registered user
+if( ( isset($settings['access']) && $settings['access'] ) || ( isset($settings['pageaccess']) && $settings['pageaccess'] ) )
+{
+	# activate session for all routes
+	$session_segments = [$routepath];
 }
 else
 {
-	session_name('nquire-session');	
+	$session_segments = ['setup', 'tm/', 'api/'];
+
+	# let plugins add own segments for session, eg. to enable csrf for forms
+	$client_segments 	= $dispatcher->dispatch(new OnSessionSegmentsLoaded([]), 'onSessionSegmentsLoaded')->getData();
+	$session_segments	= array_merge($session_segments, $client_segments);
 }
-session_start();
+
+# start session
+# Typemill\Static\Session::startSessionForSegments($session_segments, $routepath);
+
+$timer['session segments'] = microtime(true);
+
+/****************************
+* OTHER CONTAINER ITEMS			*
+****************************/
+
+# Register Middleware On Container
+if(isset($_SESSION)){
+	$container->set('csrf', function () use ($responseFactory){ return new Guard($responseFactory); });
+}
+
+# dispatcher to container
+$container->set('dispatcher', function() use ($dispatcher){ return $dispatcher; });
+
+# asset function for plugins
+$container->set('assets', function() use ($basepath){ return new \Typemill\Assets($basepath); });
+
+$timer['other container'] = microtime(true);
+
+
+/****************************
+* MIDDLEWARE								*
+****************************/
+
+# Add Validation Errors Middleware
+# $app->add(new ValidationErrors($container->get('view')));
+
+# Add Flash Messages Middleware
+# $app->add(new FlashMessages($container->get('view')));
+
+# Add Twig-View Middleware
+# $app->add(TwigMiddleware::createFromContainer($app));
+
+# if session add flash messages
+$app->add(new FlashMessages($container));
+
+/*
+if(isset($_SESSION))
+{
+	echo '<br>add csrf';
+	# Register Middleware To Be Executed On All Routes
+	$app->add('csrf');
+}
+*/
+
+# $container->set('csrf', null);
+
+# $app->add('csrf');
+# $app->add(new CsrfProtectionToMiddleware($container));
+
+
+$app->add(function($request, $handler) use ($container){
+    $response = $handler->handle($request);
+    $existingContent = (string) $response->getBody();
+
+    $response = new Response();
+    $response->getBody()->write('BEFORE' . $existingContent);
+
+    return $response;
+});
+
+# if session add csrf protection
+$app->add(new CsrfProtection($container, $responseFactory));
+
+# add session
+$app->add(new CreateSession($session_segments, ltrim($routepath, '/') ));
+
+# check if user : apikey
+# if yes
+# validate it as normal password 
+# do not create sessions 
+# set authentication to true somehow
+
+# add JsonBodyParser Middleware
+$app->add(new JsonBodyParser());
+
+# routing middleware earlier than error middleware so errors are shown
+$app->addRoutingMiddleware();
+
+# error middleware
+$errorMiddleware = new ErrorMiddleware(
+	$app->getCallableResolver(),
+	$app->getResponseFactory(),
+	true,
+	false,
+	false
+);
+
+# Set the Not Found Handler
+$errorMiddleware->setErrorHandler(HttpNotFoundException::class, function ($request, $exception) use ($container) {
+	
+	$response = new NewResponse();
+
+	return $container->get('view')->render($response->withStatus(404), '404.twig');
+
+});
+
+$app->add($errorMiddleware);
+
+$timer['middleware'] = microtime(true);
+
+/************************
+*   ADD ROUTES          *
+************************/
+
+require __DIR__ . '/routes/api.php';
+require __DIR__ . '/routes/web.php';
+
+$timer['routes'] = microtime(true);
+
+/************************
+*   RUN APP         *
+************************/
+
+$app->run();
+
+$timer['run'] = microtime(true);
+
+Typemill\Static\Helpers::printTimer($timer);
+
+die('After app run');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/********************************
+*  MOVE TO MIDDLEWARE NEXT TIME *
+********************************/
+
+print_r($session_segments);
+
+$trimmedRoute = ltrim($routepath,'/');
+
+foreach($session_segments as $segment)
+{
+
+  $test = substr( $trimmedRoute, 0, strlen($segment) );
+
+  echo '<br>' . $test . ' = ' . $segment;
+  continue;
+
+	if(substr( $uri->getPath(), 0, strlen($segment) ) === ltrim($segment, '/'))
+	{	
+		// configure session
+		ini_set('session.cookie_httponly', 1 );
+		ini_set('session.use_strict_mode', 1);
+		ini_set('session.cookie_samesite', 'lax');
+		if($uri->getScheme() == 'https')
+		{
+			ini_set('session.cookie_secure', 1);
+			session_name('__Secure-typemill-session');
+		}
+		else
+		{
+			session_name('typemill-session');
+		}
+		
+		// add csrf-protection
+		$container['csrf'] = function ($c)
+		{
+			$guard = new \Slim\Csrf\Guard();
+			$guard->setPersistentTokenMode(true);
+			$guard->setfailurecallable(function ($request, $response, $next)
+			{
+				$request = $request->withattribute("csrf_result", false);
+				return $next($request, $response);
+			});
+
+			return $guard;
+		};
+		
+		// add flash to container
+		$container['flash'] = function () 
+		{
+			return new \Slim\Flash\Messages();
+		};
+		
+		// start session
+		session_start();
+	}
+}
+
+
+
+Typemill\Static\Helpers::printTimer($timer);
+
+die('Typemill 2 is comming');
+
+
+
+
+
+
+
 
 # add flash messsages
 $container->set('flash', function(){

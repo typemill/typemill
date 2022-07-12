@@ -1,0 +1,32 @@
+member:
+  name: member
+  inherits: NULL
+  permissions: 
+    user:
+      - 'view'
+      - 'update'
+      - 'delete'
+author:
+  name: author
+  inherits: member
+  permissions: 
+    mycontent:
+      - 'view'
+      - 'create'
+      - 'update'
+    content:
+      - 'view'
+editor:
+  name: editor
+  inherits: author
+  permissions: 
+    mycontent:
+      - 'delete'
+      - 'publish'
+      - 'unpublish'
+    content:
+      - 'create'
+      - 'update'
+      - 'delete'
+      - 'publish'
+      - 'unpublish'

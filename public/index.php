@@ -1,3 +1,5 @@
 <?php
 
-require __DIR__  . '/../system/typemill/system.php';
+$rootpath = __DIR__ . DIRECTORY_SEPARATOR . '..';
+
+require  $rootpath . '/system/typemill/system.php';

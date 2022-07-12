@@ -1,0 +1,56 @@
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+	<div class="setupWrapper">
+		
+		<div class="setupContent">
+
+		</div>
+		<div class="authformWrapper">
+			<form method="POST" action="{{ url_for("auth.login") }}" autocomplete="off">
+			
+				<fieldset class="auth">
+					<div class="formElement{{ errors.username ? ' errors' : '' }}">
+
+						<input type="text" name="username" value="{{ old.username }}" required>
+						{% if errors.signup_username %}
+							<span class="error">{{ errors.username | first }}</span>
+						{% endif %}
+					</div>
+					<div class="formElement{{ errors.password ? ' errors' : '' }}">
+
+						<input type="password" name="password" required autoomplete="off">
+						{% if errors.password %}
+							<span class="error">{{ errors.password | first }}</span>
+						{% endif %}
+					</div>
+					<div class="personal-mail">
+						<label>Personal Mail</label>
+						<input type="text" name="personal-honey-mail">
+					</div>
+
+				</fieldset>
+
+				<div class="loginarea" id="loginarea">			
+
+				{{ csrf() | raw }}
+
+				</div>
+			</form>		
+		</div>
+			
+			{% if settings.recoverpw %}
+				
+			
+			{% else %}
+
+				<div class="setupContent">
+				</div>
+			
+			{% endif %}
+					
+	</div>
+	<footer></footer>
+{% endblock %}
