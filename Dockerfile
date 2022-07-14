@@ -1,13 +1,14 @@
 FROM php:8.0-apache
 
 # Install OS dependencies required
-RUN apt-get update && apt-get upgrade -y && apt-get install git unzip zlib1g-dev libpng-dev -y
+RUN apt-get update && apt-get upgrade -y && apt-get install git unzip zlib1g-dev libpng-dev libfreetype6-dev libjpeg62-turbo-dev -y
 
 # Adapt apache config
 RUN a2enmod rewrite \
     && echo "ServerName 127.0.0.1" >> /etc/apache2/apache2.conf
 
 # Install PHP ext-gd
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 RUN docker-php-ext-install gd
 
 # Copy app content
