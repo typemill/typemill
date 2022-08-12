@@ -101,6 +101,24 @@ docker run -d \
     typemill:local
 ```
 
+A simple `docker-compose.yml` file could looked like this
+```yml
+version: "2.0"
+
+services:
+  typemill:
+    image: typemill:local
+    volumes:
+      - /volume2/docker/typemill-test/settings/:/var/www/html/settings/
+      - /volume2/docker/typemill-test/media/:/var/www/html/media/
+      - /volume2/docker/typemill-test/cache/:/var/www/html/cache/
+      - /volume2/docker/typemill-test/plugins/:/var/www/html/plugins/
+      - /volume2/docker/typemill-test/content/:/var/www/html/content/
+      - /volume2/docker/typemill-test/themes/:/var/www/html/themes/
+    ports:
+      - 8080:80
+```
+
 #### Volumes
 
 - `settings` : persists users profiles, site configuration, etc. (empty by default)
