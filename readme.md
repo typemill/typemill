@@ -45,13 +45,17 @@ If you run a linux system, then please double check that mod_rewrite and htacces
 
 Download TYPEMILL from the [TYPEMILL website](http://typemill.net), unzip the files and you are done.
 
-If you are a developer, you can also clone this repository. To do so, open your command line, go to your project folder (e.g. htdocs) and type:
+If you are a developer, you can also clone this repository. To do so, open your command line, go to your project folder (e.g. `htdocs`) and type:
 
-    git clone git://github.com/typemill/typemill.git
+```
+git clone git://github.com/typemill/typemill.git
+```
 
 The GitHub-version has no vendor-folder, so you have to update and include all libraries and dependencies with composer. To do so, open your command line, go to your TYPEMILL folder and type:
 
-    composer update
+```
+composer update
+```
 
 If you did not use composer before, please go to the [composer website](http://getcomposer.org) and start to learn.
 
@@ -59,19 +63,19 @@ To run TYPEMILL on a **live** system, simply upload the files to your server
 
 #### Make Folders Writable.
 
-Make sure that the following folders and all their files are writable (permission 774 recursively):
+Make sure that the following folders and all their files are writable (permission `774` recursively):
 
-* cache
-* content
-* media
-* settings
+* `cache`
+* `content`
+* `media`
+* `settings`
 
 You can use your ftp-software for that.
 
 ### Docker installation
 > :warning: This image does not provide TLS support. It's perfect either for local use or behind your own proxy, you're advised.
 
-Clone and edit the config.example.php you find in this repository and move it as config.php
+Clone and edit the `config.example.php` you find in this repository and move it as `config.php`
 ```
 git clone git://github.com/trendschau/typemill.git
 cd typemill
@@ -163,10 +167,10 @@ TYPEMILL is published under MIT licence. Please check the licence of the include
 Contributions are highly welcome. Please follow these rules:
 
 * If you plan bigger changes, then please create an issue first so we can discuss it.
-* Fork the "DEVELOP" branch from typemill. Never use the master branch, because it is protected and only contains tested releases.
+* Fork the `develop` branch from typemill. Never use the master branch, because it is protected and only contains tested releases.
 * Do your changes.
 * After that pull the recent develop branch again to get the latest changes. 
-* Then make a pull request for the DEVELOP branch.
+* Then make a pull request for the `develop` branch.
 
 You can check the [roadmap for Typemill](https://github.com/typemill/typemill/issues/35) and scroll through the issues. I will mark issues in future that are easy to start with or where help is highly appreciated.
 
