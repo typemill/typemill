@@ -1,0 +1,25 @@
+'content':
+  'title': 'Content'
+  'routename': 'content.visual'
+  'aclresource': 'content'
+  'aclprivilege': 'view'
+'system':
+  'title': 'System'
+  'routename': 'settings.show'
+  'aclresource': 'system'
+  'aclprivilege': 'view'
+'account': 
+  'title': 'Account'
+  'routename': 'user.account'
+  'aclresource': 'user'
+  'aclprivilege': 'view'
+'frontend':
+  'title': 'Frontend'
+  'routename': 'home'
+  'aclresource': 'user'
+  'aclprivilege': 'view'
+'logout':
+  'title': 'Logout'  
+  'routename': 'auth.login'
+  'aclresource': 'user'
+  'aclprivilege': 'view'

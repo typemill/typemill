@@ -4,8 +4,9 @@ namespace Typemill\Static;
 
 class Plugins
 {
-	public static function loadPlugins($rootpath)
+	public static function loadPlugins()
 	{
+		$rootpath 			= getcwd();
 		$pluginFolder 		= self::scanPluginFolder($rootpath);
 		$classNames 		= [];
 

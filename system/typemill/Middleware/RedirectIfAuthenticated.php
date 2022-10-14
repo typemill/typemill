@@ -2,12 +2,11 @@
 
 namespace Typemill\Middleware;
 
-use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Server\MiddlewareInterface;
+use Slim\Routing\RouteParser;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
-use Psr\Http\Server\MiddlewareInterface;
-# use Slim\Routing\RouteContext;
-use Slim\Routing\RouteParser;
+use Slim\Psr7\Response;
 
 class RedirectIfAuthenticated implements MiddlewareInterface
 {			
@@ -17,18 +16,25 @@ class RedirectIfAuthenticated implements MiddlewareInterface
 		$this->settings = $settings;
 	}
 
-	public function process(Request $request, RequestHandler $handler) :response
-	{		
-		$response = $handler->handle($request);
-
+	public function process(Request $request, RequestHandler $handler) :Response
+	{
 		$editor = (isset($this->settings['editor']) && $this->settings['editor'] == 'visual') ? 'visual' : 'raw';
 
-		if(isset($_SESSION['login']))
+		$authenticated = ( 
+				(isset($_SESSION['username'])) && 
+				(isset($_SESSION['login']))
+			)
+			? true : false;
+
+		if($authenticated)
 		{
-			return $response->withHeader('Location', $this->router->pathFor('content.' . $editor))->withStatus(302);
-#			$response = $response->withRedirect($this->router->pathFor('content.' . $editor));
+			$response = new Response();
+			
+			return $response->withHeader('Location', $this->router->urlFor('content.' . $editor))->withStatus(302);
 		}
-		
+	
+		$response = $handler->handle($request);
+	
 		return $response;
 	}
 }

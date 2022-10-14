@@ -1,0 +1,15 @@
+{% if flash.info %}
+
+	<div class="alert alert-info" id="flash-message">
+		{{ flash.info | first }}
+	</div>
+
+{% endif %}
+
+{% if flash.error %}
+
+	<div class="alert alert-error" id="flash-message">
+		{{ flash.error | first }}
+	</div>
+
+{% endif %}

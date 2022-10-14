@@ -1,5 +1,29 @@
 <?php
 
+use Typemill\Controllers\ControllerSystemApi;
+use Typemill\Middleware\RestrictApiAccess;
+
+
+# https://stackoverflow.blog/2021/10/06/best-practices-for-authentication-and-authorization-for-rest-apis/
+
+# INTERNAL API
+# on login generate token 
+# tmpApiKey: store token in userfile
+# tmpApiDate: store date in userfile
+# send username and token to frontend
+# AUTHORIZATION: apikey username.tmpapikey
+# validy equals session length from settings
+
+# PUBLIC API
+# ApiKey: 
+# AUTHORIZATION: apikey username.apikey
+
+
+$app->get('/api/v1/settings', ControllerSystemApi::class . ':getSettings')->setName('api.settings.get')->add(new RestrictApiAccess());
+$app->get('/api/v1/systemnavi', ControllerSystemApi::class . ':getSystemnavi')->setName('api.systemnavi.get')->add(new RestrictApiAccess());
+$app->get('/api/v1/mainnavi', ControllerSystemApi::class . ':getMainnavi')->setName('api.mainnavi.get')->add(new RestrictApiAccess());
+
+
 /*
 use Typemill\Controllers\ControllerAuthorArticleApi;
 use Typemill\Controllers\ControllerAuthorBlockApi;

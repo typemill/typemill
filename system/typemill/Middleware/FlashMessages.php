@@ -2,31 +2,24 @@
 
 namespace Typemill\Middleware;
 
-use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
-use Psr\Http\Server\MiddlewareInterface;
-use Slim\Flash\Messages;
+use Slim\Views\Twig;
 
-class FlashMessages implements MiddlewareInterface
-{
-
-	protected $container;
-
-	public function __construct($container)
+class FlashMessages
+{	
+	public function __construct(Twig $view)
 	{
-		$this->container = $container;
+		$this->view = $view;
 	}
-
-	public function process(Request $request, RequestHandler $handler) :response
+	
+	public function __invoke(Request $request, RequestHandler $handler)
 	{
-		if(is_array($request->getAttribute('session')))
+		if(isset($_SESSION['slimFlash']) && is_array($_SESSION['slimFlash']))
 		{
-			echo '<br> flash messages';
-
-			$this->container->set('flash', function(){
-				return new Messages();
-			});
+			$this->view->getEnvironment()->addGlobal('flash', $_SESSION['slimFlash']);
+			
+			unset($_SESSION['slimFlash']);
 		}
 
 		return $handler->handle($request);

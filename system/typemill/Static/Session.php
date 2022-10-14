@@ -10,11 +10,11 @@ class Session
 
 		foreach($sessionSegments as $segment)
 		{
-			echo '<br>' . $segment;
-			echo '<br>' . $routepath;
+			#echo '<br>' . $segment;
+			#echo '<br>' . $routepath;
 			if(substr( $routepath, 0, strlen($segment) ) === ltrim($segment, '/'))
 			{
-				echo '<br>Create Session';
+				#echo '<br>Create Session';
 
 				# configure session
 				ini_set('session.cookie_httponly', 1 );

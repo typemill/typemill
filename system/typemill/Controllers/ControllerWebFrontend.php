@@ -21,11 +21,10 @@ use Typemill\Events\OnHtmlLoaded;
 use Typemill\Events\OnRestrictionsLoaded;
 */
 
-class ControllerWebFrontend extends ControllerWeb
+class ControllerWebFrontend extends Controller
 {
 	public function index(Request $request, Response $response)
 	{
-		die('hallo');
 	    return $this->c->get('view')->render($response, 'home.twig', [
 			'title'			=> 'Typemill Version 2',
 			'description'	=> 'Typemill Version 2 wird noch besser als Version 1.'

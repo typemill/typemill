@@ -3,28 +3,33 @@
 # included from /public/index.php
 
 use DI\Container;
-#use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
-use Slim\Exception\HttpNotFoundException;
 use Slim\Middleware\ErrorMiddleware;
-use Slim\Psr7\Response as Response;
 use Slim\Factory\AppFactory;
 use Slim\Csrf\Guard;
+use Slim\Views\Twig;
+use Slim\Views\TwigMiddleware;
+use Slim\Psr7\Factory\UriFactory;
+use Slim\Flash\Messages;
+use Twig\Extension\DebugExtension;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Typemill\Static\Settings;
+use Typemill\Static\Plugins;
+use Typemill\Static\Translations;
+use Typemill\Static\Permissions;
+use Typemill\Static\Session;
 use Typemill\Events\OnSettingsLoaded;
 use Typemill\Events\OnPluginsLoaded;
 use Typemill\Events\OnSessionSegmentsLoaded;
 use Typemill\Events\OnRolesPermissionsLoaded;
 use Typemill\Events\OnResourcesLoaded;
 use Typemill\Middleware\JsonBodyParser;
-use Typemill\Middleware\CreateSession;
-use Typemill\Middleware\TwigView;
-use Typemill\Middleware\CsrfProtection;
-use Typemill\Middleware\CsrfProtectionToMiddleware;
 use Typemill\Middleware\FlashMessages;
-#use Typemill\Middleware\ValidationErrors;
+use Typemill\Extensions\TwigCsrfExtension;
+use Typemill\Extensions\TwigUrlExtension;
+use Typemill\Extensions\TwigUserExtension;
+use Typemill\Models\StorageWrapper;
 
-require __DIR__  . '/../vendor/autoload.php';
+# require __DIR__  . '/../vendor/autoload.php';
 
 $timer = [];
 $timer['start'] = microtime(true);
@@ -37,13 +42,11 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-
 /****************************
 * LOAD SETTINGS							*
 ****************************/
 
-$settings = Typemill\Static\Settings::loadSettings($rootpath);
-
+$settings = Settings::loadSettings();
 
 /****************************
 * HANDLE DISPLAY ERRORS 	  *
@@ -54,6 +57,18 @@ if(isset($settings['displayErrorDetails']) && $settings['displayErrorDetails'])
 	ini_set('display_errors', 1);
 	ini_set('display_startup_errors', 1);	
 }
+
+/****************************
+* ADD PATH-INFOS FOR LATER 	*
+****************************/
+
+# ADD THEM TO THE SETTINGS AND YOU HAVE THEM EVERYWHERE??
+$uriFactory 						= new UriFactory();
+$uri 										= $uriFactory->createFromGlobals($_SERVER);
+
+$settings['fullpath'] 	= $uri->getPath();
+$settings['basepath'] 	= preg_replace('/(.*)\/.*/', '$1', $_SERVER['SCRIPT_NAME']);
+$settings['routepath'] 	= str_replace($settings['basepath'], '', $settings['fullpath']);
 
 $timer['settings'] = microtime(true);
 
@@ -71,43 +86,29 @@ $container 				= $app->getContainer();
 $responseFactory 	= $app->getResponseFactory();
 $routeParser 			= $app->getRouteCollector()->getRouteParser();
 
-# add route parser to conatiner to use named routes in controller
+# add route parser to container to use named routes in controller
 $container->set('routeParser', $routeParser);
 
-$timer['container'] = microtime(true);
-
-/****************************
-* BASE URL AND ROOT PATH  	*
-****************************/
-
-$uriFactory = new \Slim\Psr7\Factory\UriFactory();
-$uri 				= $uriFactory->createFromGlobals($_SERVER);
-$uripath 		= $uri->getPath();
-$basepath 	= preg_replace('/(.*)\/.*/', '$1', $_SERVER['SCRIPT_NAME']);
-$routepath 	= str_replace($basepath, '', $uripath);
-
 # in slim 4 you alsways have to set application basepath
-$app->setBasePath($basepath);
+$app->setBasePath($settings['basepath']);
 
-$container->set('basePath', $basepath);
-$container->set('rootPath', $rootpath);
-$container->set('uriPath', $uripath);
-$container->set('routePath', $routepath);
+$timer['container'] = microtime(true);
 
 
 /****************************
 * CREATE EVENT DISPATCHER		*
 ****************************/
 
-$dispatcher = new \Symfony\Component\EventDispatcher\EventDispatcher();
+$dispatcher = new EventDispatcher();
 
 
 /****************************
 * LOAD & UPDATE PLUGINS			*
 ****************************/
 
-$plugins 					= Typemill\Static\Plugins::loadPlugins($rootpath);
-$pluginSettings 	= $routes = $middleware	= [];
+$plugins 					= Plugins::loadPlugins();
+$routes 					= [];
+$middleware				= [];
 
 # if there are less plugins in the scan than in the settings, then a plugin has been removed
 if(count($plugins) < count($settings['plugins']))
@@ -133,8 +134,8 @@ foreach($plugins as $plugin)
 	# if the plugin is activated, add routes/middleware and add plugin as event subscriber
 	if($settings['plugins'][$pluginName]['active'])
 	{
-		$routes 			= Typemill\Static\Plugins::getNewRoutes($className, $routes);
-		$middleware		= Typemill\Static\Plugins::getNewMiddleware($className, $middleware);
+		$routes 			= Plugins::getNewRoutes($className, $routes);
+		$middleware		= Plugins::getNewMiddleware($className, $middleware);
 		
 		$dispatcher->addSubscriber(new $className($container));
 	}
@@ -144,7 +145,7 @@ foreach($plugins as $plugin)
 if(isset($updateSettings))
 {	
 	# update stored settings file
-	Typemill\settings::updateSettings($settings);
+	Settings::updateSettings($settings);
 }
 
 # add final settings to the container
@@ -163,20 +164,16 @@ $timer['plugins'] = microtime(true);
 * LOAD ROLES & PERMISSIONS	*
 ****************************/
 
-# load roles and permissions
-$rolesAndPermissions = Typemill\Static\Permissions::loadRolesAndPermissions($settings['defaultSettingsPath']);
-
-# dispatch roles so plugins can enhance them
+# load roles and permissions and dispatch to plugins
+$rolesAndPermissions = Permissions::loadRolesAndPermissions($settings['defaultSettingsPath']);
 $rolesAndPermissions = $dispatcher->dispatch(new OnRolesPermissionsLoaded($rolesAndPermissions), 'onRolesPermissionsLoaded')->getData();
 
-# load resources
-$resources = Typemill\Static\Permissions::loadResources($settings['defaultSettingsPath']);
-
-# dispatch roles so plugins can enhance them
+# load resources and dispatch to plugins
+$resources = Permissions::loadResources($settings['defaultSettingsPath']);
 $resources = $dispatcher->dispatch(new OnResourcesLoaded($resources), 'onResourcesLoaded')->getData();
 
 # create acl-object
-$acl = Typemill\Static\Permissions::createAcl($rolesAndPermissions, $resources);
+$acl = Permissions::createAcl($rolesAndPermissions, $resources);
 
 # add acl to container
 $container->set('acl', function() use ($acl){ return $acl; });
@@ -192,11 +189,11 @@ $timer['permissions'] = microtime(true);
 if( ( isset($settings['access']) && $settings['access'] ) || ( isset($settings['pageaccess']) && $settings['pageaccess'] ) )
 {
 	# activate session for all routes
-	$session_segments = [$routepath];
+	$session_segments = [$settings['routepath']];
 }
 else
 {
-	$session_segments = ['setup', 'tm/', 'api/'];
+	$session_segments = ['setup', 'tm/'];
 
 	# let plugins add own segments for session, eg. to enable csrf for forms
 	$client_segments 	= $dispatcher->dispatch(new OnSessionSegmentsLoaded([]), 'onSessionSegmentsLoaded')->getData();
@@ -204,7 +201,7 @@ else
 }
 
 # start session
-# Typemill\Static\Session::startSessionForSegments($session_segments, $routepath);
+Session::startSessionForSegments($session_segments, $settings['routepath']);
 
 $timer['session segments'] = microtime(true);
 
@@ -212,72 +209,90 @@ $timer['session segments'] = microtime(true);
 * OTHER CONTAINER ITEMS			*
 ****************************/
 
-# Register Middleware On Container
-if(isset($_SESSION)){
-	$container->set('csrf', function () use ($responseFactory){ return new Guard($responseFactory); });
-}
-
 # dispatcher to container
 $container->set('dispatcher', function() use ($dispatcher){ return $dispatcher; });
 
 # asset function for plugins
-$container->set('assets', function() use ($basepath){ return new \Typemill\Assets($basepath); });
+$container->set('assets', function() use ($settings){ return new \Typemill\Assets($settings['basepath']); });
 
-$timer['other container'] = microtime(true);
+# Register Middleware On Container
+$csrf = false;
+if(isset($_SESSION))
+{
+	# add flash messsages
+	$container->set('flash', function(){ return new Messages(); });
+
+	# Register Middleware On Container
+	$csrf = new Guard($responseFactory);
+	$container->set('csrf', function () use ($csrf){ return $csrf; });
+
+	# Add Validation Errors Middleware
+	# $app->add(new ValidationErrors($container->get('view')));
+}
+
+
+/****************************
+* TWIG TO CONTAINER					*
+****************************/
+
+$container->set('view', function() use ($settings, $csrf, $uri) {
+	
+	$twig = Twig::create(
+		[
+			# path to templates
+			$settings['rootPath'] . $settings['authorFolder'],
+			$settings['rootPath'] . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $settings['theme'],
+		],
+		[
+			# settings
+			'cache' => ( isset($settings['twigcache']) && $settings['twigcache'] ) ? $settings['rootPath'] . '/cache/twig' : false,
+			'debug' => isset($settings['displayErrorDetails'])
+		]
+	);
+	
+	$twig->getEnvironment()->addGlobal('errors', NULL);
+	$twig->getEnvironment()->addGlobal('flash', NULL);
+
+	# add extensions
+	$twig->addExtension(new DebugExtension());
+	$twig->addExtension(new TwigUserExtension());
+	$twig->addExtension(new TwigUrlExtension($uri, $settings['basepath']));
+
+	# $twig->addExtension(new \Nquire\Extensions\TwigUserExtension());
+
+	if($csrf)
+	{
+		$twig->addExtension(new TwigCsrfExtension($csrf));
+	}
+
+	# translations
+	$translations = Translations::loadTranslations($settings);
+	# $twig->getEnvironment()->addGlobal('translations', $translations);
+	$twig->addExtension(new Typemill\Extensions\TwigLanguageExtension( $translations ));
+
+	return $twig;
+
+});
 
 
 /****************************
 * MIDDLEWARE								*
 ****************************/
 
-# Add Validation Errors Middleware
-# $app->add(new ValidationErrors($container->get('view')));
-
-# Add Flash Messages Middleware
-# $app->add(new FlashMessages($container->get('view')));
-
-# Add Twig-View Middleware
-# $app->add(TwigMiddleware::createFromContainer($app));
-
-# if session add flash messages
-$app->add(new FlashMessages($container));
-
-/*
 if(isset($_SESSION))
 {
-	echo '<br>add csrf';
-	# Register Middleware To Be Executed On All Routes
+	# Add Validation Errors Middleware
+	#$app->add(new ValidationErrors($container->get('view')));
+
+	# Add Flash Messages Middleware
+	$app->add(new FlashMessages($container->get('view')));
+
+	# Add csrf middleware globally
 	$app->add('csrf');
 }
-*/
 
-# $container->set('csrf', null);
-
-# $app->add('csrf');
-# $app->add(new CsrfProtectionToMiddleware($container));
-
-
-$app->add(function($request, $handler) use ($container){
-    $response = $handler->handle($request);
-    $existingContent = (string) $response->getBody();
-
-    $response = new Response();
-    $response->getBody()->write('BEFORE' . $existingContent);
-
-    return $response;
-});
-
-# if session add csrf protection
-$app->add(new CsrfProtection($container, $responseFactory));
-
-# add session
-$app->add(new CreateSession($session_segments, ltrim($routepath, '/') ));
-
-# check if user : apikey
-# if yes
-# validate it as normal password 
-# do not create sessions 
-# set authentication to true somehow
+# Add Twig-View Middleware
+$app->add(TwigMiddleware::createFromContainer($app));
 
 # add JsonBodyParser Middleware
 $app->add(new JsonBodyParser());
@@ -317,15 +332,16 @@ require __DIR__ . '/routes/web.php';
 $timer['routes'] = microtime(true);
 
 /************************
-*   RUN APP         *
+*   RUN APP         		*
 ************************/
 
 $app->run();
 
 $timer['run'] = microtime(true);
 
-Typemill\Static\Helpers::printTimer($timer);
+# Typemill\Static\Helpers::printTimer($timer);
 
+die();
 die('After app run');
 
 
@@ -367,8 +383,8 @@ foreach($session_segments as $segment)
 
   $test = substr( $trimmedRoute, 0, strlen($segment) );
 
-  echo '<br>' . $test . ' = ' . $segment;
-  continue;
+  # echo '<br>' . $test . ' = ' . $segment;
+#  continue;
 
 	if(substr( $uri->getPath(), 0, strlen($segment) ) === ltrim($segment, '/'))
 	{	
@@ -448,7 +464,7 @@ $container->set('view', function() use ($container) {
 
 	return $twig;
 });
-
+ 
 /****************************
 *     SET ROUTE PARSER TO USE NAMED ROUTES IN CONTROLLER            *
 ****************************/

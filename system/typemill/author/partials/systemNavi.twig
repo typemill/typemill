@@ -1,0 +1,14 @@
+<nav id="sidebar-menu" class="sidebar-menu">
+	<div id="mobile-menu" class="menu-action">{{ translate('Menu') }} <span class="button-arrow"></span></div>
+	<ul class="mr-4">
+
+		{% for name,navitem in systemnavi %}
+			<li class="mb-1">
+				<a class="block p-2 border-l-4 border-slate-200 hover:bg-stone-50 hover:border-cyan-500{{ navitem.active ? ' active' : '' }}" href="{{ url_for(navitem.routename) }}">
+					<svg class="icon {{ navitem.icon }} mr-2"><use xlink:href="#{{ navitem.icon }}"></use></svg> {{ translate(name) }}
+				</a>
+			</li>
+		{% endfor %}
+
+	</ul>
+</nav>

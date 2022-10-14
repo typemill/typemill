@@ -1,0 +1,30 @@
+'system':
+  'title': 'System'
+  'routename': 'settings.show'
+  'icon': 'icon-wrench'
+  'aclresource': 'system'
+  'aclprivilege': 'view'
+'themes':
+  'title': 'Themes'
+  'routename': 'themes.show'
+  'icon': 'icon-paint-brush'
+  'aclresource': 'system'
+  'aclprivilege': 'view'
+'plugins':
+  'title': 'Plugins' 
+  'routename': 'plugins.show'
+  'icon': 'icon-plug'
+  'aclresource': 'system'
+  'aclprivilege': 'view'
+'account':
+  'title': 'Account' 
+  'routename': 'user.account'
+  'icon': 'icon-user'
+  'aclresource': 'user'
+  'aclprivilege': 'view'
+'users':
+  'title': 'Users'
+  'routename': 'user.list'
+  'icon': 'icon-group'
+  'aclresource': 'userlist'
+  'aclprivilege': 'view'

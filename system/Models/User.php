@@ -141,6 +141,7 @@ class User extends WriteYaml
 		if($user)
 		{
 			$user['lastlogin'] = time();
+			$user['tmpApiKey'] = ;
 
 			$_SESSION['user'] 	= $user['username'];
 			$_SESSION['role'] 	= $user['userrole'];

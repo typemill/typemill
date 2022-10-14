@@ -31,6 +31,33 @@ abstract class Controller
 	}
 
 
+
+
+
+
+
+	
+/*
+		protected function setUrlCollection($uri)
+		{
+			$scheme 	= $uri->getScheme();
+			$authority 	= $uri->getAuthority();
+			$protocol 	= ($scheme ? $scheme . ':' : '') . ($authority ? '//' . $authority : '');
+
+			$this->basePath 		= $this->c->get('basePath');
+	        $this->currentPath 		= $uri->getPath();
+	        $this->fullBaseUrl 		= $protocol . $this->basePath;
+	        $this->fullCurrentUrl 	= $protocol . $this->currentPath;
+
+	        $this->urlCollection	= [
+	        	'basePath' 				=> $this->basePath,
+	        	'currentPath' 			=> $this->currentPath,
+	        	'fullBaseUrl'			=> $this->fullBaseUrl,
+	        	'fullCurrentUrl'		=> $this->fullCurrentUrl
+	        ];
+		}
+
+
 /*
 	# holds the pimple container
 	protected $c;

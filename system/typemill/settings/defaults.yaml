@@ -12,6 +12,7 @@ contentFolder: 'content'
 authorFolder: '/system/typemill/author'
 adminSegment: 'tm'
 editor: 'visual'
+storage: '\Typemill\Models\Storage'
 formats:
   - 'markdown'
   - 'headline'

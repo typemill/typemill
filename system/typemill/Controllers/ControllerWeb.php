@@ -10,6 +10,7 @@ class ControllerWeb extends Controller
 {
 	public function __construct(Container $container)
 	{
+		/*
 		parent::__construct($container);
 
 		echo '<br>add twig';
@@ -47,8 +48,26 @@ class ControllerWeb extends Controller
 
 			return $twig;
 		});
+		
+		protected function setUrlCollection($uri)
+		{
+			$scheme 	= $uri->getScheme();
+			$authority 	= $uri->getAuthority();
+			$protocol 	= ($scheme ? $scheme . ':' : '') . ($authority ? '//' . $authority : '');
+
+	        $this->currentPath 		= $uri->getPath();
+	        $this->fullBaseUrl 		= $protocol . $this->basePath;
+	        $this->fullCurrentUrl 	= $protocol . $this->currentPath;
+
+	        $this->urlCollection	= [
+	        	'basePath' 				=> $this->basePath,
+	        	'currentPath' 			=> $this->currentPath,
+	        	'fullBaseUrl'			=> $this->fullBaseUrl,
+	        	'fullCurrentUrl'		=> $this->fullCurrentUrl
+	        ];
+		}
 
 		$this->c->get('dispatcher')->dispatch(new OnTwigLoaded(false), 'onTwigLoaded');
-
+*/
 	}
 }

@@ -2,15 +2,26 @@
 
 use Typemill\Controllers\ControllerWebFrontend;
 use Typemill\Controllers\ControllerWebLogin;
-use Typemill\Middleware\RedirectIfUnauthenticated;
+use Typemill\Controllers\ControllerSystem;
 use Typemill\Middleware\RedirectIfAuthenticated;
+use Typemill\Middleware\RedirectIfUnauthenticated;
 use Slim\Views\TwigMiddleware;
 
+$app->get('/tm/login', ControllerWebLogin::class . ':show')->setName('auth.show')->add(new RedirectIfAuthenticated($routeParser, $settings));
+$app->post('/tm/login', ControllerWebLogin::class . ':login')->setName('auth.login')->add(new RedirectIfAuthenticated($routeParser, $settings));
 
-$app->get('/tm/login', ControllerWebLogin::class . ':show')->setName('auth.show')
-  ->add(new RedirectIfAuthenticated($container->get('routeParser'), $container->get('settings')))
-  ->add(TwigMiddleware::createFromContainer($app));
-#$app->post('/tm/login', ControllerWebLogin::class . ':login')->setName('auth.login')->add(new RedirectIfAuthenticated($container['router'], $container['settings']));
+$app->get('/tm/system', ControllerSystem::class . ':showSettings')->setName('settings.show')->add(new RedirectIfUnauthenticated($routeParser));
+$app->get('/tm/themes', ControllerSystem::class . ':showThemes')->setName('themes.show');
+$app->get('/tm/plugins', ControllerSystem::class . ':showPlugins')->setName('plugins.show');
+$app->get('/tm/account', ControllerSystem::class . ':showAccount')->setName('user.account');
+$app->get('/tm/user/new', ControllerSystem::class . ':newUser')->setName('user.new');
+$app->get('/tm/users', ControllerSystem::class . ':listUser')->setName('user.list');
+
+
+
+
+$app->get('/tm/content/visual[/{params:.*}]', ControllerAuthorEditor::class . ':showBlox')->setName('content.visual');
+
 $app->get('/[{params:.*}]', ControllerWebFrontend::class . ':index')->setName('home');
 
 /*

@@ -18,6 +18,7 @@
     },
     "homepage": "https://github.com/typemill/typemill#readme",
     "devDependencies": {
-        "fs-extra": "^10.0.1"
+        "fs-extra": "^10.0.1",
+        "tailwindcss": "^3.1.6"
     }
 }

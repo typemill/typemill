@@ -1,0 +1,34 @@
+{% extends 'layouts/layoutSystem.twig' %}
+{% block title %}{{ translate('System Settings') }}{% endblock %}
+
+{% block content %}
+	
+	<div class="formWrapper">
+
+		<h1>{{ translate('System') }} </h1>
+
+		<div id="systemsettings" v-cloak>
+			
+			<systemsettings :userdata="userdata">${ message }</systemsettings>			
+		
+		</div>
+
+	</div>
+
+{% endblock %}
+
+{% block javascript %}
+	<script src="{{ base_url() }}/system/typemill/author/js/vue-system.js?v={{ settings.version }}"></script>		
+	<script>
+		tmaxios.get('/api/v1/mainnavi',{
+			'csrf_name': 	document.getElementById("csrf_name").value,
+			'csrf_value':	document.getElementById("csrf_value").value,
+		})
+		.then(function (response) {
+			console.info(response);
+		})
+		.catch(function (error) {
+			console.info(error);
+		});
+	</script>	
+{% endblock %}

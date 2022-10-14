@@ -1,0 +1,246 @@
+# Italian (Italiano) pls ignore autoupdates
+# Author: Severo Iuliano (https://github.com/iusvar)
+ACCOUNT: Utenza
+ACTIVE: Attivo
+ACTUAL_PASSWORD: Parola d'ordine corrente
+ADD: aggiungi
+ADD_CONTENT_BLOCK: aggiungi blocco contenuto
+ADD_DEFINITION: aggiungi definizione
+ADD_FILE: aggiungi file
+ADD_FOLDER: aggiungi cartella
+ADD_FOLDER_TO_BASE_LEVEL: aggiungi cartella al livello base
+ADD_ITEM: aggiungi articolo
+ADD_LEFT_COLUMN: aggiungi colonna a sinistra
+ADD_RIGHT_COLUMN: aggiungi colonna a destra
+ADD_ROW_ABOVE: aggiungi la riga sopra
+ADD_ROW_BELOW: aggiungi la riga sotto
+ADMINISTRATOR: administrator
+ALL: All visitors
+ALL_USERS: Tutti gli utenti
+ALTERNATIVE_TEXT_FOR_THE_HERO_IMAGE: Testo alternativo per l'immagine hero
+ALT_TEXT: Testo alternativo
+AUTHOR: Autore
+AUTHOR_DESCRIPTION_(MARKDOWN): Author-Description (Markdown)
+BACK_TO_STARTPAGE: torna alla pagina iniziale
+BOLD: grassetto
+BOTTOM: Sotto
+BROWSE: Sfoglia
+BULLET_LIST: Elenco puntato
+BY: di
+CANCEL: Annulla
+CAN_BE_USED_FOR_AUTHOR_LINE_IN_FRONTEND_: Can be used for author line in frontend.
+CAPTION: Didascalia
+CELL: cella
+CENTER: Centro
+CHECK: controllo
+CHOOSE_FILE: Scegli il file
+CLASS: Classe
+CLOSE_LIBRARY: Chiudi libreria
+CODE: Codice
+COG: ingranaggio
+CONTENT: Contenuto
+COPYRIGHT: Diritti d'autore
+CREATED_AT_(READONLY): Created at (read only)
+CREATED_AT_(READ_ONLY): Created at (readonly)
+CREATE_NEW_USER: Crea nuovo utente
+CREATE_USER: Crea utente
+CROSS: croce
+CUSTOM_CSS: CSS personalizzato
+DEFINITION: Elenco delle definizioni
+DEFINITION_LIST: Elenco delle definizioni
+DELETE: elimina
+DELETE_CLOSE: elimina/chiudi
+DELETE_COLUMN: elimina colonna
+DELETE_CONTENT_BLOCK: elimina blocco contenuto
+DELETE_PAGE: Elimina pagina
+DELETE_ROW: elimina riga
+DELETE_USER: Elimina utente
+DESCRIPTION: descrizione
+DISCARD: Scarta
+DISCARD_CHANGES: Non salvare le modifiche
+DO_YOU_REALLY_WANT_TO_DELETE_THE_USER: Vuoi veramente eliminare l'utente
+DO_YOU_REALLY_WANT_TO_DELETE_THIS_PAGE: Vuoi veramente cancellare questa pagina?
+DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES_AND_SET_THE_CONTENT_BACK_TO_THE_LIVE_VERSION: Vuoi annullare le modifiche e ripristinare i contenuti alla versione precedente?
+DRAFT: Bozza
+DRAG_A_PICTURE_OR_CLICK_TO_SELECT: trascina un'immagine o fai clic per selezionare
+DUTCH__FLEMISH: Olandese, Fiammingo
+EDIT: modifica
+EDITOR: editor
+EDIT_USER: Modifica utente
+ENGLISH: Inglese
+EXTERNAL_LINK: collegamento esterno
+E_G_: per es.:
+E_MAIL: Posta elettronica
+FAVICON: Favicon
+FILE: Archivio
+FILES: Archivi
+FIRST_NAME: Nome
+FOLDER: cartella
+FORGOT_PASSWORD: Parola d'ordine dimenticata
+FORMAT: Format
+FRENCH: French
+GENERAL_PRESENTATION: Presentazione generale
+GERMAN: Tedesco
+GOOGLE_SITEMAP: Sitemap di Google
+HAS_EDIT_RIGHTS_FOR_THIS_ARTICLE_: Has edit rights for this article.
+HEAD: Intestazione
+HEADLINE: Titolo
+HEADLINE_ANCHORS: Ancoraggi del titolo
+HERO_IMAGE: Immagine Hero
+HIDE: Nascondi
+HIDE_PAGE_FROM_NAVIGATION: Nasconde la pagina dalla navigazione
+HOME: home
+HOMEPAGE: Homepage
+HORIZONTAL_LINE: Linea orizzontale
+HR: Linea orizzontale
+IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: Se non compilato, la descrizione viene estratta dal contenuto.
+IMAGE: Immagine
+IMAGES: Immagini
+IMAGE_URL: Image URL
+IMAGE_URL_(READ_ONLY): Image URL (read only)
+ITALIAN: Italiano
+ITALIC: corsivo
+LANGUAGE: Lingua
+LANGUAGE_ADMIN: Lingua (admin-ui)
+LANGUAGE_ATTR: Attributo Lingua (sito)
+LAST_MODIFIED_LIVE_(READONLY): Last modified live (readonly)
+LAST_NAME: Cognome
+LEFT: Sinistra
+LICENCE: Licenza
+LINK: Collegamento
+LINK_TO_VIDEO: Collega al video
+LOGIN: Accesso
+LOGO: Logo
+LOGOUT: Esci
+MANUAL_DATE: Data manuale
+MARKDOWN: Markdown
+MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB__HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES_: La dimensione massima per un'immagine è di 5 MB. Le immagini hero non sono supportate da tutti i temi.
+MEMBER: member
+MENU: Menu
+META: Metadati
+META_DESCRIPTION: Descrizione
+META_TITLE: Titolo
+MISSING_REQUIREMENTS: Requisiti mancanti
+MOVE_VERTICAL: spostare in verticale
+NAVIGATION_TITLE: Titolo di navigazione
+NEW_PASSWORD: Nuova parola d'ordine
+NONE: Nessuna
+NOTICE: Avviso
+NOT_EDITABLE: non modificabile
+NO_DESCRIPTION: Nessuna descrizione
+NO_PREVIEW: Nessuna anteprima
+NO_SETTINGS: Nessuna impostazione
+NUMBERED_LIST: Elenco numerato
+OLIST: Elenchi ordinati
+ONLINE: in linea
+ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: Sono ammessi solo i seguenti caratteri speciali:
+OWNER_(USERNAME): owner (username)
+PARAGRAPH: Paragrafo
+PASSWORD: Parola d'ordine
+PLEASE_CONFIRM: Per favore conferma
+PLEASE_CORRECT_THE_ERRORS_ABOVE: Si prega di correggere gli errori sopra
+PLUGINS: Plugin
+PLUGIN_STORE: Deposito plugin
+POWER_OFF: spegni
+PROFILE_IMAGE: Profile image
+PUBLISH: Pubblica
+QUOTE: Citazione
+QUOTES: Citazione
+RAW: grezzo
+RAW_CONTENT_EDITOR: Editore contenuto grezzo
+RAW_MARKDOWN_EDITOR: Editore grezzo Markdown
+RAW_MODE: modo grezzo
+READONLY: Sola lettura
+REGISTERED_USERS_ONLY: Registered users only
+REMEMBER_TO_BOOKMARK_THIS_PAGE: Ricorda di aggiungere questa pagina ai segnalibri
+REQUIRED: Richiesto
+RIGHT: Destra
+ROLE: Ruolo
+RUSSIAN: Russo
+SAVE: Salva
+SAVED_SUCCESSFULLY: Salvato con successo
+SAVE_ALL_SETTINGS: Salva tutte le impostazioni
+SAVE_THEME: Salva tema
+SELECT_FROM_MEDIALIB: seleziona da medialib
+SETTINGS: Impostazioni
+SETTINGS_ARE_STORED: Le impostazioni sono memorizzate
+SETUP: Configurazione
+SHOW_ANCHORS_NEXT_TO_HEADLINES: Mostra le ancore accanto ai titoli
+STANDARD_EDITOR_MODE: Modalità editore standard
+START: Comincia
+SYSTEM: Sistema
+TABLE: Tabella
+TABLE_OF_CONTENTS: Sommario
+TAKEN_FROM_YOUR_USER_ACCOUNT_IF_SET_: Tratto dalla tua utenza, se impostata.
+TERM: termine
+TEXT_FILE: file di testo
+THEMES: Temi
+THEME_STORE: Deposito temi
+THE_FORMAT_BUTTONS: pulsanti di formattazione
+TITLE: Titolo
+TOC: Sommario
+TOP: Sopra
+TYPEMILL_DESCRIPTION: Il tema standard per Typemill. Reattivo, minimo e senza dipendenze. Utilizza i caratteri di sistema Calibri ed Helvetica. Non viene utilizzato JavaScript.
+ULIST: Elenchi non ordinati
+UNKNOWN: Ignoto
+UPDATE_USER: Aggiorna utente
+UPLOAD: carica
+UPLOAD_AN_IMAGE: carica un'immagine
+UPLOAD_FILE: Carica un file
+USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Utilizzato come ripiego quando non è impostata alcuna data manuale.
+USER: Utente
+USERNAME: Nome utente
+USERNAME_(READ_ONLY): Username (read only) 
+USERS: Utenti
+USE_2_TO_20_CHARACTERS: Usa da 2 a 20 caratteri.
+USE_2_TO_40_CHARACTERS: Usa da 2 a 40 caratteri.
+USE_A_VALID_LANGUAGE_ATTRIBUTE: Use a valid language attribute
+USE_A_VALID_YEAR: Usa un anno valido
+VIDEO: Video
+VIEW_SITE: Mostra sito
+VISUAL: visivo
+VISUAL_CONTENT_EDITOR: Editore contenuto visivo
+VISUAL_EDITOR: Editore visivo
+VISUAL_MARKDOWN_EDITOR: Editore visivo Markdown
+VISUAL_MODE: modo visivo
+WAIT: aspetta
+WEB: Sito
+WEBSITE_TITLE: Titolo del sito
+WEBSITE_VISIBLE_FOR: Website visible for
+WRITING: Scrittura
+YEAR: Anno
+YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: È possibile sovrascrivere il css del tema con il proprio CSS qui.
+
+ADD_NEW_FEATURES_TO_YOUR_WEBSITE_WITH_PLUGINS_AND_CONFIGURE_THEM_: Aggiungi nuove funzionalità al tuo sito mediante plugin e configurali.
+BY_THE: dalla
+CHOOSE_A_THEME_FOR_YOUR_WEBSITE_AND_CONFIGURE_THE_THEME_DETAILS_: Scegli un tema per il tuo sito e configura i dettagli del tema.
+CODED_WITH: Codificato con
+COMMUNITY: comunità
+CONFIGURE_YOUR_WEBSITE: Configura il tuo sito
+DOCS: documentazione
+GET_HELP: Chiedi aiuto
+GIVE_YOUR_NEW_WEBSITE_A_NAME__ADD_THE_AUTHOR_AND_CHOOSE_A_COPYRIGHT_: Dai un nome al tuo nuovo sito, aggiungi l'autore e scegli un diritto d'autore.
+HURRA: Evviva
+IF_YOU_HAVE_ANY_QUESTIONS__PLEASE_READ_THE: In caso di domande, si prega di leggere la
+NEXT_STEP: Prossimo passo
+OR_OPEN_A_NEW_ISSUE_ON: o aprire un nuovo problema su
+SETUP_WELCOME: Benvenuto all'installazione
+TRENDSCHAU_DIGITAL: Trendschau Digital
+VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: Visita il pannello autore e configura il tuo nuovo sito. Puoi configurare il sistema, scegliere i temi e aggiungere plugin.
+YOUR_ACCOUNT_HAS_BEEN_CREATED_AND_YOU_ARE_LOGGED_IN_NOW_: Il tuo account è stato creato e ora sei connesso.
+
+ACTIVATE_CACHE_FOR_TWIG_TEMPLATES: Attiva la cache per i modelli Twig
+CLEAR_CACHE: Cancella cache
+DELETE_ALL_CACHE_FILES: Elimina tutti i file della cache
+DEVELOPER: Sviluppatore
+DISPLAY_APPLICATION_ERRORS: Visualizza errori dell'applicazione
+ERROR_REPORTING: Segnalazione errori
+IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT__THEN_THE_IMAGE_WILL_BE_CROPPED_: Se aggiungi un valore per l'altezza, l'immagine verrà ritagliata.
+PROXY: Proxy
+STANDARD_HEIGHT_FOR_IMAGES: Altezza standard per le immagini
+STANDARD_WIDTH_FOR_IMAGES: Larghezza standard per le immagini
+THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: "Le seguenti opzioni sono solo per sviluppatori e amministratori esperti. Cambia le opzioni solo se le capisci davvero. Ad esempio: non attivare mai la segnalazione degli errori per un sito Web live, utilizzare questa opzione solo per la correzione dei bug."
+THIS_APPLIES_ONLY_FOR_FUTURE_IMAGES_IN_THE_CONTENT_AREA_: Questo vale solo per le immagini future nell'area del contenuto.
+TRUSTED_IPS_FOR_PROXY_(COMMA_SEPARATED): IP affidabili per proxy (separati da virgole)
+TWIG_CACHE: Twig Cache
+USE_X_FORWARDED_HEADERS: Usa intestazioni con X-Forwarded

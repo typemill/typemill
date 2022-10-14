@@ -2,9 +2,10 @@
 
 namespace Typemill\Extensions;
 
+use Twig\Extension\AbstractExtension;
 use Slim\Csrf\Guard;
  
-class TwigCsrfExtension extends \Twig\Extension\AbstractExtension
+class TwigCsrfExtension extends AbstractExtension
 {	
 	protected $csrf;
 
@@ -22,8 +23,8 @@ class TwigCsrfExtension extends \Twig\Extension\AbstractExtension
 	
 	public function csrf()
 	{
-		$csrf = '<p>TokenNameValue: '. $this->csrf->getTokenName() .'</p><input type="hidden" name="' . $this->csrf->getTokenNameKey(). '" value="' . $this->csrf->getTokenName() . '"> 
-				<input type="hidden" name="' . $this->csrf->getTokenValueKey(). '" value="' . $this->csrf->getTokenValue(). '">';
+		$csrf = '<p>TokenNameValue: '. $this->csrf->getTokenName() .'</p><input type="hidden" id="csrf_name" name="' . $this->csrf->getTokenNameKey(). '" value="' . $this->csrf->getTokenName() . '"> 
+				<input type="hidden" id="csrf_value" name="' . $this->csrf->getTokenValueKey(). '" value="' . $this->csrf->getTokenValue(). '">';
 		
 		return $csrf;
 	}

@@ -4,8 +4,9 @@ namespace Typemill\Static;
 
 class Settings
 {
-	public static function loadSettings($rootpath)
+	public static function loadSettings()
 	{
+		$rootpath			= getcwd();
 		$defaultsettings 	= self::getDefaultSettings($rootpath);
 		$usersettings 		= self::getUserSettings($rootpath);
 		
