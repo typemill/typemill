@@ -422,8 +422,11 @@ class ParsedownExtension extends \ParsedownExtra
             {
                 $markup .= '<ul>';
             }
-            
-            $markup .= '<li class="' . $headline['name'] . '"><a href="#' . $headline['attribute'] . '">' . $headline['text'] . '</a>';
+
+            # unescape 
+            $uheadline = preg_replace('/\\\\(?=[*_])/', '', $headline['text']);
+
+            $markup .= '<li class="' . $headline['name'] . '"><a href="#' . $headline['attribute'] . '">' . $uheadline . '</a>';
             
             if($thisLevel == $nextLevel )
             {
