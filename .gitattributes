@@ -1,0 +1,2 @@
+# Docker under Windows need LF (\n) EOL in scripts
+/docker-utils/** text eol=lf
