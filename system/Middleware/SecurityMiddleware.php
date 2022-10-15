@@ -80,8 +80,7 @@ class securityMiddleware
 			if( null !== $request->getParam('g-recaptcha-response') )
 			{
 				$recaptchaApi 		= 'https://www.google.com/recaptcha/api/siteverify';
-				$settings			= $this->c->get('settings');
-				$secret				= isset($settings['plugins'][$pluginName]['recaptcha_secretkey']) ? $settings['plugins'][$pluginName]['recaptcha_secretkey'] : false;
+				$secret				= isset($this->settings['plugins'][$pluginName]['recaptcha_secretkey']) ? $this->settings['plugins'][$pluginName]['recaptcha_secretkey'] : false;
 				$recaptchaRequest 	= ['secret' => $secret, 'response' => $request->getParam('g-recaptcha-response')];
 
 				# use key 'http' even if you send the request to https://...
