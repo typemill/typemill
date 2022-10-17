@@ -188,7 +188,7 @@ UPDATE_USER: Nutzer aktualisieren
 UPLOAD: hochladen
 UPLOAD_AN_IMAGE: Bild hochladen
 UPLOAD_FILE: Datei hochladen
-UPS__WRONG_PASSWORD_OR_USERNAME__PLEASE_TRY_AGAIN_: Ups, wrong password or username, please try again.
+UPS__WRONG_PASSWORD_OR_USERNAME__PLEASE_TRY_AGAIN_: Das Passwort oder der Nutzername sind falsch, bitte versuchen Sie es erneut.
 USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Wird alternativ zum manuellen Datum genutzt.
 USER: Nutzer
 USERNAME: Nutzername
