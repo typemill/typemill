@@ -1,12 +1,50 @@
-basics:
+system:  
   fields:
-media:
-  fields:
-writing:
-  fields:
-access:
-  fields:
-password:
-  fields:
-developer:
-  fields:
+    fieldsetsystem:
+      type: fieldset
+      legend: System
+      fields:
+        title:
+          type: text
+          label: Website Title
+          class: medium
+          maxlength: 60
+        author:
+          type: text
+          label: Author
+          class: medium
+          maxlength: 60
+        copyright:
+          type: text
+          label: Copyright
+          class: medium
+          maxlength: 60
+        year:
+          type: text
+          label: Year
+          class: medium
+          maxlength: 60
+    fieldsetmedia:
+      type: fieldset
+      legend: Media
+      fields:
+        title:
+          type: text
+          label: Website Title
+          class: medium
+          maxlength: 60
+        author:
+          type: text
+          label: Author
+          class: medium
+          maxlength: 60
+        copyright:
+          type: text
+          label: Copyright
+          class: medium
+          maxlength: 60
+        year:
+          type: text
+          label: Year
+          class: medium
+          maxlength: 60

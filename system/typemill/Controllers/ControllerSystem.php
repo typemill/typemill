@@ -3,6 +3,8 @@
 namespace Typemill\Controllers;
 
 use Typemill\Models\User;
+use Typemill\Models\Yaml;
+
 
 # use \Symfony\Component\Yaml\Yaml;
 # use Typemill\Models\Write;
@@ -60,6 +62,9 @@ class ControllerSystem extends ControllerData
 		$user->setUser($_SESSION['username']);
 		$userdata = $user->getUserData();
 
+		$yaml 			= new Yaml('\Typemill\Models\Storage');
+		$system 		= $yaml->getYaml('system/typemill/settings', 'system.yaml');
+
 	    return $this->c->get('view')->render($response, 'system/system.twig', [
 			'basicauth'			=> $user->getBasicAuth(),
 			'settings' 			=> $this->settings,
@@ -67,6 +72,7 @@ class ControllerSystem extends ControllerData
 			'systemnavi'		=> $this->getSystemNavigation($userdata['userrole']),
 			'jsdata' 			=> [
 										'settings' 	=> $this->settings,
+										'system'	=> $system,
 									]
 
 	    	# main navigation

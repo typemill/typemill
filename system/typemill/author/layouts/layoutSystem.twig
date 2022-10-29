@@ -54,7 +54,8 @@
 			
 			var data = {{ jsdata | json_encode() | raw  }}
 
-			var eventBus = false;
+/*			var eventBus = false; */
+			console.info(data.settings);
 
 		</script>
 		<script src="{{ base_url() }}/system/typemill/author/js/axios.min.js?v={{ settings.version }}"></script>
@@ -66,8 +67,12 @@
 		</script>
 <!--		<script src="{{ base_url() }}/system/typemill/author/js/autosize.min.js?v={{ settings.version }}"></script> -->
 		<script src="{{ base_url() }}/system/typemill/author/js/vue.js?v={{ settings.version }}"></script>
+		<script>
+			const { eventBus } = Vue;
+		</script>
 <!--
 		<script>
+			var eventBus = false;
 			const FormBus = new Vue();
 		</script>
 		<script src="{{ base_url() }}/system/author/js/vue-shared.js?v={{ settings.version }}"></script>		

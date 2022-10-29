@@ -1,20 +1,44 @@
 const { createApp } = Vue
 
 createApp({
- 	delimiters: ['${', '}'],
+	template: `<div><form>MyForm Here message
+							<div v-for="(field, legend) in formDefinitions">
+								{{ legend }}
+								<fieldset v-if="field.type == 'fieldset'" class="fs-formbuilder"><legend>{{field.legend}}</legend>
+									<component v-for="(subfield, index) in field.fields "
+		            	    :key="index"
+		                	:is="selectComponent(subfield)"
+		                	:errors="errors"
+		                	:name="index"
+		                	:userroles="userroles"
+		                	v-model="formdata[index]" 
+		                	v-bind="subfield">
+									</component>
+								</fieldset>
+								<component v-else
+		            	    :key="index"
+		                	:is="selectComponent(field)"
+		                	:errors="errors"
+		                	:name="index"
+		                	:userroles="userroles"
+		                	v-model="formData[index]"
+		                	v-bind="field">
+								</component>
+							</div>
+			  </form></div>`, 	
 	data() {
 		return {
 			message: 'Add system forms with vue here',
 			root: document.getElementById("main").dataset.url,
 			currentTab: 'System',
-			tabs: ['System', 'Media', 'Editor', 'Access', 'Password Recovery', 'Advanced'],
-			formDefinitions: [],
-			formData: [],
+			tabs: [],
+			formDefinitions: data.system.fields,
+			formData: data.settings,
 			formErrors: {},
 			formErrorsReset: {},
 			item: false,
 			userroles: false,
-			saved: false,
+			saved: false, 
 		}
 	},
 	computed: {
@@ -31,8 +55,143 @@ createApp({
 	    	return 'tab-' + this.currentTab.toLowerCase()
 			}
 		}
+	},
+	mounted() {            	
+    for (var key in this.formDefinitions)
+    {
+			if (this.formDefinitions.hasOwnProperty(key))
+			{
+				this.tabs.push(key);
+				this.formErrors[key] = false;
+			}
+		}
+		this.formErrorsReset = this.formErrors;
+	},
+	methods: {
+		selectComponent: function(field)
+		{
+			return 'component-'+field.type;
+		},
 	},	
 }).mount('#systemsettings')
+
+
+/*
+Vue.component('tab-meta', {
+	props: ['saved', 'errors', 'formdata', 'schema', 'userroles'],
+	data: function () {
+		return {
+			slug: false,
+			originalSlug: false,
+			slugerror: false,
+			disabled: "disabled",
+		}
+	},
+	template: '<section><form>' +
+				'<div v-if="slug !== false"><div class="large relative">' +
+					'<label>Slug / Name in URL</label><input type="text" v-model="slug" pattern="[a-z0-9\- ]" @input="changeSlug()"><button @click.prevent="storeSlug()" :disabled="disabled" class="button slugbutton bn br2 bg-tm-green white absolute">change slug</button>' +
+					'<div v-if="slugerror" class="f6 tm-red mt1">{{ slugerror }}</div>' +
+				'</div></div>' +
+				'<div v-for="(field, index) in schema.fields">' +
+					'<fieldset v-if="field.type == \'fieldset\'" class="fs-formbuilder"><legend>{{field.legend}}</legend>' + 
+						'<component v-for="(subfield, index) in field.fields "' +
+		            	    ' :key="index"' +
+		                	' :is="selectComponent(subfield)"' +
+		                	' :errors="errors"' +
+		                	' :name="index"' +
+		                	' :userroles="userroles"' +
+		                	' v-model="formdata[index]"' + 
+		                	' v-bind="subfield">' +
+						'</component>' + 
+					'</fieldset>' +
+						'<component v-else' +
+		            	    ' :key="index"' +
+		                	' :is="selectComponent(field)"' +
+		                	' :errors="errors"' +
+		                	' :name="index"' +
+		                	' :userroles="userroles"' +
+		                	' v-model="formdata[index]"' +
+		                	' v-bind="field">' +
+						'</component>' + 
+				'</div>' +
+				'<div v-if="saved" class="metasubmit"><div class="metaSuccess">{{ \'Saved successfully\'|translate }}</div></div>' +
+				'<div v-if="errors" class="metasubmit"><div class="metaErrors">{{ \'Please correct the errors above\'|translate }}</div></div>' +
+				'<div class="metasubmit"><input type="submit" @click.prevent="saveInput" :value="\'save\'|translate"></input></div>' +
+			  '</form></section>',
+	mounted: function()
+	{
+		if(this.$parent.item.slug != '')
+		{
+			this.slug =	this.$parent.item.slug;
+			this.originalSlug = this.slug;
+		}
+	},
+	methods: {
+		selectComponent: function(field)
+		{
+			return 'component-'+field.type;
+		},
+		saveInput: function()
+		{
+  			this.$emit('saveform');
+		},
+		changeSlug: function()
+		{
+			if(this.slug == this.originalSlug)
+			{
+				this.slugerror = false;
+				this.disabled = "disabled";
+				return;
+			}
+			if(this.slug == '')
+			{
+				this.slugerror = 'empty slugs are not allowed';
+				this.disabled = "disabled";
+				return;
+			}
+
+			this.slug = this.slug.replace(/ /g, '-');
+
+			if(this.slug.match(/^[a-z0-9\-]*$/))
+			{
+				this.slugerror = false;
+				this.disabled = false;
+			}
+			else
+			{
+				this.slugerror = 'Only lowercase a-z and 0-9 and "-" is allowed for slugs.';
+				this.disabled = "disabled";
+			}
+		},
+		storeSlug: function()
+		{
+
+			if(this.slug.match(/^[a-z0-9\-]*$/) && this.slug != this.originalSlug)
+			{
+				var self = this;
+
+		    myaxios.post('/api/v1/article/rename',{
+						'url':				document.getElementById("path").value,
+						'csrf_name': 	document.getElementById("csrf_name").value,
+						'csrf_value':	document.getElementById("csrf_value").value,
+						'slug': 			this.slug,
+				})
+		    .then(function (response)
+		    {
+					window.location.replace(response.data.url);
+				})
+		    .catch(function (error)
+		    {
+		      if(error.response.data.errors.message)
+		      {
+		        publishController.errors.message = error.response.data.errors.message;
+		      }
+		    });
+		  }			
+		}
+	}
+})
+
 
 
 
