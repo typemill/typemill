@@ -41,7 +41,7 @@ The zipped version has a minimal size without developer files.
 If you are a developer, you can clone this repository. To do so, open your command line, go to your project folder (e.g. `htdocs`) and type:
 
 ```
-git clone git://github.com/typemill/typemill.git
+git clone git@github.com:typemill/typemill.git
 ```
 
 The GitHub-version has no vendor-folder, so you have to update and include all libraries and dependencies with composer. To do so, open your command line, go to your TYPEMILL folder and type:
