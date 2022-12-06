@@ -6,19 +6,11 @@ use Twig\Extension\AbstractExtension;
 
 class TwigUrlExtension extends AbstractExtension
 {	
-	protected $uri;
-	protected $basepath;
-	protected $scheme;
-	protected $authority;
-	protected $protocol;
+	protected $urlinfo;
 
-	public function __construct($uri, $basepath)
+	public function __construct($urlinfo)
 	{
-		$this->uri 			= $uri;
-		$this->basepath 	= $basepath;
-		$this->scheme 		= $uri->getScheme();
-		$this->authority 	= $uri->getAuthority();
-		$this->protocol 	= ($this->scheme ? $this->scheme . ':' : '') . ($this->authority ? '//' . $this->authority : '');
+		$this->urlinfo 		= $urlinfo;
 	}
 
 	public function getFunctions()
@@ -32,16 +24,16 @@ class TwigUrlExtension extends AbstractExtension
 	
 	public function baseUrl()
 	{
-		return $this->protocol . $this->basepath;
+		return $this->urlinfo['baseurl'];
 	}
 
 	public function currentUrl()
 	{
-		return $this->protocol . $this->uri->getPath();
+		return $this->urlinfo['currenturl'];
 	}
 
 	public function currentPath()
 	{
-		return $this->uri->getPath();
+		return $this->urlinfo['route'];
 	}
 }

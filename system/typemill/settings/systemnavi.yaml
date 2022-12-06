@@ -24,7 +24,7 @@
   'aclprivilege': 'view'
 'users':
   'title': 'Users'
-  'routename': 'user.list'
+  'routename': 'users.show'
   'icon': 'icon-group'
   'aclresource': 'userlist'
   'aclprivilege': 'view'

@@ -47,7 +47,8 @@ class Validation
 		# checks if email is available if userdata is updated
 		Validator::addRule('emailChanged', function($field, $value, array $params, array $fields) use ($user)
 		{
-			$userdata = $user->getSecureUser($fields['username']);
+			$user->setUserWithPassword($fields['username']);
+			$userdata = $user->getUserData();
 			if($userdata['email'] == $value){ return true; } # user has not updated his email
 
 			$email = trim($value);
@@ -58,8 +59,8 @@ class Validation
 		# checks if username is free when create new user
 		Validator::addRule('userAvailable', function($field, $value, array $params, array $fields) use ($user)
 		{
-			$activeUser 	= $user->getUser($value);
-			$inactiveUser 	= $user->getUser("_" . $value);
+			$activeUser 	= $user->setUser($value);
+			$inactiveUser 	= $user->setUser("_" . $value);
 			if($activeUser OR $inactiveUser){ return false; }
 			return true;
 		}, 'taken');
@@ -67,8 +68,7 @@ class Validation
 		# checks if user exists when userdata is updated
 		Validator::addRule('userExists', function($field, $value, array $params, array $fields) use ($user)
 		{
-			$userdata = $user->getUser($value);
-			if($userdata){ return true; }
+			if($user->setUser($value)){ return true; }
 			return false;
 		}, 'does not exist');
 		
@@ -108,8 +108,14 @@ class Validation
 
 		Validator::addRule('checkPassword', function($field, $value, array $params, array $fields) use ($user)
 		{
-			$userdata = $user->getUser($fields['username']);
-			if($userdata && password_verify($value, $userdata['password'])){ return true; }
+			if($user->setUserWithPassword($fields['username']))
+			{
+				$userdata = $user->getUserData();
+				if(password_verify($value, $userdata['password']))
+				{ 
+					return true; 
+				}
+			}
 			return false;
 		}, 'wrong password');
 		
@@ -249,7 +255,7 @@ class Validation
 	* 
 	* @param array $params with form data.
 	* @return obj $v the validation object passed to a result method.
-	*/
+	*
 	
 	public function newPassword(array $params)
 	{
@@ -259,6 +265,29 @@ class Validation
 		$v->rule('checkPassword', 'password')->message("Password is wrong");
 		
 		return $this->validationResult($v);
+	}
+	*/
+
+	/**
+	* validation for changing the password api case
+	* 
+	* @param array $params with form data.
+	* @return obj $v the validation object passed to a result method.
+	*/
+	
+	public function newPassword(array $params)
+	{
+		$v = new Validator($params);
+		$v->rule('required', ['password', 'newpassword']);
+		$v->rule('lengthBetween', 'newpassword', 5, 20);
+		$v->rule('checkPassword', 'password')->message("Password is wrong");
+		
+		if($v->validate()) 
+		{
+			return true;
+		}
+
+		return $v->errors();
 	}
 
 	/**
@@ -283,7 +312,7 @@ class Validation
 	* 
 	* @param array $params with form data.
 	* @return obj $v the validation object passed to a result method.
-	*/
+	*
 
 	public function settings(array $params, array $copyright, array $formats, $name = false)
 	{
@@ -312,6 +341,7 @@ class Validation
 
 		return $this->validationResult($v, $name);
 	}
+	*/
 
 	/**
 	* validation for content editor
@@ -442,11 +472,11 @@ class Validation
 	* @return obj $v the validation object passed to a result method.
 	*/
 	
-	public function objectField($fieldName, $fieldValue, $objectName, $fieldDefinitions, $skiprequired = NULL)
+	public function field($fieldName, $fieldValue, $fieldDefinitions)
 	{
 		$v = new Validator(array($fieldName => $fieldValue));
 		
-		if(isset($fieldDefinitions['required']) && !$skiprequired)
+		if(isset($fieldDefinitions['required']))
 		{
 			$v->rule('required', $fieldName);
 		}
@@ -548,7 +578,15 @@ class Validation
 				$v->rule('lengthMax', $fieldName, 1000);
 				$v->rule('regex', $fieldName, '/^[\pL0-9_ \-]*$/u');
 		}
-		return $this->validationResult($v, $objectName);
+
+		if(!$v->validate())
+		{
+			return $v->errors();
+		}
+		
+		return true;
+
+		return $this->validationResult($v);
 	}
 	
 	/**

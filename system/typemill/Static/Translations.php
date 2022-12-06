@@ -6,11 +6,11 @@ use Typemill\Models\Yaml;
 
 class Translations
 {
-	public static function loadTranslations($settings)
+	public static function loadTranslations($settings, $route)
 	{
 		$yaml = new Yaml($settings['storage']);
 
-		$urlsegments = explode('/',trim($settings['routepath'],'/'));
+		$urlsegments = explode('/',trim($route,'/'));
 	
 		$environment = 'frontend';
 		if( ($urlsegments[0] === 'tm' OR $urlsegments[0] === 'setup') )

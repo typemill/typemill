@@ -11,8 +11,6 @@ class JsonBodyParser implements MiddlewareInterface
 {
 	public function process(Request $request, RequestHandler $handler) :response
 	{
-		#echo '<br> JSON Body parser';
-
 		$contentType = $request->getHeaderLine('Content-Type');
 
 		if (strstr($contentType, 'application/json')) 

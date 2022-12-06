@@ -18,31 +18,29 @@ settings:
 forms:
   fields:
 
-    layoutsize:
-      type: select
-      label: Layout Size
-      options:
-        standard: Standard
-        large: Large
-        full: Full Width
-
-    posts:
+    layout:
       type: fieldset
-      legend: Configure Posts
+      legend: General Layout
       fields:
+        layoutsize:
+          type: select
+          label: Layout Size
+          options:
+            standard: Standard
+            large: Large
+            full: Full Width        
         blogimage:
           type: checkbox
           label: Post-Images
           checkboxlabel: Generally show hero images in all lists of posts
 
-    blog:
-      type: checkbox
-      checkboxlabel: Activate a list of posts on the homepage
-
     bloghomepage:
       type: fieldset
       legend: Posts on Homepage
       fields:
+        blog:
+          type: checkbox
+          checkboxlabel: Activate a list of posts on the homepage
         blogintro:
           type: checkbox
           label: Intro Content
@@ -52,9 +50,13 @@ forms:
           label: Enter the folder path with the posts
           placeholder: /blog
 
-    landingpage:
-      type: checkbox
-      checkboxlabel: Activate a landing page with segments on the homepage
+    landing:
+      type: fieldset
+      legend: Landingpage
+      fields:
+        landingpage:
+          type: checkbox
+          checkboxlabel: Activate a landing page with segments on the homepage
 
     landingpageIntro:
       type: fieldset
@@ -64,11 +66,13 @@ forms:
           type: number
           label: Position of Intro Segment
           description: Use 0 to disable the section
+          css: 'w-half'
         introTitle:
           type: text
           label: Title for your landingpage intro
           placeholder: Typemill
           description: Leave empty to use the title of your base content page.
+          css: 'w-half'
         introMarkdown:
           type: textarea
           label: Text for your landingpage intro (use markdown)
@@ -77,10 +81,12 @@ forms:
           type: text
           label: Link for startbutton
           placeholder: /my/deeplink
+          css: 'w-half'
         introButtonLabel:
           type: text
           label: Label for startbutton
           placeholder: my label
+          css: 'w-half'
         introFullsize:
           type: checkbox
           label: Full Screen
@@ -117,45 +123,51 @@ forms:
         teaser1title:
           type: text
           label: Teaser 1 Title
+          css: 'w-half'
         teaser1text:
           type: text
           label: Teaser 1 Text
+          css: 'w-half'
         teaser1link:
           type: text
           label: Teaser 1 Link
-          fieldsize: half
+          css: 'w-half'
         teaser1label:
           type: text
           label: Teaser 1 Label
-          fieldsize: half
+          css: 'w-half'
         teaser2title:
           type: text
           label: Teaser 2 Title
+          css: 'w-half'
         teaser2text:
           type: text
           label: Teaser 2 Text
+          css: 'w-half'
         teaser2link:
           type: text
           label: Teaser 2 Link
-          fieldsize: half
+          css: 'w-half'
         teaser2label:
           type: text
           label: Teaser 2 Label
-          fieldsize: half
+          css: 'w-half'
         teaser3title:
           type: text
           label: Teaser 3 Title
+          css: 'w-half'
         teaser3text:
           type: text
           label: Teaser 3 Text
+          css: 'w-half'
         teaser3link:
           type: text
           label: Teaser 3 Link
-          fieldsize: half
+          css: 'w-half'
         teaser3label:
           type: text
           label: Teaser 3 Label
-          fieldsize: half
+          css: 'w-half'
 
     landingpageContrast:
       type: fieldset
@@ -174,9 +186,11 @@ forms:
         contrastLink:
           type: text
           label: Button Link
+          css: 'w-half'
         contrastLabel:
           type: text
           label: Button Label
+          css: 'w-half'
 
     landingpageNavi:
       type: fieldset
@@ -201,19 +215,23 @@ forms:
           type: number
           label: Position of News Segment
           description: Use 0 to disable the section          
+          css: 'w-half'
         newsHeadline:
           type: text
           label: Headline for news-segment
           placeholder: News
+          css: 'w-half'
         newsFolder:
           type: text
           label: List entries from folder
           placeholder: /blog
           description: Add a path to a folder from which you want to list entries
+          css: 'w-half'
         newsLabel:
           type: text
           label: Label for read more link
           placeholder: All News
+          css: 'w-half'
 
     fieldsetAuthor:
       type: fieldset
@@ -246,10 +264,12 @@ forms:
           type: text
           label: Date intro text
           placeholder: Last Updated
+          css: 'w-half'
 
         dateFormat:
           type: select
           label: Date format
+          css: 'w-half'
           options:
             'm/d/Y': 01/20/2020
             'd.m.Y': 20.01.2020
@@ -318,18 +338,22 @@ forms:
           type: text
           label: Label for expand button
           placeholder: expand navigation
+          css: 'w-half'
         collapse:
           type: text
           label: Label for collapse button
           placeholder: collapse navigation
+          css: 'w-half'
         next:
           type: text
           label: Label for next link
           placeholder: next
+          css: 'w-half'
         previous:
           type: text
           label: Label for previous link
           placeholder: previous
+          css: 'w-half'
 
     fieldsetfooter:
       type: fieldset
@@ -420,6 +444,7 @@ forms:
             calisto,serif: calisto (serif)
             garamond,serif: garamond (serif)
             baskerville,serif: baskerville (serif)
+            
     fieldsetColors:
       type: fieldset
       legend: Colors
@@ -428,83 +453,83 @@ forms:
           type: text
           label: Background color for body
           placeholder: 'leightseagreen'
-          fieldsize: half
+          css: 'w-half'
         fontcolorprimary:
           type: text
           label: Font color for body
           placeholder: 'white'
-          fieldsize: half
+          css: 'w-half'
         newsbackground:
           type: text
           label: Background color for news-box
           placeholder: 'white'
-          fieldsize: half
+          css: 'w-half'
         newscolor:
           type: text
           label: Font color for news-box
           placeholder: '#333'
-          fieldsize: half
+          css: 'w-half'
         brandcolortertiary:
           type: text
           label: Background color for buttons
           placeholder: 'lightseagreen'
-          fieldsize: half
+          css: 'w-half'
         fontcolortertiary:
           type: text
           label: Font color for buttons
           placeholder: '#F7F7F7'
-          fieldsize: half
+          css: 'w-half'
         bordercolortertiary:
           type: text
           label: Border color for buttons
           placeholder: '#F7F7F7'
-          fieldsize: half
+          css: 'w-half'
         fontcolorlink:
           type: text
           label: Font color for content links
           placeholder: '#007F7F'
-          fieldsize: half
+          css: 'w-half'
         brandcolorsecondary:
           type: text
           label: Background color for content
           placeholder: '#f7f7f7'
-          fieldsize: half
+          css: 'w-half'
         fontcolorsecondary:
           type: text
           label: Font color for content
           placeholder: '#333'
-          fieldsize: half
+          css: 'w-half'
         codebackground:
           type: text
           label: Background color for code
           placeholder: '#ddd'
-          fieldsize: half
+          css: 'w-half'
         codecolor:
           type: text
           label: Font color for code
           placeholder: '#333'
-          fieldsize: half
+          css: 'w-half'
         contentnavihoverbackground:
           type: text
           label: Background color for hover of content navigation
           placeholder: 'lightseagreen'
-          fieldsize: half
+          css: 'w-half'
         contentnavihovercolor:
           type: text
           label: Font color for hover of content navigation
           placeholder: 'white'
-          fieldsize: half
+          css: 'w-half'
         thinbordercolor:
           type: text
           label: Thin border color
           placeholder: 'lightgray'
           description: Used for content navigation, table and horizontal line
-          fieldsize: half
+          css: 'w-half'
         noticecolors:
           type: checkbox
           label: Color for notices
           checkboxlabel: Use grayscale color schema for notices
-          fieldsize: half
+          css: 'w-half'
 
 metatabs:
   meta:

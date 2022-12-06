@@ -1,50 +1,262 @@
-system:  
+fieldsetsystem:
+  type: fieldset
+  legend: System
   fields:
-    fieldsetsystem:
-      type: fieldset
-      legend: System
-      fields:
-        title:
-          type: text
-          label: Website Title
-          class: medium
-          maxlength: 60
-        author:
-          type: text
-          label: Author
-          class: medium
-          maxlength: 60
-        copyright:
-          type: text
-          label: Copyright
-          class: medium
-          maxlength: 60
-        year:
-          type: text
-          label: Year
-          class: medium
-          maxlength: 60
-    fieldsetmedia:
-      type: fieldset
-      legend: Media
-      fields:
-        title:
-          type: text
-          label: Website Title
-          class: medium
-          maxlength: 60
-        author:
-          type: text
-          label: Author
-          class: medium
-          maxlength: 60
-        copyright:
-          type: text
-          label: Copyright
-          class: medium
-          maxlength: 60
-        year:
-          type: text
-          label: Year
-          class: medium
-          maxlength: 60
+    title:
+      type: text
+      label: Website Title
+      maxlength: 60
+      css: w-half
+    author:
+      type: text
+      label: Author
+      css: w-half
+      maxlength: 60
+    copyright:
+      type: select
+      label: Copyright
+      css: w-half
+      maxlength: 60
+      options:
+        '©': '©'
+        'CC-BY': 'CC-BY'
+        'CC-BY-NC': 'CC-BY-NC'
+        'CC-BY-NC-ND': 'CC-BY-NC-ND'
+        'CC-BY-NC-SA': 'CC-BY-NC-SA'
+        'CC-BY-ND': 'CC-BY-ND'
+        'CC-BY-SA': 'CC-BY-SA'
+    year:
+      type: text
+      label: Year
+      css: w-half
+      maxlength: 4
+    language:
+      type: select
+      label: Language (admin ui)
+      css: w-half
+      maxlength: 60
+      options:
+        'en': 'English'
+        'ru': 'Russian'
+        'nl': 'Dutch, Flemish'
+        'de': 'German'
+        'it': 'Italian'
+        'fr': 'French'
+    langattr:
+      type: text
+      label: Language attribute (website)
+      css: w-half
+      maxlength: 5
+      description: Please use ISO 639-1 codes like "en"
+    sitemap:
+      type: text
+      label: Google sitemap (readonly)
+      css: w-half
+      readonly: true
+      description: You can ping the sitemap with the following links to google and bing
+    pingsitemap:
+      type: checkbox
+      label: Ping sitemap
+      css: w-half
+      checkboxlabel: Ping sitemap automatically after publishing a page
+fieldsetmedia:
+  type: fieldset
+  legend: Media
+  fields:
+    logo:
+      type: text
+      label: Logo
+      css: w-half
+      maxlength: 60
+    favicon:
+      type: text
+      label: Favicon
+      css: w-half
+      maxlength: 60
+    width:
+      type: text
+      label: Standard width for images
+      description: This applies only for future images in the content area.
+      css: w-half
+      maxlength: 60
+    height:
+      type: text
+      label: Standard height for images
+      description: If you add a value for the height, then the image will be cropped.
+      css: w-half
+      maxlength: 60
+    svg:
+      type: checkbox
+      label: Upload svg images
+      checkboxlabel: Allow upload of svg images (svg can be malicious, use trusted sources)
+      css: w-full
+    maxuploadsize:
+      type: number
+      label: Maximum size for file-uploads in MB
+      description: The maximum file size might be limited by your server settings.
+      css: w-half
+fieldsetwriting:
+  type: fieldset
+  legend: Writing
+  fields:
+    editor:
+      type: radio
+      label: Standard editor mode
+      css: w-half
+      options:
+        'visual': 'visual editor'
+        'raw': 'raw editor'
+    formats:
+      type: checkboxlist
+      label: Format options for visual editor
+      css: w-half
+      options:
+        'markdown': 'markdown'
+        'headline': 'headline'
+        'ulist': 'numbered list'
+        'olist': 'bullet list'
+        'table': 'table'
+        'quote': 'quote'
+        'notice': 'notice'
+        'image': 'image'
+        'video': 'video'
+        'file': 'file'
+        'toc': 'table of contents'
+        'hr': 'horizontal line'
+        'definition': 'definition list'
+        'code': 'code'
+        'shortcode': 'shortcode'
+    headlineanchors:
+      type: checkbox
+      label: Headline anchors
+      checkboxlabel: Show anchors next to headline in frontend
+      css: w-full
+    urlschemes:
+      type: text
+      label: Url schemes
+      description: Add more url schemes for external links e.g. like dict:// (comma separated list)
+      css: w-full
+      maxlength: 60
+fieldsetaccess:
+  type: fieldset
+  legend: Restrictions
+  fields:
+    access:
+      type: checkbox
+      label: Website restriction
+      checkboxlabel: Show the website only to authenticated users and redirect all other users to the login page.
+      css: w-full
+    pageaccess:
+      type: checkbox
+      label: Page restriction
+      checkboxlabel: Activate individual restrictions for pages in the meta-tab of each page.
+      css: w-full
+    hrdelimiter:
+      type: checkbox
+      label: Content break
+      checkboxlabel: Cut restricted content after the first hr-element on a page (per default content will be cut after title).
+      css: w-full
+    restrictionnotice:
+      type: textarea
+      label: Restriction notice (use markdown)
+      css: w-full
+      maxlength: 2000
+    wraprestrictionnotice:
+      type: checkbox
+      label: Wrap restriction notice
+      checkboxlabel: Wrap the restriction notice above into a notice-4 element (which can be designed as special box)
+      css: w-full
+fieldsetrecovery:
+  type: fieldset
+  legend: PW recovery
+  fields:
+    recoverpw:
+      type: checkbox
+      label: Recover password
+      checkboxlabel: Activate the password recovery.
+      css: w-full
+    recoverfrom:
+      type: text
+      label: Sender email
+      placeholder: your@email.org
+      css: w-full
+      maxlength: 60
+    recoversubject:
+      type: text
+      label: Email subject
+      placeholder: Recover your password
+      css: w-full
+      maxlength: 60
+    recovermessage:
+      type: textarea
+      label: Text before recover link in email message
+      css: w-full
+      maxlength: 2000
+fieldsetdeveloper:
+  type: fieldset
+  legend: Developer
+  fields:
+    displayErrorDetails:
+      type: checkbox
+      label: Error reporting
+      checkboxlabel: Display application errors
+      css: w-full
+    securitylog:
+      type: checkbox
+      label: Security log
+      checkboxlabel: Track spam and suspicious actions in a logfile
+      css: w-full
+    twigcache:
+      type: checkbox
+      label: Twig cache
+      checkboxlabel: Activate the cache for twig templates
+      css: w-full
+    refreshcache:
+      type: checkbox
+      label: Refresh cache
+      checkboxlabel: Refresh the cache every 10 minutes. Use this option if you change content-files via FTP.
+      css: w-full
+    proxy:
+      type: checkbox
+      label: Proxy
+      checkboxlabel: Use x-forwarded-header.
+      css: w-half
+    trustedproxies:
+      type: text
+      label: Trusted IPs for proxies (comma separated)
+      css: w-half
+    headersoff:
+      type: checkbox
+      label: Disable headers
+      checkboxlabel: Disable the typemill headers and send your owwn
+      css: w-full
+fieldsetapi:
+  type: fieldset
+  legend: API
+  fields:
+    api:
+      type: checkbox
+      label: Activate api
+      checkboxlabel: Activate the api
+      css: w-full
+    apikey:
+      type: text
+      label: Api key
+      css: w-full
+    apirole:
+      type: select
+      label: Api role
+      css: w-full
+      options:
+        'admin': 'admin'
+        'editor': 'editor'
+        'author': 'author'
+        'member': 'member'
+fieldsetlicence:
+  type: fieldset
+  legend: Licence
+  fields:
+    licencekey:
+      type: text
+      label: Your licence for maker or business features
+      css: w-full

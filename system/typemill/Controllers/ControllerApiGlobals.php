@@ -5,17 +5,8 @@ namespace Typemill\Controllers;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-class ControllerSystemApi extends ControllerData
+class ControllerApiGlobal extends ControllerData
 {
-	public function getSettings(Request $request, Response $response)
-	{
-		$response->getBody()->write(json_encode([
-			'settings'	=> $this->settings
-		]));
-
-		return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
-	}
-
 	public function getSystemNavi(Request $request, Response $response)
 	{
 		# won't work because api has no session, instead you have to pass user
@@ -30,6 +21,15 @@ class ControllerSystemApi extends ControllerData
 	{
 		$response->getBody()->write(json_encode([
 			'mainnavi' => $this->getMainNavigation('member'),
+		]));
+
+		return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+	}
+
+	public function getTranslations(Request $request, Response $response)
+	{
+		$response->getBody()->write(json_encode([
+			'translations' => $this->c->get('translations'),
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json')->withStatus(200);

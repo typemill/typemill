@@ -15,3 +15,15 @@
   position: relative;	
 }
 
+[v-cloak] {
+  display: none;
+}
+.initial-enter-active,
+.initial-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.initial-enter-from,
+.initial-leave-to {
+  opacity: 0;
+}

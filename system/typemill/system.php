@@ -17,6 +17,7 @@ use Typemill\Static\Plugins;
 use Typemill\Static\Translations;
 use Typemill\Static\Permissions;
 use Typemill\Static\Session;
+use Typemill\Static\Helpers;
 use Typemill\Events\OnSettingsLoaded;
 use Typemill\Events\OnPluginsLoaded;
 use Typemill\Events\OnSessionSegmentsLoaded;
@@ -28,8 +29,6 @@ use Typemill\Extensions\TwigCsrfExtension;
 use Typemill\Extensions\TwigUrlExtension;
 use Typemill\Extensions\TwigUserExtension;
 use Typemill\Models\StorageWrapper;
-
-# require __DIR__  . '/../vendor/autoload.php';
 
 $timer = [];
 $timer['start'] = microtime(true);
@@ -65,10 +64,7 @@ if(isset($settings['displayErrorDetails']) && $settings['displayErrorDetails'])
 # ADD THEM TO THE SETTINGS AND YOU HAVE THEM EVERYWHERE??
 $uriFactory 						= new UriFactory();
 $uri 										= $uriFactory->createFromGlobals($_SERVER);
-
-$settings['fullpath'] 	= $uri->getPath();
-$settings['basepath'] 	= preg_replace('/(.*)\/.*/', '$1', $_SERVER['SCRIPT_NAME']);
-$settings['routepath'] 	= str_replace($settings['basepath'], '', $settings['fullpath']);
+$urlinfo 								= Helpers::urlInfo($uri);
 
 $timer['settings'] = microtime(true);
 
@@ -89,8 +85,11 @@ $routeParser 			= $app->getRouteCollector()->getRouteParser();
 # add route parser to container to use named routes in controller
 $container->set('routeParser', $routeParser);
 
+# set urlinfo
+$container->set('urlinfo', $urlinfo);
+
 # in slim 4 you alsways have to set application basepath
-$app->setBasePath($settings['basepath']);
+$app->setBasePath($urlinfo['basepath']);
 
 $timer['container'] = microtime(true);
 
@@ -189,7 +188,7 @@ $timer['permissions'] = microtime(true);
 if( ( isset($settings['access']) && $settings['access'] ) || ( isset($settings['pageaccess']) && $settings['pageaccess'] ) )
 {
 	# activate session for all routes
-	$session_segments = [$settings['routepath']];
+	$session_segments = [$urlinfo['route']];
 }
 else
 {
@@ -201,7 +200,7 @@ else
 }
 
 # start session
-Session::startSessionForSegments($session_segments, $settings['routepath']);
+Session::startSessionForSegments($session_segments, $urlinfo['route']);
 
 $timer['session segments'] = microtime(true);
 
@@ -209,11 +208,15 @@ $timer['session segments'] = microtime(true);
 * OTHER CONTAINER ITEMS			*
 ****************************/
 
+# translations
+$translations = Translations::loadTranslations($settings, $urlinfo['route']);
+$container->set('translations', $translations);
+
 # dispatcher to container
 $container->set('dispatcher', function() use ($dispatcher){ return $dispatcher; });
 
 # asset function for plugins
-$container->set('assets', function() use ($settings){ return new \Typemill\Assets($settings['basepath']); });
+$container->set('assets', function() use ($urlinfo){ return new \Typemill\Assets($urlinfo['basepath']); });
 
 # Register Middleware On Container
 $csrf = false;
@@ -230,13 +233,12 @@ if(isset($_SESSION))
 	# $app->add(new ValidationErrors($container->get('view')));
 }
 
-
 /****************************
 * TWIG TO CONTAINER					*
 ****************************/
 
-$container->set('view', function() use ($settings, $csrf, $uri) {
-	
+$container->set('view', function() use ($settings, $csrf, $urlinfo, $translations) {
+
 	$twig = Twig::create(
 		[
 			# path to templates
@@ -256,7 +258,7 @@ $container->set('view', function() use ($settings, $csrf, $uri) {
 	# add extensions
 	$twig->addExtension(new DebugExtension());
 	$twig->addExtension(new TwigUserExtension());
-	$twig->addExtension(new TwigUrlExtension($uri, $settings['basepath']));
+	$twig->addExtension(new TwigUrlExtension($urlinfo));
 
 	# $twig->addExtension(new \Nquire\Extensions\TwigUserExtension());
 
@@ -265,9 +267,6 @@ $container->set('view', function() use ($settings, $csrf, $uri) {
 		$twig->addExtension(new TwigCsrfExtension($csrf));
 	}
 
-	# translations
-	$translations = Translations::loadTranslations($settings);
-	# $twig->getEnvironment()->addGlobal('translations', $translations);
 	$twig->addExtension(new Typemill\Extensions\TwigLanguageExtension( $translations ));
 
 	return $twig;

@@ -18,14 +18,15 @@ class User
 
 	public function __construct()
 	{
-		$this->userDir 	= getcwd() . '/system/settings/users';
+		$this->userDir 	= getcwd() . '/settings/users';
 		$this->yaml 	= new Yaml('\Typemill\Models\Storage');
 	}
 
 	public function setUser(string $username)
 	{
-		if(!$this->user)
-		{
+		# if no user is set or requested user has a different username
+#		if(!$this->user OR ($this->user['username'] != $username))
+#		{
 			$this->user = $this->yaml->getYaml('settings/users', $username . '.yaml');
 		
 			if(!$this->user)
@@ -40,7 +41,7 @@ class User
 
 			# delete password from public userdata
 			unset($this->user['password']);
-		}
+#		}
 
 		return $this;
 	}
@@ -62,14 +63,14 @@ class User
 		return $this;
 	}
 
-	public function getError()
-	{
-		return $this->error;
-	}
-
 	public function getUserData()
 	{
 		return $this->user;
+	}
+
+	public function getError()
+	{
+		return $this->error;
 	}
 
 	public function getAllUsers()
@@ -77,7 +78,7 @@ class User
 		# check if users directory exists
 		if(!is_dir($this->userDir))
 		{
-			$this->error = 'Directory $this->userDir does not exist.'; 
+			$this->error = "Directory $this->userDir does not exist."; 
 			
 			return false;
 		}
@@ -116,6 +117,40 @@ class User
 		return false;
 	}
 
+	public function setValue($key, $value)
+	{
+		$this->user[$key] = $value;
+	}
+
+	public function unsetValue($key)
+	{
+		unset($this->user[$key]);
+	}
+
+	public function updateUser()
+	{
+		if($this->yaml->updateYaml('settings/users', $this->user['username'] . '.yaml', $this->user))
+		{
+			$this->deleteUserIndex();
+	
+			return true;
+		}
+
+		$this->error = $this->yaml->getError();
+
+		return false;
+	}
+
+
+
+
+
+
+
+
+
+
+
 	public function unsetFromUser(array $keys)
 	{
 		if(empty($keys) OR !$this->user)
@@ -138,7 +173,7 @@ class User
 		return true;
 	}
 
-	public function updateUser()
+	public function updateUserOld()
 	{
 		# add password back to userdata before you store/update user
 		if($this->password)
@@ -155,6 +190,7 @@ class User
 
 		return false;
 	}
+
 
 	public function updateUserWithInput(array $input)
 	{
@@ -273,15 +309,15 @@ class User
 	# accepts email with or without asterix and returns userdata
 	public function findUsersByEmail($email)
 	{
-		$usernames 	= [];
-		
+		$usernames = [];
+
 		# Make sure that we scan only the first 11 files even if there are some thousand users.
 		if ($dh = opendir($this->userDir))
 		{
-			$count 		= 1;
+			$count 		= 0;
 			$exclude	= array('..', '.', '.logins', 'tmuserindex-mail.txt', 'tmuserindex-role.txt');
 
-		    while ( ($userfile = readdir($dh)) !== false && $count <= 11 ) 
+		    while ( ($userfile = readdir($dh)) !== false && $count <= 10 ) 
 		    {
 		    	if(in_array($userfile, $exclude)){ continue; }
 
@@ -292,35 +328,46 @@ class User
 		    closedir($dh);
 		}
 
-		$countusers = count($usernames);
-
-		if($countusers == 0)
+		if(count($usernames) == 0)
 		{
 			return false;
 		}
-
-		# use a simple dirty search if there are less than 10 users (only in use for new user registrations)
-		if($countusers <= 10)
+		elseif(count($usernames) <= 9)
 		{
-			foreach($usernames as $username)
+			# perform a simple search because we have less than 10 registered users
+			return $this->searchEmailSimple($usernames,$email);
+		}
+		else
+		{
+			# perform search in an index for many users
+			return $this->searchEmailByIndex($email);
+		}
+	}
+
+	private function searchEmailSimple($usernames, $email)
+	{
+		foreach($usernames as $username)
+		{
+			$this->setUser($username);
+			$user = $this->getUserData();
+
+			if($user['email'] == $email)
 			{
-				$userdata = $this->getSecureUser($username);
-
-				if($userdata['email'] == $email)
-				{
-					return $userdata;
-				}
+				return [$username];
 			}
-			return false;
 		}
+		return false;
+	}
 
+	private function searchEmailByIndex($email)
+	{
 		# if there are more than 10 users, search with an index
-		$usermails = $this->getUserMailIndex();
+		$usermails 	= $this->getUserMailIndex();
+		$usernames 	= [];
 
 		# search with starting asterix, ending asterix or without asterix
 		if($email[0] == '*')
 		{
-			$userdata = [];
 			$search = substr($email, 1);
 			$length = strlen($search);
 
@@ -328,17 +375,12 @@ class User
 			{
 				if(substr($usermail, -$length) == $search)
 				{
-					$userdata[] = $username;
+					$usernames[] = $username;
 				}
 			}
-
-			$userdata = empty($userdata) ? false : $userdata;
-
-			return $userdata;
 		}
 		elseif(substr($email, -1) == '*')
 		{
-			$userdata = [];
 			$search = substr($email, 0, -1);
 			$length = strlen($search);
 
@@ -346,21 +388,21 @@ class User
 			{
 				if(substr($usermail, 0, $length) == $search)
 				{
-					$userdata[] = $username;
+					$usernames[] = $username;
 				}
 			}
-
-			$userdata = empty($userdata) ? false : $userdata;
-
-			return $userdata;
 		}
 		elseif(isset($usermails[$email]))
 		{
-			$userdata[] = $usermails[$email];
-			return $userdata;
+			$usernames[] = $usermails[$email];
 		}
 
-		return false;
+		if(empty($usernames))
+		{
+			return false;
+		}
+
+		return $usernames;
 	}
 
 	public function getUserMailIndex()
@@ -376,12 +418,13 @@ class User
 			}
 		}
 		
-		$usernames 		= $this->getUsers();
+		$usernames 		= $this->getAllUsers();
 		$usermailindex	= [];
 
 		foreach($usernames as $username)
 		{
-			$userdata = $this->getSecureUser($username);
+			$this->setUser($username);
+			$userdata = $this->getUserData();
 
 			$usermailindex[$userdata['email']] = $username;
 		}
@@ -391,42 +434,8 @@ class User
 		return $usermailindex;
 	}
 
-	# accepts email with or without asterix and returns usernames
 	public function findUsersByRole($role)
 	{
-
-/*
-		# get all user files
-		$usernames = $this->getUsers();
-
-		$countusers = count($usernames);
-
-		if($countusers == 0)
-		{
-			return false;
-		}
-
-		# use a simple dirty search if there are less than 10 users (not in use right now)
-		if($countusers <= 4)
-		{
-			$userdata = [];
-			foreach($usernames as $key => $username)
-			{
-				$userdetails = $this->getSecureUser($username);
-
-				if($userdetails['userrole'] == $role)
-				{
-					$userdata[] = $userdetails;
-				}
-			}
-			if(empty($userdata))
-			{
-				return false;
-			}
-
-			return $userdata;
-		}
-*/
 		$userroles = $this->getUserRoleIndex();
 
 		if(isset($userroles[$role]))
@@ -449,7 +458,7 @@ class User
 			}
 		}
 
-		$usernames		= $this->getUsers();
+		$usernames		= $this->getAllUsers();
 		$userroleindex 	= [];
 
 		foreach($usernames as $username)

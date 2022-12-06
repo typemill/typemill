@@ -1,21 +1,30 @@
 <?php
 
-use Typemill\Controllers\ControllerWebFrontend;
+#use Typemill\Controllers\ControllerWebFrontend;
 use Typemill\Controllers\ControllerWebLogin;
-use Typemill\Controllers\ControllerSystem;
+use Typemill\Controllers\ControllerWebSystem;
 use Typemill\Middleware\RedirectIfAuthenticated;
 use Typemill\Middleware\RedirectIfUnauthenticated;
-use Slim\Views\TwigMiddleware;
+#use Slim\Views\TwigMiddleware;
 
 $app->get('/tm/login', ControllerWebLogin::class . ':show')->setName('auth.show')->add(new RedirectIfAuthenticated($routeParser, $settings));
 $app->post('/tm/login', ControllerWebLogin::class . ':login')->setName('auth.login')->add(new RedirectIfAuthenticated($routeParser, $settings));
 
-$app->get('/tm/system', ControllerSystem::class . ':showSettings')->setName('settings.show')->add(new RedirectIfUnauthenticated($routeParser));
-$app->get('/tm/themes', ControllerSystem::class . ':showThemes')->setName('themes.show');
-$app->get('/tm/plugins', ControllerSystem::class . ':showPlugins')->setName('plugins.show');
-$app->get('/tm/account', ControllerSystem::class . ':showAccount')->setName('user.account');
-$app->get('/tm/user/new', ControllerSystem::class . ':newUser')->setName('user.new');
-$app->get('/tm/users', ControllerSystem::class . ':listUser')->setName('user.list');
+$app->get('/tm/system', ControllerWebSystem::class . ':showSettings')->setName('settings.show')->add(new RedirectIfUnauthenticated($routeParser));
+$app->get('/tm/themes', ControllerWebSystem::class . ':showThemes')->setName('themes.show')->add(new RedirectIfUnauthenticated($routeParser));
+$app->get('/tm/plugins', ControllerWebSystem::class . ':showPlugins')->setName('plugins.show')->add(new RedirectIfUnauthenticated($routeParser));
+$app->get('/tm/account', ControllerWebSystem::class . ':showAccount')->setName('user.account')->add(new RedirectIfUnauthenticated($routeParser));
+$app->get('/tm/users', ControllerWebSystem::class . ':showUsers')->setName('users.show')->add(new RedirectIfUnauthenticated($routeParser));
+
+
+
+
+# $app->get('/tm/user/new', ControllerSystem::class . ':newUser')->setName('user.new');
+# $app->get('/tm/users', ControllerSystem::class . ':listUser')->setName('user.list');
+# $app->post('/tm/user/create', ControllerSettings::class . ':createUser')->setName('user.create')->add(new accessMiddleware($container['router'], $container['acl'], 'user', 'create'));
+# $app->post('/tm/user/update', ControllerSettings::class . ':updateUser')->setName('user.update')->add(new accessMiddleware($container['router'], $container['acl'], 'user', 'update'));
+# $app->post('/tm/user/delete', ControllerSettings::class . ':deleteUser')->setName('user.delete')->add(new accessMiddleware($container['router'], $container['acl'], 'user', 'delete'));
+# $app->get('/tm/user/{username}', ControllerSettings::class . ':showUser')->setName('user.show')->add(new accessMiddleware($container['router'], $container['acl'], 'user', 'view'));
 
 
 
@@ -55,8 +64,6 @@ else
 $app->post('/tm/formpost', ControllerFrontendForms::class . ':savePublicForm')->setName('form.save');
 
 $app->get('/tm', ControllerFrontendAuth::class . ':redirect');
-$app->get('/tm/login', ControllerFrontendAuth::class . ':show')->setName('auth.show')->add(new RedirectIfAuthenticated($container['router'], $container['settings']));
-$app->post('/tm/login', ControllerFrontendAuth::class . ':login')->setName('auth.login')->add(new RedirectIfAuthenticated($container['router'], $container['settings']));
 $app->get('/tm/logout', ControllerFrontendAuth::class . ':logout')->setName('auth.logout')->add(new RedirectIfUnauthenticated($container['router'], $container['flash']));
 
 if(isset($settings['settings']['recoverpw']) && $settings['settings']['recoverpw'])
@@ -67,22 +74,22 @@ if(isset($settings['settings']['recoverpw']) && $settings['settings']['recoverpw
 	$app->post('/tm/recoverpwnew', ControllerFrontendAuth::class . ':createrecoverpasswordnew')->setName('auth.recoverpwnew')->add(new RedirectIfAuthenticated($container['router'], $container['settings']));
 }
 
+
+/*
+
+MIGRATED
+
 $app->get('/tm/settings', ControllerSettings::class . ':showSettings')->setName('settings.show')->add(new accessMiddleware($container['router'], $container['acl'], 'system', 'view'));
 $app->post('/tm/settings', ControllerSettings::class . ':saveSettings')->setName('settings.save')->add(new accessMiddleware($container['router'], $container['acl'], 'system', 'update'));
-
 $app->get('/tm/themes', ControllerSettings::class . ':showThemes')->setName('themes.show')->add(new accessMiddleware($container['router'], $container['acl'], 'system', 'view'));
 $app->post('/tm/themes', ControllerSettings::class . ':saveThemes')->setName('themes.save')->add(new accessMiddleware($container['router'], $container['acl'], 'system', 'update'));
-
 $app->get('/tm/plugins', ControllerSettings::class . ':showPlugins')->setName('plugins.show')->add(new accessMiddleware($container['router'], $container['acl'], 'system', 'view'));
 $app->post('/tm/plugins', ControllerSettings::class . ':savePlugins')->setName('plugins.save')->add(new accessMiddleware($container['router'], $container['acl'], 'system', 'update'));
-
 $app->get('/tm/account', ControllerSettings::class . ':showAccount')->setName('user.account')->add(new accessMiddleware($container['router'], $container['acl'], 'user', 'view'));
-$app->get('/tm/user/new', ControllerSettings::class . ':newUser')->setName('user.new')->add(new accessMiddleware($container['router'], $container['acl'], 'user', 'create'));
-$app->post('/tm/user/create', ControllerSettings::class . ':createUser')->setName('user.create')->add(new accessMiddleware($container['router'], $container['acl'], 'user', 'create'));
-$app->post('/tm/user/update', ControllerSettings::class . ':updateUser')->setName('user.update')->add(new accessMiddleware($container['router'], $container['acl'], 'user', 'update'));
-$app->post('/tm/user/delete', ControllerSettings::class . ':deleteUser')->setName('user.delete')->add(new accessMiddleware($container['router'], $container['acl'], 'user', 'delete'));
-$app->get('/tm/user/{username}', ControllerSettings::class . ':showUser')->setName('user.show')->add(new accessMiddleware($container['router'], $container['acl'], 'user', 'view'));
-$app->get('/tm/users', ControllerSettings::class . ':listUser')->setName('user.list')->add(new accessMiddleware($container['router'], $container['acl'], 'userlist', 'view'));
+$app->get('/tm/login', ControllerFrontendAuth::class . ':show')->setName('auth.show')->add(new RedirectIfAuthenticated($container['router'], $container['settings']));
+$app->post('/tm/login', ControllerFrontendAuth::class . ':login')->setName('auth.login')->add(new RedirectIfAuthenticated($container['router'], $container['settings']));
+
+
 
 $app->get('/tm/content/raw[/{params:.*}]', ControllerAuthorEditor::class . ':showContent')->setName('content.raw')->add(new accessMiddleware($container['router'], $container['acl'], 'content', 'view'));
 $app->get('/tm/content/visual[/{params:.*}]', ControllerAuthorEditor::class . ':showBlox')->setName('content.visual')->add(new accessMiddleware($container['router'], $container['acl'], 'content', 'view'));

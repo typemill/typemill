@@ -1,0 +1,34 @@
+username:
+  name: username
+  label: 'Username (read only)' 
+  type: 'text'
+  readonly: true
+firstname:
+  name: firstname
+  label: 'First Name' 
+  type: 'text'
+lastname: 
+  name: lastname
+  label: 'Last Name' 
+  type:  'text'
+email:
+  name: email
+  label: 'E-Mail'
+  type: 'text'
+  required: true
+userrole:
+  name: userrole
+  label: 'Role'
+  type: 'text'
+  readonly: true
+password:
+  name: password
+  label: 'Actual Password' 
+  type: 'password'
+  autocomplete: 'new-password'
+newpassword: 
+  name: newpassword
+  label: 'New Password'
+  type: 'password'
+  autocomplete: 'new-password'
+  generator: true

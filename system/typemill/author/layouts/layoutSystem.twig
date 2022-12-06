@@ -19,9 +19,6 @@
 		<link rel="stylesheet" href="{{ base_url() }}/system/typemill/author/css/output.css?v={{ settings.version }}" />
 		<link rel="stylesheet" href="{{ base_url() }}/system/typemill/author/css/custom.css?v={{ settings.version }}" />
 		
-<!--		<link rel="stylesheet" href="{{ base_url() }}/system/author/css/tachyons.min.css?v={{ settings.version }}" />
-		<link rel="stylesheet" href="{{ base_url() }}/system/author/css/style.css?v={{ settings.version }}" />
--->
 		{{ assets.renderCSS() }}
 		
 	</head>
@@ -39,7 +36,7 @@
 			<aside class="w-1/4">
 				{% include 'partials/systemNavi.twig' %}
 			</aside>
-			<article class="w-3/4 bg-stone-50 drop-shadow-md">
+			<article class="w-3/4 bg-stone-50 drop-shadow-md p-8">
 				{% block content %}{% endblock %}
 			</article>
 		</div>
@@ -52,36 +49,21 @@
 
 		<script>
 			
-			var data = {{ jsdata | json_encode() | raw  }}
-
-/*			var eventBus = false; */
-			console.info(data.settings);
+			const data = {{ jsdata | json_encode() | raw  }}
+			const labels = {{ translations|json_encode() }};
 
 		</script>
 		<script src="{{ base_url() }}/system/typemill/author/js/axios.min.js?v={{ settings.version }}"></script>
 		<script>
 			const tmaxios = axios.create();
 			tmaxios.defaults.baseURL =  "{{ base_url() }}";
-/*			tmaxios.defaults.headers.common['Authorization'] = "Basic {{ basicauth }}"; */
+			/* header for session authentication in middleware */			
 			tmaxios.defaults.headers.common['X-Session-Auth'] = "true";
+/*			tmaxios.defaults.headers.common['Authorization'] = "Basic {{ basicauth }}"; */
 		</script>
-<!--		<script src="{{ base_url() }}/system/typemill/author/js/autosize.min.js?v={{ settings.version }}"></script> -->
 		<script src="{{ base_url() }}/system/typemill/author/js/vue.js?v={{ settings.version }}"></script>
-		<script>
-			const { eventBus } = Vue;
-		</script>
-<!--
-		<script>
-			var eventBus = false;
-			const FormBus = new Vue();
-		</script>
-		<script src="{{ base_url() }}/system/author/js/vue-shared.js?v={{ settings.version }}"></script>		
-		<script src="{{ base_url() }}/system/author/js/author.js?v={{ settings.version }}"></script>
-		<script src="{{ base_url() }}/system/author/js/typemillutils.js?v={{ settings.version }}"></script>
-		<script>
-			typemillUtilities.start()
-		</script>
--->		
+		<script src="{{ base_url() }}/system/typemill/author/js/vue-eventbus.js?v={{ settings.version }}"></script>
+
 		{% block javascript %}{% endblock %}
 
 		{{ assets.renderJS() }}		

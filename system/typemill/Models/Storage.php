@@ -75,10 +75,17 @@ class Storage
 		{
 			$this->error = "Could not open and read the file $filename in folder $folder.";
 
-			return true;
+			return false;
 		}
 
-		fwrite($openfile, $data);
+		$writefile = fwrite($openfile, $data);
+		if(!$writefile)
+		{
+			$this->error = "Could not write to the file $filename in folder $folder.";
+
+			return false;
+		}
+
 		fclose($openfile);
 
 		return true;
@@ -90,6 +97,7 @@ class Storage
 		{
 			# ??? should be with basepath???
 			$fileContent = file_get_contents($folder . DIRECTORY_SEPARATOR . $filename);
+		
 			return $fileContent;
 		}
 

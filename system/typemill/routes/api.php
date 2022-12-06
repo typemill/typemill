@@ -1,7 +1,23 @@
 <?php
 
-use Typemill\Controllers\ControllerSystemApi;
 use Typemill\Middleware\RestrictApiAccess;
+use Typemill\Controllers\ControllerApiGlobals;
+use Typemill\Controllers\ControllerApiSystemSettings;
+use Typemill\Controllers\ControllerApiSystemThemes;
+use Typemill\Controllers\ControllerApiSystemPlugins;
+use Typemill\Controllers\ControllerApiSystemUsers;
+
+$app->get('/api/v1/systemnavi', ControllerApiGlobals::class . ':getSystemnavi')->setName('api.systemnavi.get')->add(new RestrictApiAccess());
+$app->get('/api/v1/mainnavi', ControllerApiGlobals::class . ':getMainnavi')->setName('api.mainnavi.get')->add(new RestrictApiAccess());
+$app->get('/api/v1/settings', ControllerApiSystemSettings::class . ':getSettings')->setName('api.settings.get')->add(new RestrictApiAccess());
+$app->post('/api/v1/settings', ControllerApiSystemSettings::class . ':updateSettings')->setName('api.settings.set')->add(new RestrictApiAccess());
+$app->post('/api/v1/theme', ControllerApiSystemThemes::class . ':updateTheme')->setName('api.theme.set')->add(new RestrictApiAccess());
+$app->post('/api/v1/plugin', ControllerApiSystemPlugins::class . ':updatePlugin')->setName('api.plugin.set')->add(new RestrictApiAccess());
+$app->get('/api/v1/users/getbynames', ControllerApiSystemUsers::class . ':getUsersByNames')->setName('api.usersbynames')->add(new RestrictApiAccess());
+$app->get('/api/v1/users/getbyemail', ControllerApiSystemUsers::class . ':getUsersByEmail')->setName('api.usersbyemail')->add(new RestrictApiAccess());
+$app->get('/api/v1/users/getbyrole', ControllerApiSystemUsers::class . ':getUsersByRole')->setName('api.usersbyrole')->add(new RestrictApiAccess());
+$app->put('/api/v1/account', ControllerApiSystemUsers::class . ':updateUser')->setName('api.user.update')->add(new RestrictApiAccess());
+
 
 
 # https://stackoverflow.blog/2021/10/06/best-practices-for-authentication-and-authorization-for-rest-apis/
@@ -17,11 +33,6 @@ use Typemill\Middleware\RestrictApiAccess;
 # PUBLIC API
 # ApiKey: 
 # AUTHORIZATION: apikey username.apikey
-
-
-$app->get('/api/v1/settings', ControllerSystemApi::class . ':getSettings')->setName('api.settings.get')->add(new RestrictApiAccess());
-$app->get('/api/v1/systemnavi', ControllerSystemApi::class . ':getSystemnavi')->setName('api.systemnavi.get')->add(new RestrictApiAccess());
-$app->get('/api/v1/mainnavi', ControllerSystemApi::class . ':getMainnavi')->setName('api.mainnavi.get')->add(new RestrictApiAccess());
 
 
 /*

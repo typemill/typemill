@@ -1,21 +1,21 @@
 {% extends 'layouts/layoutSystem.twig' %}
-{% block title %}{{ translate('System Settings') }}{% endblock %}
+{% block title %}{{ translate('Theme Settings') }}{% endblock %}
 
 {% block content %}
 	
-	<h1 class="text-3xl font-bold mb-4">{{ translate('System') }} </h1>
-	
-	<div id="system" v-cloak></div>
+	<h1 class="text-3xl font-bold mb-4">{{ translate('Themes') }} </h1>
+
+	<div id="themes" v-cloak></div>
 
 {% endblock %}
 
 {% block javascript %}
 
-	<script src="{{ base_url() }}/system/typemill/author/js/vue-system.js?v={{ settings.version }}"></script>		
+	<script src="{{ base_url() }}/system/typemill/author/js/vue-themes.js?v={{ settings.version }}"></script>		
 	<script src="{{ base_url() }}/system/typemill/author/js/vue-translate.js?v={{ settings.version }}"></script>		
 	<script src="{{ base_url() }}/system/typemill/author/js/vue-shared.js?v={{ settings.version }}"></script>
 	<script>
-		app.mount('#system');
+		app.mount('#themes');
 	</script>
 
 {% endblock %}

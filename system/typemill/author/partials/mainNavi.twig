@@ -5,7 +5,7 @@
 	<ul class="flex border-l-2 border-stone-200">
 		{% for name,navitem in mainnavi %}
 			<li class="border-r-2 border-stone-200">
-				<a class="inline-block px-4 pt-4 pb-3 border-b-4 hover:border-stone-700 hover:bg-stone-50 focus:bg-stone-50 active:bg-stone-50{{ navitem.active ? ' bg-stone-50 border-stone-700' : ' border-stone-100' }}" href="{{ url_for(navitem.routename) }}">{{ translate(navitem.title)|capitalize }}</a>
+				<a class="inline-block px-4 pt-4 pb-3 border-b-4 hover:border-stone-700 hover:bg-stone-50 focus:bg-stone-50 active:bg-stone-50 transition duration-100{{ navitem.active ? ' bg-stone-50 border-stone-700' : ' border-stone-100' }}" href="{{ url_for(navitem.routename) }}">{{ translate(navitem.title)|capitalize }}</a>
 			</li>
 		{% endfor %}	
 	</ul>
