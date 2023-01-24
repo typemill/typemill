@@ -147,7 +147,7 @@ class ControllerFrontendAuth extends ControllerShared
 			return $response->withRedirect($this->c->router->pathFor('auth.recoverpwshow'));			
 		}
 
-		$requiredUser = $user->getSecureUser($requiredUser[0]);
+		$requiredUser = $user->getSecureUser($requiredUser['username']);
 		
 		$requiredUser['recoverdate'] 	= date("Y-m-d H:i:s");
 		$requiredUser['recovertoken'] 	= bin2hex(random_bytes(32));
