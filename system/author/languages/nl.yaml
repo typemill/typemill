@@ -1,25 +1,34 @@
 # Dutch (Nederlands)
 # Author: 
+
+# ↓ Admin Panel + Other ↓
+ABOUT_CONFIGURATIONS_FOR_TYPEMILL_ON_YOUTUBE_: about configurations for typemill on YouTube.
+ACCESS_CONTROL: Toegangscontrole
 ACCOUNT: Account
+ACTION: Action
+ACTIVATE_CACHE_FOR_TWIG_TEMPLATES: Cache activeren voor Twig-sjablonen 
+ACTIVATE_INDIVIDUAL_RESTRICTIONS_FOR_PAGES_IN_THE_META_TAB_OF_EACH_PAGE_: Activeer individuele beperkingen voor pagina's in de meta-tab van elke pagina. 
+ACTIVATE_THE_PASSWORD_RECOVERY_ONLY_IF_IT_IS_REALLY_NEEDED__IF_POSSIBLE_USE_YOUR_PASSWORD_MANAGER_INSTEAD_: Activate the password recovery only if it is really needed. If possible use your password manager instead.
+ACTIVATE_THE_RECOVER_PASSWORD_FUNCTION: Activate the recover password function
 ACTIVE: Actief
 ACTUAL_PASSWORD: Actueel wachtwoord
-ADD: toevoegen
-ADD_CONTENT_BLOCK: inhoudblok toevoegen
 ADD_DEFINITION: definitie toevoegen
 ADD_FILE: Bestand toevoegen
 ADD_FOLDER: Map toevoegen
 ADD_FOLDER_TO_BASE_LEVEL: map toevoegen op basisniveau
 ADD_ITEM: Item toevoegen
 ADD_LEFT_COLUMN: linkerkolom toevoegen
+ADD_MORE_URL_SCHEMES_FOR_EXTERNAL_LINKS_E_G__LIKE_DICT://_(COMMA_SEPARATED_LIST): Voeg meer url-schema's toe voor externe links, b.v. zoals dict:// (door komma's gescheiden lijst) 
+ADD_ONE_OR_MORE_USERNAMES_SEPARATED_WITH_COMMA_: Voeg een of meer gebruikersnamen toe, gescheiden door komma's. 
 ADD_RIGHT_COLUMN: rechter kolom toevoegen
 ADD_ROW_ABOVE: rij boven toevoegen
 ADD_ROW_BELOW: rij hieronder toevoegen
 ADMINISTRATOR: administrator
 ALL: All visitors
 ALL_USERS: Alle gebruikers
-ALTERNATIVE_TEXT_FOR_THE_HERO_IMAGE: Alternative Text for the hero image
+ALLOW_UPLOAD_OF_SVG_IMAGES_(ON_YOUR_OWN_RISK__HAS_SECURITY_IMPLICATIONS): Allow upload of svg images (on your own risk, has security implications)
 ALT_TEXT: Alt-tekst
-AUTHOR: Auteur
+AND: and
 AUTHOR_DESCRIPTION_(MARKDOWN): Author-Description (Markdown)
 BACK_TO_STARTPAGE: terug naar startpagina
 BOLD: vetgedrukt
@@ -28,130 +37,140 @@ BROWSE: BROWSE
 BULLET_LIST: Lijst met opsommingstekens
 BY: door
 CANCEL: annuleren
-CAN_BE_USED_FOR_AUTHOR_LINE_IN_FRONTEND_: Can be used for author line in frontend.
 CAPTION: Bijschrift
 CELL: cel
 CENTER: Midden
 CHECK: check
 CHOOSE_FILE: Choose file
 CLASS: Class
+CLEAR_CACHE: Cache wissen
 CLOSE_LIBRARY: Close Library
 CODE: Code
 COG: tandwiel
-CONTENT: Inhoud
+COMMA_SEPARATED_LIST_ADDITIONAL_SCHEMES: Comma separated list additional schemes
 COPYRIGHT: Auteursrecht
-CREATED_AT_(READONLY): Created at (read only)
-CREATED_AT_(READ_ONLY): Created at (readonly)
+CREATE_A_LOGFILE_IN_THE_CACHE_FOLDER_TO_TRACK_SPAM_AND_SUSPICIOUS_ACTIONS: Create a logfile in the cache folder to track spam and suspicious actions
 CREATE_NEW_USER: Nieuwe gebruiker maken
 CREATE_USER: Gebruiker maken
 CROSS: kruis
 CUSTOM_CSS: Custom CSS
+CUT_RESTRICTED_CONTENT_AFTER_THE_FIRST_HR_ELEMENT_ON_A_PAGE_(PER_DEFAULT_CONTENT_WILL_BE_CUT_AFTER_TITLE)_: Beperkte inhoud knippen na het eerste hr-element op een pagina (standaard wordt inhoud na titel geknipt). 
+DEAR_USER_: Dear user,
 DEFINITION: Definitielijst
 DEFINITION_LIST: Definitielijst
 DELETE: verwijderen
+DELETE_ALL_CACHE_FILES: Alle cachebestanden verwijderen
 DELETE_CLOSE: verwijderen / sluiten
 DELETE_COLUMN: kolom verwijderen
-DELETE_CONTENT_BLOCK: content-block verwijderen
 DELETE_PAGE: pagina verwijderen
 DELETE_ROW: rij verwijderen
 DELETE_USER: Gebruiker verwijderen
 DESCRIPTION: omschrijving
-DISCARD: weggooien
-DISCARD_CHANGES: Wijzigingen negeren
+DEVELOPER: Ontwikkelaar 
+DISABLE_HEADERS: Headers uitschakelen
+DISABLE_TYPEMILL_HEADERS_AND_SEND_YOUR_OWN: Schakel Typemill-headers uit en verzend uw eigen
+DISPLAY_APPLICATION_ERRORS: Applicatiefouten weergeven
 DO_YOU_REALLY_WANT_TO_DELETE_THE_USER: Wilt u de gebruiker echt verwijderen
 DO_YOU_REALLY_WANT_TO_DELETE_THIS_PAGE: Wilt u deze pagina echt verwijderen?
-DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES_AND_SET_THE_CONTENT_BACK_TO_THE_LIVE_VERSION: Wilt u uw wijzigingen annuleren en de inhoud terugzetten naar de live versie?
 DRAFT: Ontwerp
 DRAG_A_PICTURE_OR_CLICK_TO_SELECT: sleep een foto of klik om te selecteren
 DUTCH__FLEMISH: Dutch, Flemish
-EDIT: bewerken
-EDITOR: editor
-EDIT_USER: Gebruiker bewerken
-ENGLISH: English
-EXTERNAL_LINK: externe link
 E_G_: bijv.
 E_MAIL: e-mail
+EDIT: bewerken
+EDIT_USER: Gebruiker bewerken
+EDITOR: editor
+ENGLISH: English
+ERROR_REPORTING: Foutmelding
 FAVICON: Favicon
 FILE: File
 FILES: Files
 FIRST_NAME: Voornaam
 FOLDER: map
+FOR_ACCESS_THE_USER_MUST_HAVE_THIS_MINIMUM_ROLE: Voor toegang moet de gebruiker deze minimale rol hebben
 FORGOT_PASSWORD: Wachtwoord vergeten
 FORMAT: Formaat
 FRENCH: French
 GENERAL_PRESENTATION: General Presentation
 GERMAN: German
 GOOGLE_SITEMAP: Google Sitemap
-HAS_EDIT_RIGHTS_FOR_THIS_ARTICLE_: Has edit rights for this article.
 HEAD: Kop
 HEADLINE: Kop
 HEADLINE_ANCHORS: Headline Anchors
-HERO_IMAGE: Hero Image
-HIDE: Hide
-HIDE_PAGE_FROM_NAVIGATION: Hide page from navigation
 HOME: home
 HOMEPAGE: Homepage
 HORIZONTAL_LINE: Horizontale lijn
 HR: hr
-IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: Indien niet ingevuld, wordt de beschrijving uit de inhoud gehaald.
+IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT__THEN_THE_IMAGE_WILL_BE_CROPPED_: Als u een waarde voor de hoogte toevoegt, wordt de afbeelding bijgesneden.
 IMAGE: Afbeelding
 IMAGES: Images
-IMAGE_URL: Image URL
-IMAGE_URL_(READ_ONLY): Image URL (read only)
 ITALIAN: Italian
 ITALIC: cursief
 LANGUAGE: Taal
 LANGUAGE_ADMIN: Taal (admin-ui)
 LANGUAGE_ATTR: Taal Attribute (website)
-LAST_MODIFIED_LIVE_(READONLY): Last modified live (readonly)
 LAST_NAME: achternaam
 LEFT: Links
 LICENCE: Licentie
+LIKE_«EN»: like «en»
+LIMIT_THE_ACCESS_FOR_THE_WHOLE_WEBSITE_OR_FOR_EACH_PAGE_INDIVIDUALLY__IF_YOU_ACTIVATE_THE_WEBSITE_RESTRICTION_OR_THE_PAGE_RESTRICTIONS__THEN_SESSIONS_WILL_BE_USED_IN_FRONTEND_: Beperk de toegang voor de hele website of voor elke pagina afzonderlijk. Als u de websitebeperking of de paginabeperkingen activeert, worden sessies in de frontend gebruikt.
 LINK: Link
 LINK_TO_VIDEO: Link naar video
 LOGIN: Inloggen
 LOGO: Logo
 LOGOUT: Uitloggen
-MANUAL_DATE: Handmatige datum
 MARKDOWN: Markdown
-MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB__HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES_: Maximum size for an image is 5 MB. Hero images are not supported by all themes.
+MAXIMUM_SIZE_FOR_FILE_UPLOADS_IN_MB: Maximum size for file-uploads in MB
+MEDIA: Media
 MEMBER: Lid
 MENU: Menu
-META: Meta
-META_DESCRIPTION: Metabeschrijving
-META_TITLE: Metatitel
 MISSING_REQUIREMENTS: ontbrekende vereisten
 MOVE_VERTICAL: verplaats verticaal
-NAVIGATION_TITLE: Navigation Title
+NEW_HERE?_THEN_WATCH: New here? Then watch
 NEW_PASSWORD: Nieuw wachtwoord
-NONE: Geen
-NOTICE: Opmerking
-NOT_EDITABLE: niet bewerkbaar
 NO_DESCRIPTION: Geen beschrijving
 NO_PREVIEW: Geen voorbeeld
 NO_SETTINGS: Geen instellingen
+NONE: Geen
+NOT_EDITABLE: niet bewerkbaar
+NOTICE: Opmerking
 NUMBERED_LIST: Genummerde lijst
+OLD_SLUG_LOGIC: Old Slug Logic
 OLIST: olist
 ONLINE: online
 ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: "alleen de volgende speciale tekens zijn toegestaan:"
-OWNER_(USERNAME): owner (username)
+ONLY_THE_FOLLOWING_USERS_HAVE_ACCESS: Alleen de volgende gebruikers hebben toegang
+PAGE_RESTRICTIONS___ACTIVATE: Paginabeperkingen - Activeren 
+PAGE_RESTRICTIONS___CUT_RESTRICTED_CONTENT: Paginabeperkingen - Beperkte inhoud knippen 
+PAGE_RESTRICTIONS___NOTICE: Paginabeperkingen - Kennisgeving 
+PAGE_RESTRICTIONS___WRAP_NOTICE_INTO_A_BOX: Paginabeperkingen - Verpak kennisgeving in een doos 
 PARAGRAPH: Paragraaf
 PASSWORD: Wachtwoord
+PASSWORD_RECOVERY: Password Recovery
+PING_SITEMAP_AUTOMATICALLY: Ping sitemap automatically
+PING_SITEMAP_AUTOMATICALLY_AFTER_PUBLISHING_A_PAGE_: Ping sitemap automatically after publishing a page.
 PLEASE_CONFIRM: bevestig alstublieft
 PLEASE_CORRECT_THE_ERRORS_ABOVE: Corrigeer bovenstaande fouten
-PLUGINS: plug-ins
+PLEASE_USE_CODES_FROM: Please use codes from
+PLEASE_USE_THE_FOLLOWING_LINK_TO_CREATE_A_NEW_PASSWORD__THE_LINK_IS_VALID_FOR_24_HOURS: please use the following link to create a new password. The link is valid for 24 hours:
 PLUGIN_STORE: Plugin Store
+PLUGINS: plug-ins
 POWER_OFF: power-off
 PROFILE_IMAGE: Profiel afbeelding
-PUBLISH: Publiceren
+PROXY: Proxy
 QUOTE: Citeer
 QUOTES: Citeren
 RAW: rauw
 RAW_CONTENT_EDITOR: Ruwe Content Editor
 RAW_MARKDOWN_EDITOR: Ruwe Markdown Editor
-RAW_MODE: onbewerkte modus
 RAW_USERDATA_(READONLY_FOR_ADMINS): Ruwe Gebruikersdata (alleen lezen voor admins)
 READONLY: Alleen lezen
+RECOVER_PASSWORDS: Recover Passwords
+RECOVER_YOUR_PASSWORD: Recover your password
+RECREATE_CACHE: Recreate Cache
+RECREATE_CACHED_FILES: Recreate cached files
+REFRESH_CACHE: Refresh Cache
+REFRESH_THE_CACHE_AFTER_10_MINUTES__USE_THIS_IF_YOU_CHANGE_CONTENT_FILES_MANUALLY_E_G__WITH_FTP_: Refresh the cache after 10 minutes. Use this if you change content files manually e.g. with FTP.
 REGISTERED_USERS_ONLY: Alleen geregistreerde gebruikers
 REMEMBER_TO_BOOKMARK_THIS_PAGE: vergeet deze pagina niet te bookmarken
 REQUIRED: verplicht
@@ -159,45 +178,63 @@ RIGHT: Rechts
 ROLE: rol
 RUSSIAN: Russisch
 SAVE: Opslaan
-SAVED_SUCCESSFULLY: Succesvol opgeslagen
 SAVE_ALL_SETTINGS: Sla alle instellingen op
 SAVE_THEME: Thema opslaan
+SAVED_SUCCESSFULLY: Succesvol opgeslagen
+SECURITY_LOG: Security Log
 SELECT_FROM_MEDIALIB: Selecteer uit medialib 
+SELECT_THE_LOWEST_USERROLE__HIGHER_ROLES_WILL_HAVE_ACCESS_TOO_: Selecteer de laagste gebruikersrol. Hogere rollen hebben ook toegang. 
+SENDER_EMAIL: Sender email
 SETTINGS: Instellingen
 SETTINGS_ARE_STORED: Instellingen zijn opgeslagen
 SETUP: Instellen
+SHORTCODE: Shortcode
 SHOW_ANCHORS_NEXT_TO_HEADLINES: Ankers naast koppen weergeven
+SHOW_ANCHORS_NEXT_TO_HEADLINES_IN_FRONTEND: Show anchors next to headlines in frontend
+SHOW_THE_WEBSITE_ONLY_TO_AUTHENTICATED_USERS_AND_REDIRECT_ALL_OTHER_USERS_TO_THE_LOGIN_PAGE_: Toon de website alleen aan geverifieerde gebruikers en stuur alle andere gebruikers door naar de inlogpagina. 
 STANDARD_EDITOR_MODE: Standaardeditormodus
+STANDARD_HEIGHT_FOR_IMAGES: Standaard hoogte voor afbeeldingen
+STANDARD_WIDTH_FOR_IMAGES: Standaardbreedte voor afbeeldingen 
 START: Start
+SUBJECT: Subject
 SYSTEM: Systeem
 TABLE: Tabel
 TABLE_OF_CONTENTS: Inhoudsopgave
 TAKEN_FROM_YOUR_USER_ACCOUNT_IF_SET_: Genomen uit uw gebruikersaccount indien ingesteld.
 TERM: term
+TEXT_BEFORE_THE_RECOVER_LINK_IN_THE_EMAIL_MESSAGE: Text before the recover link in the email message
 TEXT_FILE: tekstbestand
-THEMES: Themes
-THEME_STORE: Theme Store
+THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: "De volgende opties zijn alleen voor ontwikkelaars en ervaren beheerders. Wijzig de opties alleen als u ze echt begrijpt. Bijvoorbeeld: Activeer nooit de foutrapportage voor een live website, gebruik deze optie alleen voor het oplossen van fouten."
 THE_FORMAT_BUTTONS: De opmaakknoppen
+THE_MAXIMUM_FILE_SIZE_MIGHT_BE_LIMITED_BY_YOUR_SERVER_SETTINGS_: The maximum file size might be limited by your server settings.
+THE_VIDEO_TUTORIAL: the video-tutorial
+THEME_STORE: Theme Store
+THEMES: Themes
+THIS_APPLIES_ONLY_FOR_FUTURE_IMAGES_IN_THE_CONTENT_AREA_: Dit geldt alleen voor toekomstige afbeeldingen in het inhoudsgebied.
 TITLE: Titel
 TOC: Toc
 TOP: Top
+TRUSTED_IPS_FOR_PROXY_(COMMA_SEPARATED): Vertrouwde IP's voor proxy (gescheiden door komma's) 
+TWIG_CACHE: Twig Cache
 TYPEMILL_DESCRIPTION: Het standaardthema voor typemill. Responsief, minimaal en zonder afhankelijkheden. Het gebruikt de systeemlettertypen Calibri en Helvetica. Er is geen JavaScript gebruikt.
 ULIST: ulist
 UNKNOWN: onbekend
 UPDATE_USER: Gebruiker bijwerken
 UPLOAD: Upload
-UPLOAD_AN_IMAGE: Upload een afbeelding
 UPLOAD_FILE: Upload een bestand
+UPLOAD_SVG_IMAGES: Upload svg images
 UPS__WRONG_PASSWORD_OR_USERNAME__PLEASE_TRY_AGAIN_: Oops, verkeerd wachtwoord of gebruikersnaam, probeer het opnieuw.
-USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Gebruikt als fallback als er geen handmatige datum is ingesteld.
-USER: Gebruiker
-USERNAME: Gebruikersnaam
-USERNAME_(READ_ONLY): Gebruikersnaam (alleen lezen) 
-USERS: Gebruikers
 USE_2_TO_20_CHARACTERS: Gebruik 2 tot 20 tekens.
 USE_2_TO_40_CHARACTERS: Gebruik 2 tot 40 tekens.
 USE_A_VALID_LANGUAGE_ATTRIBUTE: Gebruik een geldig taalkenmerk 
 USE_A_VALID_YEAR: Gebruik een geldig jaar
+USE_MARKDOWN: gebruik markdown
+USE_THE_OLD_LOGIC_FROM_VERSIONS_<_1_5_0_TO_CREATE_THE_SLUG: Use the old logic from versions < 1.5.0 to create the slug
+USE_X_FORWARDED_HEADERS: Gebruik X-Forwarded Headers
+USER: Gebruiker
+USERNAME: Gebruikersnaam
+USERNAME_(READ_ONLY): Gebruikersnaam (alleen lezen) 
+USERS: Gebruikers
 VIDEO: Video
 VIEW_SITE: Site bekijken
 VISUAL: visual
@@ -207,12 +244,60 @@ VISUAL_MARKDOWN_EDITOR: Visual Markdown Editor
 VISUAL_MODE: visuele modus
 WAIT: wacht
 WEB: Web
+WEBSITE_RESTRICTION: Websitebeperking
 WEBSITE_TITLE: Titel van de website
 WEBSITE_VISIBLE_FOR: Website visible for
+WRAP_THE_RESTRICTION_NOTICE_ABOVE_INTO_A_NOTICE_4_ELEMENT_(WHICH_CAN_BE_DESIGNED_AS_SPECIAL_BOX): Wikkel de beperkingskennisgeving hierboven in een bericht-4-element (dat kan worden ontworpen als een speciaal vak) 
 WRITING: Schrijven
 YEAR: Jaar
 YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: Je kunt de thema-css hier overschrijven met je eigen css. 
+YOU_CAN_PING_THE_SITEMAP_WITH_THE_FOLLOWING_LINKS_TO: You can ping the sitemap with the following links to
 
+# ↓ Creating & editing content ↓
+ADD: toevoegen
+ADD_CONTENT_BLOCK: inhoudblok toevoegen
+ADD_NOINDEX_TAG_AND_EXCLUDE_FROM_SITEMAP: Add noindex tag and exclude from sitemap
+ALTERNATIVE_TEXT_FOR_THE_HERO_IMAGE: Alternative Text for the hero image
+ARTICLE_DATE: Article Date
+AUTHOR: Auteur
+CAN_BE_USED_FOR_AUTHOR_LINE_IN_FRONTEND_: Can be used for author line in frontend.
+CHANGE_SLUG: change slug
+CONTENT: Inhoud
+CREATED_AT_(READ_ONLY): Created at (readonly)
+CREATED_AT_(READONLY): Created at (read only)
+DELETE_CONTENT_BLOCK: content-block verwijderen
+DISCARD: weggooien
+DISCARD_CHANGES: Wijzigingen negeren
+DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES_AND_SET_THE_CONTENT_BACK_TO_THE_LIVE_VERSION: Wilt u uw wijzigingen annuleren en de inhoud terugzetten naar de live versie?
+EXTERNAL_LINK: externe link
+GLOSSARY_LIST_(ONLY_FOR_FOLDERS): Glossary List (only for folders)
+GLOSSARY_STYLE: Glossary Style
+HAS_EDIT_RIGHTS_FOR_THIS_ARTICLE_: Has edit rights for this article.
+HERO_IMAGE: Hero Image
+HIDE: Hide
+HIDE_PAGE_FROM_NAVIGATION: Hide page from navigation
+IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: Indien niet ingevuld, wordt de beschrijving uit de inhoud gehaald.
+IMAGE_URL: Image URL
+IMAGE_URL_(READ_ONLY): Image URL (read only)
+LAST_MODIFIED_LIVE_(READONLY): Last modified live (readonly)
+LIST_PAGES_OR_POSTS_OF_THIS_FOLDER_AS_GLOSSARY_(ONLY_FOR_FOLDERS): List pages or posts of this folder as glossary (only for folders)
+MANUAL_DATE: Handmatige datum
+MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB__HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES_: Maximum size for an image is 5 MB. Hero images are not supported by all themes.
+META: Meta
+META_CONTENT: Meta-Content
+META_DESCRIPTION: Metabeschrijving
+META_TITLE: Metatitel
+NAVIGATION_TITLE: Navigation Title
+NOINDEX: Noindex
+OWNER_(USERNAME): owner (username)
+PUBLISH: Publiceren
+RAW_MODE: onbewerkte modus
+SLUG___NAME_IN_URL: Slug / Name in URL
+UPLOAD_AN_IMAGE: Upload een afbeelding
+USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Gebruikt als fallback als er geen handmatige datum is ingesteld.
+VISIBILITY: Visibility
+
+# ↓ Installation ↓
 ADD_NEW_FEATURES_TO_YOUR_WEBSITE_WITH_PLUGINS_AND_CONFIGURE_THEM_: Voeg nieuwe functies toe aan uw website met plug-ins en configureer ze. 
 BY_THE: door de
 CHOOSE_A_THEME_FOR_YOUR_WEBSITE_AND_CONFIGURE_THE_THEME_DETAILS_: Kies een thema voor uw website en configureer de themadetails. 
@@ -230,39 +315,3 @@ SETUP_WELCOME: Installatie Welkom
 TRENDSCHAU_DIGITAL: Trendschau Digital
 VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: Ga naar het auteurspaneel en stel uw nieuwe website in. U kunt het systeem configureren, thema's kiezen en plug-ins toevoegen.
 YOUR_ACCOUNT_HAS_BEEN_CREATED_AND_YOU_ARE_LOGGED_IN_NOW_: Uw account is aangemaakt en u bent nu ingelogd.
-
-ACCESS_CONTROL: Toegangscontrole
-ACTIVATE_INDIVIDUAL_RESTRICTIONS_FOR_PAGES_IN_THE_META_TAB_OF_EACH_PAGE_: Activeer individuele beperkingen voor pagina's in de meta-tab van elke pagina. 
-ADD_ONE_OR_MORE_USERNAMES_SEPARATED_WITH_COMMA_: Voeg een of meer gebruikersnamen toe, gescheiden door komma's. 
-CUT_RESTRICTED_CONTENT_AFTER_THE_FIRST_HR_ELEMENT_ON_A_PAGE_(PER_DEFAULT_CONTENT_WILL_BE_CUT_AFTER_TITLE)_: Beperkte inhoud knippen na het eerste hr-element op een pagina (standaard wordt inhoud na titel geknipt). 
-FOR_ACCESS_THE_USER_MUST_HAVE_THIS_MINIMUM_ROLE: Voor toegang moet de gebruiker deze minimale rol hebben
-LIMIT_THE_ACCESS_FOR_THE_WHOLE_WEBSITE_OR_FOR_EACH_PAGE_INDIVIDUALLY__IF_YOU_ACTIVATE_THE_WEBSITE_RESTRICTION_OR_THE_PAGE_RESTRICTIONS__THEN_SESSIONS_WILL_BE_USED_IN_FRONTEND_: Beperk de toegang voor de hele website of voor elke pagina afzonderlijk. Als u de websitebeperking of de paginabeperkingen activeert, worden sessies in de frontend gebruikt.
-ONLY_THE_FOLLOWING_USERS_HAVE_ACCESS: Alleen de volgende gebruikers hebben toegang
-PAGE_RESTRICTIONS___ACTIVATE: Paginabeperkingen - Activeren 
-PAGE_RESTRICTIONS___CUT_RESTRICTED_CONTENT: Paginabeperkingen - Beperkte inhoud knippen 
-PAGE_RESTRICTIONS___NOTICE: Paginabeperkingen - Kennisgeving 
-PAGE_RESTRICTIONS___WRAP_NOTICE_INTO_A_BOX: Paginabeperkingen - Verpak kennisgeving in een doos 
-SELECT_THE_LOWEST_USERROLE__HIGHER_ROLES_WILL_HAVE_ACCESS_TOO_: Selecteer de laagste gebruikersrol. Hogere rollen hebben ook toegang. 
-SHOW_THE_WEBSITE_ONLY_TO_AUTHENTICATED_USERS_AND_REDIRECT_ALL_OTHER_USERS_TO_THE_LOGIN_PAGE_: Toon de website alleen aan geverifieerde gebruikers en stuur alle andere gebruikers door naar de inlogpagina. 
-USE_MARKDOWN: gebruik markdown
-WEBSITE_RESTRICTION: Websitebeperking
-WRAP_THE_RESTRICTION_NOTICE_ABOVE_INTO_A_NOTICE_4_ELEMENT_(WHICH_CAN_BE_DESIGNED_AS_SPECIAL_BOX): Wikkel de beperkingskennisgeving hierboven in een bericht-4-element (dat kan worden ontworpen als een speciaal vak) 
-
-ACTIVATE_CACHE_FOR_TWIG_TEMPLATES: Cache activeren voor Twig-sjablonen 
-ADD_MORE_URL_SCHEMES_FOR_EXTERNAL_LINKS_E_G__LIKE_DICT://_(COMMA_SEPARATED_LIST): Voeg meer url-schema's toe voor externe links, b.v. zoals dict:// (door komma's gescheiden lijst) 
-CLEAR_CACHE: Cache wissen
-DELETE_ALL_CACHE_FILES: Alle cachebestanden verwijderen
-DEVELOPER: Ontwikkelaar 
-DISABLE_HEADERS: Headers uitschakelen
-DISABLE_TYPEMILL_HEADERS_AND_SEND_YOUR_OWN: Schakel Typemill-headers uit en verzend uw eigen
-DISPLAY_APPLICATION_ERRORS: Applicatiefouten weergeven
-ERROR_REPORTING: Foutmelding
-IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT__THEN_THE_IMAGE_WILL_BE_CROPPED_: Als u een waarde voor de hoogte toevoegt, wordt de afbeelding bijgesneden.
-PROXY: Proxy
-STANDARD_HEIGHT_FOR_IMAGES: Standaard hoogte voor afbeeldingen
-STANDARD_WIDTH_FOR_IMAGES: Standaardbreedte voor afbeeldingen 
-THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: "De volgende opties zijn alleen voor ontwikkelaars en ervaren beheerders. Wijzig de opties alleen als u ze echt begrijpt. Bijvoorbeeld: Activeer nooit de foutrapportage voor een live website, gebruik deze optie alleen voor het oplossen van fouten."
-THIS_APPLIES_ONLY_FOR_FUTURE_IMAGES_IN_THE_CONTENT_AREA_: Dit geldt alleen voor toekomstige afbeeldingen in het inhoudsgebied.
-TRUSTED_IPS_FOR_PROXY_(COMMA_SEPARATED): Vertrouwde IP's voor proxy (gescheiden door komma's) 
-TWIG_CACHE: Twig Cache
-USE_X_FORWARDED_HEADERS: Gebruik X-Forwarded Headers
