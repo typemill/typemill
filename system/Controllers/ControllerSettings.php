@@ -1090,12 +1090,12 @@ class ControllerSettings extends ControllerShared
 	private function getLanguages()
 	{
 		return array(
-			'en' => 'English',
-			'ru' => 'Russian',
 			'nl' => 'Dutch, Flemish',
+			'en' => 'English',
+			'fr' => 'French',
 			'de' => 'German',
 			'it' => 'Italian',
-			'fr' => 'French',
+			'ru' => 'Russian',
 		);
 	}
 
