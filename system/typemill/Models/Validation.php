@@ -40,7 +40,7 @@ class Validation
 		Validator::addRule('emailAvailable', function($field, $value, array $params, array $fields) use ($user)
 		{
 			$email = trim($value);
-			if($user->findUsersByEmail($email)){ return false; }
+			if($email == '' OR $user->findUsersByEmail($email)){ return false; }
 			return true;
 		}, 'taken');
 
@@ -163,6 +163,29 @@ class Validation
 			}
 			return false;
 		}, 'not secure. For code please use markdown `inline-code` or ````fenced code blocks````.');
+
+		Validator::addRule('checkLicense', function($field, $value, array $params, array $fields)
+		{
+			$parts = explode("-",$value);
+			if(count($parts) != 5)
+			{
+				return false;
+			}
+			if($parts[0] != "TM2")
+			{
+				return false;
+			}
+			unset($parts[0]);
+			foreach($parts as $key => $part)
+			{
+				if(strlen($part) != 5 OR !preg_match("/^[A-Z0-9]*$/",$part) )
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}, 'format is not valid.');
 	}
 
 	# return valitron standard object
@@ -171,6 +194,15 @@ class Validation
 		return new Validator($params);
 	}
 
+	public function returnFirstValidationErrors($errors)
+	{
+		foreach($errors as $key => $error)
+		{
+			$errors[$key] = $error[0];
+		}
+
+		return $errors;
+	}
 
 	/**
 	* validation for signup form
@@ -204,12 +236,12 @@ class Validation
 	* @return obj $v the validation object passed to a result method.
 	*/
 	
-	public function newUser(array $params, $userroles)
+	public function newUser(array $params, array $userroles)
 	{
 		$v = new Validator($params);
 		$v->rule('required', ['username', 'email', 'password'])->message("required");
 		$v->rule('alphaNum', 'username')->message("invalid characters");
-		$v->rule('lengthBetween', 'password', 5, 20)->message("Length between 5 - 20");
+		$v->rule('lengthBetween', 'password', 5, 40)->message("Length between 5 - 40");
 		$v->rule('lengthBetween', 'username', 3, 20)->message("Length between 3 - 20"); 
 		$v->rule('userAvailable', 'username')->message("User already exists");
 		$v->rule('noHTML', 'firstname')->message(" contains HTML");
@@ -220,7 +252,12 @@ class Validation
 		$v->rule('emailAvailable', 'email')->message("Email already taken");
 		$v->rule('in', 'userrole', $userroles);
 		
-		return $this->validationResult($v);
+		if($v->validate()) 
+		{
+			return true;
+		}
+
+		return $v->errors();
 	}
 	
 	public function existingUser(array $params, $userroles)
@@ -306,6 +343,30 @@ class Validation
 		
 		return $this->validationResult($v);
 	}
+
+	/**
+	* validation for changing the password api case
+	* 
+	* @param array $params with form data.
+	* @return obj $v the validation object passed to a result method.
+	*/
+	
+	public function newLicense(array $params)
+	{
+		$v = new Validator($params);
+		$v->rule('required', ['license', 'email', 'domain']);
+		$v->rule('checkLicense', 'license');
+		$v->rule('email', 'email');
+		$v->rule('url', 'domain');
+		
+		if($v->validate()) 
+		{
+			return true;
+		}
+
+		return $v->errors();
+	}
+
 
 	/**
 	* validation for system settings
@@ -499,47 +560,65 @@ class Validation
 
 		switch($fieldDefinitions['type'])
 		{
-			case "select":
-				/* create array with option keys as value */
-				$options = array();
-				foreach($fieldDefinitions['options'] as $key => $value){ $options[] = $key; }
-				$v->rule('in', $fieldName, $options);
-				break;
-			case "radio":
-				$v->rule('in', $fieldName, $fieldDefinitions['options']);
-				break;
-			case "checkboxlist":				
-				if(isset($fieldValue) && is_array($fieldValue))
-				{
-					/* create array with option keys as value */
-					$options = array();
-					foreach($fieldDefinitions['options'] as $key => $value){ $options[] = $key; }
-
-					/* loop over input values and check, if the options of the field definitions (options for checkboxlist) contains the key (input from user, key is used as value, value is used as label) */
-					foreach($fieldValue as $key => $value)
-					{
-						$v->rule('in', $key, $options);
-					}
-				}
-				break;
-			case "color":
-				$v->rule('regex', $fieldName, '/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/');
-				break;
-			case "email":
-				$v->rule('email', $fieldName);
-				break;
-			case "date":
-				$v->rule('date', $fieldName);
-				break;
 			case "checkbox":
 				if(isset($fieldDefinitions['required']))
 				{
 				 	$v->rule('accepted', $fieldName);
 				}
 				break;
-			case "url":
-				$v->rule('url', $fieldName);
-				$v->rule('lengthMax', $fieldName, 200);
+			case "checkboxlist":				
+				if(isset($fieldValue) && is_array($fieldValue))
+				{
+					# create array with option keys as value
+					$options = array();
+					foreach($fieldDefinitions['options'] as $key => $value){ $options[] = $key; }
+
+					# loop over input values and check, if the options of the field definitions (options for checkboxlist) contains the key (input from user, key is used as value, value is used as label)
+					foreach($fieldValue as $key => $value)
+					{
+						$v->rule('in', $key, $options);
+					}
+				}
+				break;
+			case "code":
+				$v->rule('lengthMax', $fieldName, 10000);
+				break;
+			case "color":
+				$v->rule('regex', $fieldName, '/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/');
+				break;
+			case "customfields":
+				$v->rule('array', $fieldName);
+				$v->rule('customfields', $fieldName);
+				break;
+			case "date":
+				$v->rule('date', $fieldName);
+				break;
+			case "email":
+				$v->rule('email', $fieldName);
+				break;
+			case "image":
+				$v->rule('noHTML', $fieldName);
+				$v->rule('lengthMax', $fieldName, 1000);
+				$v->rule('image_types', $fieldName);
+				break;
+			case "number":
+				$v->rule('integer', $fieldName);
+				break;
+			case "paragraph":
+				$v->rule('noHTML', $fieldName);
+				$v->rule('lengthMax', $fieldName, 10000);
+				break;
+			case "password":
+				$v->rule('lengthMax', $fieldName, 100);
+				break;
+			case "radio":
+				$v->rule('in', $fieldName, $fieldDefinitions['options']);
+				break;
+			case "select":
+				# create array with option keys as value
+				$options = array();
+				foreach($fieldDefinitions['options'] as $key => $value){ $options[] = $key; }
+				$v->rule('in', $fieldName, $options);
 				break;
 			case "text":
 				$v->rule('noHTML', $fieldName);
@@ -558,22 +637,10 @@ class Validation
 					$v->rule('lengthMax', $fieldName, 10000);
 				}
 				break;
-			case "paragraph":
-				$v->rule('noHTML', $fieldName);
-				$v->rule('lengthMax', $fieldName, 10000);
+			case "url":
+				$v->rule('url', $fieldName);
+				$v->rule('lengthMax', $fieldName, 200);
 				break;
-			case "password":
-				$v->rule('lengthMax', $fieldName, 100);
-				break;
-			case "image":
-				$v->rule('noHTML', $fieldName);
-				$v->rule('lengthMax', $fieldName, 1000);
-				$v->rule('image_types', $fieldName);
-				break;
-			case "customfields":
-				$v->rule('array', $fieldName);
-				$v->rule('customfields', $fieldName);
-				break;			
 			default:
 				$v->rule('lengthMax', $fieldName, 1000);
 				$v->rule('regex', $fieldName, '/^[\pL0-9_ \-]*$/u');
@@ -585,8 +652,6 @@ class Validation
 		}
 		
 		return true;
-
-		return $this->validationResult($v);
 	}
 	
 	/**

@@ -19,6 +19,8 @@
 		<link rel="stylesheet" href="{{ base_url() }}/system/typemill/author/css/output.css?v={{ settings.version }}" />
 		<link rel="stylesheet" href="{{ base_url() }}/system/typemill/author/css/custom.css?v={{ settings.version }}" />
 		
+		{% block stylesheet %}{% endblock %}
+
 		{{ assets.renderCSS() }}
 		
 	</head>
@@ -36,7 +38,7 @@
 			<aside class="w-1/4">
 				{% include 'partials/systemNavi.twig' %}
 			</aside>
-			<article class="w-3/4 bg-stone-50 drop-shadow-md p-8">
+			<article class="w-3/4 bg-stone-50 shadow-md p-8">
 				{% block content %}{% endblock %}
 			</article>
 		</div>
@@ -49,7 +51,7 @@
 
 		<script>
 			
-			const data = {{ jsdata | json_encode() | raw  }}
+			const data = {{ jsdata | json_encode() | raw  }};
 			const labels = {{ translations|json_encode() }};
 
 		</script>

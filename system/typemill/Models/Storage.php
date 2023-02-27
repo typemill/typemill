@@ -4,13 +4,42 @@ namespace Typemill\Models;
 
 class Storage
 {
-	protected $basepath;
-
 	public $error = false;
+
+	protected $basepath = false;
+
+	protected $tmpFolder = false;
+
+	protected $originalFolder = false;
+
+	protected $liveFolder = false;
+
+	protected $thumbsFolder = false;
+
+	protected $customFolder = false;
+
+	protected $fileFolder = false;
 
 	public function __construct()
 	{
-		$this->basepath 	= getcwd() . DIRECTORY_SEPARATOR;
+		$this->basepath 		= getcwd() . DIRECTORY_SEPARATOR;
+
+		$this->tmpFolder 		= $this->basepath . 'media' . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
+
+		$this->originalFolder 	= $this->basepath . 'media' . DIRECTORY_SEPARATOR . 'original' . DIRECTORY_SEPARATOR;
+
+		$this->liveFolder  		= $this->basepath . 'media' . DIRECTORY_SEPARATOR . 'live' . DIRECTORY_SEPARATOR;
+
+		$this->thumbsFolder		= $this->basepath . 'media' . DIRECTORY_SEPARATOR . 'thumbs' . DIRECTORY_SEPARATOR;
+
+		$this->customFolder		= $this->basepath . 'media' . DIRECTORY_SEPARATOR . 'custom' . DIRECTORY_SEPARATOR;
+
+		$this->fileFolder 		= $this->basepath . 'media' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR;
+	}
+
+	public function getError()
+	{
+		return $this->error;
 	}
 
 	public function checkFolder($folder)
@@ -123,22 +152,173 @@ class Storage
 		return true;
 	}
 
-	public function deleteFile($filepath)
+	public function deleteFile($folder, $filename)
 	{
-		if($this->checkFileWithPath($filepath))
+		if($this->checkFile($folder, $filename))
 		{
-			unlink($this->basePath . $filepath);
-			return true;
+			if(unlink($this->basepath . $folder . DIRECTORY_SEPARATOR . $filename))
+			{
+				return true;
+			}
+
+			$this->error = "We found the file but could not delete $filename";
 		}
+
 		return false;
 	}
 
-	public function getError()
+	public function moveFile()
 	{
-		return $this->error;
+
+	}
+
+	/**
+	 * Get the a yaml file.
+	 * @param string $fileName is the name of the Yaml Folder.
+	 * @param string $yamlFileName is the name of the Yaml File.
+	 */
+	public function getYaml($folderName, $yamlFileName)
+	{
+		$yaml = $this->getFile($folderName, $yamlFileName);
+		
+		if($yaml)
+		{
+			return \Symfony\Component\Yaml\Yaml::parse($yaml);
+		}
+
+		return false;
+	}
+
+	/**
+	 * Writes a yaml file.
+	 * @param string $fileName is the name of the Yaml Folder.
+	 * @param string $yamlFileName is the name of the Yaml File.
+	 * @param array $contentArray is the content as an array.
+	 */	
+	public function updateYaml($folderName, $yamlFileName, $contentArray)
+	{
+		$yaml = \Symfony\Component\Yaml\Yaml::dump($contentArray,6);
+		if($this->writeFile($folderName, $yamlFileName, $yaml))
+		{
+			return true;
+		}
+
+		return false;
 	}
 
 
+	public function createUniqueImageName($filename, $extension)
+	{
+		$defaultfilename = $filename;
+	
+		$suffix = 1;
+
+		while(file_exists($this->originalFolder . $filename . '.' . $extension))
+		{
+			$filename = $defaultfilename . '-' . $suffix;
+			$suffix++;
+		}
+
+		return $filename;
+	}
+
+	public function publishImage($name)
+	{
+		$pathinfo = pathinfo($name);
+		if(!$pathinfo)
+		{
+			$this->errors[] = 'Could not read pathinfo.';
+
+			return false;
+		}
+
+		$extension 	= isset($pathinfo['extension']) ? strtolower($pathinfo['extension']) : false;
+		$imagename 	= isset($pathinfo['filename']) ? $pathinfo['filename'] : false;
+
+		$imagesInTmp = glob($this->tmpFolder . "*$imagename.*"); 
+		if(empty($imagesInTmp) OR !$imagesInTmp)
+		{
+			$this->errors[] = "We did not find the image in the tmp-folder or could not read it.";
+			return false;
+		}
+
+		# case: image is not published yet and in tmp
+		foreach( $imagesInTmp as $imagepath)
+		{
+			$tmpimagename 		= explode("+", basename($imagepath));
+			$destinationfolder	= strtolower($tmpimagename[0]);
+			$filename 			= $tmpimagename[1];
+
+			switch($destinationfolder)
+			{
+				case 'original':
+					if(!rename($imagepath, $this->originalFolder . $filename))
+					{
+						$this->errors[] = "We could not store the original image to the original folder";
+					}
+					break;
+				case 'live':
+					if(!rename($imagepath, $this->liveFolder . $filename))
+					{
+						$this->errors[] = "We could not store the live image to the live folder";
+					}
+					break;
+				case 'thumbs':
+					if(!rename($imagepath, $this->thumbsFolder . $filename))
+					{
+						$this->errors[] = "We could not store the thumb to the thumb folder";
+					}
+					break;
+			}
+		}
+
+		if(empty($this->errors))
+		{
+			# return true;
+			return 'media/live/' . $imagename . '.' . $extension;
+		}
+
+		return false;
+	}
+
+	# check if an image exists in the live folder or in the original folder independent from extension
+	public function checkImage($imagepath)
+	{
+		$original 	= stripos($imagepath, '/original/');
+		$live 		= stripos($imagepath, '/live/');
+
+		$pathinfo = pathinfo($imagepath);
+		if(!$pathinfo)
+		{
+			$this->errors[] = 'Could not read pathinfo.';
+
+			return false;
+		}
+
+		$extension 	= isset($pathinfo['extension']) ? strtolower($pathinfo['extension']) : false;
+		$imagename 	= isset($pathinfo['filename']) ? $pathinfo['filename'] : false;
+		$newpath 	= false;
+
+		if($original)
+		{
+			$image 	= glob($this->originalFolder . "$imagename.*");
+			if(isset($image[0]))
+			{
+				$newpath = 'media/original/' . basename($image[0]);
+			}
+		}
+		elseif($live)
+		{
+			$image 	= glob($this->liveFolder . "$imagename.*");
+			if(isset($image[0]))
+			{
+				$newpath = 'media/live/' . basename($image[0]);
+			}
+		}
+
+		return $newpath;
+
+	}
 
 /*
 	public function checkPath($folder)

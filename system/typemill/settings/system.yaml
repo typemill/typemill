@@ -52,7 +52,7 @@ fieldsetsystem:
       type: text
       label: Google sitemap (readonly)
       css: w-half
-      readonly: true
+      disabled: true
       description: You can ping the sitemap with the following links to google and bing
     pingsitemap:
       type: checkbox
@@ -64,37 +64,42 @@ fieldsetmedia:
   legend: Media
   fields:
     logo:
-      type: text
+      type: image
       label: Logo
-      css: w-half
-      maxlength: 60
     favicon:
-      type: text
+      type: image
       label: Favicon
+    liveimagewidth:
+      type: number
+      label: Standard width for live pictures
+      placeholder: 820
+      description: Default width of live images is 820px. Changes will apply to future uploads.
       css: w-half
-      maxlength: 60
-    width:
-      type: text
-      label: Standard width for images
-      description: This applies only for future images in the content area.
-      css: w-half
-      maxlength: 60
-    height:
-      type: text
-      label: Standard height for images
+    liveimageheight:
+      type: number
+      label: Standard height for live pictures
       description: If you add a value for the height, then the image will be cropped.
       css: w-half
-      maxlength: 60
-    svg:
-      type: checkbox
-      label: Upload svg images
-      checkboxlabel: Allow upload of svg images (svg can be malicious, use trusted sources)
-      css: w-full
-    maxuploadsize:
+    maximageuploads:
       type: number
-      label: Maximum size for file-uploads in MB
+      label: Maximum size for image uploads in MB
+      description: The maximum image size might be limited by your server settings.
+      css: w-full
+    allowsvg:
+      type: checkbox
+      label: Allow svg
+      checkboxlabel: Allow the upload of svg images
+      css: w-full
+    convertwebp:
+      type: checkbox
+      label: Convert to webp
+      checkboxlabel: Try to convert uploaded images into the webp-format
+      css: w-full
+    maxfileuploads:
+      type: number
+      label: Maximum size for file uploads in MB
       description: The maximum file size might be limited by your server settings.
-      css: w-half
+      css: w-full
 fieldsetwriting:
   type: fieldset
   legend: Writing
@@ -229,34 +234,4 @@ fieldsetdeveloper:
       type: checkbox
       label: Disable headers
       checkboxlabel: Disable the typemill headers and send your owwn
-      css: w-full
-fieldsetapi:
-  type: fieldset
-  legend: API
-  fields:
-    api:
-      type: checkbox
-      label: Activate api
-      checkboxlabel: Activate the api
-      css: w-full
-    apikey:
-      type: text
-      label: Api key
-      css: w-full
-    apirole:
-      type: select
-      label: Api role
-      css: w-full
-      options:
-        'admin': 'admin'
-        'editor': 'editor'
-        'author': 'author'
-        'member': 'member'
-fieldsetlicence:
-  type: fieldset
-  legend: Licence
-  fields:
-    licencekey:
-      type: text
-      label: Your licence for maker or business features
       css: w-full

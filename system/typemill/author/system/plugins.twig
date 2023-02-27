@@ -11,9 +11,11 @@
 
 {% block javascript %}
 
-	<script src="{{ base_url() }}/system/typemill/author/js/vue-plugins.js?v={{ settings.version }}"></script>		
-	<script src="{{ base_url() }}/system/typemill/author/js/vue-translate.js?v={{ settings.version }}"></script>		
+	<script src="{{ base_url() }}/system/typemill/author/js/highlight.min.js?v={{ settings.version }}"></script>
+	<script src="{{ base_url() }}/system/typemill/author/js/vue-plugins.js?v={{ settings.version }}"></script>
+	<script src="{{ base_url() }}/system/typemill/author/js/vue-translate.js?v={{ settings.version }}"></script>
 	<script src="{{ base_url() }}/system/typemill/author/js/vue-shared.js?v={{ settings.version }}"></script>
+
 	<script>
 		app.mount('#plugins');
 	</script>

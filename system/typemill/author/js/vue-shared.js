@@ -26,22 +26,17 @@ app.component('component-text', {
 
 app.component('component-textarea', {
 	props: ['id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'css', 'value', 'errors'],
-	data: function () {
-		return {
-			textareaclass: ''
-		 }
-	},
 	template: `<div :class="css ? css : 'w-full'" class="mt-5 mb-5">
 				<label :for="name" class="block mb-1 font-medium">{{ $filters.translate(label) }}</label>
 				<textarea rows="8" class="w-full border border-stone-300 bg-stone-200 px-2 py-3"
 					:id="id"
-					:class="textareaclass"
+					:class="css"
 					:readonly="readonly"
 					:required="required"  
 					:disabled="disabled"  
 					:name="name"
 					:placeholder="placeholder"
-					:value="formatValue(value)"
+					:value="value"
 					@input="update($event, name)"></textarea>
 			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
 			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
@@ -53,12 +48,77 @@ app.component('component-textarea', {
 		},
 		formatValue: function(value)
 		{
+			/*
 			if(value !== null && typeof value === 'object')
 			{
 				this.textareaclass = 'codearea';
 				return JSON.stringify(value, undefined, 4);
 			}
 			return value;
+			*/
+		},
+	},
+})
+
+app.component('component-codearea', {
+	props: ['id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'css', 'value', 'errors'],
+	data: function() {
+		return {
+			highlighted: '',
+		}
+	},
+	template: `<div :class="css ? css : 'w-full'" class="plain mt-5 mb-5">
+				<label :for="name" class="block mb-1 font-medium">{{ $filters.translate(label) }}</label>
+				<div class="codearea">
+					<textarea data-el="editor" class="editor" ref="editor" 
+						:id="id"
+						:readonly="readonly"
+						:required="required"  
+						:disabled="disabled"  
+						:name="name"
+						:placeholder="placeholder"
+						:value="value"
+						@input="update($event, name)"></textarea>
+						<pre aria-hidden="true" class="highlight hljs"><code data-el="highlight" v-html="highlighted"></code></pre>
+					</div>
+			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
+			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
+			  </div>`,
+	mounted: function()
+	{
+		this.resizeCodearea();
+		this.highlight(this.value);
+	},
+	methods: {
+		update: function($event, name)
+		{
+			this.highlight($event.target.value);
+			this.resizeCodearea();
+			eventBus.$emit('forminput', {'name': name, 'value': $event.target.value});
+		},
+		resizeCodearea: function()
+		{
+			let codeeditor = this.$refs["editor"];
+
+			window.requestAnimationFrame(() => {
+				codeeditor.style.height = '200px';
+				if (codeeditor.scrollHeight > 200)
+				{
+					codeeditor.style.height = `${codeeditor.scrollHeight + 2}px`;
+				}
+			});
+		},
+		highlight: function(code)
+		{
+			if(code === undefined)
+			{
+				return;
+			}
+
+			window.requestAnimationFrame(() => {
+				highlighted = hljs.highlightAuto(code, ['xml','css','yaml','markdown']).value;
+				this.highlighted = highlighted;
+			});
 		},
 	},
 })
@@ -90,6 +150,11 @@ app.component('component-select', {
 
 app.component('component-checkbox', {
 	props: ['id', 'description', 'readonly', 'required', 'disabled', 'label', 'checkboxlabel', 'name', 'type', 'css', 'value', 'errors'],
+	data() {
+		return {
+	    	checked: false
+		}
+	},
 	template: `<div :class="css ? css : 'w-full'" class="mt-5 mb-5">
 				<div class="block mb-1 font-medium">{{ $filters.translate(label) }}</div>
 				<label :for="name" class="inline-flex items-start">
@@ -99,51 +164,70 @@ app.component('component-checkbox', {
 					:required="required"  
 					:disabled="disabled"
 				    :name="name"
-				    v-model="value"
-				    @change="update($event, value, name)">
+				    v-model="checked"
+				    @change="update(checked, name)">
 				    <span class="ml-2 text-sm">{{ $filters.translate(checkboxlabel) }}</span>
-			  	</label>  
+			  	</label>
 			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
 			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
 			  </div>`,
-	methods: {
-		update: function($event, value, name)
+	mounted: function()
+	{
+		if(this.value === true || this.value == 'on')
 		{
-			eventBus.$emit('forminput', {'name': name, 'value': value});
+			this.checked = true;
+		}
+	},
+	methods: {
+		update: function(checked, name)
+		{
+			eventBus.$emit('forminput', {'name': name, 'value': checked});
 		},
 	},
 })
 
 app.component('component-checkboxlist', {
 	props: ['description', 'readonly', 'required', 'disabled', 'label', 'checkboxlabel', 'options', 'name', 'type', 'css', 'value', 'errors'],
+	data() {
+		return {
+	    	checkedoptions: []
+		}
+	},
 	template: `<div :class="css ? css : 'w-full'" class="mt-5 mb-5">
 				<div class="block mb-1 font-medium">{{ $filters.translate(label) }}</div>
 				<label class="flex items-start mb-2 mt-2" v-for="option, optionvalue in options" >
 				  <input type="checkbox" class="w-6 h-6"
 					:id="optionvalue"
 				  	:value="optionvalue" 
-				  	v-model="value" 
-				  	@change="update($event, value, optionvalue, name)">
+				  	v-model="checkedoptions" 
+				  	@change="update(checkedoptions, name)">
 				  	<span class="ml-2 text-sm">{{ $filters.translate(option) }}</span>
 			  	</label>
 			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
 			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
 			  </div>`,
-	methods: {
-		update: function($event, value, optionvalue, name)
+	mounted: function()
+	{
+		if(typeof this.value === 'object')
 		{
-			/* if value (array) for checkboxlist is not initialized yet */
-			if(value === true || value === false)
-			{
-				value = [optionvalue];
-			}
-			eventBus.$emit('forminput', {'name': name, 'value': value});
+			this.checkedoptions = this.value;
+		}
+	},
+	methods: {
+		update: function(checkedoptions, name)
+		{
+			eventBus.$emit('forminput', {'name': name, 'value': checkedoptions});
 		},
 	},
 })
 
 app.component('component-radio', {
 	props: ['id', 'description', 'readonly', 'required', 'disabled', 'options', 'label', 'name', 'type', 'css', 'value', 'errors'],
+	data() {
+		return {
+	    	picked: this.value
+		}
+	},
 	template: `<div :class="css ? css : 'w-full'" class="mt-5 mb-5">
 				<div class="block mb-1 font-medium">{{ $filters.translate(label) }}</div>
 				<label class="flex items-start mb-2 mt-2" v-for="option,optionvalue in options">
@@ -154,17 +238,17 @@ app.component('component-radio', {
 					:disabled="disabled"
 				  	:name="name"
 				  	:value="optionvalue" 
-				  	v-model="value" 
-				  	@change="update($event, value, name)">
+				  	v-model="picked" 
+				  	@change="update(picked, name)">
 				  	<span class="ml-2 text-sm">{{ $filters.translate(option) }}</span>
 			  	</label>  
 			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
 			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
 			  </div>`,
 	methods: {
-		update: function($event, value, name)
+		update: function(picked, name)
 		{
-			eventBus.$emit('forminput', {'name': name, 'value': value});
+			eventBus.$emit('forminput', {'name': name, 'value': picked});
 		},
 	},
 })
@@ -604,29 +688,40 @@ app.component('component-customfields', {
 	},
 })
 
+
 app.component('component-image', {
-	props: ['id', 'description', 'maxlength', 'hidden', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
-	template: `<div class="large img-component">
-				<label>{{ $filters.translate(label) }}</label>
-				<div class="flex flex-wrap item-start">
-					<div class="w-50">
-						<div class="w6 h6 bg-black-40 dtc v-mid bg-chess">
-							<img :src="getimagesrc(value)" class="mw6 max-h6 dt center">
+	props: ['id', 'description', 'maxlength', 'hidden', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'css', 'errors'],
+	data: function(){
+		return {
+			maxsize: 10, // megabyte
+			imagepreview: '',
+			showmedialib: false,
+//			load: false,
+			quality: false,
+			qualitylabel: false,
+		}
+	},
+	template: `<div :class="css ? css : 'w-full'" class="mt-5 mb-5">
+				<label :for="name" class="block mb-1 font-medium">{{ $filters.translate(label) }}</label>
+				<div class="flex flex-wrap items-start">
+					<div class="w-half">
+						<div class="w-80 h-80 table-cell align-middle bg-chess">
+							<img :src="imagepreview" class="max-w-xs max-h-80 table mx-auto">
 						</div>
 					</div>
-					<div class="w-50 ph3 lh-copy f6 relative">
-						<div class="relative dib w-100">
-							<input class="absolute o-0 w-100 top-0 z-1 pointer" type="file" name="image" accept="image/*" @change="onFileChange( $event )" /> ' +
-							<p class="relative w-100 bn br1 bg-tm-green white pa3 ma0 tc"><svg class="icon icon-upload baseline"><use xlink:href="#icon-upload"></use></svg> {{ $filters.translate('upload an image') }}</p>'+
+					<div class="w-half ph3 lh-copy f6 relative">
+						<div class="relative w-full bg-stone-700 hover:bg-stone-900">
+							<p class="relative w-full text-white text-center px-2 py-3"><svg class="icon icon-upload baseline"><use xlink:href="#icon-upload"></use></svg> {{ $filters.translate('upload an image') }}</p>
+							<input class="absolute w-full top-0 opacity-0 bg-stone-900 cursor-pointer px-2 py-3" type="file" name="image" accept="image/*" @change="onFileChange( $event )" />
 						</div>
-						<div class="dib w-100 mt3">
-							<button class="w-100 pointer bn br1 bg-tm-green white pa3 ma0 tc" @click.prevent="openmedialib()"><svg class="icon icon-image baseline"><use xlink:href="#icon-image"></use></svg> {{ $filters.translate('select from medialib') }}</button>
+						<div class="w-full mt-3">
+							<button class="w-full bg-stone-700 hover:bg-stone-900 text-white px-2 py-3 text-center cursor-pointer transition duration-100" @click.prevent="openmedialib()"><svg class="icon icon-image baseline"><use xlink:href="#icon-image"></use></svg> {{ $filters.translate('select from medialib') }}</button>
 						</div>
-						<div class="dib w-100 mt3">
-							<label>{{ $filters.translate('Image URL (read only)') }}</label>
+						<div class="w-full mt-3">
+							<label class="block mb-1">{{ $filters.translate('Image URL (read only)') }}</label>
 							<div class="flex">
-								<button @click.prevent="deleteImage()" class="w-10 bg-tm-gray bn hover-bg-tm-red hover-white">x</button>
-								<input class="w-90" type="text" 
+								<button @click.prevent="deleteImage()" class="w-1/6 bg-stone-200 hover:bg-rose-500 hover:text-white">x</button>
+								<input type="text" class="h-12 w-5/6 border px-1 py-1" :class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'" 
 									:id="id"
 									:maxlength="maxlength"
 									readonly="readonly"
@@ -638,12 +733,12 @@ app.component('component-image', {
 									:value="value"
 									@input="update($event, name)">
 							</div>
-							<div class="dib w-100 mt2">
-								<button class="w-100 pointer ba br1 b--tm-green bg--tm-gray black pa2 ma0 tc" @click.prevent="switchQuality(value)">{{ qualitylabel }}</button>
-							</div>							
+							<div v-if="qualitylabel" class="w-full mt-3">
+								<button class="w-full cursor-pointer bg-stone-200 hover:bg-stone-300 text-center px-1 py-1 transition duration-100" @click.prevent="switchQuality(value)">{{ qualitylabel }}</button>
+							</div>
 						</div>
-					  	<div v-if="description" class="w-100 dib"><p>{{ $filters.translate(description) }}</p></div>
-					  	<div v-if="errors[name]" class="error">{{ errors[name] }}</div>
+					  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
+					  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
 					</div>
 				</div>
 				<transition name="fade-editor">
@@ -652,38 +747,56 @@ app.component('component-image', {
 					</div>
 				</transition>
 			  </div>`,
-	data: function(){
-		return {
-			maxsize: 10, // megabyte
-			imgpreview: false,
-			showmedialib: false,
-			load: false,
-			quality: false,
-			qualitylabel: false,
+	mounted: function() {
+		if(this.hasValue(this.value))
+		{
+			this.imagepreview = tmaxios.defaults.baseURL + '/' + this.value;
+
+			/* switcher for quality */
+			if(this.value.indexOf("/live/") > -1 )
+			{
+				this.quality = 'optimized';
+				this.qualitylabel = 'switch size to: maximum';
+			}
+			else if(this.value.indexOf("/original/") > -1)
+			{
+				this.quality = 'maximum';
+				this.qualitylabel = 'switch size to: optimized';
+			}
 		}
 	},
 	methods: {
-		getimagesrc: function(value)
+		hasValue: function(value)
 		{
-			if(value !== undefined && value !== null && value !== '')
+			if(typeof this.value !== "undefined" && this.value !== false && this.value !== null && this.value !== '')
 			{
-				var imgpreview = myaxios.defaults.baseURL + '/' + value;
-				if(value.indexOf("media/live") > -1 )
+				return true;
+			}
+			return false;
+		},
+		switchQuality: function(value)
+		{
+			if(this.hasValue(value))
+			{
+				if(this.quality == 'optimized')
 				{
-					this.quality = 'live';
-					this.qualitylabel = 'switch quality to: original';
+					this.quality 		= 'maximum';
+					this.qualitylabel 	= 'switch size to: optimized';
+					var newUrl 			= value.replace("/live/", "/original/");
+					this.update(newUrl);
 				}
-				else if(value.indexOf("media/original") > -1)
+				else
 				{
-					this.quality = 'original';
-					this.qualitylabel = 'switch quality to: live';
+					this.quality 		= 'optimized';
+					this.qualitylabel 	= 'switch quality to: maximum';
+					var newUrl 			= value.replace("/original/", "/live/");
+					this.update(newUrl);
 				}
-				return imgpreview;
 			}
 		},
-		update: function(value)
+		update: function(filepath)
 		{
-			FormBus.$emit('forminput', {'name': this.name, 'value': value});
+			eventBus.$emit('forminput', {'name': this.name, 'value': filepath});
 		},
 		updatemarkdown: function(markdown, url)
 		{
@@ -697,28 +810,8 @@ app.component('component-image', {
 		},
 		deleteImage: function()
 		{
-			this.imgpreview = false;
+			this.imagepreview = '';
 			this.update('');
-		},
-		switchQuality: function(value)
-		{
-			if(value !== null && value !== '')
-			{
-				if(this.quality == 'live')
-				{
-					var newUrl = value.replace("media/live", "media/original");
-					this.update(newUrl);
-					this.quality = 'original';
-					this.qualitylabel = 'switch quality to: live';
-				}
-				else
-				{
-					var newUrl = value.replace("media/original", "media/live");
-					this.update(newUrl);
-					this.quality = 'live';
-					this.qualitylabel = 'switch quality to: original';
-				}
-			}
 		},
 		openmedialib: function()
 		{
@@ -733,11 +826,13 @@ app.component('component-image', {
 				
 				if (!imageFile.type.match('image.*'))
 				{
-					publishController.errors.message = "Only images are allowed.";
+					alert('only images allowed');
+/*					publishController.errors.message = "Only images are allowed."; */
 				} 
 				else if (size > this.maxsize)
 				{
-					publishController.errors.message = "The maximal size of images is " + this.maxsize + " MB";
+					alert('too big');
+/*					publishController.errors.message = "The maximal size of images is " + this.maxsize + " MB"; */
 				}
 				else
 				{
@@ -747,10 +842,9 @@ app.component('component-image', {
 					reader.readAsDataURL(imageFile);
 					reader.onload = function(e) 
 					{
-						sharedself.imgpreview = e.target.result;
+						sharedself.imagepreview = e.target.result;
 
-					    myaxios.post('/api/v1/image',{
-							'url':				document.getElementById("path").value,
+					    tmaxios.post('/api/v1/image',{
 							'image':			e.target.result,
 							'name': 			imageFile.name,
 							'publish':  		true,
@@ -765,7 +859,8 @@ app.component('component-image', {
 							sharedself.load = false;
 					    	if(error.response)
 					    	{
-					        	publishController.errors.message = error.response.data.errors;
+					    		console.info(error.response);
+/*				        	publishController.errors.message = error.response.data.errors; */
 					      	}
 					    });
 					}
@@ -956,6 +1051,78 @@ app.component('component-file', {
 		}
 	}
 })
+
+
+app.component('modal', {
+	props: ['labelconfirm', 'labelcancel'],
+	template: `<transition name="initial" appear>
+				<div class="fixed w-full h-100 inset-0 z-50 overflow-hidden flex justify-center items-center bg-stone-700 bg-opacity-90">
+					<div class="border border-teal-500 shadow-lg bg-white w-11/12 md:max-w-md mx-auto shadow-lg z-50 overflow-y-auto">
+						<div class="text-left p-6">
+							<div class="text-2xl font-bold">
+								<slot name="header">
+									default header
+								</slot>
+							</div>
+							<div class="my-5">
+								<slot name="body">
+									default body
+								</slot>
+							</div>
+							<div class="flex justify-end pt-2">
+								<button class="focus:outline-none px-4 p-3 mr-3 text-black bg-stone-200 hover:bg-stone-300 transition duration-100" @click="$emit('close')">cancel</button>
+								<slot name="button">
+									default button
+								</slot>
+							</div>
+						</div>
+					</div>
+				</div>
+			</transition>`,
+	methods: {
+		update: function($event, name)
+		{
+			eventBus.$emit('forminput', {'name': name, 'value': $event.target.value});
+		},
+	},
+})
+
+app.component('activebox', {
+	props: ['id', 'description', 'readonly', 'required', 'disabled', 'label', 'checkboxlabel', 'name', 'type', 'css', 'value', 'errors'],
+	data() {
+		return {
+	    	checked: false
+		}
+	},
+	template: `<div class="flex">
+				<label :for="name" class="p-2">{{ $filters.translate(label) }}</label>
+			    <input type="checkbox" class="w-6 h-6 my-2"
+				  :id="id"
+				  :disabled="disabled"
+			      :name="name"
+			      v-model="checked"
+			      @change="activate(checked, name)">
+			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
+			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
+			  </div>`,
+	mounted: function()
+	{
+		if(this.value === true || this.value == 'on')
+		{
+			this.checked = true;
+		}
+	},
+	methods: {
+		activate: function(checked, name)
+		{
+			alert("yes");
+		},
+	},
+})
+
+
+
+
 
 const medialib = app.component('medialib', {
 	props: ['parentcomponent'],

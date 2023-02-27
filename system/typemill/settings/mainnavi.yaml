@@ -11,15 +11,15 @@
 'account': 
   'title': 'Account'
   'routename': 'user.account'
-  'aclresource': 'user'
+  'aclresource': 'account'
   'aclprivilege': 'view'
 'frontend':
   'title': 'Frontend'
   'routename': 'home'
-  'aclresource': 'user'
+  'aclresource': 'account'
   'aclprivilege': 'view'
 'logout':
   'title': 'Logout'  
-  'routename': 'auth.login'
-  'aclresource': 'user'
+  'routename': 'auth.logout'
+  'aclresource': 'account'
   'aclprivilege': 'view'

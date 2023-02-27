@@ -2,13 +2,14 @@
 
 namespace Typemill\Static;
 
+use Typemill\Models\StorageWrapper;
+
 class Settings
 {
 	public static function loadSettings()
 	{
-		$rootpath			= getcwd();
-		$defaultsettings 	= self::getDefaultSettings($rootpath);
-		$usersettings 		= self::getUserSettings($rootpath);
+		$defaultsettings 	= self::getDefaultSettings();
+		$usersettings 		= self::getUserSettings();
 		
 		$settings 			= $defaultsettings;
 
@@ -24,6 +25,7 @@ class Settings
 			}
 		}
 
+		$settings['rootPath'] = getcwd();
 		$settings = self::addThemeSettings($settings);
 
 		return $settings;
@@ -32,7 +34,8 @@ class Settings
 	public static function addThemeSettings($settings)
 	{
 		# we have to check if the theme has been deleted
-		$themefolder = $settings['rootPath'] . DIRECTORY_SEPARATOR . $settings['themeFolder'] . DIRECTORY_SEPARATOR;
+		$rootpath		= getcwd();
+		$themefolder 	= $rootpath . DIRECTORY_SEPARATOR . $settings['themeFolder'] . DIRECTORY_SEPARATOR;
 
 		# if there is no theme in settings or theme has been deleted
 		if(!isset($settings['theme']) OR !file_exists($themefolder . $settings['theme']))
@@ -69,8 +72,9 @@ class Settings
 		return $settings;
 	}
 	
-	public static function getDefaultSettings($rootpath)
+	public static function getDefaultSettings()
 	{
+		$rootpath				= getcwd();
 		$defaultsettingspath 	= $rootpath . DIRECTORY_SEPARATOR . 'system' . DIRECTORY_SEPARATOR . 'typemill' . DIRECTORY_SEPARATOR . 'settings' . DIRECTORY_SEPARATOR;
 		$defaultsettingsfile 	= $defaultsettingspath . 'defaults.yaml';
 
@@ -78,7 +82,6 @@ class Settings
 		{
 			$defaultsettingsyaml 					= file_get_contents($defaultsettingsfile);
 			$defaultsettings 						= \Symfony\Component\Yaml\Yaml::parse($defaultsettingsyaml);
-			$defaultsettings['rootPath'] 			= $rootpath;
 			$defaultsettings['defaultSettingsPath'] = $defaultsettingspath;
 			
 			return $defaultsettings;
@@ -87,9 +90,10 @@ class Settings
 		return false;
 	}
 	
-	public static function getUserSettings($rootpath)
+	public static function getUserSettings()
 	{	
-		$usersettingsfile 	= $rootpath . DIRECTORY_SEPARATOR . 'settings' . DIRECTORY_SEPARATOR . 'settings.yaml';
+		$rootpath				= getcwd();
+		$usersettingsfile 		= $rootpath . DIRECTORY_SEPARATOR . 'settings' . DIRECTORY_SEPARATOR . 'settings.yaml';
 
 		if(file_exists($usersettingsfile))
 		{
@@ -102,22 +106,40 @@ class Settings
 		return false;
 	}
 
+	public static function getObjectSettings($objectType, $objectName)
+	{
+#		$yaml = new Models\WriteYaml();
+		
+		$rootpath 		= getcwd();
+		$objectfile 	= $rootpath . DIRECTORY_SEPARATOR . $objectType . DIRECTORY_SEPARATOR . $objectName . DIRECTORY_SEPARATOR . $objectName . '.yaml';
+
+		if(file_exists($objectfile))
+		{
+			$objectsettingsyaml 	= file_get_contents($objectfile);
+			$objectsettings 		= \Symfony\Component\Yaml\Yaml::parse($objectsettingsyaml);
+			
+			return $objectsettings;
+		}
+
+		return false;
+	}
+
+	public static function updateSettings(array $newSettings)
+	{
+		# only allow if usersettings already exists (setup has been done)
+		$userSettings 	= self::getUserSettings();
+
+		# merge usersettings with new settings
+		$settings 	= array_merge($userSettings, $newSettings);
+		
+		$storage 	= new StorageWrapper('\Typemill\Models\Storage');
+		
+		$storage->updateYaml('settings', 'settings.yaml', $settings);
+	}
 
 
 
 ### refactor
-
-
-	public static function getObjectSettings($objectType, $objectName)
-	{
-		$yaml = new Models\WriteYaml();
-		
-		$objectFolder 	= $objectType . DIRECTORY_SEPARATOR . $objectName;
-		$objectFile		= $objectName . '.yaml';
-		$objectSettings = $yaml->getYaml($objectFolder, $objectFile);
-
-		return $objectSettings;
-	}
   
 	public static function createSettings()
 	{
@@ -133,7 +155,7 @@ class Settings
 		return false;
 	}
 
-	public static function updateSettings($settings)
+	public static function oldupdateSettings($settings)
 	{
 		# only allow if usersettings already exists (setup has been done)
 		$userSettings 	= self::getUserSettings();

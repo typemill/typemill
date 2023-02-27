@@ -856,7 +856,7 @@ class ControllerSettings extends ControllerShared
 				$userdata['userrole'] = $_SESSION['role'];
 			}
 
-			# validate standard fields for users
+ 			# validate standard fields for users
 			if($validate->existingUser($userdata, $userroles))
 			{
 				# validate custom input fields and return images

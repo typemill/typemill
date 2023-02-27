@@ -5,7 +5,7 @@ namespace Typemill\Controllers;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
-class ControllerApiGlobal extends ControllerData
+class ControllerApiGlobals extends ControllerData
 {
 	public function getSystemNavi(Request $request, Response $response)
 	{

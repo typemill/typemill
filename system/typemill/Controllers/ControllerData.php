@@ -2,7 +2,7 @@
 
 namespace Typemill\Controllers;
 
-use Typemill\Models\Yaml;
+use Typemill\Models\StorageWrapper;
 use Typemill\Events\OnSystemnaviLoaded;
 
 # this controller handels data for web and api
@@ -16,9 +16,9 @@ class ControllerData extends Controller
 
 	protected function getMainNavigation($userrole)
 	{
-		$yaml 			= new Yaml('\Typemill\Models\Storage');
+		$storage 		= new StorageWrapper('\Typemill\Models\Storage');
 
-		$mainnavi 		= $yaml->getYaml('system/typemill/settings', 'mainnavi.yaml');
+		$mainnavi 		= $storage->getYaml('system/typemill/settings', 'mainnavi.yaml');
 
 		$allowedmainnavi = [];
 
@@ -63,9 +63,9 @@ class ControllerData extends Controller
 
 	protected function getSystemNavigation($userrole)
 	{
-		$yaml 			= new Yaml('\Typemill\Models\Storage');
+		$storage 		= new StorageWrapper('\Typemill\Models\Storage');
 
-		$systemnavi 	= $yaml->getYaml('system/typemill/settings', 'systemnavi.yaml');
+		$systemnavi 	= $storage->getYaml('system/typemill/settings', 'systemnavi.yaml');
 		$systemnavi 	= $this->c->get('dispatcher')->dispatch(new OnSystemnaviLoaded($systemnavi), 'onSystemnaviLoaded')->getData();
 
 		$allowedsystemnavi = [];
@@ -89,6 +89,7 @@ class ControllerData extends Controller
 
 		return $allowedsystemnavi;
 	}
+
 
 	protected function getThemeDetails()
 	{
@@ -124,15 +125,14 @@ class ControllerData extends Controller
 
 	protected function getThemeDefinition($themeName)
 	{
-		$yaml 			= new Yaml('\Typemill\Models\Storage');
+		$storage 			= new StorageWrapper('\Typemill\Models\Storage');
 
-		$themeSettings 	= $yaml->getYaml('themes' . DIRECTORY_SEPARATOR . $themeName, $themeName . '.yaml');
+		$themeSettings 		= $storage->getYaml('themes' . DIRECTORY_SEPARATOR . $themeName, $themeName . '.yaml');
 
 		# add standard-textarea for custom css
 		$themeSettings['forms']['fields']['customcss'] = [
-			'type' 			=> 'textarea', 
+			'type' 			=> 'codearea', 
 			'label' 		=> 'Custom CSS', 
-			'rows' 			=> 10, 
 			'class' 		=> 'codearea', 
 			'description' 	=> 'You can overwrite the theme-css with your own css here.'
 		];
@@ -177,9 +177,9 @@ class ControllerData extends Controller
 
 	protected function getPluginDefinition($pluginName)
 	{
-		$yaml 				= new Yaml('\Typemill\Models\Storage');
+		$storage 			= new StorageWrapper('\Typemill\Models\Storage');
 
-		$pluginSettings 	= $yaml->getYaml('plugins' . DIRECTORY_SEPARATOR . $pluginName, $pluginName . '.yaml');
+		$pluginSettings 	= $storage->getYaml('plugins' . DIRECTORY_SEPARATOR . $pluginName, $pluginName . '.yaml');
 
 		return $pluginSettings;
 	}
@@ -194,9 +194,9 @@ class ControllerData extends Controller
 			$inspectorrole = $userrole;
 		}
 
-		$yaml 			= new Yaml('\Typemill\Models\Storage');
+		$storage 		= new StorageWrapper('\Typemill\Models\Storage');
 
-		$userfields 	= $yaml->getYaml('system/typemill/settings', 'user.yaml');
+		$userfields 	= $storage->getYaml('system/typemill/settings', 'user.yaml');
 
 		# if a plugin with a role has been deactivated, then users with the role throw an error, so set them back to member...
 		if(!$this->c->get('acl')->hasRole($userrole))
@@ -217,9 +217,11 @@ class ControllerData extends Controller
 			# array_splice($fields,1,0,$newfield);
 		}
 
-		# Only admin can change userroles
-		if($this->c->get('acl')->isAllowed($inspectorrole, 'userlist', 'write'))
+		# Only admin ...
+		if($this->c->get('acl')->isAllowed($inspectorrole, 'user', 'write'))
 		{
+
+			# can change userroles
 			$definedroles = $this->c->get('acl')->getRoles();
 			$options = [];
 
@@ -230,44 +232,11 @@ class ControllerData extends Controller
  			}
 
 			$userfields['userrole'] = ['label' => 'Role', 'type' => 'select', 'options' => $options];
+
+			# can activate api access
+			$userfields['apiaccess'] = ['label' => 'API access', 'checkboxlabel' => 'Activate API access for this user. Use username and password for api calls.', 'type' => 'checkbox'];
 		}
 
 		return $userfields;
 	}
-
-	protected function recursiveValidation($formdefinitions, $input, $validator, $themeOrPlugin = false, $name = false)
-	{
-		# loop through form-definitions, ignores everything that is not defined in yaml
-		foreach($formdefinitions as $fieldname => $fielddefinitions)
-		{
-			if(is_array($fielddefinitions) && $fielddefinitions['type'] == 'fieldset')
-			{
-				$this->recursiveValidation($fielddefinitions['fields'], $input, $validator, $themeOrPlugin, $name);
-			}
-
-			$fieldvalue = isset($input[$fieldname]) ? $input[$fieldname] : false;
-
-			if($fieldvalue)
-			{
-				$validationresult = $validator->field($fieldname, $fieldvalue, $fielddefinitions);
-
-				if($validationresult === true)
-				{
-					# if input is valid, overwrite value in original settings
-					if($themeOrPlugin)
-					{
-						$this->settings[$themeOrPlugin][$name][$fieldname] = $fieldvalue;
-					}
-					else
-					{
-						$this->settings[$fieldname] = $fieldvalue;
-					}
-				}
-				else
-				{
-					$this->errors[$fieldname] = $validationresult[$fieldname][0];
-				}
-			}
-		}
-	}	
 }

@@ -2,7 +2,7 @@
 
 namespace Typemill\Models;
 
-use Typemill\Models\Yaml;
+use Typemill\Models\StorageWrapper;
 
 class User
 {
@@ -12,55 +12,53 @@ class User
 
 	private $user = false;
 
-	private $password = false;
-
 	public $error = false;
 
 	public function __construct()
 	{
 		$this->userDir 	= getcwd() . '/settings/users';
-		$this->yaml 	= new Yaml('\Typemill\Models\Storage');
+		$this->storage 	= new StorageWrapper('\Typemill\Models\Storage');
 	}
 
 	public function setUser(string $username)
 	{
-		# if no user is set or requested user has a different username
-#		if(!$this->user OR ($this->user['username'] != $username))
-#		{
-			$this->user = $this->yaml->getYaml('settings/users', $username . '.yaml');
+		$this->user = $this->storage->getYaml('settings/users', $username . '.yaml');
+	
+		if(!$this->user)
+		{
+			$this->error = 'User not found';
+
+			return false;
+		}
 		
-			if(!$this->user)
-			{
-				$this->error = 'User not found';
-
-				return false;
-			}
-			
-			# store password in private property so it is not accessible outside			
-			$this->password = $this->user['password'];
-
-			# delete password from public userdata
-			unset($this->user['password']);
-#		}
+		# delete password from public userdata
+		unset($this->user['password']);
 
 		return $this;
 	}
 
 	public function setUserWithPassword(string $username)
 	{
+		$this->user = $this->storage->getYaml('settings/users', $username . '.yaml');
+
 		if(!$this->user)
 		{
-			$this->user = $this->yaml->getYaml('settings/users', $username . '.yaml');
+			$this->error = 'User not found.';
 
-			if(!$this->user)
-			{
-				$this->error = 'User not found.';
-
-				return false;
-			}
+			return false;
 		}
 		
 		return $this;
+	}
+
+	public function setValue($key, $value)
+	{
+		$this->user[$key] = $value;
+	}
+
+	public function unsetValue($key)
+	{
+		unset($this->user[$key]);
 	}
 
 	public function getUserData()
@@ -105,192 +103,62 @@ class User
 	{
 		$params['password'] = $this->generatePassword($params['password']);
 	
-		if($this->yaml->updateYaml('settings/users', $params['username'] . '.yaml', $params))
+		if($this->storage->updateYaml('settings/users', $params['username'] . '.yaml', $params))
 		{
 			$this->deleteUserIndex();
 
-			return $params['username'];
+			return true;
 		}
 
-		$this->error = $this->yaml->getError();
+		$this->error = $this->storage->getError();
 
 		return false;
-	}
-
-	public function setValue($key, $value)
-	{
-		$this->user[$key] = $value;
-	}
-
-	public function unsetValue($key)
-	{
-		unset($this->user[$key]);
 	}
 
 	public function updateUser()
 	{
-		if($this->yaml->updateYaml('settings/users', $this->user['username'] . '.yaml', $this->user))
+		if($this->storage->updateYaml('settings/users', $this->user['username'] . '.yaml', $this->user))
 		{
 			$this->deleteUserIndex();
 	
 			return true;
 		}
 
-		$this->error = $this->yaml->getError();
+		$this->error = $this->storage->getError();
 
 		return false;
 	}
 
-
-
-
-
-
-
-
-
-
-
-	public function unsetFromUser(array $keys)
+	public function deleteUser()
 	{
-		if(empty($keys) OR !$this->user)
+		if($this->storage->deleteFile('settings/users/', $this->user['username'] . '.yaml'))
 		{
-			$this->error = 'Keys are empty or user does not exist.';
-
-			return false;
-		}
-		
-		foreach($keys as $key)
-		{
-			if(isset($this->user[$key]))
-			{
-				unset($this->user[$key]);
-			}
-		}
-	
-		$this->yaml->updateYaml('settings/users', $this->user['username'] . '.yaml', $this->user);
-		
-		return true;
-	}
-
-	public function updateUserOld()
-	{
-		# add password back to userdata before you store/update user
-		if($this->password)
-		{
-			$this->user['password'] = $this->password;
-		}
-		
-		if($this->yaml->updateYaml('settings/users', $this->user['username'] . '.yaml', $this->user))
-		{
-			return true;
-		}
-
-		$this->error = $this->yaml->getError();
-
-		return false;
-	}
-
-
-	public function updateUserWithInput(array $input)
-	{
-		if(!isset($input['username']) OR !$this->user)
-		{
-			return false;
-		}
-		
-		# make sure new password is not stored 
-		if(isset($input['newpassword']))
-		{ 
-			unset($input['newpassword']); 
-		}
-
-		# make sure password is set correctly
-		if(isset($input['password']))
-		{
-			if(empty($input['password']))
-			{
-				unset($input['password']); 
-			}
-			else
-			{
-				$input['password'] = $this->generatePassword($input['password']);
-			}
-		}
-		
-		# set old password back to original userdate
-		if($this->password)
-		{
-			$this->user['password'] = $this->password;
-		}
-
-		# overwrite old userdata with new userdata
-		$updatedUser = array_merge($this->user, $input);
-
-		# cleanup data here
-		
-		$this->updateYaml('settings/users', $this->user['username'] . '.yaml', $updatedUser);
-
-		$this->deleteUserIndex();
-	
-		# if user updated his own profile, update session data
-		if(isset($_SESSION['username']) && $_SESSION['username'] == $input['username'])
-		{
-			$_SESSION['userrole'] 	= $updatedUser['userrole'];
-
-			if(isset($updatedUser['firstname']))
-			{
-				$_SESSION['firstname'] = $updatedUser['firstname'];
-			}
-			if(isset($updatedUser['lastname']))
-			{
-				$_SESSION['lastname'] = $updatedUser['lastname'];
-			}
-		}
-		
-		return $this->user['username'];
-	}
-	
-	public function deleteUser(string $username)
-	{
-		if($this->getUser($username))
-		{
-			unlink('settings/users/' . $username . '.yaml');
-
 			$this->deleteUserIndex();
 
 			return true;
 		}
+
+		$this->error = $this->storage->getError();		
+
 		return false;
 	}
-	
+
 	public function login()
 	{
 		if($this->user)
 		{
 			$this->user['lastlogin'] = time();
-#			$this->user['internalApiKey'] = bin2hex(random_bytes(32));
 
 			$_SESSION['username'] 	= $this->user['username'];
-#			$_SESSION['userrole'] 	= $this->user['userrole'];
 			$_SESSION['login'] 		= $this->user['lastlogin'];
-/*
-			if(isset($this->user['firstname']))
-			{
-				$_SESSION['firstname'] = $this->user['firstname'];
-			}
-			if(isset($this->user['lastname']))
-			{
-				$_SESSION['lastname'] = $this->user['lastname'];
-			}
-*/			
+
 			if(isset($this->user['recovertoken']) OR isset($this->user['recoverdate']))
 			{
 				$this->unsetFromUser($this->user['username'], ['recovertoken', 'recoverdate']);
 			}
 
 			# update user last login
-			$this->updateUser();			
+			$this->updateUser();
 		}
 	}
 	
@@ -299,12 +167,14 @@ class User
 		return \password_hash($password, PASSWORD_DEFAULT, ['cost' => 10]);
 	}
 
+/*
 	public function getBasicAuth()
 	{
 		$basicauth = $this->user['username'] . ":" . $this->user['internalApiKey'];
 
 		return base64_encode($basicauth);		
 	}
+*/
 
 	# accepts email with or without asterix and returns userdata
 	public function findUsersByEmail($email)
@@ -483,12 +353,4 @@ class User
 			unlink($userDir . DIRECTORY_SEPARATOR . 'tmuserindex-mail.txt');
 		}
 	}
-
-	# deprecated
-	public function getSecureUser(string $username)
-	{
-		$user = $this->getYaml('settings/users', $username . '.yaml');
-		unset($user['password']);
-		return $user;
-	}	
 }

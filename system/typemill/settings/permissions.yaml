@@ -2,7 +2,7 @@ member:
   name: member
   inherits: NULL
   permissions: 
-    user:
+    account:
       - 'view'
       - 'update'
       - 'delete'
