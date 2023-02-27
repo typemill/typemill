@@ -1,0 +1,21 @@
+{% extends 'layouts/layoutSystem.twig' %}
+{% block title %}{{ translate('Account') }}{% endblock %}
+
+{% block content %}
+	
+	<h1 class="text-3xl font-bold mb-4">{{ translate('User') }} </h1>
+	
+	<div id="account" v-cloak></div>
+
+{% endblock %}
+
+{% block javascript %}
+
+	<script src="{{ base_url() }}/system/typemill/author/js/vue-user.js?v={{ settings.version }}"></script>		
+	<script src="{{ base_url() }}/system/typemill/author/js/vue-translate.js?v={{ settings.version }}"></script>		
+	<script src="{{ base_url() }}/system/typemill/author/js/vue-shared.js?v={{ settings.version }}"></script>
+	<script>
+		app.mount('#account');
+	</script>
+
+{% endblock %}

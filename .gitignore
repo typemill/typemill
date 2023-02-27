@@ -18,6 +18,7 @@ content/01-cyanine-theme/01-colors-and-fonts.yaml
 content/01-cyanine-theme/02-footer.yaml
 content/01-cyanine-theme/03-content-elements.yaml
 settings/settings.yaml
+settings/license.yaml
 settings/users
 system/vendor
 plugins/demo

@@ -1,0 +1,15 @@
+license:
+  name: license
+  label: 'Your license key' 
+  type: 'text'
+  required: true
+email:
+  name: email
+  label: 'Your email' 
+  type: 'text'
+  required: true
+domain: 
+  name: domain
+  label: 'Domain for license' 
+  type:  'text'
+  required: true
