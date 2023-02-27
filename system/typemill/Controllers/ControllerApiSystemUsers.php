@@ -5,7 +5,6 @@ namespace Typemill\Controllers;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Typemill\Models\Validation;
-use Typemill\Models\Yaml;
 use Typemill\Models\User;
 
 class ControllerApiSystemUsers extends ControllerData
@@ -15,18 +14,8 @@ class ControllerApiSystemUsers extends ControllerData
 	# getUserByName
 
 	#returns userdata
-	public function getUsersByNames($request, $response, $args)
+	public function getUsersByNames(Request $request, Response $response, $args)
 	{
-		# minimum permission are admin rights
-		if(!$this->c->get('acl')->isAllowed($request->getAttribute('userrole'), 'system', 'update'))
-		{
-			$response->getBody()->write(json_encode([
-				'message' => 'You are not allowed to update settings.'
-			]));
-
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
-		}
-
 		$usernames 		= $request->getQueryParams()['usernames'] ?? false;
 		$user			= new User();
 		$userdata 		= [];
@@ -51,18 +40,8 @@ class ControllerApiSystemUsers extends ControllerData
 	}
 
 	# returns userdata
-	public function getUsersByEmail($request, $response, $args)
+	public function getUsersByEmail(Request $request, Response $response, $args)
 	{
-		# minimum permission are admin rights
-		if(!$this->c->get('acl')->isAllowed($request->getAttribute('userrole'), 'system', 'update'))
-		{
-			$response->getBody()->write(json_encode([
-				'message' => 'You are not allowed to update settings.'
-			]));
-
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
-		}
-
 		$email 			= $request->getQueryParams()['email'] ?? false;
 		$user			= new User();
 		$userdata 		= [];
@@ -86,18 +65,8 @@ class ControllerApiSystemUsers extends ControllerData
 	}
 
 	#returns userdata
-	public function getUsersByRole($request, $response, $args)
+	public function getUsersByRole(Request $request, Response $response, $args)
 	{
-		# minimum permission are admin rights
-		if(!$this->c->get('acl')->isAllowed($request->getAttribute('userrole'), 'system', 'update'))
-		{
-			$response->getBody()->write(json_encode([
-				'message' => 'You are not allowed to update settings.'
-			]));
-
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
-		}
-
 		$role 			= $request->getQueryParams()['role'] ?? false;
 		$user			= new User();
 		$userdata 		= [];
@@ -120,12 +89,12 @@ class ControllerApiSystemUsers extends ControllerData
 		return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
 	}
 
-	public function updateUser($request, $response, $args)
+	public function updateUser(Request $request, Response $response, $args)
 	{
 		$params 			= $request->getParsedBody();
 		$userdata 			= $params['userdata'] ?? false;
 		$username 			= $params['userdata']['username'] ?? false;
-		$isAdmin 			= $this->c->get('acl')->isAllowed($request->getAttribute('userrole'), 'userlist', 'write');
+		$isAdmin 			= $this->c->get('acl')->isAllowed($request->getAttribute('c_userrole'), 'user', 'write');
 
 		if(!$userdata OR !$username)
 		{
@@ -146,72 +115,49 @@ class ControllerApiSystemUsers extends ControllerData
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);			
 		}
 
-		# make sure that invalid password input is stripped out
-		if(isset($userdata['password']) && $userdata['password'] == '' )
-		{
-			unset($userdata['password']);
-			unset($userdata['newpassword']);
-		}
-
 		$user 				= new User();
 
 		# make sure you set a user with password when you update, otherwise it will delete the password completely
 		$user->setUserWithPassword($username);
 
-		$userfields 		= $this->getUserFields($request->getAttribute('userrole'));
+		$formdefinitions 	= $this->getUserFields($request->getAttribute('c_userrole'));
 
 		# validate input
 		$validator 			= new Validation();
 
-		# loop through form-definitions, ignores everything that is not defined in yaml
-		foreach($userfields as $fieldname => $fielddefinitions)
+		# cleanup password entry
+		if(isset($userdata['password']) AND $userdata['password'] == '')
 		{
-			# if there is no value for a field
-			if(!isset($userdata[$fieldname]))
-			{
-				continue;
-			}
-
-			# ignore readonly-fields
-			if(isset($fielddefinitions['readonly']) && ($fielddefinitions['readonly'] !== false) )
-			{
-				continue;
-			}
-
-			# new password needs special validation
-			if($fieldname == 'password')
-			{
-				$validationresult = $validator->newPassword($userdata);
-
-				if($validationresult === true)
-				{
-					# encrypt new password
-					$newpassword = $user->generatePassword($userdata['newpassword']);
-
-					# if input is valid, overwrite value in original user
-					$user->setValue('password', $newpassword);
-				}
-				else
-				{
-					$this->errors[$fieldname] = $validationresult[$fieldname][0];
-				}
-			}
-			else
-			{
-				# standard validation
-				$validationresult = $validator->field($fieldname, $userdata[$fieldname], $fielddefinitions);
-
-				if($validationresult === true)
-				{
-					# if input is valid, overwrite value in original user
-					$user->setValue($fieldname, $userdata[$fieldname]);
-				}
-				else
-				{
-					$this->errors[$fieldname] = $validationresult[$fieldname][0];
-				}
-			}
+			unset($userdata['password']);
 		}
+		if(isset($userdata['newpassword']) AND $userdata['newpassword'] == '')
+		{
+			unset($userdata['newpassword']);
+		}
+
+		# validate passwort changes if valid input
+		if(isset($userdata['password']) OR isset($userdata['newpassword']))
+		{
+			$validpass = $validator->newPassword($userdata);
+
+			if($validpass === true)
+			{
+				# encrypt new password
+				$userdata['password'] = $user->generatePassword($userdata['newpassword']);
+			}
+			elseif(is_array($validpass))
+			{
+				foreach($validpass as $fieldname => $errors)
+				{
+					$this->errors[$fieldname] = $errors[0];
+				}
+			}
+
+			# in all cases unset newpassword
+			unset($userdata['newpassword']);
+		}
+
+		$validatedOutput 	= $this->recursiveValidation($validator, $formdefinitions, $userdata);
 
 		if(!empty($this->errors))
 		{
@@ -221,6 +167,12 @@ class ControllerApiSystemUsers extends ControllerData
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+		}
+
+		# if input is valid, overwrite value in original user
+		foreach($validatedOutput as $fieldname => $value)
+		{
+			$user->setValue($fieldname, $value);			
 		}
 
 		if(!$user->updateUser())
@@ -239,99 +191,153 @@ class ControllerApiSystemUsers extends ControllerData
 		return $response->withHeader('Content-Type', 'application/json');
 	}
 
-/*
-	public function updateUser($request, $response, $args)
+	public function getNewUserForm(Request $request, Response $response, $args)
 	{
-		# check if user is allowed to view (edit) userlist and other users
-		if(!$this->c->acl->isAllowed($_SESSION['role'], 'userlist', 'write'))
+		$userrole = $request->getQueryParams()['userrole'] ?? false;
+		if(!$userrole)
 		{
-			# if an editor tries to update other userdata than its own 
-			if($_SESSION['user'] !== $userdata['username'])
-			{
-				return $response->withRedirect($this->c->router->pathFor('user.account'));
-			}
-			
-			# non admins cannot change their userrole, so set it to session-value
-			$userdata['userrole'] = $_SESSION['role'];
+			$response->getBody()->write(json_encode([
+				'message' => 'Userrole is required.'
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
 		}
 
+		$userform = $this->getUserFields($userrole,$inspectorrole = $request->getAttribute('c_userrole'));
 
+		# fix the standard form
+		$userform['password']['label'] = 'Password';
+		$userform['password']['generator'] = true;
+		$userform['username']['label'] = 'Username';
+		unset($userform['username']['readonly']);
+		unset($userform['userrole']);
+		unset($userform['newpassword']);
 
-			$params 		= $request->getParams();
-			$userdata 		= $params['user'];
-			$user 			= new User();
-			$validate		= new Validation();
-			$userroles 		= $this->c->acl->getRoles();
+		$response->getBody()->write(json_encode([
+			'userform' => $userform,
+		]));
 
-			$redirectRoute	= ($userdata['username'] == $_SESSION['user']) ? $this->c->router->pathFor('user.account') : $this->c->router->pathFor('user.show', ['username' => $userdata['username']]);
-
-			# validate standard fields for users
-			if($validate->existingUser($userdata, $userroles))
-			{
-				# validate custom input fields and return images
-				$userfields = $this->getUserFields($userdata['userrole']);
-				$imageFields = $this->validateInput('users', 'user', $userdata, $validate, $userfields);
-
-				if(!empty($imageFields))
-				{
-					$images = $request->getUploadedFiles();
-
-					if(isset($images['user']))
-					{
-						# set image size
-						$settings = $this->c->get('settings');
-						$imageSizes = $settings['images'];
-						$imageSizes['live'] = ['width' => 500, 'height' => 500];
-						$settings->replace(['images' => $imageSizes]);
-						$imageresult = $this->saveImages($imageFields, $userdata, $settings, $images['user']);
-		
-						if(isset($_SESSION['slimFlash']['error']))
-						{
-							return $response->withRedirect($redirectRoute);
-						}
-						elseif(isset($imageresult['username']))
-						{
-							$userdata = $imageresult;
-						}
-					}
-				}
-
-				# check for errors and redirect to path, if errors found 
-				if(isset($_SESSION['errors']))
-				{
-					$this->c->flash->addMessage('error', 'Please correct the errors');
-					return $response->withRedirect($redirectRoute);
-				}
-
-				if(empty($userdata['password']) AND empty($userdata['newpassword']))
-				{
-					# make sure no invalid passwords go into model
-					unset($userdata['password']);
-					unset($userdata['newpassword']);
-
-					$user->updateUser($userdata);
-					$this->c->flash->addMessage('info', 'Saved all changes');
-					return $response->withRedirect($redirectRoute);
-				}
-				elseif($validate->newPassword($userdata))
-				{
-					$userdata['password'] = $userdata['newpassword'];
-					unset($userdata['newpassword']);
-
-					$user->updateUser($userdata);
-					$this->c->flash->addMessage('info', 'Saved all changes');
-					return $response->withRedirect($redirectRoute);
-				}
-			}
-
-			# change error-array for formbuilder
-			$errors = $_SESSION['errors'];
-			unset($_SESSION['errors']);
-			$_SESSION['errors']['user'] = $errors;#
-
-			$this->c->flash->addMessage('error', 'Please correct your input');
-			return $response->withRedirect($redirectRoute);
-		}
+		return $response->withHeader('Content-Type', 'application/json');
 	}
-	*/	
+
+	public function createUser(Request $request, Response $response, $args)
+	{
+		$params 		= $request->getParsedBody();
+		$userdata 		= $params['userdata'] ?? false;
+		if(!$userdata)
+		{
+			$response->getBody()->write(json_encode([
+				'message' => 'Userdata are required.'
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+		}
+
+		$validate		= new Validation();
+
+		# standard validation for new users
+		$userroles 		= $this->c->get('acl')->getRoles();
+		$valresult 		= $validate->newUser($userdata, $userroles);
+		if($valresult !== true)
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> 'Please correct the errors above.',
+				'errors' 	=> $validate->returnFirstValidationErrors($valresult)
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+		}
+
+
+		# additional validation for extra fields and image handling
+		$formdefinitions = $this->getUserFields($userdata['userrole'],$inspectorrole = $request->getAttribute('c_userrole'));
+		unset($formdefinitions['username']['readonly']);
+		$validatedOutput = $this->recursiveValidation($validate, $formdefinitions, $userdata);
+		if(!empty($this->errors))
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> 'Please correct tbe errors in form.',
+				'errors' 	=> $this->errors
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+		}
+
+		$user = new User();
+		if(!$user->createUser($validatedOutput))
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> 'We could not store the new user',
+				'error' 	=> $user->error,
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);			
+		}
+
+		$response->getBody()->write(json_encode([
+			'message' 	=> 'New user created.',
+		]));
+
+		return $response->withHeader('Content-Type', 'application/json');
+	}
+
+
+	public function deleteUser(Request $request, Response $response, $args)
+	{
+		$params 			= $request->getParsedBody();
+		$username 			= $params['username'] ?? false;
+		$isAdmin 			= $this->c->get('acl')->isAllowed($request->getAttribute('c_userrole'), 'user', 'delete');
+
+		if(!$username)
+		{
+			$response->getBody()->write(json_encode([
+				'message' => 'Username is required.'
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+		}
+
+		# if a non-admin-user tries to delete another account 
+		if(!$isAdmin AND ($username !== $request->getAttribute('c_username')) )
+		{
+			$response->getBody()->write(json_encode([
+				'message' => 'You are not allowed to delete another user.'
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);			
+		}
+
+		$user = new User();
+		if(!$user->setUser($username))
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> 'We could not find the user',
+				'error'		=> $user->error
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);			
+		}
+
+		if(!$user->deleteUser())
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> 'We could not delete the user',
+				'error'		=> $user->error
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);						
+		}
+/*
+		# if user deleted his own account
+		if(isset($_SESSION['user']) && $_SESSION['user'] == $username)
+		{
+			session_destroy();		
+		}
+*/
+		$response->getBody()->write(json_encode([
+			'message' 	=> 'User deleted.',
+		]));
+
+		return $response->withHeader('Content-Type', 'application/json');
+	}
 }

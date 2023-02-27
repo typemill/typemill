@@ -29,6 +29,7 @@ use Typemill\Extensions\TwigCsrfExtension;
 use Typemill\Extensions\TwigUrlExtension;
 use Typemill\Extensions\TwigUserExtension;
 use Typemill\Models\StorageWrapper;
+use Typemill\Models\License;
 
 $timer = [];
 $timer['start'] = microtime(true);
@@ -54,7 +55,7 @@ $settings = Settings::loadSettings();
 if(isset($settings['displayErrorDetails']) && $settings['displayErrorDetails'])
 {
 	ini_set('display_errors', 1);
-	ini_set('display_startup_errors', 1);	
+#	ini_set('display_startup_errors', 1);	
 }
 
 /****************************
@@ -93,13 +94,18 @@ $app->setBasePath($urlinfo['basepath']);
 
 $timer['container'] = microtime(true);
 
-
 /****************************
 * CREATE EVENT DISPATCHER		*
 ****************************/
 
 $dispatcher = new EventDispatcher();
 
+/****************************
+*    	Check Licence					*
+****************************/
+
+$license = new License();
+$settings['license'] = $license->getLicenseScope($urlinfo);
 
 /****************************
 * LOAD & UPDATE PLUGINS			*
@@ -110,7 +116,7 @@ $routes 					= [];
 $middleware				= [];
 
 # if there are less plugins in the scan than in the settings, then a plugin has been removed
-if(count($plugins) < count($settings['plugins']))
+if(isset($settings['plugins']) && (count($plugins) < count($settings['plugins'])) )
 {
 	$updateSettings = true;
 }
@@ -130,8 +136,18 @@ foreach($plugins as $plugin)
 		$updateSettings = true;
 	}
 
+	# licence check
+	$PluginLicence = Plugins::getPremiumLicence($className);
+	if($PluginLicence)
+	{
+		if(!$settings['license'] OR !isset($settings['license'][$PluginLicence]))
+		{
+			$settings['plugins'][$pluginName]['active'] = false;
+		}
+	}
+
 	# if the plugin is activated, add routes/middleware and add plugin as event subscriber
-	if($settings['plugins'][$pluginName]['active'])
+	if(isset($settings['plugins'][$pluginName]['active']) && $settings['plugins'][$pluginName]['active'])
 	{
 		$routes 			= Plugins::getNewRoutes($className, $routes);
 		$middleware		= Plugins::getNewMiddleware($className, $middleware);
@@ -140,9 +156,13 @@ foreach($plugins as $plugin)
 	}
 }
 
+# echo '<pre>';
+# print_r($settings);
+# die();
+
 # if plugins have been added or removed
 if(isset($updateSettings))
-{	
+{
 	# update stored settings file
 	Settings::updateSettings($settings);
 }
@@ -262,6 +282,7 @@ $container->set('view', function() use ($settings, $csrf, $urlinfo, $translation
 
 	# $twig->addExtension(new \Nquire\Extensions\TwigUserExtension());
 
+	# start csrf only if session is active
 	if($csrf)
 	{
 		$twig->addExtension(new TwigCsrfExtension($csrf));

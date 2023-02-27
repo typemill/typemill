@@ -30,6 +30,20 @@ const app = Vue.createApp({
 							<button type="submit" @click.prevent="save()" class="w-full p-3 my-1 bg-stone-700 hover:bg-stone-900 text-white cursor-pointer transition duration-100">Save</button>
 						</div>
 					</form>
+					<div class="my-5 text-center">
+						<button @click.prevent="showModal = true" class="p-3 px-4 text-rose-500 border border-rose-100 hover:border-rose-500 cursor-pointer transition duration-100">delete user</button>
+						<modal v-if="showModal" @close="showModal = false">
+					    	<template #header>
+					    		<h3>Delete user</h3>
+					    	</template>
+					    	<template #body>
+					    		<p>Do you really want to delete this user?</p>
+					    	</template>
+					    	<template #button>
+					    		<button @click="deleteuser()" class="focus:outline-none px-4 p-3 mr-3 text-white bg-rose-500 hover:bg-rose-700 transition duration-100">delete user</button>
+					    	</template>
+						</modal>
+					</div>
 				</div>
 			</Transition>`,
 	data() {
@@ -40,6 +54,7 @@ const app = Vue.createApp({
 			message: '',
 			messageClass: '',
 			errors: {},
+			showModal: false,
 		}
 	},
 	mounted() {
@@ -51,13 +66,17 @@ const app = Vue.createApp({
 		selectComponent: function(type)
 		{
 			return 'component-'+type;
-		},		
+		},
+		changeForm: function()
+		{
+			/* change input form if user role changed */
+		},
 		save: function()
 		{
 			this.reset();
 			var self = this;
 
-			tmaxios.put('/api/v1/account',{
+			tmaxios.put('/api/v1/user',{
 				'csrf_name': 	document.getElementById("csrf_name").value,
 				'csrf_value':	document.getElementById("csrf_value").value,
 				'userdata': this.formData
@@ -75,7 +94,37 @@ const app = Vue.createApp({
 				{
 					self.errors = error.response.data.errors;
 				}
-			});			
+			});
+		},
+		deleteuser: function()
+		{
+			this.reset();
+			var self = this;
+
+			tmaxios.delete('/api/v1/user',{
+				data: {
+					'csrf_name': 	document.getElementById("csrf_name").value,
+					'csrf_value':	document.getElementById("csrf_value").value,
+					'username': 	this.formData.username
+				}
+			})
+			.then(function (response)
+			{
+				self.showModal = false;
+				self.messageClass = 'bg-teal-500';
+				self.message = response.data.message;
+				/* redirect to userlist */
+			})
+			.catch(function (error)
+			{
+				self.showModal = false;
+				self.messageClass = 'bg-rose-500';
+				self.message = error.response.data.message;
+				if(error.response.data.errors !== undefined)
+				{
+					self.errors = error.response.data.errors;
+				}
+			});
 		},
 		reset: function()
 		{

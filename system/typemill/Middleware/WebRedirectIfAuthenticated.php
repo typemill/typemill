@@ -8,7 +8,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Psr7\Response;
 
-class RedirectIfAuthenticated implements MiddlewareInterface
+class WebRedirectIfAuthenticated implements MiddlewareInterface
 {			
 	public function __construct(RouteParser $router, $settings)
 	{
@@ -18,8 +18,6 @@ class RedirectIfAuthenticated implements MiddlewareInterface
 
 	public function process(Request $request, RequestHandler $handler) :Response
 	{
-		$editor = (isset($this->settings['editor']) && $this->settings['editor'] == 'visual') ? 'visual' : 'raw';
-
 		$authenticated = ( 
 				(isset($_SESSION['username'])) && 
 				(isset($_SESSION['login']))
@@ -28,6 +26,9 @@ class RedirectIfAuthenticated implements MiddlewareInterface
 
 		if($authenticated)
 		{
+
+			$editor = (isset($this->settings['editor']) && $this->settings['editor'] == 'visual') ? 'visual' : 'raw';
+
 			$response = new Response();
 			
 			return $response->withHeader('Location', $this->router->urlFor('content.' . $editor))->withStatus(302);

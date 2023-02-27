@@ -4,6 +4,7 @@ namespace Typemill\Controllers;
 
 use DI\Container;
 use Slim\Routing\RouteContext;
+use Typemill\Models\StorageWrapper;
 
 # use Psr\Container\ContainerInterface;
 # use Typemill\Models\Folder;
@@ -30,9 +31,79 @@ abstract class Controller
 		$this->settings 	= $container->get('settings');
 	}
 
+	protected function settingActive($setting)
+	{
+		if(isset($this->settings[$setting]) && $this->settings[$setting])
+		{
+			return true;
+		}
 
+		return false;
+	}
 
+	# move to another place??
+	protected function recursiveValidation($validator, array $formdefinitions, $input, $output = [])
+	{
+		# loop through form-definitions, ignores everything that is not defined in yaml
+		foreach($formdefinitions as $fieldname => $fielddefinitions)
+		{
+			if(is_array($fielddefinitions) && $fielddefinitions['type'] == 'fieldset')
+			{
+				$output = $this->recursiveValidation($validator, $fielddefinitions['fields'], $input, $output);
+			}
 
+			# do not store values for disabled fields
+			if(isset($fielddefinitions['disabled']) && $fielddefinitions['type'])
+			{
+				continue;
+			}
+
+			if(isset($input[$fieldname]))
+			{
+				$fieldvalue = $input[$fieldname];
+
+				$validationresult = $validator->field($fieldname, $fieldvalue, $fielddefinitions);
+
+				if($validationresult === true)
+				{
+					# MOVE THIS TO A SEPARATE FUNCTION SO YOU CAN STORE IMAGES ONLY IF ALL FIELDS SUCCESSFULLY VALIDATED
+					# images have special treatment, check ProcessImage-Model and ImageApiController
+					if($fielddefinitions['type'] == 'image')
+					{
+						# then check if file is there already: check for name and maybe correct image extension (if quality has been changed)
+						$storage = new StorageWrapper('\Typemill\Models\Storage');
+						$existingImagePath = $storage->checkImage($fieldvalue);
+						
+						if($existingImagePath)
+						{
+							$fieldvalue = $existingImagePath;
+						}
+						else
+						{
+							# there is no published image with that name, so check if there is an unpublished image in tmp folder and publish it
+							$newImagePath = $storage->publishImage($fieldvalue);
+							if($newImagePath)
+							{
+								$fieldvalue = $newImagePath;
+							}
+							else
+							{
+								$fieldvalue = '';
+							}
+						}
+					}
+
+					$output[$fieldname] = $fieldvalue;
+				}
+				else
+				{
+					$this->errors[$fieldname] = $validationresult[$fieldname][0];
+				}
+			}
+		}
+
+		return $output;
+	}
 
 
 
@@ -323,6 +394,7 @@ abstract class Controller
 
 		return true;
 	}
+
 
 	public function updateSitemap($ping = false)
 	{

@@ -1,0 +1,27 @@
+{% extends 'layouts/layoutSystem.twig' %}
+{% block title %}{{ translate('License') }}{% endblock %}
+
+{% block content %}
+	
+	<h1 class="text-3xl font-bold mb-4">{{ translate('License') }} </h1>
+	
+	<div id="license" v-cloak></div>
+
+{% endblock %}
+
+{% block javascript %}
+
+	<script src="{{ base_url() }}/system/typemill/author/js/vue-license.js?v={{ settings.version }}"></script>		
+	<script src="{{ base_url() }}/system/typemill/author/js/vue-translate.js?v={{ settings.version }}"></script>		
+	<script src="{{ base_url() }}/system/typemill/author/js/vue-shared.js?v={{ settings.version }}"></script>
+	<script>
+		app.mount('#license');
+	</script>
+    <script src="https://cdn.paddle.com/paddle/paddle.js"></script>
+    <script type="text/javascript">
+
+		Paddle.Environment.set('sandbox');
+		Paddle.Setup({ vendor: 10629 });
+
+    </script>
+{% endblock %}

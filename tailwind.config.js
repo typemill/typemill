@@ -5,7 +5,10 @@ module.exports = {
     extend: {
       width: {
         'half': '48%',
-      }       
+      },
+      opacity: {
+        '0': '0',
+      }             
     },
   },
   plugins: [],

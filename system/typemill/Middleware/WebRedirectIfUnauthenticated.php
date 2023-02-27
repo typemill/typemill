@@ -9,8 +9,8 @@ use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Psr7\Response;
 use Typemill\Models\User;
 
-class RedirectIfUnauthenticated implements MiddlewareInterface
-{			
+class WebRedirectIfUnauthenticated implements MiddlewareInterface
+{
 	public function __construct(RouteParser $router)
 	{
 		$this->router 	= $router;
@@ -18,29 +18,29 @@ class RedirectIfUnauthenticated implements MiddlewareInterface
 
 	public function process(Request $request, RequestHandler $handler) :response
 	{
-		$authenticated = ( 
-				(isset($_SESSION['username'])) && 
-				(isset($_SESSION['login']))
-			)
-			? true : false;
-
-		if($authenticated)
+		# session authentication
+		if(
+			(isset($_SESSION['username'])) && 
+			(isset($_SESSION['login']))
+		)
 		{
-			# here we have to load userdata and pass them through request or response
+			# load userdata
 			$user = new User();
 
 			if($user->setUser($_SESSION['username']))
 			{
+
+ 				# pass username and userrole
 				$userdata = $user->getUserData();
 
-				$request = $request->withAttribute('username', $userdata['username']);
-				$request = $request->withAttribute('userrole', $userdata['userrole']);
+				$request = $request->withAttribute('c_username', $userdata['username']);
+				$request = $request->withAttribute('c_userrole', $userdata['userrole']);
 
 			    # this executes code from routes first and then executes middleware
 				$response = $handler->handle($request);
 
 				return $response;
-			}			
+			}
 		}
 
 		# this executes only middleware code and not code from route

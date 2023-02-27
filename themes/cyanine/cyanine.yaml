@@ -9,8 +9,8 @@ amount: 25
 
 settings:
   landingpage: on
-  landingpageIntro: 1
-  landingpageNavi: 2
+  introPosition: '1'
+  naviPosition: '2'
   naviTitle: Get Started
   fontheadline: sans-serif
   fontnavi: sans-serif
@@ -62,7 +62,7 @@ forms:
       type: fieldset
       legend: Landingpage Intro Segment
       fields:
-        landingpageIntro:
+        introPosition:
           type: number
           label: Position of Intro Segment
           description: Use 0 to disable the section
@@ -104,7 +104,7 @@ forms:
       type: fieldset
       legend: Landingpage Info Segment
       fields:
-        landingpageInfo:
+        infoPosition:
           type: number
           label: Position of Info Segment
           description: Use 0 to disable the section          
@@ -116,7 +116,7 @@ forms:
       type: fieldset
       legend: Landingpage Teaser Segment
       fields:
-        landingpageTeaser:
+        teaserPosition:
           type: number
           label: Position of Teaser Segment
           description: Use 0 to disable the section
@@ -173,7 +173,7 @@ forms:
       type: fieldset
       legend: Landingpage Contrast Segment
       fields:
-        landingpageContrast:
+        contrastPosition:
           type: number
           label: Position of Contrast Segment
           description: Use 0 to disable the section          
@@ -196,7 +196,7 @@ forms:
       type: fieldset
       legend: Landingpage Navigation Segment
       fields:
-        landingpageNavi:
+        naviPosition:
           type: number
           label: Position of Navi Segment
           description: Use 0 to disable the section          
@@ -211,7 +211,7 @@ forms:
       type: fieldset
       legend: Landingpage News Segment      
       fields:
-        landingpageNews:
+        newsPosition:
           type: number
           label: Position of News Segment
           description: Use 0 to disable the section          

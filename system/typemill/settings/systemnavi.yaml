@@ -16,15 +16,21 @@
   'icon': 'icon-plug'
   'aclresource': 'system'
   'aclprivilege': 'view'
+'license':
+  'title': 'License'
+  'routename': 'license.show'
+  'icon': 'icon-wrench'
+  'aclresource': 'system'
+  'aclprivilege': 'view'
 'account':
   'title': 'Account' 
   'routename': 'user.account'
   'icon': 'icon-user'
-  'aclresource': 'user'
+  'aclresource': 'account'
   'aclprivilege': 'view'
 'users':
   'title': 'Users'
   'routename': 'users.show'
   'icon': 'icon-group'
-  'aclresource': 'userlist'
+  'aclresource': 'user'
   'aclprivilege': 'view'

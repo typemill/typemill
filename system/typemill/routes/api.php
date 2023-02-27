@@ -1,23 +1,44 @@
 <?php
 
-use Typemill\Middleware\RestrictApiAccess;
+use Slim\Routing\RouteCollectorProxy;
+use Typemill\Middleware\ApiAuthentication;
+use Typemill\Middleware\ApiAuthorization;
 use Typemill\Controllers\ControllerApiGlobals;
+use Typemill\Controllers\ControllerApiMedia;
 use Typemill\Controllers\ControllerApiSystemSettings;
 use Typemill\Controllers\ControllerApiSystemThemes;
 use Typemill\Controllers\ControllerApiSystemPlugins;
+use Typemill\Controllers\ControllerApiSystemLicense;
 use Typemill\Controllers\ControllerApiSystemUsers;
+use Typemill\Controllers\ControllerApiImage;
 
-$app->get('/api/v1/systemnavi', ControllerApiGlobals::class . ':getSystemnavi')->setName('api.systemnavi.get')->add(new RestrictApiAccess());
-$app->get('/api/v1/mainnavi', ControllerApiGlobals::class . ':getMainnavi')->setName('api.mainnavi.get')->add(new RestrictApiAccess());
-$app->get('/api/v1/settings', ControllerApiSystemSettings::class . ':getSettings')->setName('api.settings.get')->add(new RestrictApiAccess());
-$app->post('/api/v1/settings', ControllerApiSystemSettings::class . ':updateSettings')->setName('api.settings.set')->add(new RestrictApiAccess());
-$app->post('/api/v1/theme', ControllerApiSystemThemes::class . ':updateTheme')->setName('api.theme.set')->add(new RestrictApiAccess());
-$app->post('/api/v1/plugin', ControllerApiSystemPlugins::class . ':updatePlugin')->setName('api.plugin.set')->add(new RestrictApiAccess());
-$app->get('/api/v1/users/getbynames', ControllerApiSystemUsers::class . ':getUsersByNames')->setName('api.usersbynames')->add(new RestrictApiAccess());
-$app->get('/api/v1/users/getbyemail', ControllerApiSystemUsers::class . ':getUsersByEmail')->setName('api.usersbyemail')->add(new RestrictApiAccess());
-$app->get('/api/v1/users/getbyrole', ControllerApiSystemUsers::class . ':getUsersByRole')->setName('api.usersbyrole')->add(new RestrictApiAccess());
-$app->put('/api/v1/account', ControllerApiSystemUsers::class . ':updateUser')->setName('api.user.update')->add(new RestrictApiAccess());
+$app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 
+	# GLOBALS
+	$group->get('/systemnavi', ControllerApiGlobals::class . ':getSystemnavi')->setName('api.systemnavi.get')->add(new ApiAuthorization($acl, 'account', 'view')); # member
+	$group->get('/mainnavi', ControllerApiGlobals::class . ':getMainnavi')->setName('api.mainnavi.get')->add(new ApiAuthorization($acl, 'account', 'view')); # member
+
+	# SYSTEM
+	$group->get('/settings', ControllerApiSystemSettings::class . ':getSettings')->setName('api.settings.get')->add(new ApiAuthorization($acl, 'system', 'view')); # admin
+	$group->post('/settings', ControllerApiSystemSettings::class . ':updateSettings')->setName('api.settings.set')->add(new ApiAuthorization($acl, 'system', 'update')); # admin
+	$group->post('/license', ControllerApiSystemLicense::class . ':createLicense')->setName('api.license.create')->add(new ApiAuthorization($acl, 'system', 'update')); # admin
+	$group->post('/theme', ControllerApiSystemThemes::class . ':updateTheme')->setName('api.theme.set')->add(new ApiAuthorization($acl, 'system', 'update')); # admin
+	$group->post('/plugin', ControllerApiSystemPlugins::class . ':updatePlugin')->setName('api.plugin.set')->add(new ApiAuthorization($acl, 'system', 'update')); # admin
+	$group->get('/users/getbynames', ControllerApiSystemUsers::class . ':getUsersByNames')->setName('api.usersbynames')->add(new ApiAuthorization($acl, 'user', 'update')); # admin
+	$group->get('/users/getbyemail', ControllerApiSystemUsers::class . ':getUsersByEmail')->setName('api.usersbyemail')->add(new ApiAuthorization($acl, 'user', 'update')); # admin
+	$group->get('/users/getbyrole', ControllerApiSystemUsers::class . ':getUsersByRole')->setName('api.usersbyrole')->add(new ApiAuthorization($acl, 'user', 'update')); # admin
+	$group->get('/userform', ControllerApiSystemUsers::class . ':getNewUserForm')->setName('api.user.form')->add(new ApiAuthorization($acl, 'user', 'update')); # admin
+	$group->post('/user', ControllerApiSystemUsers::class . ':createUser')->setName('api.user.create')->add(new ApiAuthorization($acl, 'user', 'update')); # admin
+	$group->put('/user', ControllerApiSystemUsers::class . ':updateUser')->setName('api.user.update')->add(new ApiAuthorization($acl, 'account', 'update')); # member
+	$group->delete('/user', ControllerApiSystemUsers::class . ':deleteUser')->setName('api.user.delete')->add(new ApiAuthorization($acl, 'account', 'delete')); # member
+
+	# MEDIA
+	$group->post('/image', ControllerApiImage::class . ':saveImage')->setName('api.image.create');
+	$group->get('/image', ControllerApiMedia::class . ':getImage')->setName('api.image.get');
+	$group->put('/image', ControllerApiMedia::class . ':publishImage')->setName('api.image.publish');
+	$group->delete('/image', ControllerApiMedia::class . ':deleteImage')->setName('api.image.delete');
+
+})->add(new ApiAuthentication());
 
 
 # https://stackoverflow.blog/2021/10/06/best-practices-for-authentication-and-authorization-for-rest-apis/

@@ -2,13 +2,13 @@
 
 namespace Typemill\Static;
 
-use Typemill\Models\Yaml;
+use Typemill\Models\StorageWrapper;
 
 class Translations
 {
 	public static function loadTranslations($settings, $route)
 	{
-		$yaml = new Yaml($settings['storage']);
+		$storage = new StorageWrapper($settings['storage']);
 
 		$urlsegments = explode('/',trim($route,'/'));
 	
@@ -33,7 +33,7 @@ class Translations
 		$theme_language_file 	= $language . '.yaml';
 		if (file_exists($theme_language_folder . $theme_language_file))
 		{
-			$theme_translations = $yaml->getYaml($theme_language_folder, $theme_language_file);
+			$theme_translations = $storage->getYaml($theme_language_folder, $theme_language_file);
 		}
 
 		if($environment == 'admin')
@@ -42,7 +42,7 @@ class Translations
 			$system_language_file 	= $language . '.yaml';
 			if(file_exists($system_language_folder . $system_language_file))
 			{
-				$system_translations = $yaml->getYaml($system_language_folder, $system_language_file);
+				$system_translations = $storage->getYaml($system_language_folder, $system_language_file);
 			}
 
 			# Next change, to provide labels for the admin and user environments.
@@ -52,13 +52,13 @@ class Translations
 	  		{
 			  	foreach($settings['plugins'] as $plugin => $config)
 			  	{
-					if($config['active'] == 'on')
+					if(isset($config['active']) && $config['active'])
 					{
 				  		$plugin_language_folder = 'plugins' . DIRECTORY_SEPARATOR . $plugin . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR;
 				  		$plugin_language_file = $language . '.yaml';
 				  		if (file_exists($plugin_language_folder . $plugin_language_file))
 				  		{
-							$plugins_translations[$plugin] = $yaml->getYaml($plugin_language_folder, $plugin_language_file);
+							$plugins_translations[$plugin] = $storage->getYaml($plugin_language_folder, $plugin_language_file);
 				  		}
 					}
 			  	}

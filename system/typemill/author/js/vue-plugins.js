@@ -1,55 +1,65 @@
 const app = Vue.createApp({
 	template: `<Transition name="initial" appear>
-							<div class="w-full">
-								<ul>
-									<li v-for="(theme,themename) in formDefinitions" class="w-full my-4 bg-stone-100">
-										<div class="w-full p-8">
-											<div class="w-full">
-												<h2 class="text-xl font-bold mb-3">{{theme.name}}</h2>
-												<div class="text-xs my-3">author: <a :href="theme.homepage" class="hover:underline text-teal-500">{{theme.author}}</a> | version: {{theme.version}} | {{theme.licence}}</div>
-												<p>{{theme.description}}</p>
-											</div>
-											<div class="w-full mt-6 flex justify-between">
-												<button @click="setCurrent(themename)" class="w-half p-3 bg-stone-700 hover:bg-stone-900 text-white cursor-pointer transition duration-100">Configure</button>
-												<button class="w-half p-3 bg-teal-500 hover:bg-teal-600 text-white cursor-pointer transition duration-100">Donate/Buy</button>
-											</div>
-										</div>
-										<form class="w-full p-8" v-if="current == themename">
-											<div v-for="(fieldDefinition, fieldname) in theme.forms.fields">
-												<fieldset class="flex flex-wrap justify-between border-2 border-stone-200 p-4 my-8" v-if="fieldDefinition.type == 'fieldset'">
-													<legend class="text-lg font-medium">{{ fieldDefinition.legend }}</legend>
-													<component v-for="(subfieldDefinition, subfieldname) in fieldDefinition.fields"
+				<div class="w-full">
+					<ul>
+						<li v-for="(plugin,pluginname) in formDefinitions" class="w-full my-4 bg-stone-100">
+							<div class="flex justify-between w-full px-8 py-3 border-b border-white">
+								<p class="py-2">License: free</p>
+								<activebox 
+									:key="pluginname" 
+									:errors="false"
+									:name="pluginname"
+									:value="true"
+									:label="'active'"
+								></activebox> 
+							</div>
+							<div class="w-full p-8">
+								<div class="w-full">
+									<h2 class="text-xl font-bold mb-3">{{plugin.name}}</h2>
+									<div class="text-xs my-3">author: <a :href="plugin.homepage" class="hover:underline text-teal-500">{{plugin.author}}</a> | version: {{plugin.version}}</div>
+									<p>{{plugin.description}}</p>
+								</div>
+								<div class="w-full mt-6 flex justify-between">
+									<button @click="setCurrent(pluginname)" class="w-half p-3 bg-stone-700 hover:bg-stone-900 text-white cursor-pointer transition duration-100">Configure</button>
+									<button class="w-half p-3 bg-teal-500 hover:bg-teal-600 text-white cursor-pointer transition duration-100">Donate/Buy</button>
+								</div>
+							</div>
+							<form class="w-full p-8" v-if="current == pluginname">
+								<div v-for="(fieldDefinition, fieldname) in plugin.forms.fields">
+									<fieldset class="flex flex-wrap justify-between border-2 border-stone-200 p-4 my-8" v-if="fieldDefinition.type == 'fieldset'">
+										<legend class="text-lg font-medium">{{ fieldDefinition.legend }}</legend>
+										<component v-for="(subfieldDefinition, subfieldname) in fieldDefinition.fields"
 						            	    :key="subfieldname"
 						                	:is="selectComponent(subfieldDefinition.type)"
 						                	:errors="errors"
 						                	:name="subfieldname"
 						                	:userroles="userroles"
-						                	:value="formData[themename][subfieldname]" 
+						                	:value="formData[pluginname][subfieldname]" 
 						                	v-bind="subfieldDefinition">
-													</component>
-												</fieldset>
-												<component v-else
+										</component>
+									</fieldset>
+									<component v-else
 					            	    :key="fieldname"
 					                	:is="selectComponent(fieldDefinition.type)"
 					                	:errors="errors"
 					                	:name="fieldname"
 					                	:userroles="userroles"
-					                	:value="formData[themename][fieldname]" 
+					                	:value="formData[pluginname][fieldname]" 
 					                	v-bind="fieldDefinition">
-												</component>
-											</div>
-											<div class="my-5">
-												<div :class="messageClass" class="block w-full h-8 px-3 py-1 my-1 text-white transition duration-100">{{ message }}</div>
-												<div class="w-full">
-														<button type="submit" @click.prevent="save()" class="w-full p-3 my-1 bg-stone-700 hover:bg-stone-900 text-white cursor-pointer transition duration-100">Save</button>
-														<button @click.prevent="" class="w-full p-3 my-1 bg-teal-500 hover:bg-teal-600 text-white cursor-pointer transition duration-100">Donate/Buy</button>
-												</div>
-											</div>
-										</form>
-									</li>
-								</ul>
-							</div>
-						</Transition>`,
+									</component>
+								</div>
+								<div class="my-5">
+									<div :class="messageClass" class="block w-full h-8 px-3 py-1 my-1 text-white transition duration-100">{{ message }}</div>
+									<div class="w-full">
+										<button type="submit" @click.prevent="save()" class="w-full p-3 my-1 bg-stone-700 hover:bg-stone-900 text-white cursor-pointer transition duration-100">Save</button>
+										<button @click.prevent="" class="w-full p-3 my-1 bg-teal-500 hover:bg-teal-600 text-white cursor-pointer transition duration-100">Donate/Buy</button>
+									</div>
+								</div>
+							</form>
+						</li>
+					</ul>
+				</div>
+			</Transition>`,
 	data() {
 		return {
 			current: '',
@@ -58,7 +68,7 @@ const app = Vue.createApp({
 			message: '',
 			messageClass: '',
 			errors: {},
-			userroles: false
+			userroles: false,
 		}
 	},
 	mounted() {

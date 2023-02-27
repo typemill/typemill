@@ -8,21 +8,8 @@ use Slim\Routing\RouteContext;
 use Typemill\Models\Validation;
 use Typemill\Models\User;
 
-class ControllerWebLogin extends Controller
+class ControllerWebAuth extends Controller
 {
-	# redirect if visit /setup route
-	public function redirect(Request $request, Response $response)
-	{
-		if(isset($_SESSION['login']))
-		{
-			return $response->withHeader('Location', $this->routeParser->urlFor('content.raw'))->withStatus(302);
-		}
-		else
-		{
-			return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
-		}
-	}
-
 	public function show(Request $request, Response $response)
 	{
 	    return $this->c->get('view')->render($response, 'auth/login.twig', [
@@ -88,6 +75,43 @@ return $response->withHeader('Location', $this->routeParser->urlFor('settings.sh
 
 		$this->c->get('flash')->addMessage('error', 'Ups, wrong password or username, please try again.');
 
+		return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
+	}
+
+	/**
+	* log out a user
+	* 
+	* @param obj $request the slim request object
+	* @param obj $response the slim response object
+	* @return obje $response with redirect to route
+	*/
+	
+	public function logout(Request $request, Response $response)
+	{
+		# check https://www.php.net/session_destroy
+		if(isset($_SESSION))
+		{
+			# Unset all of the session variables.
+			$_SESSION = array();
+
+			# If it's desired to kill the session, also delete the session cookie. This will destroy the session, and not just the session data!
+			if (ini_get("session.use_cookies"))
+			{
+				$params = session_get_cookie_params();
+			
+				setcookie(
+					session_name(), 
+					'', 
+					time() - 42000,
+					$params["path"], $params["domain"],
+					$params["secure"], $params["httponly"]
+				);
+			}
+
+			# Finally, destroy the session.
+			session_destroy();
+		}
+		
 		return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
 	}
 }

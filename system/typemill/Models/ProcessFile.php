@@ -11,7 +11,6 @@ class Yaml extends StorageWrapper
 	 */
 	public function getYaml($folderName, $yamlFileName)
 	{
-		die('Yaml class outdated. Use storage instead.');
 		$yaml = $this->getFile($folderName, $yamlFileName);
 		
 		if($yaml)
@@ -30,7 +29,6 @@ class Yaml extends StorageWrapper
 	 */	
 	public function updateYaml($folderName, $yamlFileName, $contentArray)
 	{
-		die('Yaml class outdated. Use storage instead.');
 		$yaml = \Symfony\Component\Yaml\Yaml::dump($contentArray,6);
 		if($this->writeFile($folderName, $yamlFileName, $yaml))
 		{

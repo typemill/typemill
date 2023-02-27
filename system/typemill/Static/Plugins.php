@@ -86,6 +86,27 @@ class Plugins
 		
 		return $middleware;
 	}
+
+	public static function getPremiumLicence($className)
+	{
+		$premiumlist = [
+			'\Plugins\demo\demo' => 'BUSINESS'
+		];
+
+		if(isset($premiumList['className']))
+		{
+			return $premiumList['className'];
+		}
+
+		$licenceType = false;
+
+		if(method_exists($className, 'setPremiumLicence'))
+		{
+			$licenceType = $className::setPremiumLicence();			
+		}
+		
+		return $licenceType;
+	}
 	
 	private static function checkRouteArray($routes,$route)
 	{

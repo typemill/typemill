@@ -1,37 +1,49 @@
 <?php
 
-#use Typemill\Controllers\ControllerWebFrontend;
-use Typemill\Controllers\ControllerWebLogin;
+use Slim\Routing\RouteCollectorProxy;
+use Typemill\Middleware\WebRedirectIfAuthenticated;
+use Typemill\Middleware\WebRedirectIfUnauthenticated;
+use Typemill\Middleware\WebAuthorization;
+use Typemill\Controllers\ControllerWebAuth;
 use Typemill\Controllers\ControllerWebSystem;
-use Typemill\Middleware\RedirectIfAuthenticated;
-use Typemill\Middleware\RedirectIfUnauthenticated;
+use Typemill\Controllers\ControllerWebFrontend;
 #use Slim\Views\TwigMiddleware;
 
-$app->get('/tm/login', ControllerWebLogin::class . ':show')->setName('auth.show')->add(new RedirectIfAuthenticated($routeParser, $settings));
-$app->post('/tm/login', ControllerWebLogin::class . ':login')->setName('auth.login')->add(new RedirectIfAuthenticated($routeParser, $settings));
+# login/register
+$app->group('/tm', function (RouteCollectorProxy $group) {
 
-$app->get('/tm/system', ControllerWebSystem::class . ':showSettings')->setName('settings.show')->add(new RedirectIfUnauthenticated($routeParser));
-$app->get('/tm/themes', ControllerWebSystem::class . ':showThemes')->setName('themes.show')->add(new RedirectIfUnauthenticated($routeParser));
-$app->get('/tm/plugins', ControllerWebSystem::class . ':showPlugins')->setName('plugins.show')->add(new RedirectIfUnauthenticated($routeParser));
-$app->get('/tm/account', ControllerWebSystem::class . ':showAccount')->setName('user.account')->add(new RedirectIfUnauthenticated($routeParser));
-$app->get('/tm/users', ControllerWebSystem::class . ':showUsers')->setName('users.show')->add(new RedirectIfUnauthenticated($routeParser));
+	$group->get('/login', ControllerWebAuth::class . ':show')->setName('auth.show');
+	$group->post('/login', ControllerWebAuth::class . ':login')->setName('auth.login');
 
+})->add(new WebRedirectIfAuthenticated($routeParser, $settings));
 
+# author and editor area, requires authentication
+$app->group('/tm', function (RouteCollectorProxy $group) use ($routeParser,$acl) {
 
+	$group->get('/logout', ControllerWebAuth::class . ':logout')->setName('auth.logout');
+	$group->get('/system', ControllerWebSystem::class . ':showSettings')->setName('settings.show')->add(new WebAuthorization($routeParser, $acl, 'system', 'show')); # admin;
+	$group->get('/license', ControllerWebSystem::class . ':showLicense')->setName('license.show')->add(new WebAuthorization($routeParser, $acl, 'system', 'show')); # admin;
+	$group->get('/themes', ControllerWebSystem::class . ':showThemes')->setName('themes.show')->add(new WebAuthorization($routeParser, $acl, 'system', 'show')); # admin;
+	$group->get('/plugins', ControllerWebSystem::class . ':showPlugins')->setName('plugins.show')->add(new WebAuthorization($routeParser, $acl, 'system', 'show')); # admin;
+	$group->get('/account', ControllerWebSystem::class . ':showAccount')->setName('user.account')->add(new WebAuthorization($routeParser, $acl, 'account', 'view')); # member;
+	$group->get('/users', ControllerWebSystem::class . ':showUsers')->setName('users.show')->add(new WebAuthorization($routeParser, $acl, 'user', 'show')); # admin;
+	$group->get('/user/new', ControllerWebSystem::class . ':newUser')->setName('user.new')->add(new WebAuthorization($routeParser, $acl, 'user', 'create')); # admin;
+	$group->get('/user/{username}', ControllerWebSystem::class . ':showUser')->setName('user.show')->add(new WebAuthorization($routeParser, $acl, 'user', 'show')); # admin;;
 
-# $app->get('/tm/user/new', ControllerSystem::class . ':newUser')->setName('user.new');
-# $app->get('/tm/users', ControllerSystem::class . ':listUser')->setName('user.list');
-# $app->post('/tm/user/create', ControllerSettings::class . ':createUser')->setName('user.create')->add(new accessMiddleware($container['router'], $container['acl'], 'user', 'create'));
-# $app->post('/tm/user/update', ControllerSettings::class . ':updateUser')->setName('user.update')->add(new accessMiddleware($container['router'], $container['acl'], 'user', 'update'));
-# $app->post('/tm/user/delete', ControllerSettings::class . ':deleteUser')->setName('user.delete')->add(new accessMiddleware($container['router'], $container['acl'], 'user', 'delete'));
-# $app->get('/tm/user/{username}', ControllerSettings::class . ':showUser')->setName('user.show')->add(new accessMiddleware($container['router'], $container['acl'], 'user', 'view'));
+	# REFACTOR
+	$group->get('/content/visual[/{params:.*}]', ControllerAuthorEditor::class . ':showBlox')->setName('content.visual');
 
+})->add(new WebRedirectIfUnauthenticated($routeParser));
 
+$app->redirect('/tm', $routeParser->urlFor('auth.show'), 302);
+$app->redirect('/tm/', $routeParser->urlFor('auth.show'), 302);
 
+# same with setup redirect
 
-$app->get('/tm/content/visual[/{params:.*}]', ControllerAuthorEditor::class . ':showBlox')->setName('content.visual');
-
+# website
 $app->get('/[{params:.*}]', ControllerWebFrontend::class . ':index')->setName('home');
+
+
 
 /*
 use Typemill\Controllers\ControllerAuthorEditor;
