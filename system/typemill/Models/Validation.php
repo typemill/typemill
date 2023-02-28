@@ -367,6 +367,21 @@ class Validation
 		return $v->errors();
 	}
 
+	public function activateExtension(array $params)
+	{
+		$v = new Validator($params);
+		$v->rule('required', ['name', 'type', 'checked']);
+		$v->rule('in', 'type', ['plugins', 'themes']);
+		$v->rule('boolean', 'checked');
+		
+		if($v->validate()) 
+		{
+			return true;
+		}
+
+		return $v->errors();
+	}
+
 
 	/**
 	* validation for system settings

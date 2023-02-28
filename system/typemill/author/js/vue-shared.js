@@ -1087,43 +1087,6 @@ app.component('modal', {
 	},
 })
 
-app.component('activebox', {
-	props: ['id', 'description', 'readonly', 'required', 'disabled', 'label', 'checkboxlabel', 'name', 'type', 'css', 'value', 'errors'],
-	data() {
-		return {
-	    	checked: false
-		}
-	},
-	template: `<div class="flex">
-				<label :for="name" class="p-2">{{ $filters.translate(label) }}</label>
-			    <input type="checkbox" class="w-6 h-6 my-2"
-				  :id="id"
-				  :disabled="disabled"
-			      :name="name"
-			      v-model="checked"
-			      @change="activate(checked, name)">
-			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
-			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
-			  </div>`,
-	mounted: function()
-	{
-		if(this.value === true || this.value == 'on')
-		{
-			this.checked = true;
-		}
-	},
-	methods: {
-		activate: function(checked, name)
-		{
-			alert("yes");
-		},
-	},
-})
-
-
-
-
-
 const medialib = app.component('medialib', {
 	props: ['parentcomponent'],
 	template: `<div class="medialib">

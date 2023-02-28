@@ -36,6 +36,7 @@ abstract class Plugin implements EventSubscriberInterface
 
     protected function isXhr()
     {
+    	return true;
     	if($this->container['request']->isXhr())
     	{
 			return true;
@@ -45,11 +46,13 @@ abstract class Plugin implements EventSubscriberInterface
 
     protected function getParams()
     {
+    	return true;
     	return $this->container['request']->getParams();
     }
 
     protected function returnJson($data)
     {
+    	return true;
         return $this->container['response']
             ->withHeader("Content-Type", "application/json")
             ->withStatus(200)
@@ -58,6 +61,7 @@ abstract class Plugin implements EventSubscriberInterface
 
     protected function returnJsonError($data)
     {
+    	return true;
         return $this->container['response']
             ->withHeader("Content-Type", "application/json")
             ->withStatus(400)
@@ -66,118 +70,141 @@ abstract class Plugin implements EventSubscriberInterface
 	
 	protected function getSettings()
 	{
+		return true;
 		return $this->container->get('settings');
 	}
 	
 	protected function getPluginSettings($plugin)
 	{
+		return true;
 		return $this->container->get('settings')['plugins'][$plugin];
 	}
 
 	protected function getRoute()
 	{
+		return true;
 		return $this->container['request']->getUri()->withUserInfo('');
 	}
 	
 	protected function getPath()
 	{
+		return true;
 		return $this->container['request']->getUri()->getPath();
 	}
 	
 	protected function getDispatcher()
 	{
+		return true;
 		return $this->container['dispatcher'];
 	}
 	
 	protected function getTwig()
 	{
+		return true;
 		return $this->container['view'];
 	}
 	
 	protected function addTwigGlobal($name, $class)
 	{
+		return true;
 		$this->container->view->getEnvironment()->addGlobal($name, $class);
 	}
 	
 	protected function addTwigFilter($name, $filter)
 	{
+		return true;
 		$filter = new \Twig_SimpleFilter($name, $filter);
 		$this->container->view->getEnvironment()->addFilter($filter);
 	}
 	
 	protected function addTwigFunction($name, $function)
 	{
+		return true;
 		$function = new \Twig_SimpleFunction($name, $function);
 		$this->container->view->getEnvironment()->addFunction($function);
 	}
 
 	protected function addJS($JS)
 	{
+		return true;
 		$this->container->assets->addJS($JS);
 	}
 
 	protected function addEditorJS($JS)
 	{
+		return true;
 		$this->container->assets->addEditorJS($JS);
 	}
 
 	protected function addInlineJS($JS)
 	{
+		return true;
 		$this->container->assets->addInlineJS($JS);
 	}
 
 	protected function addSvgSymbol($symbol)
 	{
+		return true;
 		$this->container->assets->addSvgSymbol($symbol);
 	}
 
 	protected function addEditorInlineJS($JS)
 	{
+		return true;
 		$this->container->assets->addEditorInlineJS($JS);
 	}
 	
 	protected function addCSS($CSS)
 	{
+		return true;
 		$this->container->assets->addCSS($CSS);		
 	}
 	
 	protected function addInlineCSS($CSS)
 	{
+		return true;
 		$this->container->assets->addInlineCSS($CSS);		
 	}
 
 	protected function addEditorCSS($CSS)
 	{
+		return true;
 		$this->container->assets->addEditorCSS($CSS);
 	}
 
 	protected function getMeta()
 	{
+		return true;
 		return $this->container->assets->meta;
 	}
 
 	public function addMeta($key,$meta)
 	{
+		return true;
 		$this->container->assets->addMeta($key, $meta);
 	}
 
 	protected function activateAxios()
 	{
+		return true;
 		$this->container->assets->activateAxios();		
 	}
 	
 	protected function activateVue()
 	{
+		return true;
 		$this->container->assets->activateVue();		
 	}
 
 	protected function activateTachyons()
 	{
+		return true;
 		$this->container->assets->activateTachyons();		
 	}	
 
 	protected function markdownToHtml($markdown)
 	{
+		return true;
 		$parsedown 		= new ParsedownExtension();
 		
 		$contentArray 	= $parsedown->text($markdown);
@@ -188,6 +215,7 @@ abstract class Plugin implements EventSubscriberInterface
 	
 	protected function getFormData($pluginName)
 	{
+		return true;
 		$flash = $this->container->flash->getMessages();
 		
 		if(isset($flash['formdata']))

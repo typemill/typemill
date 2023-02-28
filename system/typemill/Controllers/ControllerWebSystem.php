@@ -62,13 +62,19 @@ class ControllerWebSystem extends ControllerData
 	public function showPlugins($request, $response, $args)
 	{
 		$translations 		= $this->c->get('translations');
-		$pluginSettings 	= $this->getPluginDetails();
+		$pluginDefinitions 	= $this->getPluginDetails();
 		
-		$plugindata = [];
+		$pluginSettings = [];
 
 		foreach($this->settings['plugins'] as $pluginname => $plugininputs)
 		{
-			$plugindata[$pluginname] = $plugininputs;
+			$pluginSettings[$pluginname] = $plugininputs;
+		}
+
+		$license = [];
+		if(is_array($this->settings['license']))
+		{
+			$license = array_keys($this->settings['license']);
 		}
 
 	    return $this->c->get('view')->render($response, 'system/plugins.twig', [
@@ -76,8 +82,9 @@ class ControllerWebSystem extends ControllerData
 			'mainnavi'			=> $this->getMainNavigation($request->getAttribute('c_userrole')),
 			'systemnavi'		=> $this->getSystemNavigation($request->getAttribute('c_userrole')),
 			'jsdata' 			=> [
-										'settings' 		=> $plugindata,
-										'plugins'		=> $pluginSettings,
+										'settings' 		=> $pluginSettings,
+										'definitions'	=> $pluginDefinitions,
+										'license'		=> $license,
 										'labels'		=> $translations,
 										'urlinfo'		=> $this->c->get('urlinfo')
 									]

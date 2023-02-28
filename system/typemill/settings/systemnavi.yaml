@@ -4,6 +4,12 @@
   'icon': 'icon-wrench'
   'aclresource': 'system'
   'aclprivilege': 'view'
+'license':
+  'title': 'License'
+  'routename': 'license.show'
+  'icon': 'icon-wrench'
+  'aclresource': 'system'
+  'aclprivilege': 'view'
 'themes':
   'title': 'Themes'
   'routename': 'themes.show'
@@ -14,12 +20,6 @@
   'title': 'Plugins' 
   'routename': 'plugins.show'
   'icon': 'icon-plug'
-  'aclresource': 'system'
-  'aclprivilege': 'view'
-'license':
-  'title': 'License'
-  'routename': 'license.show'
-  'icon': 'icon-wrench'
   'aclresource': 'system'
   'aclprivilege': 'view'
 'account':

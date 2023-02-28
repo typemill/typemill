@@ -34,6 +34,13 @@ class ControllerApiSystemPlugins extends ControllerData
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
+		# keep the active setting
+		$validatedOutput['active'] = false;
+		if(isset($plugininput['active']) && $plugininput['active'] == true)
+		{
+			$validatedOutput['active'] = true;
+		}
+
 		$plugindata['plugins'][$pluginname] = $validatedOutput;
 
 		# store updated settings here
