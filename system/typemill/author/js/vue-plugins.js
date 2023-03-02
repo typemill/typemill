@@ -7,7 +7,7 @@ const app = Vue.createApp({
 								<p class="py-2">License: {{ plugin.license }}</p>
 								<div class="flex">
 									<label :for="pluginname" class="p-2">{{ $filters.translate('active') }}</label>
-								    <input type="checkbox" class="w-6 h-6 my-2"
+								    <input type="checkbox" class="w-6 h-6 my-2 accent-white"
 								      :name="pluginname"
 								      v-model="formData[pluginname]['active']"
 								      @change="activate(pluginname)">
@@ -20,9 +20,12 @@ const app = Vue.createApp({
 									<p>{{plugin.description}}</p>
 								</div>
 								<div class="w-full mt-6 flex justify-between">
-									<button @click="setCurrent(pluginname)" class="w-half p-3 bg-stone-700 hover:bg-stone-900 text-white cursor-pointer transition duration-100">Configure</button>
-									<a v-if="!checkLicense(license, plugin.license)" href="https://typemill.net/buy" target="_blank" class="w-half p-3 py-4 text-center bg-teal-500 hover:bg-teal-600 text-white cursor-pointer transition duration-100">Buy a license</a>
-									<a v-else-if="plugin.donate" :href="plugin.donate" target="_blank" class="w-full p-3 my-1 bg-teal-500 hover:bg-teal-600 text-white cursor-pointer transition duration-100">Donate</a>
+									<button @click="setCurrent(pluginname)" class="flex-1 flex items-center justify-center space-x-4 p-3 bg-stone-700 hover:bg-stone-900 text-white cursor-pointer transition duration-100">
+										<span>Configure</span>
+										<span :class="(current == pluginname) ? 'border-b-8 border-b-white' : 'border-t-8 border-t-white'" class="h-0 w-0 border-x-8 border-x-transparent"></span>
+									</button>
+									<a v-if="!checkLicense(license, plugin.license)" href="https://typemill.net/buy" target="_blank" class="flex-1 ml-3 p-3 py-4 text-center bg-teal-500 hover:bg-teal-600 text-white cursor-pointer transition duration-100">Buy a license</a>
+									<a v-else-if="plugin.paypal" :href="plugin.paypal" target="_blank" class="flex-1 ml-3 p-3 py-4 text-center bg-teal-500 hover:bg-teal-600 text-white cursor-pointer transition duration-100">Donate {{plugin.amount}},-</a>
 								</div>
 							</div>
 							<form class="w-full p-8" v-if="current == pluginname">
@@ -51,10 +54,10 @@ const app = Vue.createApp({
 								</div>
 								<div class="my-5">
 									<div :class="messageClass" class="block w-full h-8 px-3 py-1 my-1 text-white transition duration-100">{{ message }}</div>
-									<div class="w-full">
-										<button type="submit" @click.prevent="save()" class="w-full p-3 my-1 bg-stone-700 hover:bg-stone-900 text-white cursor-pointer transition duration-100">Save</button>
-										<a v-if="checkLicense(license, plugin.license)" href="https://typemill.net/buy" target="_blank" class="w-full p-3 my-1 bg-teal-500 hover:bg-teal-600 text-white cursor-pointer transition duration-100">Get a license</a>
-										<a v-else-if="plugin.donate" :href="plugin.donate" target="_blank" class="w-full p-3 my-1 bg-teal-500 hover:bg-teal-600 text-white cursor-pointer transition duration-100">Donate</a>
+									<div class="w-full mt-6 flex justify-between">
+										<button type="submit" @click.prevent="save()" class="flex-1 p-3 bg-stone-700 hover:bg-stone-900 text-white cursor-pointer transition duration-100">Save</button>
+										<a v-if="!checkLicense(license, plugin.license)" href="https://typemill.net/buy" target="_blank" class="flex-1 ml-3 p-3 py-4 text-center bg-teal-500 hover:bg-teal-600 text-white cursor-pointer transition duration-100">Buy a license</a>
+										<a v-else-if="plugin.paypal" :href="plugin.paypal" target="_blank" class="flex-1 ml-3 p-3 py-4 text-center bg-teal-500 hover:bg-teal-600 text-white cursor-pointer transition duration-100">Donate {{plugin.amount}},-</a>
 									</div>
 								</div>
 							</form>
@@ -93,13 +96,15 @@ const app = Vue.createApp({
 		eventBus.$on('forminput', formdata => {
 			this.formData[this.current][formdata.name] = formdata.value;
 		});
+
+		console.info(this.formData);
 	},
 	methods: {
 		getActiveClass: function(pluginname)
 		{
 			if(this.formData[pluginname]['active'])
 			{
-				return 'bg-teal-500 text-white';
+				return 'bg-stone-200';
 			}
 		},
 		getLinkToLicense: function()

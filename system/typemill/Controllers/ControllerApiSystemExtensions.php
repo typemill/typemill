@@ -51,7 +51,7 @@ class ControllerApiSystemExtensions extends ControllerData
 				if(!isset($licenseScope[$definitions['license']]))
 				{
 					$response->getBody()->write(json_encode([
-						'message' 	=> 'We can not activate this plugin because you need a valid '. $definitions['license'] .'-license and your website must run under the domain of your license.',
+						'message' => 'Activation failed because you need a valid '. $definitions['license'] .'-license for this and your website must run under the domain of your license.',
 					]));
 
 					return $response->withHeader('Content-Type', 'application/json')->withStatus(400);					
@@ -60,9 +60,15 @@ class ControllerApiSystemExtensions extends ControllerData
 		}
 
 		$objectdata = [];
-		$objectdata[$params['type']][$params['name']] = $this->settings[$params['type']][$params['name']];
-		$objectdata[$params['type']][$params['name']]['active'] = $params['checked'];
-
+		if($params['type'] == 'plugins')
+		{
+			$objectdata[$params['type']][$params['name']] = $this->settings[$params['type']][$params['name']];
+			$objectdata[$params['type']][$params['name']]['active'] = $params['checked'];
+		}
+		elseif($params['type'] == 'themes')
+		{
+			$objectdata['theme'] = $params['name'];
+		}
 
 		# store updated settings here
 		$updatedSettings = Settings::updateSettings($objectdata);

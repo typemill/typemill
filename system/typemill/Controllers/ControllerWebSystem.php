@@ -34,16 +34,21 @@ class ControllerWebSystem extends ControllerData
 
 	public function showThemes($request, $response, $args)
 	{
-		$storage 		= new StorageWrapper('\Typemill\Models\Storage');
-		$translations 	= $this->c->get('translations');
-		$themeSettings 	= $this->getThemeDetails();
+		$storage 			= new StorageWrapper('\Typemill\Models\Storage');
+		$translations 		= $this->c->get('translations');
+		$themeDefinitions 	= $this->getThemeDetails();
 
-		$themedata = [];
-
+		$themeSettings = [];
 		foreach($this->settings['themes'] as $themename => $themeinputs)
 		{
-			$themedata[$themename] = $themeinputs;
-			$themedata[$themename]['customcss'] = $storage->getFile('cache', $themename . '-custom.css');
+			$themeSettings[$themename] = $themeinputs;
+			$themeSettings[$themename]['customcss'] = $storage->getFile('cache', $themename . '-custom.css');
+		}
+
+		$license = [];
+		if(is_array($this->settings['license']))
+		{
+			$license = array_keys($this->settings['license']);
 		}
 
 	    return $this->c->get('view')->render($response, 'system/themes.twig', [
@@ -51,8 +56,10 @@ class ControllerWebSystem extends ControllerData
 			'mainnavi'			=> $this->getMainNavigation($request->getAttribute('c_userrole')),
 			'systemnavi'		=> $this->getSystemNavigation($request->getAttribute('c_userrole')),
 			'jsdata' 			=> [
-										'settings' 		=> $themedata,
-										'themes'		=> $themeSettings,
+										'settings' 		=> $themeSettings,
+										'definitions'	=> $themeDefinitions,
+										'theme'			=> $this->settings['theme'],
+										'license' 		=> $license,
 										'labels'		=> $translations,
 										'urlinfo'		=> $this->c->get('urlinfo')
 									]
