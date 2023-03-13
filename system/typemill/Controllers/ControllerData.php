@@ -90,7 +90,6 @@ class ControllerData extends Controller
 		return $allowedsystemnavi;
 	}
 
-
 	protected function getThemeDetails()
 	{
 		$themes = $this->getThemes();
@@ -238,5 +237,158 @@ class ControllerData extends Controller
 		}
 
 		return $userfields;
+	}
+
+
+
+##########################################################################################
+#  GET STUFF FOR EDITOR AREA
+##########################################################################################
+
+	# reads the cached structure with published and non-published pages for the author
+	# setStructureDraft
+	protected function getStructureForAuthors($userrole, $username)
+	{
+		# get the cached structure
+		$this->structureDraft = $this->writeCache->getCache('cache', $this->structureDraftName);
+
+		# if there is no cached structure
+		if(!$this->structureDraft)
+		{
+			return $this->setFreshStructureDraft();
+		}
+
+		return true;
+	}
+
+	# creates a fresh structure with published and non-published pages for the author
+	# setFreshStrutureDraft
+	protected function createNewStructureForAuthors()
+	{
+		# scan the content of the folder
+		$pagetreeDraft = Folder::scanFolder($this->settings['rootPath'] . $this->settings['contentFolder'], $draft = true );
+
+		# if there is content, then get the content details
+		if(count($pagetreeDraft) > 0)
+		{
+			# get the extended structure files with changes like navigation title or hidden pages
+			$yaml = new writeYaml();
+			$extended = $this->getExtended();
+
+			# create an array of object with the whole content of the folder and changes from extended file
+			$this->structureDraft = Folder::getFolderContentDetails($pagetreeDraft, $extended, $this->settings, $this->uri->getBaseUrl(), $this->uri->getBasePath());
+			
+			# cache structure draft
+			$this->writeCache->updateCache('cache', $this->structureDraftName, 'lastCache.txt', $this->structureDraft);
+
+			return true;
+		}
+
+		return false;
+	}
+
+	# reads the cached structure of published pages
+	# setStrutureLive
+	protected function getStructureForReaders()
+	{
+		# get the cached structure
+		$this->structureLive = $this->writeCache->getCache('cache', $this->structureLiveName);
+
+		# if there is no cached structure
+		if(!$this->structureLive)
+		{
+			return $this->setFreshStructureLive();
+		}
+
+		return true;
+	}
+
+	# creates a fresh structure with published pages
+	protected function setFreshStructureLive()
+	{
+		# scan the content of the folder
+		$pagetreeLive = Folder::scanFolder($this->settings['rootPath'] . $this->settings['contentFolder'], $draft = false );
+
+		# if there is content, then get the content details
+		if($pagetreeLive && count($pagetreeLive) > 0)
+		{
+			# get the extended structure files with changes like navigation title or hidden pages
+			$yaml = new writeYaml();
+			$extended = $this->getExtended();
+
+			# create an array of object with the whole content of the folder and changes from extended file
+			$this->structureLive = Folder::getFolderContentDetails($pagetreeLive, $extended, $this->settings, $this->uri->getBaseUrl(), $this->uri->getBasePath());
+			
+			# cache structure live
+			$this->writeCache->updateCache('cache', $this->structureLiveName, 'lastCache.txt', $this->structureLive);
+
+			return true;
+		}
+
+		return false;
+	}
+
+	# reads the live navigation from cache (live structure without hidden pages)
+	protected function setNavigation()
+	{
+		# get the cached structure
+		$this->navigation = $this->writeCache->getCache('cache', 'navigation.txt');
+
+		# if there is no cached structure
+		if(!$this->navigation)
+		{
+			return $this->setFreshNavigation();
+		}
+
+		return true;
+	}
+
+	# creates a fresh live navigation (live structure without hidden pages)
+	protected function setFreshNavigation()
+	{
+
+		if(!$this->extended)
+		{
+			$extended = $this->getExtended();
+		}
+
+		if($this->containsHiddenPages($this->extended))
+		{
+			if(!$this->structureLive)
+			{
+				$this->setStructureLive();
+			}
+
+			$structureLive = $this->c->dispatcher->dispatch('onPagetreeLoaded', new OnPagetreeLoaded($this->structureLive))->getData();
+			$this->navigation = $this->createNavigation($structureLive);
+
+			# cache navigation
+			$this->writeCache->updateCache('cache', 'navigation.txt', false, $this->navigation);
+			
+			return true;
+		}
+
+		# make sure no old navigation file is left
+		$this->writeCache->deleteFileWithPath('cache' . DIRECTORY_SEPARATOR . 'navigation.txt');
+
+		return false;
+	}
+
+	# create navigation from structure
+	protected function createNavigation($structureLive)
+	{
+		foreach ($structureLive as $key => $element)
+		{
+			if($element->hide === true)
+			{
+				unset($structureLive[$key]);
+			}
+			elseif(isset($element->folderContent))
+			{
+				$structureLive[$key]->folderContent = $this->createNavigation($element->folderContent);
+			}
+		}
+		
+		return $structureLive;
 	}
 }

@@ -4,21 +4,23 @@ namespace Typemill\Models;
 
 class Storage
 {
-	public $error = false;
+	public $error 				= false;
 
-	protected $basepath = false;
+	protected $basepath 		= false;
 
-	protected $tmpFolder = false;
+	protected $tmpFolder 		= false;
 
-	protected $originalFolder = false;
+	protected $originalFolder 	= false;
 
-	protected $liveFolder = false;
+	protected $liveFolder 		= false;
 
-	protected $thumbsFolder = false;
+	protected $thumbsFolder 	= false;
 
-	protected $customFolder = false;
+	protected $customFolder 	= false;
 
-	protected $fileFolder = false;
+	protected $fileFolder 		= false;
+
+	protected $contentFolder 	= false;
 
 	public function __construct()
 	{
@@ -35,11 +37,22 @@ class Storage
 		$this->customFolder		= $this->basepath . 'media' . DIRECTORY_SEPARATOR . 'custom' . DIRECTORY_SEPARATOR;
 
 		$this->fileFolder 		= $this->basepath . 'media' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR;
+	
+		$this->contentFolder 	= $this->basepath . 'content';
 	}
 
 	public function getError()
 	{
 		return $this->error;
+	}
+
+	public function getStorageInfo($item)
+	{
+		if(isset($this->$item))
+		{
+			return $this->$item;
+		}
+		return false;
 	}
 
 	public function checkFolder($folder)
@@ -87,7 +100,7 @@ class Storage
 		return true;
 	}
 
-	public function writeFile($folder, $filename, $data)
+	public function writeFile($folder, $filename, $data, $method = NULL)
 	{
 		if(!$this->checkFolder($folder))
 		{
@@ -107,6 +120,12 @@ class Storage
 			return false;
 		}
 
+		# serialize, json_decode
+		if($method && is_callable($method))
+		{
+			$data = $method($data);
+		}
+
 		$writefile = fwrite($openfile, $data);
 		if(!$writefile)
 		{
@@ -120,13 +139,19 @@ class Storage
 		return true;
 	}
 
-	public function getFile($folder, $filename)
+	public function getFile($folder, $filename, $method = NULL)
 	{
 		if($this->checkFile($folder, $filename))
 		{
 			# ??? should be with basepath???
 			$fileContent = file_get_contents($folder . DIRECTORY_SEPARATOR . $filename);
 		
+			# use unserialise or json_decode
+			if($method && is_callable($method))
+			{
+				$fileContent = $method($fileContent);
+			}
+
 			return $fileContent;
 		}
 
@@ -205,6 +230,8 @@ class Storage
 
 		return false;
 	}
+
+
 
 
 	public function createUniqueImageName($filename, $extension)

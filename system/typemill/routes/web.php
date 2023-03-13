@@ -6,6 +6,7 @@ use Typemill\Middleware\WebRedirectIfUnauthenticated;
 use Typemill\Middleware\WebAuthorization;
 use Typemill\Controllers\ControllerWebAuth;
 use Typemill\Controllers\ControllerWebSystem;
+use Typemill\Controllers\ControllerWebAuthor;
 use Typemill\Controllers\ControllerWebFrontend;
 #use Slim\Views\TwigMiddleware;
 
@@ -20,6 +21,7 @@ $app->group('/tm', function (RouteCollectorProxy $group) {
 # author and editor area, requires authentication
 $app->group('/tm', function (RouteCollectorProxy $group) use ($routeParser,$acl) {
 
+	# Admin Area
 	$group->get('/logout', ControllerWebAuth::class . ':logout')->setName('auth.logout');
 	$group->get('/system', ControllerWebSystem::class . ':showSettings')->setName('settings.show')->add(new WebAuthorization($routeParser, $acl, 'system', 'show')); # admin;
 	$group->get('/license', ControllerWebSystem::class . ':showLicense')->setName('license.show')->add(new WebAuthorization($routeParser, $acl, 'system', 'show')); # admin;
@@ -30,8 +32,8 @@ $app->group('/tm', function (RouteCollectorProxy $group) use ($routeParser,$acl)
 	$group->get('/user/new', ControllerWebSystem::class . ':newUser')->setName('user.new')->add(new WebAuthorization($routeParser, $acl, 'user', 'create')); # admin;
 	$group->get('/user/{username}', ControllerWebSystem::class . ':showUser')->setName('user.show')->add(new WebAuthorization($routeParser, $acl, 'user', 'show')); # admin;;
 
-	# REFACTOR
-	$group->get('/content/visual[/{params:.*}]', ControllerAuthorEditor::class . ':showBlox')->setName('content.visual');
+	# Author Area
+	$group->get('/content/visual[/{route:.*}]', ControllerWebAuthor::class . ':showBlox')->setName('content.visual')->add(new WebAuthorization($routeParser, $acl, 'mycontent', 'view'));
 
 })->add(new WebRedirectIfUnauthenticated($routeParser));
 

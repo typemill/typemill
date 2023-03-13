@@ -1,0 +1,114 @@
+<nav id="sidebar-menu" class="sidebar-menu--content">
+	<div id="data-navi" data-homepage='{{ homepage|json_encode() }}' data-editormode="{{settings.editor}}"></div>
+	<div id="mobile-menu" class="menu-action">{{ __('Menu') }} <span class="button-arrow"></span></div>
+	<div id="navi" class="content-navi" :value.sync="freeze" v-cloak>
+		<div class="navi-list">
+			<div class="navi-item folder">
+				<div class="foldertoggle" @click="clearToggle"><svg class="icon icon-enlarge2"><use xlink:href="#icon-enlarge2"></use></svg></div>
+				<div class="status" :class="homepage.status"></div>
+				<a href="{{ base_url }}/tm/content/{{ settings.editor }}" :class="homepage.active"><span><span class="iconwrapper"><svg class="icon icon-home"><use xlink:href="#icon-home"></use></svg></span><span class="level-1">{{ __('Homepage') }}</span></a>
+			</div>
+		</div>
+		<draggable class="navi-list" tag="ul" 
+			@start="onStart" 
+			@end="onEnd" 
+			:list="items" 
+			:move="checkMove" 
+			group="file" 
+			animation="150" 
+			:disabled="freeze">	
+			<navigation 
+				v-for="item in items"
+				ref="draggit" 
+				:freeze="freeze" 
+				:name="item.name"
+				:hide="item.hide"
+				:active="item.active" 
+				:parent="item.activeParent" 
+				:level="item.keyPath"
+				:root="root"
+				:url="item.urlRelWoF" 
+				:id="item.keyPath" 
+				:key="item.keyPath" 
+				:elementtype="item.elementType" 
+				:contains="item.contains"
+				:filetype="item.fileType" 
+				:status="item.status"
+				:folder="item.folderContent"
+				:collapse="collapse"
+			></navigation>
+		</draggable>
+		<ul class="navi-list addBaseItem">
+			<li class="navi-item file">
+				<span class="iconwrapper">
+					<svg class="icon icon-plus"><use xlink:href="#icon-plus"></use></svg>
+				</span>
+				<span class="addNaviItem">
+					<a class="addNaviLink" href="#" @click.prevent="toggleForm">{{ __('add item') }}</a>
+				</span>
+				<transition name="fade">
+					<div v-if="showForm" class="addNaviForm">
+						<input v-model="newItem">
+						<button class="b-left" @click="addFile('file')">{{ __('add file') }}</button><button class="b-right" @click="addFile('folder')">{{ __('add folder') }}</button>
+					</div>
+				</transition>
+			</li>
+		</ul>
+	</div>
+</nav>
+
+{% verbatim %}
+	<template id="navigation-template">
+		<li class="navi-item" :class="elementtype">
+			<div v-if="folder" class="foldertoggle" @click="callToggle(name)"><svg v-if="isCollapsed(name)" class="icon icon-shrink2"><use xlink:href="#icon-shrink2"></use></svg><svg v-else class="icon icon-enlarge2"><use xlink:href="#icon-enlarge2"></use></svg></div>
+			<div class="status" :class="status"></div>
+			<a v-bind:href="getUrl(root, url)" :class="checkActive(active,parent)"><span class="iconwrapper"><svg class="icon" :class="getIconClass(elementtype, filetype, hide)"><use :xlink:href="getIcon(elementtype, filetype, hide)"></use></svg></span><span :class="getLevel(level)">{{ name }}</span><span class="movewrapper"><svg class="icon icon-arrows-v"><use xlink:href="#icon-arrows-v"></use></svg></span></a>
+			<draggable v-if="folder" v-show="!isCollapsed(name)" class="navi-list" tag="ul" 
+				@start="onStart" 
+				@end="onEnd"
+				:list="folder" 
+				:move="checkMove" 
+				group="file" 
+				animation="150" 
+				:disabled="freeze">
+				<navigation 
+					v-for="item in folder"
+					v-if="contains == 'pages'"
+					ref="draggit" 
+					:freeze="freeze" 
+					:name="item.name" 
+					:hide="item.hide"
+					:active="item.active" 
+					:parent="item.activeParent" 
+					:level="item.keyPath" 
+					:url="item.urlRelWoF" 
+					:root="root" 
+					:id="item.keyPath" 
+					:key="item.keyPath" 
+					:filetype="item.fileType" 
+					:status="item.status" 
+					:elementtype="item.elementType"
+					:contains="item.contains" 
+					:folder="item.folderContent"
+					:collapse="collapse"
+				></navigation>
+			</draggable>
+			<ul v-if="folder && contains == 'pages'" class="navi-list">
+				<li class="navi-item file">
+					<span class="iconwrapper">
+						<svg class="icon icon-plus"><use xlink:href="#icon-plus"></use></svg>
+					</span>
+					<span :class="getLevel(level + '.0')" class="addNaviItem">
+						<a class="addNaviLink" href="#" @click.prevent="toggleForm">{% endverbatim %}{{ __('add item') }}{% verbatim %}</a>
+					</span>
+					<transition name="fade">
+						<div v-if="showForm" class="addNaviForm">
+							<input v-model="newItem">
+							<button class="b-left" @click="addFile('file')">{% endverbatim %}{{ __('add file') }}{% verbatim %}</button><button class="b-right" @click="addFile('folder')">{% endverbatim %}{{ __('add folder') }}{% verbatim %}</button>
+						</div>
+					</transition>
+				</li>
+			</ul>
+		</li>
+	</template>
+{% endverbatim %}

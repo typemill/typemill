@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>{% block title %}{% endblock %}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<meta name="description" content="Edit your content with typemill"/>
+
+		<meta name="msapplication-TileColor" content="#F9F8F6" />
+		<meta name="msapplication-TileImage" content="{{ base_url() }}/system/author/img/favicon-144.png" />
+		<link rel="icon" type="image/png" href="{{ base_url() }}/system/author/img/favicon-16.png" sizes="16x16" />
+		<link rel="icon" type="image/png" href="{{ base_url() }}/system/author/img/favicon-32.png" sizes="32x32" />
+		<link rel="apple-touch-icon" sizes="72x72" href="{{ base_url() }}/system/author/img/favicon-72.png" />
+		<link rel="apple-touch-icon" sizes="114x114" href="{{ base_url() }}/system/author/img/favicon-114.png" />
+		<link rel="apple-touch-icon" sizes="144x144" href="{{ base_url() }}/system/author/img/favicon-144.png" />
+		<link rel="apple-touch-icon" sizes="180x180" href="{{ base_url() }}/system/author/img/favicon-180.png" />
+
+		<link rel="stylesheet" href="{{ base_url() }}/system/typemill/author/css/output.css?v={{ settings.version }}" />
+		<link rel="stylesheet" href="{{ base_url() }}/system/typemill/author/css/custom.css?v={{ settings.version }}" />
+		
+		{% block stylesheet %}{% endblock %}
+
+		{{ assets.renderCSS() }}
+		
+	</head>
+	<body class="bg-stone-100">
+
+		{% include 'partials/symbols.twig' %}
+		
+		<header class="border-b-2 border-stone-200">
+			{% include 'partials/mainNavi.twig' %}
+		</header>
+
+		{% include 'partials/flash.twig' %}
+
+		<div class="max-w-6xl m-auto mt-7 flex justify-between" id="main" data-url="{{ base_url() }}">
+			<aside class="w-1/4">
+				{% include 'partials/contentNavi.twig' %}
+			</aside>
+			<article class="w-3/4 bg-stone-50 shadow-md p-8">
+				{% block content %}{% endblock %}
+			</article>
+		</div>
+		
+		{{ csrf() | raw }}
+
+		<script>
+			
+			const data = {{ jsdata | json_encode() | raw  }};
+			const labels = {{ translations|json_encode() }};
+
+		</script>
+		<script src="{{ base_url() }}/system/typemill/author/js/axios.min.js?v={{ settings.version }}"></script>
+		<script>
+			const tmaxios = axios.create();
+			tmaxios.defaults.baseURL =  "{{ base_url() }}";
+			tmaxios.defaults.headers.common['X-Session-Auth'] = "true";
+		</script>
+		<script src="{{ base_url() }}/system/typemill/author/js/vue.js?v={{ settings.version }}"></script>
+		<script src="{{ base_url() }}/system/typemill/author/js/vue-eventbus.js?v={{ settings.version }}"></script>
+
+		{% block javascript %}{% endblock %}
+
+		{{ assets.renderJS() }}		
+	
+	</body>
+</html>

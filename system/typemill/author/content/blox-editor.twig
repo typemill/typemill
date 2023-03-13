@@ -1,0 +1,22 @@
+{% extends 'layouts/layoutContent.twig' %}
+{% block title %}{{ translate('Visual Editor') }}{% endblock %}
+
+{% block content %}
+	
+	<h1 class="text-3xl font-bold mb-4">{{ translate('Visual Editor') }} </h1>
+	
+	<div id="veditor" v-cloak></div>
+
+{% endblock %}
+
+{% block javascript %}
+
+	<script src="{{ base_url() }}/system/typemill/author/js/highlight.min.js?v={{ settings.version }}"></script>
+	<script src="{{ base_url() }}/system/typemill/author/js/vue-system.js?v={{ settings.version }}"></script>		
+	<script src="{{ base_url() }}/system/typemill/author/js/vue-translate.js?v={{ settings.version }}"></script>		
+	<script src="{{ base_url() }}/system/typemill/author/js/vue-shared.js?v={{ settings.version }}"></script>
+	<script>
+		app.mount('#veditor');
+	</script>
+
+{% endblock %}
