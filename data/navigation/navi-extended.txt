@@ -4,11 +4,11 @@
     noindex: false
     path: /00-welcome
     keyPath: 0
-/welcome/setup-your-website:
+/welcome/markdown-test:
     navtitle: ''
     hide: false
     noindex: false
-    path: /00-welcome/00-setup-your-website.md
+    path: /00-welcome/00-markdown-test.md
     keyPath: '0.0'
 /welcome/manage-access:
     navtitle: ''
@@ -16,23 +16,23 @@
     noindex: false
     path: /00-welcome/01-manage-access.md
     keyPath: '0.1'
-/welcome/write-content:
-    navtitle: ''
-    hide: false
-    noindex: false
-    path: /00-welcome/02-write-content.md
-    keyPath: '0.2'
 /welcome/get-help:
     navtitle: ''
     hide: false
     noindex: false
-    path: /00-welcome/03-get-help.md
-    keyPath: '0.3'
-/welcome/markdown-test:
+    path: /00-welcome/02-get-help.md
+    keyPath: '0.2'
+/welcome/setup-your-website:
     navtitle: ''
     hide: false
     noindex: false
-    path: /00-welcome/04-markdown-test.md
+    path: /00-welcome/03-setup-your-website.md
+    keyPath: '0.3'
+/welcome/write-content:
+    navtitle: ''
+    hide: false
+    noindex: false
+    path: /00-welcome/04-write-content.md
     keyPath: '0.4'
 /cyanine-theme:
     navtitle: ''
@@ -40,17 +40,17 @@
     noindex: false
     path: /01-cyanine-theme
     keyPath: 1
-/cyanine-theme/landingpage:
-    navtitle: ''
-    hide: false
-    noindex: false
-    path: /01-cyanine-theme/00-landingpage.md
-    keyPath: '1.0'
 /cyanine-theme/colors-and-fonts:
     navtitle: ''
     hide: false
     noindex: false
-    path: /01-cyanine-theme/01-colors-and-fonts.md
+    path: /01-cyanine-theme/00-colors-and-fonts.md
+    keyPath: '1.0'
+/cyanine-theme/landingpage:
+    navtitle: ''
+    hide: false
+    noindex: false
+    path: /01-cyanine-theme/01-landingpage.md
     keyPath: '1.1'
 /cyanine-theme/footer:
     navtitle: ''
