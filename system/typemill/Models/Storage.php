@@ -192,9 +192,52 @@ class Storage
 		return false;
 	}
 
-	public function moveFile()
+	# used to sort the navigation / files 
+	public function moveFile($item, $folderPath, $index, $date = null)
 	{
+		$filetypes			= array('md', 'txt', 'yaml');
+		
+		# set new order as string
+		$newOrder			= ($index < 10) ? '0' . $index : $index;
 
+		$newPath 			= $this->contentFolder . $folderPath . DIRECTORY_SEPARATOR . $newOrder . '-' . $item->slug;
+
+		if($item->elementType == 'folder')
+		{
+			$oldPath = $this->basePath . 'content' . $item->path;
+			if(@rename($oldPath, $newPath))
+			{
+				return true;
+			}
+			return false;
+		}
+		
+		# create old path but without filetype
+		$oldPath		= substr($item->path, 0, strpos($item->path, "."));
+		$oldPath		= $this->contentFolder . $oldPath;
+
+		$result 		= true;
+		
+		foreach($filetypes as $filetype)
+		{
+			$oldFilePath = $oldPath . '.' . $filetype;
+			$newFilePath = $newPath . '.' . $filetype;
+			
+			#check if file with filetype exists and rename
+			if($oldFilePath != $newFilePath && file_exists($oldFilePath))
+			{
+				if(@rename($oldFilePath, $newFilePath))
+				{
+					$result = $result;
+				}
+				else
+				{
+					$result = false;
+				}
+			}
+		}
+
+		return $result;		
 	}
 
 	/**
@@ -498,54 +541,5 @@ class Storage
 		return $result;
 	}	
 
-	public function moveElement($item, $folderPath, $index, $date = null)
-	{
-		$filetypes			= array('md', 'txt', 'yaml');
-		
-		# set new order as string
-		$newOrder			= ($index < 10) ? '0' . $index : $index;
-
-		# create new path with foldername or filename but without file-type
-		# $newPath 			= $this->basePath . 'content' . $folderPath . DIRECTORY_SEPARATOR . $newOrder . '-' . str_replace(" ", "-", $item->name);
-		
-		$newPath 			= $this->basePath . 'content' . $folderPath . DIRECTORY_SEPARATOR . $newOrder . '-' . $item->slug;
-
-		if($item->elementType == 'folder')
-		{
-			$oldPath = $this->basePath . 'content' . $item->path;
-			if(@rename($oldPath, $newPath))
-			{
-				return true;
-			}
-			return false;
-		}
-		
-		# create old path but without filetype
-		$oldPath		= substr($item->path, 0, strpos($item->path, "."));
-		$oldPath		= $this->basePath . 'content' . $oldPath;
-				
-		$result 		= true;
-		
-		foreach($filetypes as $filetype)
-		{
-			$oldFilePath = $oldPath . '.' . $filetype;
-			$newFilePath = $newPath . '.' . $filetype;
-			
-			#check if file with filetype exists and rename
-			if($oldFilePath != $newFilePath && file_exists($oldFilePath))
-			{
-				if(@rename($oldFilePath, $newFilePath))
-				{
-					$result = $result;
-				}
-				else
-				{
-					$result = false;
-				}
-			}
-		}
-
-		return $result;		
-	}
 	*/
 }

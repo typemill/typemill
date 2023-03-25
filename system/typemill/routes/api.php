@@ -12,6 +12,7 @@ use Typemill\Controllers\ControllerApiSystemExtensions;
 use Typemill\Controllers\ControllerApiSystemLicense;
 use Typemill\Controllers\ControllerApiSystemUsers;
 use Typemill\Controllers\ControllerApiImage;
+use Typemill\Controllers\ControllerApiAuthorArticle;
 
 $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 
@@ -39,6 +40,10 @@ $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 	$group->get('/image', ControllerApiMedia::class . ':getImage')->setName('api.image.get');
 	$group->put('/image', ControllerApiMedia::class . ':publishImage')->setName('api.image.publish');
 	$group->delete('/image', ControllerApiMedia::class . ':deleteImage')->setName('api.image.delete');
+
+	# ARTICLE
+	$group->post('/article/sort', ControllerApiAuthorArticle::class . ':sortArticle')->setName('api.article.sort')->add(new ApiAuthorization($acl, 'content', 'view')); # author
+	$group->post('/article', ControllerApiAuthorArticle::class . ':createArticle')->setName('api.article.create')->add(new ApiAuthorization($acl, 'content', 'view')); # author
 
 })->add(new ApiAuthentication());
 
