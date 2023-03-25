@@ -382,6 +382,66 @@ class Validation
 		return $v->errors();
 	}
 
+	/**
+	* validation for resort navigation
+	* 
+	* @param array $params with form data.
+	* @return true or $v->errors with array of errors to use in json-response
+	*/
+	
+	public function navigationSort(array $params)
+	{
+		$v = new Validator($params);
+				
+		$v->rule('required', ['item_id', 'parent_id_from', 'parent_id_to']);
+		$v->rule('regex', 'item_id', '/^[0-9.]+$/i');
+		$v->rule('regex', 'parent_id_from', '/^[a-zA-Z0-9.]+$/i');
+		$v->rule('regex', 'parent_id_to', '/^[a-zA-Z0-9.]+$/i');
+		$v->rule('integer', 'index_new');
+		$v->rule('integer', 'index_old');
+		
+		if($v->validate()) 
+		{
+			return true;
+		} 
+
+		return $v->errors();
+	}
+
+	/**
+	* validation for new navigation items
+	* 
+	* @param array $params with form data.
+	* @return true or $v->errors with array of errors to use in json-response
+	*/
+
+	public function navigationItem(array $params)
+	{
+		$v = new Validator($params);
+
+		$v->rule('required', ['folder_id', 'item_name', 'type', 'url']);
+		$v->rule('regex', 'folder_id', '/^(root)|([0-9.]+)$/i');
+		$v->rule('navigation', 'item_name');
+		$v->rule('lengthBetween', 'item_name', 1, 60);
+		$v->rule('in', 'type', ['file', 'folder']);
+		
+		if($v->validate()) 
+		{
+			return true;
+		} 
+		else
+		{
+			return $v->errors();
+		}
+	}	
+
+
+
+
+
+
+
+
 
 	/**
 	* validation for system settings
@@ -463,80 +523,7 @@ class Validation
 		}
 	}
 
-	/**
-	* validation for resort navigation
-	* 
-	* @param array $params with form data.
-	* @return true or $v->errors with array of errors to use in json-response
-	*/
-	
-	public function navigationSort(array $params)
-	{
-		$v = new Validator($params);
-				
-		$v->rule('required', ['item_id', 'parent_id_from', 'parent_id_to']);
-		$v->rule('regex', 'item_id', '/^[0-9.]+$/i');
-		$v->rule('regex', 'parent_id_from', '/^[a-zA-Z0-9.]+$/i');
-		$v->rule('regex', 'parent_id_to', '/^[a-zA-Z0-9.]+$/i');
-		$v->rule('integer', 'index_new');
-		
-		if($v->validate()) 
-		{
-			return true;
-		} 
-		else
-		{
-			return $v->errors();
-		}
-	}
 
-	/**
-	* validation for new navigation items
-	* 
-	* @param array $params with form data.
-	* @return true or $v->errors with array of errors to use in json-response
-	*/
-
-	public function navigationItem(array $params)
-	{
-		$v = new Validator($params);
-
-		$v->rule('required', ['folder_id', 'item_name', 'type', 'url']);
-		$v->rule('regex', 'folder_id', '/^[0-9.]+$/i');
-#		$v->rule('noSpecialChars', 'item_name');
-		$v->rule('navigation', 'item_name');
-		$v->rule('lengthBetween', 'item_name', 1, 60);
-		$v->rule('in', 'type', ['file', 'folder']);
-		
-		if($v->validate()) 
-		{
-			return true;
-		} 
-		else
-		{
-			return $v->errors();
-		}
-	}	
-
-	public function navigationBaseItem(array $params)
-	{
-		$v = new Validator($params);
-						
-		$v->rule('required', ['item_name', 'type', 'url']);
-#		$v->rule('noSpecialChars', 'item_name');
-		$v->rule('navigation', 'item_name');
-		$v->rule('lengthBetween', 'item_name', 1, 40);
-		$v->rule('in', 'type', ['file', 'folder']);
-		
-		if($v->validate()) 
-		{
-			return true;
-		} 
-		else
-		{
-			return $v->errors();
-		}
-	}	
 	
 	/**
 	* validation for dynamic fields ( settings for themes and plugins)

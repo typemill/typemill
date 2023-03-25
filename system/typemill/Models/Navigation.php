@@ -40,6 +40,35 @@ class Navigation
 		$this->extendedNaviName 	= 'navi-extended.txt';
 	}
 
+	public function clearNavigation(array $deleteitems = NULL )
+	{
+		# clear cache 
+		$this->extendedNavigation = false;
+		$this->draftNavigation = false;
+		$this->basicDraftNavigation = false;
+		$this->liveNavigation = false;
+		$this->basicLiveNavigation = false;
+
+		# clear files
+		$navifiles = [
+			'extended' 	=> $this->extendedNaviName,
+			'draft' 	=> $this->draftNaviName,
+			'live'		=> $this->liveNaviName
+		];
+
+		if($deleteitems)
+		{
+			$navifiles = array_intersect_key($navifiles, $deleteitems);
+		}
+
+		foreach($navifiles as $navifile)
+		{
+			$result = $this->storage->deleteFile($this->naviFolder, $navifile);
+		}
+
+		return $result;
+	}
+
 	public function getMainNavigation($userrole, $acl, $urlinfo, $editor)
 	{
 		$mainnavi 		= $this->storage->getYaml('system/typemill/settings', 'mainnavi.yaml');
@@ -75,7 +104,6 @@ class Navigation
 
 		return $allowedmainnavi;
 	}
-
 
 	# get the navigation with draft files for author environment
 	public function getDraftNavigation($urlinfo, $language, $userrole = null, $username = null)

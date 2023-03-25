@@ -6,14 +6,18 @@ member:
       - 'view'
       - 'update'
       - 'delete'
-author:
-  name: author
+contributor:
+  name: contributor
   inherits: member
   permissions: 
     mycontent:
       - 'view'
       - 'create'
       - 'update'
+author:
+  name: author
+  inherits: contributor
+  permissions: 
     content:
       - 'view'
 editor:
