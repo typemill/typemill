@@ -1110,6 +1110,8 @@ input, textarea{
 }
 textarea{
 	min-height: 84px;
+	max-height: 1092px;
+	resize: vertical;
 }
 select{
 	padding: 14px 8px;

@@ -37,7 +37,7 @@
 						{% if is_role('administrator') %}
 							<fieldset>
 								<div class="large">
-									<legend>Raw Userdata (readonly for admins)</legend>
+									<legend>{{ __('Raw Userdata (readonly for admins)') }}</legend>
 									<textarea readonly="readonly" rows="10">{{ userdata|json_encode(constant('JSON_PRETTY_PRINT')) }}</textarea>
 								</div>
 							</fieldset>
@@ -62,7 +62,7 @@
 				<h2>{{ __('Delete') }} {{ userdata.username }}</h2>
 				<p>{{ __('Do you really want to delete the user') }} {{userdata.username}}? {{ __('Please confirm') }}.</p>
 				<input type="hidden" name="username" value="{{userdata.username}}">
-				<input type="submit" class="danger" value="Delete user">
+				<input type="submit" class="danger" value="{{ __('Delete User') }}">
 				{{ csrf_field() | raw }}
 			</form>
 		</div>

@@ -1,26 +1,35 @@
 # Russian (Русский)
 # Author: Paul (https://paul.bid) paulbid@protonmail.com
+
+# ↓ Admin Panel + Other ↓
+ABOUT_CONFIGURATIONS_FOR_TYPEMILL_ON_YOUTUBE_: о настройках для TypeMill на YouTube.
+ACCESS_CONTROL: Настройки доступа
 ACCOUNT: Аккаунт
+ACTION: Действие
+ACTIVATE_CACHE_FOR_TWIG_TEMPLATES: Активировать кэш для шаблонов Twig
+ACTIVATE_INDIVIDUAL_RESTRICTIONS_FOR_PAGES_IN_THE_META_TAB_OF_EACH_PAGE_: Активировать индивидуальные ограничения для страниц во вкладке метаданные у каждой страницы.
+ACTIVATE_THE_PASSWORD_RECOVERY_ONLY_IF_IT_IS_REALLY_NEEDED__IF_POSSIBLE_USE_YOUR_PASSWORD_MANAGER_INSTEAD_: Активируйте функции восстановления паролей только в том случае, если это действительно необходимо. Если возможно, используйте вместо этого свой менеджер паролей.
+ACTIVATE_THE_RECOVER_PASSWORD_FUNCTION: Активировать функцию воостановления паролей
 ACTIVE: Активный
 ACTUAL_PASSWORD: Текущий пароль
-ADD: Добавить
-ADD_CONTENT_BLOCK: Добавить блок
 ADD_DEFINITION: добавить определение
-ADD_FILE: добавить запись
+ADD_FILE: добавить страницу
 ADD_FOLDER: добавить раздел
 ADD_FOLDER_TO_BASE_LEVEL: добавить раздел на корневой уровень
 ADD_ITEM: Добавить
 ADD_LEFT_COLUMN: добавить колонку слева
+ADD_MORE_URL_SCHEMES_FOR_EXTERNAL_LINKS_E_G__LIKE_DICT://_(COMMA_SEPARATED_LIST): Добавьте дополнительные схемы URL для внешних ссылок, например как dict:// (список, разделенный запятыми)
+ADD_ONE_OR_MORE_USERNAMES_SEPARATED_WITH_COMMA_: Добавьте одно или несколько имен пользователей через запятую.
 ADD_RIGHT_COLUMN: добавить колонку справа
 ADD_ROW_ABOVE: добавить строку выше
 ADD_ROW_BELOW: добавить строку ниже
 ADMINISTRATOR: Администратор
 ALL: Всех посетителей
 ALL_USERS: Все пользователи
-ALTERNATIVE_TEXT_FOR_THE_HERO_IMAGE: Альтернативный текст-описание главного изображения для записи
+ALLOW_UPLOAD_OF_SVG_IMAGES_(ON_YOUR_OWN_RISK__HAS_SECURITY_IMPLICATIONS): Разрешить загрузку изображений в svg формате. Разрешая, пожалуйста, учитывайте все связанные с этим риски, ибо это может иметь плачевные последствия с точки зрения безопасности сайта.
 ALT_TEXT: Альтернативный текст
-AUTHOR: Автор
-AUTHOR_DESCRIPTION_(MARKDOWN): Об авторе (Markdown)
+AND: и
+AUTHOR_DESCRIPTION_(MARKDOWN): Об авторе (поддерживается Markdown)
 BACK_TO_STARTPAGE: Назад на главную страницу
 BOLD: Полужирный
 BOTTOM: Внизу
@@ -28,130 +37,140 @@ BROWSE: ОБЗОР
 BULLET_LIST: Маркированный список
 BY: от
 CANCEL: Отмена
-CAN_BE_USED_FOR_AUTHOR_LINE_IN_FRONTEND_: Может использоваться в качестве описания автора на странице с записью.
 CAPTION: Название
 CELL: ячейка
 CENTER: По центру
 CHECK: проверить
 CHOOSE_FILE: Выберите файл
 CLASS: Класс
+CLEAR_CACHE: Очистить кэш
 CLOSE_LIBRARY: Закрыть библиотеку
 CODE: Код
 COG: cog
-CONTENT: Контент
+COMMA_SEPARATED_LIST_ADDITIONAL_SCHEMES: Разделенный запятыми список дополнительных схем
 COPYRIGHT: Копирайт
-CREATED_AT_(READONLY): Создано (нельзя изменить)
-CREATED_AT_(READ_ONLY): Создано (нельзя изменить)
+CREATE_A_LOGFILE_IN_THE_CACHE_FOLDER_TO_TRACK_SPAM_AND_SUSPICIOUS_ACTIONS: Создать и вести файл журнала в папке кэша для отслеживания спама и подозрительных действий
 CREATE_NEW_USER: Создание нового пользователя
 CREATE_USER: Создать пользователя
 CROSS: Зачёркнутый
 CUSTOM_CSS: Дополнительный CSS
+CUT_RESTRICTED_CONTENT_AFTER_THE_FIRST_HR_ELEMENT_ON_A_PAGE_(PER_DEFAULT_CONTENT_WILL_BE_CUT_AFTER_TITLE)_: Скрыть контент после первого hr-элемента на странице (по умолчанию контент скрывается после заголовка).
+DEAR_USER_: Уважаемый пользователь,
 DEFINITION: Список определений
 DEFINITION_LIST: Список определений
 DELETE: Удалить
+DELETE_ALL_CACHE_FILES: Удалить все файлы кэша
 DELETE_CLOSE: Удалить/закрыть
 DELETE_COLUMN: Удалить колонку
-DELETE_CONTENT_BLOCK: Удалить блок
 DELETE_PAGE: Удалить страницу
 DELETE_ROW: Удалить строку
 DELETE_USER: Удалить пользователя
 DESCRIPTION: описание
-DISCARD: Сбросить
-DISCARD_CHANGES: Сбросить изменения
+DEVELOPER: Настройки разработчика
+DISABLE_HEADERS: Отключение заголовков
+DISABLE_TYPEMILL_HEADERS_AND_SEND_YOUR_OWN: Отключить заголовки Typemill и отправлять свои заголовки
+DISPLAY_APPLICATION_ERRORS: Отображение ошибок
 DO_YOU_REALLY_WANT_TO_DELETE_THE_USER: Вы действительно хотите удалить пользователя
 DO_YOU_REALLY_WANT_TO_DELETE_THIS_PAGE: Вы действительно хотите удалить эту страницу?
-DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES_AND_SET_THE_CONTENT_BACK_TO_THE_LIVE_VERSION: Вы хотите сбросить изменения и вернуться к предыдущей версии?
 DRAFT: Черновик
 DRAG_A_PICTURE_OR_CLICK_TO_SELECT: загрузить изображение
 DUTCH__FLEMISH: Dutch, Flemish (Голландский, Фламандский)
-EDIT: редактировать
-EDITOR: Редактор
-EDIT_USER: Редактирование профиля
-ENGLISH: English (Английский)
-EXTERNAL_LINK: внешняя ссылка
 E_G_: например
 E_MAIL: Email
+EDIT: Редактировать
+EDIT_USER: Редактирование профиля
+EDITOR: Редактор
+ENGLISH: English (Английский)
+ERROR_REPORTING: Отчёты об ошибках
 FAVICON: Иконка сайта (Favicon)
 FILE: Файл
 FILES: Файлы
 FIRST_NAME: Имя
 FOLDER: раздел
+FOR_ACCESS_THE_USER_MUST_HAVE_THIS_MINIMUM_ROLE: Для доступа к этой странице пользователь должен иметь как минимум выбранную роль
 FORGOT_PASSWORD: Забыл пароль
 FORMAT: Формат
 FRENCH: French (Французский)
 GENERAL_PRESENTATION: Графическая атрибутика
 GERMAN: German (Немецкий)
-GOOGLE_SITEMAP: Google Sitemap
-HAS_EDIT_RIGHTS_FOR_THIS_ARTICLE_: Имеет права на редактирование этой записи.
+GOOGLE_SITEMAP: Карта сайта от Google
 HEAD: Заголовок
 HEADLINE: Заголовок
 HEADLINE_ANCHORS: Якорные ссылки в заголовках
-HERO_IMAGE: Главное изображение для записи
-HIDE: Скрыть
-HIDE_PAGE_FROM_NAVIGATION: Скрыть страницу из меню навигации
 HOME: главная
 HOMEPAGE: Главная
 HORIZONTAL_LINE: Горизонтальная линия
 HR: Горизонтальная линия
-IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: Если не заполнено, описание генерируется из содержимого.
+IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT__THEN_THE_IMAGE_WILL_BE_CROPPED_: Если вы добавите значение высоты, изображения будут обрезаны исходя из этого значения.
 IMAGE: Изображение
 IMAGES: Изображения
-IMAGE_URL: URL изображения
-IMAGE_URL_(READ_ONLY): URL изображения (нельзя изменить)
 ITALIAN: Italian (Итальянский)
 ITALIC: Наклонный
 LANGUAGE: Язык
 LANGUAGE_ADMIN: Язык (для панели администратора)
 LANGUAGE_ATTR: Атрибут языка (для сайта)
-LAST_MODIFIED_LIVE_(READONLY): Последнее изменение было (нельзя изменить)
 LAST_NAME: Фамилия
 LEFT: Слева
 LICENCE: Лицензия
+LIKE_«EN»: например «en»
+LIMIT_THE_ACCESS_FOR_THE_WHOLE_WEBSITE_OR_FOR_EACH_PAGE_INDIVIDUALLY__IF_YOU_ACTIVATE_THE_WEBSITE_RESTRICTION_OR_THE_PAGE_RESTRICTIONS__THEN_SESSIONS_WILL_BE_USED_IN_FRONTEND_: Ограничьте доступ для всего сайта или для каждой страницы в отдельности. Если вы активируете ограничение доступа к сайту или ограничение доступа к некоторым страницам, то сеансы пользователей (сессии) будут храниться на стороне пользователей (во фронтенд части).
 LINK: Ссылка
 LINK_TO_VIDEO: Ссылка на видео
 LOGIN: Войти
 LOGO: Логотип
 LOGOUT: Выйти
-MANUAL_DATE: Выбор даты вручную
 MARKDOWN: Markdown
-MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB__HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES_: Максимальный размер изображения - 5 MB. Главные изображения для записей поддерживаются не всеми темами.
+MAXIMUM_SIZE_FOR_FILE_UPLOADS_IN_MB: Максимальный размер загружаемых файлов в МБ
+MEDIA: Настройки медиа
 MEMBER: Зарегистрированный пользователь
 MENU: Меню
-META: Метаданные
-META_DESCRIPTION: Мета-описание
-META_TITLE: Мета-заголовок
 MISSING_REQUIREMENTS: Отсутствующие требования
 MOVE_VERTICAL: двигаться по вертикали
-NAVIGATION_TITLE: Название страницы в меню навигации
+NEW_HERE?_THEN_WATCH: Впервые здесь? Тогда посмотрите
 NEW_PASSWORD: Новый пароль
-NONE: Нет
-NOTICE: Заметка
-NOT_EDITABLE: нельзя отредактировать
 NO_DESCRIPTION: Нет описания
 NO_PREVIEW: Нет предпросмотра
 NO_SETTINGS: Нет настроек
+NONE: Нет
+NOT_EDITABLE: нельзя отредактировать
+NOTICE: Заметка
 NUMBERED_LIST: Упорядоченный список
+OLD_SLUG_LOGIC: Старый алгорим внутренних ссылок
 OLIST: Упорядоченный список
 ONLINE: онлайн
 ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: Разрешены только следующие специальные символы -
-OWNER_(USERNAME): Владелец (имя пользователя)
+ONLY_THE_FOLLOWING_USERS_HAVE_ACCESS: Только следующие пользователи имеют доступ к этой странице
+PAGE_RESTRICTIONS___ACTIVATE: Настройки страниц - Активация ограничения доступа
+PAGE_RESTRICTIONS___CUT_RESTRICTED_CONTENT: Настройки страниц - Скрытие ограниченного контента
+PAGE_RESTRICTIONS___NOTICE: Настройки страниц - Примечание об ограничении доступа
+PAGE_RESTRICTIONS___WRAP_NOTICE_INTO_A_BOX: Настройки страниц - Оборачивание примечания об ограничении доступа в рамку
 PARAGRAPH: Параграф
 PASSWORD: Пароль
+PASSWORD_RECOVERY: Настройки восстановления паролей
+PING_SITEMAP_AUTOMATICALLY: Перепроверять карту сайта автоматически
+PING_SITEMAP_AUTOMATICALLY_AFTER_PUBLISHING_A_PAGE_: Перепроверять карту сайта автоматически каждый раз после публикации страницы.
 PLEASE_CONFIRM: Пожалуйста подтвердите
 PLEASE_CORRECT_THE_ERRORS_ABOVE: Пожалуйста, исправьте ошибки выше
-PLUGINS: Плагины
+PLEASE_USE_CODES_FROM: Пожалуйста, используйте коды из
+PLEASE_USE_THE_FOLLOWING_LINK_TO_CREATE_A_NEW_PASSWORD__THE_LINK_IS_VALID_FOR_24_HOURS: пожалуйста, воспользуйтесь следующей ссылкой, чтобы создать новый пароль. Ссылка действительна в течение 24 часов:
 PLUGIN_STORE: Магазин Плагинов
+PLUGINS: Плагины
 POWER_OFF: выключить
 PROFILE_IMAGE: Изображение профиля (аватар)
-PUBLISH: Опубликовать
+PROXY: Прокси
 QUOTE: Цитата
 QUOTES: Цитирует
 RAW: исходный код
 RAW_CONTENT_EDITOR: Редактор исходного кода
 RAW_MARKDOWN_EDITOR: Редактор кода Markdown
-RAW_MODE: Режим исходного кода
-RAW_USERDATA_(READONLY_FOR_ADMINS): Пользовательские данные (только для администраторов и только просмотр)
-READONLY: Нельзя изменить
+RAW_USERDATA_(READONLY_FOR_ADMINS): Пользовательские данные (видны только администраторам и только в режиме просмотра)
+READONLY: нельзя изменить
+RECOVER_PASSWORDS: Восстановление паролей
+RECOVER_YOUR_PASSWORD: Сброс пароля на сайте ...
+RECREATE_CACHE: Пересоздать кэш
+RECREATE_CACHED_FILES: Пересоздать файлы кэша
+REFRESH_CACHE: Обновление кэша
+REFRESH_THE_CACHE_AFTER_10_MINUTES__USE_THIS_IF_YOU_CHANGE_CONTENT_FILES_MANUALLY_E_G__WITH_FTP_: Обновлять кэш каждые 10 минут. Используйте эту настройку, если вы изменяете файлы содержимого сайта вручную, например, с помощью FTP.
 REGISTERED_USERS_ONLY: Только зарегистрированных пользователей
 REMEMBER_TO_BOOKMARK_THIS_PAGE: Не забудьте добавить в закладки эту страницу
 REQUIRED: Обязательно
@@ -159,45 +178,63 @@ RIGHT: Справа
 ROLE: Роль
 RUSSIAN: Russian (Русский)
 SAVE: Сохранить
-SAVED_SUCCESSFULLY: Успешно сохранено
 SAVE_ALL_SETTINGS: Сохранить все настройки
 SAVE_THEME: Сохранить настройки Темы
+SAVED_SUCCESSFULLY: Успешно сохранено
+SECURITY_LOG: Логи безопасности
 SELECT_FROM_MEDIALIB: Выбрать из библиотеки
+SELECT_THE_LOWEST_USERROLE__HIGHER_ROLES_WILL_HAVE_ACCESS_TOO_: Выберите роль пользователя. Более важные роли также будут иметь доступ к странице.
+SENDER_EMAIL: Email отправителя, который увидят пользователи при получении письма о сбросе пароля
 SETTINGS: Настройки
 SETTINGS_ARE_STORED: Настройки сохранены
 SETUP: Установка
+SHORTCODE: Шорткод
 SHOW_ANCHORS_NEXT_TO_HEADLINES: Показывать якорные ссылки рядом с заголовками
+SHOW_ANCHORS_NEXT_TO_HEADLINES_IN_FRONTEND: Показывать якорные ссылки рядом с заголовками на страницах сайта
+SHOW_THE_WEBSITE_ONLY_TO_AUTHENTICATED_USERS_AND_REDIRECT_ALL_OTHER_USERS_TO_THE_LOGIN_PAGE_: Показывать сайт только аутентифицированным пользователям и перенаправлять всех остальных пользователей на страницу входа.
 STANDARD_EDITOR_MODE: Стандартный режим редактора
+STANDARD_HEIGHT_FOR_IMAGES: Стандартная высота для изображений
+STANDARD_WIDTH_FOR_IMAGES: Стандартная ширина для изображений
 START: Начать
+SUBJECT: Тема письма с информацией о сбросе пароля
 SYSTEM: Настройки
 TABLE: Таблица
 TABLE_OF_CONTENTS: Оглавление
 TAKEN_FROM_YOUR_USER_ACCOUNT_IF_SET_: Взято из вашего профиля, если в профиле заполнено
 TERM: термин
+TEXT_BEFORE_THE_RECOVER_LINK_IN_THE_EMAIL_MESSAGE: Текст письма перед ссылкой на восстановление пароля
 TEXT_FILE: текстовый файл
-THEMES: Темы
-THEME_STORE: Магазин Тем
+THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: "Следующие параметры предназначены только для разработчиков и опытных администраторов. Изменяйте параметры только в том случае, если вы действительно их понимаете. Например: никогда не активируйте отчёт об ошибках для действующего сайта, используйте эту опцию только для исправления ошибок."
 THE_FORMAT_BUTTONS: Кнопки для форматирования
+THE_MAXIMUM_FILE_SIZE_MIGHT_BE_LIMITED_BY_YOUR_SERVER_SETTINGS_: Максимальный размер загружаемых файлов также может быть ограничен настройками вашего веб-сервера.
+THE_VIDEO_TUTORIAL: видеоурок
+THEME_STORE: Магазин Тем
+THEMES: Темы
+THIS_APPLIES_ONLY_FOR_FUTURE_IMAGES_IN_THE_CONTENT_AREA_: Это относится только к будущим изображениям в области содержимого.
 TITLE: Название
 TOC: Оглавление
 TOP: Наверху
+TRUSTED_IPS_FOR_PROXY_(COMMA_SEPARATED): Список надёжных IP-адресов для прокси (список, разделенный запятыми)
+TWIG_CACHE: Twig кэш
 TYPEMILL_DESCRIPTION: Стандартная тема для Typemill. Отзывчивая, минималистичная и без каких-либо зависимостей. Используются системные шрифты Calibri и Helvetica. А вот JavaScript не используется.
 ULIST: Маркированный список
 UNKNOWN: Неизвестен
-UPDATE_USER: Обновить данные профиля
+UPDATE_USER: Обновить данные пользователя
 UPLOAD: загрузить
-UPLOAD_AN_IMAGE: Загрузить изображение
 UPLOAD_FILE: Загрузить файл
+UPLOAD_SVG_IMAGES: Загружать изображения в svg формате
 UPS__WRONG_PASSWORD_OR_USERNAME__PLEASE_TRY_AGAIN_: Упс... неправильный пароль или имя пользователя, попробуйте войти ещё раз.
-USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Используется как запасной вариант, когда дата не установлена в ручную.
-USER: Пользователь
-USERNAME: Имя пользователя
-USERNAME_(READ_ONLY): Имя пользователя (не изменяется) 
-USERS: Пользователи
 USE_2_TO_20_CHARACTERS: Изпользуйте от 2 до 20 символов.
 USE_2_TO_40_CHARACTERS: Используйте от 2 до 40 символов.
 USE_A_VALID_LANGUAGE_ATTRIBUTE: Используйте допустимый языковой атрибут
 USE_A_VALID_YEAR: Используйте правильный формат для указания года
+USE_MARKDOWN: поддерживается Markdown
+USE_THE_OLD_LOGIC_FROM_VERSIONS_<_1_5_0_TO_CREATE_THE_SLUG: Использовать старый алгорим из версий < 1.5.0, чтобы создавать внутренние сслыки
+USE_X_FORWARDED_HEADERS: Использовать X-Forwarded Заголовки
+USER: Пользователь
+USERNAME: Имя пользователя
+USERNAME_(READ_ONLY): Имя пользователя (нельзя изменить) 
+USERS: Пользователи
 VIDEO: Видео
 VIEW_SITE: На сайт
 VISUAL: визуально
@@ -207,21 +244,69 @@ VISUAL_MARKDOWN_EDITOR: Визуальный редактор Markdown
 VISUAL_MODE: визульный режим
 WAIT: подождите
 WEB: Сайт
+WEBSITE_RESTRICTION: Ограничения доступа к сайту
 WEBSITE_TITLE: Название сайта
 WEBSITE_VISIBLE_FOR: Сайт виден для
+WRAP_THE_RESTRICTION_NOTICE_ABOVE_INTO_A_NOTICE_4_ELEMENT_(WHICH_CAN_BE_DESIGNED_AS_SPECIAL_BOX): Обернуть указанное выше примечание об ограничении доступа в элемент notice-4 (который может быть выполнен в виде специальной рамки).
 WRITING: Настройки редактора
 YEAR: Год
 YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: Вы можете изменить CSS стиль Темы на свой собственный CSS здесь.
+YOU_CAN_PING_THE_SITEMAP_WITH_THE_FOLLOWING_LINKS_TO: Вы можете проверить карту сайта с помощью следующих ссылок от
 
-ADD_NEW_FEATURES_TO_YOUR_WEBSITE_WITH_PLUGINS_AND_CONFIGURE_THEM_: Добавляйте новые функции на свой сайт с помощью плагинов и настраивайте их.
+# ↓ Creating & editing content ↓
+ADD: Добавить
+ADD_CONTENT_BLOCK: Добавить блок
+ADD_NOINDEX_TAG_AND_EXCLUDE_FROM_SITEMAP: Добавить тег noindex и исключить страницу из карты сайта
+ALTERNATIVE_TEXT_FOR_THE_HERO_IMAGE: Альтернативный текст-описание главного изображения для страницы
+ARTICLE_DATE: Даты
+AUTHOR: Автор (имя автора для отображения на сайте)
+CAN_BE_USED_FOR_AUTHOR_LINE_IN_FRONTEND_: Может использоваться в качестве описания автора на странице сайта.
+CHANGE_SLUG: Изменить ярлык / URL страницы
+CONTENT: Контент
+CREATED_AT_(READ_ONLY): Создано (нельзя изменить)
+CREATED_AT_(READONLY): Создано (нельзя изменить)
+DELETE_CONTENT_BLOCK: Удалить блок
+DISCARD: Сбросить
+DISCARD_CHANGES: Сбросить изменения
+DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES_AND_SET_THE_CONTENT_BACK_TO_THE_LIVE_VERSION: Вы хотите сбросить изменения и вернуться к предыдущей версии?
+EXTERNAL_LINK: Посмотреть страницу на сайте
+GLOSSARY_LIST_(ONLY_FOR_FOLDERS): Глоссарий (только для папок)
+GLOSSARY_STYLE: Настройки глоссария
+HAS_EDIT_RIGHTS_FOR_THIS_ARTICLE_: Имеет права на редактирование этой страницы.
+HERO_IMAGE: Главное изображение для страницы
+HIDE: Скрыть
+HIDE_PAGE_FROM_NAVIGATION: Скрыть страницу из меню навигации сайта
+IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: Если не заполнено, описание генерируется из содержимого.
+IMAGE_URL: URL изображения
+IMAGE_URL_(READ_ONLY): URL изображения (нельзя изменить)
+LAST_MODIFIED_LIVE_(READONLY): Последнее изменение было (нельзя изменить)
+LIST_PAGES_OR_POSTS_OF_THIS_FOLDER_AS_GLOSSARY_(ONLY_FOR_FOLDERS): Использовать список страниц или страницы внутри этой папки в качестве глоссария (только для папок)
+MANUAL_DATE: Выбор даты вручную
+MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB__HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES_: Максимальный размер изображения - 5 MB. Главные изображения для страниц поддерживаются не всеми темами.
+META: Метаданные
+META_CONTENT: Метаданные
+META_DESCRIPTION: Мета-описание
+META_TITLE: Мета-заголовок
+NAVIGATION_TITLE: Название страницы в меню навигации
+NOINDEX: Не индексировать
+OWNER_(USERNAME): Владелец (имя пользователя)
+PUBLISH: Опубликовать
+RAW_MODE: Режим исходного кода
+SLUG___NAME_IN_URL: Ярлык / URL страницы
+UPLOAD_AN_IMAGE: Загрузить изображение
+USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Используется как запасной вариант, когда дата не установлена в ручную.
+VISIBILITY: Видимость страницы
+
+# ↓ Installation ↓
+ADD_NEW_FEATURES_TO_YOUR_WEBSITE_WITH_PLUGINS_AND_CONFIGURE_THEM_: Добавьте новые функции на свой сайт с помощью плагинов и настраивайте их.
 BY_THE: от
 CHOOSE_A_THEME_FOR_YOUR_WEBSITE_AND_CONFIGURE_THE_THEME_DETAILS_: Выберите тему для своего сайта и настройте детали темы.
-CODED_WITH: Разработано с
-COMMUNITY: сообщество
+CODED_WITH: Разработка была с
+COMMUNITY: сообществом
 CONFIGURE_YOUR_WEBSITE: Настройте свой сайт
-DOCS: документация
+DOCS: документацию
 GET_HELP: Помощь
-GIVE_YOUR_NEW_WEBSITE_A_NAME__ADD_THE_AUTHOR_AND_CHOOSE_A_COPYRIGHT_: Дайте вашему новому сайту имя, добавьте автора и выберите тип авторского права (лицензии).
+GIVE_YOUR_NEW_WEBSITE_A_NAME__ADD_THE_AUTHOR_AND_CHOOSE_A_COPYRIGHT_: Дайте новому сайту имя, добавьте автора и выберите тип авторского права (лицензии).
 HURRA: Урашечки
 IF_YOU_HAVE_ANY_QUESTIONS__PLEASE_READ_THE: Если у вас есть вопросы, пожалуйста прочтите
 NEXT_STEP: Следующий шаг
@@ -230,39 +315,3 @@ SETUP_WELCOME: Первоначальные настройки
 TRENDSCHAU_DIGITAL: Trendschau Digital
 VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: Посетите панель администратора и настройте свой новый сайт. Вы можете настроить систему, выбрать темы и добавить плагины.
 YOUR_ACCOUNT_HAS_BEEN_CREATED_AND_YOU_ARE_LOGGED_IN_NOW_: Ваша учётная запись создана, и вы вошли в систему.
-
-ACCESS_CONTROL: Настройки доступа
-ACTIVATE_INDIVIDUAL_RESTRICTIONS_FOR_PAGES_IN_THE_META_TAB_OF_EACH_PAGE_: Активировать индивидуальные ограничения для страниц во вкладке метаданные у каждой страницы.
-ADD_ONE_OR_MORE_USERNAMES_SEPARATED_WITH_COMMA_: Добавьте одно или несколько имен пользователей через запятую.
-CUT_RESTRICTED_CONTENT_AFTER_THE_FIRST_HR_ELEMENT_ON_A_PAGE_(PER_DEFAULT_CONTENT_WILL_BE_CUT_AFTER_TITLE)_: Скрыть контент после первого hr-элемента на странице (по умолчанию контент скрывается после заголовка).
-FOR_ACCESS_THE_USER_MUST_HAVE_THIS_MINIMUM_ROLE: Для доступа к этой странице пользователь должен иметь как минимум выбранную роль
-LIMIT_THE_ACCESS_FOR_THE_WHOLE_WEBSITE_OR_FOR_EACH_PAGE_INDIVIDUALLY__IF_YOU_ACTIVATE_THE_WEBSITE_RESTRICTION_OR_THE_PAGE_RESTRICTIONS__THEN_SESSIONS_WILL_BE_USED_IN_FRONTEND_: Ограничьте доступ для всего сайта или для каждой страницы в отдельности. Если вы активируете ограничение сайта или ограничения страниц, то сеансы пользователей (сессии) будут храниться на стороне пользователей (во фронтенд части).
-ONLY_THE_FOLLOWING_USERS_HAVE_ACCESS: Только следующие пользователи имеют доступ к этой странице
-PAGE_RESTRICTIONS___ACTIVATE: Настройки страниц - Активация ограничения доступа
-PAGE_RESTRICTIONS___CUT_RESTRICTED_CONTENT: Настройки страниц - Скрытие ограниченного контента
-PAGE_RESTRICTIONS___NOTICE: Настройки страниц - Примечание об ограничении доступа
-PAGE_RESTRICTIONS___WRAP_NOTICE_INTO_A_BOX: Настройки страниц - Оборачивание примечания об ограничении доступа в рамку
-SELECT_THE_LOWEST_USERROLE__HIGHER_ROLES_WILL_HAVE_ACCESS_TOO_: Выберите роль пользователя. Более важные роли также будут иметь доступ к странице.
-SHOW_THE_WEBSITE_ONLY_TO_AUTHENTICATED_USERS_AND_REDIRECT_ALL_OTHER_USERS_TO_THE_LOGIN_PAGE_: Показывать сайт только аутентифицированным пользователям и перенаправлять всех остальных пользователей на страницу входа.
-USE_MARKDOWN: поддерживается Markdown
-WEBSITE_RESTRICTION: Ограничения доступа к сайту
-WRAP_THE_RESTRICTION_NOTICE_ABOVE_INTO_A_NOTICE_4_ELEMENT_(WHICH_CAN_BE_DESIGNED_AS_SPECIAL_BOX): Обернуть указанное выше примечание об ограничении доступа в элемент notice-4 (который может быть выполнен в виде специальной рамки).
-
-ACTIVATE_CACHE_FOR_TWIG_TEMPLATES: Активировать кэш для шаблонов Twig
-ADD_MORE_URL_SCHEMES_FOR_EXTERNAL_LINKS_E_G__LIKE_DICT://_(COMMA_SEPARATED_LIST): Добавьте дополнительные схемы URL для внешних ссылок, например как dict:// (список, разделенный запятыми)
-CLEAR_CACHE: Очистить кэш
-DELETE_ALL_CACHE_FILES: Удалить все файлы кэша
-DEVELOPER: Настройки разработчика
-DISABLE_HEADERS: Отключение заголовков
-DISABLE_TYPEMILL_HEADERS_AND_SEND_YOUR_OWN: Отключить заголовки Typemill и отправлять свои заголовки
-DISPLAY_APPLICATION_ERRORS: Отображение ошибок
-ERROR_REPORTING: Отчёты об ошибках
-IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT__THEN_THE_IMAGE_WILL_BE_CROPPED_: Если вы добавите значение высоты, изображение будет обрезано.
-PROXY: Прокси
-STANDARD_HEIGHT_FOR_IMAGES: Стандартная высота для изображений
-STANDARD_WIDTH_FOR_IMAGES: Стандартная ширина для изображений
-THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: "Следующие параметры предназначены только для разработчиков и опытных администраторов. Изменяйте параметры только в том случае, если вы действительно их понимаете. Например: никогда не активируйте отчет об ошибках для действующего сайта, используйте эту опцию только для исправления ошибок."
-THIS_APPLIES_ONLY_FOR_FUTURE_IMAGES_IN_THE_CONTENT_AREA_: Это относится только к будущим изображениям в области содержимого.
-TRUSTED_IPS_FOR_PROXY_(COMMA_SEPARATED): Список надежных IP-адресов для прокси (список, разделенный запятыми)
-TWIG_CACHE: Twig кэш
-USE_X_FORWARDED_HEADERS: Использовать X-Forwarded Заголовки

@@ -1,25 +1,34 @@
 # English
 # Author: Sebastian Schuermanns
+
+# ↓ Admin Panel + Other ↓
+ABOUT_CONFIGURATIONS_FOR_TYPEMILL_ON_YOUTUBE_: about configurations for typemill on YouTube.
+ACCESS_CONTROL: Access Control
 ACCOUNT: Account
+ACTION: Action
+ACTIVATE_CACHE_FOR_TWIG_TEMPLATES: Activate Cache for Twig Templates
+ACTIVATE_INDIVIDUAL_RESTRICTIONS_FOR_PAGES_IN_THE_META_TAB_OF_EACH_PAGE_: Activate individual restrictions for pages in the meta-tab of each page.
+ACTIVATE_THE_PASSWORD_RECOVERY_ONLY_IF_IT_IS_REALLY_NEEDED__IF_POSSIBLE_USE_YOUR_PASSWORD_MANAGER_INSTEAD_: Activate the password recovery only if it is really needed. If possible use your password manager instead.
+ACTIVATE_THE_RECOVER_PASSWORD_FUNCTION: Activate the recover password function
 ACTIVE: Active
 ACTUAL_PASSWORD: Actual Password
-ADD: add
-ADD_CONTENT_BLOCK: add content-block
 ADD_DEFINITION: add definition
 ADD_FILE: add file
 ADD_FOLDER: add folder
 ADD_FOLDER_TO_BASE_LEVEL: add folder to base level
 ADD_ITEM: add item
 ADD_LEFT_COLUMN: add left column
+ADD_MORE_URL_SCHEMES_FOR_EXTERNAL_LINKS_E_G__LIKE_DICT://_(COMMA_SEPARATED_LIST): Add more url schemes for external links e.g. like dict:// (comma separated list)
+ADD_ONE_OR_MORE_USERNAMES_SEPARATED_WITH_COMMA_: Add one or more usernames separated with comma.
 ADD_RIGHT_COLUMN: add right column
 ADD_ROW_ABOVE: add row above
 ADD_ROW_BELOW: add row below
 ADMINISTRATOR: administrator
 ALL: all
 ALL_USERS: all users
-ALTERNATIVE_TEXT_FOR_THE_HERO_IMAGE: alternative text for the hero image
+ALLOW_UPLOAD_OF_SVG_IMAGES_(ON_YOUR_OWN_RISK__HAS_SECURITY_IMPLICATIONS): Allow upload of svg images (on your own risk, has security implications)
 ALT_TEXT: alt-text
-AUTHOR: author
+AND: and
 AUTHOR_DESCRIPTION_(MARKDOWN): author-description (markdown)
 BACK_TO_STARTPAGE: back to startpage
 BOLD: bold
@@ -28,130 +37,140 @@ BROWSE: BROWSE
 BULLET_LIST: bullet list
 BY: by
 CANCEL: cancel
-CAN_BE_USED_FOR_AUTHOR_LINE_IN_FRONTEND_: Can be used for author line in frontend.
 CAPTION: caption
 CELL: cell
 CENTER: center
 CHECK: check
 CHOOSE_FILE: choose file
 CLASS: class
+CLEAR_CACHE: Clear Cache
 CLOSE_LIBRARY: close library
 CODE: code
 COG: cog
-CONTENT: content
+COMMA_SEPARATED_LIST_ADDITIONAL_SCHEMES: Comma separated list additional schemes
 COPYRIGHT: copyright
-CREATED_AT_(READONLY): Created at (read only)
-CREATED_AT_(READ_ONLY): Created at (readonly)
+CREATE_A_LOGFILE_IN_THE_CACHE_FOLDER_TO_TRACK_SPAM_AND_SUSPICIOUS_ACTIONS: Create a logfile in the cache folder to track spam and suspicious actions
 CREATE_NEW_USER: Create new user
 CREATE_USER: Create user
 CROSS: cross
 CUSTOM_CSS: Custom CSS
+CUT_RESTRICTED_CONTENT_AFTER_THE_FIRST_HR_ELEMENT_ON_A_PAGE_(PER_DEFAULT_CONTENT_WILL_BE_CUT_AFTER_TITLE)_: Cut restricted content after the first hr-element on a page (per default content will be cut after title).
+DEAR_USER_: Dear user,
 DEFINITION: definition list
 DEFINITION_LIST: definition list
 DELETE: delete
+DELETE_ALL_CACHE_FILES: Delete all cache files
 DELETE_CLOSE: delete/close
 DELETE_COLUMN: delete column
-DELETE_CONTENT_BLOCK: delete content-block
 DELETE_PAGE: delete page
 DELETE_ROW: delete row
 DELETE_USER: delete user
 DESCRIPTION: description
-DISCARD: discard
-DISCARD_CHANGES: discard changes
+DEVELOPER: Developer
+DISABLE_HEADERS: Disable Headers
+DISABLE_TYPEMILL_HEADERS_AND_SEND_YOUR_OWN: Disable Typemill Headers And Send Your Own
+DISPLAY_APPLICATION_ERRORS: Display Application Errors
 DO_YOU_REALLY_WANT_TO_DELETE_THE_USER: Do you really want to delete the user
 DO_YOU_REALLY_WANT_TO_DELETE_THIS_PAGE: Do you really want to delete this page?
-DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES_AND_SET_THE_CONTENT_BACK_TO_THE_LIVE_VERSION: Do you want to discard your changes and set the content back to the live version?
 DRAFT: draft
 DRAG_A_PICTURE_OR_CLICK_TO_SELECT: upload an image
 DUTCH__FLEMISH: Dutch, Flemish
-EDIT: edit
-EDITOR: editor
-EDIT_USER: edit user
-ENGLISH: English
-EXTERNAL_LINK: external-link
 E_G_: e.g.
 E_MAIL: e-mail
+EDIT: edit
+EDIT_USER: edit user
+EDITOR: editor
+ENGLISH: English
+ERROR_REPORTING: Error Reporting
 FAVICON: favicon
 FILE: file
 FILES: Files
 FIRST_NAME: first name
 FOLDER: folder
+FOR_ACCESS_THE_USER_MUST_HAVE_THIS_MINIMUM_ROLE: For access the user must have this minimum role
 FORGOT_PASSWORD: forgot password
 FORMAT: format
 FRENCH: French
 GENERAL_PRESENTATION: General Presentation
 GERMAN: German
 GOOGLE_SITEMAP: google sitemap
-HAS_EDIT_RIGHTS_FOR_THIS_ARTICLE_: Has edit rights for this article.
 HEAD: Head
 HEADLINE: Headline
 HEADLINE_ANCHORS: Headline anchors
-HERO_IMAGE: Hero image
-HIDE: Hide
-HIDE_PAGE_FROM_NAVIGATION: Hide page from navigation
 HOME: home
 HOMEPAGE: Homepage
 HORIZONTAL_LINE: Horizontal Line
 HR: hr
-IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: If not filled, the description is extracted from content.
+IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT__THEN_THE_IMAGE_WILL_BE_CROPPED_: If you add a value for the height, then the image will be cropped.
 IMAGE: Image
 IMAGES: Images
-IMAGE_URL: Image URL
-IMAGE_URL_(READ_ONLY): Image URL (read only)
 ITALIAN: Italian
 ITALIC: italic
 LANGUAGE: Language
 LANGUAGE_ADMIN: Language (admin-ui)
 LANGUAGE_ATTR: Language Attribute (website)
-LAST_MODIFIED_LIVE_(READONLY): Last modified live (readonly)
 LAST_NAME: Last Name
 LEFT: Left
 LICENCE: Licence
+LIKE_«EN»: like «en»
+LIMIT_THE_ACCESS_FOR_THE_WHOLE_WEBSITE_OR_FOR_EACH_PAGE_INDIVIDUALLY__IF_YOU_ACTIVATE_THE_WEBSITE_RESTRICTION_OR_THE_PAGE_RESTRICTIONS__THEN_SESSIONS_WILL_BE_USED_IN_FRONTEND_: Limit the access for the whole website or for each page individually. If you activate the website restriction or the page restrictions, then sessions will be used in frontend.
 LINK: Link
 LINK_TO_VIDEO: Link to video
 LOGIN: Login
 LOGO: Logo
 LOGOUT: Logout
-MANUAL_DATE: Manual date
 MARKDOWN: markdown
-MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB__HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES_: Maximum size for an image is 5 MB. Hero images are not supported by all themes.
+MAXIMUM_SIZE_FOR_FILE_UPLOADS_IN_MB: Maximum size for file-uploads in MB
+MEDIA: Media
 MEMBER: member
 MENU: Menu
-META: meta
-META_DESCRIPTION: Meta description
-META_TITLE: Meta title
 MISSING_REQUIREMENTS: Missing Requirements
 MOVE_VERTICAL: move vertical
-NAVIGATION_TITLE: Navigation Title
+NEW_HERE?_THEN_WATCH: New here? Then watch
 NEW_PASSWORD: New Password
-NONE: None
-NOTICE: Notice
-NOT_EDITABLE: not editable
 NO_DESCRIPTION: No description
 NO_PREVIEW: No Preview
 NO_SETTINGS: No Settings
+NONE: None
+NOT_EDITABLE: not editable
+NOTICE: Notice
 NUMBERED_LIST: Numbered List
+OLD_SLUG_LOGIC: Old Slug Logic
 OLIST: olist
 ONLINE: online
 ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: Only the following special characters are allowed
-OWNER_(USERNAME): owner (username)
+ONLY_THE_FOLLOWING_USERS_HAVE_ACCESS: Only the following users have access
+PAGE_RESTRICTIONS___ACTIVATE: Page Restrictions - Activate
+PAGE_RESTRICTIONS___CUT_RESTRICTED_CONTENT: Page Restrictions - Cut Restricted Content
+PAGE_RESTRICTIONS___NOTICE: Page Restrictions - Notice
+PAGE_RESTRICTIONS___WRAP_NOTICE_INTO_A_BOX: Page Restrictions - Wrap Notice into a Box
 PARAGRAPH: Paragraph
 PASSWORD: Password
+PASSWORD_RECOVERY: Password Recovery
+PING_SITEMAP_AUTOMATICALLY: Ping sitemap automatically
+PING_SITEMAP_AUTOMATICALLY_AFTER_PUBLISHING_A_PAGE_: Ping sitemap automatically after publishing a page.
 PLEASE_CONFIRM: Please confirm
 PLEASE_CORRECT_THE_ERRORS_ABOVE: Please correct the errors above
-PLUGINS: Plugins
+PLEASE_USE_CODES_FROM: Please use codes from
+PLEASE_USE_THE_FOLLOWING_LINK_TO_CREATE_A_NEW_PASSWORD__THE_LINK_IS_VALID_FOR_24_HOURS: please use the following link to create a new password. The link is valid for 24 hours:
 PLUGIN_STORE: Plugin Store
+PLUGINS: Plugins
 POWER_OFF: power-off
 PROFILE_IMAGE: Profile-Image
-PUBLISH: Publish
+PROXY: Proxy
 QUOTE: Quote
 QUOTES: Quote
 RAW: raw
 RAW_CONTENT_EDITOR: Raw Content Editor
 RAW_MARKDOWN_EDITOR: Raw Markdown Editor
-RAW_MODE: raw mode
 RAW_USERDATA_(READONLY_FOR_ADMINS): Raw Userdata (readonly for admins)
 READONLY: Readonly
+RECOVER_PASSWORDS: Recover Passwords
+RECOVER_YOUR_PASSWORD: Recover your password
+RECREATE_CACHE: Recreate Cache
+RECREATE_CACHED_FILES: Recreate cached files
+REFRESH_CACHE: Refresh Cache
+REFRESH_THE_CACHE_AFTER_10_MINUTES__USE_THIS_IF_YOU_CHANGE_CONTENT_FILES_MANUALLY_E_G__WITH_FTP_: Refresh the cache after 10 minutes. Use this if you change content files manually e.g. with FTP.
 REGISTERED_USERS_ONLY: registered users only
 REMEMBER_TO_BOOKMARK_THIS_PAGE: Remember to bookmark this page
 REQUIRED: Required
@@ -159,45 +178,63 @@ RIGHT: Right
 ROLE: Role
 RUSSIAN: Russian
 SAVE: Save
-SAVED_SUCCESSFULLY: Saved successfully
 SAVE_ALL_SETTINGS: Save All Settings
 SAVE_THEME: Save Theme
+SAVED_SUCCESSFULLY: Saved successfully
+SECURITY_LOG: Security Log
 SELECT_FROM_MEDIALIB: select from medialib
+SELECT_THE_LOWEST_USERROLE__HIGHER_ROLES_WILL_HAVE_ACCESS_TOO_: Select the lowest userrole. Higher roles will have access too.
+SENDER_EMAIL: Sender email
 SETTINGS: Settings
 SETTINGS_ARE_STORED: Settings are stored
 SETUP: Setup
+SHORTCODE: Shortcode
 SHOW_ANCHORS_NEXT_TO_HEADLINES: Show anchors next to headlines
+SHOW_ANCHORS_NEXT_TO_HEADLINES_IN_FRONTEND: Show anchors next to headlines in frontend
+SHOW_THE_WEBSITE_ONLY_TO_AUTHENTICATED_USERS_AND_REDIRECT_ALL_OTHER_USERS_TO_THE_LOGIN_PAGE_: Show the website only to authenticated users and redirect all other users to the login page.
 STANDARD_EDITOR_MODE: Standard Editor Mode
+STANDARD_HEIGHT_FOR_IMAGES: Standard height for images
+STANDARD_WIDTH_FOR_IMAGES: Standard width for images
 START: Start
+SUBJECT: Subject
 SYSTEM: System
 TABLE: Table
 TABLE_OF_CONTENTS: Table of Contents
 TAKEN_FROM_YOUR_USER_ACCOUNT_IF_SET_: Taken from your user account if set.
 TERM: term
+TEXT_BEFORE_THE_RECOVER_LINK_IN_THE_EMAIL_MESSAGE: Text before the recover link in the email message
 TEXT_FILE: text-file
-THEMES: Themes
-THEME_STORE: Theme Store
+THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: The following options are only for developers and experienced administrators. Only change the options if you really understand them. For example, never activate the error reporting for a live website, use this option only for bug-fixing.
 THE_FORMAT_BUTTONS: The Format Buttons
+THE_MAXIMUM_FILE_SIZE_MIGHT_BE_LIMITED_BY_YOUR_SERVER_SETTINGS_: The maximum file size might be limited by your server settings.
+THE_VIDEO_TUTORIAL: the video-tutorial
+THEME_STORE: Theme Store
+THEMES: Themes
+THIS_APPLIES_ONLY_FOR_FUTURE_IMAGES_IN_THE_CONTENT_AREA_: This applies only for future images in the content area.
 TITLE: Title
 TOC: toc
 TOP: Top
+TRUSTED_IPS_FOR_PROXY_(COMMA_SEPARATED): Trusted IPs for proxy (comma separated)
+TWIG_CACHE: Twig Cache
 TYPEMILL_DESCRIPTION: The standard theme for Typemill. Responsive, minimal and without any dependencies. It uses the system fonts Calibri and Helvetica. No JavaScript is used.
 ULIST: ulist
 UNKNOWN: Unknown
 UPDATE_USER: Update User
 UPLOAD: upload
-UPLOAD_AN_IMAGE: upload an image
 UPLOAD_FILE: Upload a file
+UPLOAD_SVG_IMAGES: Upload svg images
 UPS__WRONG_PASSWORD_OR_USERNAME__PLEASE_TRY_AGAIN_: Ups, wrong password or username, please try again.
-USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Used as fallback when no manual date is set.
-USER: User
-USERNAME: Username
-USERNAME_(READ_ONLY): Username (read only) 
-USERS: Users
 USE_2_TO_20_CHARACTERS: Use 2 to 20 characters.
 USE_2_TO_40_CHARACTERS: Use 2 to 40 characters.
 USE_A_VALID_LANGUAGE_ATTRIBUTE: Use a valid language attribute
 USE_A_VALID_YEAR: Use a valid year
+USE_MARKDOWN: use markdown
+USE_THE_OLD_LOGIC_FROM_VERSIONS_<_1_5_0_TO_CREATE_THE_SLUG: Use the old logic from versions < 1.5.0 to create the slug
+USE_X_FORWARDED_HEADERS: Use X-Forwarded Headers
+USER: User
+USERNAME: Username
+USERNAME_(READ_ONLY): Username (read only) 
+USERS: Users
 VIDEO: Video
 VIEW_SITE: View Site
 VISUAL: visual
@@ -207,12 +244,60 @@ VISUAL_MARKDOWN_EDITOR: Visual Markdown Editor
 VISUAL_MODE: visual mode
 WAIT: wait
 WEB: Web
+WEBSITE_RESTRICTION: Website Restriction
 WEBSITE_TITLE: Website Title
 WEBSITE_VISIBLE_FOR: Website visible for
+WRAP_THE_RESTRICTION_NOTICE_ABOVE_INTO_A_NOTICE_4_ELEMENT_(WHICH_CAN_BE_DESIGNED_AS_SPECIAL_BOX): Wrap the restriction notice above into a notice-4 element (which can be designed as special box)
 WRITING: Writing
 YEAR: Year
 YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: You can overwrite the theme-css with your own css here.
+YOU_CAN_PING_THE_SITEMAP_WITH_THE_FOLLOWING_LINKS_TO: You can ping the sitemap with the following links to
 
+# ↓ Creating & editing content ↓
+ADD: add
+ADD_CONTENT_BLOCK: add content-block
+ADD_NOINDEX_TAG_AND_EXCLUDE_FROM_SITEMAP: Add noindex tag and exclude from sitemap
+ALTERNATIVE_TEXT_FOR_THE_HERO_IMAGE: alternative text for the hero image
+ARTICLE_DATE: Article Date
+AUTHOR: author
+CAN_BE_USED_FOR_AUTHOR_LINE_IN_FRONTEND_: Can be used for author line in frontend.
+CHANGE_SLUG: change slug
+CONTENT: content
+CREATED_AT_(READ_ONLY): Created at (readonly)
+CREATED_AT_(READONLY): Created at (read only)
+DELETE_CONTENT_BLOCK: delete content-block
+DISCARD: discard
+DISCARD_CHANGES: discard changes
+DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES_AND_SET_THE_CONTENT_BACK_TO_THE_LIVE_VERSION: Do you want to discard your changes and set the content back to the live version?
+EXTERNAL_LINK: external-link
+GLOSSARY_LIST_(ONLY_FOR_FOLDERS): Glossary List (only for folders)
+GLOSSARY_STYLE: Glossary Style
+HAS_EDIT_RIGHTS_FOR_THIS_ARTICLE_: Has edit rights for this article.
+HERO_IMAGE: Hero image
+HIDE: Hide
+HIDE_PAGE_FROM_NAVIGATION: Hide page from navigation
+IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: If not filled, the description is extracted from content.
+IMAGE_URL: Image URL
+IMAGE_URL_(READ_ONLY): Image URL (read only)
+LAST_MODIFIED_LIVE_(READONLY): Last modified live (readonly)
+LIST_PAGES_OR_POSTS_OF_THIS_FOLDER_AS_GLOSSARY_(ONLY_FOR_FOLDERS): List pages or posts of this folder as glossary (only for folders)
+MANUAL_DATE: Manual date
+MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB__HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES_: Maximum size for an image is 5 MB. Hero images are not supported by all themes.
+META: meta
+META_CONTENT: Meta-Content
+META_DESCRIPTION: Meta description
+META_TITLE: Meta title
+NAVIGATION_TITLE: Navigation Title
+NOINDEX: Noindex
+OWNER_(USERNAME): owner (username)
+PUBLISH: Publish
+RAW_MODE: raw mode
+SLUG___NAME_IN_URL: Slug / Name in URL
+UPLOAD_AN_IMAGE: upload an image
+USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Used as fallback when no manual date is set.
+VISIBILITY: Visibility
+
+# ↓ Installation ↓
 ADD_NEW_FEATURES_TO_YOUR_WEBSITE_WITH_PLUGINS_AND_CONFIGURE_THEM_: Add new features to your website with plugins and configure them.
 BY_THE: by the
 CHOOSE_A_THEME_FOR_YOUR_WEBSITE_AND_CONFIGURE_THE_THEME_DETAILS_: Choose a theme for your website and configure the theme details.
@@ -230,39 +315,3 @@ SETUP_WELCOME: Setup Welcome
 TRENDSCHAU_DIGITAL: Trendschau Digital
 VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: Visit the author panel and setup your new website. You can configure the system, choose themes and add plugins.
 YOUR_ACCOUNT_HAS_BEEN_CREATED_AND_YOU_ARE_LOGGED_IN_NOW_: Your account has been created and you are logged in now.
-
-ACCESS_CONTROL: Access Control
-ACTIVATE_INDIVIDUAL_RESTRICTIONS_FOR_PAGES_IN_THE_META_TAB_OF_EACH_PAGE_: Activate individual restrictions for pages in the meta-tab of each page.
-ADD_ONE_OR_MORE_USERNAMES_SEPARATED_WITH_COMMA_: Add one or more usernames separated with comma.
-CUT_RESTRICTED_CONTENT_AFTER_THE_FIRST_HR_ELEMENT_ON_A_PAGE_(PER_DEFAULT_CONTENT_WILL_BE_CUT_AFTER_TITLE)_: Cut restricted content after the first hr-element on a page (per default content will be cut after title).
-FOR_ACCESS_THE_USER_MUST_HAVE_THIS_MINIMUM_ROLE: For access the user must have this minimum role
-LIMIT_THE_ACCESS_FOR_THE_WHOLE_WEBSITE_OR_FOR_EACH_PAGE_INDIVIDUALLY__IF_YOU_ACTIVATE_THE_WEBSITE_RESTRICTION_OR_THE_PAGE_RESTRICTIONS__THEN_SESSIONS_WILL_BE_USED_IN_FRONTEND_: Limit the access for the whole website or for each page individually. If you activate the website restriction or the page restrictions, then sessions will be used in frontend.
-ONLY_THE_FOLLOWING_USERS_HAVE_ACCESS: Only the following users have access
-PAGE_RESTRICTIONS___ACTIVATE: Page Restrictions - Activate
-PAGE_RESTRICTIONS___CUT_RESTRICTED_CONTENT: Page Restrictions - Cut Restricted Content
-PAGE_RESTRICTIONS___NOTICE: Page Restrictions - Notice
-PAGE_RESTRICTIONS___WRAP_NOTICE_INTO_A_BOX: Page Restrictions - Wrap Notice into a Box
-SELECT_THE_LOWEST_USERROLE__HIGHER_ROLES_WILL_HAVE_ACCESS_TOO_: Select the lowest userrole. Higher roles will have access too.
-SHOW_THE_WEBSITE_ONLY_TO_AUTHENTICATED_USERS_AND_REDIRECT_ALL_OTHER_USERS_TO_THE_LOGIN_PAGE_: Show the website only to authenticated users and redirect all other users to the login page.
-USE_MARKDOWN: use markdown
-WEBSITE_RESTRICTION: Website Restriction
-WRAP_THE_RESTRICTION_NOTICE_ABOVE_INTO_A_NOTICE_4_ELEMENT_(WHICH_CAN_BE_DESIGNED_AS_SPECIAL_BOX): Wrap the restriction notice above into a notice-4 element (which can be designed as special box)
-
-ACTIVATE_CACHE_FOR_TWIG_TEMPLATES: Activate Cache for Twig Templates
-ADD_MORE_URL_SCHEMES_FOR_EXTERNAL_LINKS_E_G__LIKE_DICT://_(COMMA_SEPARATED_LIST): Add more url schemes for external links e.g. like dict:// (comma separated list)
-CLEAR_CACHE: Clear Cache
-DELETE_ALL_CACHE_FILES: Delete all cache files
-DEVELOPER: Developer
-DISABLE_HEADERS: Disable Headers
-DISABLE_TYPEMILL_HEADERS_AND_SEND_YOUR_OWN: Disable Typemill Headers And Send Your Own
-DISPLAY_APPLICATION_ERRORS: Display Application Errors
-ERROR_REPORTING: Error Reporting
-IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT__THEN_THE_IMAGE_WILL_BE_CROPPED_: If you add a value for the height, then the image will be cropped.
-PROXY: Proxy
-STANDARD_HEIGHT_FOR_IMAGES: Standard height for images
-STANDARD_WIDTH_FOR_IMAGES: Standard width for images
-THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: The following options are only for developers and experienced administrators. Only change the options if you really understand them. For example, never activate the error reporting for a live website, use this option only for bug-fixing.
-THIS_APPLIES_ONLY_FOR_FUTURE_IMAGES_IN_THE_CONTENT_AREA_: This applies only for future images in the content area.
-TRUSTED_IPS_FOR_PROXY_(COMMA_SEPARATED): Trusted IPs for proxy (comma separated)
-TWIG_CACHE: Twig Cache
-USE_X_FORWARDED_HEADERS: Use X-Forwarded Headers
