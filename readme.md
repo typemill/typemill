@@ -4,7 +4,13 @@ TYPEMILL is a lightweight flat file cms for micro-publishers. You can use it for
 
 ![TYPEMILL Screenshot](https://typemill.net/media/tm-demo.gif)
 
-Note: Typemill V1 is compatible with PHP 7.4 and PHP 8.0. We are working on a version 2 now that will run with PHP 8.0 and higher.
+# Typemill V2
+
+This is the repository of Typemill V1. Typemill is compatible with PHP 7.4 and PHP 8.0. 
+
+We are working on a version 2 that will run with PHP 8.0 and higher. Alpha-release is planned for July 2023. 
+
+Join the [newsletter](https://typemill.net/news) to get updates and check the branch [tm2-dev](https://github.com/typemill/typemill/tree/tm2-dev) if you want to help and contribute.
 
 ## Features
 
