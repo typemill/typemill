@@ -6,9 +6,10 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Routing\RouteContext;
 
-use Typemill\Models\Navigation;
-use Typemill\Models\Validation;
 use Typemill\Models\StorageWrapper;
+use Typemill\Models\Validation;
+use Typemill\Models\Navigation;
+use Typemill\Static\Slug;
 
 class ControllerApiAuthorArticle extends Controller
 {
@@ -74,7 +75,7 @@ class ControllerApiAuthorArticle extends Controller
 	    }
 
 		# if an item is moved to the first level
-		if($parentKeyTo == '')
+		if($params['parent_id_to'] == '')
 		{
 			# create empty and default values so that the logic below still works
 			$newFolder 			=  new \stdClass();
@@ -91,7 +92,7 @@ class ControllerApiAuthorArticle extends Controller
 		}
 		
 		# if the item has been moved within the same folder
-		if($parentKeyFrom == $parentKeyTo)
+		if($params['parent_id_from'] == $params['parent_id_to'])
 		{
 			# no need to ping search engines
 			$ping = false;
@@ -127,14 +128,14 @@ class ControllerApiAuthorArticle extends Controller
 		$storage 		= new StorageWrapper('\Typemill\Models\Storage');
 		foreach($folderContent as $folderItem)
 		{
-			if(!$storage->moveFile($folderItem, $newFolder->path, $index))
+			if(!$storage->moveContentFile($folderItem, $newFolder->path, $index))
 			{
 				$writeError = true;
 			}
 			$index++;
 		}
 		if($writeError)
-		{ 
+		{
 			$response->getBody()->write(json_encode([
 				'message' 		=> 'Something went wrong. Please refresh the page and check, if all folders and files are writable.',
 				'navigation' 	=> $draftNavigation,
@@ -195,7 +196,7 @@ class ControllerApiAuthorArticle extends Controller
 
 		# input validation
 		$validate 			= new Validation();
-		$result 			= $validate->validateNaviItem($params);
+		$result 			= $validate->navigationItem($params);
 		if(!$result)
 		{
 			$response->getBody()->write(json_encode([
@@ -208,7 +209,7 @@ class ControllerApiAuthorArticle extends Controller
 
 		# set variables
 		$urlinfo 			= $this->c->get('urlinfo');
-		$langattr 			= $this->settings['langattr'];
+		$langattr 			= $this->settings['langattr'] ?? 'en';
 
 		# get navigation
 	    $navigation 		= new Navigation();
@@ -217,8 +218,8 @@ class ControllerApiAuthorArticle extends Controller
 	    if($params['folder_id'] == 'root')
 	    {
 			$folderContent		= $draftNavigation;
-	    }
-	    else
+		}
+		else
 	    {
 			# get the ids (key path) for item, old folder and new folder
 			$folderKeyPath 		= explode('.', $params['folder_id']);
@@ -238,30 +239,28 @@ class ControllerApiAuthorArticle extends Controller
 			$folderContent		= $folder->folderContent;
 	    }
 
+		$slug 			= Slug::createSlug($params['item_name'], $langattr);
 
-
-
-
-		
-		$name 		= $params['item_name'];
-		$slug 		= Folder::createSlug($this->params['item_name'], $this->settings);
-
-		# initialize index
-		$index = 0;
-		
 		# iterate through the whole content of the new folder
-		$writeError = false;
-		$folderPath = isset($folder) ? $folder->path : '';
+		$index 			= 0;
+		$writeError 	= false;
+		$folderPath 	= isset($folder) ? $folder->path : '';
+		$storage 		= new StorageWrapper('\Typemill\Models\Storage');
 
 		foreach($folderContent as $folderItem)
 		{
 			# check, if the same name as new item, then return an error
 			if($folderItem->slug == $slug)
 			{
-				return $response->withJson(array('navigation' => $draftNavigation, 'errors' => 'There is already a page with this name. Please choose another name.', 'url' => $url), 404);
+				$response->getBody()->write(json_encode([
+					'message' 	=> 'There is already a page with this name. Please choose another name.'
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
 			}
 			
-			if(!$writeYaml->moveElement($folderItem, $folderPath, $index))
+			# rename files just in case that index is not in line (because file has been moved before)
+			if(!$storage->moveContentFile($folderItem, $folderPath, $index))
 			{
 				$writeError = true;
 			}
@@ -270,47 +269,63 @@ class ControllerApiAuthorArticle extends Controller
 
 		if($writeError)
 		{ 
-			return $response->withJson(array('data' => $this->structureDraft, 'errors' => 'Something went wrong. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404); 
+			$response->getBody()->write(json_encode([
+				'message' 	=> 'Something went wrong. Please refresh the page and check, if all folders and files are writable.'
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
 		}
-
-
-
-
-
 
 		# add prefix number to the name
 		$namePath 	= $index > 9 ? $index . '-' . $slug : '0' . $index . '-' . $slug;
-		$folderPath	= 'content' . $folder->path;
 		
 		# create default content
-		$content = json_encode(['# ' . $name, 'Content']);
+		$content = json_encode(['# ' . $params['item_name'], 'Content']);
 		
-		if($this->params['type'] == 'file')
+		if($params['type'] == 'file')
 		{
-			if(!$writeYaml->writeFile($folderPath, $namePath . '.txt', $content))
+			if(!$storage->writeFile('contentFolder', $folderPath, $namePath . '.txt', $content))
 			{
-				return $response->withJson(array('data' => $this->structureDraft, 'errors' => 'We could not create the file. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404);
+				$response->getBody()->write(json_encode([
+					'message' 	=> 'We could not create the file. Please refresh the page and check, if all folders and files are writable.'
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
 			}
+			$storage->updateYaml('contentFolder', $folderPath, $namePath . '.yaml', ['meta' => ['navtitle' => $params['item_name']]]);
 		}
-		elseif($this->params['type'] == 'folder')
+		elseif($params['type'] == 'folder')
 		{
-			if(!$writeYaml->checkPath($folderPath . DIRECTORY_SEPARATOR . $namePath))
+			if(!$storage->checkFolder('contentFolder', $folderPath, $namePath))
 			{
-				return $response->withJson(array('data' => $this->structureDraft, 'errors' => 'We could not create the folder. Please refresh the page and check, if all folders and files are writable.', 'url' => $url), 404);
+				$response->getBody()->write(json_encode([
+					'message' 	=> 'We could not create the folder. Please refresh the page and check, if all folders and files are writable.'
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
 			}
-			$this->writeCache->writeFile($folderPath . DIRECTORY_SEPARATOR . $namePath, 'index.txt', $content);
+			$storage->writeFile('contentFolder', $folderPath . DIRECTORY_SEPARATOR . $namePath, 'index.txt', $content);
+			$storage->updateYaml('contentFolder', $folderPath . DIRECTORY_SEPARATOR . $namePath, 'index.yaml', ['meta' => ['navtitle' => $params['item_name']]]);
 
 			# always redirect to a folder
-			$url = $this->uri->getBaseUrl() . '/tm/content/' . $this->settings['editor'] . $folder->urlRelWoF . '/' . $slug;
-
+#			$url = $urlinfo['baseurl'] . '/tm/content/' . $this->settings['editor'] . $folder->urlRelWoF . '/' . $slug;
 		}
 
+		$navigation->clearNavigation();
+
+/*
 		# get extended structure
-		$extended = $writeYaml->getYaml('cache', 'structure-extended.yaml');
+		$extended = $navigation->getExtendedNavigation($urlinfo, $langattr);
 
 		# create the url for the item
-		$urlWoF = $folder->urlRelWoF . '/' . $slug;
-#		$urlWoF = '/' . $slug;
+	    if($params['folder_id'] == 'root')
+	    {
+			$urlWoF = '/' . $slug;
+	    }
+	    else
+	    {
+			$urlWoF = $folder->urlRelWoF . '/' . $slug;
+	    }
 
 		# add the navigation name to the item htmlspecialchars needed for french language
 		$extended[$urlWoF] = ['hide' => false, 'navtitle' => $name];
@@ -331,5 +346,14 @@ class ControllerApiAuthorArticle extends Controller
 		# $url = $this->uri->getBaseUrl() . '/tm/content/' . $this->settings['editor'] . $folder->urlRelWoF . '/' . $slug;
 		
 		return $response->withJson(array('data' => $this->structureDraft, 'errors' => false, 'url' => $url));
+*/
+
+		$response->getBody()->write(json_encode([
+			'navigation'	=> $navigation->getDraftNavigation($urlinfo, $langattr),
+			'message'		=> '',
+			'url' 			=> false
+		]));
+
+		return $response->withHeader('Content-Type', 'application/json');
 	}
 }

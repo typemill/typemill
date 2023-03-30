@@ -5,7 +5,7 @@ namespace Typemill\Models;
 use Typemill\Models\StorageWrapper;
 use Typemill\Models\Folder;
 
-class Navigation
+class Navigation extends Folder
 {
 	private $storage;
 
@@ -27,11 +27,13 @@ class Navigation
 
 	private $basicLiveNavigation = false;
 
+	public $activeNavigation = false;
+
 	public function __construct()
 	{
 		$this->storage 				= new StorageWrapper('\Typemill\Models\Storage');
 
-		$this->naviFolder 			= 'data' . DIRECTORY_SEPARATOR . 'navigation';
+		$this->naviFolder 			= 'navigation';
 
 		$this->liveNaviName 		= 'navi-live.txt';
 
@@ -63,7 +65,7 @@ class Navigation
 
 		foreach($navifiles as $navifile)
 		{
-			$result = $this->storage->deleteFile($this->naviFolder, $navifile);
+			$result = $this->storage->deleteFile('dataFolder', $this->naviFolder, $navifile);
 		}
 
 		return $result;
@@ -71,7 +73,7 @@ class Navigation
 
 	public function getMainNavigation($userrole, $acl, $urlinfo, $editor)
 	{
-		$mainnavi 		= $this->storage->getYaml('system/typemill/settings', 'mainnavi.yaml');
+		$mainnavi 		= $this->storage->getYaml('systemSettings', '', 'mainnavi.yaml');
 
 		$allowedmainnavi = [];
 
@@ -110,7 +112,7 @@ class Navigation
 	{
 		# todo: filter for userrole or username 
 
-		$this->draftNavigation = $this->storage->getFile($this->naviFolder, $this->draftNaviName, 'unserialize');
+		$this->draftNavigation = $this->storage->getFile('dataFolder', $this->naviFolder, $this->draftNaviName, 'unserialize');
 
 		if($this->draftNavigation)
 		{
@@ -127,7 +129,7 @@ class Navigation
 		$draftNavigation = $this->mergeNavigationWithExtended($basicDraftNavigation, $extendedNavigation);
 
 		# cache it
-		$this->storage->writeFile($this->naviFolder, $this->draftNaviName, $draftNavigation, 'serialize');
+		$this->storage->writeFile('dataFolder', $this->naviFolder, $this->draftNaviName, $draftNavigation, 'serialize');
 
 		return $draftNavigation;
 	}
@@ -144,15 +146,13 @@ class Navigation
 	# creates a fresh structure with published and non-published pages for the author
 	public function createBasicDraftNavigation($urlinfo, $language)
 	{
-		$folder = new Folder();
-
 		# scan the content of the folder
-		$draftContentTree = $folder->scanFolder($this->storage->getStorageInfo('contentFolder'), $draft = true);
+		$draftContentTree = $this->scanFolder($this->storage->getFolderPath('contentFolder'), $draft = true);
 
 		# if there is content, then get the content details
 		if(count($draftContentTree) > 0)
 		{
-			$draftNavigation = $folder->getFolderContentDetails($draftContentTree, $language, $urlinfo['baseurl'], $urlinfo['basepath']);
+			$draftNavigation = $this->getFolderContentDetails($draftContentTree, $language, $urlinfo['baseurl'], $urlinfo['basepath']);
 			
 			return $draftNavigation;
 		}
@@ -166,7 +166,7 @@ class Navigation
 		if(!$this->extendedNavigation)
 		{
 			# read the extended navi file
-			$this->extendedNavigation = $this->storage->getYaml($this->naviFolder, $this->extendedNaviName);
+			$this->extendedNavigation = $this->storage->getYaml('dataFolder', $this->naviFolder, $this->extendedNaviName);
 		}
 
 		if(!$this->extendedNavigation)
@@ -176,7 +176,7 @@ class Navigation
 			$this->extendedNavigation = $this->createExtendedNavigation($basicDraftNavigation, $extended = NULL);
 		
 			# cache it
-			$this->storage->updateYaml($this->naviFolder, $this->extendedNaviName, $this->extendedNavigation);
+			$this->storage->updateYaml('dataFolder', $this->naviFolder, $this->extendedNaviName, $this->extendedNavigation);
 		}
 
 		return $this->extendedNavigation;
@@ -190,7 +190,7 @@ class Navigation
 			$extended = [];
 		}
 
-		$contentFolder = $this->storage->getStorageInfo('contentFolder');
+		$contentFolder = $this->storage->getFolderPath('contentFolder');
 
 		foreach ($navigation as $key => $item)
 		{
@@ -200,13 +200,17 @@ class Navigation
 			if(file_exists($contentFolder . $filename))
 			{
 				# read file
-				$meta = $this->storage->getYaml($contentFolder, $filename);
+				$meta = $this->storage->getYaml($contentFolder, '', $filename);
 
 				$extended[$item->urlRelWoF]['navtitle'] 	= isset($meta['meta']['navtitle']) ? $meta['meta']['navtitle'] : '';
 				$extended[$item->urlRelWoF]['hide'] 		= isset($meta['meta']['hide']) ? $meta['meta']['hide'] : false;
 				$extended[$item->urlRelWoF]['noindex'] 		= isset($meta['meta']['noindex']) ? $meta['meta']['noindex'] : false;
 				$extended[$item->urlRelWoF]['path']			= $item->path;
 				$extended[$item->urlRelWoF]['keyPath']		= $item->keyPath;
+			}
+			else
+			{
+				# should we create the yaml file here if it does not exist?
 			}
 
 			if ($item->elementType == 'folder')
@@ -250,7 +254,7 @@ class Navigation
 		foreach($searchArray as $key => $itemKey)
 		{
 			$item = isset($navigation[$itemKey]) ? clone($navigation[$itemKey]) : false;
-			
+
 			unset($searchArray[$key]);
 			if(!empty($searchArray) && $item)
 			{
@@ -261,11 +265,60 @@ class Navigation
 		return $item;
 	}
 
+	public function getItemForUrlFrontend($folderContentDetails, $url, $result = NULL)
+	{
+		foreach($folderContentDetails as $key => $item)
+		{
+			# set item active, needed to move item in navigation
+			if($item->urlRelWoF === $url)
+			{
+				$item->active = true;
+				$result = $item;
+			}
+			elseif($item->elementType === "folder")
+			{
+				$result = $this->getItemForUrlFrontend($item->folderContent, $url, $result);
+			}
+		}
+
+		return $result;
+	}	
+
+	public function setActiveNaviItems($navigation, array $searchArray)
+	{
+		foreach($searchArray as $key => $itemKey)
+		{
+			if(isset($navigation[$itemKey]))
+			{
+				unset($searchArray[$key]);
+
+				# active, if there are no more subitems
+				if(empty($searchArray))
+				{
+					$navigation[$itemKey]->active = true;
+				}
+
+				# activeParent, if there are more subitems
+				if(!empty($searchArray) && isset($navigation[$itemKey]->folderContent))
+				{
+					$navigation[$itemKey]->activeParent = true;
+					$navigation[$itemKey]->folderContent = $this->setActiveNaviItems($navigation[$itemKey]->folderContent, $searchArray);
+				}
+				
+				# break to avoid other items with that key are set active
+				break;
+			}
+		}
+		return $navigation;
+	}
+
+
+############################## TODO
 	# reads the cached structure with published pages
 	public function getLiveNavigation()
 	{
 		# get the cached navi
-		$liveNavi = $this->storage->getFile($this->naviFolder, $this->liveNaviName, 'unserialize');
+		$liveNavi = $this->storage->getFile('naviFolder', $this->naviFolder, $this->liveNaviName, 'unserialize');
 
 		# if there is no cached structure
 		if(!$liveNavi)
@@ -276,13 +329,13 @@ class Navigation
 		return $liveNavi;
 	}
 
+
+################################## TODO
 	# creates a fresh structure with published pages
 	private function createNewLiveNavigation($urlinfo, $language)
 	{
-		$folder = new Folder();
-
 		# scan the content of the folder
-		$draftNavi = $folder->scanFolder($this->storage->contentFolder, $draft = false);
+		$draftNavi = $this->scanFolder($this->storage->contentFolder, $draft = false);
 
 		# if there is content, then get the content details
 		if($draftNavi && count($draftNavi) > 0)
@@ -316,7 +369,7 @@ class Navigation
 	{
 		# get the extended structure files with changes like navigation title or hidden pages
 		$yaml = new writeYaml();
-		$extended = $yaml->getYaml('cache', 'structure-extended.yaml');
+		$extended = $yaml->getYaml('cacheFolder', '', 'structure-extended.yaml');
 
 		if(isset($extended[$item->urlRelWoF]))
 		{
@@ -327,7 +380,7 @@ class Navigation
 			unset($extended[$item->urlRelWoF]);
 			
 			$extended[$newUrl] = $entry;
-			$yaml->updateYaml('cache', 'structure-extended.yaml', $extended);
+			$yaml->updateYaml('cacheFolder', '', 'structure-extended.yaml', $extended);
 		}
 
 		return true;
@@ -343,7 +396,7 @@ class Navigation
 		if($this->item->elementType == "file" && isset($extended[$this->item->urlRelWoF]))
 		{
 			unset($extended[$this->item->urlRelWoF]);
-			$yaml->updateYaml('cache', 'structure-extended.yaml', $extended);
+			$yaml->updateYaml('cacheFolder', '', 'structure-extended.yaml', $extended);
 		}
 
 		if($this->item->elementType == "folder")
@@ -362,7 +415,7 @@ class Navigation
 
 			if($changed)
 			{
-				$yaml->updateYaml('cache', 'structure-extended.yaml', $extended);
+				$yaml->updateYaml('cacheFolder', '', 'structure-extended.yaml', $extended);
 			}
 		}
 	}

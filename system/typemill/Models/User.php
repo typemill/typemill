@@ -22,7 +22,7 @@ class User
 
 	public function setUser(string $username)
 	{
-		$this->user = $this->storage->getYaml('settings/users', $username . '.yaml');
+		$this->user = $this->storage->getYaml('settingsFolder', 'users', $username . '.yaml');
 	
 		if(!$this->user)
 		{
@@ -39,7 +39,7 @@ class User
 
 	public function setUserWithPassword(string $username)
 	{
-		$this->user = $this->storage->getYaml('settings/users', $username . '.yaml');
+		$this->user = $this->storage->getYaml('settingsFolder', 'users', $username . '.yaml');
 
 		if(!$this->user)
 		{
@@ -103,7 +103,7 @@ class User
 	{
 		$params['password'] = $this->generatePassword($params['password']);
 	
-		if($this->storage->updateYaml('settings/users', $params['username'] . '.yaml', $params))
+		if($this->storage->updateYaml('settingsFolder', 'users', $params['username'] . '.yaml', $params))
 		{
 			$this->deleteUserIndex();
 
@@ -117,7 +117,7 @@ class User
 
 	public function updateUser()
 	{
-		if($this->storage->updateYaml('settings/users', $this->user['username'] . '.yaml', $this->user))
+		if($this->storage->updateYaml('settingsFolder', 'users', $this->user['username'] . '.yaml', $this->user))
 		{
 			$this->deleteUserIndex();
 	
@@ -131,7 +131,7 @@ class User
 
 	public function deleteUser()
 	{
-		if($this->storage->deleteFile('settings/users/', $this->user['username'] . '.yaml'))
+		if($this->storage->deleteFile('settingsFolder', 'users', $this->user['username'] . '.yaml'))
 		{
 			$this->deleteUserIndex();
 

@@ -18,7 +18,7 @@ class ControllerData extends Controller
 	{
 		$storage 		= new StorageWrapper('\Typemill\Models\Storage');
 
-		$mainnavi 		= $storage->getYaml('system/typemill/settings', 'mainnavi.yaml');
+		$mainnavi 		= $storage->getYaml('systemSettings', '', 'mainnavi.yaml');
 
 		$allowedmainnavi = [];
 
@@ -65,7 +65,7 @@ class ControllerData extends Controller
 	{
 		$storage 		= new StorageWrapper('\Typemill\Models\Storage');
 
-		$systemnavi 	= $storage->getYaml('system/typemill/settings', 'systemnavi.yaml');
+		$systemnavi 	= $storage->getYaml('systemSettings', '', 'systemnavi.yaml');
 		$systemnavi 	= $this->c->get('dispatcher')->dispatch(new OnSystemnaviLoaded($systemnavi), 'onSystemnaviLoaded')->getData();
 
 		$allowedsystemnavi = [];
@@ -126,7 +126,7 @@ class ControllerData extends Controller
 	{
 		$storage 			= new StorageWrapper('\Typemill\Models\Storage');
 
-		$themeSettings 		= $storage->getYaml('themes' . DIRECTORY_SEPARATOR . $themeName, $themeName . '.yaml');
+		$themeSettings 		= $storage->getYaml('themeFolder', $themeName, $themeName . '.yaml');
 
 		# add standard-textarea for custom css
 		$themeSettings['forms']['fields']['customcss'] = [
@@ -178,7 +178,7 @@ class ControllerData extends Controller
 	{
 		$storage 			= new StorageWrapper('\Typemill\Models\Storage');
 
-		$pluginSettings 	= $storage->getYaml('plugins' . DIRECTORY_SEPARATOR . $pluginName, $pluginName . '.yaml');
+		$pluginSettings 	= $storage->getYaml('pluginFolder', $pluginName, $pluginName . '.yaml');
 
 		return $pluginSettings;
 	}
@@ -195,7 +195,7 @@ class ControllerData extends Controller
 
 		$storage 		= new StorageWrapper('\Typemill\Models\Storage');
 
-		$userfields 	= $storage->getYaml('system/typemill/settings', 'user.yaml');
+		$userfields 	= $storage->getYaml('systemSettings', '', 'user.yaml');
 
 		# if a plugin with a role has been deactivated, then users with the role throw an error, so set them back to member...
 		if(!$this->c->get('acl')->hasRole($userrole))

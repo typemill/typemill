@@ -27,7 +27,7 @@ class ControllerWebAuth extends Controller
 
         $input 			= $request->getParsedBody();
 		$validation		= new Validation();
-		$settings 		= $this->c->get('settings');
+#		$settings 		= $this->c->get('settings');
 		
 		if($validation->signin($input))
 		{
@@ -35,7 +35,9 @@ class ControllerWebAuth extends Controller
 
 			if(!$user->setUserWithPassword($input['username']))
 			{
-				# return error
+				$this->c->get('flash')->addMessage('error', 'Ups, wrong password or username, please try again!!');
+
+				return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
 			}
 
 			$userdata = $user->getUserData();

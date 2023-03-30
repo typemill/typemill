@@ -29,7 +29,7 @@ class ControllerApiSystemSettings extends ControllerData
 		$params 			= $request->getParsedBody();
 		$settingsinput 		= $params['settings'];
 		$storage 			= new StorageWrapper('\Typemill\Models\Storage');
-		$formdefinitions 	= $storage->getYaml('system/typemill/settings', 'system.yaml');
+		$formdefinitions 	= $storage->getYaml('systemSettings', '', 'system.yaml');
 
 		# validate input
 		$validator 			= new Validation();

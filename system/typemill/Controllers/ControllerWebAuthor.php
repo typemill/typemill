@@ -41,6 +41,8 @@ class ControllerWebAuthor extends Controller
 
 		$item 				= $navigation->getItemWithKeyPath($draftNavigation, explode(".", $pageinfo['keyPath']));
 
+		$draftNavigation 	= $navigation->setActiveNaviItems($draftNavigation, explode(".", $pageinfo['keyPath']));
+
 		$mainNavigation 	= $navigation->getMainNavigation($request->getAttribute('c_userrole'), $this->c->get('acl'), $urlinfo, $this->settings['editor']);
 
 	    return $this->c->get('view')->render($response, 'content/blox-editor.twig', [
@@ -52,11 +54,7 @@ class ControllerWebAuthor extends Controller
 										'item'			=> $item,
 										'urlinfo'		=> $urlinfo
 									]
-	    ]);
-
-	    echo '<pre>';
-	    print_r($draftNavigation);
-	    die();
+		]);
 
 
 

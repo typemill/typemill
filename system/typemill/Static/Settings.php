@@ -134,7 +134,7 @@ class Settings
 		
 		$storage 	= new StorageWrapper('\Typemill\Models\Storage');
 		
-		$storage->updateYaml('settings', 'settings.yaml', $settings);
+		$storage->updateYaml('basepath', 'settings', 'settings.yaml', $settings);
 	}
 
 

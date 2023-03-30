@@ -20,7 +20,7 @@ class License
 	{
 		$storage = new StorageWrapper('\Typemill\Models\Storage');
 
-		$licensedata = $storage->getYaml('settings', 'license.yaml');
+		$licensedata = $storage->getYaml('basepath', 'settings', 'license.yaml');
 
 		if(!$licensedata)
 		{
