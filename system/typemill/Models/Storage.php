@@ -4,41 +4,69 @@ namespace Typemill\Models;
 
 class Storage
 {
-	public $error 				= false;
+	public $error 					= false;
 
-	protected $basepath 		= false;
+	protected $basepath 			= false;
 
-	protected $tmpFolder 		= false;
+	protected $tmpFolder 			= false;
 
-	protected $originalFolder 	= false;
+	protected $originalFolder 		= false;
 
-	protected $liveFolder 		= false;
+	protected $liveFolder 			= false;
 
-	protected $thumbsFolder 	= false;
+	protected $thumbsFolder 		= false;
 
-	protected $customFolder 	= false;
+	protected $customFolder 		= false;
 
-	protected $fileFolder 		= false;
+	protected $fileFolder 			= false;
 
-	protected $contentFolder 	= false;
+	protected $contentFolder 		= false;
 
+	protected $dataFolder 			= false;
+
+	protected $cacheFolder 			= false;
+
+	protected $settingsFolder 		= false;
+
+	protected $themeFolder 			= false;
+
+	protected $pluginFolder 		= false;
+
+	protected $translationFolder 	= false;
+
+	protected $systemSettings 		= false;
+ 
 	public function __construct()
 	{
-		$this->basepath 		= getcwd() . DIRECTORY_SEPARATOR;
+		$this->basepath 			= getcwd() . DIRECTORY_SEPARATOR;
 
-		$this->tmpFolder 		= $this->basepath . 'media' . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
+		$this->tmpFolder 			= $this->basepath . 'media' . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
 
-		$this->originalFolder 	= $this->basepath . 'media' . DIRECTORY_SEPARATOR . 'original' . DIRECTORY_SEPARATOR;
+		$this->originalFolder 		= $this->basepath . 'media' . DIRECTORY_SEPARATOR . 'original' . DIRECTORY_SEPARATOR;
 
-		$this->liveFolder  		= $this->basepath . 'media' . DIRECTORY_SEPARATOR . 'live' . DIRECTORY_SEPARATOR;
+		$this->liveFolder  			= $this->basepath . 'media' . DIRECTORY_SEPARATOR . 'live' . DIRECTORY_SEPARATOR;
 
-		$this->thumbsFolder		= $this->basepath . 'media' . DIRECTORY_SEPARATOR . 'thumbs' . DIRECTORY_SEPARATOR;
+		$this->thumbsFolder			= $this->basepath . 'media' . DIRECTORY_SEPARATOR . 'thumbs' . DIRECTORY_SEPARATOR;
 
-		$this->customFolder		= $this->basepath . 'media' . DIRECTORY_SEPARATOR . 'custom' . DIRECTORY_SEPARATOR;
+		$this->customFolder			= $this->basepath . 'media' . DIRECTORY_SEPARATOR . 'custom' . DIRECTORY_SEPARATOR;
 
-		$this->fileFolder 		= $this->basepath . 'media' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR;
+		$this->fileFolder 			= $this->basepath . 'media' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR;
 	
-		$this->contentFolder 	= $this->basepath . 'content';
+		$this->contentFolder 		= $this->basepath . 'content';
+
+		$this->dataFolder  			= $this->basepath . 'data';
+
+		$this->cacheFolder 			= $this->basepath . 'cache';
+
+		$this->settingsFolder 		= $this->basepath . 'settings';
+
+		$this->pluginFolder 		= $this->basepath . 'plugins';
+
+		$this->themeFolder 			= $this->basepath . 'themes';
+
+		$this->translationFolder 	= $this->basepath . 'system' .  DIRECTORY_SEPARATOR . 'typemill' . DIRECTORY_SEPARATOR . 'author' . DIRECTORY_SEPARATOR . 'translations' . DIRECTORY_SEPARATOR;
+	
+		$this->systemSettings 		= $this->basepath . 'system' .  DIRECTORY_SEPARATOR . 'typemill' .  DIRECTORY_SEPARATOR . 'settings';
 	}
 
 	public function getError()
@@ -46,7 +74,251 @@ class Storage
 		return $this->error;
 	}
 
-	public function getStorageInfo($item)
+	public function getFolderPath($location, $folder = NULL)
+	{
+		if(isset($this->$location))
+		{
+			$path = rtrim($this->$location, DIRECTORY_SEPARATOR);
+			$path .= DIRECTORY_SEPARATOR;
+			if($folder && $folder != '')
+			{
+				$folder = trim($folder, DIRECTORY_SEPARATOR);
+				$path .= $folder . DIRECTORY_SEPARATOR; 
+			}
+#			echo '<pre>';
+#			echo $path;
+
+			return $path;
+		}
+
+		$this->error = "We could not find a folderPath for $location";
+		return false;
+	}
+
+	public function checkFolder($location, $folder)
+	{
+		$folderpath = $this->getFolderPath($location, $folder);
+
+		if(!is_dir($folderpath) OR !is_writable($folderpath))
+		{
+			$this->error = "The folder $folderpath does not exist or is not writable.";
+
+			return false;
+		}
+
+		return true;
+	}
+
+	public function createFolder($location, $folder)
+	{
+		$folderpath = $this->getFolderPath($location, $folder);
+
+		if(is_dir($folderpath))
+		{
+			return true;
+		}
+
+		if(!mkdir($folderpath, 0755, true))
+		{
+			$this->error = "Could not create folder $folderpath.";
+
+			return false;
+		}
+
+		return true;
+	}
+
+	public function checkFile($location, $folder, $filename)
+	{
+		$filepath = $this->getFolderPath($location, $folder) . $filename;
+
+		if(!file_exists($filepath))
+		{
+			$this->error = "The file $filepath does not exist.";
+
+			return false;
+		}
+
+		return true;
+	}
+
+	public function getFile($location, $folder, $filename, $method = NULL)
+	{
+		if($this->checkFile($location, $folder, $filename))
+		{
+			$filepath = $this->getFolderPath($location) . $folder . DIRECTORY_SEPARATOR . $filename;
+
+			$fileContent = file_get_contents($filepath);
+		
+			# use unserialise or json_decode
+			if($method && is_callable($method))
+			{
+				$fileContent = $method($fileContent);
+			}
+
+			return $fileContent;
+		}
+
+		return false;
+	}
+
+	public function writeFile($location, $folder, $filename, $data, $method = NULL)
+	{
+		if(!$this->checkFolder($location, $folder))
+		{
+			if(!$this->createFolder($location, $folder))
+			{
+				return false;
+			}
+		}
+
+		$filepath = $this->getFolderPath($location) . $folder . DIRECTORY_SEPARATOR . $filename;
+			
+		$openfile = @fopen($filepath, "w");
+		if(!$openfile)
+		{
+			$this->error = "Could not open and read the file $filepath";
+
+			return false;
+		}
+
+		# serialize, json_decode
+		if($method && is_callable($method))
+		{
+			$data = $method($data);
+		}
+
+		$writefile = fwrite($openfile, $data);
+		if(!$writefile)
+		{
+			$this->error = "Could not write to the file $filepath";
+
+			return false;
+		}
+
+		fclose($openfile);
+
+		return true;
+	}
+
+	public function renameFile($location, $folder, $oldname, $newname)
+	{
+		$oldFilePath = $this->getFolderPath($location) . $folder . DIRECTORY_SEPARATOR . $oldname;
+		$newFilePath = $this->getFolderPath($location) . $folder . DIRECTORY_SEPARATOR . $newname;
+
+		if(!file_exists($oldFilePath))
+		{
+			return false;
+		}
+
+		if(!rename($oldFilePath, $newFilePath))
+		{
+			return false;
+		}
+		
+		return true;
+	}
+
+	public function deleteFile($location, $folder, $filename)
+	{
+		if($this->checkFile($location, $folder, $filename))
+		{
+			$filepath = $this->getFolderPath($location) . $folder . DIRECTORY_SEPARATOR . $filename;
+
+			if(unlink($filepath))
+			{
+				return true;
+			}
+
+			$this->error = "We found the file but could not delete $filepath";
+		}
+
+		return false;
+	}
+
+	# used to sort the navigation / files 
+	public function moveContentFile($item, $folderPath, $index, $date = null)
+	{
+		$filetypes			= array('md', 'txt', 'yaml');
+		
+		# set new order as string
+		$newOrder			= ($index < 10) ? '0' . $index : $index;
+
+		$newPath 			= $this->contentFolder . $folderPath . DIRECTORY_SEPARATOR . $newOrder . '-' . $item->slug;
+
+		if($item->elementType == 'folder')
+		{
+			$oldPath = $this->contentFolder . $item->path;
+
+			if(@rename($oldPath, $newPath))
+			{
+				return true;
+			}
+			return false;
+		}
+		
+		# create old path but without filetype
+		$oldPath		= substr($item->path, 0, strpos($item->path, "."));
+		$oldPath		= $this->contentFolder . $oldPath;
+
+		$result 		= true;
+		
+		foreach($filetypes as $filetype)
+		{
+			$oldFilePath = $oldPath . '.' . $filetype;
+			$newFilePath = $newPath . '.' . $filetype;
+			
+			#check if file with filetype exists and rename
+			if($oldFilePath != $newFilePath && file_exists($oldFilePath))
+			{
+				if(@rename($oldFilePath, $newFilePath))
+				{
+					$result = $result;
+				}
+				else
+				{
+					$result = false;
+				}
+			}
+		}
+
+		return $result;
+	}
+
+	public function getYaml($location, $folder, $filename)
+	{
+		$yaml = $this->getFile($location, $folder, $filename);
+		
+		if($yaml)
+		{
+			return \Symfony\Component\Yaml\Yaml::parse($yaml);
+		}
+
+		return false;
+	}
+
+	public function updateYaml($location, $folder, $filename, $contentArray)
+	{
+		$yaml = \Symfony\Component\Yaml\Yaml::dump($contentArray,6);
+		if($this->writeFile($location, $folder, $filename, $yaml))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+
+
+
+
+
+
+
+
+
+
+	public function getStorageInfoBREAK($item)
 	{
 		if(isset($this->$item))
 		{
@@ -55,7 +327,7 @@ class Storage
 		return false;
 	}
 
-	public function checkFolder($folder)
+	public function checkFolderBREAK($folder)
 	{
 		$folderpath = $this->basepath . $folder;
 
@@ -69,7 +341,7 @@ class Storage
 		return true;
 	}
 
-	public function createFolder($folder)
+	public function createFolderBREAK($folder)
 	{
 		$folderpath = $this->basepath . $folder;
 
@@ -88,7 +360,7 @@ class Storage
 		return true;
 	}
 
-	public function checkFile($folder, $filename)
+	public function checkFileBREAK($folder, $filename)
 	{
 		if(!file_exists($this->basepath . $folder . DIRECTORY_SEPARATOR . $filename))
 		{
@@ -100,8 +372,12 @@ class Storage
 		return true;
 	}
 
-	public function writeFile($folder, $filename, $data, $method = NULL)
+	public function writeFileBREAK($folder, $filename, $data, $method = NULL)
 	{
+		echo '<pre>';
+		var_dump($folder);
+		die();
+
 		if(!$this->checkFolder($folder))
 		{
 			if(!$this->createFolder($folder))
@@ -139,7 +415,7 @@ class Storage
 		return true;
 	}
 
-	public function getFile($folder, $filename, $method = NULL)
+	public function getFileBREAK($folder, $filename, $method = NULL)
 	{
 		if($this->checkFile($folder, $filename))
 		{
@@ -158,9 +434,8 @@ class Storage
 		return false;
 	}
 
-	public function renameFile($folder, $oldname, $newname)
+	public function renameFileBREAK($folder, $oldname, $newname)
 	{
-
 		$oldFilePath = $this->basepath . $folder . DIRECTORY_SEPARATOR . $oldname;
 		$newFilePath = $this->basepath . $folder . DIRECTORY_SEPARATOR . $newname;
 
@@ -177,7 +452,7 @@ class Storage
 		return true;
 	}
 
-	public function deleteFile($folder, $filename)
+	public function deleteFileBREAK($folder, $filename)
 	{
 		if($this->checkFile($folder, $filename))
 		{
@@ -193,7 +468,7 @@ class Storage
 	}
 
 	# used to sort the navigation / files 
-	public function moveFile($item, $folderPath, $index, $date = null)
+	public function moveContentFileBREAK($item, $folderPath, $index, $date = null)
 	{
 		$filetypes			= array('md', 'txt', 'yaml');
 		
@@ -204,7 +479,8 @@ class Storage
 
 		if($item->elementType == 'folder')
 		{
-			$oldPath = $this->basePath . 'content' . $item->path;
+			$oldPath = $this->contentFolder . $item->path;
+
 			if(@rename($oldPath, $newPath))
 			{
 				return true;
@@ -237,43 +513,8 @@ class Storage
 			}
 		}
 
-		return $result;		
+		return $result;
 	}
-
-	/**
-	 * Get the a yaml file.
-	 * @param string $fileName is the name of the Yaml Folder.
-	 * @param string $yamlFileName is the name of the Yaml File.
-	 */
-	public function getYaml($folderName, $yamlFileName)
-	{
-		$yaml = $this->getFile($folderName, $yamlFileName);
-		
-		if($yaml)
-		{
-			return \Symfony\Component\Yaml\Yaml::parse($yaml);
-		}
-
-		return false;
-	}
-
-	/**
-	 * Writes a yaml file.
-	 * @param string $fileName is the name of the Yaml Folder.
-	 * @param string $yamlFileName is the name of the Yaml File.
-	 * @param array $contentArray is the content as an array.
-	 */	
-	public function updateYaml($folderName, $yamlFileName, $contentArray)
-	{
-		$yaml = \Symfony\Component\Yaml\Yaml::dump($contentArray,6);
-		if($this->writeFile($folderName, $yamlFileName, $yaml))
-		{
-			return true;
-		}
-
-		return false;
-	}
-
 
 
 

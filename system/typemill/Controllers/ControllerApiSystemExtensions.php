@@ -42,7 +42,9 @@ class ControllerApiSystemExtensions extends ControllerData
 
 		if($params['checked'] == true)
 		{
-			$definitions 		= $storage->getYaml($params['type'] . DIRECTORY_SEPARATOR . $params['name'], $params['name'] . '.yaml');
+			$folder = ( $params['type'] == 'plugins' ) ? 'pluginFolder' : 'themeFolder';
+
+			$definitions 		= $storage->getYaml($folder, $params['name'], $params['name'] . '.yaml');
 			
 			if(isset($definitions['license']) && in_array($definitions['license'], ['MAKER', 'BUSINESS']))
 			{

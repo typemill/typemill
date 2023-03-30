@@ -59,7 +59,7 @@ class Helpers{
 		$line 		.= ';' . $action;
 
 		$storage 	= new StorageWrapper('\Typemill\Models\Storage');
-		$logfile 	= $storage->getFile('cache', 'securitylog.txt');
+		$logfile 	= $storage->getFile('basepath', 'cache', 'securitylog.txt');
 
 		if($logfile)
 		{
@@ -70,7 +70,7 @@ class Helpers{
 			$logfile = $line . PHP_EOL;
 		}
 		
-		$storage->writeFile('cache', 'securitylog.txt', $logfile);
+		$storage->writeFile('basepath', 'cache', 'securitylog.txt', $logfile);
 	}
 
 	public static function array_sort($array, $on, $order=SORT_ASC)

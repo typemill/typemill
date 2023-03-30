@@ -18,7 +18,7 @@ class ControllerApiSystemThemes extends ControllerData
 		$themename 			= $params['theme'];
 		$themeinput 		= $params['settings'];
 		$storage 			= new StorageWrapper('\Typemill\Models\Storage');
-		$formdefinitions 	= $storage->getYaml('themes' . DIRECTORY_SEPARATOR . $themename, $themename . '.yaml');
+		$formdefinitions 	= $storage->getYaml('themeFolder', $themename, $themename . '.yaml');
 		$themedata 			= [];
 
 		# validate input

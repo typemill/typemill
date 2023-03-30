@@ -11,7 +11,7 @@ class ControllerWebSystem extends ControllerData
 	public function showSettings($request, $response, $args)
 	{
 		$storage 		= new StorageWrapper('\Typemill\Models\Storage');
-		$systemfields 	= $storage->getYaml('system/typemill/settings', 'system.yaml');
+		$systemfields 	= $storage->getYaml('systemSettings', '', 'system.yaml');
 		$translations 	= $this->c->get('translations');
 
 		# add full url for sitemap to settings
@@ -42,7 +42,7 @@ class ControllerWebSystem extends ControllerData
 		foreach($this->settings['themes'] as $themename => $themeinputs)
 		{
 			$themeSettings[$themename] = $themeinputs;
-			$themeSettings[$themename]['customcss'] = $storage->getFile('cache', $themename . '-custom.css');
+			$themeSettings[$themename]['customcss'] = $storage->getFile('cacheFolder', '', $themename . '-custom.css');
 		}
 
 		$license = [];
@@ -102,7 +102,7 @@ class ControllerWebSystem extends ControllerData
 	{
 		$storage 		= new StorageWrapper('\Typemill\Models\Storage');
 		$license 		= new License();
-		$licensefields 	= $storage->getYaml('system/typemill/settings', 'license.yaml');
+		$licensefields 	= $storage->getYaml('systemSettings', '', 'license.yaml');
 		$translations 	= $this->c->get('translations');
 
 		$licensedata 	= $license->getLicenseData($this->c->get('urlinfo'));

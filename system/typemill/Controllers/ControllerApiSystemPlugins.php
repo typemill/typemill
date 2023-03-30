@@ -17,7 +17,7 @@ class ControllerApiSystemPlugins extends ControllerData
 		$pluginname 		= $params['plugin'];
 		$plugininput 		= $params['settings'];
 		$storage 			= new StorageWrapper('\Typemill\Models\Storage');
-		$formdefinitions 	= $storage->getYaml('plugins' . DIRECTORY_SEPARATOR . $pluginname, $pluginname . '.yaml');
+		$formdefinitions 	= $storage->getYaml('pluginFolder', $pluginname, $pluginname . '.yaml');
 		$plugindata 		= [];
 
 		# validate input

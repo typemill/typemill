@@ -5,12 +5,12 @@ const navigation = Vue.createApp({
 					<button class="w-1/2 ml-1 hover:bg-stone-700 hover:text-stone-50 border border-stone-200 px-2 py-1 transition duration-100" @click.prevent="collapseNavigation()">collapse all</button>
 					<button class="w-1/2 mr-1 hover:bg-stone-700 hover:text-stone-50 border border-stone-200 px-2 py-1 transition duration-100" @click.prevent="expandNavigation()">expand all</button>
 				</div>
-				<div class="flex w-full mb-1 font-bold">
+				<div class="flex w-full my-px border-y border-stone-200 font-bold">
 					<div class="border-l-4 border-teal-500 published"></div>
-					<a class="flex-grow p-1 hover:bg-teal-500 hover:text-stone-50 pl-2 text-bold transition duration-100" :href="getHomeUrl()">Home</a>
+					<a class="flex-grow p-1 pl-3 hover:bg-teal-500 hover:text-stone-50 text-bold transition duration-100" :href="getHomeUrl()">Home</a>
 		  		</div>
-				<div class="pl-2 pl-4 pl-8 pl-12"></div>
-				<navilevel :navigation="navigation" />
+				<div class="pl-2 pl-3 pl-4 pl-6 pl-8 pl-9 pl-10 pl-12 pl-15 text-stone-50"></div>
+				<navilevel :navigation="navigation" :expanded="expanded" />
 			</div>`,
 	data: function () {
 		return {
@@ -59,12 +59,28 @@ const navigation = Vue.createApp({
 		expandNavigation()
 		{
 			this.expanded = this.getFolderNames(this.navigation, []);
-			localStorage.setItem("expanded", this.expanded.toString());			
+			localStorage.setItem("expanded", this.expanded.toString());
 		},
 		collapseNavigation()
 		{
-			this.expanded = [];
-			localStorage.removeItem('expanded');
+			this.expanded = this.getActiveNames(this.navigation, []);
+			localStorage.setItem("expanded", this.expanded.toString());
+		},
+		getActiveNames(navigation, expanded)
+		{
+			for (const item of navigation)
+			{
+				if(item.activeParent || item.active)
+				{
+					expanded.push(item.name);
+				}
+
+				if (item.elementType == 'folder')
+				{
+					this.getActiveNames(item.folderContent, expanded);
+				}
+			}
+			return expanded;
 		},
 		getFolderNames(navigation, result)
 		{
@@ -97,10 +113,11 @@ navigation.component('navilevel',{
 			:component-data="{
 				id: parentId ? parentId : false
 			}"
+			:expanded="expanded"
 		  >
 		    <template #item="{ element }">
 				<li :class="element.elementType" :id="element.keyPath" :data-url="element.urlRelWoF" :data-active="element.active">
-					<div class="flex w-full mb-1 relative" :class="element.elementType == 'folder' ? 'font-bold' : ''">
+					<div class="flex w-full my-px border-b border-stone-200 relative" :class="element.elementType == 'folder' ? 'font-bold' : ''">
 						<div class="border-l-4 border-teal-500" :class="element.status"></div>
 						<a :href="getUrl(element.urlRelWoF)" class="flex-grow p-1 hover:bg-teal-500 hover:text-stone-50" :class="getNaviClass(element.active, element.activeParent, element.keyPathArray)">
 							{{ element.name }}
@@ -120,34 +137,28 @@ navigation.component('navilevel',{
 							</svg>
 						</div>
 					</div>
-					<navilevel v-show="isExpanded(element.name)" v-if="element.elementType == 'folder'" :list="element.folderContent" :navigation="element.folderContent" :parentId="element.keyPath" />
+					<navilevel v-show="isExpanded(element.name)" v-if="element.elementType == 'folder'" :list="element.folderContent" :navigation="element.folderContent" :parentId="element.keyPath" :expanded="expanded" />
 				</li>
 			</template>
 			<template #footer>
 				<li>
-					<div class="flex w-full mb-1 group">
+					<div class="flex w-full my-px border-b border-stone-200 hover:bg-stone-200 group">
 						<div class="border-l-4 border-stone-200"></div>
 						<div class="flex-grow">
-							<input :class="navilevel" class="w-full p-1 bg-stone-50 border-2 border-stone-50 focus:outline-none" placeholder="..." v-model="newItem">
+							<input :class="getNaviInputLevel(parentId)" class="w-full p-1 bg-transparent border-0 border-stone-100 hover:border-stone-200 focus:border-stone-200 focus:bg-stone-200 focus:outline-none" placeholder="..." v-model="newItem">
 						</div>
 <!--						<div class="w-1/4 invisible group-hover:visible"> -->
 						<div class="flex">
-							<button title="add a file" @click="addItem('file', parentId)" class="text-stone-500 bg-stone-100 hover:text-stone-100 hover:bg-stone-700 p-1 border-2 border-stone-50 transition duration-100">
+							<button title="add a file" @click="addItem('file', parentId)" class="text-stone-500 bg-transparent hover:text-stone-100 hover:bg-stone-700 p-1 border-0 border-stone-50 transition duration-100">
 								<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 28">
 									<path fill="currentColor" d="M22.937 5.938c0.578 0.578 1.062 1.734 1.062 2.562v18c0 0.828-0.672 1.5-1.5 1.5h-21c-0.828 0-1.5-0.672-1.5-1.5v-25c0-0.828 0.672-1.5 1.5-1.5h14c0.828 0 1.984 0.484 2.562 1.062zM16 2.125v5.875h5.875c-0.094-0.266-0.234-0.531-0.344-0.641l-4.891-4.891c-0.109-0.109-0.375-0.25-0.641-0.344zM22 26v-16h-6.5c-0.828 0-1.5-0.672-1.5-1.5v-6.5h-12v24h20zM6 12.5c0-0.281 0.219-0.5 0.5-0.5h11c0.281 0 0.5 0.219 0.5 0.5v1c0 0.281-0.219 0.5-0.5 0.5h-11c-0.281 0-0.5-0.219-0.5-0.5v-1zM17.5 16c0.281 0 0.5 0.219 0.5 0.5v1c0 0.281-0.219 0.5-0.5 0.5h-11c-0.281 0-0.5-0.219-0.5-0.5v-1c0-0.281 0.219-0.5 0.5-0.5h11zM17.5 20c0.281 0 0.5 0.219 0.5 0.5v1c0 0.281-0.219 0.5-0.5 0.5h-11c-0.281 0-0.5-0.219-0.5-0.5v-1c0-0.281 0.219-0.5 0.5-0.5h11z"></path>
 								</svg>
 							</button>
-							<button title="add a folder" @click="addItem('folder', parentId)" class="text-stone-500 bg-stone-100 hover:text-stone-100 hover:bg-stone-700 p-1 border-2 border-stone-50 transition duration-100">
+							<button title="add a folder" @click="addItem('folder', parentId)" class="text-stone-500 bg-transparent hover:text-stone-100 hover:bg-stone-700 p-1 border-0 border-stone-50 transition duration-100">
 								<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 28">
 									<path fill="currentColor" d="M24 20.5v-11c0-0.828-0.672-1.5-1.5-1.5h-11c-0.828 0-1.5-0.672-1.5-1.5v-1c0-0.828-0.672-1.5-1.5-1.5h-5c-0.828 0-1.5 0.672-1.5 1.5v15c0 0.828 0.672 1.5 1.5 1.5h19c0.828 0 1.5-0.672 1.5-1.5zM26 9.5v11c0 1.922-1.578 3.5-3.5 3.5h-19c-1.922 0-3.5-1.578-3.5-3.5v-15c0-1.922 1.578-3.5 3.5-3.5h5c1.922 0 3.5 1.578 3.5 3.5v0.5h10.5c1.922 0 3.5 1.578 3.5 3.5z"></path>
 								</svg>
 							</button>
-<!--							<button title="add a link" @click="addItem('link', parentId)" class="text-stone-500 bg-stone-100 hover:text-stone-100 hover:bg-stone-700 p-1 border-2 border-stone-50 transition duration-100">
-								<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 32 32">
-									<path fill="currentColor" d="M13.757 19.868c-0.416 0-0.832-0.159-1.149-0.476-2.973-2.973-2.973-7.81 0-10.783l6-6c1.44-1.44 3.355-2.233 5.392-2.233s3.951 0.793 5.392 2.233c2.973 2.973 2.973 7.81 0 10.783l-2.743 2.743c-0.635 0.635-1.663 0.635-2.298 0s-0.635-1.663 0-2.298l2.743-2.743c1.706-1.706 1.706-4.481 0-6.187-0.826-0.826-1.925-1.281-3.094-1.281s-2.267 0.455-3.094 1.281l-6 6c-1.706 1.706-1.706 4.481 0 6.187 0.635 0.635 0.635 1.663 0 2.298-0.317 0.317-0.733 0.476-1.149 0.476z"></path>
-									<path fill="currentColor" d="M8 31.625c-2.037 0-3.952-0.793-5.392-2.233-2.973-2.973-2.973-7.81 0-10.783l2.743-2.743c0.635-0.635 1.664-0.635 2.298 0s0.635 1.663 0 2.298l-2.743 2.743c-1.706 1.706-1.706 4.481 0 6.187 0.826 0.826 1.925 1.281 3.094 1.281s2.267-0.455 3.094-1.281l6-6c1.706-1.706 1.706-4.481 0-6.187-0.635-0.635-0.635-1.663 0-2.298s1.663-0.635 2.298 0c2.973 2.973 2.973 7.81 0 10.783l-6 6c-1.44 1.44-3.355 2.233-5.392 2.233z"></path>
-								</svg>
-							</button> -->
 						</div>
 					</div>
 				</li>
@@ -160,6 +171,10 @@ navigation.component('navilevel',{
 		},
 		parentId: {
 			default: 'root'
+		},
+		expanded: {
+			type: Array,
+			required: false
 		}
 	},
 	data: function () {
@@ -194,12 +209,34 @@ navigation.component('navilevel',{
 	{
 		getNaviClass(active, activeParent, keyPathArray)
 		{
-			var naviclass = 'pl-' + (keyPathArray.length * 2);
+			var level = 3;
+			if(keyPathArray.length > 1)
+			{
+				var level = keyPathArray.length * 3; // 3, 6, 9, 12, 15
+			}
+			let naviclass = 'pl-' + level;
 			this.navilevel = naviclass;
-			if(active){ naviclass += " active" }
-			if(activeParent){ naviclass += " activeParent" }
+			if(activeParent)
+			{ 
+				naviclass += " activeParent";
+			}
+			else if(active)
+			{ 
+				naviclass += " text-stone-50 bg-teal-500";
+			}
 
 			return naviclass;
+		},
+		getNaviInputLevel(keyPathArray)
+		{
+			var level = 3;
+			var levelString = String(keyPathArray);
+			if(levelString != "root")
+			{
+				var levelArray = levelString.split(".");
+				var level = (levelArray.length + 1) * 3; // 3, 6, 9, 12, 15
+			}
+			return 'pl-' + level;
 		},
 		getUrl(segment)
 		{
@@ -211,7 +248,7 @@ navigation.component('navilevel',{
 		},
 		isExpanded(name)
 		{
-			if(this.$root.expanded.indexOf(name) > -1)
+			if(this.expanded.indexOf(name) > -1)
 			{
 				return true;
 			}
@@ -317,7 +354,7 @@ navigation.component('navilevel',{
 				}
 				if(response.data.navigation)
 				{
-					self.items = response.data.navigation;
+					self.$root.$data.navigation = response.data.navigation;						
 					self.newItem = '';
 				}
 			})
@@ -333,303 +370,3 @@ navigation.component('navilevel',{
 });
 
 navigation.mount('#contentNavigation');
-
-/*
-	data: function () {
-		return {
-			title: "Navigation",
-			navigation: data.navigation, 
-			homepage: false,
-			editormode: 'visual',
-			freeze: false,
-			modalWindow: false,
-			format: /[@#*()=\[\]{};:"\\|,.<>\/]/,
-			folderName: '',
-			showForm: false,
-			newItem: '',
-			collapse: [],
-		}
-	},
-
-						<draggable class="navi-list list-none" tag="ul" 
-							@start="onStart" 
-							@end="onEnd" 
-							:list="items" 
-							:move="checkMove" 
-							group="file" 
-							animation="150" 
-							:disabled="freeze"
-							item-key="items.length">	
-							<navilevel 
-								v-for="item in items"
-								ref="draggit" 
-								:freeze="freeze" 
-								:name="item.name"
-								:hide="item.hide"
-								:active="item.active" 
-								:parent="item.activeParent" 
-								:level="item.keyPath"
-								:root="root"
-								:url="item.urlRelWoF" 
-								:id="item.keyPath" 
-								:key="item.keyPath" 
-								:elementtype="item.elementType" 
-								:contains="item.contains"
-								:filetype="item.fileType" 
-								:status="item.status"
-								:folder="item.folderContent"
-								:collapse="collapse"
-							></navilevel>
-						</draggable>
-	data: function () {
-		return {
-			title: "Navigation",
-			items: data.navigation, 
-			homepage: false,
-			editormode: 'visual',
-			freeze: false,
-			modalWindow: false,
-			format: /[@#*()=\[\]{};:"\\|,.<>\/]/,
-			folderName: '',
-			showForm: false,
-			newItem: '',
-			collapse: [],
-		}
-	},
-		checkMove: function(evt){
-/*			this.$refs.draggit[0].checkMove(evt);		*
-			if(evt.dragged.classList.contains('folder') && evt.from.parentNode.id != evt.to.parentNode.id)
-			{
-				return false;
-			}
-			if(evt.dragged.firstChild.className == 'active' && !editor.draftDisabled)
-			{
-				publishController.errors.message = "Please save your changes before you move the file";
-				return false;
-			}
-			return true;
-		},
-		onStart: function(evt){
-			this.$refs.draggit[0].onStart(evt);		
-		},
-		onEnd: function(evt){
-			this.$refs.draggit[0].onEnd(evt);
-		},
-		addFile : function(type)
-		{
-			publishController.errors.message = false;
-
-			if(this.format.test(this.newItem) || !this.newItem || this.newItem.length > 40)
-			{
-				publishController.errors.message = 'Special Characters are not allowed. Length between 1 and 40.';
-				return;
-			}
-			
-			self = this; 
-			
-			self.freeze = true;
-			self.errors = {title: false, content: false, message: false};
-
-			myaxios.post('/api/v1/baseitem',{
-				'item_name': 		this.newItem,
-				'type':				type,
-				'url':				document.getElementById("path").value,
-				'csrf_name': 		document.getElementById("csrf_name").value,
-				'csrf_value':		document.getElementById("csrf_value").value,
-			})
-			.then(function (response) {
-							
-				self.freeze = false;
-					
-				if(response.data.url)
-				{
-					window.location.replace(response.data.url);
-				}
-				if(response.data.data)
-				{
-					self.items = response.data.data;
-					self.newItem = '';
-					self.showForm = false;
-				}
-			})
-			.catch(function (error)
-			{
-				publishController.errors.message = error.response.data.errors;
-			});
-		},
-		getNavi: function()
-		{
-			publishController.errors.message = false;
-
-			var self = this;
-			
-			self.freeze = true;
-			self.errors = {title: false, content: false, message: false};
-
-			var activeItem = document.getElementById("path").value;
-			
-			var url = this.root + '/api/v1/navigation?url=' + activeItem;
-			var method 	= 'GET';
-
-	        myaxios.get('/api/v1/navigation',{
-	        	params: {
-					'url':			activeItem,
-					'csrf_name': 	document.getElementById("csrf_name").value,
-					'csrf_value':	document.getElementById("csrf_value").value,
-	        	}
-			})
-	        .then(function (response) {
-
-				self.freeze = false;
-				if(response.data.data)
-				{
-					self.items = response.data.data;
-					self.newItem = '';
-					self.homepage = response.data.homepage;						
-				}
-	        })
-	        .catch(function (error)
-	        {
-	           	if(error.response.data.errors)
-	            {
-					publishController.errors.message = error.response.data.errors;	            	
-	            }
-	        });
-		}
-	}
-})
-
-		checkMove : function(evt)
-		{
-			if(evt.dragged.classList.contains('folder') && evt.from.parentNode.id != evt.to.parentNode.id)
-			{
-				return false;
-			}
-			if(evt.dragged.firstChild.className == 'active' && !editor.draftDisabled)
-			{
-				publishController.errors.message = "Please save your changes before you move the file";
-				return false;
-			}
-			return true;
-		},
-		onStart : function(evt)
-		{
-			/* delete error messages if exist *
-			publishController.errors.message = false;
-		},
-		getUrl : function(root, url)
-		{
-			return root + '/tm/content/' + this.$root.$data.editormode + url;
-		},
-		checkActive : function(active,parent)
-		{
-			if(active && !parent)
-			{
-				return 'active';
-			}
-			return 'inactive';
-		},
-
-		checkActive : function(active,parent)
-		{
-			if(active && !parent)
-			{
-				return 'active';
-			}
-			return 'inactive';
-		},
-		addFile : function(type)
-		{
-			publishController.errors.message = false;
-
-			if(this.format.test(this.newItem) || !this.newItem || this.newItem.length > 40)
-			{
-				publishController.errors.message = 'Special Characters are not allowed. Length between 1 and 40.';
-				return;
-			}
-			
-			self = this; 
-			
-			self.freeze = true;
-			self.errors = {title: false, content: false, message: false};
-
-			myaxios.post('/api/v1/baseitem',{
-				'item_name': 		this.newItem,
-				'type':				type,
-				'url':				document.getElementById("path").value,
-				'csrf_name': 		document.getElementById("csrf_name").value,
-				'csrf_value':		document.getElementById("csrf_value").value,
-			})
-			.then(function (response) {
-							
-				self.freeze = false;
-					
-				if(response.data.url)
-				{
-					window.location.replace(response.data.url);
-				}
-				if(response.data.data)
-				{
-					self.items = response.data.data;
-					self.newItem = '';
-					self.showForm = false;
-				}
-			})
-			.catch(function (error)
-			{
-				publishController.errors.message = error.response.data.errors;
-			});
-		},
-
-		addFile : function(type)
-		{
-			publishController.errors.message = false;
-
-			if(this.$root.$data.format.test(this.newItem) || !this.newItem || this.newItem.length > 60)
-			{
-				publishController.errors.message = 'Special Characters are not allowed. Length between 1 and 60.';
-				return;
-			}
-			
-			var self = this;
-			
-			self.$root.$data.freeze = true;
-			self.errors = {title: false, content: false, message: false};
-
-			myaxios.post('/api/v1/article',{
-				'folder_id': 		this.$el.id,
-				'item_name': 		this.newItem,
-				'type':				type,
-				'url':				document.getElementById("path").value,
-				'csrf_name': 		document.getElementById("csrf_name").value,
-				'csrf_value':		document.getElementById("csrf_value").value,
-			})
-			.then(function (response) {
-
-				self.$root.$data.freeze = false;
-					
-				if(response.data.url)
-				{
-					window.location.replace(response.data.url);
-				}
-				if(response.data.data)
-				{
-					// evt.item.classList.remove("load");
-					self.$root.$data.items = response.data.data;
-					self.newItem = '';
-					self.showForm = false;
-				}
-			})
-			.catch(function (error)
-			{
-				if(error.response.data.errors)
-				{
-				    publishController.errors.message = error.response.data.errors;
-				}
-			});
-		},
-	}
-})
-
-navigation.mount('#contentNavigation');
-*/

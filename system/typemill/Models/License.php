@@ -74,7 +74,7 @@ class License
 	{
 		$storage = new StorageWrapper('\Typemill\Models\Storage');
 
-		$licensedata = $storage->getYaml('settings', 'license.yaml');
+		$licensedata = $storage->getYaml('basepath', 'settings', 'license.yaml');
 
 		if(!$licensedata)
 		{
@@ -193,7 +193,7 @@ class License
 		$signedLicense['license']['email'] = trim($params['email']);
 		$storage = new StorageWrapper('\Typemill\Models\Storage');
 
-		$storage->updateYaml('settings', 'license.yaml', $signedLicense['license']);
+		$storage->updateYaml('basepath', 'settings', 'license.yaml', $signedLicense['license']);
 
 		return true;
 	}

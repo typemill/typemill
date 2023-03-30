@@ -5,7 +5,6 @@ namespace Typemill\Controllers;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Typemill\Models\Validation;
-use Typemill\Models\StorageWrapper;
 use Typemill\Models\License;
 
 class ControllerApiSystemLicense extends ControllerData
