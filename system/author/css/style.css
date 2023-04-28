@@ -908,7 +908,7 @@ button.searchbutton.clear:hover{
 .formWrapper, .welcome{
 	display: block;
 	position: relative;
-	max-width: 900px;
+	max-width: 1000px;
 	margin: auto;
 }
 .welcome{
@@ -974,7 +974,7 @@ button.searchbutton.clear:hover{
 }
 .welcome .welcomeInner{
 	margin-top: 20px;
-	width: 90%;
+	width: 97%;
 	height: 120px;
 }
 
