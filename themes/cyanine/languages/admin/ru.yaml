@@ -1,0 +1,82 @@
+# Russian
+# Author: Paul (https://paul.bid) paulbid@protonmail.com
+ACTIVATE_A_LANDINGPAGE: Активировать режим одностраничника
+ACTIVATE_FOOTER_COLUMNS: Активировать колонки в подвале сайта
+ADD_A_PATH_TO_A_FOLDER_FROM_WHICH_YOU_WANT_TO_LIST_ENTRIES: Добавьте путь к папке, из которой вы хотите вывести список записей
+ADD_THE_BASE_URL_TO_THE_CONTENT_REPOSITORY__E_G__GITHUB__: Добавьте базовый URL-адрес в репозиторий контента (например, github).
+ALL_FONTS_ARE_SYSTEM_FONTS_WITH_(FALLBACKS)_IF_THE_FONT_IS_NOT_INSTALLED: Все шрифты являются системными шрифтами с (запасными вариантами), если шрифт не установлен
+ARTICLE_AUTHOR: Автор статьи
+ARTICLE_DATE: Дата публикации статьи
+ARTICLE_EDIT_LINK: Дата последнего редактирования статьи
+AUTHOR_INTRO_TEXT: Предисловие автора
+BASIC_FONT_FAMILY: Основное семейство шрифтов
+BOTTOM: Внизу
+BUTTON_LABEL: Текст кнопки
+BUTTON_LINK: Ссылка кнопки
+COLORS: Цвета
+COUNT_CHAPTERS_IN_NAVIGATION?: Подсчитывать главы в навигации?
+CYANINE_IS_A_MODERN_AND_FLEXIBLE_MULTI_PURPOSE_THEME_AND_THE_STANDARD_THEME_FOR_TYPEMILL_: Cyanine — это современная и гибкая многоцелевая тема, стандартная тема для TypeMill.
+DATE_FORMAT: Формат даты
+DATE_INTRO_TEXT: Дата вступления к тексту
+FONT_FAMILIES: Семейства шрифтов
+FONT_FAMILY_FOR_HEADLINES: Семействоа шрифтов для заголовков
+FONT_FAMILY_FOR_NAVIGATIONS: Font-family for navigations
+FOOTER_COLUMN_1_(USE_MARKDOWN): Первая колонка в подвале сайта (поддерживается Markdown)
+FOOTER_COLUMN_2_(USE_MARKDOWN): Вторая колонка в подвале сайта (поддерживается Markdown)
+FOOTER_COLUMN_3_(USE_MARKDOWN): Третья колонка в подвале сайта (поддерживается Markdown)
+FOOTER_COLUMNS: Колонки а подвале сайта
+HEADLINE_FOR_NEWS_SEGMENT: Заголовок для раздела страницы с новостями
+HOW_MANY_NAVIGATION_LEVELS?: Сколько уровней навигации?
+LABEL_FOR_READ_MORE_LINK: Текст для ссылки «подробнее»
+LABEL_FOR_STARTBUTTON: Текст для кнопки старта
+LANDINGPAGE_CONTRAST_SEGMENT: Контрастный раздел одностраничника
+LANDINGPAGE_INFO_SEGMENT: Информационный раздел одностраничника
+LANDINGPAGE_INTRO_SEGMENT: Вводный раздел одностраничника
+LANDINGPAGE_NAVIGATION_SEGMENT: Раздел навигации по одностраничнику
+LANDINGPAGE_NEWS_SEGMENT: Новостной раздел одностраничника
+LANDINGPAGE_TEASER_SEGMENT: Раздел тизера для одностраничника
+LINK_FOR_STARTBUTTON: Ссылка для кнопки старта
+LINK_TO_REPOSITORY: Ссылка на репозиторий
+LIST_ENTRIES_FROM_FOLDER: Список записей из папки
+NAVIGATIONS_AND_CHAPTERS: Навигация и главы
+POSITION_OF_ARTICLE_AUTHOR_LINE_(TOP/BOTTOM): Расположение информации от авторе (вверху/внизу)
+POSITION_OF_ARTICLE_DATE_(TOP/BOTTOM): Расположение информации о дате (вверху/внизу)
+POSITION_OF_CONTRAST_SEGMENT: Расположение контрастного раздела
+POSITION_OF_INFO_SEGMENT: Расположение информационного раздела
+POSITION_OF_INTRO_SEGMENT: Расположение вводного раздела
+POSITION_OF_NAVI_SEGMENT: Расположение раздела с навигацией
+POSITION_OF_NEWS_SEGMENT: Расположение новостного раздела
+POSITION_OF_TEASER_SEGMENT: Расположение тизерного раздела
+POSITION_OF_THE_EDIT_LINK_(TOP/BOTTOM): Расположение ссылки для редактирования (вверху/внизу)
+PRIMARY_BRAND_COLOR: Основной фирменный цвет
+PRIMARY_FONT_COLOR: Основной цвет шрифта
+SECONDARY_BRAND_COLOR: Дополнительный фирменный цвет
+SECONDARY_FONT_COLOR: Дополнительный цвет шрифта
+SHOW_CHAPTER_NUMBERS: Показывать номера глав
+TEASER_1_LABEL: Тизер 1 — Метка
+TEASER_1_LINK: Тизер 1 — Ссылка
+TEASER_1_TEXT: Тизер 1 — Текст
+TEASER_1_TITLE: Тизер 1 — Заголовок
+TEASER_2_LABEL: Тизер 2 — Метка
+TEASER_2_LINK: Тизер 2 — Ссылка
+TEASER_2_TEXT: Тизер 2 — Текст
+TEASER_2_TITLE: Тизер 2 — Заголовок
+TEASER_3_LABEL: Тизер 3 — Метка
+TEASER_3_LINK: Тизер 3 — Ссылка
+TEASER_3_TEXT: Тизер 3 — Текст
+TEASER_3_TITLE: Тизер 3 — Заголовок
+TEXT/LABEL_FOR_EDIT_LINK: Текст/метка для ссылки на редактирование
+TEXT_LINKS: text-links
+TEXT: Текст
+THIN_BORDER_COLOR: Цвет тонкой границы
+TITLE_FOR_NAVIGATION: Заголовок для навигации
+TITLE: Заголовок
+TOP: Вверху
+USE_0_TO_DISABLE_THE_SECTION: Используйте 0, чтобы отключить раздел
+USED_AS_CONTRARY_COLOR_FOR_HOVERS_IN_NAVIGATION_AND_BUTTONS: Используется в качестве цвета для наведения курсора в навигации и кнопках
+USED_FOR_CONTENT_BACKGROUND__FONT_COLORS_ON_HOVER_AND_MORE: Используется для фона содержимого, цвета шрифта при наведении курсора и многого другого
+USED_FOR_LINKS__CHECK_CONTRAST_FOR_A11Y_: Used for links, check contrast for a11y.
+USED_FOR_TEXT: Используется для текста
+USED_FOR_THE_BODY_BACKGROUND_AND_BORDERS: Используется для фона страницы и границ
+USED_FOR_THIN_BORDERS_IN_NAVIGATIONS_AND_TABLES: Используется для создания тонких границ в навигациях и таблицах
+USE_MARKDOWN: Поддерживается Markdown
