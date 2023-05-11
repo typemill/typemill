@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Typemill\Models\Validation;
 use Typemill\Models\License;
 
-class ControllerApiSystemLicense extends ControllerData
+class ControllerApiSystemLicense extends Controller
 {
 	public function createLicense(Request $request, Response $response)
 	{

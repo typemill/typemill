@@ -34,11 +34,11 @@
 
 		{% include 'partials/flash.twig' %}
 
-		<div class="max-w-6xl m-auto mt-7 flex justify-between" id="main" data-url="{{ base_url() }}">
+		<div class="max-w-6xl m-auto mt-7 flex justify-between items-start" id="main" data-url="{{ base_url() }}">
 			<aside class="w-1/4">
 				<div id="contentNavigation" v-cloak></div>
 			</aside>
-			<article class="w-3/4 bg-stone-50 shadow-md p-8">
+			<article class="relative w-3/4">
 				{% block content %}{% endblock %}
 			</article>
 		</div>
@@ -51,6 +51,7 @@
 			const labels = {{ translations|json_encode() }};
 
 		</script>
+		<script src="{{ base_url() }}/system/typemill/author/js/autosize.min.js?v={{ settings.version }}"></script>
 		<script src="{{ base_url() }}/system/typemill/author/js/axios.min.js?v={{ settings.version }}"></script>
 		<script>
 			const tmaxios = axios.create();
@@ -59,9 +60,10 @@
 		</script>
 		<script src="{{ base_url() }}/system/typemill/author/js/vue.js?v={{ settings.version }}"></script>
 		<script src="{{ base_url() }}/system/typemill/author/js/vue-eventbus.js?v={{ settings.version }}"></script>
+		<script src="{{ base_url() }}/system/typemill/author/js/vue-shared.js?v={{ settings.version }}"></script>
 		<script src="{{ base_url() }}/system/typemill/author/js/sortable.min.js?v={{ settings.version }}"></script>
 		<script src="{{ base_url() }}/system/typemill/author/js/vuedraggable.umd.min.js?v={{ settings.version }}"></script>
-		<script type="module" src="{{ base_url() }}/system/typemill/author/js/vue-contentnavi.js?v={{ settings.version }}"></script>
+		<script src="{{ base_url() }}/system/typemill/author/js/vue-contentnavi.js?v={{ settings.version }}"></script>
 
 		{% block javascript %}{% endblock %}
 

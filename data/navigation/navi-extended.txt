@@ -34,33 +34,45 @@
     noindex: false
     path: /00-welcome/04-write-content.md
     keyPath: '0.4'
+/welcome/edit-test:
+    navtitle: ''
+    hide: false
+    noindex: false
+    path: /00-welcome/05-edit-test.txt
+    keyPath: '0.5'
+/welcome/new:
+    navtitle: ''
+    hide: false
+    noindex: false
+    path: /00-welcome/06-new.txt
+    keyPath: '0.6'
 /cyanine-theme:
     navtitle: ''
     hide: false
     noindex: false
     path: /01-cyanine-theme
     keyPath: 1
-/cyanine-theme/colors-and-fonts:
-    navtitle: ''
-    hide: false
-    noindex: false
-    path: /01-cyanine-theme/00-colors-and-fonts.md
-    keyPath: '1.0'
 /cyanine-theme/landingpage:
     navtitle: ''
     hide: false
     noindex: false
-    path: /01-cyanine-theme/01-landingpage.md
-    keyPath: '1.1'
+    path: /01-cyanine-theme/00-landingpage.md
+    keyPath: '1.0'
 /cyanine-theme/footer:
     navtitle: ''
     hide: false
     noindex: false
-    path: /01-cyanine-theme/02-footer.md
-    keyPath: '1.2'
+    path: /01-cyanine-theme/01-footer.md
+    keyPath: '1.1'
 /cyanine-theme/content-elements:
     navtitle: ''
     hide: false
     noindex: false
-    path: /01-cyanine-theme/03-content-elements.md
+    path: /01-cyanine-theme/02-content-elements.md
+    keyPath: '1.2'
+/cyanine-theme/colors-and-fonts:
+    navtitle: ''
+    hide: false
+    noindex: false
+    path: /01-cyanine-theme/03-colors-and-fonts.md
     keyPath: '1.3'

@@ -308,14 +308,123 @@ class Storage
 		return false;
 	}
 
+	public function createUniqueImageName($filename, $extension)
+	{
+		$defaultfilename = $filename;
+	
+		$suffix = 1;
+
+		while(file_exists($this->originalFolder . $filename . '.' . $extension))
+		{
+			$filename = $defaultfilename . '-' . $suffix;
+			$suffix++;
+		}
+
+		return $filename;
+	}
+
+	public function publishImage($name)
+	{
+		$pathinfo = pathinfo($name);
+		if(!$pathinfo)
+		{
+			$this->error = 'Could not read pathinfo.';
+
+			return false;
+		}
+
+		$extension 	= isset($pathinfo['extension']) ? strtolower($pathinfo['extension']) : false;
+		$imagename 	= isset($pathinfo['filename']) ? $pathinfo['filename'] : false;
+
+		$imagesInTmp = glob($this->tmpFolder . "*$imagename.*"); 
+		if(empty($imagesInTmp) OR !$imagesInTmp)
+		{
+			$this->error = "We did not find the image in the tmp-folder or could not read it.";
+			return false;
+		}
+
+		# case: image is not published yet and in tmp
+		foreach( $imagesInTmp as $imagepath)
+		{
+			$tmpimagename 		= explode("+", basename($imagepath));
+			$destinationfolder	= strtolower($tmpimagename[0]);
+			$filename 			= $tmpimagename[1];
+
+			switch($destinationfolder)
+			{
+				case 'original':
+					if(!rename($imagepath, $this->originalFolder . $filename))
+					{
+						$this->error = "We could not store the original image to the original folder";
+					}
+					break;
+				case 'live':
+					if(!rename($imagepath, $this->liveFolder . $filename))
+					{
+						$this->error = "We could not store the live image to the live folder";
+					}
+					break;
+				case 'thumbs':
+					if(!rename($imagepath, $this->thumbsFolder . $filename))
+					{
+						$this->error = "We could not store the thumb to the thumb folder";
+					}
+					break;
+			}
+		}
+
+		if(!$this->error)
+		{
+			# return true;
+			return 'media/live/' . $imagename . '.' . $extension;
+		}
+
+		return false;
+	}
+
+	# check if an image exists in the live folder or in the original folder independent from extension
+	public function checkImage($imagepath)
+	{
+		$original 	= stripos($imagepath, '/original/');
+		$live 		= stripos($imagepath, '/live/');
+
+		$pathinfo = pathinfo($imagepath);
+		if(!$pathinfo)
+		{
+			$this->error = 'Could not read pathinfo.';
+
+			return false;
+		}
+
+		$extension 	= isset($pathinfo['extension']) ? strtolower($pathinfo['extension']) : false;
+		$imagename 	= isset($pathinfo['filename']) ? $pathinfo['filename'] : false;
+		$newpath 	= false;
+
+		if($original)
+		{
+			$image 	= glob($this->originalFolder . "$imagename.*");
+			if(isset($image[0]))
+			{
+				$newpath = 'media/original/' . basename($image[0]);
+			}
+		}
+		elseif($live)
+		{
+			$image 	= glob($this->liveFolder . "$imagename.*");
+			if(isset($image[0]))
+			{
+				$newpath = 'media/live/' . basename($image[0]);
+			}
+		}
+
+		return $newpath;
+
+	}
 
 
 
 
-
-
-
-
+/*
 
 
 	public function getStorageInfoBREAK($item)
@@ -518,120 +627,12 @@ class Storage
 
 
 
-	public function createUniqueImageName($filename, $extension)
-	{
-		$defaultfilename = $filename;
-	
-		$suffix = 1;
 
-		while(file_exists($this->originalFolder . $filename . '.' . $extension))
-		{
-			$filename = $defaultfilename . '-' . $suffix;
-			$suffix++;
-		}
 
-		return $filename;
-	}
 
-	public function publishImage($name)
-	{
-		$pathinfo = pathinfo($name);
-		if(!$pathinfo)
-		{
-			$this->errors[] = 'Could not read pathinfo.';
 
-			return false;
-		}
 
-		$extension 	= isset($pathinfo['extension']) ? strtolower($pathinfo['extension']) : false;
-		$imagename 	= isset($pathinfo['filename']) ? $pathinfo['filename'] : false;
 
-		$imagesInTmp = glob($this->tmpFolder . "*$imagename.*"); 
-		if(empty($imagesInTmp) OR !$imagesInTmp)
-		{
-			$this->errors[] = "We did not find the image in the tmp-folder or could not read it.";
-			return false;
-		}
-
-		# case: image is not published yet and in tmp
-		foreach( $imagesInTmp as $imagepath)
-		{
-			$tmpimagename 		= explode("+", basename($imagepath));
-			$destinationfolder	= strtolower($tmpimagename[0]);
-			$filename 			= $tmpimagename[1];
-
-			switch($destinationfolder)
-			{
-				case 'original':
-					if(!rename($imagepath, $this->originalFolder . $filename))
-					{
-						$this->errors[] = "We could not store the original image to the original folder";
-					}
-					break;
-				case 'live':
-					if(!rename($imagepath, $this->liveFolder . $filename))
-					{
-						$this->errors[] = "We could not store the live image to the live folder";
-					}
-					break;
-				case 'thumbs':
-					if(!rename($imagepath, $this->thumbsFolder . $filename))
-					{
-						$this->errors[] = "We could not store the thumb to the thumb folder";
-					}
-					break;
-			}
-		}
-
-		if(empty($this->errors))
-		{
-			# return true;
-			return 'media/live/' . $imagename . '.' . $extension;
-		}
-
-		return false;
-	}
-
-	# check if an image exists in the live folder or in the original folder independent from extension
-	public function checkImage($imagepath)
-	{
-		$original 	= stripos($imagepath, '/original/');
-		$live 		= stripos($imagepath, '/live/');
-
-		$pathinfo = pathinfo($imagepath);
-		if(!$pathinfo)
-		{
-			$this->errors[] = 'Could not read pathinfo.';
-
-			return false;
-		}
-
-		$extension 	= isset($pathinfo['extension']) ? strtolower($pathinfo['extension']) : false;
-		$imagename 	= isset($pathinfo['filename']) ? $pathinfo['filename'] : false;
-		$newpath 	= false;
-
-		if($original)
-		{
-			$image 	= glob($this->originalFolder . "$imagename.*");
-			if(isset($image[0]))
-			{
-				$newpath = 'media/original/' . basename($image[0]);
-			}
-		}
-		elseif($live)
-		{
-			$image 	= glob($this->liveFolder . "$imagename.*");
-			if(isset($image[0]))
-			{
-				$newpath = 'media/live/' . basename($image[0]);
-			}
-		}
-
-		return $newpath;
-
-	}
-
-/*
 	public function checkPath($folder)
 	{
 		$folderPath = $this->basepath . $folder;

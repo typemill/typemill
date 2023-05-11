@@ -2,9 +2,8 @@
 
 namespace Typemill\Extensions;
 
-use Typemill\Models\Folder;
+use Typemill\Static\Slug;
 use Typemill\Events\OnShortcodeFound;
-
 
 class ParsedownExtension extends \ParsedownExtra
 {
@@ -360,7 +359,7 @@ class ParsedownExtension extends \ParsedownExtra
             }
 
             $text = trim($Line['text'], '#');
-            $headline = Folder::createSlug($Line['text'], $this->settings);
+            $headline = Slug::createSlug($Line['text'], $this->settings);
 
             if ($this->strictMode and isset($text[0]) and $text[0] !== ' ')
             {

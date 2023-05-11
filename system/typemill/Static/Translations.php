@@ -29,13 +29,11 @@ class Translations
 		$plugins_translations 	= [];
 
 		# theme labels selected according to the environment: admin or user
-		$theme_language_folder 	= DIRECTORY_SEPARATOR . $settings['theme'] . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR . $environment . DIRECTORY_SEPARATOR;
-		$theme_translations 	= $storage->getYaml('themeFolder', $theme_language_folder, $language . '.yaml') ?? [];
+		$theme_translations 	= $storage->getYaml('themeFolder', $settings['theme'], $language . '.yaml') ?? [];
 
 		if($environment == 'admin')
 		{
-			$system_language_folder 	= DIRECTORY_SEPARATOR . 'typemill' . DIRECTORY_SEPARATOR . 'author' . DIRECTORY_SEPARATOR . 'translations' . DIRECTORY_SEPARATOR;
-			$system_translations 		= $storage->getYaml('translationFolder', $system_language_folder, $language . '.yaml');
+			$system_translations 		= $storage->getYaml('translationFolder', '', $language . '.yaml');
 
 			# Next change, to provide labels for the admin and user environments.
 			# There may be plugins that only work in the user environment, only in the admin environment, or in both environments.
@@ -46,8 +44,7 @@ class Translations
 			  	{
 					if(isset($config['active']) && $config['active'])
 					{
-				  		$plugin_language_folder 		= DIRECTORY_SEPARATOR . $plugin . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR;
-						$plugins_translations[$plugin] 	= $storage->getYaml('pluginFolder', $plugin_language_folder, $language . '.yaml');
+						$plugins_translations[$plugin] 	= $storage->getYaml('pluginFolder', $plugin, $language . '.yaml');
 					}
 			  	}
 

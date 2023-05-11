@@ -12,10 +12,10 @@
 {% block javascript %}
 
 	<script src="{{ base_url() }}/system/typemill/author/js/highlight.min.js?v={{ settings.version }}"></script>
-	<script src="{{ base_url() }}/system/typemill/author/js/vue-system.js?v={{ settings.version }}"></script>		
-	<script src="{{ base_url() }}/system/typemill/author/js/vue-translate.js?v={{ settings.version }}"></script>		
-	<script src="{{ base_url() }}/system/typemill/author/js/vue-shared.js?v={{ settings.version }}"></script>
+	<script src="{{ base_url() }}/system/typemill/author/js/vue-system.js?v={{ settings.version }}"></script>
+	<script src="{{ base_url() }}/system/typemill/author/js/vue-forms.js?v={{ settings.version }}"></script>
 	<script>
+		app.config.globalProperties.$filters = translatefilter;
 		app.mount('#system');
 	</script>
 

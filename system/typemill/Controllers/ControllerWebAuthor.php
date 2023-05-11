@@ -5,13 +5,13 @@ namespace Typemill\Controllers;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Routing\RouteContext;
+use Typemill\Models\Navigation;
+use Typemill\Models\Content;
 # use Typemill\Models\Folder;
 # use Typemill\Extensions\ParsedownExtension;
 # use Typemill\Models\StorageWrapper;
 # use Typemill\Models\User;
 # use Typemill\Models\License;
-
-use Typemill\Models\Navigation;
 
 class ControllerWebAuthor extends Controller
 {
@@ -24,60 +24,83 @@ class ControllerWebAuthor extends Controller
 		$langattr 			= $this->settings['langattr'];
 
 	    $navigation 		= new Navigation();
+		$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $langattr);
+	    $home 				= $navigation->getHomepageItem($urlinfo['baseurl']);
 
-	    $extendedNavigation	= $navigation->getExtendedNavigation($urlinfo, $langattr);
-	    $pageinfo 			= $extendedNavigation[$url] ?? false;
 
-	    if(!$pageinfo)
-	    {
-		    return $this->c->get('view')->render($response->withStatus(404), '404.twig', [
-				'title'			=> 'Typemill Author Area',
-				'description'	=> 'Typemill Version 2 wird noch besser als Version 1.'
-		    ]);
-	    }
+		if($url == '/')
+		{
+			$item 				= $home;
+		}
+		else
+		{
+		    $extendedNavigation	= $navigation->getExtendedNavigation($urlinfo, $langattr);
 
-	    # extend : $request->getAttribute('c_userrole')
-	    $draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $langattr);
+		    $pageinfo 			= $extendedNavigation[$url] ?? false;
+		    if(!$pageinfo)
+		    {
+			    return $this->c->get('view')->render($response->withStatus(404), '404.twig', [
+					'title'			=> 'Typemill Author Area',
+					'description'	=> 'Typemill Version 2 wird noch besser als Version 1.'
+			    ]);
+		    }
 
-		$item 				= $navigation->getItemWithKeyPath($draftNavigation, explode(".", $pageinfo['keyPath']));
+			$keyPathArray 		= explode(".", $pageinfo['keyPath']);
 
-		$draftNavigation 	= $navigation->setActiveNaviItems($draftNavigation, explode(".", $pageinfo['keyPath']));
+		    # extend : $request->getAttribute('c_userrole')
+		    $draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $langattr);
+
+			$draftNavigation 	= $navigation->setActiveNaviItems($draftNavigation, $keyPathArray);
+
+			$item 				= $navigation->getItemWithKeyPath($draftNavigation, $keyPathArray);
+		}
+
+	#	$item->modified		= ($item->published OR $item->drafted) ? filemtime($this->settings['contentFolder'] . $this->path) : false;
 
 		$mainNavigation 	= $navigation->getMainNavigation($request->getAttribute('c_userrole'), $this->c->get('acl'), $urlinfo, $this->settings['editor']);
 
+		$content 			= new Content($urlinfo['baseurl']);
+
+		$draftMarkdown  	= $content->getDraftMarkdown($item);
+
+		$draftMarkdownHtml	= $content->addDraftHtml($draftMarkdown);
+
+/*
+		if(isset($draftHtml[0]))
+		{
+			$title = $draftHtml[0];
+			unset($draftHtml[0]);
+		}
+
+		echo '<pre>';
+		print_r($draftHtml);
+		die();
+*/
 	    return $this->c->get('view')->render($response, 'content/blox-editor.twig', [
 			'settings' 			=> $this->settings,
 			'mainnavi'			=> $mainNavigation,
+			'content' 			=> $draftMarkdownHtml,
 			'jsdata' 			=> [
 										'settings' 		=> $this->settings,
+										'urlinfo'		=> $urlinfo,
 										'navigation'	=> $draftNavigation,
 										'item'			=> $item,
-										'urlinfo'		=> $urlinfo
+										'home' 			=> $home,
+										'content' 		=> $draftMarkdownHtml
 									]
 		]);
 
 
 
-		# set structure
-		if(!$this->setStructureDraft()){ return $this->renderIntern404($response, array( 'navigation' => true, 'content' => $this->errors )); }
 
 		# set information for homepage
 		$this->setHomepage($args);
-
-		# set item
-		if(!$this->setItem()){ return $this->renderIntern404($response, array( 'navigation' => $this->structureDraft, 'settings' => $this->settings, 'content' => $this->errors )); }
-
 		# we have to check ownership here to use it for permission-check in templates
 		$this->checkContentOwnership();
-
 		# set the status for published and drafted
-		$this->setPublishStatus();
-		
+		$this->setPublishStatus();		
 		# set path
 		$this->setItemPath($this->item->fileType);
-
-		# add the modified date for the file
-		$this->item->modified	= ($this->item->published OR $this->item->drafted) ? filemtime($this->settings['contentFolder'] . $this->path) : false;
 
 		# read content from file
 		if(!$this->setContent()){ return $this->renderIntern404($response, array( 'navigation' => $this->structure, 'settings' => $this->settings, 'content' => $this->errors )); }

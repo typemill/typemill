@@ -7,13 +7,12 @@ use Typemill\Static\Slug;
 
 class ProcessImage extends ProcessAssets
 {
-	protected $imgstring 			= false;
-	protected $type 				= false;
-	protected $extension 			= false;
 	protected $allowedExtensions 	= ['png' => true, 'jpg' => true, 'jpeg' => true, 'webp' => true];
-	protected $filename 			= false;
+
 	protected $animated 			= false;
+
 	protected $resizable 			= true;
+
 	protected $sizes  				= [];
 
 	public function prepareImage($image, $name)
@@ -73,77 +72,12 @@ class ProcessImage extends ProcessAssets
 
 		return false;
 	}
-
-
-	# decode a base64 image string from js image components
-	public function decode(string $image)
-	{
-        $imageParts 		= explode(";base64,", $image);
-
-        if(!isset($imageParts[0]) OR !isset($imageParts[1]))
-        {
-        	$this->errors[] = 'Could not decode image, probably not a base64 encoding.';
-
-        	return false;
-        }
-
-        $type 				= explode("/", $imageParts[0]);
-        $this->type			= strtolower($type[0]);
-		$this->imgstring	= base64_decode($imageParts[1]);
-
-		return true;
-	}
-
-	# set the pathinfo (name and extension) and slugify a unique name if option to overwrite existing files is false
-	public function setPathInfo(string $name)
-	{
-		$pathinfo			= pathinfo($name);
-		if(!$pathinfo)
-		{
-			$this->errors[] = 'Could not read pathinfo.';
-
-			return false;
-		}
-
-		$this->extension 	= isset($pathinfo['extension']) ? strtolower($pathinfo['extension']) : false;
-		$this->filename 	= Slug::createSlug($pathinfo['filename']);
-
-		if(!$this->extension OR !$this->filename)
-		{
-			$this->errors[] = 'Extension or filename are missing.';
-
-			return false;
-		}
-
-		return true;
-	}
-
-	public function getExtension()
-	{
-		return $this->extension;
-	}
-
-	public function getFilename()
-	{
-		return $this->filename;
-	}
-
-	public function setFilename($filename)
-	{
-		$this->filename = $filename;
-	}
-
-	public function getFullName()
-	{
-		return $this->filename . '.' . $this->extension;
-	}
-
+	
 	# add an allowed image extension like svg
 	public function addAllowedExtension(string $extension)
 	{
 		$this->allowedExtensions[$extension] = true;
 	}
-
 
 	# force an image type like webp
 	public function setExtension(string $extension)
@@ -166,12 +100,12 @@ class ProcessImage extends ProcessAssets
 	# check if image should not be resized (animated gif and svg)
 	public function isResizable()
 	{
-		if($this->type == 'gif' && $this->detectAnimatedGif())
+		if($this->filetype == 'gif' && $this->detectAnimatedGif())
 		{
 			$this->resizable = false;
 		}
 
-		if($this->type == 'svg+xml')
+		if($this->filetype == 'svg+xml')
 		{
 			$this->resizable = false;
 		}
@@ -181,7 +115,7 @@ class ProcessImage extends ProcessAssets
  
 	public function detectAnimatedGif()
 	{
-		$is_animated = preg_match('#(\x00\x21\xF9\x04.{4}\x00\x2C.*){2,}#s', $this->imgstring);
+		$is_animated = preg_match('#(\x00\x21\xF9\x04.{4}\x00\x2C.*){2,}#s', $this->filedata);
 		if ($is_animated == 1)
 		{
 			$this->animated = true;
@@ -195,7 +129,7 @@ class ProcessImage extends ProcessAssets
 	{
 		$path = $this->tmpFolder . $destinationfolder . '+' . $this->filename . '.' . $this->extension;
 		
-		if(!file_put_contents($path, $this->imgstring))
+		if(!file_put_contents($path, $this->filedata))
 		{
 			$this->errors[] = 'could not store the image in the temporary folder';			
 		}
@@ -210,7 +144,7 @@ class ProcessImage extends ProcessAssets
 
 	public function createImage()
 	{
-		return imagecreatefromstring($this->imgstring);
+		return imagecreatefromstring($this->filedata);
 	}
 
 	public function getImageSize($image)
@@ -296,6 +230,26 @@ class ProcessImage extends ProcessAssets
 
 
 	# publish image function is moved to storage model
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 	# MOVE TO STORAGE ??

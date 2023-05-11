@@ -3,15 +3,24 @@
 namespace Typemill\Models;
 
 use Typemill\Models\Folder;
+use Typemill\Static\Slug;
+
 
 class ProcessAssets
-{
-	# holds the path to the temporary image folder
-	public $basepath = false;
+{ 
+	public $errors 		= [];
 
-	public $tmpFolder = false;
+	public $basepath 	= false;
 
-	public $errors 	= [];
+	public $tmpFolder 	= false;
+
+	public $extension 	= false;
+
+	public $filename 	= false;
+
+	public $filetype 	= false;
+
+	public $filedata 	= false;
 
 	public function __construct()
 	{
@@ -48,6 +57,117 @@ class ProcessAssets
 		}
 		
 		return $result;
+	}
+
+	# set the pathinfo (name and extension) and slugify a unique name if option to overwrite existing files is false
+	public function setPathInfo(string $name)
+	{
+		$pathinfo			= pathinfo($name);
+		if(!$pathinfo)
+		{
+			$this->errors[] = 'Could not read pathinfo.';
+
+			return false;
+		}
+
+		$this->extension 	= isset($pathinfo['extension']) ? strtolower($pathinfo['extension']) : false;
+		$this->filename 	= Slug::createSlug($pathinfo['filename']);
+
+		if(!$this->extension OR !$this->filename)
+		{
+			$this->errors[] = 'Extension or filename are missing.';
+
+			return false;
+		}
+
+		return true;
+	}
+
+	public function decode(string $file)
+	{
+		$fileParts 		= explode(";base64,", $file);
+		$fileType		= explode("/", $fileParts[0]);
+		$fileData		= base64_decode($fileParts[1]);
+
+		$fileParts 		= explode(";base64,", $file);
+
+		if(!isset($fileParts[0]) OR !isset($fileParts[1]))
+		{
+			$this->errors[] = 'Could not decode image or file, probably not a base64 encoding.';
+
+			return false;
+		}
+
+		$type 				= explode("/", $fileParts[0]);
+		$this->filetype		= strtolower($fileType[0]);
+		$this->filedata		= base64_decode($fileParts[1]);
+
+		return true;
+	}	
+
+	public function getExtension()
+	{
+		return $this->extension;
+	}
+
+	public function getFiletype()
+	{
+		return $this->filetype;
+	}
+
+	public function getFilename()
+	{
+		return $this->filename;
+	}
+
+	public function setFilename($filename)
+	{
+		$this->filename = $filename;
+	}
+
+	public function getFullName()
+	{
+		return $this->filename . '.' . $this->extension;
+	}
+
+	public function getFiledata()
+	{
+		return $this->filedata;
+	}
+
+	public function getFullPath()
+	{
+		return $this->tmpFolder . $this->filename . '.' . $this->extension;
+	}
+
+    public function formatSizeUnits($bytes)
+    {
+        if ($bytes >= 1073741824)
+        {
+            $bytes = number_format($bytes / 1073741824, 2) . ' GB';
+        }
+        elseif ($bytes >= 1048576)
+        {
+            $bytes = number_format($bytes / 1048576, 2) . ' MB';
+        }
+        elseif ($bytes >= 1024)
+        {
+            $bytes = number_format($bytes / 1024, 2) . ' KB';
+        }
+        elseif ($bytes > 1)
+        {
+            $bytes = $bytes . ' bytes';
+        }
+        elseif ($bytes == 1)
+        {
+            $bytes = $bytes . ' byte';
+        }
+        else
+        {
+            $bytes = '0 bytes';
+        }
+
+        return $bytes;
 	}
 
 
@@ -211,33 +331,4 @@ class ProcessAssets
 		return $result;
 	}
 
-    public function formatSizeUnits($bytes)
-    {
-        if ($bytes >= 1073741824)
-        {
-            $bytes = number_format($bytes / 1073741824, 2) . ' GB';
-        }
-        elseif ($bytes >= 1048576)
-        {
-            $bytes = number_format($bytes / 1048576, 2) . ' MB';
-        }
-        elseif ($bytes >= 1024)
-        {
-            $bytes = number_format($bytes / 1024, 2) . ' KB';
-        }
-        elseif ($bytes > 1)
-        {
-            $bytes = $bytes . ' bytes';
-        }
-        elseif ($bytes == 1)
-        {
-            $bytes = $bytes . ' byte';
-        }
-        else
-        {
-            $bytes = '0 bytes';
-        }
-
-        return $bytes;
-	}
 }

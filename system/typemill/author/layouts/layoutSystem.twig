@@ -65,7 +65,10 @@
 		</script>
 		<script src="{{ base_url() }}/system/typemill/author/js/vue.js?v={{ settings.version }}"></script>
 		<script src="{{ base_url() }}/system/typemill/author/js/vue-eventbus.js?v={{ settings.version }}"></script>
-
+		<script src="{{ base_url() }}/system/typemill/author/js/vue-shared.js?v={{ settings.version }}"></script>
+		<script>
+			kixote.mount('#kixote');
+		</script>
 		{% block javascript %}{% endblock %}
 
 		{{ assets.renderJS() }}		

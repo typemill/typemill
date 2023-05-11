@@ -42,16 +42,18 @@ class Navigation extends Folder
 		$this->extendedNaviName 	= 'navi-extended.txt';
 	}
 
+	# use array ['extended' => true, 'draft' => true, 'live' => true] to clear files
 	public function clearNavigation(array $deleteitems = NULL )
 	{
-		# clear cache 
-		$this->extendedNavigation = false;
-		$this->draftNavigation = false;
-		$this->basicDraftNavigation = false;
-		$this->liveNavigation = false;
-		$this->basicLiveNavigation = false;
+		$result = false;
 
-		# clear files
+		# clear cache 
+		$this->extendedNavigation 		= false;
+		$this->draftNavigation 			= false;
+		$this->basicDraftNavigation 	= false;
+		$this->liveNavigation 			= false;
+		$this->basicLiveNavigation 		= false;
+
 		$navifiles = [
 			'extended' 	=> $this->extendedNaviName,
 			'draft' 	=> $this->draftNaviName,
@@ -107,12 +109,48 @@ class Navigation extends Folder
 		return $allowedmainnavi;
 	}
 
+	public function getSystemNavigation($userrole, $acl, $urlinfo)
+	{
+		$systemnavi 	= $this->storage->getYaml('systemSettings', '', 'systemnavi.yaml');
+#		$systemnavi 	= $this->c->get('dispatcher')->dispatch(new OnSystemnaviLoaded($systemnavi), 'onSystemnaviLoaded')->getData();
+
+		$allowedsystemnavi = [];
+
+		foreach($systemnavi as $name => $naviitem)
+		{
+			# check if the navi-item is active (e.g if segments like "content" or "system" is in current url)
+			# a bit fragile because url-segment and name/key in systemnavi.yaml and plugins have to be the same
+			if(strpos($urlinfo['route'], 'tm/' . $name))
+			{
+				$naviitem['active'] = true;
+			}
+
+			if($acl->isAllowed($userrole, $naviitem['aclresource'], $naviitem['aclprivilege']))
+			{
+				$allowedsystemnavi[$name] = $naviitem;
+			}
+		}
+
+		return $allowedsystemnavi;
+	}
+
 	# get the navigation with draft files for author environment
 	public function getDraftNavigation($urlinfo, $language, $userrole = null, $username = null)
 	{
 		# todo: filter for userrole or username 
 
+#		$this->clearNavigation(['extended' => true, 'draft' => true, 'live' => true]);
+
 		$this->draftNavigation = $this->storage->getFile('dataFolder', $this->naviFolder, $this->draftNaviName, 'unserialize');
+
+
+
+/*		echo '<pre>';
+		$draftContentTree = $this->scanFolder($this->storage->getFolderPath('contentFolder'), true);
+		$draftNavigation = $this->getFolderContentDetails($draftContentTree, $language, $urlinfo['baseurl'], $urlinfo['basepath']);
+		print_r($draftNavigation);
+		die();
+*/
 
 		if($this->draftNavigation)
 		{
@@ -201,17 +239,21 @@ class Navigation extends Folder
 			{
 				# read file
 				$meta = $this->storage->getYaml($contentFolder, '', $filename);
-
-				$extended[$item->urlRelWoF]['navtitle'] 	= isset($meta['meta']['navtitle']) ? $meta['meta']['navtitle'] : '';
-				$extended[$item->urlRelWoF]['hide'] 		= isset($meta['meta']['hide']) ? $meta['meta']['hide'] : false;
-				$extended[$item->urlRelWoF]['noindex'] 		= isset($meta['meta']['noindex']) ? $meta['meta']['noindex'] : false;
-				$extended[$item->urlRelWoF]['path']			= $item->path;
-				$extended[$item->urlRelWoF]['keyPath']		= $item->keyPath;
 			}
 			else
 			{
-				# should we create the yaml file here if it does not exist?
+				# create initial yaml
+				$meta = [];
+				$meta['meta']['navtitle'] = $item->name;
+
+				$this->storage->updateYaml('contentFolder', '', $filename, $meta);
 			}
+
+			$extended[$item->urlRelWoF]['navtitle'] 	= isset($meta['meta']['navtitle']) ? $meta['meta']['navtitle'] : '';
+			$extended[$item->urlRelWoF]['hide'] 		= isset($meta['meta']['hide']) ? $meta['meta']['hide'] : false;
+			$extended[$item->urlRelWoF]['noindex'] 		= isset($meta['meta']['noindex']) ? $meta['meta']['noindex'] : false;
+			$extended[$item->urlRelWoF]['path']			= $item->path;
+			$extended[$item->urlRelWoF]['keyPath']		= $item->keyPath;
 
 			if ($item->elementType == 'folder')
 			{
@@ -247,9 +289,15 @@ class Navigation extends Folder
 		return $mergedNavigation;
 	}
 
-	public function getItemWithKeyPath($navigation, array $searchArray)
+	public function getItemWithKeyPath($navigation, array $searchArray, $baseUrl = null)
 	{
 		$item = false;
+
+		# if it is the homepage
+		if(isset($searchArray[0]) && $searchArray[0] == '')
+		{
+			return $this->getHomepageItem($baseUrl);
+		}
 
 		foreach($searchArray as $key => $itemKey)
 		{
@@ -264,25 +312,6 @@ class Navigation extends Folder
 
 		return $item;
 	}
-
-	public function getItemForUrlFrontend($folderContentDetails, $url, $result = NULL)
-	{
-		foreach($folderContentDetails as $key => $item)
-		{
-			# set item active, needed to move item in navigation
-			if($item->urlRelWoF === $url)
-			{
-				$item->active = true;
-				$result = $item;
-			}
-			elseif($item->elementType === "folder")
-			{
-				$result = $this->getItemForUrlFrontend($item->folderContent, $url, $result);
-			}
-		}
-
-		return $result;
-	}	
 
 	public function setActiveNaviItems($navigation, array $searchArray)
 	{
@@ -311,6 +340,41 @@ class Navigation extends Folder
 		}
 		return $navigation;
 	}
+
+	public function getHomepageItem($baseUrl)
+	{
+#		$live 	= $this->storage->getFile('contentFolder', '', 'index.md');
+		$draft 	= $this->storage->getFile('contentFolder', '', 'index.txt');
+
+		# return a standard item-object
+		$item 					= new \stdClass;
+
+		$item->status 			= $draft ? 'modified' : 'published';
+		$item->originalName 	= 'home';
+		$item->elementType 		= 'folder';
+		$item->fileType			= $draft ? 'mdtxt' : 'md';
+		$item->order 			= false;
+		$item->name 			= 'home';
+		$item->slug				= '';
+		$item->path				= '';
+		$item->pathWithoutType	= DIRECTORY_SEPARATOR . 'index';
+		$item->key				= false;
+		$item->keyPath			= '';
+		$item->keyPathArray		= [''];
+		$item->chapter			= false;
+		$item->urlRel			= '/';
+		$item->urlRelWoF		= '/';
+		$item->urlAbs			= $baseUrl;
+		$item->active			= true;
+		$item->activeParent		= false;
+		$item->hide 			= false;
+
+		return $item;
+	}
+
+
+
+
 
 
 ############################## TODO
