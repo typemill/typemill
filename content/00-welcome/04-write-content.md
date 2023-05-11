@@ -40,3 +40,4 @@ Ever tried to revise a published article in WordPress? Yes, it works, but if you
 * In **raw mode**: To store changes in a new draft, simply click on the "save draft"-button in the publish controller.
 * You can work on a draft as long as you want without changing the live version. Your changes go live if you click the button "publish".
 * In visual mode, you can also use the discard-button and go back to the published version.
+

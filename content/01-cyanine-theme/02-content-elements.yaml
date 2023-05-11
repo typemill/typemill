@@ -1,0 +1,16 @@
+meta:
+    navtitle: 'content elements'
+    title: 'Content Elements'
+    description: "Cyanine provides a lot of other settings for your content area. For example:  \nAdd an edit-button for github, gitlab or other plattforms.\nShow the author.\nShow the publish date.\nShow the chapter numbers in the navigation.\n"
+    heroimage: ''
+    heroimagealt: null
+    hide: false
+    noindex: false
+    owner: trendschau
+    author: 'Sebastian Schürmanns'
+    allowedrole: null
+    alloweduser: null
+    manualdate: null
+    modified: '2021-11-24'
+    created: '2021-06-17'
+    time: 16-23-24
