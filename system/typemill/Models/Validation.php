@@ -205,7 +205,7 @@ class Validation
 	}
 
 	/**
-	* validation for signup form
+	* validation for signin form
 	* 
 	* @param array $params with form data.
 	* @return obj $v the validation object passed to a result method.
@@ -230,7 +230,7 @@ class Validation
 	}
 	
 	/**
-	* validation for signup form
+	* validation for new user (in backoffice)
 	* 
 	* @param array $params with form data.
 	* @return obj $v the validation object passed to a result method.
@@ -260,6 +260,7 @@ class Validation
 		return $v->errors();
 	}
 	
+	# change user in backoffice
 	public function existingUser(array $params, $userroles)
 	{
 		$v = new Validator($params);
@@ -275,50 +276,6 @@ class Validation
 		$v->rule('emailChanged', 'email')->message("Email already taken");
 		$v->rule('in', 'userrole', $userroles);
 
-		return $this->validationResult($v);
-	}
-	
-	public function username($username)
-	{
-		$v = new Validator($username);
-		$v->rule('alphaNum', 'username')->message("Only alpha-numeric characters allowed");
-		$v->rule('lengthBetween', 'username', 3, 20)->message("Length between 3 - 20"); 
-
-		return $this->validationResult($v);
-	}
-
-	/**
-	* validation for changing the password
-	* 
-	* @param array $params with form data.
-	* @return obj $v the validation object passed to a result method.
-	*
-	
-	public function newPassword(array $params)
-	{
-		$v = new Validator($params);
-		$v->rule('required', ['password', 'newpassword']);
-		$v->rule('lengthBetween', 'newpassword', 5, 20);
-		$v->rule('checkPassword', 'password')->message("Password is wrong");
-		
-		return $this->validationResult($v);
-	}
-	*/
-
-	/**
-	* validation for changing the password api case
-	* 
-	* @param array $params with form data.
-	* @return obj $v the validation object passed to a result method.
-	*/
-	
-	public function newPassword(array $params)
-	{
-		$v = new Validator($params);
-		$v->rule('required', ['password', 'newpassword']);
-		$v->rule('lengthBetween', 'newpassword', 5, 20);
-		$v->rule('checkPassword', 'password')->message("Password is wrong");
-		
 		if($v->validate()) 
 		{
 			return true;
@@ -327,30 +284,6 @@ class Validation
 		return $v->errors();
 	}
 
-	/**
-	* validation for password recovery
-	* 
-	* @param array $params with form data.
-	* @return obj $v the validation object passed to a result method.
-	*/
-	
-	public function recoverPassword(array $params)
-	{
-		$v = new Validator($params);
-		$v->rule('required', ['password', 'passwordrepeat']);
-		$v->rule('lengthBetween', 'password', 5, 20);
-		$v->rule('equals', 'passwordrepeat', 'password');
-		
-		return $this->validationResult($v);
-	}
-
-	/**
-	* validation for changing the password api case
-	* 
-	* @param array $params with form data.
-	* @return obj $v the validation object passed to a result method.
-	*/
-	
 	public function newLicense(array $params)
 	{
 		$v = new Validator($params);
@@ -382,13 +315,6 @@ class Validation
 		return $v->errors();
 	}
 
-	/**
-	* validation for resort navigation
-	* 
-	* @param array $params with form data.
-	* @return true or $v->errors with array of errors to use in json-response
-	*/
-	
 	public function navigationSort(array $params)
 	{
 		$v = new Validator($params);
@@ -408,18 +334,11 @@ class Validation
 		return $v->errors();
 	}
 
-	/**
-	* validation for new navigation items
-	* 
-	* @param array $params with form data.
-	* @return true or $v->errors with array of errors to use in json-response
-	*/
-
 	public function navigationItem(array $params)
 	{
 		$v = new Validator($params);
 
-		$v->rule('required', ['folder_id', 'item_name', 'type', 'url']);
+		$v->rule('required', ['folder_id', 'item_name', 'type']);
 		$v->rule('regex', 'folder_id', '/^(root)|([0-9.]+)$/i');
 		$v->rule('navigation', 'item_name');
 		$v->rule('lengthBetween', 'item_name', 1, 60);
@@ -435,22 +354,166 @@ class Validation
 		}
 	}	
 
+	public function blockInput(array $params)
+	{
+		$v = new Validator($params);
+		
+		$v->rule('required', ['markdown', 'block_id', 'url']);
+		$v->rule('markdownSecure', 'markdown');
+		$v->rule('regex', 'block_id', '/^[0-9.]+$/i');
+		
+		if($v->validate())
+		{
+			return true;
+		} 
+		else
+		{
+			return $v->errors();
+		}
+	}
+
+	public function blockMove(array $params)
+	{
+		$v = new Validator($params);
+		
+		$v->rule('required', ['index_new', 'index_old', 'url']);
+		$v->rule('regex', 'index_new', '/^[0-9.]+$/i');
+		$v->rule('regex', 'index_old', '/^[0-9.]+$/i');
+		
+		if($v->validate())
+		{
+			return true;
+		} 
+		else
+		{
+			return $v->errors();
+		}
+	}
+
+	public function blockDelete(array $params)
+	{
+		$v = new Validator($params);
+		
+		$v->rule('required', ['block_id', 'url']);
+		$v->rule('regex', 'block_id', '/^[0-9.]+$/i');
+		
+		if($v->validate())
+		{
+			return true;
+		} 
+		else
+		{
+			return $v->errors();
+		}
+	}
+
+	public function articlePublish(array $params)
+	{
+		$v = new Validator($params);
+
+		# special conditions for startpage
+		if(isset($params['item_id']) && $params['item_id'] == '')
+		{
+			$v->rule('required', ['url']);
+			$v->rule('markdownSecure', 'markdown');			
+		}
+		else
+		{
+			$v->rule('required', ['item_id', 'url']);
+			$v->rule('regex', 'item_id', '/^[0-9.]+$/i');
+			$v->rule('markdownSecure', 'markdown');
+		}
+				
+		if($v->validate())
+		{
+			return true;
+		} 
+		else
+		{
+			return $v->errors();
+		}
+	}
 
 
 
 
 
 
+	
+	public function usernameBREAK($username)
+	{
+		$v = new Validator($username);
+		$v->rule('alphaNum', 'username')->message("Only alpha-numeric characters allowed");
+		$v->rule('lengthBetween', 'username', 3, 20)->message("Length between 3 - 20"); 
 
+		return $this->validationResult($v);
+	}
+
+	/**
+	* validation for changing the password
+	* 
+	* @param array $params with form data.
+	* @return obj $v the validation object passed to a result method.
+	*/
+	
+	public function newPasswordOldBREAK(array $params)
+	{
+		$v = new Validator($params);
+		$v->rule('required', ['password', 'newpassword']);
+		$v->rule('lengthBetween', 'newpassword', 5, 20);
+		$v->rule('checkPassword', 'password')->message("Password is wrong");
+		
+		return $this->validationResult($v);
+	}
+
+
+	/**
+	* validation for changing the password api case
+	* 
+	* @param array $params with form data.
+	* @return obj $v the validation object passed to a result method.
+	*/
+	
+	public function newPasswordBREAK(array $params)
+	{
+		$v = new Validator($params);
+		$v->rule('required', ['password', 'newpassword']);
+		$v->rule('lengthBetween', 'newpassword', 5, 20);
+		$v->rule('checkPassword', 'password')->message("Password is wrong");
+		
+		if($v->validate()) 
+		{
+			return true;
+		}
+
+		return $v->errors();
+	}
+
+	/**
+	* validation for password recovery
+	* 
+	* @param array $params with form data.
+	* @return obj $v the validation object passed to a result method.
+	*/
+	
+	public function recoverPasswordBREAK(array $params)
+	{
+		$v = new Validator($params);
+		$v->rule('required', ['password', 'passwordrepeat']);
+		$v->rule('lengthBetween', 'password', 5, 20);
+		$v->rule('equals', 'passwordrepeat', 'password');
+		
+		return $this->validationResult($v);
+	}
 
 	/**
 	* validation for system settings
 	* 
 	* @param array $params with form data.
 	* @return obj $v the validation object passed to a result method.
-	*
+	*/
 
-	public function settings(array $params, array $copyright, array $formats, $name = false)
+	public function settingsBREAK(array $params, array $copyright, array $formats, $name = false)
 	{
 		$v = new Validator($params);
 		
@@ -477,7 +540,7 @@ class Validation
 
 		return $this->validationResult($v, $name);
 	}
-	*/
+
 
 	/**
 	* validation for content editor
@@ -504,26 +567,6 @@ class Validation
 			return $v->errors();
 		}		
 	}
-	
-	public function blockInput(array $params)
-	{
-		$v = new Validator($params);
-		
-		$v->rule('required', ['markdown', 'block_id', 'url']);
-		$v->rule('markdownSecure', 'markdown');
-		$v->rule('regex', 'block_id', '/^[0-9.]+$/i');
-		
-		if($v->validate())
-		{
-			return true;
-		} 
-		else
-		{
-			return $v->errors();
-		}
-	}
-
-
 	
 	/**
 	* validation for dynamic fields ( settings for themes and plugins)
@@ -582,7 +625,7 @@ class Validation
 					}
 				}
 				break;
-			case "code":
+			case "codearea":
 				$v->rule('lengthMax', $fieldName, 10000);
 				break;
 			case "color":

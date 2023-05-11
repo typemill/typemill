@@ -137,6 +137,12 @@ class Settings
 		$storage->updateYaml('basepath', 'settings', 'settings.yaml', $settings);
 	}
 
+	public static function getSettingsDefinitions()
+	{
+		$storage  = new StorageWrapper('\Typemill\Models\Storage');
+		
+		return $storage->getYaml('systemSettings', '', 'system.yaml');
+	}
 
 
 ### refactor

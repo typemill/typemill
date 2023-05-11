@@ -69,6 +69,15 @@ class License
 
 	}
 
+
+	public function getLicenseFields()
+	{
+		$storage 		= new StorageWrapper('\Typemill\Models\Storage');
+		$licensefields 	= $storage->getYaml('systemSettings', '', 'license.yaml');
+
+		return $licensefields;
+	}
+
 	# check the local licence file (like pem or pub)
 	private function checkLicense()
 	{

@@ -5,11 +5,11 @@ namespace Typemill\Controllers;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Typemill\Models\Validation;
-use Typemill\Models\StorageWrapper;
 use Typemill\Models\License;
+use Typemill\Models\Extension;
 use Typemill\Static\Settings;
 
-class ControllerApiSystemExtensions extends ControllerData
+class ControllerApiSystemExtensions extends Controller
 {
 	public function activateExtension(Request $request, Response $response)
 	{
@@ -38,18 +38,24 @@ class ControllerApiSystemExtensions extends ControllerData
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
-		$storage 			= new StorageWrapper('\Typemill\Models\Storage');
-
 		if($params['checked'] == true)
 		{
-			$folder = ( $params['type'] == 'plugins' ) ? 'pluginFolder' : 'themeFolder';
+			$extension			= new Extension();
 
-			$definitions 		= $storage->getYaml($folder, $params['name'], $params['name'] . '.yaml');
-			
+			if($params['type'] == 'plugins')
+			{
+				$definitions = $extension->getPluginDefinition($params['name']);
+			}
+			elseif($params['type'] == 'themes')
+			{
+				$definitions = $extension->getThemeDefinition($params['name']);
+			}
+
 			if(isset($definitions['license']) && in_array($definitions['license'], ['MAKER', 'BUSINESS']))
 			{
-				$license = new License();
-				$licenseScope = $license->getLicenseScope($this->c->get('urlinfo'));
+				$license 		= new License();
+				$licenseScope 	= $license->getLicenseScope($this->c->get('urlinfo'));
+				
 				if(!isset($licenseScope[$definitions['license']]))
 				{
 					$response->getBody()->write(json_encode([

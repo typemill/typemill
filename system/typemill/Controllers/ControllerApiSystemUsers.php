@@ -7,9 +7,8 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Typemill\Models\Validation;
 use Typemill\Models\User;
 
-class ControllerApiSystemUsers extends ControllerData
+class ControllerApiSystemUsers extends Controller
 {
-
 	# getCurrentUser
 	# getUserByName
 
@@ -96,13 +95,19 @@ class ControllerApiSystemUsers extends ControllerData
 		$username 			= $params['userdata']['username'] ?? false;
 		$isAdmin 			= $this->c->get('acl')->isAllowed($request->getAttribute('c_userrole'), 'user', 'write');
 
-		if(!$userdata OR !$username)
+		$validate		= new Validation();
+
+		# standard validation for new users
+		$userroles 		= $this->c->get('acl')->getRoles();
+		$valresult 		= $validate->existingUser($userdata, $userroles);
+		if($valresult !== true)
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'Userdata and username is required.'
+				'message' 	=> 'Please correct the errors above.',
+				'errors' 	=> $validate->returnFirstValidationErrors($valresult)
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
 		# if a non-admin-user tries to update another account 
@@ -114,16 +119,6 @@ class ControllerApiSystemUsers extends ControllerData
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);			
 		}
-
-		$user 				= new User();
-
-		# make sure you set a user with password when you update, otherwise it will delete the password completely
-		$user->setUserWithPassword($username);
-
-		$formdefinitions 	= $this->getUserFields($request->getAttribute('c_userrole'));
-
-		# validate input
-		$validator 			= new Validation();
 
 		# cleanup password entry
 		if(isset($userdata['password']) AND $userdata['password'] == '')
@@ -138,7 +133,7 @@ class ControllerApiSystemUsers extends ControllerData
 		# validate passwort changes if valid input
 		if(isset($userdata['password']) OR isset($userdata['newpassword']))
 		{
-			$validpass = $validator->newPassword($userdata);
+			$validpass = $validate->newPassword($userdata);
 
 			if($validpass === true)
 			{
@@ -157,8 +152,13 @@ class ControllerApiSystemUsers extends ControllerData
 			unset($userdata['newpassword']);
 		}
 
-		$validatedOutput 	= $this->recursiveValidation($validator, $formdefinitions, $userdata);
+		# make sure you set a user with password when you update, otherwise it will delete the password completely
+		$user 				= new User();
+		$user->setUserWithPassword($username);
+		$formdefinitions 	= $user->getUserFields($this->c->get('acl'), $request->getAttribute('c_userrole'));
 
+
+		$validatedOutput 	= $this->recursiveValidation($validate, $formdefinitions, $userdata);
 		if(!empty($this->errors))
 		{
 			$response->getBody()->write(json_encode([
@@ -203,7 +203,8 @@ class ControllerApiSystemUsers extends ControllerData
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
 		}
 
-		$userform = $this->getUserFields($userrole,$inspectorrole = $request->getAttribute('c_userrole'));
+		$user 		= new User();
+		$userform 	= $user->getUserFields($this->c->get('acl'), $userrole,$inspectorrole = $request->getAttribute('c_userrole'));
 
 		# fix the standard form
 		$userform['password']['label'] = 'Password';
@@ -250,7 +251,8 @@ class ControllerApiSystemUsers extends ControllerData
 
 
 		# additional validation for extra fields and image handling
-		$formdefinitions = $this->getUserFields($userdata['userrole'],$inspectorrole = $request->getAttribute('c_userrole'));
+		$user 				= new User();
+		$formdefinitions 	= $user->getUserFields($this->c->get('acl'), $userdata['userrole'],$inspectorrole = $request->getAttribute('c_userrole'));
 		unset($formdefinitions['username']['readonly']);
 		$validatedOutput = $this->recursiveValidation($validate, $formdefinitions, $userdata);
 		if(!empty($this->errors))
@@ -263,7 +265,6 @@ class ControllerApiSystemUsers extends ControllerData
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
-		$user = new User();
 		if(!$user->createUser($validatedOutput))
 		{
 			$response->getBody()->write(json_encode([

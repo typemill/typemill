@@ -5,7 +5,7 @@ namespace Typemill\Controllers;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Typemill\Models\Validation;
-use Typemill\Models\StorageWrapper;
+use Typemill\Models\Extension;
 use Typemill\Models\User;
 use Typemill\Static\Settings;
 
@@ -13,7 +13,7 @@ use Typemill\Static\Settings;
 # how to translate results in API call ???
 # we should translate in backend instead of twig or vue
 
-class ControllerApiSystemSettings extends ControllerData
+class ControllerApiSystemSettings extends Controller
 {
 	public function getSettings(Request $request, Response $response)
 	{
@@ -28,8 +28,8 @@ class ControllerApiSystemSettings extends ControllerData
 	{
 		$params 			= $request->getParsedBody();
 		$settingsinput 		= $params['settings'];
-		$storage 			= new StorageWrapper('\Typemill\Models\Storage');
-		$formdefinitions 	= $storage->getYaml('systemSettings', '', 'system.yaml');
+
+		$formdefinitions 	= Settings::getSettingsDefinitions();
 
 		# validate input
 		$validator 			= new Validation();

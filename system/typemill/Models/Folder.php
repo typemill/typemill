@@ -161,16 +161,13 @@ class Folder
 			}
 			elseif($name)
 			{
-				# do not use files in base folder (only folders are allowed)
-				# if(!isset($keyPath)) continue;
-
 				# do not use index files
 				if($name == 'index.md' || $name == 'index.txt' || $name == 'index.txtmd' ) continue;
 
 				$nameParts 				= $this->getStringParts($name);
 				$fileType 				= array_pop($nameParts);
 				$nameWithoutType		= $this->getNameWithoutType($name);
-
+				
 				if($fileType == 'md')
 				{
 					$status = 'published';
@@ -255,6 +252,7 @@ class Folder
 
 	public function getHomepageItem($baseUrl)
 	{
+		die('folder model: getHomepageItem moved to navigation model');
 		# return a standard item-object
 		$item 					= new \stdClass;
 
@@ -284,6 +282,8 @@ class Folder
 
 	public function getItemForUrl($folderContentDetails, $url, $baseUrl, $result = NULL, $home = NULL )
 	{
+		die('folder model: getItemForUrl. Is it in use?');
+
 		# if we are on the homepage
 		if($home)
 		{

@@ -6,8 +6,10 @@ const navigation = Vue.createApp({
 					<button class="w-1/2 mr-1 hover:bg-stone-700 hover:text-stone-50 border border-stone-200 px-2 py-1 transition duration-100" @click.prevent="expandNavigation()">expand all</button>
 				</div>
 				<div class="flex w-full my-px border-y border-stone-200 font-bold">
-					<div class="border-l-4 border-teal-500 published"></div>
-					<a class="flex-grow p-1 pl-3 hover:bg-teal-500 hover:text-stone-50 text-bold transition duration-100" :href="getHomeUrl()">Home</a>
+					<div class="border-l-4" :class="getStatusClass(home.status)"></div>
+					<a :href="getUrl(home.urlRelWoF)" class="flex-grow p-1 hover:bg-teal-500 hover:text-stone-50" :class="getNaviClass(home.active)">
+						{{ home.name }}
+					</a>
 		  		</div>
 				<div class="pl-2 pl-3 pl-4 pl-6 pl-8 pl-9 pl-10 pl-12 pl-15 text-stone-50"></div>
 				<navilevel :navigation="navigation" :expanded="expanded" />
@@ -15,6 +17,8 @@ const navigation = Vue.createApp({
 	data: function () {
 		return {
 			navigation: data.navigation,
+			home: data.home,
+			backup: false,
 			isExpended: false,
 			expanded: [],
 		}
@@ -35,14 +39,50 @@ const navigation = Vue.createApp({
 			}
 			this.expanded = expanded.split(',');
 		}
+
 		eventBus.$on('toggleFolder', this.toggleFolder);
+
+		eventBus.$on('backupNavigation', this.backupNavigation);
+
+		eventBus.$on('revertNavigation', this.revertNavigation);
+
+		eventBus.$on('navigation', navigation => {
+			this.navigation = navigation;
+		});
+
+		eventBus.$on('item', item => {
+			if(item.originalName == 'home')
+			{
+				this.home = item;
+			}
+		});
 	},
 	methods: {
-		getHomeUrl()
+		getStatusClass(status)
 		{
-			return tmaxios.defaults.baseURL + '/tm/content/visual';
+			if(status == 'published')
+			{
+				return "border-teal-500";				
+			}
+			else if(status == 'modified')
+			{
+				return "border-yellow-400";
+			}
 		},
-		toggleFolder: function(name)
+		getNaviClass(home)
+		{
+			if(home.active)
+			{ 
+				return "text-stone-50 bg-teal-500";
+			}
+
+			return '';
+		},
+		getUrl()
+		{
+			return tmaxios.defaults.baseURL + '/tm/content/' + data.settings.editor;
+		},
+		toggleFolder(name)
 		{
 			var index = this.expanded.indexOf(name);
 			if (index > -1)
@@ -93,6 +133,14 @@ const navigation = Vue.createApp({
 				}
 			}
 			return result;
+		},
+		backupNavigation()
+		{
+			this.backup = this.navigation;
+		},
+		revertNavigation()
+		{
+			this.navigation = this.backup;
 		}
 	}
 });
@@ -118,7 +166,7 @@ navigation.component('navilevel',{
 		    <template #item="{ element }">
 				<li :class="element.elementType" :id="element.keyPath" :data-url="element.urlRelWoF" :data-active="element.active">
 					<div class="flex w-full my-px border-b border-stone-200 relative" :class="element.elementType == 'folder' ? 'font-bold' : ''">
-						<div class="border-l-4 border-teal-500" :class="element.status"></div>
+						<div class="border-l-4" :class="getStatusClass(element.status)"></div>
 						<a :href="getUrl(element.urlRelWoF)" class="flex-grow p-1 hover:bg-teal-500 hover:text-stone-50" :class="getNaviClass(element.active, element.activeParent, element.keyPathArray)">
 							{{ element.name }}
 						</a>
@@ -207,6 +255,21 @@ navigation.component('navilevel',{
 	},
 	methods: 
 	{
+		getStatusClass(status)
+		{
+			if(status == 'published')
+			{
+				return "border-teal-500";				
+			}
+			else if(status == 'unpublished')
+			{
+				return "border-rose-500";
+			}
+			else if(status == 'modified')
+			{
+				return "border-yellow-400";
+			}
+		},
 		getNaviClass(active, activeParent, keyPathArray)
 		{
 			var level = 3;
@@ -240,7 +303,7 @@ navigation.component('navilevel',{
 		},
 		getUrl(segment)
 		{
-			return tmaxios.defaults.baseURL + '/tm/content/visual' + segment;
+			return tmaxios.defaults.baseURL + '/tm/content/' + data.settings.editor + segment;
 		},
 		callToggle(name)
 		{
@@ -256,6 +319,7 @@ navigation.component('navilevel',{
 		},
 		onStart(evt)
 		{
+			eventBus.$emit('backupNavigation');
 			/* delete error messages if exist */
 			// publishController.errors.message = false;
 		},
@@ -296,7 +360,6 @@ navigation.component('navilevel',{
 				'index_new': 		evt.newIndex,
 				'active':			evt.item.dataset.active,
 				'url':  			evt.item.dataset.url,
-//				'url':				document.getElementById("path").value,
 //				'csrf_name': 		document.getElementById("csrf_name").value,
 //				'csrf_value':		document.getElementById("csrf_value").value,
 			})
@@ -318,16 +381,18 @@ navigation.component('navilevel',{
 			{
 				if(error.response.data.errors.message)
 				{
+					eventBus.$emit('revertNavigation');
 //					publishController.errors.message = error.response.data.errors;
 				}
 			});
 		},
 		addItem(type, parent)
 		{
-			// publishController.errors.message = false;
-			if(this.format.test(this.newItem) || !this.newItem || this.newItem.length > 40)
+			eventBus.$emit('publisherclear');
+
+			if(	this.format.test(this.newItem) ||  !this.newItem || this.newItem.length > 40)
 			{
-				// publishController.errors.message = 'Special Characters are not allowed. Length between 1 and 40.';
+				eventBus.$emit('publishermessage', 'Special Characters are not allowed. Length between 1 and 40.');
 				return;
 			}
 			
@@ -339,8 +404,8 @@ navigation.component('navilevel',{
 			tmaxios.post('/api/v1/article',{
 				'item_name': 		this.newItem,
 				'folder_id': 		parent,
-				'type':				type,
-			//	'url':				document.getElementById("path").value,
+				'type':				type
+//				'url':  			evt.item.dataset.url,
 			//	'csrf_name': 		document.getElementById("csrf_name").value,
 			//	'csrf_value':		document.getElementById("csrf_value").value,
 			})
@@ -360,7 +425,7 @@ navigation.component('navilevel',{
 			})
 			.catch(function (error)
 			{
-//				publishController.errors.message = error.response.data.errors;
+				eventBus.$emit('publishermessage', error.response.data.message);
 			});
 		},
 		emitter(value) {

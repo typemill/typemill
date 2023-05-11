@@ -2,48 +2,69 @@
 
 namespace Typemill\Controllers;
 
-use Typemill\Models\StorageWrapper;
+use Typemill\Models\Navigation;
+use Typemill\Models\Extension;
 use Typemill\Models\User;
 use Typemill\Models\License;
+use Typemill\Static\Settings;
 
-class ControllerWebSystem extends ControllerData
+class ControllerWebSystem extends Controller
 {	
 	public function showSettings($request, $response, $args)
 	{
-		$storage 		= new StorageWrapper('\Typemill\Models\Storage');
-		$systemfields 	= $storage->getYaml('systemSettings', '', 'system.yaml');
-		$translations 	= $this->c->get('translations');
+		$navigation 		= new Navigation();
+		$mainNavigation		= $navigation->getMainNavigation(
+									$userrole 	= $request->getAttribute('c_userrole'),
+									$acl 		= $this->c->get('acl'),
+									$urlinfo 	= $this->c->get('urlinfo'),
+									$editor 	= $this->settings['editor']
+								);
+
+		$systemNavigation	= $navigation->getSystemNavigation(
+									$userrole 	= $request->getAttribute('c_userrole'),
+									$acl 		= $this->c->get('acl'),
+									$urlinfo 	= $this->c->get('urlinfo')
+								);
+
+		$systemfields 		= Settings::getSettingsDefinitions();
 
 		# add full url for sitemap to settings
 		$this->settings['sitemap'] = $this->c->get('urlinfo')['baseurl'] . '/cache/sitemap.xml';
 
 	    return $this->c->get('view')->render($response, 'system/system.twig', [
+#			'captcha' 			=> $this->checkIfAddCaptcha(),
 #			'basicauth'			=> $user->getBasicAuth(),
 			'settings' 			=> $this->settings,
-			'mainnavi'			=> $this->getMainNavigation($request->getAttribute('c_userrole')),
-			'systemnavi'		=> $this->getSystemNavigation($request->getAttribute('c_userrole')),
+			'mainnavi'			=> $mainNavigation,
+			'systemnavi'		=> $systemNavigation,
 			'jsdata' 			=> [
 										'settings' 		=> $this->settings,
 										'system'		=> $systemfields,
-										'labels'		=> $translations,
+										'labels'		=> $this->c->get('translations'),
 										'urlinfo'		=> $this->c->get('urlinfo')
 									]
-#			'captcha' => $this->checkIfAddCaptcha(),
 	    ]);
 	}
 
 	public function showThemes($request, $response, $args)
 	{
-		$storage 			= new StorageWrapper('\Typemill\Models\Storage');
-		$translations 		= $this->c->get('translations');
-		$themeDefinitions 	= $this->getThemeDetails();
+		$navigation 		= new Navigation();
+		$mainNavigation		= $navigation->getMainNavigation(
+									$userrole 	= $request->getAttribute('c_userrole'),
+									$acl 		= $this->c->get('acl'),
+									$urlinfo 	= $this->c->get('urlinfo'),
+									$editor 	= $this->settings['editor']
+								);
 
-		$themeSettings = [];
-		foreach($this->settings['themes'] as $themename => $themeinputs)
-		{
-			$themeSettings[$themename] = $themeinputs;
-			$themeSettings[$themename]['customcss'] = $storage->getFile('cacheFolder', '', $themename . '-custom.css');
-		}
+		$systemNavigation	= $navigation->getSystemNavigation(
+									$userrole 	= $request->getAttribute('c_userrole'),
+									$acl 		= $this->c->get('acl'),
+									$urlinfo 	= $this->c->get('urlinfo')
+								);
+
+		$extension 			= new Extension();
+		$themeDefinitions 	= $extension->getThemeDetails();
+		$themeSettings 		= $extension->getThemeSettings($this->settings['themes']);
 
 		$license = [];
 		if(is_array($this->settings['license']))
@@ -53,14 +74,14 @@ class ControllerWebSystem extends ControllerData
 
 	    return $this->c->get('view')->render($response, 'system/themes.twig', [
 			'settings' 			=> $this->settings,
-			'mainnavi'			=> $this->getMainNavigation($request->getAttribute('c_userrole')),
-			'systemnavi'		=> $this->getSystemNavigation($request->getAttribute('c_userrole')),
+			'mainnavi'			=> $mainNavigation,
+			'systemnavi'		=> $systemNavigation,
 			'jsdata' 			=> [
 										'settings' 		=> $themeSettings,
 										'definitions'	=> $themeDefinitions,
 										'theme'			=> $this->settings['theme'],
 										'license' 		=> $license,
-										'labels'		=> $translations,
+										'labels'		=> $this->c->get('translations'),
 										'urlinfo'		=> $this->c->get('urlinfo')
 									]
 	    ]);
@@ -68,15 +89,23 @@ class ControllerWebSystem extends ControllerData
 
 	public function showPlugins($request, $response, $args)
 	{
-		$translations 		= $this->c->get('translations');
-		$pluginDefinitions 	= $this->getPluginDetails();
-		
-		$pluginSettings = [];
+		$navigation 		= new Navigation();
+		$mainNavigation		= $navigation->getMainNavigation(
+									$userrole 	= $request->getAttribute('c_userrole'),
+									$acl 		= $this->c->get('acl'),
+									$urlinfo 	= $this->c->get('urlinfo'),
+									$editor 	= $this->settings['editor']
+								);
 
-		foreach($this->settings['plugins'] as $pluginname => $plugininputs)
-		{
-			$pluginSettings[$pluginname] = $plugininputs;
-		}
+		$systemNavigation	= $navigation->getSystemNavigation(
+									$userrole 	= $request->getAttribute('c_userrole'),
+									$acl 		= $this->c->get('acl'),
+									$urlinfo 	= $this->c->get('urlinfo')
+								);
+
+		$extension 			= new Extension();
+		$pluginDefinitions 	= $extension->getPluginDetails();
+		$pluginSettings 	= $extension->getPluginSettings($this->settings['plugins']);
 
 		$license = [];
 		if(is_array($this->settings['license']))
@@ -86,13 +115,13 @@ class ControllerWebSystem extends ControllerData
 
 	    return $this->c->get('view')->render($response, 'system/plugins.twig', [
 			'settings' 			=> $this->settings,
-			'mainnavi'			=> $this->getMainNavigation($request->getAttribute('c_userrole')),
-			'systemnavi'		=> $this->getSystemNavigation($request->getAttribute('c_userrole')),
+			'mainnavi'			=> $mainNavigation,
+			'systemnavi'		=> $systemNavigation,
 			'jsdata' 			=> [
 										'settings' 		=> $pluginSettings,
 										'definitions'	=> $pluginDefinitions,
 										'license'		=> $license,
-										'labels'		=> $translations,
+										'labels'		=> $this->c->get('translations'),
 										'urlinfo'		=> $this->c->get('urlinfo')
 									]
 	    ]);
@@ -100,11 +129,22 @@ class ControllerWebSystem extends ControllerData
 
 	public function showLicense($request, $response, $args)
 	{
-		$storage 		= new StorageWrapper('\Typemill\Models\Storage');
-		$license 		= new License();
-		$licensefields 	= $storage->getYaml('systemSettings', '', 'license.yaml');
-		$translations 	= $this->c->get('translations');
+		$navigation 		= new Navigation();
+		$mainNavigation		= $navigation->getMainNavigation(
+									$userrole 	= $request->getAttribute('c_userrole'),
+									$acl 		= $this->c->get('acl'),
+									$urlinfo 	= $this->c->get('urlinfo'),
+									$editor 	= $this->settings['editor']
+								);
 
+		$systemNavigation	= $navigation->getSystemNavigation(
+									$userrole 	= $request->getAttribute('c_userrole'),
+									$acl 		= $this->c->get('acl'),
+									$urlinfo 	= $this->c->get('urlinfo')
+								);
+
+		$license 		= new License();
+		$licensefields 	= $license->getLicenseFields();
 		$licensedata 	= $license->getLicenseData($this->c->get('urlinfo'));
 		if($licensedata)
 		{
@@ -116,35 +156,48 @@ class ControllerWebSystem extends ControllerData
 
 	    return $this->c->get('view')->render($response, 'system/license.twig', [
 			'settings' 			=> $this->settings,
-			'mainnavi'			=> $this->getMainNavigation($request->getAttribute('c_userrole')),
-			'systemnavi'		=> $this->getSystemNavigation($request->getAttribute('c_userrole')),
+			'mainnavi'			=> $mainNavigation,
+			'systemnavi'		=> $systemNavigation,
 			'jsdata' 			=> [
 										'licensedata' 	=> $licensedata,
 										'licensefields'	=> $licensefields,
-										'labels'		=> $translations,
-										'urlinfo'		=> $this->c->get('urlinfo')									]
+										'labels'		=> $this->c->get('translations'),
+										'urlinfo'		=> $this->c->get('urlinfo')							]
 	    ]);
 	}
 
 	public function showAccount($request, $response, $args)
 	{
-		$translations 		= $this->c->get('translations');	
+		$navigation 		= new Navigation();
+		$mainNavigation		= $navigation->getMainNavigation(
+									$userrole 	= $request->getAttribute('c_userrole'),
+									$acl 		= $this->c->get('acl'),
+									$urlinfo 	= $this->c->get('urlinfo'),
+									$editor 	= $this->settings['editor']
+								);
+
+		$systemNavigation	= $navigation->getSystemNavigation(
+									$userrole 	= $request->getAttribute('c_userrole'),
+									$acl 		= $this->c->get('acl'),
+									$urlinfo 	= $this->c->get('urlinfo')
+								);
+
 		$username			= $request->getAttribute('c_username');
 		$user				= new User();
-
 		$user->setUser($username);
+
 		$userdata			= $user->getUserData();
-		$userfields 		= $this->getUserFields($userdata['userrole']);
+		$userfields 		= $user->getUserFields($this->c->get('acl'), $userdata['userrole']);
 
 	    return $this->c->get('view')->render($response, 'system/account.twig', [
 			'settings' 			=> $this->settings,
-			'mainnavi'			=> $this->getMainNavigation($request->getAttribute('c_userrole')),
-			'systemnavi'		=> $this->getSystemNavigation($request->getAttribute('c_userrole')),
+			'mainnavi'			=> $mainNavigation,
+			'systemnavi'		=> $systemNavigation,
 			'jsdata' 			=> [
 										'userdata'		=> $userdata,
 										'userfields'	=> $userfields,
 										'userroles'		=> $this->c->get('acl')->getRoles(),
-										'labels'		=> $translations,
+										'labels'		=> $this->c->get('translations'),
 										'urlinfo'		=> $this->c->get('urlinfo')
 									]
 	    ]);
@@ -152,12 +205,24 @@ class ControllerWebSystem extends ControllerData
 
 	public function showUsers($request, $response, $args)
 	{
-		$translations 		= $this->c->get('translations');	
+		$navigation 		= new Navigation();
+		$mainNavigation		= $navigation->getMainNavigation(
+									$userrole 	= $request->getAttribute('c_userrole'),
+									$acl 		= $this->c->get('acl'),
+									$urlinfo 	= $this->c->get('urlinfo'),
+									$editor 	= $this->settings['editor']
+								);
+
+		$systemNavigation	= $navigation->getSystemNavigation(
+									$userrole 	= $request->getAttribute('c_userrole'),
+									$acl 		= $this->c->get('acl'),
+									$urlinfo 	= $this->c->get('urlinfo')
+								);
+
 		$user				= new User();
 		$usernames			= $user->getAllUsers();
 		$userdata			= [];
-
-		$count = 0;
+		$count 				= 0;
 		foreach($usernames as $username)
 		{
 			if($count == 10) break;
@@ -168,14 +233,14 @@ class ControllerWebSystem extends ControllerData
 
 	    return $this->c->get('view')->render($response, 'system/users.twig', [
 			'settings' 			=> $this->settings,
-			'mainnavi'			=> $this->getMainNavigation($request->getAttribute('c_userrole')),
-			'systemnavi'		=> $this->getSystemNavigation($request->getAttribute('c_userrole')),
+			'mainnavi'			=> $mainNavigation,
+			'systemnavi'		=> $systemNavigation,
 			'jsdata' 			=> [
 										'totalusers'	=> count($usernames),
 										'usernames' 	=> $usernames,
 										'userdata'		=> $userdata,
 										'userroles'		=> $this->c->get('acl')->getRoles(),
-										'labels'		=> $translations,
+										'labels'		=> $this->c->get('translations'),
 										'urlinfo'		=> $this->c->get('urlinfo')
 									]
 	    ]);
@@ -183,28 +248,40 @@ class ControllerWebSystem extends ControllerData
 
 	public function showUser($request, $response, $args)
 	{
-		$translations 		= $this->c->get('translations');
-		$username			= $args['username'] ?? false;
-		$inspector 			= $request->getAttribute('c_userrole');
-		$user				= new User();
+		$navigation 		= new Navigation();
+		$mainNavigation		= $navigation->getMainNavigation(
+									$userrole 	= $request->getAttribute('c_userrole'),
+									$acl 		= $this->c->get('acl'),
+									$urlinfo 	= $this->c->get('urlinfo'),
+									$editor 	= $this->settings['editor']
+								);
 
+		$systemNavigation	= $navigation->getSystemNavigation(
+									$userrole 	= $request->getAttribute('c_userrole'),
+									$acl 		= $this->c->get('acl'),
+									$urlinfo 	= $this->c->get('urlinfo')
+								);
+
+		$user				= new User();
+		$username			= $args['username'] ?? false;
 		if(!$user->setUser($username))
 		{
 			die("return a not found page");
 		}
 
 		$userdata			= $user->getUserData();
-		$userfields 		= $this->getUserFields($userdata['userrole'], $inspector);
+		$inspector 			= $request->getAttribute('c_userrole');
+		$userfields 		= $user->getUserFields($this->c->get('acl'), $userdata['userrole'], $inspector);
 
 	    return $this->c->get('view')->render($response, 'system/user.twig', [
 			'settings' 			=> $this->settings,
-			'mainnavi'			=> $this->getMainNavigation($request->getAttribute('c_userrole')),
-			'systemnavi'		=> $this->getSystemNavigation($request->getAttribute('c_userrole')),
+			'mainnavi'			=> $mainNavigation,
+			'systemnavi'		=> $systemNavigation,
 			'jsdata' 			=> [
 										'userdata'		=> $userdata,
 										'userfields'	=> $userfields,
 										'userroles'		=> $this->c->get('acl')->getRoles(),
-										'labels'		=> $translations,
+										'labels'		=> $this->c->get('translations'),
 										'urlinfo'		=> $this->c->get('urlinfo')
 									]
 	    ]);
@@ -212,24 +289,31 @@ class ControllerWebSystem extends ControllerData
 
 	public function newUser($request, $response, $args)
 	{
-		$translations 		= $this->c->get('translations');
+		$navigation 		= new Navigation();
+		$mainNavigation		= $navigation->getMainNavigation(
+									$userrole 	= $request->getAttribute('c_userrole'),
+									$acl 		= $this->c->get('acl'),
+									$urlinfo 	= $this->c->get('urlinfo'),
+									$editor 	= $this->settings['editor']
+								);
+
+		$systemNavigation	= $navigation->getSystemNavigation(
+									$userrole 	= $request->getAttribute('c_userrole'),
+									$acl 		= $this->c->get('acl'),
+									$urlinfo 	= $this->c->get('urlinfo')
+								);
 
 	    return $this->c->get('view')->render($response, 'system/usernew.twig', [
 			'settings' 			=> $this->settings,
-			'mainnavi'			=> $this->getMainNavigation($request->getAttribute('c_userrole')),
-			'systemnavi'		=> $this->getSystemNavigation($request->getAttribute('c_userrole')),
+			'mainnavi'			=> $mainNavigation,
+			'systemnavi'		=> $systemNavigation,
 			'jsdata' 			=> [
 										'userroles'		=> $this->c->get('acl')->getRoles(),
-										'labels'		=> $translations,
+										'labels'		=> $this->c->get('translations'),
 										'urlinfo'		=> $this->c->get('urlinfo')
 									]
 	    ]);
 	}
-
-
-
-
-
 
 
 /*
@@ -249,71 +333,6 @@ class ControllerWebSystem extends ControllerData
 			'content' 		=> $content,
 			'route' 		=> $route->getName() 
 		));
-	}
-			
-
-	public function clearCache($request, $response, $args)
-	{
-		$this->uri 			= $request->getUri()->withUserInfo('');
-		$dir 				= $this->settings['basePath'] . 'cache';
-
-		$error 				= $this->writeCache->deleteCacheFiles($dir);
-		if($error)
-		{
-			return $response->withJson(['errors' => $error], 500);
-		}
-
-		# create a new draft structure
-		$this->setFreshStructureDraft();
-
-		# create a new draft structure
-		$this->setFreshStructureLive();
-
-		# create a new draft structure
-		$this->setFreshNavigation();
-
-		# update the sitemap
-		$this->updateSitemap();
-
-		return $response->withJson(array('errors' => false));
-	}
-
-
-	protected function saveImages($imageFields, $userInput, $userSettings, $files)
-	{
-		# initiate image processor with standard image sizes
-		$processImages = new ProcessImage($userSettings['images']);
-
-		if(!$processImages->checkFolders('images'))
-		{
-			$this->c->flash->addMessage('error', 'Please make sure that your media folder exists and is writable.');
-			return false; 
-		}
-
-		foreach($imageFields as $fieldName => $imageField)
-		{
-			if(isset($userInput[$fieldName]))
-			{
-				# handle single input with single file upload
-    			$image = $files[$fieldName];
-    		
-    			if($image->getError() === UPLOAD_ERR_OK) 
-    			{
-    				# not the most elegant, but createImage expects a base64-encoded string.
-    				$imageContent = $image->getStream()->getContents();
-					$imageData = base64_encode($imageContent);
-					$imageSrc = 'data: ' . $image->getClientMediaType() . ';base64,' . $imageData;
-
-					if($processImages->createImage($imageSrc, $image->getClientFilename(), $userSettings['images'], $overwrite = NULL))
-					{
-						# returns image path to media library
-						$userInput[$fieldName] = $processImages->publishImage();
-					}
-			    }
-			}
-		}
-		return $userInput;
-	}
-	*/
-
+	}			
+*/
 }

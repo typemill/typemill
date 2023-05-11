@@ -12,7 +12,10 @@ use Typemill\Controllers\ControllerApiSystemExtensions;
 use Typemill\Controllers\ControllerApiSystemLicense;
 use Typemill\Controllers\ControllerApiSystemUsers;
 use Typemill\Controllers\ControllerApiImage;
+use Typemill\Controllers\ControllerApiFile;
 use Typemill\Controllers\ControllerApiAuthorArticle;
+use Typemill\Controllers\ControllerApiAuthorBlock;
+use Typemill\Controllers\ControllerApiAuthorShortcode;
 
 $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 
@@ -35,15 +38,37 @@ $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 	$group->put('/user', ControllerApiSystemUsers::class . ':updateUser')->setName('api.user.update')->add(new ApiAuthorization($acl, 'account', 'update')); # member
 	$group->delete('/user', ControllerApiSystemUsers::class . ':deleteUser')->setName('api.user.delete')->add(new ApiAuthorization($acl, 'account', 'delete')); # member
 
-	# MEDIA
-	$group->post('/image', ControllerApiImage::class . ':saveImage')->setName('api.image.create');
-	$group->get('/image', ControllerApiMedia::class . ':getImage')->setName('api.image.get');
-	$group->put('/image', ControllerApiMedia::class . ':publishImage')->setName('api.image.publish');
-	$group->delete('/image', ControllerApiMedia::class . ':deleteImage')->setName('api.image.delete');
+	# IMAGES
+	$group->post('/image', ControllerApiImage::class . ':saveImage')->setName('api.image.create')->add(new ApiAuthorization($acl, 'mycontent', 'create'));
+	$group->put('/image', ControllerApiImage::class . ':publishImage')->setName('api.image.publish')->add(new ApiAuthorization($acl, 'mycontent', 'create'));
+#	$group->get('/image', ControllerApiMedia::class . ':getImage')->setName('api.image.get');
+#	$group->delete('/image', ControllerApiMedia::class . ':deleteImage')->setName('api.image.delete');
+	
+	# FILES
+	$group->get('/filerestrictions', ControllerApiFile::class . ':getFileRestrictions')->setName('api.file.getrestrictions')->add(new ApiAuthorization($acl, 'mycontent', 'create'));
+	$group->post('/filerestrictions', ControllerApiFile::class . ':updateFileRestrictions')->setName('api.file.updaterestrictions')->add(new ApiAuthorization($acl, 'mycontent', 'create'));
+	$group->post('/file', ControllerApiFile::class . ':uploadFile')->setName('api.file.upload')->add(new ApiAuthorization($acl, 'mycontent', 'create'));
+#	$group->get('/api/v1/file', ControllerAuthorMediaApi::class . ':getFile')->setName('api.file.get')->add(new RestrictApiAccess($container['router']));
+#	$app->put('/api/v1/file', ControllerAuthorMediaApi::class . ':publishFile')->setName('api.file.publish')->add(new RestrictApiAccess($container['router']));
+#	$app->delete('/api/v1/file', ControllerAuthorMediaApi::class . ':deleteFile')->setName('api.file.delete')->add(new RestrictApiAccess($container['router']));
 
 	# ARTICLE
-	$group->post('/article/sort', ControllerApiAuthorArticle::class . ':sortArticle')->setName('api.article.sort')->add(new ApiAuthorization($acl, 'content', 'view')); # author
-	$group->post('/article', ControllerApiAuthorArticle::class . ':createArticle')->setName('api.article.create')->add(new ApiAuthorization($acl, 'content', 'view')); # author
+	$group->post('/article/sort', ControllerApiAuthorArticle::class . ':sortArticle')->setName('api.article.sort')->add(new ApiAuthorization($acl, 'content', 'create')); # author
+	$group->post('/article', ControllerApiAuthorArticle::class . ':createArticle')->setName('api.article.create')->add(new ApiAuthorization($acl, 'content', 'create')); # author
+	$group->post('/article/publish', ControllerApiAuthorArticle::class . ':publishArticle')->setName('api.article.publish')->add(new ApiAuthorization($acl, 'content', 'publish'));
+	$group->delete('/article/unpublish', ControllerApiAuthorArticle::class . ':unpublishArticle')->setName('api.article.unpublish')->add(new ApiAuthorization($acl, 'content', 'unpublish'));
+	$group->delete('/article/discard', ControllerApiAuthorArticle::class . ':discardArticleChanges')->setName('api.article.discard')->add(new ApiAuthorization($acl, 'content', 'edit'));
+	$group->delete('/article', ControllerApiAuthorArticle::class . ':deleteArticle')->setName('api.article.delete')->add(new ApiAuthorization($acl, 'content', 'delete'));
+
+	# BLOCKS
+	$group->post('/block', ControllerApiAuthorBlock::class . ':addBlock')->setName('api.block.add')->add(new ApiAuthorization($acl, 'mycontent', 'create'));
+	$group->put('/block/move', ControllerApiAuthorBlock::class . ':moveBlock')->setName('api.block.move')->add(new ApiAuthorization($acl, 'mycontent', 'view'));
+	$group->put('/block', ControllerApiAuthorBlock::class . ':updateBlock')->setName('api.block.update')->add(new ApiAuthorization($acl, 'mycontent', 'update'));
+	$group->delete('/block', ControllerApiAuthorBlock::class . ':deleteBlock')->setName('api.block.delete')->add(new ApiAuthorization($acl, 'mycontent', 'delete'));
+	$group->post('/video', ControllerApiImage::class . ':saveVideoImage')->setName('api.video.save')->add(new ApiAuthorization($acl, 'mycontent', 'view'));
+
+	# SHORTCODE
+	$group->get('/shortcodedata', ControllerApiAuthorShortcode::class . ':getShortcodeData')->setName('api.shortcodedata.get')->add(new ApiAuthorization($acl, 'mycontent', 'view'));
 
 })->add(new ApiAuthentication());
 

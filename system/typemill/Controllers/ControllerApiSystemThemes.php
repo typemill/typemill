@@ -5,26 +5,24 @@ namespace Typemill\Controllers;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Typemill\Models\Validation;
-use Typemill\Models\StorageWrapper;
-use Typemill\Models\User;
+use Typemill\Models\Extension;
 use Typemill\Static\Settings;
 
-
-class ControllerApiSystemThemes extends ControllerData
+class ControllerApiSystemThemes extends Controller
 {
 	public function updateTheme(Request $request, Response $response)
 	{
 		$params 			= $request->getParsedBody();
 		$themename 			= $params['theme'];
 		$themeinput 		= $params['settings'];
-		$storage 			= new StorageWrapper('\Typemill\Models\Storage');
-		$formdefinitions 	= $storage->getYaml('themeFolder', $themename, $themename . '.yaml');
+
+		$extension 			= new Extension();
+		$formdefinitions 	= $extension->getThemeDefinition($themename);
 		$themedata 			= [];
 
 		# validate input
 		$validator 			= new Validation();
 		$validatedOutput 	= $this->recursiveValidation($validator, $formdefinitions['forms']['fields'], $themeinput);
-
 		if(!empty($this->errors))
 		{
 			$response->getBody()->write(json_encode([

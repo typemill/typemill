@@ -9,13 +9,13 @@ const app = Vue.createApp({
 								<div v-for="(fieldDefinition, fieldname) in formDefinitions">
 									<fieldset class="flex flex-wrap justify-between" :class="(fieldDefinition.legend == currentTab) ? 'block' : 'hidden'" v-if="fieldDefinition.type == 'fieldset'">
 										<component v-for="(subfieldDefinition, fieldname) in fieldDefinition.fields"
-			            	    :key="fieldname"
-			                	:is="selectComponent(subfieldDefinition.type)"
-			                	:errors="errors"
-			                	:name="fieldname"
-			                	:userroles="userroles"
-			                	:value="formData[fieldname]" 
-			                	v-bind="subfieldDefinition">
+											:key="fieldname"
+											:is="selectComponent(subfieldDefinition.type)"
+											:errors="errors"
+											:name="fieldname"
+											:userroles="userroles"
+											:value="formData[fieldname]" 
+											v-bind="subfieldDefinition">
 										</component>
 									</fieldset>
 								</div>
@@ -38,8 +38,8 @@ const app = Vue.createApp({
 	},
 	mounted() {
 
-    for (var key in this.formDefinitions)
-    {
+		for (var key in this.formDefinitions)
+		{
 			if (this.formDefinitions.hasOwnProperty(key))
 			{
 				this.tabs.push(this.formDefinitions[key].legend);

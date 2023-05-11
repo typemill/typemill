@@ -1,6 +1,7 @@
 <nav class="max-w-6xl m-auto flex justify-between">
-	<div class="p-3 text-2xl font-bold">
-		<a href="{{ base_url }}/tm/content/{{ settings.editor }}">Typemill</a>
+	<div class="p-3 flex">
+		<a class="text-2xl font-bold" href="{{ base_url() }}/tm/content/{{ settings.editor }}">Typemill</a>
+		<div id="kixote"></div>
 	</div>
 	<ul class="flex border-l-2 border-stone-200">
 		{% for name,navitem in mainnavi %}
