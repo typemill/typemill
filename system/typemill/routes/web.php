@@ -34,6 +34,7 @@ $app->group('/tm', function (RouteCollectorProxy $group) use ($routeParser,$acl)
 
 	# Author Area
 	$group->get('/content/visual[/{route:.*}]', ControllerWebAuthor::class . ':showBlox')->setName('content.visual')->add(new WebAuthorization($routeParser, $acl, 'mycontent', 'view'));
+	$group->get('/content/raw[/{route:.*}]', ControllerWebAuthor::class . ':showRaw')->setName('content.raw')->add(new WebAuthorization($routeParser, $acl, 'mycontent', 'view'));
 
 })->add(new WebRedirectIfUnauthenticated($routeParser));
 

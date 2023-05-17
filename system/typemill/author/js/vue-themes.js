@@ -71,13 +71,13 @@ const app = Vue.createApp({
 					<div class="my-5 text-center">
 						<modal v-if="showModal" @close="showModal = false">
 					    	<template #header>
-					    		<h3>License required</h3>
+					    		<h3>{{ $filters.translate('License required') }}</h3>
 					    	</template>
 					    	<template #body>
-					    		<p>{{ modalMessage }}</p>
+					    		<p>{{ $filters.translate(modalMessage) }}</p>
 					    	</template>
 					    	<template #button>
-					    		<a :href="getLinkToLicense()" class="focus:outline-none px-4 p-3 mr-3 text-white bg-teal-500 hover:bg-teal-700 transition duration-100">Check your license</a>
+					    		<a :href="getLinkToLicense()" class="focus:outline-none px-4 p-3 mr-3 text-white bg-teal-500 hover:bg-teal-700 transition duration-100">{{ $filters.translate('Check your license') }}</a>
 					    	</template>
 						</modal>
 					</div>					

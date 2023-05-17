@@ -54,9 +54,9 @@ class Content
 		return $markdownArray;
 	}
 
-	public function saveDraftMarkdown($item, $markdown)
+	public function saveDraftMarkdown($item, array $markdownArray)
 	{
-		$markdown = json_encode($markdown);
+		$markdown = json_encode($markdownArray);
 
 		if($this->storage->writeFile('contentFolder', '', $item->pathWithoutType . '.txt', $markdown))
 		{
@@ -64,6 +64,16 @@ class Content
 		}
 
 		return $this->storage->getError();
+	}
+
+	public function markdownArrayToText(array $markdownArray)
+	{
+		return $this->parsedown->arrayBlocksToMarkdown($markdownArray);
+	}
+
+	public function markdownTextToArray(string $markdown)
+	{
+		return $this->parsedown->markdownToArrayBlocks($markdown);
 	}
 
 	public function publishMarkdown($item, array $markdownArray)

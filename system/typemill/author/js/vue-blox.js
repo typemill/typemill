@@ -69,7 +69,7 @@ const bloxeditor = Vue.createApp({
 			{
 				if(error.response)
 				{
-					publishController.errors.message = error.response.data.errors.message;
+					eventBus.$emit('publishermessage', error.response.data.message);
 				}
 			});
 		},
@@ -143,8 +143,8 @@ bloxeditor.component('new-block',{
 			<div v-if="componentType" class="relative bg-stone-100">
 				<component ref="activeComponent" :disabled="disabled" :markdown="newblockmarkdown" :index="index" @saveBlockEvent="saveNewBlock" @updateMarkdownEvent="updateMarkdownFunction" :is="componentType"></component>
 				<div class="edit-buttons absolute -bottom-3 right-4 z-2 text-xs">
-					<button class="cancel w-20  p-1 border-r border-stone-700 bg-stone-200 hover:bg-rose-500 hover:text-white transition-1" :disabled="disabled" @click.prevent="closeComponent">cancel</button>
-					<button class="save w-20 p-1 border-l border-stone-700 bg-stone-200 hover:bg-teal-500 hover:text-white transition-1" :disabled="disabled" @click.prevent="saveNewBlock()">save</button>
+					<button class="cancel w-20  p-1 border-r border-stone-700 bg-stone-200 hover:bg-rose-500 hover:text-white transition-1" :disabled="disabled" @click.prevent="closeComponent">{{ $filters.translate('cancel') }}</button>
+					<button class="save w-20 p-1 border-l border-stone-700 bg-stone-200 hover:bg-teal-500 hover:text-white transition-1" :disabled="disabled" @click.prevent="saveNewBlock()">{{ $filters.translate('save') }}</button>
 				</div>
 			</div>
 		</div>
@@ -205,6 +205,14 @@ bloxeditor.component('new-block',{
 				self.$root.$data.content = response.data.content;
 				self.closeComponent();
 				eventBus.$emit('closeComponents');
+				if(response.data.navigation)
+				{
+					eventBus.$emit('navigation', response.data.navigation);
+				}
+				if(response.data.item)
+				{
+					eventBus.$emit('item', response.data.item);					
+				}
 			})
 			.catch(function (error)
 			{
@@ -225,14 +233,14 @@ bloxeditor.component('content-block', {
 				<div v-if="newblock" class="bg-stone-100">
 					<div class="w-full flex justify-between bg-stone-200">
 						<p class="p-2 pl-4">Choose a content type</p>
-						<button class="p-2 border-l border-stone-700 hover:text-white hover:bg-rose-500 transition-1" @click="closeNewBlock">close</button>
+						<button class="p-2 border-l border-stone-700 hover:text-white hover:bg-rose-500 transition-1" @click="closeNewBlock">{{ $filters.translate('close') }}</button>
 					</div>
 					<new-block :index="index"></new-block>
 				</div>
 				<div class="relative blox-wrapper mb-1">
 	 				<div v-if="index != 0" class="sideaction hidden absolute -top-3 left-1/2 -translate-x-1/2 z-10 text-xs">
-						<button class="delete w-16 p-1 border-r border-stone-700 bg-stone-200 hover:bg-rose-500 hover:text-white transition-1" @mousedown.prevent="disableSort()" @click.prevent="deleteBlock">del</button>
-		 				<button class="add w-16 p-1 border-l border-stone-700 bg-stone-200 hover:bg-teal-500 hover:text-white transition-1" :disabled="disabled" @mousedown.prevent="disableSort()" @click.prevent="openNewBlock">add</button> 
+						<button class="delete w-16 p-1 border-r border-stone-700 bg-stone-200 hover:bg-rose-500 hover:text-white transition-1" @mousedown.prevent="disableSort()" @click.prevent="deleteBlock">{{ $filters.translate('delete') }}</button>
+		 				<button class="add w-16 p-1 border-l border-stone-700 bg-stone-200 hover:bg-teal-500 hover:text-white transition-1" :disabled="disabled" @mousedown.prevent="disableSort()" @click.prevent="openNewBlock">{{ $filters.translate('add') }}</button> 
 					</div>
 					<div v-if="!edit" class="blox-preview px-6 py-3 hover:bg-stone-100 overflow-hidden transition-1" @click="showEditor" v-html="getHtml(element.html)"></div>
 					<div v-else class="blox-editor bg-stone-100">
@@ -244,8 +252,8 @@ bloxeditor.component('content-block', {
       					</div>
 						<component ref="activeComponent" :disabled="disabled" :markdown="updatedmarkdown" :index="index" @saveBlockEvent="saveBlock" @updateMarkdownEvent="updateMarkdownFunction" :is="componentType"></component>
 						<div class="edit-buttons absolute -bottom-3 right-4 z-10 text-xs">
-							<button class="cancel w-20  p-1 border-r border-stone-700 bg-stone-200 hover:bg-rose-500 hover:text-white transition-1" :disabled="disabled" @click.prevent="closeEditor">cancel</button>
-							<button class="save w-20 p-1 border-l border-stone-700 bg-stone-200 hover:bg-teal-500 hover:text-white transition-1" :disabled="disabled" @click.prevent="saveBlock">save</button>
+							<button class="cancel w-20  p-1 border-r border-stone-700 bg-stone-200 hover:bg-rose-500 hover:text-white transition-1" :disabled="disabled" @click.prevent="closeEditor">{{ $filters.translate('cancel') }}</button>
+							<button class="save w-20 p-1 border-l border-stone-700 bg-stone-200 hover:bg-teal-500 hover:text-white transition-1" :disabled="disabled" @click.prevent="saveBlock">{{ $filters.translate('save') }}</button>
 						</div>
 					</div>
 				</div>
@@ -368,11 +376,8 @@ bloxeditor.component('content-block', {
 				}
 				if(response.data.item)
 				{
-					eventBus.$emit('item', response.data.item);					
+					eventBus.$emit('item', response.data.item);
 				}
-
-				// update the navigation and mark navigation item as modified
-				// navi.getNavi();
 			})
 			.catch(function (error)
 			{

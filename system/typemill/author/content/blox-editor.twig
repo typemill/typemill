@@ -22,13 +22,14 @@
 
 	<script src="{{ base_url() }}/system/typemill/author/js/vue-blox-config.js?v={{ settings.version }}"></script>
 	<script src="{{ base_url() }}/system/typemill/author/js/vue-blox.js?v={{ settings.version }}"></script>
-<!--	<script src="{{ base_url() }}/system/typemill/author/js/vue-translate.js?v={{ settings.version }}"></script>		-->
 	<script src="{{ base_url() }}/system/typemill/author/js/vue-blox-components.js?v={{ settings.version }}"></script>
 	<script src="{{ base_url() }}/system/typemill/author/js/vue-publisher.js?v={{ settings.version }}"></script>
 	<script>
 
-		// add translation to global config here...
+		bloxeditor.config.globalProperties.$filters = translatefilter;
 		bloxeditor.mount('#editor');
+		
+		publisher.config.globalProperties.$filters = translatefilter;
 		publisher.mount('#publisher');
 	
 	</script>

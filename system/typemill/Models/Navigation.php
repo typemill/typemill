@@ -365,7 +365,7 @@ class Navigation extends Folder
 		$item->urlRel			= '/';
 		$item->urlRelWoF		= '/';
 		$item->urlAbs			= $baseUrl;
-		$item->active			= true;
+		$item->active			= false;
 		$item->activeParent		= false;
 		$item->hide 			= false;
 

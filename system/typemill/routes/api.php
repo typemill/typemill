@@ -55,6 +55,8 @@ $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 	# ARTICLE
 	$group->post('/article/sort', ControllerApiAuthorArticle::class . ':sortArticle')->setName('api.article.sort')->add(new ApiAuthorization($acl, 'content', 'create')); # author
 	$group->post('/article', ControllerApiAuthorArticle::class . ':createArticle')->setName('api.article.create')->add(new ApiAuthorization($acl, 'content', 'create')); # author
+	$group->put('/draft', ControllerApiAuthorArticle::class . ':updateDraft')->setName('api.draft.update')->add(new ApiAuthorization($acl, 'content', 'create')); # author
+	$group->post('/draft/publish', ControllerApiAuthorArticle::class . ':publishDraft')->setName('api.draft.publish')->add(new ApiAuthorization($acl, 'content', 'create')); # author
 	$group->post('/article/publish', ControllerApiAuthorArticle::class . ':publishArticle')->setName('api.article.publish')->add(new ApiAuthorization($acl, 'content', 'publish'));
 	$group->delete('/article/unpublish', ControllerApiAuthorArticle::class . ':unpublishArticle')->setName('api.article.unpublish')->add(new ApiAuthorization($acl, 'content', 'unpublish'));
 	$group->delete('/article/discard', ControllerApiAuthorArticle::class . ':discardArticleChanges')->setName('api.article.discard')->add(new ApiAuthorization($acl, 'content', 'edit'));

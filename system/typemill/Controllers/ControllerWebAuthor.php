@@ -27,10 +27,10 @@ class ControllerWebAuthor extends Controller
 		$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $langattr);
 	    $home 				= $navigation->getHomepageItem($urlinfo['baseurl']);
 
-
 		if($url == '/')
 		{
 			$item 				= $home;
+			$item->active 		= true;
 		}
 		else
 		{
@@ -65,17 +65,6 @@ class ControllerWebAuthor extends Controller
 
 		$draftMarkdownHtml	= $content->addDraftHtml($draftMarkdown);
 
-/*
-		if(isset($draftHtml[0]))
-		{
-			$title = $draftHtml[0];
-			unset($draftHtml[0]);
-		}
-
-		echo '<pre>';
-		print_r($draftHtml);
-		die();
-*/
 	    return $this->c->get('view')->render($response, 'content/blox-editor.twig', [
 			'settings' 			=> $this->settings,
 			'mainnavi'			=> $mainNavigation,
@@ -83,82 +72,84 @@ class ControllerWebAuthor extends Controller
 			'jsdata' 			=> [
 										'settings' 		=> $this->settings,
 										'urlinfo'		=> $urlinfo,
+										'labels'		=> $this->c->get('translations'),
 										'navigation'	=> $draftNavigation,
 										'item'			=> $item,
 										'home' 			=> $home,
 										'content' 		=> $draftMarkdownHtml
 									]
 		]);
-
-
-
-
-		# set information for homepage
-		$this->setHomepage($args);
-		# we have to check ownership here to use it for permission-check in templates
-		$this->checkContentOwnership();
-		# set the status for published and drafted
-		$this->setPublishStatus();		
-		# set path
-		$this->setItemPath($this->item->fileType);
-
-		# read content from file
-		if(!$this->setContent()){ return $this->renderIntern404($response, array( 'navigation' => $this->structure, 'settings' => $this->settings, 'content' => $this->errors )); }
-
-		$content = $this->content;
-
-		if($content == '')
-		{
-			$content = [];
-		}
-		
-		# initialize parsedown extension
-		$parsedown = new ParsedownExtension($this->uri->getBaseUrl());
-
-		# to fix footnote-logic in parsedown, set visual mode to true
-		$parsedown->setVisualMode();
-
-		# if content is not an array, then transform it
-		if(!is_array($content))
-		{
-			# turn markdown into an array of markdown-blocks
-			$content = $parsedown->markdownToArrayBlocks($content);
-		}
-		
-		# needed for ToC links
-		$relurl = '/tm/content/' . $this->settings['editor'] . '/' . $this->item->urlRel;
-		
-		foreach($content as $key => $block)
-		{
-			/* parse markdown-file to content-array */
-			$contentArray 	= $parsedown->text($block);
-
-			/* parse markdown-content-array to content-string */
-			$content[$key]	= $parsedown->markup($contentArray);
-		}
-
-		# extract title and delete from content array, array will start at 1 after that.
-		$title = '# add title';
-		if(isset($content[0]))
-		{
-			$title = $content[0];
-			unset($content[0]);			
-		}
-
-		return $this->renderIntern($response, 'editor/editor-blox.twig', array(
-			'acl'			=> $this->c->acl, 
-			'mycontent'		=> $this->mycontent,
-			'navigation' 	=> $this->structureDraft,
-			'homepage' 		=> $this->homepage,
-			'title' 		=> $title, 
-			'content' 		=> $content, 
-			'item' 			=> $this->item,
-			'settings' 		=> $this->settings 
-		));
 	}
 
-	public function showContent(Request $request, Response $response, $args)
+	public function showRaw(Request $request, Response $response, $args)
 	{
+		# get url for requested page
+		$url 				= isset($args['route']) ? '/' . $args['route'] : '/';
+		$urlinfo 			= $this->c->get('urlinfo');
+		$fullUrl  			= $urlinfo['baseurl'] . $url;
+		$langattr 			= $this->settings['langattr'];
+
+	    $navigation 		= new Navigation();
+		$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $langattr);
+	    $home 				= $navigation->getHomepageItem($urlinfo['baseurl']);
+
+		if($url == '/')
+		{
+			$item 				= $home;
+			$item->active 		= true;
+		}
+		else
+		{
+		    $extendedNavigation	= $navigation->getExtendedNavigation($urlinfo, $langattr);
+
+		    $pageinfo 			= $extendedNavigation[$url] ?? false;
+		    if(!$pageinfo)
+		    {
+			    return $this->c->get('view')->render($response->withStatus(404), '404.twig', [
+					'title'			=> 'Typemill Author Area',
+					'description'	=> 'Typemill Version 2 wird noch besser als Version 1.'
+			    ]);
+		    }
+
+			$keyPathArray 		= explode(".", $pageinfo['keyPath']);
+
+		    # extend : $request->getAttribute('c_userrole')
+		    $draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $langattr);
+
+			$draftNavigation 	= $navigation->setActiveNaviItems($draftNavigation, $keyPathArray);
+
+			$item 				= $navigation->getItemWithKeyPath($draftNavigation, $keyPathArray);
+		}
+
+	#	$item->modified		= ($item->published OR $item->drafted) ? filemtime($this->settings['contentFolder'] . $this->path) : false;
+
+		$mainNavigation 	= $navigation->getMainNavigation($request->getAttribute('c_userrole'), $this->c->get('acl'), $urlinfo, $this->settings['editor']);
+
+		$content 			= new Content($urlinfo['baseurl']);
+
+		$draftMarkdown  	= $content->getDraftMarkdown($item);
+
+		$draftMarkdownHtml	= $content->addDraftHtml($draftMarkdown);
+
+	    return $this->c->get('view')->render($response, 'content/raw-editor.twig', [
+			'settings' 			=> $this->settings,
+			'mainnavi'			=> $mainNavigation,
+			'content' 			=> $draftMarkdownHtml,
+			'jsdata' 			=> [
+										'settings' 		=> $this->settings,
+										'urlinfo'		=> $urlinfo,
+										'labels'		=> $this->c->get('translations'),
+										'navigation'	=> $draftNavigation,
+										'item'			=> $item,
+										'home' 			=> $home,
+										'content' 		=> $draftMarkdownHtml,
+									]
+		]);
+
+
+
+
+
 		# get params from call
 #		$this->uri 		= $request->getUri()->withUserInfo('');
 #		$this->params	= isset($args['params']) ? ['url' => $this->uri->getBasePath() . '/' . $args['params']] : ['url' => $this->uri->getBasePath()];
