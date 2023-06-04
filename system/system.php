@@ -309,7 +309,7 @@ if($container['flash'])
 *  ASSET MIDDLEWARE FOR TWIG	*
 ********************************/
 
-$app->add(new \Typemill\Middleware\assetMiddleware($container));
+$app->add(new \Typemill\Middleware\assetMiddleware($container, $container['settings']));
 
 /********************************
 *  PROXY DETECTION FOR REQUEST	*

@@ -181,6 +181,8 @@ SAVE: Enregistrer
 SAVE_ALL_SETTINGS: Sauvegarder tous les paramètres
 SAVE_THEME: Enregistrer et activer ce thème
 SAVED_SUCCESSFULLY: Enregistré avec succès
+SCHEMELESS_BASE_URL: URL de base sans schéma
+SCHEMELESS_BASE_URL_DESC: Supprime le schéma (c.-à-d., HTTP ou HTTPS) lors de l'adressage des ressources
 SECURITY_LOG: Security Log
 SELECT_FROM_MEDIALIB: Sélectionner dans la bibliothèque de médias
 SELECT_THE_LOWEST_USERROLE__HIGHER_ROLES_WILL_HAVE_ACCESS_TOO_: Selectionner le rôle minimal. Les rôles plus élevés accèderont également.
