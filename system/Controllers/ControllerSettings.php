@@ -111,6 +111,7 @@ class ControllerSettings extends ControllerShared
 					'proxy'					=> isset($newSettings['proxy']) ? true : null,
 					'trustedproxies'		=> $newSettings['trustedproxies'],
 					'headersoff'			=> isset($newSettings['headersoff']) ? true : null,
+					'schemelessbaseurl'		=> isset($newSettings['schemelessbaseurl']) ? true : null,
 					'urlschemes'			=> $newSettings['urlschemes'],
 					'svg'					=> isset($newSettings['svg']) ? true : null,
 					'recoverpw'				=> isset($newSettings['recoverpw']) ? true : null,

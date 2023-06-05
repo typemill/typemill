@@ -181,6 +181,8 @@ SAVE: Сохранить
 SAVE_ALL_SETTINGS: Сохранить все настройки
 SAVE_THEME: Сохранить настройки Темы
 SAVED_SUCCESSFULLY: Успешно сохранено
+SCHEMELESS_BASE_URL: Базовый URL без схемы
+SCHEMELESS_BASE_URL_DESC: Удаляет схему (т.е., HTTP или HTTPS) при адресации ресурсов
 SECURITY_LOG: Логи безопасности
 SELECT_FROM_MEDIALIB: Выбрать из библиотеки
 SELECT_THE_LOWEST_USERROLE__HIGHER_ROLES_WILL_HAVE_ACCESS_TOO_: Выберите роль пользователя. Более важные роли также будут иметь доступ к странице.

@@ -181,6 +181,8 @@ SAVE: Save
 SAVE_ALL_SETTINGS: Save All Settings
 SAVE_THEME: Save Theme
 SAVED_SUCCESSFULLY: Saved successfully
+SCHEMELESS_BASE_URL: Schemeless Base Url
+SCHEMELESS_BASE_URL_DESC: Remove scheme (i.e., HTTP or HTTPS) when addressing resources
 SECURITY_LOG: Security Log
 SELECT_FROM_MEDIALIB: select from medialib
 SELECT_THE_LOWEST_USERROLE__HIGHER_ROLES_WILL_HAVE_ACCESS_TOO_: Select the lowest userrole. Higher roles will have access too.

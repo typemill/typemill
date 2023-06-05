@@ -185,6 +185,7 @@ class Settings
 									'proxy' => true,
 									'trustedproxies' => true,
 									'headersoff' => true,
+									'schemelessbaseurl' => true,
 									'urlschemes' => true,
 									'svg' => true,
 									'recoverpw' => true,

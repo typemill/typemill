@@ -181,6 +181,8 @@ SAVE: Opslaan
 SAVE_ALL_SETTINGS: Sla alle instellingen op
 SAVE_THEME: Thema opslaan
 SAVED_SUCCESSFULLY: Succesvol opgeslagen
+SCHEMELESS_BASE_URL: URL zonder schema
+SCHEMELESS_BASE_URL_DESC: Verwijdert het schema (d.w.z., HTTP of HTTPS) bij het adresseren van bronnen
 SECURITY_LOG: Security Log
 SELECT_FROM_MEDIALIB: Selecteer uit medialib 
 SELECT_THE_LOWEST_USERROLE__HIGHER_ROLES_WILL_HAVE_ACCESS_TOO_: Selecteer de laagste gebruikersrol. Hogere rollen hebben ook toegang. 

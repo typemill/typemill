@@ -322,6 +322,13 @@
 							<span class="checkmark"></span>
 						</label>
 					</div>
+					<div class="large{{ errors.settings.schemelessbaseurl ? ' error' : '' }}">
+						<label for="settings[schemelessbaseurl]">{{ __('Schemeless Base Url') }}</label>
+						<label class="control-group">{{ __('Remove scheme (i.e., HTTP or HTTPS) when addressing resources') }}
+							<input name="settings[schemelessbaseurl]" type="checkbox" {% if (settings.schemelessbaseurl or old.settings.schemelessbaseurl) %} checked {% endif %}>
+							<span class="checkmark"></span>
+						</label>
+					</div>
 				</fieldset>
 			</section>
 			<input type="submit" value="{{ __('Save All Settings') }}" />

@@ -161,6 +161,8 @@ SAVE: Salva
 SAVED_SUCCESSFULLY: Salvato con successo
 SAVE_ALL_SETTINGS: Salva tutte le impostazioni
 SAVE_THEME: Salva tema
+SCHEMELESS_BASE_URL: URL di base senza schema
+SCHEMELESS_BASE_URL_DESC: Rimuove lo schema (cioè, HTTP o HTTPS) durante l'indirizzamento delle risorse
 SELECT_FROM_MEDIALIB: seleziona da medialib
 SETTINGS: Impostazioni
 SETTINGS_ARE_STORED: Le impostazioni sono memorizzate
