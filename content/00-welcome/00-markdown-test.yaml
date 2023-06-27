@@ -1,15 +1,8 @@
 meta:
-    title: 'Markdown Reference and Test Page'
-    description: 'Markdown is a simple and universal syntax for text formatting. More and more writers switch to markdown, because they can format their text during the writing process without using any format-buttons. '
-    author: 'Sebastian Schürmanns'
-    manualdate: '2020-02-22'
-    modified: '2020-01-20'
-    created: null
-    time: 04-40-32
-    navtitle: ''
-    hide: false
-ebooks:
-    layout: electric
-    content:
-        -
-            name: 'markdown test'
+    navtitle: 'markdown test'
+    owner: Sebastian
+    created: '2023-06-12'
+    time: 22-36-41
+    modified: '2023-05-11'
+    title: 'Markdown is a simple and universal syntax for text formatting. More and more writers switch to markdown, because they can format their text during the writing process without using any format-buttons. Once they are familiar with the markdown syntax, they can write formatted text much easier and faster than with any standard HTML-editor.'
+    description: 'Developers love markdown, because it is much cleaner and saver than HTML. And they can easily convert markdown to a lot of other document formats like HTML and'

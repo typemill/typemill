@@ -63,8 +63,6 @@ const app = Vue.createApp({
 
 	        tmaxios.get('/api/v1/users/getbynames',{
 	        	params: {
-					'csrf_name': 	document.getElementById("csrf_name").value,
-					'csrf_value':	document.getElementById("csrf_value").value,
 	        		'usernames': 	usernames,
 	        	}
 			})
@@ -102,8 +100,6 @@ const app = Vue.createApp({
 
 		        tmaxios.get('/api/v1/users/getbyemail',{
 		        	params: {
-						'csrf_name': 	document.getElementById("csrf_name").value,
-						'csrf_value':	document.getElementById("csrf_value").value,
 		        		'email': 		term,
 		        	}
 				})
@@ -132,8 +128,6 @@ const app = Vue.createApp({
 
 		        tmaxios.get('/api/v1/users/getbyrole',{
 		        	params: {
-						'csrf_name': 	document.getElementById("csrf_name").value,
-						'csrf_value':	document.getElementById("csrf_value").value,
 		        		'role': 		term,
 		        	}
 				})

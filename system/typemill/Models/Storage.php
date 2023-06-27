@@ -162,8 +162,27 @@ class Storage
 		return false;
 	}
 
+	public function getFileTime($location, $folder, $filename)
+	{
+		$filepath = $this->getFolderPath($location, $folder) . $filename;
+
+		if(!file_exists($filepath))
+		{
+			$this->error = "The file $filepath does not exist.";
+
+			return false;
+		}
+
+		return date("Y-m-d",filemtime($filepath));
+	}
+
 	public function writeFile($location, $folder, $filename, $data, $method = NULL)
 	{
+		# CLEAN EVERYTHING UP FUNCTION
+		$folder 	= trim($folder, DIRECTORY_SEPARATOR);
+		$folder 	= ($folder == '') ? '' : $folder . DIRECTORY_SEPARATOR;
+		$filename 	= trim($filename, DIRECTORY_SEPARATOR);
+
 		if(!$this->checkFolder($location, $folder))
 		{
 			if(!$this->createFolder($location, $folder))
@@ -172,7 +191,7 @@ class Storage
 			}
 		}
 
-		$filepath = $this->getFolderPath($location) . $folder . DIRECTORY_SEPARATOR . $filename;
+		$filepath = $this->getFolderPath($location) . $folder . $filename;
 			
 		$openfile = @fopen($filepath, "w");
 		if(!$openfile)
@@ -203,17 +222,22 @@ class Storage
 
 	public function renameFile($location, $folder, $oldname, $newname)
 	{
+		$folder = trim($folder, DIRECTORY_SEPARATOR);
+
 		$oldFilePath = $this->getFolderPath($location) . $folder . DIRECTORY_SEPARATOR . $oldname;
 		$newFilePath = $this->getFolderPath($location) . $folder . DIRECTORY_SEPARATOR . $newname;
 
-		if(!file_exists($oldFilePath))
+		if($oldFilePath != $newFilePath)
 		{
-			return false;
-		}
+			if(!file_exists($oldFilePath))
+			{
+				return false;
+			}
 
-		if(!rename($oldFilePath, $newFilePath))
-		{
-			return false;
+			if(!rename($oldFilePath, $newFilePath))
+			{
+				return false;
+			}
 		}
 		
 		return true;
@@ -323,7 +347,37 @@ class Storage
 		return $filename;
 	}
 
-	public function publishImage($name)
+	public function publishFile($name)
+	{
+		$pathinfo = pathinfo($name);
+		if(!$pathinfo)
+		{
+			$this->error = 'Could not read pathinfo.';
+
+			return false;
+		}
+
+		$filename = $pathinfo['filename'] . '.' . $pathinfo['extension'];
+		$filepath = $this->tmpFolder . $filename;
+
+		if(!file_exists($this->tmpFolder . $filename))
+		{
+			$this->error = "We did not find the file in the tmp-folder or could not read it.";
+			return false;
+		}
+
+		$success = rename($this->tmpFolder . $filename, $this->fileFolder . $filename);
+		
+		if($success === true)
+		{
+			# return true;
+			return 'media/files/' . $filename;
+		}
+
+		return false;
+	}
+
+	public function publishImage($name, $noresize = false)
 	{
 		$pathinfo = pathinfo($name);
 		if(!$pathinfo)
@@ -353,12 +407,26 @@ class Storage
 			switch($destinationfolder)
 			{
 				case 'original':
-					if(!rename($imagepath, $this->originalFolder . $filename))
+
+					$result = rename($imagepath, $this->originalFolder . $filename);
+				
+					if($noresize)
 					{
-						$this->error = "We could not store the original image to the original folder";
+						$result = copy($this->originalFolder . $filename, $this->liveFolder . $filename);
+						$extension = pathinfo($this->originalFolder . $filename, PATHINFO_EXTENSION);
 					}
+				
+					if(!$result)
+					{
+						$this->error = "We could not store the original image";
+					}
+				
 					break;
 				case 'live':
+					if($noresize)
+					{
+						break;
+					}
 					if(!rename($imagepath, $this->liveFolder . $filename))
 					{
 						$this->error = "We could not store the live image to the live folder";
@@ -420,6 +488,14 @@ class Storage
 		return $newpath;
 
 	}
+
+
+
+
+
+
+
+
 
 
 
@@ -752,36 +828,5 @@ class Storage
 		return false;
 	}
 	
-	public function renamePost($oldPathWithoutType, $newPathWithoutType)
-	{
-		$filetypes			= array('md', 'txt', 'yaml');
-				
-		$oldPath 			= $this->basePath . 'content' . $oldPathWithoutType;
-		$newPath 			= $this->basePath . 'content' . $newPathWithoutType;
-						
-		$result 			= true;
-		
-		foreach($filetypes as $filetype)
-		{
-			$oldFilePath = $oldPath . '.' . $filetype;
-			$newFilePath = $newPath . '.' . $filetype;
-			
-			#check if file with filetype exists and rename
-			if($oldFilePath != $newFilePath && file_exists($oldFilePath))
-			{
-				if(@rename($oldFilePath, $newFilePath))
-				{
-					$result = $result;
-				}
-				else
-				{
-					$result = false;
-				}
-			}
-		}
-
-		return $result;
-	}	
-
 	*/
 }

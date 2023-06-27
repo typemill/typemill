@@ -7,11 +7,6 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Routing\RouteContext;
 use Typemill\Models\Navigation;
 use Typemill\Models\Content;
-# use Typemill\Models\Folder;
-# use Typemill\Extensions\ParsedownExtension;
-# use Typemill\Models\StorageWrapper;
-# use Typemill\Models\User;
-# use Typemill\Models\License;
 
 class ControllerWebAuthor extends Controller
 {
@@ -48,7 +43,7 @@ class ControllerWebAuthor extends Controller
 			$keyPathArray 		= explode(".", $pageinfo['keyPath']);
 
 		    # extend : $request->getAttribute('c_userrole')
-		    $draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $langattr);
+#		    $draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $langattr);
 
 			$draftNavigation 	= $navigation->setActiveNaviItems($draftNavigation, $keyPathArray);
 

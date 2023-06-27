@@ -74,7 +74,7 @@ const publisher = Vue.createApp({
 							{{ $filters.translate('visual') }}
 						</a>
 						<a 
-							href="{{ item.urlAbs }}"
+							:href="item.urlAbs"
 							target="_blank" 
 							class="px-4 py-2 border border-stone-200 bg-stone-50 hover:bg-stone-700 hover:text-white transition ml-1" 
 							>

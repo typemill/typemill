@@ -64,6 +64,16 @@ class ControllerWebSystem extends Controller
 
 		$extension 			= new Extension();
 		$themeDefinitions 	= $extension->getThemeDetails();
+
+		# add userroles and other datasets
+		foreach($themeDefinitions as $name => $definitions)
+		{
+			if(isset($definitions['forms']['fields']))
+			{
+				$themeDefinitions[$name]['forms']['fields'] = $this->addDatasets($definitions['forms']['fields']);
+			}
+		}
+
 		$themeSettings 		= $extension->getThemeSettings($this->settings['themes']);
 
 		$license = [];
@@ -105,6 +115,16 @@ class ControllerWebSystem extends Controller
 
 		$extension 			= new Extension();
 		$pluginDefinitions 	= $extension->getPluginDetails();
+
+		# add userroles and other datasets
+		foreach($pluginDefinitions as $name => $definitions)
+		{
+			if(isset($definitions['forms']['fields']))
+			{
+				$pluginDefinitions[$name]['forms']['fields'] = $this->addDatasets($definitions['forms']['fields']);
+			}
+		}
+
 		$pluginSettings 	= $extension->getPluginSettings($this->settings['plugins']);
 
 		$license = [];

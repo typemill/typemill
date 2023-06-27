@@ -1,15 +1,8 @@
 meta:
     navtitle: 'colors and fonts'
-    hide: false
-    title: 'Colors and Fonts'
-    description: 'First of all cyanine supports individual logos. If you want to use our logo, then please upload it in the system settings. Cyanine will automatically replace the title text with your logo. '
-    heroimage: null
-    heroimagealt: null
-    owner: null
-    author: trendschau
-    allowedrole: null
-    alloweduser: null
-    manualdate: null
-    modified: '2021-10-04'
-    created: '2020-06-11'
-    time: 20-37-12
+    owner: Sebastian
+    created: '2023-06-12'
+    time: 22-36-53
+    modified: '2023-03-26'
+    title: 'First of all cyanine supports individual logos. If you want to use our logo, then please upload it in the system settings. Cyanine will automatically replace the title text with your logo. You can also upload your own favicon in the system settings.'
+    description: 'Cyanine allows you to change many colors. Please make sure that your color-combinations are readable and accessible. The following colors are editable: '

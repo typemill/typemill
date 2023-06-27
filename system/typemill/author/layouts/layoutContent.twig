@@ -43,7 +43,7 @@
 			</article>
 		</div>
 		
-		{{ csrf() | raw }}
+<!--		< csrf() | raw > -->
 
 		<script>
 			
@@ -69,7 +69,7 @@
 		</script>
 		{% block javascript %}{% endblock %}
 
-		{{ assets.renderJS() }}		
-	
+			{{ assets.renderJS()|raw }}
+
 	</body>
 </html>

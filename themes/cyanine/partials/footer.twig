@@ -24,6 +24,6 @@
 		{% else %}
 		    {% set copyrightYears = settings.year ~ ' - ' ~ nowYear %}
 		{% endif %}
-		<p class="f6">{{ settings.copyright }} {{ __('by') }} {{ settings.author }}, {{ copyrightYears }}. {{ __('All Rights Reserved') }}. {{ __('Built with') }} <a class="link underline f-secondary" href="https://typemill.net">Typemill</a>.</p>
+		<p class="f6">{{ settings.copyright }} {{ translate('by') }} {{ settings.author }}, {{ copyrightYears }}. {{ translate('All Rights Reserved') }}. {{ translate('Built with') }} <a class="link underline f-secondary" href="https://typemill.net">Typemill</a>.</p>
 	{% endif %}
 </div>

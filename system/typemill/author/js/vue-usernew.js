@@ -69,8 +69,6 @@ const app = Vue.createApp({
 
 	        tmaxios.get('/api/v1/userform',{
 	        	params: {
-					'csrf_name': 	document.getElementById("csrf_name").value,
-					'csrf_value':	document.getElementById("csrf_value").value,
 					'userrole': 	this.selectedrole
 	        	}
 			})
@@ -95,8 +93,6 @@ const app = Vue.createApp({
 			var self = this;
 
 			tmaxios.post('/api/v1/user',{
-				'csrf_name': 	document.getElementById("csrf_name").value,
-				'csrf_value':	document.getElementById("csrf_value").value,
 				'userdata': this.formData
 			})
 			.then(function (response)

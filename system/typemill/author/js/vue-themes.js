@@ -139,8 +139,6 @@ const app = Vue.createApp({
 			var self = this;
 
 			tmaxios.post('/api/v1/extensions',{
-				'csrf_name': 	document.getElementById("csrf_name").value,
-				'csrf_value':	document.getElementById("csrf_value").value,
 				'type': 'themes',
 				'name': themename,
 				'checked': this.formData[themename]['active']
@@ -178,8 +176,6 @@ const app = Vue.createApp({
 			var self = this;
 
 			tmaxios.post('/api/v1/theme',{
-				'csrf_name': 	document.getElementById("csrf_name").value,
-				'csrf_value':	document.getElementById("csrf_value").value,
 				'theme': this.current,
 				'settings': this.formData[this.current]
 			})

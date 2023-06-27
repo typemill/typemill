@@ -1,23 +1,8 @@
 meta:
+    navtitle: 'write content'
+    owner: Sebastian
+    created: '2023-06-12'
+    time: 22-09-48
+    modified: '2023-05-11'
     title: 'Write Content'
-    description: 'Typemill is a simple Flat File Content Management System (CMS). We (the community) work hard to provide the best author experience with easy and intuitive authoring tools. But Typemill is still in early development and it is likely that not everything will work perfectly out of the box.'
-    heroimage: ''
-    heroimagealt: 'Hero Alternative'
-    owner: null
-    author: 'Sebastian Schürmanns'
-    manualdate: null
-    modified: '2021-01-30'
-    created: null
-    time: null
-    navtitle: ''
-    hide: false
-    allowedrole: administrator
-    alloweduser: 'trendschau, testmember'
-seo:
-    heroimage: media/live/bildschirmfoto-zu-2019-08-30-20-46-29.png
-    heroimagealt: 'My Alt-Text'
-adamhall:
-    myfield:
-        -
-            key: b
-            value: 'Das muss eine schöne Sache sei'
+    description: 'Typemill provides easy and intuitive authoring tools and we work hard to create a good author experience. With the interactive navigation you can create pages'

@@ -481,6 +481,87 @@ class ControllerApiAuthorArticle extends Controller
 		return $response->withHeader('Content-Type', 'application/json');
 	}
 
+	public function renameArticle(Request $request, Response $response, $args)
+	{
+		$validRights		= $this->validateRights($request->getAttribute('c_userrole'), 'mycontent', 'edit');
+		if(!$validRights)
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> 'You do not have enough rights.',
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);			
+		}
+
+		$params 			= $request->getParsedBody();
+		$validate			= new Validation();
+		$validInput 		= $validate->articleRename($params);
+		if($validInput !== true)
+		{
+			$errors 		= $validate->returnFirstValidationErrors($validInput);
+			$response->getBody()->write(json_encode([
+				'message' 	=> reset($errors),
+				'errors' 	=> $errors
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+		}
+
+		$navigation 		= new Navigation();
+		$urlinfo 			= $this->c->get('urlinfo');
+		$item 				= $this->getItem($navigation, $params['url'], $urlinfo);
+		if(!$item)
+		{
+			$response->getBody()->write(json_encode([
+				'message' => 'page not found',
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+		}
+
+		# check if name exists
+		$parentUrl 			= str_replace($item->slug, '', $item->urlRelWoF);
+		if($parentUrl == '/')
+		{
+			$parentItem = new \stdClass;
+			$parentItem->folderContent = $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']);
+		}
+		else
+		{
+			$parentItem = $this->getItem($navigation, $parentUrl, $urlinfo);
+		}
+
+		foreach($parentItem->folderContent as $sibling)
+		{
+			if($sibling->slug == $params['slug'])
+			{
+				$response->getBody()->write(json_encode([
+					'message' => 'There is already a page with that slug',
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+			}
+		}
+
+		$navigation->renameItem($item, $params['slug']);
+
+		$navigation->clearNavigation();
+#		$this->updateSitemap($ping = true);
+
+		# create the new url for redirects
+		$newUrlRel =  str_replace($item->slug, $params['slug'], $item->urlRelWoF);
+		$url = $urlinfo['baseurl'] . '/tm/content/' . $this->settings['editor'] . $newUrlRel;
+		
+		$response->getBody()->write(json_encode([
+			'navigation'	=> $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']),
+			'message'		=> '',
+			'url' 			=> $url
+		]));
+
+		return $response->withHeader('Content-Type', 'application/json');
+	}
+
+
 	public function sortArticle(Request $request, Response $response, $args)
 	{ 
 		$validRights		= $this->validateRights($request->getAttribute('c_userrole'), 'content', 'update');

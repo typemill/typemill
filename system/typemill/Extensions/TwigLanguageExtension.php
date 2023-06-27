@@ -5,7 +5,6 @@ namespace Typemill\Extensions;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
-# use Typemill\Models\WriteYaml;
 
 class TwigLanguageExtension extends AbstractExtension
 {

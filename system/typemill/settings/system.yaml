@@ -225,11 +225,11 @@ fieldsetdeveloper:
       type: checkbox
       label: Proxy
       checkboxlabel: Use x-forwarded-header.
-      css: w-half
+      css: w-full
     trustedproxies:
       type: text
       label: Trusted IPs for proxies (comma separated)
-      css: w-half
+      css: w-full
     headersoff:
       type: checkbox
       label: Disable headers

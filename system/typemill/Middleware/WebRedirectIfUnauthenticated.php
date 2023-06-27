@@ -29,7 +29,6 @@ class WebRedirectIfUnauthenticated implements MiddlewareInterface
 
 			if($user->setUser($_SESSION['username']))
 			{
-
  				# pass username and userrole
 				$userdata = $user->getUserData();
 

@@ -80,8 +80,6 @@ const app = Vue.createApp({
 			var self = this;
 
 			tmaxios.put('/api/v1/user',{
-				'csrf_name': 	document.getElementById("csrf_name").value,
-				'csrf_value':	document.getElementById("csrf_value").value,
 				'userdata': this.formData
 			})
 			.then(function (response)
@@ -106,8 +104,6 @@ const app = Vue.createApp({
 
 			tmaxios.delete('/api/v1/user',{
 				data: {
-					'csrf_name': 	document.getElementById("csrf_name").value,
-					'csrf_value':	document.getElementById("csrf_value").value,
 					'username': 	this.formData.username
 				}
 			})

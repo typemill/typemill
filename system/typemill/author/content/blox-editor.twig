@@ -3,15 +3,30 @@
 
 {% block content %}
 
-	<div id="initial-content" class="px-12 py-8" v-pre>
-			
-		{% for block in content %}
-				<div class="blox-preview px-6 py-3 mb-1">{{ block.html|raw }}</div>
-		{% endfor %}
+	<div id="initial-content" v-pre>
+
+		<div class="flex">
+			<span class="px-4 py-2 border-b-2 border-stone-200">content</span>
+			<span class="px-4 py-2 border-b-2 border-stone-200">meta</span>
+		</div>
+
+		<div class="px-12 py-8 bg-stone-50">
+			{% for block in content %}
+					<div class="blox-preview px-6 py-3 mb-1">{{ block.html|raw }}</div>
+			{% endfor %}
+		</div>
 
 	</div>
-		
-	<div id="editor" class="px-12 py-8 bg-stone-50 shadow-md mb-16" v-cloak></div>
+	
+	{% if (acl.isAllowed(get_role(), 'content', 'update')) or ( (mycontent) and (acl.isAllowed(get_role(), 'mycontent', 'update')) ) %}
+
+		<div>you have the right!</div>
+
+	{% endif %}
+
+	<div id="meta"></div>
+
+	<div id="editor"></div>
 
 	<div id="publisher" class="fixed bottom-0 w-54rem bg-stone-100 border-t border-stone-200 shadow-md" v-cloak></div>
 
@@ -23,11 +38,16 @@
 	<script src="{{ base_url() }}/system/typemill/author/js/vue-blox-config.js?v={{ settings.version }}"></script>
 	<script src="{{ base_url() }}/system/typemill/author/js/vue-blox.js?v={{ settings.version }}"></script>
 	<script src="{{ base_url() }}/system/typemill/author/js/vue-blox-components.js?v={{ settings.version }}"></script>
+	<script src="{{ base_url() }}/system/typemill/author/js/vue-meta.js?v={{ settings.version }}"></script>
+	<script src="{{ base_url() }}/system/typemill/author/js/vue-forms.js?v={{ settings.version }}"></script>
 	<script src="{{ base_url() }}/system/typemill/author/js/vue-publisher.js?v={{ settings.version }}"></script>
 	<script>
 
 		bloxeditor.config.globalProperties.$filters = translatefilter;
 		bloxeditor.mount('#editor');
+
+		app.config.globalProperties.$filters = translatefilter;
+		app.mount('#meta');
 		
 		publisher.config.globalProperties.$filters = translatefilter;
 		publisher.mount('#publisher');

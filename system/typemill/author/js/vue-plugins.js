@@ -96,8 +96,6 @@ const app = Vue.createApp({
 		eventBus.$on('forminput', formdata => {
 			this.formData[this.current][formdata.name] = formdata.value;
 		});
-
-		console.info(this.formData);
 	},
 	methods: {
 		getActiveClass: function(pluginname)
@@ -127,8 +125,6 @@ const app = Vue.createApp({
 			var self = this;
 
 			tmaxios.post('/api/v1/extensions',{
-				'csrf_name': 	document.getElementById("csrf_name").value,
-				'csrf_value':	document.getElementById("csrf_value").value,
 				'type': 'plugins',
 				'name': pluginname,
 				'checked': this.formData[pluginname]['active']
@@ -165,8 +161,6 @@ const app = Vue.createApp({
 			var self = this;
 
 			tmaxios.post('/api/v1/plugin',{
-				'csrf_name': 	document.getElementById("csrf_name").value,
-				'csrf_value':	document.getElementById("csrf_value").value,
 				'plugin': this.current,
 				'settings': this.formData[this.current]
 			})

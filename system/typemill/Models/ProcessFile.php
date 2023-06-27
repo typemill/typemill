@@ -4,9 +4,9 @@ namespace Typemill\Models;
 
 class ProcessFile extends ProcessAssets
 {
+
 	public function storeFile($file, $name)
 	{
-
 		$this->clearTempFolder();
 
 		$this->setPathInfo($name);
@@ -39,6 +39,9 @@ class ProcessFile extends ProcessAssets
 
 
 
+
+
+
 	/**
 	 * Moves the uploaded file to the upload directory. Only used for settings / NON VUE.JS uploads
 	 *
@@ -58,22 +61,6 @@ class ProcessFile extends ProcessAssets
 	    $uploadedFile->moveTo($this->fileFolder . $this->getFullName());
 
 	    return $this->getFullName();
-	}
-
-	public function publishFile()
-	{
-		$files 			= scandir($this->tmpFolder);
-		$success		= true;
-		
-		foreach($files as $file)
-		{
-			if (!in_array($file, array(".","..")))
-			{
-				$success = rename($this->tmpFolder . $file, $this->fileFolder . $file);
-			}
-		}
-		
-		return $success;
 	}
 
 

@@ -33,8 +33,6 @@ const promptlist = [
 									var self = this;
 
 									tmaxios.get('/api/v1/settings',{
-										'csrf_name': 	document.getElementById("csrf_name").value,
-										'csrf_value':	document.getElementById("csrf_value").value,
 									})
 									.then(function (response)
 									{

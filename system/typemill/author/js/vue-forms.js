@@ -78,9 +78,10 @@ app.component('component-codearea', {
 						:name="name"
 						:placeholder="placeholder"
 						:value="value"
-						@input="update($event, name)"></textarea>
-						<pre aria-hidden="true" class="highlight hljs"><code data-el="highlight" v-html="highlighted"></code></pre>
-					</div>
+						@input="update($event, name)">
+					</textarea>
+					<pre aria-hidden="true" class="highlight hljs"><code data-el="highlight" v-html="highlighted"></code></pre>
+				</div>
 			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
 			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
 			  </div>`,
@@ -848,8 +849,6 @@ app.component('component-image', {
 							'image':			e.target.result,
 							'name': 			imageFile.name,
 							'publish':  		true,
-							'csrf_name': 		document.getElementById("csrf_name").value,
-							'csrf_value':		document.getElementById("csrf_value").value,
 						})
 					    .then(function (response) {
 							sharedself.update(response.data.name);
@@ -968,8 +967,6 @@ app.component('component-file', {
 		    myaxios.get('/api/v1/filerestrictions',{
 		      params: {
 						'url':			document.getElementById("path").value,
-						'csrf_name': 	document.getElementById("csrf_name").value,
-						'csrf_value':	document.getElementById("csrf_value").value,
 						'filename': 	filename,
 		      }
 			})
@@ -989,8 +986,6 @@ app.component('component-file', {
 		{
 		    myaxios.post('/api/v1/filerestrictions',{
 						'url':			document.getElementById("path").value,
-						'csrf_name': 	document.getElementById("csrf_name").value,
-						'csrf_value':	document.getElementById("csrf_value").value,
 						'filename': 	this.value,
 						'role': 		this.selectedrole,
 			})
@@ -1029,8 +1024,6 @@ app.component('component-file', {
 							'file':				e.target.result,
 							'name': 			uploadedFile.name, 
 							'publish':  		true,
-							'csrf_name': 		document.getElementById("csrf_name").value,
-							'csrf_value':		document.getElementById("csrf_value").value,
 						})
 					    .then(function (response) {
 							sharedself.load = false;

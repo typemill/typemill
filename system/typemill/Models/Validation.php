@@ -463,6 +463,41 @@ class Validation
 		}
 	}
 
+	public function articleRename(array $params)
+	{
+		$v = new Validator($params);
+		
+		$v->rule('required', ['url', 'slug', 'oldslug']);
+		$v->rule('regex', 'slug', '/^[a-z0-9\-]*$/');
+		$v->rule('lengthBetween', 'slug', 1, 50)->message("Length between 1 - 50"); 
+		$v->rule('different', 'slug', 'oldslug');
+
+		if($v->validate())
+		{
+			return true;
+		} 
+		else
+		{
+			return $v->errors();
+		}
+	}
+
+	public function metaInput(array $params)
+	{
+		$v = new Validator($params);
+		
+		$v->rule('required', ['url', 'tab', 'data']);
+
+		if($v->validate())
+		{
+			return true;
+		} 
+		else
+		{
+			return $v->errors();
+		}
+	}
+
 
 
 

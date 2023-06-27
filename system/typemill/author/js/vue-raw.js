@@ -1,6 +1,6 @@
 const raweditor = Vue.createApp({
 	template: `
-				<fieldset>
+				<fieldset v-if="showraw" class="px-12 py-8 bg-stone-50 shadow-md mb-16">
 					<div class="w-full px-6 py-3" :class="{'error' : errors.title}">
 						<label class="block mb-1 font-medium" for="title">{{ $filters.translate('Title') }}*</label>
 						<input 
@@ -37,21 +37,33 @@ const raweditor = Vue.createApp({
 			item: data.item,
 			highlighted: '',
 			errors: false,
-			freeze: false,		
+			freeze: false,
+			showraw: true,		
 		}
 	},
 	mounted() {
 		this.initializeContent(data.content)
 
 		eventBus.$on('savedraft', this.saveDraft);
-
 		eventBus.$on('publishdraft', this.publishDraft);
-
+		eventBus.$on('showEditor', this.showEditor );
+		eventBus.$on('hideEditor', this.hideEditor );
 		eventBus.$on('content', content => {
 			this.initializeContent(content);
 		});
 	},
 	methods: {
+		showEditor()
+		{
+			this.showraw = true;
+			this.$nextTick(() => {
+				this.resizeCodearea();
+			})			
+		},
+		hideEditor()
+		{
+			this.showraw =false;
+		},		
 		initializeContent(contentArray)
 		{
 			let markdown = '';
