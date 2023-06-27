@@ -70,3 +70,9 @@
     noindex: false
     path: /01-cyanine-theme/03-colors-and-fonts.md
     keyPath: '1.3'
+/cyanine-theme/new:
+    navtitle: new
+    hide: false
+    noindex: false
+    path: /01-cyanine-theme/04-new.txt
+    keyPath: '1.4'
