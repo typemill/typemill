@@ -1,14 +1,14 @@
 const navigation = Vue.createApp({
 	template: `
 			<div class="mr-3">
-				<div class="flex w-100 mb-4">
-					<button class="w-1/2 ml-1 hover:bg-stone-700 hover:text-stone-50 border border-stone-200 px-2 py-1 transition duration-100" @click.prevent="collapseNavigation()">collapse all</button>
-					<button class="w-1/2 mr-1 hover:bg-stone-700 hover:text-stone-50 border border-stone-200 px-2 py-1 transition duration-100" @click.prevent="expandNavigation()">expand all</button>
+				<div class="flex w-100 mb-8">
+					<button class="w-1/2 hover:bg-stone-700 hover:border-stone-700 hover:text-stone-50 border-b-2 border-stone-200 px-2 py-2 transition duration-100" @click.prevent="collapseNavigation()">{{ $filters.translate('collapse all') }}</button>
+					<button class="w-1/2 hover:bg-stone-700 hover:border-stone-700 hover:text-stone-50 border-b-2 border-stone-200 px-2 py-2 transition duration-100" @click.prevent="expandNavigation()">{{ $filters.translate('expand all') }}</button>
 				</div>
 				<div class="flex w-full my-px border-y border-stone-200 font-bold">
 					<div class="border-l-4" :class="getStatusClass(home.status)"></div>
-					<a :href="getUrl(home.urlRelWoF)" class="flex-grow p-1 hover:bg-teal-500 hover:text-stone-50" :class="getNaviClass(home.active)">
-						{{ home.name }}
+					<a :href="getUrl(home.urlRelWoF)" class="flex-grow p-1 pl-3 border-l-2 border-stone-50 hover:bg-teal-500 hover:text-stone-50" :class="home.active ? 'text-stone-50 bg-teal-500' : ''">
+						{{ $filters.translate(home.name) }}
 					</a>
 		  		</div>
 				<div class="pl-2 pl-3 pl-4 pl-6 pl-8 pl-9 pl-10 pl-12 pl-15 text-stone-50"></div>
@@ -41,19 +41,16 @@ const navigation = Vue.createApp({
 		}
 
 		eventBus.$on('toggleFolder', this.toggleFolder);
-
 		eventBus.$on('backupNavigation', this.backupNavigation);
-
 		eventBus.$on('revertNavigation', this.revertNavigation);
-
 		eventBus.$on('navigation', navigation => {
 			this.navigation = navigation;
 		});
-
 		eventBus.$on('item', item => {
 			if(item.originalName == 'home')
 			{
 				this.home = item;
+				this.home.active = true;
 			}
 		});
 	},
@@ -68,15 +65,6 @@ const navigation = Vue.createApp({
 			{
 				return "border-yellow-400";
 			}
-		},
-		getNaviClass(home)
-		{
-			if(home.active)
-			{ 
-				return "text-stone-50 bg-teal-500";
-			}
-
-			return '';
 		},
 		getUrl()
 		{
@@ -167,7 +155,7 @@ navigation.component('navilevel',{
 				<li :class="element.elementType" :id="element.keyPath" :data-url="element.urlRelWoF" :data-active="element.active">
 					<div class="flex w-full my-px border-b border-stone-200 relative" :class="element.elementType == 'folder' ? 'font-bold' : ''">
 						<div class="border-l-4" :class="getStatusClass(element.status)"></div>
-						<a :href="getUrl(element.urlRelWoF)" class="flex-grow p-1 hover:bg-teal-500 hover:text-stone-50" :class="getNaviClass(element.active, element.activeParent, element.keyPathArray)">
+						<a :href="getUrl(element.urlRelWoF)" class="flex-grow border-l-2 border-stone-50 p-1 hover:bg-teal-500 hover:text-stone-50" :class="getNaviClass(element.active, element.activeParent, element.keyPathArray)">
 							{{ element.name }}
 						</a>
 						<div v-if="load == element.keyPath" class="p-1 absolute right-0">
@@ -360,8 +348,6 @@ navigation.component('navilevel',{
 				'index_new': 		evt.newIndex,
 				'active':			evt.item.dataset.active,
 				'url':  			evt.item.dataset.url,
-//				'csrf_name': 		document.getElementById("csrf_name").value,
-//				'csrf_value':		document.getElementById("csrf_value").value,
 			})
 			.then(function (response)
 			{	
@@ -405,9 +391,6 @@ navigation.component('navilevel',{
 				'item_name': 		this.newItem,
 				'folder_id': 		parent,
 				'type':				type
-//				'url':  			evt.item.dataset.url,
-			//	'csrf_name': 		document.getElementById("csrf_name").value,
-			//	'csrf_value':		document.getElementById("csrf_value").value,
 			})
 			.then(function (response) {
 							
@@ -433,5 +416,3 @@ navigation.component('navilevel',{
 		},	
 	},
 });
-
-navigation.mount('#contentNavigation');

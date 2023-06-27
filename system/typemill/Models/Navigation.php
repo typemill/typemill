@@ -139,18 +139,7 @@ class Navigation extends Folder
 	{
 		# todo: filter for userrole or username 
 
-#		$this->clearNavigation(['extended' => true, 'draft' => true, 'live' => true]);
-
 		$this->draftNavigation = $this->storage->getFile('dataFolder', $this->naviFolder, $this->draftNaviName, 'unserialize');
-
-
-
-/*		echo '<pre>';
-		$draftContentTree = $this->scanFolder($this->storage->getFolderPath('contentFolder'), true);
-		$draftNavigation = $this->getFolderContentDetails($draftContentTree, $language, $urlinfo['baseurl'], $urlinfo['basepath']);
-		print_r($draftNavigation);
-		die();
-*/
 
 		if($this->draftNavigation)
 		{
@@ -198,6 +187,59 @@ class Navigation extends Folder
 		return false;
 	}
 
+	# get the navigation with draft files for author environment
+	public function getLiveNavigation($urlinfo, $language, $userrole = null, $username = null)
+	{
+		# todo: filter for userrole or username 
+
+		$this->liveNavigation = $this->storage->getFile('dataFolder', $this->naviFolder, $this->liveNaviName, 'unserialize');
+
+		if($this->liveNavigation)
+		{
+			return $this->liveNavigation;
+		}
+
+		# if there is no cached navi, create a basic new draft navi
+		$basicLiveNavigation = $this->getBasicLiveNavigation($urlinfo, $language);
+
+		# get the extended navigation with additional infos from the meta-files like title or hidden pages
+		$extendedNavigation = $this->getExtendedNavigation($urlinfo, $language);
+
+		# merge the basic draft navi with the extended infos from meta-files
+		$liveNavigation = $this->mergeNavigationWithExtended($basicLiveNavigation, $extendedNavigation);
+
+		# cache it
+		$this->storage->writeFile('dataFolder', $this->naviFolder, $this->liveNaviName, $liveNavigation, 'serialize');
+
+		return $liveNavigation;
+	}
+
+	public function getBasicLiveNavigation($urlinfo, $language)
+	{
+		if(!$this->basicLiveNavigation)
+		{
+			$this->basicLiveNavigation = $this->createBasicLiveNavigation($urlinfo, $language);
+		}
+		return $this->basicLiveNavigation;
+	}
+
+	# creates a fresh structure with published and non-published pages for the author
+	public function createBasicLiveNavigation($urlinfo, $language)
+	{
+		# scan the content of the folder
+		$liveContentTree = $this->scanFolder($this->storage->getFolderPath('contentFolder'), $draft = false);
+
+		# if there is content, then get the content details
+		if(count($liveContentTree) > 0)
+		{
+			$liveNavigation = $this->getFolderContentDetails($liveContentTree, $language, $urlinfo['baseurl'], $urlinfo['basepath']);
+			
+			return $liveNavigation;
+		}
+
+		return false;
+	}
+
 	# get the extended navigation with additional infos from the meta-files like title or hidden pages
 	public function getExtendedNavigation($urlinfo, $language)
 	{
@@ -228,19 +270,15 @@ class Navigation extends Folder
 			$extended = [];
 		}
 
-		$contentFolder = $this->storage->getFolderPath('contentFolder');
-
 		foreach ($navigation as $key => $item)
 		{
 			# $filename = ($item->elementType == 'folder') ? DIRECTORY_SEPARATOR . 'index.yaml' : $item->pathWithoutType . '.yaml';
 			$filename = $item->pathWithoutType . '.yaml';
 
-			if(file_exists($contentFolder . $filename))
-			{
-				# read file
-				$meta = $this->storage->getYaml($contentFolder, '', $filename);
-			}
-			else
+			# read file
+			$meta = $this->storage->getYaml('contentFolder', '', $filename);
+
+			if(!$meta)
 			{
 				# create initial yaml
 				$meta = [];
@@ -365,122 +403,247 @@ class Navigation extends Folder
 		$item->urlRel			= '/';
 		$item->urlRelWoF		= '/';
 		$item->urlAbs			= $baseUrl;
-		$item->active			= true;
+		$item->active			= false;
 		$item->activeParent		= false;
 		$item->hide 			= false;
 
 		return $item;
 	}
 
-
-
-
-
-
-############################## TODO
-	# reads the cached structure with published pages
-	public function getLiveNavigation()
+	public function renameItem($item, $newslug)
 	{
-		# get the cached navi
-		$liveNavi = $this->storage->getFile('naviFolder', $this->naviFolder, $this->liveNaviName, 'unserialize');
+		$folder 	= str_replace($item->originalName, '', $item->path);
+		$oldname 	= $item->order . '-' . $item->slug;
+		$newname 	= $item->order . '-' . $newslug;
+		$result 	= true;
 
-		# if there is no cached structure
-		if(!$liveNavi)
+		if($item->elementType == 'folder')
 		{
-			return $this->createNewLiveNavigation();
+			$result = $this->storage->renameFile('contentFolder', $folder, $oldname, $newname);
 		}
 
-		return $liveNavi;
-	}
-
-
-################################## TODO
-	# creates a fresh structure with published pages
-	private function createNewLiveNavigation($urlinfo, $language)
-	{
-		# scan the content of the folder
-		$draftNavi = $this->scanFolder($this->storage->contentFolder, $draft = false);
-
-		# if there is content, then get the content details
-		if($draftNavi && count($draftNavi) > 0)
+		if($item->elementType == 'file')
 		{
-			# get the extended structure files with changes like navigation title or hidden pages
-			$extended = $this->getExtendedNavi();
-
-			# create an array of object with the whole content of the folder and changes from extended file
-			$liveNavi = $folder->getFolderContentDetails($liveNavi, $extended, $this->settings, $this->uri->getBaseUrl(), $this->uri->getBasePath());
-			
-			# cache structure live
-			$this->storage->writeFile($this->naviFolder, $this->liveNaviName, $liveNavi, 'serialize');
-
-			return $liveNavi;
-		}
-
-		return false;
-	}
-
-
-
-
-
-
-
-
-
-
-	# only backoffice
-	protected function renameExtended($item, $newFolder)
-	{
-		# get the extended structure files with changes like navigation title or hidden pages
-		$yaml = new writeYaml();
-		$extended = $yaml->getYaml('cacheFolder', '', 'structure-extended.yaml');
-
-		if(isset($extended[$item->urlRelWoF]))
-		{
-			$newUrl = $newFolder->urlRelWoF . '/' . $item->slug;
-
-			$entry = $extended[$item->urlRelWoF];
-			
-			unset($extended[$item->urlRelWoF]);
-			
-			$extended[$newUrl] = $entry;
-			$yaml->updateYaml('cacheFolder', '', 'structure-extended.yaml', $extended);
-		}
-
-		return true;
-	}
-
-	# only backoffice
-	protected function deleteFromExtended()
-	{
-		# get the extended structure files with changes like navigation title or hidden pages
-		$yaml = new writeYaml();
-		$extended = $yaml->getYaml('cache', 'structure-extended.yaml');
-
-		if($this->item->elementType == "file" && isset($extended[$this->item->urlRelWoF]))
-		{
-			unset($extended[$this->item->urlRelWoF]);
-			$yaml->updateYaml('cacheFolder', '', 'structure-extended.yaml', $extended);
-		}
-
-		if($this->item->elementType == "folder")
-		{
-			$changed = false;
-
-			# delete all entries with that folder url
-			foreach($extended as $url => $entries)
+			$filetypes 	= array('md', 'txt', 'yaml');
+			$result 	= true;
+			foreach($filetypes as $filetype)
 			{
-				if( strpos($url, $this->item->urlRelWoF) !== false )
+				$oldfilename = $oldname . '.' . $filetype;
+				$newfilename = $newname . '.' . $filetype;
+
+				$result = $this->storage->renameFile('contentFolder', $folder, $oldfilename, $newfilename);
+			}
+		}
+		
+		return $result;
+	}
+
+	public function getCurrentPage($args)
+	{
+		if(isset($args['route']))
+		{
+			$argSegments = explode("/", $args['route']);
+
+			# check if the last url segment is a number
+			$pageNumber = array_pop($argSegments);
+			if(is_numeric($pageNumber) && $pageNumber < 10000)
+			{
+				# then check if the segment before the page is a "p" that indicates a paginator
+				$pageIndicator = array_pop($argSegments);
+				if($pageIndicator == "p")
 				{
-					$changed = true;
-					unset($extended[$url]);
+					return $pageNumber;
 				}
 			}
+		}
 
-			if($changed)
+		return false;		
+	}
+
+
+	public function removeHiddenPages($liveNavigation)
+	{
+		foreach($liveNavigation as $key => $item)
+		{
+			if(isset($item->hide) && $item->hide == true)
 			{
-				$yaml->updateYaml('cacheFolder', '', 'structure-extended.yaml', $extended);
+				unset($liveNavigation[$key]);
+			}
+			elseif($item->elementType == 'folder' && !empty($item->folderContent))
+			{
+				$item->folderContent = $this->removeHiddenPages($item->folderContent);
 			}
 		}
+
+		return $liveNavigation;
 	}
+
+
+	public function getBreadcrumb($navigation, $searchArray, $i = NULL, $breadcrumb = NULL)
+	{
+		# if it is the first round, create an empty array
+		if(!$i){ $i = 0; $breadcrumb = array();}
+
+		if(!$searchArray){ return $breadcrumb;}
+
+		while($i < count($searchArray))
+		{
+			if(!isset($navigation[$searchArray[$i]])){ return false; }
+			$item = $navigation[$searchArray[$i]];
+
+			if($i == count($searchArray)-1)
+			{
+				$item->active = true;
+			}
+			else
+			{
+				$item->activeParent = true;
+			}
+
+			$copy = clone($item);
+			if($copy->elementType == 'folder')
+			{
+				unset($copy->folderContent);
+				$navigation = $item->folderContent;
+			}
+			$breadcrumb[] = $copy;
+			
+			$i++;
+			return $this->getBreadcrumb($navigation, $searchArray, $i++, $breadcrumb);
+		}
+
+		return $breadcrumb;
+	}	
+
+	public function getPagingForItem($navigation, $item)
+	{
+		# if page is home
+		if(trim($item->pathWithoutType, DIRECTORY_SEPARATOR) == 'index')
+		{
+			return $item;
+		}
+
+		$keyPos 			= count($item->keyPathArray)-1;
+		$thisChapArray		= $item->keyPathArray;
+		$nextItemArray 		= $item->keyPathArray;
+		$prevItemArray 		= $item->keyPathArray;
+		
+		$item->thisChapter 	= false;
+		$item->prevItem 	= false;
+		$item->nextItem 	= false;
+		
+		
+		/************************
+		* 	ADD THIS CHAPTER 	*
+		************************/
+
+		if($keyPos > 0)
+		{
+			array_pop($thisChapArray);
+			$item->thisChapter = $this->getItemWithKeyPath($navigation, $thisChapArray);
+		}
+		
+		/************************
+		* 	ADD NEXT ITEM	 	*
+		************************/
+				
+		if($item->elementType == 'folder')
+		{
+			# get the first element in the folder
+			$item->nextItem = isset($item->folderContent[0]) ? clone($item->folderContent[0]) : false;
+		}
+		
+		# the item is a file or an empty folder
+		if(!$item->nextItem)
+		{
+			# walk to the next file in the same hierarchy
+			$nextItemArray[$keyPos]++;
+
+			# get the key of the last element in this hierarchy level
+			# if there is no chapter, then it is probably an empty first-level-folder. Count content to get the number of first level items
+			$lastKey = $item->thisChapter ? array_key_last($item->thisChapter->folderContent) : count($navigation);
+
+			# as long as the nextItemArray is smaller than the last key in this hierarchy level, search for the next item
+			# this ensures that it does not stop if key is missing (e.g. if the next page is hidden)
+			while( ($nextItemArray[$keyPos] <= $lastKey) && !$item->nextItem = $this->getItemWithKeyPath($navigation, $nextItemArray) )
+			{
+				$nextItemArray[$keyPos]++;
+			}
+		}
+		
+		# there is no next file or folder in this level, so walk up the hierarchy to the next folder or file
+		while(!$item->nextItem)
+		{
+			# delete the array level with the current item, so you are in the parent folder
+			array_pop($nextItemArray);
+
+			# if the array is empty now, then you where in the base level already, so break
+			if(empty($nextItemArray)) break; 
+
+			# define the key position where you are right now
+			$newKeyPos = count($nextItemArray)-1;
+
+			# go to the next position
+			$nextItemArray[$newKeyPos]++;
+
+			# search for 5 items in case there are some hidden elements
+			$maxlength = $nextItemArray[$newKeyPos]+5;
+			while( ($nextItemArray[$newKeyPos] <= $maxlength) && !$item->nextItem = $this->getItemWithKeyPath($navigation, $nextItemArray) )
+			{
+				$nextItemArray[$newKeyPos]++;
+			}
+		}
+
+		/************************
+		* 	ADD PREVIOUS ITEM	*
+		************************/
+		
+		# check if element is the first in the array
+		$first = ($prevItemArray[$keyPos] == 0) ? true : false;
+
+		if(!$first)
+		{
+			$prevItemArray[$keyPos]--;
+			
+			while($prevItemArray[$keyPos] >= 0 && !$item->prevItem = $this->getItemWithKeyPath($navigation, $prevItemArray))
+			{
+				$prevItemArray[$keyPos]--;
+			}
+			
+			# if no item is found, then all previous items are hidden, so set first item to true and it will walk up the array later
+			if(!$item->prevItem)
+			{
+				$first = true;
+			}
+			elseif($item->prevItem && $item->prevItem->elementType == 'folder' && !empty($item->prevItem->folderContent))
+			{
+				# if the previous item is a folder, the get the last item of that folder
+				$item->prevItem = $this->getLastItemOfFolder($item->prevItem);
+			}
+		}
+
+		# if it is the first item in the folder (or all other files are hidden)
+		if($first)
+		{
+			# then the previous item is the containing chapter
+			$item->prevItem = $item->thisChapter;
+		}
+		
+		if($item->prevItem && $item->prevItem->elementType == 'folder'){ unset($item->prevItem->folderContent); }
+		if($item->nextItem && $item->nextItem->elementType == 'folder'){ unset($item->nextItem->folderContent); }
+		if($item->thisChapter){unset($item->thisChapter->folderContent); }
+		
+		return $item;
+	}
+
+	public function getLastItemOfFolder($folder)
+	{
+		$lastItem = end($folder->folderContent);
+		if(is_object($lastItem) && $lastItem->elementType == 'folder' && !empty($lastItem->folderContent))
+		{
+			return $this->getLastItemOfFolder($lastItem);
+		}
+		return $lastItem;
+	}
+
 }

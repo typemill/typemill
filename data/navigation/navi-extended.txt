@@ -1,77 +1,71 @@
 /welcome:
-    navtitle: ''
+    navtitle: welcome
     hide: false
     noindex: false
     path: /00-welcome
     keyPath: 0
 /welcome/markdown-test:
-    navtitle: ''
+    navtitle: 'markdown test'
     hide: false
     noindex: false
     path: /00-welcome/00-markdown-test.md
     keyPath: '0.0'
 /welcome/manage-access:
-    navtitle: ''
+    navtitle: 'manage access'
     hide: false
     noindex: false
     path: /00-welcome/01-manage-access.md
     keyPath: '0.1'
 /welcome/get-help:
-    navtitle: ''
+    navtitle: 'get help'
     hide: false
     noindex: false
     path: /00-welcome/02-get-help.md
     keyPath: '0.2'
 /welcome/setup-your-website:
-    navtitle: ''
+    navtitle: 'setup your website'
     hide: false
     noindex: false
     path: /00-welcome/03-setup-your-website.md
     keyPath: '0.3'
 /welcome/write-content:
-    navtitle: ''
+    navtitle: 'write content'
     hide: false
     noindex: false
     path: /00-welcome/04-write-content.md
     keyPath: '0.4'
-/welcome/edit-test:
-    navtitle: ''
+/welcome/todos:
+    navtitle: 'To Dos'
     hide: false
     noindex: false
-    path: /00-welcome/05-edit-test.txt
+    path: /00-welcome/05-todos.txtmd
     keyPath: '0.5'
-/welcome/new:
-    navtitle: ''
-    hide: false
-    noindex: false
-    path: /00-welcome/06-new.txt
-    keyPath: '0.6'
 /cyanine-theme:
-    navtitle: ''
+    navtitle: 'cyanine theme'
     hide: false
     noindex: false
     path: /01-cyanine-theme
     keyPath: 1
 /cyanine-theme/landingpage:
-    navtitle: ''
+    navtitle: landingpage
     hide: false
-    noindex: false
+    noindex: true
     path: /01-cyanine-theme/00-landingpage.md
     keyPath: '1.0'
 /cyanine-theme/footer:
-    navtitle: ''
+    navtitle: footer
     hide: false
     noindex: false
     path: /01-cyanine-theme/01-footer.md
     keyPath: '1.1'
 /cyanine-theme/content-elements:
-    navtitle: ''
+    navtitle: 'content elements'
     hide: false
     noindex: false
     path: /01-cyanine-theme/02-content-elements.md
     keyPath: '1.2'
 /cyanine-theme/colors-and-fonts:
-    navtitle: ''
+    navtitle: 'colors and fonts'
     hide: false
     noindex: false
     path: /01-cyanine-theme/03-colors-and-fonts.md

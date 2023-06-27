@@ -71,13 +71,13 @@ const app = Vue.createApp({
 					<div class="my-5 text-center">
 						<modal v-if="showModal" @close="showModal = false">
 					    	<template #header>
-					    		<h3>License required</h3>
+					    		<h3>{{ $filters.translate('License required') }}</h3>
 					    	</template>
 					    	<template #body>
-					    		<p>{{ modalMessage }}</p>
+					    		<p>{{ $filters.translate(modalMessage) }}</p>
 					    	</template>
 					    	<template #button>
-					    		<a :href="getLinkToLicense()" class="focus:outline-none px-4 p-3 mr-3 text-white bg-teal-500 hover:bg-teal-700 transition duration-100">Check your license</a>
+					    		<a :href="getLinkToLicense()" class="focus:outline-none px-4 p-3 mr-3 text-white bg-teal-500 hover:bg-teal-700 transition duration-100">{{ $filters.translate('Check your license') }}</a>
 					    	</template>
 						</modal>
 					</div>					
@@ -139,8 +139,6 @@ const app = Vue.createApp({
 			var self = this;
 
 			tmaxios.post('/api/v1/extensions',{
-				'csrf_name': 	document.getElementById("csrf_name").value,
-				'csrf_value':	document.getElementById("csrf_value").value,
 				'type': 'themes',
 				'name': themename,
 				'checked': this.formData[themename]['active']
@@ -178,8 +176,6 @@ const app = Vue.createApp({
 			var self = this;
 
 			tmaxios.post('/api/v1/theme',{
-				'csrf_name': 	document.getElementById("csrf_name").value,
-				'csrf_value':	document.getElementById("csrf_value").value,
 				'theme': this.current,
 				'settings': this.formData[this.current]
 			})

@@ -5,9 +5,16 @@ bloxeditor.component('title-component', {
 			</div>`,
 	mounted: function(){
 		this.$refs.markdown.focus();
+
 		autosize(document.querySelectorAll('textarea'));
+
+		eventBus.$on('beforeSave', this.beforeSave );
 	},
 	methods: {
+		beforeSave()
+		{
+			this.$emit('saveBlockEvent');
+		},
 		updatemarkdown(content)
 		{
 			this.$emit('updateMarkdownEvent', content);
@@ -29,9 +36,16 @@ bloxeditor.component('markdown-component', {
 			 	</div>`,
 	mounted: function(){
 		this.$refs.markdown.focus();
+
 		autosize(document.querySelectorAll('textarea'));
+
+		eventBus.$on('beforeSave', this.beforeSave );
 	},
 	methods: {
+		beforeSave()
+		{
+			this.$emit('saveBlockEvent');
+		},
 		updatemarkdown(content)
 		{
 			var emptyline = /^\s*$(?:\r\n?|\n)/gm;
@@ -71,6 +85,8 @@ bloxeditor.component('headline-component', {
 	},
 	mounted: function(){
 
+		eventBus.$on('beforeSave', this.beforeSave );
+
 		this.$refs.markdown.focus();
 		
 		this.compmarkdown = this.markdown;
@@ -88,6 +104,10 @@ bloxeditor.component('headline-component', {
 		}
 	},
 	methods: {
+		beforeSave()
+		{
+			this.$emit('saveBlockEvent');
+		},
 		updatemarkdown: function(event)
 		{
 			this.level = this.getHeadlineLevel(this.compmarkdown);
@@ -154,6 +174,8 @@ bloxeditor.component('ulist-component', {
 	},
 	mounted: function(){
 
+		eventBus.$on('beforeSave', this.beforeSave );
+
 		this.compmarkdown = this.markdown;
 		
 		if(this.compmarkdown == '')
@@ -190,6 +212,10 @@ bloxeditor.component('ulist-component', {
 		this.$refs.markdown.focus();
 	},
 	methods: {
+		beforeSave()
+		{
+			this.$emit('saveBlockEvent');
+		},		
 		updatemarkdown: function(event)
 		{
 			this.$emit('updateMarkdownEvent', event.target.value);
@@ -245,6 +271,8 @@ bloxeditor.component('olist-component', {
 	},
 	mounted: function(){
 
+		eventBus.$on('beforeSave', this.beforeSave );
+
 		this.compmarkdown = this.markdown;
 
 		if(this.compmarkdown == '')
@@ -259,6 +287,10 @@ bloxeditor.component('olist-component', {
 		this.$refs.markdown.focus();
 	},
 	methods: {
+		beforeSave()
+		{
+			this.$emit('saveBlockEvent');
+		},		
 		updatemarkdown: function(event)
 		{
 			this.$emit('updateMarkdownEvent', event.target.value);
@@ -303,7 +335,7 @@ bloxeditor.component('code-component', {
 					</svg>
 				</div>
 				<div class="w-full flex p-3 border-b-2 border-stone-700 bg-stone-200">
-				  <label class="pr-2 py-1" for="language">Language: </label> 
+				  <label class="pr-2 py-1" for="language">{{ $filters.translate('Language') }}: </label> 
 				  <input class="px-2 py-1 flex-grow text-stone-700 focus:outline-none" name="language" type="text" v-model="language" :disabled="disabled" @input="createlanguage">
 				</div>
 				<textarea class="font-mono text-sm opacity-1 w-full bg-transparent px-6 py-3 outline-none" ref="markdown" v-model="codeblock" :disabled="disabled" @input="createmarkdown"></textarea>
@@ -316,7 +348,11 @@ bloxeditor.component('code-component', {
 		}
 	},
 	mounted: function(){
+
+		eventBus.$on('beforeSave', this.beforeSave );
+
 		this.$refs.markdown.focus();
+
 		if(this.markdown)
 		{
 			var codelines 	= this.markdown.split(/\r\n|\n\r|\n|\r/);
@@ -347,6 +383,10 @@ bloxeditor.component('code-component', {
 		});	
 	},
 	methods: {
+		beforeSave()
+		{
+			this.$emit('saveBlockEvent');
+		},		
 		createlanguage: function()
 		{
 			var codeblock = this.prefix + this.language + '\n' + this.codeblock + '\n' + this.prefix;
@@ -377,6 +417,8 @@ bloxeditor.component('hr-component', {
 				</div>`,
 	mounted: function(){
 
+		eventBus.$on('beforeSave', this.beforeSave );
+
 		this.$refs.markdown.focus();
 
 		autosize(document.querySelectorAll('textarea'));
@@ -384,6 +426,10 @@ bloxeditor.component('hr-component', {
 		this.$emit('updateMarkdownEvent', '---');
 	},
 	methods: {
+		beforeSave()
+		{
+			this.$emit('saveBlockEvent');
+		},		
 		updatemarkdown: function(event)
 		{
 			var emptyline = /^\s*$(?:\r\n?|\n)/gm;
@@ -411,6 +457,8 @@ bloxeditor.component('toc-component', {
 				</div>`,
 	mounted: function(){
 
+		eventBus.$on('beforeSave', this.beforeSave );
+
 		this.$refs.markdown.focus();
 
 		autosize(document.querySelectorAll('textarea'));
@@ -418,6 +466,10 @@ bloxeditor.component('toc-component', {
 		this.$emit('updateMarkdownEvent', '[TOC]');
 	},
 	methods: {
+		beforeSave()
+		{
+			this.$emit('saveBlockEvent');
+		},		
 		updatemarkdown: function(event)
 		{
 			var emptyline = /^\s*$(?:\r\n?|\n)/gm;
@@ -453,6 +505,8 @@ bloxeditor.component('quote-component', {
 	},
 	mounted: function(){
 
+		eventBus.$on('beforeSave', this.beforeSave );
+
 		this.$refs.markdown.focus();
 
 		if(this.markdown)
@@ -469,6 +523,10 @@ bloxeditor.component('quote-component', {
 		});
 	},
 	methods: {
+		beforeSave()
+		{
+			this.$emit('saveBlockEvent');
+		},		
 		updatemarkdown: function(value)
 		{
 			this.quote = value;
@@ -518,6 +576,8 @@ bloxeditor.component('notice-component', {
 	},
 	mounted: function(){
 
+		eventBus.$on('beforeSave', this.beforeSave );
+
 		this.$refs.markdown.focus();
 
 		if(this.markdown)
@@ -538,6 +598,10 @@ bloxeditor.component('notice-component', {
 		});
 	},
 	methods: {
+		beforeSave()
+		{
+			this.$emit('saveBlockEvent');
+		},		
 		noticedown: function()
 		{
 			this.prefix = this.getNoticePrefix(this.markdown);
@@ -621,9 +685,9 @@ bloxeditor.component('table-component', {
 									class="border border-stone-300 text-center text-stone-500"
 								>{{value}} 
 							  		<div v-if="columnbar === value" class="absolute z-20 w-32 text-left text-xs text-white bg-stone-700 transition-1">
-								 		<div class="p-2 hover:bg-teal-500" @click="addleftcolumn($event, value)">add left column</div>
-							     		<div class="p-2 hover:bg-teal-500" @click="addrightcolumn($event, value)">add right column</div>
-								 		<div class="p-2 hover:bg-teal-500" @click="deletecolumn($event, value)">delete column</div>							
+								 		<div class="p-2 hover:bg-teal-500" @click="addleftcolumn($event, value)">{{ $filters.translate('add left column') }}</div>
+							     		<div class="p-2 hover:bg-teal-500" @click="addrightcolumn($event, value)">{{ $filters.translate('add right column') }}</div>
+								 		<div class="p-2 hover:bg-teal-500" @click="deletecolumn($event, value)">{{ $filters.translate('delete column') }}</div>
 							  		</div>
 								</td>
 								<th v-if="rowindex === 1" v-for="(value,colindex) in row" 
@@ -644,9 +708,9 @@ bloxeditor.component('table-component', {
 									class="p-2 border border-stone-300"
 								>
 							 		<div v-if="colindex === 0 && rowbar === value" class="rowaction absolute z-20 left-12 w-32 text-left text-xs text-white bg-stone-700">
-  										<div class="actionline p-2 hover:bg-teal-500" @click="addaboverow($event, value)">add row above</div>
-										<div class="actionline p-2 hover:bg-teal-500" @click="addbelowrow($event, value)">add row below</div>
-										<div class="actionline p-2 hover:bg-teal-500" @click="deleterow($event, value)">delete row</div>
+  										<div class="actionline p-2 hover:bg-teal-500" @click="addaboverow($event, value)">{{ $filters.translate('add row above') }}</div>
+										<div class="actionline p-2 hover:bg-teal-500" @click="addbelowrow($event, value)">{{ $filters.translate('add row below') }}</div>
+										<div class="actionline p-2 hover:bg-teal-500" @click="deleterow($event, value)">{{ $filters.translate('delete row') }}</div>
 									</div>
 									{{ value }}
 								</td>
@@ -656,6 +720,8 @@ bloxeditor.component('table-component', {
 				</div>`,
 	mounted: function(){
 
+		eventBus.$on('beforeSave', this.beforeSave );
+
 		this.$refs.markdown.focus();
 		
 		if(this.markdown)
@@ -664,6 +730,10 @@ bloxeditor.component('table-component', {
 		}
 	},
 	methods: {
+		beforeSave()
+		{
+			this.$emit('saveBlockEvent');
+		},		
 		generateTable(markdown)
 		{
 			var table = [];
@@ -834,10 +904,16 @@ bloxeditor.component('definition-component', {
 							  		  		<div class="flex mb-2" v-for="(description,ddindex) in element.descriptions">
 								  		  		<svg class="icon icon-dots-two-vertical mt-3"><use xlink:href="#icon-dots-two-vertical"></use></svg> 
 							  					<textarea class="flex-grow p-2 focus:outline-none" :placeholder="description" v-html="element.descriptions[ddindex]" :disabled="disabled" @input="updatedescription($event, index, ddindex)" @keydown.13.prevent="enter" @blur="updateMarkdown"></textarea>
-								  				<button title="delete description" class="text-white bg-stone-700 w-6 h-6 text-xs hover:bg-rose-500" @click.prevent="deleteItem($event,index,ddindex)"><svg class="icon icon-minus"><use xlink:href="#icon-minus"></use></svg></button>
+								  				<button title="delete description" class="text-white bg-stone-700 w-6 h-6 text-xs hover:bg-rose-500" @click.prevent="deleteItem($event,index,ddindex)">
+								  					<svg class="icon icon-minus">
+								  						<use xlink:href="#icon-minus"></use>
+								  					</svg>
+								  				</button>
 							  				</div>
 							  				<button title="add description" class="text-white bg-stone-700 w-6 h-6 text-xs hover:bg-teal-500 ml-4 mr-2" @click.prevent="addItem($event,index)">
-								  				<svg class="icon icon-plus"><use xlink:href="#icon-plus"></use></svg>
+								  				<svg class="icon icon-plus">
+								  					<use xlink:href="#icon-plus"></use>
+								  				</svg>
 								  			</button>
 								  			<span class="text-sm">Add description</span>
 						  				</div>
@@ -849,11 +925,14 @@ bloxeditor.component('definition-component', {
 		  				<button title="add definition" class="text-white bg-stone-700 w-6 h-6 text-xs hover:bg-teal-500 mr-2" @click.prevent="addDefinition">
 			  				<svg class="icon icon-plus"><use xlink:href="#icon-plus"></use></svg>
 			  			</button>
-						<span class="text-sm">Add definition</span>
+						<span class="text-sm">{{ $filters.translate('Add definition') }}</span>
 						<div v-if="load" class="loadwrapper"><span class="load"></span></div>
 					</div>
 				</div>`,
 	mounted: function(){
+
+		eventBus.$on('beforeSave', this.beforeSave );
+
 		if(this.markdown)
 		{
 			var definitionList		= this.markdown.replace("\r\n", "\n");
@@ -909,6 +988,10 @@ bloxeditor.component('definition-component', {
 		}
 	},
 	methods: {
+		beforeSave()
+		{
+			this.$emit('saveBlockEvent');
+		},		
 		enter()
 		{
 			return false;
@@ -1056,7 +1139,6 @@ bloxeditor.component('inline-formats', {
 	},
 	mounted: function() {
 		this.formatBar = document.getElementById('formatBar');
-		console.info(this.formatBar);
 		window.addEventListener('mouseup', this.onMouseup),
 		window.addEventListener('mousedown', this.onMousedown)
 	},
@@ -1239,37 +1321,37 @@ bloxeditor.component('image-component', {
 				<div v-if="load" class="loadwrapper"><span class="load"></span></div>
 				<div class="imgmeta p-8" v-if="imgmeta">
 					<div class="flex mb-2">
-						<label class="w-1/5 py-2" for="imgalt">Alt-Text: </label>
+						<label class="w-1/5 py-2" for="imgalt">{{ $filters.translate('Alt-Text') }}: </label>
 						<input class="w-4/5 p-2" name="imgalt" type="text" placeholder="alt" @input="createmarkdown" v-model="imgalt" max="100" />
 					</div>
 					<div class="flex mb-2">
-						<label class="w-1/5 py-2" for="imgtitle">Title: </label>
+						<label class="w-1/5 py-2" for="imgtitle">{{ $filters.translate('Title') }}: </label>
 						<input class="w-4/5 p-2" name="imgtitle" type="text" placeholder="title" v-model="imgtitle" @input="createmarkdown" max="64" />
 					</div>
 					<div class="flex mb-2">
-						<label class="w-1/5 py-2" for="imgcaption">Caption: </label>
+						<label class="w-1/5 py-2" for="imgcaption">{{ $filters.translate('Caption') }}: </label>
 						<input class="w-4/5 p-2" title="imgcaption" type="text" placeholder="caption" v-model="imgcaption" @input="createmarkdown" max="140" />
 					</div>
 					<div class="flex mb-2">
-						<label class="w-1/5 py-2" for="imgurl">Link: </label>
+						<label class="w-1/5 py-2" for="imgurl">{{ $filters.translate('Link') }}: </label>
 						<input class="w-4/5 p-2" title="imgurl" type="url" placeholder="url" v-model="imglink" @input="createmarkdown" />
 					</div>
 					<div class="flex mb-2">
-						<label class="w-1/5 py-2" for="imgclass">Class: </label>
+						<label class="w-1/5 py-2" for="imgclass">{{ $filters.translate('Class') }}: </label>
 						<select class="w-4/5 p-2 bg-white" title="imgclass" v-model="imgclass" @change="createmarkdown">
-							<option value="center">Center</option>
-							<option value="left">Left</option>
-							<option value="right">Right</option>
+							<option value="center">{{ $filters.translate('Center') }}</option>
+							<option value="left">{{ $filters.translate('Left') }}</option>
+							<option value="right">{{ $filters.translate('Right') }}</option>
 						</select>
 					</div>
 					<div class="flex mb-2">
-						<label class="w-1/5 py-2" for="imgsizes">width/height:</label>
+						<label class="w-1/5 py-2" for="imgsizes">{{ $filters.translate('width/height') }}:</label>
 						<input class="w-2/5 p-2 mr-1" title="imgwidth" type="text" :placeholder="originalwidth" v-model="imgwidth" @input="changewidth" max="6" />
 						<input class="w-2/5 p-2 ml-1" title="imgheight" type="text" :placeholder="originalheight" v-model="imgheight" @input="changeheight" max="6" />
 					</div>
 					<div class="mb-2">
 						<label v-if="showresize" for="saveoriginal" class="flex w-full">
-							<span class="w-1/5">Do not resize:</span>
+							<span class="w-1/5">{{ $filters.translate('Do not resize') }}:</span>
 							<input type="checkbox" class="w-6 h-6" name="saveoriginal"  v-model="noresize" @change="createmarkdown"  />
 						</label>
 					</div>
@@ -1280,7 +1362,7 @@ bloxeditor.component('image-component', {
 			compmarkdown: '',
 			saveimage: false,
 			maxsize: 5, // megabyte
-			imgpreview: false,
+			imgpreview: '',
 			showmedialib: false,
 			load: false,
 			imgmeta: false,
@@ -1299,14 +1381,19 @@ bloxeditor.component('image-component', {
 			imgfile: '',
 			showresize: true,
 			noresize: false,
+			newblock: true,
 		}
 	},
 	mounted: function(){
 		
+		eventBus.$on('beforeSave', this.beforeSave );
+
 		this.$refs.markdown.focus();
 
 		if(this.markdown)
 		{
+			this.newblock  			= false;
+
 			this.showresize 		= false;
 
 			this.imgmeta 			= true;
@@ -1319,8 +1406,7 @@ bloxeditor.component('image-component', {
 				this.imgcaption 	= imgcaption[0].slice(1,-1);
 				
 				imgmarkdown 		= imgmarkdown.replace(this.imgcaption,'');
-				imgmarkdown 		= imgmarkdown.replace(/\r?\n|\r/g,'');
-			
+				imgmarkdown 		= imgmarkdown.replace(/\r?\n|\r/g,'');			
 			}
 
 			if(this.markdown[0] == '[')
@@ -1332,7 +1418,6 @@ bloxeditor.component('image-component', {
 					
 					imgmarkdown 		= imgmarkdown.replace(imglink[1],'');
 					imgmarkdown 		= imgmarkdown.slice(1, -1);
-					
 				}
 			}
 						
@@ -1446,7 +1531,7 @@ bloxeditor.component('image-component', {
 			}
 			else
 			{
-				errors = 'Maximum size of image alt-text is 100 characters';
+				errors = this.$filters.translate('Maximum size of image alt-text is 100 characters');
 				imgmarkdown = '![]';
 			}
 			
@@ -1458,7 +1543,7 @@ bloxeditor.component('image-component', {
 				}
 				else
 				{
-					errors = 'Maximum size of image title is 100 characters';
+					errors = this.$filters.translate('Maximum size of image title is 100 characters');
 				}
 			}
 			else
@@ -1476,7 +1561,7 @@ bloxeditor.component('image-component', {
 				}
 				else
 				{
-					errors = 'Maximum size of image id is 100 characters';
+					errors = this.$filters.translate('Maximum size of image id is 100 characters');
 				}
 			}
 			if(this.imgclass != '')
@@ -1487,7 +1572,7 @@ bloxeditor.component('image-component', {
 				}
 				else
 				{
-					errors = 'Maximum size of image class is 100 characters';
+					errors = this.$filters.translate('Maximum size of image class is 100 characters');
 				}
 			}
 			if(this.imgloading != '')
@@ -1519,7 +1604,7 @@ bloxeditor.component('image-component', {
 				}
 				else
 				{
-					errors = 'Maximum size of image link is 100 characters';
+					errors = this.$filters.translate('Maximum size of image link is 100 characters');
 				}
 			}
 
@@ -1531,14 +1616,16 @@ bloxeditor.component('image-component', {
 				}
 				else
 				{
-					errors = 'Maximum size of image caption is 140 characters';
+					errors = this.$filters.translate('Maximum size of image caption is 140 characters');
 				}
 			}
 			
+			/*
 			if(this.noresize === true)
 			{
 				imgmarkdown = imgmarkdown + '|noresize';
 			}
+			*/
 
 			if(errors)
 			{
@@ -1551,6 +1638,7 @@ bloxeditor.component('image-component', {
 				this.compmarkdown = imgmarkdown;
 //				publishController.errors.message = false;
 //				this.$parent.activatePage();
+
 				this.$emit('updateMarkdownEvent', imgmarkdown);
 			}
 		},
@@ -1652,33 +1740,20 @@ bloxeditor.component('image-component', {
 							'url':				data.urlinfo.route,
 							'image':			e.target.result,
 							'name': 			imageFile.name, 
-							'csrf_name': 		document.getElementById("csrf_name").value,
-							'csrf_value':		document.getElementById("csrf_value").value,
 						})
 					    .then(function (response) {
 								
 								self.load = false;
 								self.saveimage = true;
-						//		self.$parent.activatePage();
 
 								self.imgmeta = true;
 								self.imgfile = response.data.name;
-	//							self.$emit('updateMarkdownEvent', '![]('+ response.data.name +')');								
 					    })
 					    .catch(function (error)
 					    {
-					      /*
-								if(httpStatus == 400)
-								{
-									self.activatePage();
-									publishController.errors.message = "Looks like you are logged out. Please login and try again.";
-								}
-								*/
-					      
 					      if(error.response)
 					      {
 					      	alert("errror in response");
-	//				        publishController.errors.message = error.response.data.errors.message;
 					      }
 
 					    });
@@ -1686,75 +1761,45 @@ bloxeditor.component('image-component', {
 				}
 			}
 		},
-		saveBlock()
+		beforeSave()
 		{
-			/* saves image, after that saves markdown */
+			/* publish the image before you save the block */
+
 			if(!this.imgfile)
 			{
 				alert("no file");
 				return;
 			}
-
 			if(!this.saveimage)
 			{
-				this.saveMarkdown();				
+				this.$emit('saveBlockEvent');
 			}
 			else
 			{
 				var self = this;
 
 		        tmaxios.put('/api/v1/image',{
-					'url':				data.urlinfo.route,
-					'imgfile': 			this.imgfile,
-					'csrf_name': 		document.getElementById("csrf_name").value,
-					'csrf_value':		document.getElementById("csrf_value").value,
+					'url':			data.urlinfo.route,
+					'imgfile': 		this.imgfile,
+					'noresize':  	this.noresize
 				})
 				.then(function (response)
 				{
-					self.imgfile = response.data.path;
-	//				self.createmarkdownimageloaded();
-					self.saveMarkdown();
+					self.saveimage 	= false;
+					self.imgfile 	= response.data.path;
 
-	//				console.info(response.data.path);
-					return;
-	//				self.$root.$data.content = response.data.content;
-	//				self.closeEditor();
+					self.createmarkdownimageloaded();
+
+					self.$emit('saveBlockEvent');
 				})
 				.catch(function (error)
 				{
 					if(error.response)
 					{
 						console.info(error.response);
-	//					publishController.errors.message = error.response.data.errors.message;
 					}
 				});
 			}
-		},
-		saveMarkdown()
-		{
-			this.createmarkdownimageloaded();
-
-			var self = this;
-
-	        tmaxios.put('/api/v1/block',{
-				'url':				data.urlinfo.route,
-				'block_id':			this.index,
-				'markdown': 		this.compmarkdown,
-				'csrf_name': 		document.getElementById("csrf_name").value,
-				'csrf_value':		document.getElementById("csrf_value").value,
-			})
-			.then(function (response)
-			{
-				self.$root.$data.content = response.data.content;
-				eventBus.$emit('closeComponents');
-			})
-			.catch(function (error)
-			{
-				if(error.response)
-				{
-					publishController.errors.message = error.response.data.errors.message;
-				}
-			});
 		},
 	}
 })
@@ -1770,14 +1815,14 @@ bloxeditor.component('file-component', {
 							<svg class="icon icon-upload">
 								<use xlink:href="#icon-upload"></use>
 							</svg> 
-							upload file
+							{{ $filters.translate('upload file') }}
 						</p>
 					</div>
 					<button class="imageselect  w-1/2 text-center p-6" @click.prevent="openmedialib()">
 						<svg class="icon icon-paperclip baseline">
 							<use xlink:href="#icon-paperclip"></use>
 						</svg> 
-						select from medialib
+						{{ $filters.translate('select from medialib') }}
 					</button>
 				</div>
 <!--
@@ -1796,13 +1841,13 @@ bloxeditor.component('file-component', {
 				<div class="imgmeta p-8" v-if="filemeta">
 					<input title="fileid" type="hidden" placeholder="id" v-model="fileid" @input="createmarkdown" max="140" />
 					<div class="flex mb-2">
-						<label class="w-1/5 py-2" for="filetitle">Title: </label>
+						<label class="w-1/5 py-2" for="filetitle">{{ $filters.translate('Title') }}: </label>
 						<input class="w-4/5 p-2" name="filetitle" type="text" placeholder="Add a title for the download-link" v-model="filetitle" @input="createmarkdown" max="64" />
 					</div>
 					<div class="flex mb-2">
 						<label class="w-1/5 py-2" for="filerestriction">Access for: </label>
 						<select class="w-4/5 p-2 bg-white" name="filerestriction" v-model="selectedrole" @change="updaterestriction">
-							<option disabled value="">Please select</option>
+							<option disabled value="">{{ $filters.translate('Please select') }}</option>
 							<option v-for="role in userroles">{{ role }}</option>
 						</select>
 					</div>
@@ -1820,10 +1865,13 @@ bloxeditor.component('file-component', {
 			fileid: '',
 			userroles: ['all'],
 			selectedrole: '',
+			savefile: false,
 		}
 	},
 	mounted: function(){
 		
+		eventBus.$on('beforeSave', this.beforeSave );
+
 		this.$refs.markdown.focus();
 
 		if(this.markdown)
@@ -1929,8 +1977,6 @@ bloxeditor.component('file-component', {
 			tmaxios.get('/api/v1/filerestrictions',{
 				params: {
 					'url':			data.urlinfo.route,
-					'csrf_name': 	document.getElementById("csrf_name").value,
-					'csrf_value':	document.getElementById("csrf_value").value,
 					'filename': 	fileurl,
 		    	}
 			})
@@ -1948,8 +1994,6 @@ bloxeditor.component('file-component', {
 		{
 			tmaxios.post('/api/v1/filerestrictions',{
 				'url':			data.urlinfo.route,
-				'csrf_name': 	document.getElementById("csrf_name").value,
-				'csrf_value':	document.getElementById("csrf_value").value,
 				'filename': 	this.fileurl,
 				'role': 		this.selectedrole,
 			})
@@ -1984,8 +2028,6 @@ bloxeditor.component('file-component', {
 							'url':				data.urlinfo.route,
 							'file':				e.target.result,
 							'name': 			uploadedFile.name, 
-							'csrf_name': 		document.getElementById("csrf_name").value,
-							'csrf_value':		document.getElementById("csrf_value").value,
 						})
 						.then(function (response) {
 
@@ -1993,9 +2035,10 @@ bloxeditor.component('file-component', {
 //							self.$parent.activatePage();
 
 							self.filemeta 			= true;
+							self.savefile 			= true;
 							self.filetitle 			= response.data.fileinfo.title;
 							self.fileextension 		= response.data.fileinfo.extension;
-							self.fileurl 			= response.data.fileinfo.url;
+							self.fileurl 			= response.data.filepath;
 							self.selectedrole 		= '';
 							
 							self.createmarkdown();
@@ -2013,122 +2056,50 @@ bloxeditor.component('file-component', {
 					}
 				}
 			}
-		}
+		},
+		beforeSave()
+		{
+			/* publish file before you save markdown */
+
+			if(!this.fileurl)
+			{
+				alert("no file");
+				return;
+			}
+
+			if(!this.savefile)
+			{
+				this.createmarkdown();
+				this.$emit('saveBlockEvent');
+			}
+			else
+			{
+				var self = this;
+
+		        tmaxios.put('/api/v1/file',{
+					'url':			data.urlinfo.route,
+					'file': 		this.fileurl,
+				})
+				.then(function (response)
+				{
+					self.fileurl = response.data.path;
+
+					self.createmarkdown();
+
+					self.$emit('saveBlockEvent');
+				})
+				.catch(function (error)
+				{
+					if(error.response)
+					{
+						console.info(error.response);
+					}
+				});
+			}
+		},		
 	}
 })
 
-bloxeditor.component('shortcode-component', {
-	props: ['markdown', 'disabled', 'index'],
-	data: function(){
-		return {
-			shortcodedata: false,
-			shortcodename: '',
-			compmarkdown: '',
-		}
-	},
-	template: `<div>
-					<div class="absolute top-3 -left-5 text-stone-400">
-						<svg class="icon icon-square-brackets">
-							<use xlink:href="#icon-square-brackets"></use>
-						</svg>
-					</div>
-					<div v-if="shortcodedata" class="p-8 bg-stone-100" ref="markdown">
-						<div class="flex mt-2 mb-2">
-							<label class="w-1/5 py-2" for="shortcodename">Shortcode: </label> 
-							<select class="w-4/5 p-2 bg-white" title="shortcodename" v-model="shortcodename" @change="createmarkdown(shortcodename)"><option v-for="shortcode,name in shortcodedata" :value="name">{{ name }}</option></select>
-						</div>
-						<div class="flex mt-2 mb-2" v-for="key,attribute in shortcodedata[shortcodename]">
-							<label class="w-1/5 py-2" for="key">{{ attribute }}: </label> 
-							<input class="w-4/5 p-2 bg-white" type="search" list="shortcodedata[shortcodename][attribute]" v-model="shortcodedata[shortcodename][attribute].value" @input="createmarkdown(shortcodename,attribute)">
-							<datalist id="shortcodedata[shortcodename][attribute]">
-								<option v-for="item in shortcodedata[shortcodename][attribute].content" @click="selectsearch(item,attribute)" :value="item"></option>
-							</datalist>
-						</div>
-					</div>
-					<textarea v-else class="opacity-1 w-full bg-transparent px-6 py-3 outline-none" ref="markdown" placeholder="No shortcodes are registered" disabled></textarea>
-				</div>`,
-	mounted: function(){
-
-		var myself = this;
-		
-		tmaxios.get('/api/v1/shortcodedata',{
-		  	params: {
-					'url':			data.urlinfo.route,
-					'csrf_name': 	document.getElementById("csrf_name").value,
-					'csrf_value':	document.getElementById("csrf_value").value,
-				}
-			})
-			.then(function (response) {
-				if(response.data.shortcodedata !== false)
-				{
-					myself.shortcodedata = response.data.shortcodedata;
-					myself.parseshortcode();
-				}
-			})
-			.catch(function (error)
-			{
-				if(error.response)
-		    {
-
-		   	}
-		});
-	},
-	methods: {
-		parseshortcode()
-		{
-			if(this.markdown)
-			{
-				var shortcodestring 	= this.markdown.trim();
-				shortcodestring 		= shortcodestring.slice(2,-2);
-				this.shortcodename 		= shortcodestring.substr(0,shortcodestring.indexOf(' '));
-
-				var regexp 				= /(\w+)\s*=\s*("[^"]*"|\'[^\']*\'|[^"\'\\s>]*)/g;
-				var matches 			= shortcodestring.matchAll(regexp);
-				matches 				= Array.from(matches);
-				matchlength 			= matches.length;
-				
-				if(matchlength > 0)
-				{
-					for(var i=0;i<matchlength;i++)
-					{
-						var attribute 			= matches[i][1];
-						var attributeValue 	= matches[i][2].replaceAll('"','');
-
-						this.shortcodedata[this.shortcodename][attribute].value = attributeValue;
-					}
-				}
-			}
-		},
-		createmarkdown: function(shortcodename,attribute = false)
-		{
-			var attributes = '';
-			if(attribute)
-			{
-				for (var attribute in this.shortcodedata[shortcodename])
-				{
-					if(this.shortcodedata[shortcodename].hasOwnProperty(attribute))
-					{
-					    attributes += ' ' + attribute + '="' +  this.shortcodedata[shortcodename][attribute].value + '"';
-					}
-				}
-			}
-
-			this.compmarkdown = '[:' + shortcodename + attributes + ' :]';
-
-			this.$emit('updatedMarkdown', this.compmarkdown);
-		},
-		selectsearch: function(item,attribute)
-		{
-			/* check if still reactive */
-			this.shortcodedata[this.shortcodename][attribute].value = item;
-			this.createmarkdown(this.shortcodename,attribute);
-		},
-		updatemarkdown: function(event)
-		{
-			this.$emit('updateMarkdownEvent', event.target.value);
-		},
-	},
-})
 
 bloxeditor.component('video-component', {
 	props: ['markdown', 'disabled', 'index'],
@@ -2140,7 +2111,7 @@ bloxeditor.component('video-component', {
 					</div>
 					<div>{{ markdown }}</div>
 					<div class="flex mt-2 mb-2">
-						<label class="w-1/5 py-2" for="video">Link to youtube: </label> 
+						<label class="w-1/5 py-2" for="video">{{ $filters.translate('Link to youtube') }}: </label> 
 						<input class="w-4/5 p-2 bg-white" type="url" ref="markdown" placeholder="https://www.youtube.com/watch?v=" :value="markdown" :disabled="disabled" @input="updatemarkdown($event.target.value)">
 					</div>
 			</div>`,
@@ -2157,6 +2128,8 @@ bloxeditor.component('video-component', {
 		}
 	},
 	mounted: function(){
+
+		eventBus.$on('beforeSave', this.beforeSave );
 
 		this.$refs.markdown.focus();
 
@@ -2224,7 +2197,7 @@ bloxeditor.component('video-component', {
 			this.generateMarkdown();
 			this.$emit('updateMarkdownEvent', url);
 		},
-		saveBlock()
+		beforeSave()
 		{
 			if(!this.edited)
 			{
@@ -2239,13 +2212,11 @@ bloxeditor.component('video-component', {
 				'provider':  		this.provider,
 				'providerurl': 		this.providerurl,
 				'videoid': 			this.videoid,
-				'csrf_name': 		document.getElementById("csrf_name").value,
-				'csrf_value':		document.getElementById("csrf_value").value,
 			})
 			.then(function (response)
 			{
 				self.path = response.data.path;
-				self.saveMarkdown();
+				self.$emit('saveBlockEvent');
 			})
 			.catch(function (error)
 			{
@@ -2255,31 +2226,123 @@ bloxeditor.component('video-component', {
 				}
 			});
 		},
-		saveMarkdown()
-		{
-			this.generateMarkdown();
+	},
+})
 
-			var myself = this;
 
-	        tmaxios.put('/api/v1/block',{
-				'url':				data.urlinfo.route,
-				'block_id':			this.index,
-				'markdown': 		this.compmarkdown,
-				'csrf_name': 		document.getElementById("csrf_name").value,
-				'csrf_value':		document.getElementById("csrf_value").value,
+bloxeditor.component('shortcode-component', {
+	props: ['markdown', 'disabled', 'index'],
+	data: function(){
+		return {
+			shortcodedata: false,
+			shortcodename: '',
+			compmarkdown: '',
+		}
+	},
+	template: `<div>
+					<div class="absolute top-3 -left-5 text-stone-400">
+						<svg class="icon icon-square-brackets">
+							<use xlink:href="#icon-square-brackets"></use>
+						</svg>
+					</div>
+					<div v-if="shortcodedata" class="p-8 bg-stone-100" ref="markdown">
+						<div class="flex mt-2 mb-2">
+							<label class="w-1/5 py-2" for="shortcodename">{{ $filters.translate('Shortcode') }}: </label> 
+							<select class="w-4/5 p-2 bg-white" title="shortcodename" v-model="shortcodename" @change="createmarkdown(shortcodename)"><option v-for="shortcode,name in shortcodedata" :value="name">{{ name }}</option></select>
+						</div>
+						<div class="flex mt-2 mb-2" v-for="key,attribute in shortcodedata[shortcodename]">
+							<label class="w-1/5 py-2" for="key">{{ attribute }}: </label> 
+							<input class="w-4/5 p-2 bg-white" type="search" list="shortcodedata[shortcodename][attribute]" v-model="shortcodedata[shortcodename][attribute].value" @input="createmarkdown(shortcodename,attribute)">
+							<datalist id="shortcodedata[shortcodename][attribute]">
+								<option v-for="item in shortcodedata[shortcodename][attribute].content" @click="selectsearch(item,attribute)" :value="item"></option>
+							</datalist>
+						</div>
+					</div>
+					<textarea v-else class="opacity-1 w-full bg-transparent px-6 py-3 outline-none" ref="markdown" placeholder="No shortcodes are registered" disabled></textarea>
+				</div>`,
+	mounted: function(){
+
+		eventBus.$on('beforeSave', this.beforeSave );
+
+		var myself = this;
+		
+		tmaxios.get('/api/v1/shortcodedata',{
+		  	params: {
+					'url':			data.urlinfo.route,
+				}
 			})
-			.then(function (response)
-			{
-				myself.$root.$data.content = response.data.content;
-				eventBus.$emit('closeComponents');
+			.then(function (response) {
+				if(response.data.shortcodedata !== false)
+				{
+					myself.shortcodedata = response.data.shortcodedata;
+					myself.parseshortcode();
+				}
 			})
 			.catch(function (error)
 			{
 				if(error.response)
+		    {
+
+		   	}
+		});
+	},
+	methods: {
+		beforeSave()
+		{
+			this.$emit('saveBlockEvent');
+		},
+		parseshortcode()
+		{
+			if(this.markdown)
+			{
+				var shortcodestring 	= this.markdown.trim();
+				shortcodestring 		= shortcodestring.slice(2,-2);
+				this.shortcodename 		= shortcodestring.substr(0,shortcodestring.indexOf(' '));
+
+				var regexp 				= /(\w+)\s*=\s*("[^"]*"|\'[^\']*\'|[^"\'\\s>]*)/g;
+				var matches 			= shortcodestring.matchAll(regexp);
+				matches 				= Array.from(matches);
+				matchlength 			= matches.length;
+				
+				if(matchlength > 0)
 				{
-					publishController.errors.message = error.response.data.errors.message;
+					for(var i=0;i<matchlength;i++)
+					{
+						var attribute 			= matches[i][1];
+						var attributeValue 	= matches[i][2].replaceAll('"','');
+
+						this.shortcodedata[this.shortcodename][attribute].value = attributeValue;
+					}
 				}
-			});
+			}
+		},
+		createmarkdown: function(shortcodename,attribute = false)
+		{
+			var attributes = '';
+			if(attribute)
+			{
+				for (var attribute in this.shortcodedata[shortcodename])
+				{
+					if(this.shortcodedata[shortcodename].hasOwnProperty(attribute))
+					{
+					    attributes += ' ' + attribute + '="' +  this.shortcodedata[shortcodename][attribute].value + '"';
+					}
+				}
+			}
+
+			this.compmarkdown = '[:' + shortcodename + attributes + ' :]';
+
+			this.$emit('updatedMarkdown', this.compmarkdown);
+		},
+		selectsearch: function(item,attribute)
+		{
+			/* check if still reactive */
+			this.shortcodedata[this.shortcodename][attribute].value = item;
+			this.createmarkdown(this.shortcodename,attribute);
+		},
+		updatemarkdown: function(event)
+		{
+			this.$emit('updateMarkdownEvent', event.target.value);
 		},
 	},
 })

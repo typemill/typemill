@@ -55,7 +55,7 @@
 [data-el="editor"] {
   border-width: 1px;
   background:rgb(68 64 60);
-  color: white;
+  color: transparent;
   caret-color: white;
   white-space: break-spaces;
   word-break: break-word;

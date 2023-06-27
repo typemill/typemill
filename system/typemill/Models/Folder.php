@@ -253,6 +253,7 @@ class Folder
 	public function getHomepageItem($baseUrl)
 	{
 		die('folder model: getHomepageItem moved to navigation model');
+
 		# return a standard item-object
 		$item 					= new \stdClass;
 
@@ -309,6 +310,8 @@ class Folder
 
 	public function getItemForUrlFrontend($folderContentDetails, $url, $result = NULL)
 	{
+		die('folder: called function getItemForUrlFrontend');
+
 		foreach($folderContentDetails as $key => $item)
 		{
 			# set item active, needed to move item in navigation
@@ -326,126 +329,6 @@ class Folder
 		return $result;
 	}	
 
-	public function getPagingForItem($content, $item)
-	{
-		# if page is home
-		if(trim($item->pathWithoutType, DIRECTORY_SEPARATOR) == 'index')
-		{
-			return $item;
-		}
-
-		$keyPos 			= count($item->keyPathArray)-1;
-		$thisChapArray		= $item->keyPathArray;
-		$nextItemArray 		= $item->keyPathArray;
-		$prevItemArray 		= $item->keyPathArray;
-		
-		$item->thisChapter 	= false;
-		$item->prevItem 	= false;
-		$item->nextItem 	= false;
-		
-		
-		/************************
-		* 	ADD THIS CHAPTER 	*
-		************************/
-
-		if($keyPos > 0)
-		{
-			array_pop($thisChapArray);
-			$item->thisChapter = $this->getItemWithKeyPath($content, $thisChapArray);
-		}
-		
-		/************************
-		* 	ADD NEXT ITEM	 	*
-		************************/
-				
-		if($item->elementType == 'folder')
-		{
-			# get the first element in the folder
-			$item->nextItem = isset($item->folderContent[0]) ? clone($item->folderContent[0]) : false;
-		}
-		
-		# the item is a file or an empty folder
-		if(!$item->nextItem)
-		{
-			# walk to the next file in the same hierarchy
-			$nextItemArray[$keyPos]++;
-
-			# get the key of the last element in this hierarchy level
-			# if there is no chapter, then it is probably an empty first-level-folder. Count content to get the number of first level items
-			$lastKey = $item->thisChapter ? array_key_last($item->thisChapter->folderContent) : count($content);
-
-			# as long as the nextItemArray is smaller than the last key in this hierarchy level, search for the next item
-			# this ensures that it does not stop if key is missing (e.g. if the next page is hidden)
-			while( ($nextItemArray[$keyPos] <= $lastKey) && !$item->nextItem = $this->getItemWithKeyPath($content, $nextItemArray) )
-			{
-				$nextItemArray[$keyPos]++;
-			}
-		}
-		
-		# there is no next file or folder in this level, so walk up the hierarchy to the next folder or file
-		while(!$item->nextItem)
-		{
-			# delete the array level with the current item, so you are in the parent folder
-			array_pop($nextItemArray);
-
-			# if the array is empty now, then you where in the base level already, so break
-			if(empty($nextItemArray)) break; 
-
-			# define the key position where you are right now
-			$newKeyPos = count($nextItemArray)-1;
-
-			# go to the next position
-			$nextItemArray[$newKeyPos]++;
-
-			# search for 5 items in case there are some hidden elements
-			$maxlength = $nextItemArray[$newKeyPos]+5;
-			while( ($nextItemArray[$newKeyPos] <= $maxlength) && !$item->nextItem = $this->getItemWithKeyPath($content, $nextItemArray) )
-			{
-				$nextItemArray[$newKeyPos]++;
-			}
-		}
-
-		/************************
-		* 	ADD PREVIOUS ITEM	*
-		************************/
-		
-		# check if element is the first in the array
-		$first = ($prevItemArray[$keyPos] == 0) ? true : false;
-
-		if(!$first)
-		{
-			$prevItemArray[$keyPos]--;
-			
-			while($prevItemArray[$keyPos] >= 0 && !$item->prevItem = $this->getItemWithKeyPath($content, $prevItemArray))
-			{
-				$prevItemArray[$keyPos]--;
-			}
-			
-			# if no item is found, then all previous items are hidden, so set first item to true and it will walk up the array later
-			if(!$item->prevItem)
-			{
-				$first = true;
-			}
-			elseif($item->prevItem && $item->prevItem->elementType == 'folder' && !empty($item->prevItem->folderContent))
-			{
-				# if the previous item is a folder, the get the last item of that folder
-				$item->prevItem = $this->getLastItemOfFolder($item->prevItem);
-			}
-		}
-
-		# if it is the first item in the folder (or all other files are hidden)
-		if($first)
-		{
-			# then the previous item is the containing chapter
-			$item->prevItem = $item->thisChapter;
-		}
-		
-		if($item->prevItem && $item->prevItem->elementType == 'folder'){ unset($item->prevItem->folderContent); }
-		if($item->nextItem && $item->nextItem->elementType == 'folder'){ unset($item->nextItem->folderContent); }
-		if($item->thisChapter){unset($item->thisChapter->folderContent); }
-		
-		return $item;
-	}
 
 	/*
 	 * Gets a copy of an item with a key
@@ -460,6 +343,8 @@ class Folder
 	 
 	public function getItemWithKeyPath($content, array $searchArray)
 	{
+		die('folder: called function getItemWithKeyPath');
+
 		$item = false;
 
 		foreach($searchArray as $key => $itemKey)
@@ -479,6 +364,9 @@ class Folder
 	# NOT IN USE
 	public function getItemWithKeyPathNew($array, array $keys)
 	{
+
+		die('folder: called function getItemWithKeyPathNew');
+
 		$item = $array;
 		
         foreach ($keys as $key)
@@ -499,6 +387,8 @@ class Folder
 	 
 	public function extractItemWithKeyPath($structure, array $keys)
 	{
+		die('folder: called function extractItemWithKeyPath');
+
 		$result = &$structure;
 		$last = array_pop($keys);
 
@@ -522,6 +412,8 @@ class Folder
 	# NOT IN USE
 	public function deleteItemWithKeyPathNOTINUSE($structure, array $keys)
 	{
+		die('folder: called function deleteItemWithKeyPathNOTINUSE');
+
 		$result = &$structure;
 		$last = array_pop($keys);
 
@@ -542,55 +434,11 @@ class Folder
 		
 		return $structure;
 	}
-	
-	# get breadcrumb as copied array, 
-	# set elements active in original 
-	# mark parent element in original
-	public function getBreadcrumb($content, $searchArray, $i = NULL, $breadcrumb = NULL)
-	{
-		# if it is the first round, create an empty array
-		if(!$i){ $i = 0; $breadcrumb = array();}
-
-		if(!$searchArray){ return $breadcrumb;}
-
-		while($i < count($searchArray))
-		{
-			if(!isset($content[$searchArray[$i]])){ return false; }
-			$item = $content[$searchArray[$i]];
-
-			if($i == count($searchArray)-1)
-			{
-				$item->active = true;
-			}
-			else
-			{
-				$item->activeParent = true;
-			}
-
-			/*
-			$item->active = true;
-			if($i == count($searchArray)-2)
-			{
-				$item->activeParent = true; 
-			}
-			*/
-
-			$copy = clone($item);
-			if($copy->elementType == 'folder')
-			{
-				unset($copy->folderContent);
-				$content = $item->folderContent;
-			}
-			$breadcrumb[] = $copy;
-			
-			$i++;
-			return $this->getBreadcrumb($content, $searchArray, $i++, $breadcrumb);
-		}
-		return $breadcrumb;
-	}
-	
+		
 	public function getParentItem($content, $searchArray, $iteration = NULL)
 	{
+		die('folder: called function getParentItem');
+		
 		if(!$iteration){ $iteration = 0; }
 		while($iteration < count($searchArray)-2)
 		{
@@ -600,17 +448,7 @@ class Folder
 		}
 		return $content[$searchArray[$iteration]];
 	}
-	
-	private function getLastItemOfFolder($folder)
-	{	
-		$lastItem = end($folder->folderContent);
-		if(is_object($lastItem) && $lastItem->elementType == 'folder' && !empty($lastItem->folderContent))
-		{
-			return $this->getLastItemOfFolder($lastItem);
-		}
-		return $lastItem;
-	}
-		
+			
 	public function getStringParts($name)
 	{
 		return preg_split('/[\-\.\_\=\+\?\!\*\#\(\)\/ ]/',$name);

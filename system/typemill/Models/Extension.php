@@ -10,7 +10,7 @@ class Extension
 
 	public function __construct()
 	{
-		$this->storage 				= new StorageWrapper('\Typemill\Models\Storage');
+		$this->storage 	= new StorageWrapper('\Typemill\Models\Storage');
 	}
 
 	public function getThemeDetails()

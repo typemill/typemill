@@ -24,6 +24,7 @@ class ControllerApiAuthorBlock extends Controller
 		}
 
 		$params 			= $request->getParsedBody();
+
 		$validate			= new Validation();
 		$validInput 		= $validate->blockInput($params);
 		if($validInput !== true)

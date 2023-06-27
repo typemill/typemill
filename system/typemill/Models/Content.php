@@ -54,9 +54,18 @@ class Content
 		return $markdownArray;
 	}
 
-	public function saveDraftMarkdown($item, $markdown)
+	public function getLiveMarkdown($item)
 	{
-		$markdown = json_encode($markdown);
+		$filetype = '.md';
+
+		$markdown = $this->storage->getFile('contentFolder', '', $item->pathWithoutType . $filetype);
+
+		return $markdown;
+	}
+
+	public function saveDraftMarkdown($item, array $markdownArray)
+	{
+		$markdown = json_encode($markdownArray);
 
 		if($this->storage->writeFile('contentFolder', '', $item->pathWithoutType . '.txt', $markdown))
 		{
@@ -171,8 +180,20 @@ class Content
 		return $content;
 	}
 
+	public function getContentArray($markdown)
+	{
+		return $this->parsedown->text($markdown);
+	}
+
+	public function getContentHtml($contentArray)
+	{
+		return $this->parsedown->markup($contentArray);
+	}
+
 	public function arrayBlocksToMarkdown($arrayBlocks)
 	{
+		die("please use markdownToArrayText in content model");
+
         $markdown = '';
         
         foreach($arrayBlocks as $block)
@@ -183,8 +204,41 @@ class Content
         return $markdown;
 	}
 
+
+	public function markdownArrayToText(array $markdownArray)
+	{
+		return $this->parsedown->arrayBlocksToMarkdown($markdownArray);
+	}
+
+
+	public function markdownTextToArray(string $markdown)
+	{
+		return $this->parsedown->markdownToArrayBlocks($markdown);
+	}
+
+
+	public function getFirstImage(array $contentArray)
+	{
+		foreach($contentArray as $block)
+		{
+			if(isset($block['name']) && $block['name'] == 'p')
+			{
+				if(isset($block['handler']['argument']) && substr($block['handler']['argument'], 0, 2) == '![' )
+				{
+					return $block['handler']['argument'];	
+				}
+			}
+		}
+		
+		return false;
+	}
+
+
+########## FIX
 	public function generateToc($content, $relurl)
 	{
+		die('Please fix generateToc in content.php');
+
 		# we assume that page has no table of content
 		$toc = false;
 		
@@ -218,5 +272,60 @@ class Content
 		}
 
 		return $toc;
+	}
+
+	# MOVE SOMEWHERE ELSE
+	public function checkCustomCSS($theme)
+	{
+		return $this->storage->checkFile('cacheFolder', '', $theme . '-custom.css');
+	}
+
+	public function checkLogoFile($logo)
+	{
+		return $this->storage->checkFile('basepath', '', $logo);
+	}
+
+	public function getTitle(array $markdown)
+	{
+		if(!is_array($markdown))
+		{
+			$markdown = $this->markdownTextToArray($markdown);
+		}
+
+		return trim($markdown[0], "# ");
+	}
+
+	public function getDescription(array $markdown)
+	{
+		if(!is_array($markdown))
+		{
+			$markdown = $this->markdownTextToArray($markdown);
+		}
+
+		$description = isset($markdown[1]) ? $markdown[1] : '';
+
+		# create description or abstract from content
+		if($description !== '')
+		{
+			$firstLineArray = $this->parsedown->text($description);
+			$description 	= strip_tags($this->parsedown->markup($firstLineArray));
+
+			# if description is very short
+			if(strlen($description) < 100 && isset($markdown[2]))
+			{
+				$secondLineArray = $this->parsedown->text($markdown[2]);
+				$description 	.= ' ' . strip_tags($this->parsedown->markup($secondLineArray));
+			}
+
+			# if description is too long
+			if(strlen($description) > 160)
+			{
+				$description	= substr($description, 0, 160);
+				$lastSpace 		= strrpos($description, ' ');
+				$description 	= substr($description, 0, $lastSpace);
+			}
+		}
+
+		return $description;
 	}
 }

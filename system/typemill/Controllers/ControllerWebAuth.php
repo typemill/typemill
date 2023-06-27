@@ -90,30 +90,8 @@ return $response->withHeader('Location', $this->routeParser->urlFor('settings.sh
 	
 	public function logout(Request $request, Response $response)
 	{
-		# check https://www.php.net/session_destroy
-		if(isset($_SESSION))
-		{
-			# Unset all of the session variables.
-			$_SESSION = array();
+		\Typemill\Static\Session::stopSession();
 
-			# If it's desired to kill the session, also delete the session cookie. This will destroy the session, and not just the session data!
-			if (ini_get("session.use_cookies"))
-			{
-				$params = session_get_cookie_params();
-			
-				setcookie(
-					session_name(), 
-					'', 
-					time() - 42000,
-					$params["path"], $params["domain"],
-					$params["secure"], $params["httponly"]
-				);
-			}
-
-			# Finally, destroy the session.
-			session_destroy();
-		}
-		
 		return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
 	}
 }

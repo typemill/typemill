@@ -152,8 +152,6 @@ const medialib = {
         myaxios.get('/api/v1/medialib/images',{
         	params: {
 				'url':			document.getElementById("path").value,
-				'csrf_name': 	document.getElementById("csrf_name").value,
-				'csrf_value':	document.getElementById("csrf_value").value,
         	}
 		})
         .then(function (response)

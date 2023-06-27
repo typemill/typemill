@@ -154,6 +154,132 @@ class ControllerApiAuthorArticle extends Controller
 		return $response->withHeader('Content-Type', 'application/json');
 	}
 
+	public function updateDraft(Request $request, Response $response, $args)
+	{
+		$validRights		= $this->validateRights($request->getAttribute('c_userrole'), 'mycontent', 'edit');
+		if(!$validRights)
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> 'You do not have enough rights.',
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);			
+		}
+
+		$params 			= $request->getParsedBody();
+		$validate			= new Validation();
+		$validInput 		= $validate->articleUpdate($params);
+		if($validInput !== true)
+		{
+			$errors 		= $validate->returnFirstValidationErrors($validInput);
+			$response->getBody()->write(json_encode([
+				'message' 	=> reset($errors),
+				'errors' 	=> $errors
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+		}
+
+		$navigation 		= new Navigation();
+		$urlinfo 			= $this->c->get('urlinfo');
+		$item 				= $this->getItem($navigation, $params['url'], $urlinfo);
+		if(!$item)
+		{
+			$response->getBody()->write(json_encode([
+				'message' => 'page not found',
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+		}
+
+	    # save draft content
+		$content 			= new Content($urlinfo['baseurl']);
+		$markdown 			= $params['title'] . PHP_EOL . PHP_EOL . $params['body'];
+		$markdownArray 		= $content->markdownTextToArray($markdown);
+		$content->saveDraftMarkdown($item, $markdownArray);
+
+		# refresh navigation and item
+	    $navigation->clearNavigation();
+		$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']);
+		$draftNavigation 	= $navigation->setActiveNaviItems($draftNavigation, $item->keyPathArray);
+		$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
+		
+		# refresh content
+		$draftMarkdown  	= $content->getDraftMarkdown($item);
+		$draftMarkdownHtml	= $content->addDraftHtml($draftMarkdown);
+
+		$response->getBody()->write(json_encode([
+			'item'			=> $item,
+			'navigation'	=> $draftNavigation,
+			'content' 		=> $draftMarkdownHtml
+		]));
+
+		return $response->withHeader('Content-Type', 'application/json');
+	}
+
+	public function publishDraft(Request $request, Response $response, $args)
+	{
+		$validRights		= $this->validateRights($request->getAttribute('c_userrole'), 'mycontent', 'edit');
+		if(!$validRights)
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> 'You do not have enough rights.',
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);			
+		}
+
+		$params 			= $request->getParsedBody();
+		$validate			= new Validation();
+		$validInput 		= $validate->articleUpdate($params);
+		if($validInput !== true)
+		{
+			$errors 		= $validate->returnFirstValidationErrors($validInput);
+			$response->getBody()->write(json_encode([
+				'message' 	=> reset($errors),
+				'errors' 	=> $errors
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+		}
+
+		$navigation 		= new Navigation();
+		$urlinfo 			= $this->c->get('urlinfo');
+		$item 				= $this->getItem($navigation, $params['url'], $urlinfo);
+		if(!$item)
+		{
+			$response->getBody()->write(json_encode([
+				'message' => 'page not found',
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+		}
+
+	    # save draft content
+		$content 			= new Content($urlinfo['baseurl']);
+		$markdown 			= $params['title'] . PHP_EOL . PHP_EOL . $params['body'];
+		$markdownArray 		= $content->markdownTextToArray($markdown);
+		$content->publishMarkdown($item, $markdownArray);
+
+		# refresh navigation and item
+	    $navigation->clearNavigation();
+		$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']);
+		$draftNavigation 	= $navigation->setActiveNaviItems($draftNavigation, $item->keyPathArray);
+		$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
+		
+		# refresh content
+		$draftMarkdown  	= $content->getDraftMarkdown($item);
+		$draftMarkdownHtml	= $content->addDraftHtml($draftMarkdown);
+
+		$response->getBody()->write(json_encode([
+			'item'			=> $item,
+			'navigation'	=> $draftNavigation,
+			'content' 		=> $draftMarkdownHtml
+		]));
+
+		return $response->withHeader('Content-Type', 'application/json');
+	}
+
 	public function discardArticleChanges(Request $request, Response $response, $args)
 	{
 		$validRights		= $this->validateRights($request->getAttribute('c_userrole'), 'mycontent', 'edit');
@@ -355,6 +481,87 @@ class ControllerApiAuthorArticle extends Controller
 		return $response->withHeader('Content-Type', 'application/json');
 	}
 
+	public function renameArticle(Request $request, Response $response, $args)
+	{
+		$validRights		= $this->validateRights($request->getAttribute('c_userrole'), 'mycontent', 'edit');
+		if(!$validRights)
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> 'You do not have enough rights.',
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);			
+		}
+
+		$params 			= $request->getParsedBody();
+		$validate			= new Validation();
+		$validInput 		= $validate->articleRename($params);
+		if($validInput !== true)
+		{
+			$errors 		= $validate->returnFirstValidationErrors($validInput);
+			$response->getBody()->write(json_encode([
+				'message' 	=> reset($errors),
+				'errors' 	=> $errors
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+		}
+
+		$navigation 		= new Navigation();
+		$urlinfo 			= $this->c->get('urlinfo');
+		$item 				= $this->getItem($navigation, $params['url'], $urlinfo);
+		if(!$item)
+		{
+			$response->getBody()->write(json_encode([
+				'message' => 'page not found',
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+		}
+
+		# check if name exists
+		$parentUrl 			= str_replace($item->slug, '', $item->urlRelWoF);
+		if($parentUrl == '/')
+		{
+			$parentItem = new \stdClass;
+			$parentItem->folderContent = $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']);
+		}
+		else
+		{
+			$parentItem = $this->getItem($navigation, $parentUrl, $urlinfo);
+		}
+
+		foreach($parentItem->folderContent as $sibling)
+		{
+			if($sibling->slug == $params['slug'])
+			{
+				$response->getBody()->write(json_encode([
+					'message' => 'There is already a page with that slug',
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+			}
+		}
+
+		$navigation->renameItem($item, $params['slug']);
+
+		$navigation->clearNavigation();
+#		$this->updateSitemap($ping = true);
+
+		# create the new url for redirects
+		$newUrlRel =  str_replace($item->slug, $params['slug'], $item->urlRelWoF);
+		$url = $urlinfo['baseurl'] . '/tm/content/' . $this->settings['editor'] . $newUrlRel;
+		
+		$response->getBody()->write(json_encode([
+			'navigation'	=> $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']),
+			'message'		=> '',
+			'url' 			=> $url
+		]));
+
+		return $response->withHeader('Content-Type', 'application/json');
+	}
+
+
 	public function sortArticle(Request $request, Response $response, $args)
 	{ 
 		$validRights		= $this->validateRights($request->getAttribute('c_userrole'), 'content', 'update');
@@ -381,6 +588,14 @@ class ControllerApiAuthorArticle extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
+		# set variables
+		$urlinfo 			= $this->c->get('urlinfo');
+		$langattr 			= $this->settings['langattr'] ?? 'en';
+
+		$itemKeyPath 		= explode('.', $params['item_id']);
+		$parentKeyFrom		= explode('.', $params['parent_id_from']);
+		$parentKeyTo		= explode('.', $params['parent_id_to']);
+
 		# get navigation
 	    $navigation 		= new Navigation();
 	    $draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $langattr);
@@ -395,10 +610,6 @@ class ControllerApiAuthorArticle extends Controller
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 	    }
-
-		$itemKeyPath 		= explode('.', $params['item_id']);
-		$parentKeyFrom		= explode('.', $params['parent_id_from']);
-		$parentKeyTo		= explode('.', $params['parent_id_to']);
 
 		# if an item is moved to the first level
 		if($params['parent_id_to'] == '')

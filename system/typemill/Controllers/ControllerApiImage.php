@@ -20,8 +20,6 @@ class ControllerApiImage extends Controller
 	# solution for logo
 	# return error messages and display in image component
 	# check if resized is bigger than original, then use original
-	# use original size checkbox
-
 
 	public function saveImage(Request $request, Response $response, $args)
 	{
@@ -133,6 +131,7 @@ class ControllerApiImage extends Controller
 	public function publishImage(Request $request, Response $response, $args)
 	{
 		$params = $request->getParsedBody();
+		$noresize = (isset($params['noresize']) && $params['noresize'] == true) ? true : false;
 
 		if(!isset($params['imgfile']) OR !$params['imgfile'])
 		{
@@ -145,7 +144,7 @@ class ControllerApiImage extends Controller
 
 		$storage 	= new StorageWrapper('\Typemill\Models\Storage');
 
-		$result 	= $storage->publishImage($params['imgfile']);
+		$result 	= $storage->publishImage($params['imgfile'], $noresize);
 
 		if(!$result)
 		{

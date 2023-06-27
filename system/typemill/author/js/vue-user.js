@@ -4,7 +4,7 @@ const app = Vue.createApp({
 					<form class="w-full my-8">
 						<div v-for="(fieldDefinition, fieldname) in formDefinitions">
 							<fieldset class="flex flex-wrap justify-between border-2 border-stone-200 p-4 my-8" v-if="fieldDefinition.type == 'fieldset'">
-								<legend class="text-lg font-medium">{{ fieldDefinition.legend }}</legend>
+								<legend class="text-lg font-medium">{{ $filters.translate(fieldDefinition.legend) }}</legend>
 								<component v-for="(subfieldDefinition, subfieldname) in fieldDefinition.fields"
 				            	    :key="subfieldname"
 				                	:is="selectComponent(subfieldDefinition.type)"
@@ -26,7 +26,7 @@ const app = Vue.createApp({
 							</component>
 						</div>
 						<div class="my-5">
-							<div :class="messageClass" class="block w-full h-8 px-3 py-1 my-1 text-white transition duration-100">{{ message }}</div>
+							<div :class="messageClass" class="block w-full h-8 px-3 py-1 my-1 text-white transition duration-100">{{ $filters.translate(message) }}</div>
 							<button type="submit" @click.prevent="save()" class="w-full p-3 my-1 bg-stone-700 hover:bg-stone-900 text-white cursor-pointer transition duration-100">{{ $filters.translate('Save') }}</button>
 						</div>
 					</form>
@@ -37,7 +37,7 @@ const app = Vue.createApp({
 					    		<h3>{{ $filters.translate('Delete user') }}</h3>
 					    	</template>
 					    	<template #body>
-					    		<p>Do you really want to delete this user?</p>
+					    		<p>{{ $filters.translate('Do you really want to delete this user') }}?</p>
 					    	</template>
 					    	<template #button>
 					    		<button @click="deleteuser()" class="focus:outline-none px-4 p-3 mr-3 text-white bg-rose-500 hover:bg-rose-700 transition duration-100">{{ $filters.translate('delete user') }}</button>
@@ -80,8 +80,6 @@ const app = Vue.createApp({
 			var self = this;
 
 			tmaxios.put('/api/v1/user',{
-				'csrf_name': 	document.getElementById("csrf_name").value,
-				'csrf_value':	document.getElementById("csrf_value").value,
 				'userdata': this.formData
 			})
 			.then(function (response)
@@ -106,8 +104,6 @@ const app = Vue.createApp({
 
 			tmaxios.delete('/api/v1/user',{
 				data: {
-					'csrf_name': 	document.getElementById("csrf_name").value,
-					'csrf_value':	document.getElementById("csrf_value").value,
 					'username': 	this.formData.username
 				}
 			})

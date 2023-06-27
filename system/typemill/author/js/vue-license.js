@@ -99,8 +99,6 @@ const app = Vue.createApp({
 			var self = this;
 
 			tmaxios.post('/api/v1/license',{
-				'csrf_name': 	document.getElementById("csrf_name").value,
-				'csrf_value':	document.getElementById("csrf_value").value,
 				'license': this.formData
 			})
 			.then(function (response)

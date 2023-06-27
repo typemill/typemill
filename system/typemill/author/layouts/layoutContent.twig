@@ -43,12 +43,11 @@
 			</article>
 		</div>
 		
-		{{ csrf() | raw }}
+<!--		< csrf() | raw > -->
 
 		<script>
 			
 			const data = {{ jsdata | json_encode() | raw  }};
-			const labels = {{ translations|json_encode() }};
 
 		</script>
 		<script src="{{ base_url() }}/system/typemill/author/js/autosize.min.js?v={{ settings.version }}"></script>
@@ -64,10 +63,13 @@
 		<script src="{{ base_url() }}/system/typemill/author/js/sortable.min.js?v={{ settings.version }}"></script>
 		<script src="{{ base_url() }}/system/typemill/author/js/vuedraggable.umd.min.js?v={{ settings.version }}"></script>
 		<script src="{{ base_url() }}/system/typemill/author/js/vue-contentnavi.js?v={{ settings.version }}"></script>
-
+		<script>
+			navigation.config.globalProperties.$filters = translatefilter;
+			navigation.mount('#contentNavigation');			
+		</script>
 		{% block javascript %}{% endblock %}
 
-		{{ assets.renderJS() }}		
-	
+			{{ assets.renderJS()|raw }}
+
 	</body>
 </html>

@@ -534,11 +534,9 @@ forms:
 metatabs:
   meta:
     fields:
-      fieldsetGlossary:
-        type: fieldset
-        legend: Glossary Style
+      fieldsetfolder:
         fields:
           glossary:
             type: checkbox
-            label: Glossary List (only for folders)
+            label: Glossary List (cyanine theme)
             checkboxlabel: List pages or posts of this folder as glossary (only for folders)

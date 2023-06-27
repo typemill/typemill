@@ -35,7 +35,7 @@ const modal = {
 const translatefilter = {
 	translate(value)
 	{
-		if(typeof data.labels === 'undefined') return;
+		if(typeof data.labels === 'undefined') return value;
 		if (!value) return '';
 
 		translation_key 	= value.replace(/[ ]/g,"_").replace(/[.]/g, "_").replace(/[,]/g, "_").replace(/[-]/g, "_").replace(/[,]/g,"_").toUpperCase();

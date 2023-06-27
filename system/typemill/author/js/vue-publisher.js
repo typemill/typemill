@@ -5,30 +5,41 @@ const publisher = Vue.createApp({
 				<div class="flex justify-between px-6 py-3">
 					<div class="flex">
 						<div class="border-l-4 w-32 px-2 py-2" :class="getStatusClass(item.status)">
-							{{ item.status }}
+							{{ $filters.translate(item.status) }}
 						</div>
 						<button 
 							v-if="raw" 
 							@click.prevent="saveDraft" 
-							:disabled="isPublished"
-							class="cursor-pointer ml-1 w-24 px-4 py-2 border border-stone-200 text-white bg-teal-500 hover:bg-teal-600 disabled:bg-stone-50 disabled:text-stone-900 disabled:cursor-not-allowed transition" 
+							:disabled="nochanges"
+							class="cursor-pointer ml-1 w-24 px-4 py-2 border border-stone-200 text-white disabled:bg-stone-50 disabled:text-stone-900 disabled:cursor-not-allowed transition" 
+							:class="publishClass"
 							>
-							save draft
+							{{ $filters.translate('draft') }}
 						</button>
 						<button 
+							v-if="raw"
+							@click.prevent="publishDraft"
+							:disabled="nopublish"
+							class="cursor-pointer ml-1 w-24 px-4 py-2 border border-stone-200 text-white disabled:bg-stone-50 disabled:text-stone-900 disabled:cursor-not-allowed transition" 
+							:class="publishClass"
+							>
+							{{ $filters.translate('publish') }}
+						</button>
+						<button 
+							v-if="visual"
 							@click.prevent="publishArticle"
 							:disabled="isPublished"
 							class="cursor-pointer ml-1 w-24 px-4 py-2 border border-stone-200 text-white disabled:bg-stone-50 disabled:text-stone-900 disabled:cursor-not-allowed transition" 
 							:class="publishClass"
 							>
-							publish
+							{{ $filters.translate('publish') }}
 						</button>
 						<button 
 							@click.prevent="showModal = 'discard'" 
 							:disabled="!isModified"
 							class="cursor-pointer ml-1 w-24 px-4 py-2 border border-stone-200 text-white bg-yellow-500 hover:bg-yellow-600 disabled:bg-stone-50 disabled:text-stone-900 disabled:cursor-not-allowed transition" 
 							>
-							discard
+							{{ $filters.translate('discard') }}
 						</button>
 						<button 
 							v-if="item.originalName != 'home'"
@@ -36,34 +47,34 @@ const publisher = Vue.createApp({
 							:disabled="isUnpublished"
 							class="cursor-pointer ml-1 w-24 px-4 py-2 border border-stone-200 text-white bg-teal-500 hover:bg-teal-600 disabled:bg-stone-50 disabled:text-stone-900 disabled:cursor-not-allowed transition" 
 							>
-							unpublish
+							{{ $filters.translate('unpublish') }}
 						</button>
 						<button 
 							v-if="item.originalName != 'home'"
 							@click.prevent="showModal = 'delete'"
 							class="cursor-pointer ml-1 w-24 px-4 py-2 border border-stone-200 bg-stone-50 hover:bg-rose-500 hover:text-white transition" 
 							>
-							delete
+							{{ $filters.translate('delete') }}
 						</button>
 					</div>
 					<div class="flex">
 						<a 
 							v-if="visual" 
-							href="{{ base_url }}/tm/content/raw{{ itemurl }}" 
+							:href="rawUrl" 
 							class="px-4 py-2 border border-stone-200 bg-stone-50 hover:bg-stone-700 hover:text-white transition ml-1" 
 							>
-							raw editor
+							{{ $filters.translate('raw') }}
 						</a>
 						<a 
 							v-if="raw" 
-							href="{{ base_url }}/tm/content/visual{{ itemurl }}"
+							:href="visualUrl"
 							class="px-4 py-2 border border-stone-200 bg-stone-50 hover:bg-stone-700 hover:text-white transition ml-1" 
 							@click="checkUnsafedContent(event)" 
 							>
-							visual editor
+							{{ $filters.translate('visual') }}
 						</a>
 						<a 
-							href="{{ item.urlAbs }}"
+							:href="item.urlAbs"
 							target="_blank" 
 							class="px-4 py-2 border border-stone-200 bg-stone-50 hover:bg-stone-700 hover:text-white transition ml-1" 
 							>
@@ -76,39 +87,46 @@ const publisher = Vue.createApp({
 				<transition name="fade">
 					<modal v-if="showModal == 'discard'" @close="showModal = false">
 				    	<template #header>
-				    		<h3>Discard changes</h3>
+				    		<h3>{{ $filters.translate('Discard changes') }}</h3>
 				    	</template>
 				    	<template #body>
-				    		<p>Do you want to discard your changes and set the content back to the live version?</p>
+				    		<p>{{ $filters.translate('Do you want to discard your changes and set the content back to the live version') }}?</p>
 				    	</template>
 				    	<template #button>
-				    		<button @click="discardChanges" class="focus:outline-none px-4 p-3 mr-3 text-white bg-rose-500 hover:bg-rose-700 transition duration-100">Discard changes</button>
+				    		<button @click="discardChanges" class="focus:outline-none px-4 p-3 mr-3 text-white bg-rose-500 hover:bg-rose-700 transition duration-100">{{ $filters.translate('Discard changes') }}</button>
 				    	</template>
 					</modal>
 				</transition>
 				<transition name="fade">
 					<modal v-if="showModal == 'delete'" @close="showModal = false">
 				    	<template #header>
-				    		<h3>Delete page</h3>
+				    		<h3>{{ $filters.translate('Delete page') }}</h3>
 				    	</template>
 				    	<template #body>
-				    		<p>Do you really want to delete this page? Please confirm.</p>
+				    		<p>
+				    			{{ $filters.translate('Do you really want to delete this page') }}? 
+				    			{{ $filters.translate('Please confirm') }}.
+				    		</p>
 				    	</template>
 				    	<template #button>
-				    		<button @click="deleteArticle" class="focus:outline-none px-4 p-3 mr-3 text-white bg-rose-500 hover:bg-rose-700 transition duration-100">Delete page</button>
+				    		<button @click="deleteArticle" class="focus:outline-none px-4 p-3 mr-3 text-white bg-rose-500 hover:bg-rose-700 transition duration-100">{{ $filters.translate('Delete page') }}</button>
 				    	</template>
 					</modal>
 				</transition>
 				<transition name="fade">
 					<modal v-if="showModal == 'unpublish'" @close="showModal = false">
 				    	<template #header>
-				    		<h3>Unpublish page</h3>
+				    		<h3>{{ $filters.translate('Unpublish page') }}</h3>
 				    	</template>
 				    	<template #body>
-				    		<p>This page has been modified. If you unpublish the page, then we will delete the published version and keep the modified version. Please confirm.</p>
+				    		<p>
+				    			{{ $filters.translate('This page has been modified') }}. 
+				    			{{ $filters.translate('If you unpublish the page, then we will delete the published version and keep the modified version') }}. 
+				    			{{ $filters.translate('Please confirm') }}.
+				    		</p>
 				    	</template>
 				    	<template #button>
-				    		<button @click="unpublishArticle" class="focus:outline-none px-4 p-3 mr-3 text-white bg-rose-500 hover:bg-rose-700 transition duration-100">Unpublish page</button>
+				    		<button @click="unpublishArticle" class="focus:outline-none px-4 p-3 mr-3 text-white bg-rose-500 hover:bg-rose-700 transition duration-100">{{ $filters.translate('Unpublish page') }}</button>
 				    	</template>
 					</modal>
 				</transition>
@@ -121,6 +139,7 @@ const publisher = Vue.createApp({
 			showModal: false,
 			message: false,
 			messageClass: '',
+			nochanges: true,
 		}
 	},
 	components: {
@@ -147,6 +166,10 @@ const publisher = Vue.createApp({
 
 		eventBus.$on('publisherclear', this.clearPublisher);
 
+		eventBus.$on('editdraft', this.markChanges);
+
+		eventBus.$on('cleardraft', this.unmarkChanges);
+
 	},
 	computed: {
 		isPublished()
@@ -167,10 +190,31 @@ const publisher = Vue.createApp({
 	    	{
 	    		return 'bg-teal-500 hover:bg-teal-600';
 	    	}
-	    	if(this.item.status == 'modified')
+	    	else
 	    	{
 	    		return 'bg-yellow-500 hover:bg-yellow-600';
 	    	}
+	    	/*
+	    	if(this.item.status == 'modified')
+	    	{
+	    		return 'bg-yellow-500 hover:bg-yellow-600';
+	    	}*/
+	    },
+	    nopublish()
+	    {
+	    	if(this.item.status != 'published')
+	    	{
+	    		return false;
+	    	}
+	    	return this.nochanges;
+	    },
+	    rawUrl()
+	    {
+	    	return data.urlinfo.baseurl + '/tm/content/raw' + this.item.urlRelWoF;
+	    },
+	    visualUrl()
+	    {
+	    	return data.urlinfo.baseurl + '/tm/content/visual' + this.item.urlRelWoF;
 	    },
 	},
 	methods: {
@@ -180,6 +224,14 @@ const publisher = Vue.createApp({
 			this.messageClass 	= false;
 			this.showModal 		= false;
 		},
+	    markChanges()
+	    {
+	    	this.nochanges = false;
+	    },
+	    unmarkChanges()
+	    {
+	    	this.nochanges = true;
+	    },
 		getStatusClass(status)
 		{
 			if(status == 'published')
@@ -280,20 +332,11 @@ const publisher = Vue.createApp({
 		},
 		saveDraft()
 		{
-			var self = this;
-			tmaxios.put('/api/v1/article',{
-
-			})
-			.then(function (response) {
-				self.draftResult 	= 'success';
-				navi.getNavi();
-			})
-			.catch(function (error)
-			{
-				self.draftDisabled 	= false;
-				self.draftResult 	= 'fail';
-				self.handleErrors(error);
-			});
+			eventBus.$emit('savedraft');
+		},
+		publishDraft()
+		{
+			eventBus.$emit('publishdraft');
 		},
 		deleteArticle()
 		{

@@ -5,6 +5,7 @@ namespace Typemill\Controllers;
 use DI\Container;
 use Slim\Routing\RouteContext;
 use Typemill\Models\StorageWrapper;
+use Typemill\Events\OnTwigLoaded;
 
 # use Psr\Container\ContainerInterface;
 # use Typemill\Models\Folder;
@@ -12,7 +13,6 @@ use Typemill\Models\StorageWrapper;
 # use Typemill\Models\WriteYaml;
 # use Typemill\Events\OnPageReady;
 # use Typemill\Events\OnPagetreeLoaded;
-use Typemill\Events\OnTwigLoaded;
 
 abstract class Controller
 {
@@ -22,14 +22,31 @@ abstract class Controller
 	# holds the settings
 	protected $settings;
 
+	protected $routeParser;
+
 	public function __construct(Container $container)
 	{
 		$this->c 			= $container;
 
+		$this->settings 	= $container->get('settings');
+
 		$this->routeParser 	= $container->get('routeParser');
 
-		$this->settings 	= $container->get('settings');
+#		$this->csrf 		= $container->get('csrf');
+
+		$this->c->get('dispatcher')->dispatch(new OnTwigLoaded(false), 'onTwigLoaded');		
 	}
+
+	public function getCsrfData($request)
+	{
+        $nameKey = $this->csrf->getTokenNameKey();
+        $valueKey = $this->csrf->getTokenValueKey();    
+        
+        return [
+            $nameKey => $request->getAttribute($nameKey),
+            $valueKey => $request->getAttribute($valueKey)
+        ];
+	}	
 
 	protected function settingActive($setting)
 	{
@@ -83,6 +100,30 @@ abstract class Controller
 		$url = trim($url, '/');
 
 		return '/' . $url;
+	}
+
+	protected function addDatasets(array $formDefinitions)
+	{
+		foreach($formDefinitions as $fieldname => $field)
+		{
+			if(isset($field['type']) && $field['type'] == 'fieldset')
+			{
+				$formDefinitions[$fieldname]['fields'] = $this->addDatasets($field['fields']);
+			}
+
+			if(isset($field['type']) && ($field['type'] == 'select' ) && isset($field['dataset']) && ($field['dataset'] == 'userroles' ) )
+			{
+				$userroles = [null => null];
+				foreach($this->c->get('acl')->getRoles() as $userrole)
+				{
+					$userroles[$userrole] = $userrole;
+				}
+
+				$formDefinitions[$fieldname]['options'] = $userroles;
+			}
+		}
+
+		return $formDefinitions;
 	}
 
 	protected function validateRights($userrole, $resource, $action)

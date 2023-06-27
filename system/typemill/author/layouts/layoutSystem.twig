@@ -47,13 +47,12 @@
 				Typemill version xyz
 		</footer>
 
-		{{ csrf() | raw }}
+<!--		< csrf() | raw > -->
 
 		<script>
 			
 			const data = {{ jsdata | json_encode() | raw  }};
-			const labels = {{ translations|json_encode() }};
-
+			
 		</script>
 		<script src="{{ base_url() }}/system/typemill/author/js/axios.min.js?v={{ settings.version }}"></script>
 		<script>
@@ -67,7 +66,7 @@
 		<script src="{{ base_url() }}/system/typemill/author/js/vue-eventbus.js?v={{ settings.version }}"></script>
 		<script src="{{ base_url() }}/system/typemill/author/js/vue-shared.js?v={{ settings.version }}"></script>
 		<script>
-			kixote.mount('#kixote');
+/*			kixote.mount('#kixote'); */
 		</script>
 		{% block javascript %}{% endblock %}
 

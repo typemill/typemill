@@ -7,6 +7,7 @@ use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Routing\RouteContext;
 use Slim\Psr7\Response;
 use Typemill\Models\User;
+use Typemill\Static\Session;
 
 class ApiAuthentication
 {
@@ -18,30 +19,11 @@ class ApiAuthentication
 	    # check if it is a session based authentication
 		if ($request->hasHeader('X-Session-Auth'))
 		{
-			session_start();
-
-			$authenticated = ( 
-					(isset($_SESSION['username'])) && 
-					(isset($_SESSION['login'])) 
-				)
-				? true : false;
-
-			if($authenticated)
+			if($request->getAttribute('c_username') && $request->getAttribute('c_userrole'))
 			{
-				# here we have to load userdata and pass them through request or response
-				$user = new User();
+				$response = $handler->handle($request);
 
-				if($user->setUser($_SESSION['username']))
-				{
-					$userdata = $user->getUserData();
-
-					$request = $request->withAttribute('c_username', $userdata['username']);
-					$request = $request->withAttribute('c_userrole', $userdata['userrole']);
-
-					$response = $handler->handle($request);
-
-					return $response;
-				}
+				return $response;
 			}
 			else
 			{

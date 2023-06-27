@@ -11,7 +11,7 @@ class ControllerApiFile extends Controller
 {
 	public function getFileRestrictions(Request $request, Response $response, $args)
 	{
-		$params = $request->getParsedBody();
+		$params = $request->getQueryParams();
 
 		$restriction 	= 'all';
 
@@ -70,6 +70,9 @@ class ControllerApiFile extends Controller
 			$restrictions = [];
 		}
 
+		# make sure you always add live path to the restriction registry, not temporary path
+		$filename = str_replace('media/tmp', 'media/files', $filename);
+
 		if($role == 'all')
 		{
 			unset($restrictions[$filename]);
@@ -87,7 +90,6 @@ class ControllerApiFile extends Controller
 
 		return $response->withHeader('Content-Type', 'application/json');
 	}
-
 
 	public function uploadFile(Request $request, Response $response, $args)
 	{
@@ -154,13 +156,13 @@ class ControllerApiFile extends Controller
 		$fileProcessor	= new ProcessFile();
 
 		$fileinfo = $fileProcessor->storeFile($params['file'], $params['name']);
+		$filePath = str_replace('media/files', 'media/tmp', $fileinfo['url']);
 
 		if($fileinfo)
 		{
 			# if the previous check of the mtype with the base64 string failed, then do it now again with the temporary file
 			if(!$mtype)
 			{
-				$filePath 	= str_replace('media/files', 'media/tmp', $fileinfo['url']);
 				$fullPath 	= $this->settings['rootPath'] . $filePath;
 				$finfo 		= finfo_open( FILEINFO_MIME_TYPE );
 				$mtype 		= @finfo_file( $finfo, $fullPath );
@@ -188,7 +190,8 @@ class ControllerApiFile extends Controller
 
 			$response->getBody()->write(json_encode([
 				'message' => 'File has been stored',
-				'fileinfo' => $fileinfo
+				'fileinfo' => $fileinfo,
+				'filepath' => $filePath
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json');
@@ -201,7 +204,39 @@ class ControllerApiFile extends Controller
 		return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
 	}
 
+	public function publishFile(Request $request, Response $response, $args)
+	{
+		$params = $request->getParsedBody();
 
+		if(!isset($params['file']) OR !$params['file'])
+		{
+			$response->getBody()->write(json_encode([
+				'message' 		=> 'filename is missing.',
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+		}
+
+		$storage 	= new StorageWrapper('\Typemill\Models\Storage');
+
+		$result 	= $storage->publishFile($params['file']);
+
+		if(!$result)
+		{
+			$response->getBody()->write(json_encode([
+				'message' 		=> $storage->getError()
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+		}
+
+		$response->getBody()->write(json_encode([
+			'message' => 'File saved successfully',
+			'path' => $result,
+		]));
+
+		return $response->withHeader('Content-Type', 'application/json');		
+	}
 
 
 
@@ -265,31 +300,6 @@ class ControllerApiFile extends Controller
 	}
 
 
-
-	public function publishFile(Request $request, Response $response, $args)
-	{
-		$params 		= $request->getParsedBody();
-
-		$fileProcessor	= new ProcessFile();
-		if(!$fileProcessor->checkFolders())
-		{
-			return $response->withJson(['errors' => 'Please check if your media-folder exists and all folders inside are writable.'], 500);
-		}
-		
-		if($fileProcessor->publishFile())
-		{
-			$request 	= $request->withParsedBody($params);
-		
-			$block = new ControllerAuthorBlockApi($this->c);
-			if($params['new'])
-			{
-				return $block->addBlock($request, $response, $args);
-			}
-			return $block->updateBlock($request, $response, $args);
-		}
-
-		return $response->withJson(['errors' => 'could not store file to media folder'],500);	
-	}
 
 	public function deleteFile(Request $request, Response $response, $args)
 	{

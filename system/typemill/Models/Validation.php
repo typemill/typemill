@@ -434,6 +434,70 @@ class Validation
 		}
 	}
 
+	public function articleUpdate(array $params)
+	{
+		$v = new Validator($params);
+
+		# special conditions for startpage
+		if(isset($params['item_id']) && $params['item_id'] == '')
+		{
+			$v->rule('required', ['url', 'title', 'body']);
+			$v->rule('markdownSecure', 'title');
+			$v->rule('markdownSecure', 'body');
+		}
+		else
+		{
+			$v->rule('required', ['item_id', 'url', 'title', 'body']);
+			$v->rule('regex', 'item_id', '/^[0-9.]+$/i');
+			$v->rule('markdownSecure', 'title');
+			$v->rule('markdownSecure', 'body');
+		}
+		
+		if($v->validate())
+		{
+			return true;
+		} 
+		else
+		{
+			return $v->errors();
+		}
+	}
+
+	public function articleRename(array $params)
+	{
+		$v = new Validator($params);
+		
+		$v->rule('required', ['url', 'slug', 'oldslug']);
+		$v->rule('regex', 'slug', '/^[a-z0-9\-]*$/');
+		$v->rule('lengthBetween', 'slug', 1, 50)->message("Length between 1 - 50"); 
+		$v->rule('different', 'slug', 'oldslug');
+
+		if($v->validate())
+		{
+			return true;
+		} 
+		else
+		{
+			return $v->errors();
+		}
+	}
+
+	public function metaInput(array $params)
+	{
+		$v = new Validator($params);
+		
+		$v->rule('required', ['url', 'tab', 'data']);
+
+		if($v->validate())
+		{
+			return true;
+		} 
+		else
+		{
+			return $v->errors();
+		}
+	}
+
 
 
 
