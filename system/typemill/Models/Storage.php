@@ -377,7 +377,7 @@ class Storage
 		return false;
 	}
 
-	public function publishImage($name, $noresize)
+	public function publishImage($name, $noresize = false)
 	{
 		$pathinfo = pathinfo($name);
 		if(!$pathinfo)

@@ -502,7 +502,6 @@ class Validation
 
 
 
-
 	
 	public function usernameBREAK($username)
 	{

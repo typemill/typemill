@@ -2100,7 +2100,6 @@ bloxeditor.component('file-component', {
 	}
 })
 
-
 bloxeditor.component('video-component', {
 	props: ['markdown', 'disabled', 'index'],
 	template: `<div class="video dropbox p-8">

@@ -204,18 +204,15 @@ class Content
         return $markdown;
 	}
 
-
 	public function markdownArrayToText(array $markdownArray)
 	{
 		return $this->parsedown->arrayBlocksToMarkdown($markdownArray);
 	}
 
-
 	public function markdownTextToArray(string $markdown)
 	{
 		return $this->parsedown->markdownToArrayBlocks($markdown);
 	}
-
 
 	public function getFirstImage(array $contentArray)
 	{
