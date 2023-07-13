@@ -15,6 +15,11 @@
   position: relative;	
 }
 
+
+/********************
+*   VUE     *
+********************/
+
 [v-cloak] {
   display: none;
 }
@@ -22,9 +27,22 @@
 .initial-leave-active {
   transition: opacity 0.2s ease;
 }
-
 .initial-enter-from,
 .initial-leave-to {
+  opacity: 0;
+}
+
+
+.fade-enter-active {
+  transition: opacity 0.2s ease;
+}
+.fade-enter-from{
+  opacity: 0;
+}
+.list-enter-active {
+  transition: opacity 0.2s ease;
+}
+.list-enter-from{
   opacity: 0;
 }
 
@@ -449,57 +467,6 @@
   font-weight:300; 
 }
 
-/*** BLOX EDITOR ***
-
-.edit .blox-editor .h1,
-.edit .blox-editor .h2,
-.edit .blox-editor .h3,
-.edit .blox-editor .h4,
-.edit .blox-editor .h5,
-.edit .blox-editor .h6{
-  line-height: 1em;
-  margin-top: 0;
-  margin-bottom: 0; 
-}
-.edit .blox-editor .h1{
-  font-weight: 700; 
-  font-size: 2.2em; 
-  padding-top: 0.6em;
-  padding-bottom: 0.6em;
-}
-.edit .blox-editor .h2{ 
-  font-weight: 700; 
-  font-size: 1.6em; 
-  padding-top: 1.3em; 
-  padding-bottom: 0.6em;
-}
-.edit .blox-editor .h3{ 
-  font-weight: 700; 
-  font-size: 1.3em; 
-  text-transform: none; 
-  padding-top: 1.2em; 
-  padding-bottom: 0.6em;
-}
-.edit .blox-editor .h4{ 
-  font-weight: 700; 
-  font-size: 1.1em; 
-  padding-top: 1.2em; 
-  padding-bottom: 0.6em;
-}
-.edit .blox-editor .h5{ 
-  font-weight: 700; 
-  font-size: 1em; 
-  padding-top: 1.2em; 
-  padding-bottom: 0.6em;
-}
-.edit .blox-editor .h6{ 
-  font-size: 1em; 
-  font-style: italic; 
-  font-weight:300; 
-  padding-top: 1em; 
-  padding-bottom: 0.6em;
-}
-
 
 /************************
 ** INLINE FORMATG BAR  **
@@ -562,319 +529,3 @@
   outline: 0px;
   border: 0px;
 }
-
-
-/*
-.title input{
-  font-size: 2.2em;
-  font-weight: 700;
-  padding: 20px;
-}
-
-
-
-.imageupload{
-  width: 50%;
-  position: relative;
-  display: inline-block;
-  border-right: 1px dotted grey;
-  box-sizing:border-box;
-}
-
-
-.imageselect{
-  width: 50%;
-  position: relative;
-  display: inline-block;
-  box-sizing:border-box;
-  border:0px;
-  padding: 0 0 0 0;
-  margin: 0 0 0 0;
-  min-height: 70px;
-  background: #f9f8f6;
-  font-family: Helvetica, Calibri, Arial, sans-serif;
-}
-.dropbox{
-  min-height: 70px;
-  background: #f9f8f6;
-  padding: 0px;
-  box-sizing: border-box;
-  margin-bottom: 10px; 
-}
-.dropbox p{
-  position: relative;
-  cursor: pointer;
-  line-height: 70px;
-  width: 100%;
-  text-align: center;
-  box-sizing:border-box;
-  padding: 0;
-  margin: 0;
-}
-.dropbox input, .dropbox select{
-  background-color: #fff;
-  width: 80%;
-  margin: 2px 0;
-  display: inline-block;
-}
-.video input{
-  width: 75%;
-  margin: 15px 0;
-}
-.dropbox select{
-  background-image: linear-gradient(45deg, transparent 50%, #444 50%), linear-gradient(135deg, #444 50%, transparent 50%), linear-gradient(to right, #fff, #fff);
-}
-.dropbox label{
-  width: 20%;
-  display: inline-block;
-}
-.video label{
-  text-align: right;
-  padding-right: 10px;
-  box-sizing: border-box;
-}
-.dropbox .imgmeta{
-  padding: 30px;
-  box-sizing: border-box; 
-}
-.dropbox .input-file{
-    opacity: 0;
-    width: 100%;
-    height: 70px;
-    position: absolute;
-    cursor: pointer;
-  z-index: 1;
-}
-.medialib{
-  margin: auto;
-  width: 100%;
-  height: 80%;
-  overflow: auto;
-  background: #f9f8f6;
-  max-width: 1200px;
-}
-.imagecard{
-  margin: 10px;
-  box-shadow:0 2px 5px rgba(22,23,26,.05);
-  display: inline-block;
-  vertical-align: top;
-  background: #fff;
-}
-
-sup{}
-cite{}
-abbr{}
-hr{
-  background: #ddd;
-  height: 2px;
-  margin: 20px 0;
-  border: 0px;
-}
-.setupWrapper a, .setupWrapper a:link, .setupWrapper a:visited
-{
-  text-decoration: none;
-  color: #444;
-}
-.setupWrapper a:focus, .setupWrapper a:hover, .setupWrapper a:active
-{
-  color: #e0474c; 
-}
-.mbfix{ margin-bottom: 0px!important; }
-
-.slugbutton{
-    right: 20px;
-    height: 52px;
-    width: 150px;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-.blox-body{
-  position: relative;
-  padding: 18px 20px      
-}
-.blox-overlay{
-  position:absolute;
-  display: block;
-  z-index: 10;
-  box-sizing: border-box;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #FFF;
-  background: rgba(255,255,255,0.8);  
-}
-.blox-editor{
-  position: relative;
-}
-.blox-buttons{
-  position: absolute;
-    bottom: -15px;
-  text-align: right;
-    right: 25px;
-    width: 200px;
-  z-index: 99;
-}
-.blox-buttons button{
-  display: inline-block;
-  box-sizing: border-box;
-  margin: 2px;
-  padding: 3px 6px;
-  width: 80px;
-  text-align: center;
-  color: #444;
-  background: #f9f8f6;
-  border: 2px solid #fff;
-  border-radius: 2px;
-  font-size: 0.9em;
-}
-.blox-buttons button.edit{
-  background: #70c1b3;
-  color: #fff;
-}
-.blox-buttons button.edit:hover{
-  background: #4D978A;
-}
-.blox-buttons button.cancel:hover{
-  background: #e0474c;
-  color: #fff;
-}
-.blox-buttons button.edit:disabled, .blox-buttons button.cancel:disabled{
-  background: #eee;
-  color: #444;
-  border: 1px solid #eee;
-}
-
-
-.sideaction{
-  position: absolute;
-  top: 0px;
-  font-size: 0.8em;
-  right: -22px;
-}
-.sideaction button{
-  display: block;
-  font-weight: 300;
-  font-size: 0.9em;
-  background: #fff;
-  color: #fff;
-  width: 20px;
-  height: 20px;
-  line-height: 25px;
-  text-align: center;
-  padding: 0px;
-  margin: 1px;
-  border: 0px;
-  border-radius: 1px;
-}
-.blox-wrapper{
-  position: relative;
-}
-.editactive .sideaction button, 
-.blox-wrapper:hover button.add,
-.blox-wrapper:hover button.delete{
-  background-color: #f9f8f6;
-  color: #666;
-}
-.sideaction:hover ~ .background-helper {
-    background-color: #f9f8f6;
-}
-.editactive .background-helper{
-  background-color: transparent!important;
-}
-.blox-wrapper button.add:hover{
-  background: #66b0a3;
-  color: #fff;
-}
-.blox-wrapper button.delete:hover{
-  background: #e0474c;
-  color: #fff;
-}
-
-
-
-.blox-editor textarea{
-  font-family: arial;
-  line-height: 1.5em;
-  font-size: 16px;
-  padding-left: 20px;
-  padding-right: 20px;
-  box-sizing: border-box;
-  min-height: 40px;
-}
-.blox-editor textarea:focus, .blox-editor input:focus{
-  box-shadow: none;
-  outline: none;
-}
-.blox-editor input.mdcontent.h2,.blox-editor input.mdcontent.h3,.blox-editor input.mdcontent.h4,.blox-editor input.mdcontent.h5,.blox-editor input.mdcontent.h6{
-  padding-left: 35px;
-  height: auto;
-}
-.blox-editor input.mdcontent.h2{
-  font-size: 1.6em;
-  font-weight: 700;
-}
-.blox-editor input.mdcontent.h3{
-  font-size: 1.3em;
-  font-weight: 700;
-}
-.blox-editor input.mdcontent.h4{
-  font-size: 1.1em;
-  font-weight: 700;
-}
-.blox-editor input.mdcontent.h5{
-  font-size: 1em;
-  font-weight: 700;
-}
-.blox-editor input.mdcontent.h6{
-  font-size: 1em;
-  font-weight: 300;
-  font-style: italic;
-}
-button.hdown{
-  position: absolute;
-  padding: 8px;
-  top: 1px;
-  bottom: 1px;
-  left: 0px;
-  font-size: 1em;
-  font-weight: 700;
-  border: 0px solid #fff;
-  border-right: 1px solid #fff;
-}
-button.hdown.headline{
-  color: #f9f8f6;
-  background: #66b0a3;  
-}
-.blox-editor .contenttype {
-  position: absolute;
-  top: 15px;
-  left: -25px;
-  color: #666;
-}
-.visible{
-  display: block;
-}
-.hidden{
-  visibility: hidden;
-}
-.hidden .blox:hover{
-  background: #fff;
-}
-.component{
-  position: absolute;
-  width: 100%;
-  z-index:9;
-}
-*/

@@ -229,7 +229,6 @@ class ProcessImage extends ProcessAssets
 	}
 
 
-	# publish image function is moved to storage model
 
 
 
@@ -238,65 +237,13 @@ class ProcessImage extends ProcessAssets
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	# MOVE TO STORAGE ??
-	public function deleteImage($name)
-	{
-		# validate name 
-		$name = basename($name);
-
-		if(!file_exists($this->originalFolder . $name) OR !unlink($this->originalFolder . $name))
-		{
-			$this->errors[] = "We could not delete the original image";
-		}
-
-		if(!file_exists($this->liveFolder . $name) OR !unlink($this->liveFolder . $name))
-		{
-			$this->errors[] = "We could not delete the live image";
-		}
-
-		if(!file_exists($this->thumbFolder . $name) OR !unlink($this->thumbFolder . $name))
-		{
-			$this->errors[] = "we could not delete the thumb image";
-		}
-
-		# delete custom images (resized and grayscaled) array_map('unlink', glob("some/dir/*.txt"));
-		$pathinfo = pathinfo($name);
-		foreach(glob($this->customFolder . $pathinfo['filename'] . '\-*.' . $pathinfo['extension']) as $image)
-		{
-			# you could check if extension is the same here
-			if(!unlink($image))
-			{
-				$this->errors[] = "we could not delete a custom image (grayscale or resized)";
-			}
-		}
-		
-		if(empty($this->errors))
-		{
-			return true;
-		}
-
-		return false;
-	}
 
 
 
 	# in use ??
 	public function deleteImageWithName($name)
 	{
+		die("processImage model deleteImageWithName please check method.");
 		# e.g. delete $name = 'logo...';
 
 		$name = basename($name);
@@ -321,6 +268,8 @@ class ProcessImage extends ProcessAssets
 	# in use ??
 	public function copyImage($name,$sourcefolder,$targetfolder)
 	{
+		die("processImage model copyImage please check method.");
+
 		copy($sourcefolder . $name, $targetfolder . $name);
 	}
 
@@ -389,78 +338,6 @@ class ProcessImage extends ProcessAssets
 
 
 
-	/*
-	* scans content of a folder (without recursion)
-	* vars: folder path as string
-	* returns: one-dimensional array with names of folders and files
-	*/
-	public function scanMediaFlat()
-	{
-		$thumbs 		= array_diff(scandir($this->thumbFolder), array('..', '.'));
-		$imagelist		= array();
-
-		foreach ($thumbs as $key => $name)
-		{
-			if (file_exists($this->liveFolder . $name))
-			{
-				$imagelist[] = [
-					'name' 		=> $name,
-					'timestamp'	=> filemtime($this->liveFolder . $name),
-					'src_thumb'	=> 'media/thumbs/' . $name,
-					'src_live'	=> 'media/live/' . $name,
-				];
-			}
-		}
-
-		$imagelist = Helpers::array_sort($imagelist, 'timestamp', SORT_DESC);
-
-		return $imagelist;
-	}
-
-
-	# get details from existing image for media library
-	public function getImageDetails($name, $structure)
-	{		
-		$name = basename($name);
-
-		if (!in_array($name, array(".","..")) && file_exists($this->liveFolder . $name))
-		{
-			$imageinfo 		= getimagesize($this->liveFolder . $name);
-
-			if(!$imageinfo && pathinfo($this->liveFolder . $name, PATHINFO_EXTENSION) == 'svg')
-			{
-				$imagedetails = [
-					'name' 		=> $name,
-					'timestamp'	=> filemtime($this->liveFolder . $name),
-					'bytes' 	=> filesize($this->liveFolder . $name),
-					'width'		=> '---',
-					'height'	=> '---',
-					'type'		=> 'svg',
-					'src_thumb'	=> 'media/thumbs/' . $name,
-					'src_live'	=> 'media/live/' . $name,
-					'pages'		=> $this->findPagesWithUrl($structure, $name, $result = [])
-				];				
-			}
-			else
-			{
-				$imagedetails = [
-					'name' 		=> $name,
-					'timestamp'	=> filemtime($this->liveFolder . $name),
-					'bytes' 	=> filesize($this->liveFolder . $name),
-					'width'		=> $imageinfo[0],
-					'height'	=> $imageinfo[1],
-					'type'		=> $imageinfo['mime'],
-					'src_thumb'	=> 'media/thumbs/' . $name,
-					'src_live'	=> 'media/live/' . $name,
-					'pages'		=> $this->findPagesWithUrl($structure, $name, $result = [])
-				];
-			}
-
-			return $imagedetails;
-		}
-
-		return false;
-	}
 
 	public function generateThumbs()
 	{

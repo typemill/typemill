@@ -6,10 +6,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Routing\RouteContext;
 use Typemill\Models\Validation;
-use Typemill\Models\Content;
 use Typemill\Models\Navigation;
 use Typemill\Models\Meta;
-use Typemill\Static\Slug;
 
 class ControllerApiAuthorMeta extends Controller
 {
@@ -97,7 +95,7 @@ class ControllerApiAuthorMeta extends Controller
 		return $response->withHeader('Content-Type', 'application/json');
 	}
 
-	public function updateMetaData(Request $request, Response $response, $args)
+	public function updateMeta(Request $request, Response $response, $args)
 	{
 		$validRights		= $this->validateRights($request->getAttribute('c_userrole'), 'content', 'update');
 		if(!$validRights)
@@ -323,160 +321,6 @@ class ControllerApiAuthorMeta extends Controller
 
 		return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-	# get the standard meta-definitions and the meta-definitions from plugins (same for all sites)
-	public function aggregateMetaDefinitions($folder = null)
-	{
-		$metatabs = $this->meta->getMetaDefinitions();
-
-		# the fields for user or role based access
-		if(!isset($this->settings['pageaccess']) || $this->settings['pageaccess'] === NULL )
-		{
-			unset($metatabs['meta']['fields']['fieldsetrights']);
-		}
-
-		# add radio buttons to choose posts or pages for folder.
-		if(!$folder)
-		{
-			unset($metatabs['meta']['fields']['contains']);
-		}
-
-		echo '<pre>';
-		print_r($metatabs);
-		die();
-
-		# loop through all plugins
-		if(!empty($this->settings['plugins']))
-		{
-			foreach($this->settings['plugins'] as $name => $plugin)
-			{
-				if($plugin['active'])
-				{
-					$pluginSettings = \Typemill\Settings::getObjectSettings('plugins', $name);
-					if($pluginSettings && isset($pluginSettings['metatabs']))
-					{
-						$metatabs = array_merge_recursive($metatabs, $pluginSettings['metatabs']);
-					}
-				}
-			}
-		}
-		
-		# add the meta from theme settings here
-		$themeSettings = \Typemill\Settings::getObjectSettings('themes', $this->settings['theme']);
-		
-		if($themeSettings && isset($themeSettings['metatabs']))
-		{
-			$metatabs = array_merge_recursive($metatabs, $themeSettings['metatabs']);
-		}
-
-		# dispatch meta 
-#		$metatabs 		= $this->c->dispatcher->dispatch('onMetaDefinitionsLoaded', new OnMetaDefinitionsLoaded($metatabs))->getData();
-
-		return $metatabs;
-	}
-*/
-
-
-	public function publishArticle(Request $request, Response $response, $args)
-	{
-		$validRights		= $this->validateRights($request->getAttribute('c_userrole'), 'content', 'update');
-		if(!$validRights)
-		{
-			$response->getBody()->write(json_encode([
-				'message' 	=> 'You do not have enough rights.',
-			]));
-
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);			
-		}
-
-		$params 			= $request->getParsedBody();
-		$validate			= new Validation();
-		$validInput 		= $validate->articlePublish($params);
-		if($validInput !== true)
-		{
-			$errors 		= $validate->returnFirstValidationErrors($validInput);
-			$response->getBody()->write(json_encode([
-				'message' 	=> reset($errors),
-				'errors' 	=> $errors
-			]));
-
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
-		}
-
-		$navigation 		= new Navigation();
-		$urlinfo 			= $this->c->get('urlinfo');
-		$item 				= $this->getItem($navigation, $params['url'], $urlinfo);
-		if(!$item)
-		{
-			$response->getBody()->write(json_encode([
-				'message' => 'page not found',
-			]));
-
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
-		}
-
-	    # publish content
-		$content 			= new Content($urlinfo['baseurl']);
-		$draftMarkdown  	= $content->getDraftMarkdown($item);
-		$content->publishMarkdown($item, $draftMarkdown);
-
-		# refresh navigation and item
-	    $navigation->clearNavigation();
-		$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']);
-		$draftNavigation 	= $navigation->setActiveNaviItems($draftNavigation, $item->keyPathArray);
-		$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
-
-		$response->getBody()->write(json_encode([
-			'navigation'	=> $draftNavigation,
-			'item'			=> $item
-		]));
-
-		return $response->withHeader('Content-Type', 'application/json');
-	}
-
-	# get the standard meta-definitions and the meta-definitions from plugins (same for all sites)
-	public function getMetaDefinitions(Request $request, Response $response, $args)
-	{
-		$validRights		= $this->validateRights($request->getAttribute('c_userrole'), 'content', 'update');
-		if(!$validRights)
-		{
-			$response->getBody()->write(json_encode([
-				'message' 	=> 'You do not have enough rights.',
-			]));
-
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);			
-		}
-
-		$metatabs = $this->aggregateMetaDefinitions();
-
-		$response->getBody()->write(json_encode([
-			'definitions'	=> $metatabs
-		]));
-
-		return $response->withHeader('Content-Type', 'application/json');
-	}
-
-
 
 
 	# we have to flatten field definitions for tabs if there are fieldsets in it

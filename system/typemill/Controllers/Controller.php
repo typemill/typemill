@@ -32,8 +32,6 @@ abstract class Controller
 
 		$this->routeParser 	= $container->get('routeParser');
 
-#		$this->csrf 		= $container->get('csrf');
-
 		$this->c->get('dispatcher')->dispatch(new OnTwigLoaded(false), 'onTwigLoaded');		
 	}
 

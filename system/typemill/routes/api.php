@@ -40,18 +40,21 @@ $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 	$group->delete('/user', ControllerApiSystemUsers::class . ':deleteUser')->setName('api.user.delete')->add(new ApiAuthorization($acl, 'account', 'delete')); # member
 
 	# IMAGES
+	$group->get('/pagemedia', ControllerApiImage::class . ':getPagemedia')->setName('api.image.pagemedia')->add(new ApiAuthorization($acl, 'mycontent', 'read'));
+	$group->get('/images', ControllerApiImage::class . ':getImages')->setName('api.image.images')->add(new ApiAuthorization($acl, 'mycontent', 'read'));
 	$group->post('/image', ControllerApiImage::class . ':saveImage')->setName('api.image.create')->add(new ApiAuthorization($acl, 'mycontent', 'create'));
 	$group->put('/image', ControllerApiImage::class . ':publishImage')->setName('api.image.publish')->add(new ApiAuthorization($acl, 'mycontent', 'create'));
-#	$group->get('/image', ControllerApiMedia::class . ':getImage')->setName('api.image.get');
-#	$group->delete('/image', ControllerApiMedia::class . ':deleteImage')->setName('api.image.delete');
+	$group->get('/image', ControllerApiImage::class . ':getImage')->setName('api.image.get')->add(new ApiAuthorization($acl, 'mycontent', 'read'));
+	$group->delete('/image', ControllerApiImage::class . ':deleteImage')->setName('api.image.delete')->add(new ApiAuthorization($acl, 'mycontent', 'delete'));
 	
 	# FILES
 	$group->get('/filerestrictions', ControllerApiFile::class . ':getFileRestrictions')->setName('api.file.getrestrictions')->add(new ApiAuthorization($acl, 'mycontent', 'create'));
 	$group->post('/filerestrictions', ControllerApiFile::class . ':updateFileRestrictions')->setName('api.file.updaterestrictions')->add(new ApiAuthorization($acl, 'mycontent', 'create'));
 	$group->post('/file', ControllerApiFile::class . ':uploadFile')->setName('api.file.upload')->add(new ApiAuthorization($acl, 'mycontent', 'create'));
 	$group->put('/file', ControllerApiFile::class . ':publishFile')->setName('api.file.publish')->add(new ApiAuthorization($acl, 'mycontent', 'update'));
-#	$group->get('/api/v1/file', ControllerAuthorMediaApi::class . ':getFile')->setName('api.file.get')->add(new RestrictApiAccess($container['router']));
-#	$app->delete('/api/v1/file', ControllerAuthorMediaApi::class . ':deleteFile')->setName('api.file.delete')->add(new RestrictApiAccess($container['router']));
+	$group->get('/files', ControllerApiFile::class . ':getFiles')->setName('api.files.get')->add(new ApiAuthorization($acl, 'mycontent', 'read'));
+	$group->get('/file', ControllerApiFile::class . ':getFile')->setName('api.file.get')->add(new ApiAuthorization($acl, 'mycontent', 'read'));
+	$group->delete('/file', ControllerApiFile::class . ':deleteFile')->setName('api.file.delete')->add(new ApiAuthorization($acl, 'mycontent', 'read'));
 
 	# ARTICLE
 	$group->post('/article/sort', ControllerApiAuthorArticle::class . ':sortArticle')->setName('api.article.sort')->add(new ApiAuthorization($acl, 'content', 'create')); # author
@@ -75,9 +78,7 @@ $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 	$group->get('/shortcodedata', ControllerApiAuthorShortcode::class . ':getShortcodeData')->setName('api.shortcodedata.get')->add(new ApiAuthorization($acl, 'mycontent', 'view'));
 
 	# META
-	$group->get('/metadata', ControllerApiAuthorMeta::class . ':getMetaData')->setName('api.metadata.get')->add(new ApiAuthorization($acl, 'mycontent', 'view'));
-	$group->get('/metadefinitions', ControllerApiAuthorMeta::class . ':getMetaDefinitions')->setName('api.definitions.get')->add(new ApiAuthorization($acl, 'mycontent', 'view'));
-	$group->post('/metadata', ControllerApiAuthorMeta::class . ':updateMetaData')->setName('api.metadata.update')->add(new ApiAuthorization($acl, 'mycontent', 'update'));
 	$group->get('/meta', ControllerApiAuthorMeta::class . ':getMeta')->setName('api.meta.get')->add(new ApiAuthorization($acl, 'mycontent', 'view'));
+	$group->post('/meta', ControllerApiAuthorMeta::class . ':updateMeta')->setName('api.metadata.update')->add(new ApiAuthorization($acl, 'mycontent', 'update'));
 
 })->add(new ApiAuthentication());

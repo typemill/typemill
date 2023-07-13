@@ -2,6 +2,8 @@
 
 namespace Typemill\Models;
 
+use Typemill\Static\Helpers;
+
 class Storage
 {
 	public $error 					= false;
@@ -332,6 +334,11 @@ class Storage
 		return false;
 	}
 
+
+	##################
+	## 	  IMAGES 	##
+	##################
+
 	public function createUniqueImageName($filename, $extension)
 	{
 		$defaultfilename = $filename;
@@ -345,36 +352,6 @@ class Storage
 		}
 
 		return $filename;
-	}
-
-	public function publishFile($name)
-	{
-		$pathinfo = pathinfo($name);
-		if(!$pathinfo)
-		{
-			$this->error = 'Could not read pathinfo.';
-
-			return false;
-		}
-
-		$filename = $pathinfo['filename'] . '.' . $pathinfo['extension'];
-		$filepath = $this->tmpFolder . $filename;
-
-		if(!file_exists($this->tmpFolder . $filename))
-		{
-			$this->error = "We did not find the file in the tmp-folder or could not read it.";
-			return false;
-		}
-
-		$success = rename($this->tmpFolder . $filename, $this->fileFolder . $filename);
-		
-		if($success === true)
-		{
-			# return true;
-			return 'media/files/' . $filename;
-		}
-
-		return false;
 	}
 
 	public function publishImage($name, $noresize = false)
@@ -489,10 +466,221 @@ class Storage
 
 	}
 
+	public function getImageList()
+	{
+		$thumbs 		= array_diff(scandir($this->thumbsFolder), array('..', '.'));
+		$imagelist		= array();
+
+		foreach ($thumbs as $key => $name)
+		{
+			if (file_exists($this->liveFolder . $name))
+			{
+				$imagelist[] = [
+					'name' 		=> $name,
+					'timestamp'	=> filemtime($this->liveFolder . $name),
+					'src_thumb'	=> 'media/thumbs/' . $name,
+					'src_live'	=> 'media/live/' . $name,
+				];
+			}
+		}
+
+		$imagelist = Helpers::array_sort($imagelist, 'timestamp', SORT_DESC);
+
+		return $imagelist;
+	}
+
+	# get details from existing image for media library
+	public function getImageDetails($name)
+	{		
+		$name = basename($name);
+
+		if (!in_array($name, array(".","..")) && file_exists($this->liveFolder . $name))
+		{
+			$imageinfo 		= getimagesize($this->liveFolder . $name);
+
+			if(!$imageinfo && pathinfo($this->liveFolder . $name, PATHINFO_EXTENSION) == 'svg')
+			{
+				$imagedetails = [
+					'name' 		=> $name,
+					'timestamp'	=> filemtime($this->liveFolder . $name),
+					'bytes' 	=> filesize($this->liveFolder . $name),
+					'width'		=> '---',
+					'height'	=> '---',
+					'type'		=> 'svg',
+					'src_thumb'	=> 'media/thumbs/' . $name,
+					'src_live'	=> 'media/live/' . $name,
+				];
+			}
+			else
+			{
+				$imagedetails = [
+					'name' 		=> $name,
+					'timestamp'	=> filemtime($this->liveFolder . $name),
+					'bytes' 	=> filesize($this->liveFolder . $name),
+					'width'		=> $imageinfo[0],
+					'height'	=> $imageinfo[1],
+					'type'		=> $imageinfo['mime'],
+					'src_thumb'	=> 'media/thumbs/' . $name,
+					'src_live'	=> 'media/live/' . $name,
+				];
+			}
+
+			return $imagedetails;
+		}
+
+		return false;
+	}
+
+	public function deleteImage($name)
+	{
+		# validate name 
+		$name = basename($name);
+
+		if(!file_exists($this->liveFolder . $name) OR !unlink($this->liveFolder . $name))
+		{
+			$this->error .= "We could not delete the live image. ";
+		}
+
+		if(!file_exists($this->thumbsFolder . $name) OR !unlink($this->thumbsFolder . $name))
+		{
+			$this->error .= "We could not delete the thumb image. ";
+		}
+
+		# delete custom images (resized and grayscaled) array_map('unlink', glob("some/dir/*.txt"));
+		$pathinfo = pathinfo($name);
+
+		foreach(glob($this->originalFolder . $pathinfo['filename'] . '\.*') as $image)
+		{
+			# you could check if extension is the same here
+			if(!unlink($image))
+			{
+				$this->error = "We could not delete the original image in $this->originalFolder $image. ";
+			}
+		}
+
+		foreach(glob($this->customFolder . $pathinfo['filename'] . '\-*.' . $pathinfo['extension']) as $image)
+		{
+			# you could check if extension is the same here
+			if(!unlink($image))
+			{
+				$this->error .= "we could not delete a custom image (grayscale or resized). ";
+			}
+		}
+		
+		if(!$this->error)
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	##################
+	## 	  FILES 	##
+	##################
+
+	public function publishFile($name)
+	{
+		$pathinfo = pathinfo($name);
+		if(!$pathinfo)
+		{
+			$this->error = 'Could not read pathinfo.';
+
+			return false;
+		}
+
+		$filename = $pathinfo['filename'] . '.' . $pathinfo['extension'];
+		$filepath = $this->tmpFolder . $filename;
+
+		if(!file_exists($this->tmpFolder . $filename))
+		{
+			$this->error = "We did not find the file in the tmp-folder or could not read it.";
+			return false;
+		}
+
+		$success = rename($this->tmpFolder . $filename, $this->fileFolder . $filename);
+		
+		if($success === true)
+		{
+			# return true;
+			return 'media/files/' . $filename;
+		}
+
+		return false;
+	}
+
+	public function getFileList()
+	{
+		$files 		= scandir($this->fileFolder);
+		$filelist	= array();
+
+		foreach ($files as $key => $name)
+		{
+			if (!in_array($name, array(".","..","filerestrictions.yaml")) && file_exists($this->fileFolder . $name))
+			{
+				$filelist[] = [
+					'name' 		=> $name,
+					'timestamp'	=> filemtime($this->fileFolder . $name),
+					'bytes' 	=> filesize($this->fileFolder . $name),					
+					'info'		=> pathinfo($this->fileFolder . $name),
+					'url'		=> 'media/files/' . $name,
+				];
+			}
+		}
+
+		$filelist = Helpers::array_sort($filelist, 'timestamp', SORT_DESC);
+
+		return $filelist;
+	}
+
+	public function getFileDetailsBREAK($name)
+	{
+		$name = basename($name);
+
+		if (!in_array($name, array(".","..")) && file_exists($this->fileFolder . $name))
+		{
+			$filedetails = [
+				'name' 		=> $name,
+				'timestamp'	=> filemtime($this->fileFolder . $name),
+				'bytes' 	=> filesize($this->fileFolder . $name),
+				'info'		=> pathinfo($this->fileFolder . $name),
+				'url'		=> 'media/files/' . $name,
+			];
+
+			return $filedetails;
+		}
+
+		return false;
+	}
+
+	public function deleteMediaFile($name)
+	{
+		# validate name 
+		$name = basename($name);
+
+		if(file_exists($this->fileFolder . $name) && unlink($this->fileFolder . $name))
+		{
+			return true;
+		}
+
+		return false;
+	}
 
 
+	public function deleteFileWithName($name)
+	{
+		# e.g. delete $name = 'logo';
 
+		$name = basename($name);
 
+		if($name != '' && !in_array($name, array(".","..")))
+		{
+			foreach(glob($this->fileFolder . $name) as $file)
+			{
+				unlink($file);
+			}
+		}
+	}
 
 
 

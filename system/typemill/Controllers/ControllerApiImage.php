@@ -6,6 +6,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Typemill\Models\ProcessImage;
 use Typemill\Models\StorageWrapper;
+use Typemill\Extensions\ParsedownExtension;
 
 
 # use Typemill\Models\ProcessFile;
@@ -20,6 +21,110 @@ class ControllerApiImage extends Controller
 	# solution for logo
 	# return error messages and display in image component
 	# check if resized is bigger than original, then use original
+
+	public function getPagemedia(Request $request, Response $response, $args)
+	{
+		$url 			= $request->getQueryParams()['url'] ?? false;
+		$path 			= $request->getQueryParams()['path'] ?? false;
+		$pagemedia 		= [];
+
+		if(!$path)
+		{
+			$response->getBody()->write(json_encode([
+				'message' 		=> 'Path is missing.',
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+		}
+		
+		$storage 		= new StorageWrapper('\Typemill\Models\Storage');
+
+		$markdown 	= $storage->getFile('contentFolder', '', $path . '.txt');
+		if($markdown)
+		{
+			$markdownArray 	= json_decode($markdown);
+			$parsedown 		= new ParsedownExtension();
+			$markdown 		= $parsedown->arrayBlocksToMarkdown($markdownArray);
+		}
+		else
+		{
+			$markdown = $storage->getFile('contentFolder', '', $path . '.md');
+		}
+
+		$mdmedia 	= $this->findMediaInText($markdown);
+
+		$meta 		= $storage->getFile('contentFolder', '', $path . '.yaml');
+
+		$mtmedia  	= $this->findMediaInText($meta);
+
+		$pagemedia 	= array_merge($mdmedia[2], $mtmedia[2]);
+
+		$response->getBody()->write(json_encode([
+			'pagemedia' 	=> $pagemedia
+		]));
+
+		return $response->withHeader('Content-Type', 'application/json');
+	}
+
+	protected function findMediaInText($text)
+	{
+		preg_match_all('/media\/(live|files)\/(.+?\.[a-zA-Z]{2,4})/', $text, $matches);
+
+		return $matches;
+	}	
+
+	public function getImages(Request $request, Response $response, $args)
+	{
+		$url 			= $request->getQueryParams()['url'] ?? false;
+		$path 			= $request->getQueryParams()['path'] ?? false;
+		$pagemedia 		= [];
+		
+		$storage 		= new StorageWrapper('\Typemill\Models\Storage');
+
+		$imagelist 		= $storage->getImageList();
+
+		$response->getBody()->write(json_encode([
+			'images' 		=> $imagelist
+		]));
+
+		return $response->withHeader('Content-Type', 'application/json');
+	}
+
+	public function getImage(Request $request, Response $response, $args)
+	{
+		$name 			= $request->getQueryParams()['name'] ?? false;
+
+		# VALIDATE NAME
+
+		if(!$name)
+		{
+			$response->getBody()->write(json_encode([
+				'message' 		=> 'Imagename is missing.',
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+		}
+
+		$storage 		= new StorageWrapper('\Typemill\Models\Storage');
+
+		$imagedetails 	= $storage->getImageDetails($name);
+		
+		if(!$imagedetails)
+		{
+			$response->getBody()->write(json_encode([
+				'message' 		=> 'No image found.',
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+		}
+
+		$response->getBody()->write(json_encode([
+			'image' 		=> $imagedetails,
+		]));
+
+		return $response->withHeader('Content-Type', 'application/json');		
+	}
+	
 
 	public function saveImage(Request $request, Response $response, $args)
 	{
@@ -283,127 +388,38 @@ class ControllerApiImage extends Controller
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
-
-
-
-
-
-		
-		$imageData64	= 'data:image/jpeg;base64,' . base64_encode($imageData);
-		$desiredSizes	= ['live' => ['width' => 560, 'height' => 315]];
-		$imageProcessor	= new ProcessImage($this->settings['images']);
-		if(!$imageProcessor->checkFolders())
-		{
-			return $response->withJson(['errors' => ['message' => 'Please check if your media-folder exists and all folders inside are writable.']], 500);
-		}
-
-		$tmpImage		= $imageProcessor->createImage($imageData64, $videoID, $desiredSizes);
-		
-		if(!$tmpImage)
-		{
-			return $response->withJson(array('errors' => 'could not create temporary image'));			
-		}
-		
-		$imageUrl 		= $imageProcessor->publishImage();
-		if($imageUrl)
-		{
-			$this->params['markdown'] = '![' . $class . '-video](' . $imageUrl . ' "click to load video"){#' . $videoID. ' .' . $class . '}';
-
-			$request 	= $request->withParsedBody($this->params);
-			$block = new ControllerAuthorBlockApi($this->c);
-			if($this->params['new'])
-			{
-				return $block->addBlock($request, $response, $args);
-			}
-			return $block->updateBlock($request, $response, $args);
-		}
-		
-		return $response->withJson(array('errors' => 'could not store the preview image'));	
 	}
 
-
-
-
-
-
-
-
-
-	public function getMediaLibImages(Request $request, Response $response, $args)
-	{
-		# get params from call 
-		$this->params 	= $request->getParsedBody();
-		$this->uri 		= $request->getUri()->withUserInfo('');
-
-		$imageProcessor	= new ProcessImage($this->settings['images']);
-		if(!$imageProcessor->checkFolders('images'))
-		{
-			return $response->withJson(['errors' => 'Please check if your media-folder exists and all folders inside are writable.'], 500);
-		}
-		
-		$imagelist 		= $imageProcessor->scanMediaFlat();
-
-		$response->getBody()->write(json_encode([
-			'images' => $imagelist
-		]));
-
-		return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
-	}
-
-	public function getImage(Request $request, Response $response, $args)
-	{
-		# get params from call 
-		$this->params 	= $request->getParsedBody();
-		$this->uri 		= $request->getUri()->withUserInfo('');
-
-		$this->setStructureDraft();
-
-		$imageProcessor	= new ProcessImage($this->settings['images']);
-		if(!$imageProcessor->checkFolders('images'))
-		{
-			return $response->withJson(['errors' => 'Please check if your media-folder exists and all folders inside are writable.'], 500);
-		}
-
-		$imageDetails 	= $imageProcessor->getImageDetails($this->params['name'], $this->structureDraft);
-		
-		if($imageDetails)
-		{
-			return $response->withJson(['image' => $imageDetails]);
-		}
-		
-		return $response->withJson(['errors' => 'Image not found or image name not valid.'], 404);
-	}
-	
 	public function deleteImage(Request $request, Response $response, $args)
 	{
-		# get params from call 
-		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri()->withUserInfo('');
+		$params = $request->getParsedBody();
 
-		# minimum permission is that user is allowed to delete content
-		if(!$this->c->acl->isAllowed($_SESSION['role'], 'content', 'delete'))
+		if(!isset($params['name']))
 		{
-			return $response->withJson(array('data' => false, 'errors' => 'You are not allowed to delete images.'), 403);
+			$response->getBody()->write(json_encode([
+				'message' 		=> 'Imagename is missing.'
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
 		}
 
-		if(!isset($this->params['name']))
+		$storage = new StorageWrapper('\Typemill\Models\Storage');
+
+		$deleted = $storage->deleteImage($params['name']);
+
+		if($deleted)
 		{
-			return $response->withJson(['errors' => 'image name is missing'],500);
+			$response->getBody()->write(json_encode([
+				'message' 		=> 'Image deleted successfully.'
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json');
 		}
 
-		$imageProcessor	= new ProcessImage($this->settings['images']);
-		if(!$imageProcessor->checkFolders('images'))
-		{
-			return $response->withJson(['errors' => 'Please check if your media-folder exists and all folders inside are writable.'], 500);
-		}
+		$response->getBody()->write(json_encode([
+			'message' 		=> $storage->getError()
+		]));
 
-		if($imageProcessor->deleteImage($this->params['name']))
-		{
-			return $response->withJson(['errors' => false]);
-		}
-
-		return $response->withJson(['errors' => 'Oops, looks like we could not delete all sizes of that image.'], 500);
+		return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
 	}
-
-
 }

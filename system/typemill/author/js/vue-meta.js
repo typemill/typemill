@@ -121,7 +121,7 @@ const app = Vue.createApp({
 			this.saved = false;
 
 			self = this;
-			tmaxios.post('/api/v1/metadata',{
+			tmaxios.post('/api/v1/meta',{
 				'url':			data.urlinfo.route,
 				'tab': 			self.currentTab,
 				'data': 		self.formData[self.currentTab]

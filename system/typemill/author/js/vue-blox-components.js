@@ -1294,6 +1294,9 @@ bloxeditor.component('inline-formats', {
 
 bloxeditor.component('image-component', {
 	props: ['markdown', 'disabled', 'index'],
+	components: {
+		medialib: medialib
+	},	
 	template: `<div class="dropbox pb-6">
 				<input type="hidden" ref="markdown" :value="markdown" :disabled="disabled" @input="updatemarkdown" />
 				<div class="flex">
@@ -1303,13 +1306,14 @@ bloxeditor.component('image-component', {
 					</div>
 					<button class="imageselect w-1/2 text-center p-6" @click.prevent="openmedialib()"><svg class="icon icon-image"><use xlink:href="#icon-image"></use></svg> select from medialib</button>
 				</div>
-<!--				
-				<transition name="fade-editor">
-					<div v-if="showmedialib" class="modalWindow">
-						<medialib parentcomponent="images"></medialib>
+
+				<Transition name="initial" appear>
+					<div v-if="showmedialib" class="fixed top-0 left-0 right-0 bottom-0 bg-stone-100 z-50">
+						<button class="w-full bg-stone-200 hover:bg-rose-500 hover:text-white p-2 transition duration-100" @click.prevent="showmedialib = false">{{ $filters.translate('close library') }}</button>
+						<medialib parentcomponent="images" @addFromMedialibEvent="addFromMedialibFunction"></medialib>
 					</div>
-				</transition> 
--->
+				</Transition> 
+
 				<div class="absolute top-3 -left-5 text-stone-400">
 					<svg class="icon icon-image">
 						<use xlink:href="#icon-image"></use>
@@ -1490,6 +1494,19 @@ bloxeditor.component('image-component', {
 		}
 	},
 	methods: {
+		closemedialib()
+		{
+			this.showmedialib = false;
+		},
+		addFromMedialibFunction(value)
+		{
+			this.imgfile 		= value;
+			this.imgpreview 	= data.urlinfo.baseurl + '/' + value;
+			this.showmedialib 	= false;
+			this.saveimage 		= false;
+
+			this.createmarkdown();
+		},
 		updatemarkdown(event)
 		{
 			this.$emit('updateMarkdownEvent', event.target.value);
@@ -1619,19 +1636,10 @@ bloxeditor.component('image-component', {
 					errors = this.$filters.translate('Maximum size of image caption is 140 characters');
 				}
 			}
-			
-			/*
-			if(this.noresize === true)
-			{
-				imgmarkdown = imgmarkdown + '|noresize';
-			}
-			*/
 
 			if(errors)
 			{
 				console.info(errors);
-//				this.$parent.freezePage();
-//				publishController.errors.message = errors;
 			}
 			else
 			{
@@ -1692,7 +1700,7 @@ bloxeditor.component('image-component', {
 		{
 			this.showresize 	= false;
 			this.noresize 		= false;
-			this.showmedialib = true;
+			this.showmedialib 	= true;
 		},
 		isChecked(classname)
 		{
@@ -1806,6 +1814,9 @@ bloxeditor.component('image-component', {
 
 bloxeditor.component('file-component', {
 	props: ['markdown', 'disabled', 'index'],
+	components: {
+		medialib: medialib
+	},	
 	template: `<div class="dropbox">
 				<input type="hidden" ref="markdown" :value="markdown" :disabled="disabled" @input="updatemarkdown" />
 				<div class="flex">
@@ -1825,13 +1836,14 @@ bloxeditor.component('file-component', {
 						{{ $filters.translate('select from medialib') }}
 					</button>
 				</div>
-<!--
-				<transition name="fade-editor">
-					<div v-if="showmedialib" class="modalWindow">
-						<medialib parentcomponent="files"></medialib>
+
+				<Transition name="initial" appear>
+					<div v-if="showmedialib" class="fixed top-0 left-0 right-0 bottom-0 bg-stone-100 z-50">
+						<button class="w-full bg-stone-200 hover:bg-rose-500 hover:text-white p-2 transition duration-100" @click.prevent="showmedialib = false">{{ $filters.translate('close library') }}</button>
+						<medialib parentcomponent="files" @addFromMedialibEvent="addFromMedialibFunction"></medialib>
 					</div>
-				</transition> 
--->
+				</Transition>
+
 				<div class="absolute top-3 -left-5 text-stone-400">
 					<svg class="icon icon-paperclip">
 						<use xlink:href="#icon-paperclip"></use>
@@ -1906,6 +1918,18 @@ bloxeditor.component('file-component', {
 		this.getrestriction();
 	},
 	methods: {
+		addFromMedialibFunction(file)
+		{
+			this.showmedialib 	= false;
+			this.savefile 		= false;
+			this.fileurl 		= file.url;
+			this.filemeta 		= true;
+			this.filetitle 		= file.name;
+			this.fileextension 	= file.info.extension;
+
+			this.createmarkdown();
+			this.getrestriction(file.url);
+		},
 		openmedialib: function()
 		{
 			this.showmedialib = true;
@@ -2168,8 +2192,6 @@ bloxeditor.component('video-component', {
 		},
 		parseUrl(url)
 		{
-			alert("parse: " + url);
-
 			let urlparts = url.split('?');
 			let urlParams = new URLSearchParams(urlparts[1]);
 
@@ -2189,7 +2211,6 @@ bloxeditor.component('video-component', {
 		},
 		updatemarkdown(url)
 		{
-			alert("update: " + url);
 			this.edited = true;
 			this.url = url;
 			this.parseUrl(url);

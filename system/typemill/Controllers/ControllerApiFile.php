@@ -9,6 +9,57 @@ use Typemill\Models\StorageWrapper;
 
 class ControllerApiFile extends Controller
 {
+	public function getFiles(Request $request, Response $response, $args)
+	{
+		$url 			= $request->getQueryParams()['url'] ?? false;
+		$path 			= $request->getQueryParams()['path'] ?? false;
+		
+		$storage 		= new StorageWrapper('\Typemill\Models\Storage');
+
+		$filelist 		= $storage->getFileList();
+
+		$response->getBody()->write(json_encode([
+			'files' 	=> $filelist,
+		]));
+
+		return $response->withHeader('Content-Type', 'application/json');
+	}
+
+	public function getFile(Request $request, Response $response, $args)
+	{
+		$name 			= $request->getQueryParams()['name'] ?? false;
+
+		# VALIDATE NAME
+
+		if(!$name)
+		{
+			$response->getBody()->write(json_encode([
+				'message' 		=> 'Filename is missing.',
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+		}
+
+		$storage 		= new StorageWrapper('\Typemill\Models\Storage');
+
+		$filedetails 	= $storage->getFileDetails($name);
+		
+		if(!$filedetails)
+		{
+			$response->getBody()->write(json_encode([
+				'message' 		=> 'No File found.',
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+		}
+
+		$response->getBody()->write(json_encode([
+			'file' 		=> $filedetails,
+		]));
+
+		return $response->withHeader('Content-Type', 'application/json');
+	}
+
 	public function getFileRestrictions(Request $request, Response $response, $args)
 	{
 		$params = $request->getQueryParams();
@@ -238,96 +289,39 @@ class ControllerApiFile extends Controller
 		return $response->withHeader('Content-Type', 'application/json');		
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	public function getMediaLibFiles(Request $request, Response $response, $args)
-	{
-		# get params from call
-		$this->params 	= $request->getParsedBody();
-		$this->uri 		= $request->getUri()->withUserInfo('');
-
-		$fileProcessor	= new ProcessFile();
-		if(!$fileProcessor->checkFolders())
-		{
-			return $response->withJson(['errors' => 'Please check if your media-folder exists and all folders inside are writable.'], 500);
-		}
-		
-		$filelist 		= $fileProcessor->scanFilesFlat();
-
-		$response->getBody()->write(json_encode([
-			'files' => $filelist
-		]));
-
-		return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
-	}
-
-	public function getFile(Request $request, Response $response, $args)
-	{
-		# get params from call 
-		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri()->withUserInfo('');
-
-		$this->setStructureDraft();
-
-		$fileProcessor	= new ProcessFile();
-		if(!$fileProcessor->checkFolders())
-		{
-			return $response->withJson(['errors' => 'Please check if your media-folder exists and all folders inside are writable.'], 500);
-		}
-
-		$fileDetails 	= $fileProcessor->getFileDetails($this->params['name'], $this->structureDraft);
-
-		if($fileDetails)
-		{
-			return $response->withJson(['file' => $fileDetails]);
-		}
-
-		return $response->withJson(['errors' => 'file not found or file name invalid'],404);
-	}
-
-
-
 	public function deleteFile(Request $request, Response $response, $args)
 	{
-		# get params from call 
-		$this->params 	= $request->getParams();
-		$this->uri 		= $request->getUri()->withUserInfo('');
+		$params = $request->getParsedBody();
 
-		# minimum permission is that user is allowed to delete content
-		if(!$this->c->acl->isAllowed($_SESSION['role'], 'content', 'delete'))
+		if(!isset($params['name']))
 		{
-			return $response->withJson(array('data' => false, 'errors' => 'You are not allowed to delete files.'), 403);
+			$response->getBody()->write(json_encode([
+				'message' 		=> 'Filename is missing.'
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
 		}
 
-		if(!isset($this->params['name']))
+		$storage = new StorageWrapper('\Typemill\Models\Storage');
+
+		$deleted = $storage->deleteMediaFile($params['name']);
+
+		if($deleted)
 		{
-			return $response->withJson(['errors' => 'file name is missing'],500);	
+			$response->getBody()->write(json_encode([
+				'message' 		=> 'File deleted successfully.'
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json');
 		}
 
-		$fileProcessor	= new ProcessFile();
+		$response->getBody()->write(json_encode([
+			'message' 		=> $storage->getError()
+		]));
 
-		if($fileProcessor->deleteFile($this->params['name']))
-		{
-			return $response->withJson(['errors' => false]);
-		}
-
-		return $response->withJson(['errors' => 'could not delete the file'],500);
+		return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
 	}
-
+ 
 	# https://www.sitepoint.com/mime-types-complete-list/
 	# https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
 	# https://wiki.selfhtml.org/wiki/MIME-Type/%C3%9Cbersicht
