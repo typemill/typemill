@@ -8,11 +8,11 @@
 
 ## Raw Editor
 
-* DONE
+* DONE ready
 
 ## Medialib
 
-bla
+* DONE
 
 ## Posts
 
@@ -27,18 +27,32 @@ bla
 * DONE
 * DONE: Test restrictions
 
-## Else
+## ToDos
+
+Biig blocks:
+
+* DONE: Media Library
+* DONE: Posts
+* Recover Password
+
+Small features:
 
 * Sitemap and ping
 * Captcha
 * Clear Cache
 * Security Log
 * Backend fields
-
-## Fixes
-
+* Proxy
 * DONE: Session handling: csrf fail and session start error if restrictions are active
 * Editor: Warn if open another block
+* Image generation on the fly
+* Assets
+
+Cleanups:
+
+* Events
+* Error messages
+* Translations
 
 ## Select userroles
 
@@ -51,5 +65,5 @@ bla
 
 * On activation in apiControllerExtension. It checks the license in yaml.
 * In plugin php code with setPremiumLicense
-* In static plugins, it checks manual premium list and method setPremiumLicense and more
+* In static plugins, it checks manual premium list and method setPremiumLicense and more 
 

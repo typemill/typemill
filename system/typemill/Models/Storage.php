@@ -633,6 +633,150 @@ class Storage
 		return $filelist;
 	}
 
+	public function deleteMediaFile($name)
+	{
+		# validate name 
+		$name = basename($name);
+
+		if(file_exists($this->fileFolder . $name) && unlink($this->fileFolder . $name))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	public function deleteFileWithName($name)
+	{
+		# e.g. delete $name = 'logo';
+
+		$name = basename($name);
+
+		if($name != '' && !in_array($name, array(".","..")))
+		{
+			foreach(glob($this->fileFolder . $name) as $file)
+			{
+				unlink($file);
+			}
+		}
+	}
+
+	##################
+	## 	 POST PAGES	##
+	##################
+
+	public function transformPagesToPosts($folder)
+	{		
+		$filetypes			= array('md', 'txt', 'yaml');
+		$result 			= true;
+
+		foreach($folder->folderContent as $page)
+		{
+			# create old filename without filetype
+			$oldFile 	= $this->contentFolder . $page->pathWithoutType;
+
+			# set default date
+			$date 		= date('Y-m-d', time());
+			$time		= date('H-i', time());
+
+			$meta 		= $this->getYaml('contentFolder', '', $page->pathWithoutType . '.yaml');
+
+			if($meta)
+			{
+				# get dates from meta
+				if(isset($meta['meta']['manualdate'])){ $date = $meta['meta']['manualdate']; }
+				elseif(isset($meta['meta']['created'])){ $date = $meta['meta']['created']; }
+				elseif(isset($meta['meta']['modified'])){ $date = $meta['meta']['modified']; }
+
+				# set time
+				if(isset($meta['meta']['time']))
+				{
+					$time = $meta['meta']['time'];
+				}
+			}
+
+			$datetime 	= $date . '-' . $time;
+			$datetime 	= implode(explode('-', $datetime));
+			$datetime	= substr($datetime,0,12);
+
+			# create new file-name without filetype
+			$newFile 	= $this->contentFolder . $folder->path . DIRECTORY_SEPARATOR . $datetime . '-' . $page->slug;
+
+			foreach($filetypes as $filetype)
+			{
+				$oldFilePath = $oldFile . '.' . $filetype;
+				$newFilePath = $newFile . '.' . $filetype;
+							
+				#check if file with filetype exists and rename
+				if($oldFilePath != $newFilePath && file_exists($oldFilePath))
+				{
+					if(@rename($oldFilePath, $newFilePath))
+					{
+						$result = $result;
+					}
+					else
+					{
+						$this->error = "could not rename $oldFilePath to $newFilePath";
+						$result = false;
+					}
+				}
+			}
+		}
+
+		return $result;
+	}
+
+	public function transformPostsToPages($folder)
+	{
+		$filetypes			= array('md', 'txt', 'yaml');
+		$index				= 0;
+		$result 			= true;
+
+		foreach($folder->folderContent as $page)
+		{
+			# create old filename without filetype
+			$oldFile 	= $this->contentFolder . $page->pathWithoutType;
+
+			$order 		= $index;
+
+			if($index < 10)
+			{
+				$order = '0' . $index;
+			}
+
+			# create new file-name without filetype
+			$newFile 	= $this->contentFolder . $folder->path . DIRECTORY_SEPARATOR . $order . '-' . $page->slug;
+
+			foreach($filetypes as $filetype)
+			{
+				$oldFilePath = $oldFile . '.' . $filetype;
+				$newFilePath = $newFile . '.' . $filetype;
+				
+				#check if file with filetype exists and rename
+				if($oldFilePath != $newFilePath && file_exists($oldFilePath))
+				{
+					if(@rename($oldFilePath, $newFilePath))
+					{
+						$result = $result;
+					}
+					else
+					{
+						$this->error = "could not rename $oldFilePath to $newFilePath";
+						$result = false;
+					}
+				}
+			}
+
+			$index++;
+		}
+
+		return $result;
+	}
+
+
+
+/*
+
 	public function getFileDetailsBREAK($name)
 	{
 		$name = basename($name);
@@ -652,44 +796,6 @@ class Storage
 
 		return false;
 	}
-
-	public function deleteMediaFile($name)
-	{
-		# validate name 
-		$name = basename($name);
-
-		if(file_exists($this->fileFolder . $name) && unlink($this->fileFolder . $name))
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-
-	public function deleteFileWithName($name)
-	{
-		# e.g. delete $name = 'logo';
-
-		$name = basename($name);
-
-		if($name != '' && !in_array($name, array(".","..")))
-		{
-			foreach(glob($this->fileFolder . $name) as $file)
-			{
-				unlink($file);
-			}
-		}
-	}
-
-
-
-
-
-
-
-/*
-
 
 	public function getStorageInfoBREAK($item)
 	{

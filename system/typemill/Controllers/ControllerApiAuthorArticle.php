@@ -481,6 +481,124 @@ class ControllerApiAuthorArticle extends Controller
 		return $response->withHeader('Content-Type', 'application/json');
 	}
 
+	public function createPost(Request $request, Response $response, $args)
+	{
+		$validRights		= $this->validateRights($request->getAttribute('c_userrole'), 'mycontent', 'create');
+		if(!$validRights)
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> 'You do not have enough rights.',
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);			
+		}
+
+		$params 			= $request->getParsedBody();
+		$validate			= new Validation();
+		$validInput 		= $validate->navigationItem($params);
+		if($validInput !== true)
+		{
+			$errors 		= $validate->returnFirstValidationErrors($validInput);
+			$response->getBody()->write(json_encode([
+				'message' 	=> reset($errors),
+				'errors' 	=> $errors
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+		}
+
+		# set variables
+		$urlinfo 			= $this->c->get('urlinfo');
+		$langattr 			= $this->settings['langattr'] ?? 'en';
+
+		# get navigation
+	    $navigation 		= new Navigation();
+	    $draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $langattr);
+	    if($params['folder_id'] == 'root')
+	    {
+			$folderContent		= $draftNavigation;
+		}
+		else
+	    {
+			# get the ids (key path) for item, old folder and new folder
+			$folderKeyPath 		= explode('.', $params['folder_id']);
+			
+			# get the item from structure
+			$folder				= $navigation->getItemWithKeyPath($draftNavigation, $folderKeyPath);
+
+			if(!$folder)
+			{ 
+				$response->getBody()->write(json_encode([
+					'message' 	=> 'We could not find this page. Please refresh and try again.'
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+			}
+
+			$folderContent		= $folder->folderContent;
+	    }
+
+		$slug 			= Slug::createSlug($params['item_name'], $langattr);
+
+		# iterate through the whole content of the new folder
+		$index 			= 0;
+		$writeError 	= false;
+		$folderPath 	= isset($folder) ? $folder->path : '';
+		$storage 		= new StorageWrapper('\Typemill\Models\Storage');
+
+		foreach($folderContent as $folderItem)
+		{
+			# check, if the same name as new item, then return an error
+			if($folderItem->slug == $slug)
+			{
+				$response->getBody()->write(json_encode([
+					'message' 	=> 'There is already a page with this name. Please choose another name.'
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+			}
+		}
+
+		# add prefix date to the name
+		$namePath 		= date("YmdHi") . '-' . $slug;
+		
+		# create default content
+		$content = json_encode(['# ' . $params['item_name'], 'Content']);
+		
+		if($params['type'] == 'file')
+		{
+			if(!$storage->writeFile('contentFolder', $folderPath, $namePath . '.txt', $content))
+			{
+				$response->getBody()->write(json_encode([
+					'message' 	=> 'We could not create the file. Please refresh the page and check, if all folders and files are writable.'
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+			}
+			$storage->updateYaml('contentFolder', $folderPath, $namePath . '.yaml', ['meta' => ['navtitle' => $params['item_name']]]);
+		}
+		elseif($params['type'] == 'folder')
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> 'We cannot create a folder, only files.'
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+		}
+
+		$navigation->clearNavigation();
+	    $draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $langattr);
+		$item				= $navigation->getItemWithKeyPath($draftNavigation, $folderKeyPath);
+
+		$response->getBody()->write(json_encode([
+			'navigation'	=> $draftNavigation,
+			'item'			=> $item,
+		]));
+
+		return $response->withHeader('Content-Type', 'application/json');
+	}
+
+
 	public function renameArticle(Request $request, Response $response, $args)
 	{
 		$validRights		= $this->validateRights($request->getAttribute('c_userrole'), 'mycontent', 'edit');

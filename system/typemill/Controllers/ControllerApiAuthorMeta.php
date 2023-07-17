@@ -50,7 +50,7 @@ class ControllerApiAuthorMeta extends Controller
 		# if item is a folder
 		if($item->elementType == "folder" && isset($item->contains))
 		{
-			$metadata['meta']['contains'] = isset($pagemeta['meta']['contains']) ? $pagemeta['meta']['contains'] : $item->contains;
+			$metadata['meta']['contains'] = isset($metadata['meta']['contains']) ? $metadata['meta']['contains'] : $item->contains;
 
 			# get global metadefinitions
 			$metadefinitions = $meta->getMetaDefinitions($this->settings, $folder = true);
@@ -237,7 +237,7 @@ class ControllerApiAuthorMeta extends Controller
 
 			# if folder has changed and contains pages instead of posts or posts instead of pages
 			if($item->elementType == "folder" && isset($params['data']['contains']) && isset($pageMeta['meta']['contains']) && $this->hasChanged($params['data'], $pageMeta['meta'], 'contains'))
-			{
+			{				
 				if($meta->folderContainsFolders($item))
 				{
 					$response->getBody()->write(json_encode([

@@ -714,10 +714,6 @@ video {
   bottom: 0.75rem;
 }
 
-.top-12 {
-  top: 3rem;
-}
-
 .top-10 {
   top: 2.5rem;
 }
@@ -732,6 +728,10 @@ video {
 
 .z-50 {
   z-index: 50;
+}
+
+.float-right {
+  float: right;
 }
 
 .m-0 {

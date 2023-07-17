@@ -27,6 +27,8 @@
 	<div id="meta"></div>
 
 	<div id="editor"></div>
+	
+	<div id="posts"></div>
 
 	<div id="publisher" class="fixed bottom-0 w-54rem bg-stone-100 border-t border-stone-200 shadow-md" v-cloak></div>
 
@@ -41,6 +43,7 @@
 	<script src="{{ base_url() }}/system/typemill/author/js/vue-meta.js?v={{ settings.version }}"></script>
 	<script src="{{ base_url() }}/system/typemill/author/js/vue-forms.js?v={{ settings.version }}"></script>
 	<script src="{{ base_url() }}/system/typemill/author/js/vue-publisher.js?v={{ settings.version }}"></script>
+	<script src="{{ base_url() }}/system/typemill/author/js/vue-posts.js?v={{ settings.version }}"></script>
 	<script>
 
 		bloxeditor.config.globalProperties.$filters = translatefilter;
@@ -51,6 +54,9 @@
 		
 		publisher.config.globalProperties.$filters = translatefilter;
 		publisher.mount('#publisher');
+
+		posts.config.globalProperties.$filters = translatefilter;
+		posts.mount('#posts');
 	
 	</script>
 

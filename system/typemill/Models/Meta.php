@@ -166,6 +166,43 @@ class Meta
 		return $meta;
 	}
 
+	public function folderContainsFolders($folder)
+	{
+		foreach($folder->folderContent as $page)
+		{
+			if($page->elementType == 'folder')
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	# just route it to storageWrapper because wrapper is initialized here and we dont want to initialize it in controllers
+	public function transformPostsToPages($folder)
+	{
+		if($this->storage->transformPostsToPages($folder))
+		{
+			return true;
+		}
+
+#		return $this->storage->getError();
+		return false;
+	}
+
+	public function transformPagesToPosts($folder)
+	{
+		if($this->storage->transformPagesToPosts($folder))
+		{
+			return true;
+		}
+
+#		return $this->storage->getError();
+		return false;
+	}
+
+
 
 
 
@@ -181,6 +218,8 @@ class Meta
 
 	public function getNavtitle($url)
 	{
+		die("meta moddel this method is outdated");
+
 		# get the extended structure where the navigation title is stored
 		$extended = $this->getYaml('cache', 'structure-extended.yaml');
 		
@@ -194,6 +233,9 @@ class Meta
 	# used by articleApiController and pageController to add title and description if an article is published
 	public function completePageMeta($content, $settings, $item)
 	{
+
+		die("meta moddel this method is outdated");
+
 		$meta = $this->getPageMeta($settings, $item);
 
 		if(!$meta)
@@ -237,6 +279,9 @@ class Meta
 
 	private function whitelistMeta($meta, $metascheme)
 	{
+
+		die("meta moddel this method is outdated");
+
 		# we have only 2 dimensions, so no recursive needed
 		foreach($meta as $tab => $values)
 		{
@@ -257,6 +302,8 @@ class Meta
 
 	public function generateDescription($content, $parsedown, $item)
 	{
+		die("meta moddel this method is outdated");
+
 		$description = isset($content[1]) ? $content[1] : '';
 
 		# create description or abstract from content
@@ -281,124 +328,5 @@ class Meta
 			}
 		}
 		return $description;
-	}
-
-	public function transformPagesToPosts($folder)
-	{		
-		$filetypes			= array('md', 'txt', 'yaml');
-		$result 			= true;
-
-		foreach($folder->folderContent as $page)
-		{
-			# create old filename without filetype
-			$oldFile 	= $this->basePath . 'content' . $page->pathWithoutType;
-
-			# set default date
-			$date 		= date('Y-m-d', time());
-			$time		= date('H-i', time());
-
-			$meta 		= $this->getYaml('content', $page->pathWithoutType . '.yaml');
-
-			if($meta)
-			{
-				# get dates from meta
-				if(isset($meta['meta']['manualdate'])){ $date = $meta['meta']['manualdate']; }
-				elseif(isset($meta['meta']['created'])){ $date = $meta['meta']['created']; }
-				elseif(isset($meta['meta']['modified'])){ $date = $meta['meta']['modified']; }
-
-				# set time
-				if(isset($meta['meta']['time']))
-				{
-					$time = $meta['meta']['time'];
-				}
-			}
-
-			$datetime 	= $date . '-' . $time;
-			$datetime 	= implode(explode('-', $datetime));
-			$datetime	= substr($datetime,0,12);
-
-			# create new file-name without filetype
-			$newFile 	= $this->basePath . 'content' . $folder->path . DIRECTORY_SEPARATOR . $datetime . '-' . $page->slug;
-
-			foreach($filetypes as $filetype)
-			{
-				$oldFilePath = $oldFile . '.' . $filetype;
-				$newFilePath = $newFile . '.' . $filetype;
-							
-				#check if file with filetype exists and rename
-				if($oldFilePath != $newFilePath && file_exists($oldFilePath))
-				{
-					if(@rename($oldFilePath, $newFilePath))
-					{
-						$result = $result;
-					}
-					else
-					{
-						$result = false;
-					}
-				}
-			}
-		}
-
-		return $result;
-	}
-
-	public function transformPostsToPages($folder)
-	{
-		$filetypes			= array('md', 'txt', 'yaml');
-		$index				= 0;
-		$result 			= true;
-
-		foreach($folder->folderContent as $page)
-		{
-			# create old filename without filetype
-			$oldFile 	= $this->basePath . 'content' . $page->pathWithoutType;
-
-			$order 		= $index;
-
-			if($index < 10)
-			{
-				$order = '0' . $index;
-			}
-
-			# create new file-name without filetype
-			$newFile 	= $this->basePath . 'content' . $folder->path . DIRECTORY_SEPARATOR . $order . '-' . $page->slug;
-
-			foreach($filetypes as $filetype)
-			{
-				$oldFilePath = $oldFile . '.' . $filetype;
-				$newFilePath = $newFile . '.' . $filetype;
-				
-				#check if file with filetype exists and rename
-				if($oldFilePath != $newFilePath && file_exists($oldFilePath))
-				{
-					if(@rename($oldFilePath, $newFilePath))
-					{
-						$result = $result;
-					}
-					else
-					{
-						$result = false;
-					}
-				}
-			}
-
-			$index++;
-		}
-
-		return $result;
-	}
-
-	public function folderContainsFolders($folder)
-	{
-		foreach($folder->folderContent as $page)
-		{
-			if($page->elementType == 'folder')
-			{
-				return true;
-			}
-		}
-
-		return false;
 	}
 }

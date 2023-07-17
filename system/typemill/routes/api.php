@@ -66,6 +66,7 @@ $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 	$group->post('/article', ControllerApiAuthorArticle::class . ':createArticle')->setName('api.article.create')->add(new ApiAuthorization($acl, 'content', 'create')); # author
 	$group->put('/draft', ControllerApiAuthorArticle::class . ':updateDraft')->setName('api.draft.update')->add(new ApiAuthorization($acl, 'content', 'create')); # author
 	$group->post('/draft/publish', ControllerApiAuthorArticle::class . ':publishDraft')->setName('api.draft.publish')->add(new ApiAuthorization($acl, 'content', 'create')); # author
+	$group->post('/post', ControllerApiAuthorArticle::class . ':createPost')->setName('api.post.create')->add(new ApiAuthorization($acl, 'content', 'create'));
 
 	# BLOCKS
 	$group->post('/block', ControllerApiAuthorBlock::class . ':addBlock')->setName('api.block.add')->add(new ApiAuthorization($acl, 'mycontent', 'create'));

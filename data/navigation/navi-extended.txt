@@ -38,7 +38,7 @@
     navtitle: 'To Dos'
     hide: false
     noindex: false
-    path: /00-welcome/05-todos.txtmd
+    path: /00-welcome/05-todos.md
     keyPath: '0.5'
 /cyanine-theme:
     navtitle: 'cyanine theme'
@@ -46,17 +46,17 @@
     noindex: false
     path: /01-cyanine-theme
     keyPath: 1
+/cyanine-theme/new:
+    navtitle: new
+    hide: false
+    noindex: false
+    path: /01-cyanine-theme/00-new.txt
+    keyPath: '1.0'
 /cyanine-theme/landingpage:
     navtitle: landingpage
     hide: false
     noindex: true
-    path: /01-cyanine-theme/00-landingpage.md
-    keyPath: '1.0'
-/cyanine-theme/footer:
-    navtitle: footer
-    hide: false
-    noindex: false
-    path: /01-cyanine-theme/01-footer.md
+    path: /01-cyanine-theme/01-landingpage.md
     keyPath: '1.1'
 /cyanine-theme/content-elements:
     navtitle: 'content elements'
@@ -70,9 +70,9 @@
     noindex: false
     path: /01-cyanine-theme/03-colors-and-fonts.md
     keyPath: '1.3'
-/cyanine-theme/new:
-    navtitle: new
+/cyanine-theme/footer:
+    navtitle: footer
     hide: false
     noindex: false
-    path: /01-cyanine-theme/04-new.txt
+    path: /01-cyanine-theme/04-footer.md
     keyPath: '1.4'

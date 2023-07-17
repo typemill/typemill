@@ -164,7 +164,7 @@ navigation.component('navilevel',{
 								<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
 							</svg>
       					</div>
-						<div v-if="element.elementType == 'folder'" class=" p-1 bg-transparent absolute right-0" @click="callToggle(element.name)">
+						<div v-if="element.elementType == 'folder' && element.contains == 'pages'" class=" p-1 bg-transparent absolute right-0" @click="callToggle(element.name)">
 							<svg v-if="isExpanded(element.name)" class="icon icon-cheveron-up">
 								<use xlink:href="#icon-cheveron-up"></use>
 							</svg>
@@ -173,7 +173,7 @@ navigation.component('navilevel',{
 							</svg>
 						</div>
 					</div>
-					<navilevel v-show="isExpanded(element.name)" v-if="element.elementType == 'folder'" :list="element.folderContent" :navigation="element.folderContent" :parentId="element.keyPath" :expanded="expanded" />
+					<navilevel v-show="isExpanded(element.name)" v-if="element.elementType == 'folder' && element.contains == 'pages'" :list="element.folderContent" :navigation="element.folderContent" :parentId="element.keyPath" :expanded="expanded" />
 				</li>
 			</template>
 			<template #footer>
