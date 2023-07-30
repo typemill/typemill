@@ -19,12 +19,6 @@ use Typemill\Events\OnHtmlLoaded;
 use Typemill\Events\OnRestrictionsLoaded;
 
 
-/*
-use Typemill\Models\Folder;
-use Typemill\Models\WriteMeta;
-use Typemill\Extensions\ParsedownExtension;
-*/
-
 class ControllerWebFrontend extends Controller
 {
 	public function index(Request $request, Response $response, $args)
@@ -131,7 +125,7 @@ class ControllerWebFrontend extends Controller
 			if($restrictions['defaultContent'])
 			{
 				# cut the restricted content
-				$shortenedPage = $this->cutRestrictedContent($markdownBlocks);
+				$shortenedPage = $this->cutRestrictedContent($markdownArray);
 
 				# check if there is customized content
 				$restrictionnotice = $this->prepareRestrictionNotice();

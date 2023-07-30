@@ -112,7 +112,8 @@ const app = Vue.createApp({
 				self.showModal = false;
 				self.messageClass = 'bg-teal-500';
 				self.message = response.data.message;
-				/* redirect to userlist */
+
+				window.location.replace(data.urlinfo.baseurl + '/tm/users');
 			})
 			.catch(function (error)
 			{

@@ -101,7 +101,7 @@ abstract class Controller
 	}
 
 	protected function addDatasets(array $formDefinitions)
-	{
+	{		
 		foreach($formDefinitions as $fieldname => $field)
 		{
 			if(isset($field['type']) && $field['type'] == 'fieldset')
@@ -109,15 +109,25 @@ abstract class Controller
 				$formDefinitions[$fieldname]['fields'] = $this->addDatasets($field['fields']);
 			}
 
-			if(isset($field['type']) && ($field['type'] == 'select' ) && isset($field['dataset']) && ($field['dataset'] == 'userroles' ) )
+			if(isset($field['type']) && ($field['type'] == 'select' ) )
 			{
-				$userroles = [null => null];
-				foreach($this->c->get('acl')->getRoles() as $userrole)
+				# always add null as first option in selectboxes.
+				$options = [null => null];
+				
+				if(is_array($field['options']))
 				{
-					$userroles[$userrole] = $userrole;
+					$options = array_merge($options, $field['options']);
 				}
 
-				$formDefinitions[$fieldname]['options'] = $userroles;
+				if(isset($field['dataset']) && ($field['dataset'] == 'userroles' ))
+				{
+					foreach($this->c->get('acl')->getRoles() as $userrole)
+					{
+						$options[$userrole] = $userrole;
+					}
+				}
+
+				$formDefinitions[$fieldname]['options'] = $options;
 			}
 		}
 
@@ -177,6 +187,12 @@ abstract class Controller
 			if(isset($input[$fieldname]))
 			{
 				$fieldvalue = $input[$fieldname];
+
+				# fix false or null values for selectboxes
+				if($fielddefinitions['type'] == "select" && ($fieldvalue === 'NULL' OR $fieldvalue === false))
+				{ 
+					$fieldvalue = NULL; 
+				}
 
 				$validationresult = $validator->field($fieldname, $fieldvalue, $fielddefinitions);
 

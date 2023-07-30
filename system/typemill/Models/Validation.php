@@ -559,11 +559,11 @@ class Validation
 	* @return obj $v the validation object passed to a result method.
 	*/
 	
-	public function recoverPasswordBREAK(array $params)
+	public function recoverPassword(array $params)
 	{
 		$v = new Validator($params);
 		$v->rule('required', ['password', 'passwordrepeat']);
-		$v->rule('lengthBetween', 'password', 5, 20);
+		$v->rule('lengthBetween', 'password', 5, 50);
 		$v->rule('equals', 'passwordrepeat', 'password');
 		
 		return $this->validationResult($v);

@@ -1,6 +1,6 @@
 {% if flash.info %}
 
-	<div class="alert alert-info" id="flash-message">
+	<div class="w-full text-center text-white p-2 bg-teal-600 border-b border-white" id="flash-message">
 		{{ flash.info | first }}
 	</div>
 
@@ -8,7 +8,7 @@
 
 {% if flash.error %}
 
-	<div class="alert alert-error" id="flash-message">
+	<div class="w-full text-center text-white p-2 bg-rose-500" id="flash-message">
 		{{ flash.error | first }}
 	</div>
 

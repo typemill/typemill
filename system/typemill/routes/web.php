@@ -4,21 +4,31 @@ use Slim\Routing\RouteCollectorProxy;
 use Typemill\Middleware\WebRedirectIfAuthenticated;
 use Typemill\Middleware\WebRedirectIfUnauthenticated;
 use Typemill\Middleware\WebAuthorization;
+use Typemill\Controllers\ControllerWebSetup;
 use Typemill\Controllers\ControllerWebAuth;
+use Typemill\Controllers\ControllerWebRecover;
 use Typemill\Controllers\ControllerWebSystem;
 use Typemill\Controllers\ControllerWebAuthor;
 use Typemill\Controllers\ControllerWebFrontend;
 use Typemill\Controllers\ControllerWebDownload;
 
-# login/register
-$app->group('/tm', function (RouteCollectorProxy $group) {
+# LOGIN / REGISTER / RECOVER
+$app->group('/tm', function (RouteCollectorProxy $group) use ($settings) {
 
 	$group->get('/login', ControllerWebAuth::class . ':show')->setName('auth.show');
 	$group->post('/login', ControllerWebAuth::class . ':login')->setName('auth.login');
 
+	if(isset($settings['recoverpw']) && $settings['recoverpw'])
+	{
+		$group->get('/recover', ControllerWebRecover::class . ':showRecoverForm')->setName('auth.recoverform');
+		$group->post('/recover', ControllerWebRecover::class . ':recoverPassword')->setName('auth.recover');
+		$group->get('/reset', ControllerWebRecover::class . ':showPasswordResetForm')->setName('auth.resetform');
+		$group->post('/reset', ControllerWebRecover::class . ':resetPassword')->setName('auth.reset');
+	}
+
 })->add(new WebRedirectIfAuthenticated($routeParser, $settings));
 
-# author and editor area, requires authentication
+# AUTHOR AREA (requires authentication)
 $app->group('/tm', function (RouteCollectorProxy $group) use ($routeParser,$acl) {
 
 	# Admin Area
@@ -40,9 +50,6 @@ $app->group('/tm', function (RouteCollectorProxy $group) use ($routeParser,$acl)
 
 $app->redirect('/tm', $routeParser->urlFor('auth.show'), 302);
 $app->redirect('/tm/', $routeParser->urlFor('auth.show'), 302);
-
-# same with setup redirect
-
 
 # downloads
 $app->get('/media/files[/{params:.*}]', ControllerWebDownload::class . ':download')->setName('download.file');

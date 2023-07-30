@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Typemill\Models\Validation;
 use Typemill\Models\Extension;
 use Typemill\Models\User;
-use Typemill\Static\Settings;
+use Typemill\Models\Settings;
 
 
 # how to translate results in API call ???
@@ -28,8 +28,9 @@ class ControllerApiSystemSettings extends Controller
 	{
 		$params 			= $request->getParsedBody();
 		$settingsinput 		= $params['settings'];
+		$settingsModel 		= new Settings();
 
-		$formdefinitions 	= Settings::getSettingsDefinitions();
+		$formdefinitions 	= $settingsModel->getSettingsDefinitions();
 
 		# validate input
 		$validator 			= new Validation();
@@ -46,7 +47,7 @@ class ControllerApiSystemSettings extends Controller
 		}
 
 		# store updated settings here
-		$updatedSettings = Settings::updateSettings($validatedOutput);
+		$updatedSettings 	= $settingsModel->updateSettings($validatedOutput);
 
 		$response->getBody()->write(json_encode([
 			'message' => 'settings have been saved',

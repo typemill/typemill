@@ -1,17 +1,9 @@
 version: '2.0.0'
-setup: true
-welcome: true
 title: 'Typemill'
 author: 'Unknown'
-copyright: 'Copyright'
+copyright: false
 language: 'en'
 langattr: 'en'
-themeFolder: 'themes'
-pluginFolder: 'plugins'
-settingsFolder: 'settings'
-contentFolder: 'content'
-authorFolder: '/system/typemill/author'
-adminSegment: 'tm'
 editor: 'visual'
 storage: '\Typemill\Models\Storage'
 formats:

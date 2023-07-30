@@ -38,7 +38,7 @@
     navtitle: 'To Dos'
     hide: false
     noindex: false
-    path: /00-welcome/05-todos.md
+    path: /00-welcome/05-todos.txtmd
     keyPath: '0.5'
 /cyanine-theme:
     navtitle: 'cyanine theme'
@@ -50,7 +50,7 @@
     navtitle: new
     hide: false
     noindex: false
-    path: /01-cyanine-theme/00-new.txt
+    path: /01-cyanine-theme/00-new.md
     keyPath: '1.0'
 /cyanine-theme/landingpage:
     navtitle: landingpage

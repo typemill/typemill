@@ -1,0 +1,54 @@
+{% extends 'layouts/layoutAuth.twig' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+	<div class="flex justify-end">
+		
+		<div class="bg-teal-600 text-white min-h-screen w-1/2 flex justify-center items-center">
+			<div class="max-w-md content-center">
+			
+				<form method="POST" action="{{ url_for("auth.recover") }}" autocomplete="off">
+				
+					<fieldset class="">
+
+						<div class="my-2 {{ errors.email ? ' errors' : '' }}">
+							<label for="email">{{ 'Email'|translate }} <abbr title="{{ 'required'|translate }}">*</abbr></label>
+							<input 
+								type="text" 
+								name="email" 
+								value="{{ old.email }}" 
+								class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+							required>
+							{% if errors.email %}
+								<span class="">{{ errors.email|first }}</span>
+							{% endif %}
+						</div>
+						
+						<div class="personal-mail hidden">
+							<label>Personal Mail</label>
+							<input type="text" name="personal-honey-mail">
+						</div>
+
+						<input 
+							type="submit" 
+							value="{{ 'Recover password'|translate }}" 
+                      		class="block w-full mt-6 px-3 py-3 border-0 font-medium text-xs leading-tight uppercase border-2 border-stone-50 text-stone-50 pointer hover:bg-stone-50 hover:text-stone-800 cursor-pointer focus:outline-none focus:ring-0 transition duration-100 ease-in-out"
+						/>
+
+					</fieldset>
+
+				</form>	
+			</div>
+		</div>
+		
+		<div class="content-center w-1/2 flex justify-center items-center">
+			<div class="max-w-md content-center">
+				<h1 class="text-4xl py-5">Forgot your password?</h1>
+				<p>Enter the email of your user-account, click the recover-button and check your mailbox for further instructions.</p>
+			</div>
+		</div>
+	
+	</div>
+{% endblock %}

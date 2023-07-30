@@ -8,7 +8,7 @@ class Storage
 {
 	public $error 					= false;
 
-	protected $basepath 			= false;
+	private $basepath 				= false;
 
 	protected $tmpFolder 			= false;
 
@@ -30,9 +30,9 @@ class Storage
 
 	protected $settingsFolder 		= false;
 
-	protected $themeFolder 			= false;
+	protected $themesFolder 		= false;
 
-	protected $pluginFolder 		= false;
+	protected $pluginsFolder 		= false;
 
 	protected $translationFolder 	= false;
 
@@ -62,9 +62,9 @@ class Storage
 
 		$this->settingsFolder 		= $this->basepath . 'settings';
 
-		$this->pluginFolder 		= $this->basepath . 'plugins';
+		$this->pluginsFolder 		= $this->basepath . 'plugins';
 
-		$this->themeFolder 			= $this->basepath . 'themes';
+		$this->themesFolder 		= $this->basepath . 'themes';
 
 		$this->translationFolder 	= $this->basepath . 'system' .  DIRECTORY_SEPARATOR . 'typemill' . DIRECTORY_SEPARATOR . 'author' . DIRECTORY_SEPARATOR . 'translations' . DIRECTORY_SEPARATOR;
 	
@@ -78,6 +78,10 @@ class Storage
 
 	public function getFolderPath($location, $folder = NULL)
 	{
+		# security: remove ../ from location
+		# security: make sure user does not write into basepath
+		# security: write only into certain folders
+
 		if(isset($this->$location))
 		{
 			$path = rtrim($this->$location, DIRECTORY_SEPARATOR);
@@ -97,7 +101,7 @@ class Storage
 		return false;
 	}
 
-	public function checkFolder($location, $folder)
+	public function checkFolder($location, $folder = NULL)
 	{
 		$folderpath = $this->getFolderPath($location, $folder);
 
@@ -366,6 +370,12 @@ class Storage
 
 		$extension 	= isset($pathinfo['extension']) ? strtolower($pathinfo['extension']) : false;
 		$imagename 	= isset($pathinfo['filename']) ? $pathinfo['filename'] : false;
+
+		if(!$extension OR !$imagename)
+		{
+			$this->error = "Extension or name for image is missing.";
+			return false;
+		}
 
 		$imagesInTmp = glob($this->tmpFolder . "*$imagename.*"); 
 		if(empty($imagesInTmp) OR !$imagesInTmp)

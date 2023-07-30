@@ -4,6 +4,7 @@ namespace Typemill\Models;
 
 use Typemill\Models\StorageWrapper;
 use Typemill\Models\Content;
+use Typemill\Models\Settings;
 
 class Meta
 {
@@ -36,7 +37,8 @@ class Meta
 
 	public function getMetaDefinitions($settings, $folder)
 	{
-		$metadefinitions = $this->storage->getYaml('systemSettings', '', 'metatabs.yaml');
+		$metadefinitions 	= $this->storage->getYaml('systemSettings', '', 'metatabs.yaml');
+		$settingsModel 		= new Settings();
 
 		# loop through all plugins
 		if(!empty($settings['plugins']))
@@ -45,7 +47,7 @@ class Meta
 			{
 				if($plugin['active'])
 				{
-					$pluginSettings = \Typemill\Static\Settings::getObjectSettings('plugins', $name);
+					$pluginSettings = $settingsModel->getObjectSettings('pluginsFolder', $name);
 					if($pluginSettings && isset($pluginSettings['metatabs']))
 					{
 						$metadefinitions = array_merge_recursive($metadefinitions, $pluginSettings['metatabs']);
@@ -55,7 +57,7 @@ class Meta
 		}
 		
 		# add the meta from theme settings here
-		$themeSettings = \Typemill\Static\Settings::getObjectSettings('themes', $settings['theme']);
+		$themeSettings = $settingsModel->getObjectSettings('themesFolder', $settings['theme']);
 		
 		if($themeSettings && isset($themeSettings['metatabs']))
 		{

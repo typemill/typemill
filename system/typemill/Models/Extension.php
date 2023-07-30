@@ -40,7 +40,7 @@ class Extension
 
 	public function getThemes()
 	{
-		$themeFolder 	= $this->storage->getFolderPath('themeFolder');
+		$themeFolder 	= $this->storage->getFolderPath('themesFolder');
 		$themeFolderC 	= scandir($themeFolder);
 		$themes 		= [];
 		foreach ($themeFolderC as $key => $theme)
@@ -59,7 +59,7 @@ class Extension
 
 	public function getThemeDefinition($themeName)
 	{
-		$themeSettings 		= $this->storage->getYaml('themeFolder', $themeName, $themeName . '.yaml');
+		$themeSettings 		= $this->storage->getYaml('themesFolder', $themeName, $themeName . '.yaml');
 
 		# add standard-textarea for custom css
 		$themeSettings['forms']['fields']['customcss'] = [
@@ -101,7 +101,7 @@ class Extension
 
 	public function getPlugins()
 	{
-		$pluginFolder 	= $this->storage->getFolderPath('pluginFolder');
+		$pluginFolder 	= $this->storage->getFolderPath('pluginsFolder');
 		$pluginFolderC 	= scandir($pluginFolder);
 		$plugins 		= [];
 		foreach ($pluginFolderC as $key => $plugin)
@@ -120,7 +120,7 @@ class Extension
 
 	public function getPluginDefinition($pluginName)
 	{
-		$pluginSettings 	= $this->storage->getYaml('pluginFolder', $pluginName, $pluginName . '.yaml');
+		$pluginSettings 	= $this->storage->getYaml('pluginsFolder', $pluginName, $pluginName . '.yaml');
 
 		return $pluginSettings;
 	}

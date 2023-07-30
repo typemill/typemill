@@ -22,6 +22,7 @@ class ControllerWebAuth extends Controller
 	    if( ( null !== $request->getattribute('csrf_result') ) OR ( $request->getattribute('csrf_result') === false ) )
 	    {
 			$this->c->flash->addMessage('error', 'The form has a timeout, please try again.');
+
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'));
 	    }
 
@@ -53,9 +54,8 @@ class ControllerWebAuth extends Controller
 
 				$user->login();
 
-return $response->withHeader('Location', $this->routeParser->urlFor('settings.show'))->withStatus(302);
+#				return $response->withHeader('Location', $this->routeParser->urlFor('settings.show'))->withStatus(302);
 
-/*
 				# if user is allowed to view content-area
 				$acl = $this->c->get('acl');
 				if($acl->hasRole($userdata['userrole']) && $acl->isAllowed($userdata['userrole'], 'content', 'view'))
@@ -66,7 +66,6 @@ return $response->withHeader('Location', $this->routeParser->urlFor('settings.sh
 				}
 
 				return $response->withHeader('Location', $this->routeParser->urlFor('user.account'))->withStatus(302);
-*/
 			}
 		}
 		

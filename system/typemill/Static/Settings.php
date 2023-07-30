@@ -3,15 +3,19 @@
 namespace Typemill\Static;
 
 use Typemill\Models\StorageWrapper;
+use Typemill\Static\Translations;
 
 class Settings
 {
 	public static function loadSettings()
 	{
+		echo debug_backtrace()[1]['function'];
+		die('use model load settings instead');
 		$defaultsettings 	= self::getDefaultSettings();
 		$usersettings 		= self::getUserSettings();
 		
 		$settings 			= $defaultsettings;
+		$settings['setup'] 	= true;
 
 		if($usersettings)
 		{
@@ -33,6 +37,9 @@ class Settings
 
 	public static function addThemeSettings($settings)
 	{
+				echo debug_backtrace()[1]['function'];
+		die('use model addThemeSettings instead');
+
 		# we have to check if the theme has been deleted
 		$rootpath		= getcwd();
 		$themefolder 	= $rootpath . DIRECTORY_SEPARATOR . $settings['themeFolder'] . DIRECTORY_SEPARATOR;
@@ -74,6 +81,9 @@ class Settings
 	
 	public static function getDefaultSettings()
 	{
+		echo debug_backtrace()[1]['function'];
+		die('use model getDefaultSettings instead');
+
 		$rootpath				= getcwd();
 		$defaultsettingspath 	= $rootpath . DIRECTORY_SEPARATOR . 'system' . DIRECTORY_SEPARATOR . 'typemill' . DIRECTORY_SEPARATOR . 'settings' . DIRECTORY_SEPARATOR;
 		$defaultsettingsfile 	= $defaultsettingspath . 'defaults.yaml';
@@ -92,6 +102,9 @@ class Settings
 	
 	public static function getUserSettings()
 	{	
+		echo debug_backtrace()[1]['function'];
+		die('use model getUserSettings instead');
+
 		$rootpath				= getcwd();
 		$usersettingsfile 		= $rootpath . DIRECTORY_SEPARATOR . 'settings' . DIRECTORY_SEPARATOR . 'settings.yaml';
 
@@ -106,10 +119,22 @@ class Settings
 		return false;
 	}
 
-	public static function getObjectSettings($objectType, $objectName)
+	public static function getObjectSettings($objectType, $objectName, $storagepath = '\Typemill\Models\Storage')
 	{
-#		$yaml = new Models\WriteYaml();
-		
+		echo debug_backtrace()[1]['function'];
+		die('use model getObjectSettings instead');
+
+		$storage 	= new StorageWrapper($storagepath);
+
+		$objectSettings = $storage->getYaml($objectType, $objectName, $objectName . '.yaml');
+
+		if($objectSettings)
+		{
+			return $objectSettings;
+		}
+		return false;
+
+/*
 		$rootpath 		= getcwd();
 		$objectfile 	= $rootpath . DIRECTORY_SEPARATOR . $objectType . DIRECTORY_SEPARATOR . $objectName . DIRECTORY_SEPARATOR . $objectName . '.yaml';
 
@@ -122,116 +147,52 @@ class Settings
 		}
 
 		return false;
+		*/
 	}
 
-	public static function updateSettings(array $newSettings)
+	public static function updateSettings(array $newSettings, $storagepath = '\Typemill\Models\Storage')
 	{
+		echo debug_backtrace()[1]['function'];
+		die('use model updateSettings instead');
+
+		$storage 	= new StorageWrapper($storagepath);
+
 		# only allow if usersettings already exists (setup has been done)
 		$userSettings 	= self::getUserSettings();
 
 		# merge usersettings with new settings
 		$settings 	= array_merge($userSettings, $newSettings);
-		
-		$storage 	= new StorageWrapper('\Typemill\Models\Storage');
-		
-		$storage->updateYaml('basepath', 'settings', 'settings.yaml', $settings);
+				
+		$storage->updateYaml('settingsFolder', '', 'settings.yaml', $settings);
 	}
 
-	public static function getSettingsDefinitions()
+	public static function getSettingsDefinitions($storagepath = '\Typemill\Models\Storage')
 	{
-		$storage  = new StorageWrapper('\Typemill\Models\Storage');
+		echo debug_backtrace()[1]['function'];
+		die('use model getSettingsDefinitions instead');
+
+		$storage  = new StorageWrapper($storagepath);
 		
 		return $storage->getYaml('systemSettings', '', 'system.yaml');
 	}
 
-
-
-
-
-
-
-
-### refactor
-  
-	public static function createSettings()
+	public static function createSettings($storagepath = '\Typemill\Models\Storage')
 	{
-		$yaml = new Models\WriteYaml();
+		echo debug_backtrace()[1]['function'];
+		die('use model createSettings instead');
 
-    	$language = self::whichLanguage();
+		$storage  = new StorageWrapper($storagepath);
+
+    	$language = Translations::whichLanguage();
     
-		# create initial settings file with only setup false
-		if($yaml->updateYaml('settings', 'settings.yaml', array('setup' => false, 'language' => $language)))
+    	$initialSettings = $storage->updateYaml('settingsFolder', '', 'settings.yaml', [
+			'language' => $language
+		]);
+
+		if($initialSettings)
 		{
 			return true; 
 		}
 		return false;
-	}
-
-	public static function oldupdateSettings($settings)
-	{
-		# only allow if usersettings already exists (setup has been done)
-		$userSettings 	= self::getUserSettings();
-		
-		if($userSettings)
-		{
-			# whitelist settings that can be stored in usersettings (values are not relevant here, only keys)
-			$allowedUserSettings = ['displayErrorDetails' => true,
-									'title' => true,
-									'copyright' => true,
-									'language' => true,
-									'langattr' => true,
-									'startpage' => true,
-									'author' => true,
-									'year' => true,
-									'access' => true,
-									'pageaccess' => true,
-									'hrdelimiter' => true,
-									'restrictionnotice' => true,
-									'wraprestrictionnotice' => true,
-									'headlineanchors' => true,
-									'theme' => true,
-									'editor' => true,
-									'formats' => true,
-									'setup' => true,
-									'welcome' => true,
-									'images' => true,
-									'live' => true,
-									'width' => true,
-									'height' => true,
-									'plugins' => true,
-									'themes' => true,
-									'latestVersion' => true,
-									'logo' => true,
-									'favicon' => true,
-									'twigcache' => true,
-									'proxy' => true,
-									'trustedproxies' => true,
-									'headersoff' => true,
-									'urlschemes' => true,
-									'svg' => true,
-									'recoverpw' => true,
-									'recoversubject' => true,
-									'recovermessage' => true,
-									'recoverfrom' => true,
-									'securitylog' => true,
-									'oldslug' => true,
-									'refreshcache' => true,
-									'pingsitemap' => true,
-								];
-
-			# cleanup the existing usersettings
-			$userSettings = array_intersect_key($userSettings, $allowedUserSettings);
-
-			# cleanup the new settings passed as an argument
-			$settings 	= array_intersect_key($settings, $allowedUserSettings);
-			
-			# merge usersettings with new settings
-			$settings 	= array_merge($userSettings, $settings);
-
-			# write settings to yaml
-			$yaml = new Models\WriteYaml();
-			$yaml->updateYaml('settings', 'settings.yaml', $settings);					
-		}
-	}
-	
+	}	
 }

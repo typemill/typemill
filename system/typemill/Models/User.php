@@ -116,7 +116,7 @@ class User
 	}
 
 	public function updateUser()
-	{
+	{		
 		if($this->storage->updateYaml('settingsFolder', 'users', $this->user['username'] . '.yaml', $this->user))
 		{
 			$this->deleteUserIndex();

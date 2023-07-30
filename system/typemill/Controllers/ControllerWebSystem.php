@@ -6,7 +6,7 @@ use Typemill\Models\Navigation;
 use Typemill\Models\Extension;
 use Typemill\Models\User;
 use Typemill\Models\License;
-use Typemill\Static\Settings;
+use Typemill\Models\Settings;
 
 class ControllerWebSystem extends Controller
 {	
@@ -26,7 +26,9 @@ class ControllerWebSystem extends Controller
 									$urlinfo 	= $this->c->get('urlinfo')
 								);
 
-		$systemfields 		= Settings::getSettingsDefinitions();
+		$settingsModel 		= new Settings();
+		$systemfields 		= $settingsModel->getSettingsDefinitions();
+		$systemfields 		= $this->addDatasets($systemfields);
 
 		# add full url for sitemap to settings
 		$this->settings['sitemap'] = $this->c->get('urlinfo')['baseurl'] . '/cache/sitemap.xml';

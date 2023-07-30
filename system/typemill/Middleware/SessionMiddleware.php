@@ -24,7 +24,7 @@ class SessionMiddleware implements MiddlewareInterface
     
 	public function process(Request $request, RequestHandler $handler) :response
     {
-        # start session for routes
+        # start session
         Session::startSessionForSegments($this->segments, $this->route);
 
         $authenticated = ( 

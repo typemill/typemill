@@ -33,6 +33,7 @@ Biig blocks:
 
 * DONE: Media Library
 * DONE: Posts
+* DONE: Setup
 * Recover Password
 
 Small features:
@@ -47,6 +48,7 @@ Small features:
 * Editor: Warn if open another block
 * Image generation on the fly
 * Assets
+* Bug: Table of content duplicated for published pages
 
 Cleanups:
 

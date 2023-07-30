@@ -1,22 +1,19 @@
 <?php
 
-# included from /public/index.php
-
 use DI\Container;
 use Slim\Middleware\ErrorMiddleware;
 use Slim\Factory\AppFactory;
-# use Slim\Csrf\Guard;
 use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
 use Slim\Psr7\Factory\UriFactory;
 use Twig\Extension\DebugExtension;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Typemill\Assets;
-use Typemill\Static\Settings;
+use Typemill\Models\Settings;
+use Typemill\Models\License;
 use Typemill\Static\Plugins;
 use Typemill\Static\Translations;
 use Typemill\Static\Permissions;
-# use Typemill\Static\Session;
 use Typemill\Static\Helpers;
 use Typemill\Events\OnSettingsLoaded;
 use Typemill\Events\OnPluginsLoaded;
@@ -24,6 +21,8 @@ use Typemill\Events\OnSessionSegmentsLoaded;
 use Typemill\Events\OnRolesPermissionsLoaded;
 use Typemill\Events\OnResourcesLoaded;
 use Typemill\Middleware\SessionMiddleware;
+use Typemill\Middleware\OldInputMiddleware;
+use Typemill\Middleware\ValidationErrorsMiddleware;
 use Typemill\Middleware\JsonBodyParser;
 use Typemill\Middleware\FlashMessages;
 use Typemill\Middleware\AssetMiddleware;
@@ -32,8 +31,6 @@ use Typemill\Extensions\TwigUrlExtension;
 use Typemill\Extensions\TwigUserExtension;
 use Typemill\Extensions\TwigLanguageExtension;
 use Typemill\Extensions\TwigMarkdownExtension;
-# use Typemill\Models\StorageWrapper;
-use Typemill\Models\License;
 
 $timer = [];
 $timer['start'] = microtime(true);
@@ -50,7 +47,10 @@ error_reporting(E_ALL);
 * LOAD SETTINGS							*
 ****************************/
 
-$settings = Settings::loadSettings();
+$settingsModel = new Settings();
+
+$settings = $settingsModel->loadSettings();
+# $settings = Settings::loadSettings();
 
 /****************************
 * HANDLE DISPLAY ERRORS 	  *
@@ -81,10 +81,10 @@ $timer['settings'] = microtime(true);
 $container 				= new Container();
 AppFactory::setContainer($container);
 
-$app 							= AppFactory::create();
+$app 					= AppFactory::create();
 $container 				= $app->getContainer();
 
-$responseFactory 	= $app->getResponseFactory();
+$responseFactory 		= $app->getResponseFactory();
 $routeParser 			= $app->getRouteCollector()->getRouteParser();
 
 # add route parser to container to use named routes in controller
@@ -164,7 +164,9 @@ foreach($plugins as $plugin)
 if(isset($updateSettings))
 {
 	# update stored settings file
-	Settings::updateSettings($settings);
+	$newPluginSettings = ['plugins' => $settings['plugins']];
+	$settingsModel->updateSettings($newPluginSettings);
+	# Settings::updateSettings($settings);
 }
 
 # add final settings to the container
@@ -184,11 +186,11 @@ $timer['plugins'] = microtime(true);
 ****************************/
 
 # load roles and permissions and dispatch to plugins
-$rolesAndPermissions = Permissions::loadRolesAndPermissions($settings['defaultSettingsPath']);
+$rolesAndPermissions = Permissions::loadRolesAndPermissions($settings['systemSettingsPath']);
 $rolesAndPermissions = $dispatcher->dispatch(new OnRolesPermissionsLoaded($rolesAndPermissions), 'onRolesPermissionsLoaded')->getData();
 
 # load resources and dispatch to plugins
-$resources = Permissions::loadResources($settings['defaultSettingsPath']);
+$resources = Permissions::loadResources($settings['systemSettingsPath']);
 $resources = $dispatcher->dispatch(new OnResourcesLoaded($resources), 'onResourcesLoaded')->getData();
 
 # create acl-object
@@ -212,7 +214,7 @@ if( ( isset($settings['access']) && $settings['access'] ) || ( isset($settings['
 }
 else
 {
-	$session_segments = ['setup', 'tm/'];
+	$session_segments = ['setup', 'tm/', 'api/'];
 
 	# let plugins add own segments for session, eg. to enable csrf for forms
 	$client_segments 	= $dispatcher->dispatch(new OnSessionSegmentsLoaded([]), 'onSessionSegmentsLoaded')->getData();
@@ -277,12 +279,13 @@ $container->set('view', function() use ($settings, $csrf, $urlinfo, $translation
 		[
 			# path to templates with namespaces
 			$settings['rootPath'] . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $settings['theme'],
-			$settings['rootPath'] . $settings['authorFolder'],
+			$settings['rootPath'] . DIRECTORY_SEPARATOR . 'system' . DIRECTORY_SEPARATOR . 'typemill' . DIRECTORY_SEPARATOR . 'author',
 		],
 		[
 			# settings
 			'cache' => ( isset($settings['twigcache']) && $settings['twigcache'] ) ? $settings['rootPath'] . '/cache/twig' : false,
 			'debug' => isset($settings['displayErrorDetails']),
+			'debug' => true,
 			'autoescape' => false
 		]
 	);
@@ -317,6 +320,10 @@ $container->set('view', function() use ($settings, $csrf, $urlinfo, $translation
 ****************************/
 
 $app->add(new AssetMiddleware($assets, $container->get('view')));
+
+$app->add(new ValidationErrorsMiddleware($container->get('view')));
+
+$app->add(new OldInputMiddleware($container->get('view')));
 
 $app->add(new FlashMessages($container));
 
@@ -356,9 +363,15 @@ $timer['middleware'] = microtime(true);
 /************************
 *   ADD ROUTES          *
 ************************/
-
-require __DIR__ . '/routes/api.php';
-require __DIR__ . '/routes/web.php';
+if(isset($settings['setup']) && $settings['setup'] == true)
+{
+	require __DIR__ . '/routes/setup.php';
+}
+else
+{
+	require __DIR__ . '/routes/api.php';
+	require __DIR__ . '/routes/web.php';
+}
 
 $timer['routes'] = microtime(true);
 

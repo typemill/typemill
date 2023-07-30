@@ -1,0 +1,94 @@
+{% extends 'layouts/layoutAuth.twig' %}
+
+{% block title %}{{ 'Setup'|translate }}{% endblock %}
+
+{% block content %}
+
+	<div class="flex justify-end">
+		
+		<div class="bg-teal-600 text-white min-h-screen w-1/2 flex justify-center items-center">
+			<div class="max-w-md content-center">
+
+				<h1 class="text-4xl py-5">{{ 'Setup'|translate }}</h1>
+			
+				<form method="POST" action="{{ url_for("setup.create") }}" autocomplete="off">
+				
+					<fieldset class="">
+
+						<div class="my-2 {{ errors.username ? ' errors' : '' }}">
+							<label for="username">{{ 'Username'|translate }} <abbr title="{{ 'required'|translate }}">*</abbr></label>
+							<input 
+								type="text" 
+								name="username" 
+								value="{{ old.username }}" 
+								class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+							required>
+							{% if errors.signup_username %}
+								<span class="">{{ errors.username|first }}</span>
+							{% endif %}
+						</div>
+
+						<div class="my-2 {{ errors.email ? ' errors' : '' }}">
+							<label for="email">{{ 'E-Mail'|translate }} <abbr title="{{ 'required'|translate }}">*</abbr></label>
+							<input 
+								type="text" 
+								name="email" 
+								value="{{ old.email }}" 
+								class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+							required>
+							{% if errors.signup_email %}
+								<span class="">{{ errors.email|first }}</span>
+							{% endif %}
+						</div>
+						
+						<div class="my-2 {{ errors.password ? ' errors' : '' }}">
+							<label for="password">{{ 'Password'|translate }} <abbr title="{{ 'required'|translate }}">*</abbr></label>
+							<input 
+								type="password" 
+								name="password" 
+								autoomplete="off"
+								class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+							required>
+							{% if errors.password %}
+								<span class="error">{{ errors.password|first }}</span>
+							{% endif %}
+						</div>
+
+						<div class="personal-mail hidden">
+							<label>Personal Mail</label>
+							<input type="text" name="personal-honey-mail">
+						</div>
+
+						<input 
+							type="submit" 
+							value="{{ 'Setup'|translate }}" 
+                      		class="block w-full mt-6 px-3 py-3 border-0 font-medium text-xs leading-tight uppercase border-2 border-stone-50 text-stone-50 pointer hover:bg-stone-50 hover:text-stone-800 cursor-pointer focus:outline-none focus:ring-0 transition duration-100 ease-in-out"
+						/>
+
+					</fieldset>
+
+					<div id="loginarea" class="hidden"> csrf() | raw </div>
+
+				</form>	
+			</div>
+		</div>
+		
+		<div class="content-center w-1/2 flex justify-center items-center">
+			<div class="max-w-md content-center">
+				{% if systemerrors %}
+					<h2 class="text-4xl py-5">Systemcheck</h2>
+					<p>The following requirements for the installation are missing:</p>
+					<ul style="color:red;padding: 0 14px">
+						{% for systemerror in systemerrors %}
+							<li style="margin: 5px 0">{{ systemerror }}</li>
+						{% endfor %}
+					</ul>
+				{% else %}
+					<h2 class="text-6xl py-5">Welcome to Typemill</h2>
+					<p>some bla bla bla here</p>
+				{% endif %}
+			</div>
+		</div>
+	
+	</div>
+{% endblock %}

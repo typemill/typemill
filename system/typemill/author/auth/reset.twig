@@ -8,39 +8,40 @@
 		
 		<div class="bg-teal-600 text-white min-h-screen w-1/2 flex justify-center items-center">
 			<div class="max-w-md content-center">
-
-				<h1 class="text-4xl py-5">Login</h1>
 			
-				<form method="POST" action="{{ url_for("auth.login") }}" autocomplete="off">
+				<form method="POST" action="{{ url_for("auth.reset") }}" autocomplete="off">
 				
 					<fieldset class="">
 
-						<div class="my-2 {{ errors.username ? ' errors' : '' }}">
-							<label for="username">{{ 'Username'|translate }} <abbr title="{{ 'required'|translate }}">*</abbr></label>
-							<input 
-								type="text" 
-								name="username" 
-								value="{{ old.username }}" 
-								class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-							required>
-							{% if errors.signup_username %}
-								<span class="">{{ errors.username|first }}</span>
-							{% endif %}
-						</div>
-						
 						<div class="my-2 {{ errors.password ? ' errors' : '' }}">
 							<label for="password">{{ 'Password'|translate }} <abbr title="{{ 'required'|translate }}">*</abbr></label>
 							<input 
 								type="password" 
 								name="password" 
-								autoomplete="off"
+								value="{{ old.password }}" 
 								class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
 							required>
 							{% if errors.password %}
-								<span class="error">{{ errors.password|first }}</span>
+								<span class="">{{ errors.password|first }}</span>
 							{% endif %}
 						</div>
 
+						<div class="my-2 {{ errors.passwordrepeat ? ' errors' : '' }}">
+							<label for="passwordrepeat">{{ 'Repeat password'|translate }} <abbr title="{{ 'required'|translate }}">*</abbr></label>
+							<input 
+								type="password" 
+								name="passwordrepeat" 
+								value="{{ old.passwordrepeat }}" 
+								class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+							required>
+							{% if errors.passwordrepeat %}
+								<span class="">{{ errors.passwordrepeat|first }}</span>
+							{% endif %}
+						</div>
+
+						<input type="hidden" name="recovertoken" value="{{recovertoken}}">
+						<input type="hidden" name="username" value="{{username}}">
+						
 						<div class="personal-mail hidden">
 							<label>Personal Mail</label>
 							<input type="text" name="personal-honey-mail">
@@ -48,22 +49,11 @@
 
 						<input 
 							type="submit" 
-							value="{{ 'Login'|translate }}" 
+							value="{{ 'Create new password'|translate }}" 
                       		class="block w-full mt-6 px-3 py-3 border-0 font-medium text-xs leading-tight uppercase border-2 border-stone-50 text-stone-50 pointer hover:bg-stone-50 hover:text-stone-800 cursor-pointer focus:outline-none focus:ring-0 transition duration-100 ease-in-out"
 						/>
 
 					</fieldset>
-
-					<div id="loginarea" class="hidden"> csrf() | raw </div>
-
-					{% if settings.recoverpw %}
-						
-					
-					{% else %}
-
-						<div class=""></div>
-					
-					{% endif %}
 
 				</form>	
 			</div>
@@ -71,11 +61,14 @@
 		
 		<div class="content-center w-1/2 flex justify-center items-center">
 			<div class="max-w-md content-center">
-				<h2>Latest from Typemill</h2>
-				<p>Hey, get the latest news from Typemill please!</p>
-				<p>base_url(): {{ base_url() }}</p>
-				<p>current_url(): {{ current_url() }}</p>
-				<p>current_path(): {{ current_path() }}</p>
+				<h1 class="text-4xl py-5">Forgot your password?</h1>
+				<p class="py-1">No problem, simply create a new one on the left.</p> 
+				<p class="py-1">Want to stay save with your passwords? Here are some tips:</p>
+				<ul class="list-disc pl-4 py-1">
+					<li>Let the password manager of your browser remember your passwords.</p>
+					<li>If you don't want to rely on your browser, use a separate password manager like keepass or others.</li>
+					<li>Last but not least: Do not use the same password for several applications.</li>
+				</ul>
 			</div>
 		</div>
 	
