@@ -7,6 +7,8 @@ class ProcessFile extends ProcessAssets
 
 	public function storeFile($file, $name)
 	{
+		die('use processAssets instead of processFile');
+
 		$this->clearTempFolder();
 
 		$this->setPathInfo($name);
@@ -51,7 +53,9 @@ class ProcessFile extends ProcessAssets
 	 */
 	public function moveUploadedFile(UploadedFile $uploadedFile, $overwrite = false, $name = false, $folder = NULL)
 	{
+		die('use processAssets instead of processFile');
 		$this->setFileName($uploadedFile->getClientFilename(), 'file');
+
 		
 		if($name)
 		{

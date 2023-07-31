@@ -4,14 +4,10 @@ namespace Typemill\Controllers;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use Typemill\Models\ProcessImage;
+use Typemill\Models\ProcessAssets;
 use Typemill\Models\StorageWrapper;
 use Typemill\Extensions\ParsedownExtension;
 
-
-# use Typemill\Models\ProcessFile;
-# use Typemill\Models\Yaml;
-# use Typemill\Controllers\ControllerAuthorBlockApi;
 
 class ControllerApiImage extends Controller
 {
@@ -139,7 +135,7 @@ class ControllerApiImage extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 		
-		$img = new ProcessImage();
+		$img = new ProcessAssets();
 
 		if($this->settingActive('allowsvg'))
 		{
@@ -321,7 +317,7 @@ class ControllerApiImage extends Controller
 		
 		$imageData64 = 'data:image/jpeg;base64,' . base64_encode($imageData);
 
-		$img = new ProcessImage();
+		$img = new ProcessAssets();
 
 		# prepare the image
 		if(!$img->prepareImage($imageData64, $class . '-' . $videoID . '.jpg'))

@@ -17,6 +17,8 @@ class ProcessImage extends ProcessAssets
 
 	public function prepareImage($image, $name)
 	{
+		die('use processAssets instead of processImages');
+
 		# change clear tmp folder and delete only old ones
 		$this->clearTempFolder();
 		#$this->checkFolders('image');
@@ -34,6 +36,9 @@ class ProcessImage extends ProcessAssets
 
 	public function storeOriginalToTmp()
 	{
+
+		die('use processAssets instead of processImages');
+
 		# $this->saveName();
 		$this->saveOriginal();
 
@@ -47,6 +52,9 @@ class ProcessImage extends ProcessAssets
 
 	public function storeRenditionsToTmp($sizes)
 	{
+		die('use processAssets instead of processImages');
+
+
 		# transform image-stream into image
 		$image 	= $this->createImage();
 		
@@ -76,17 +84,20 @@ class ProcessImage extends ProcessAssets
 	# add an allowed image extension like svg
 	public function addAllowedExtension(string $extension)
 	{
+		die('use processAssets instead of processImages');
 		$this->allowedExtensions[$extension] = true;
 	}
 
 	# force an image type like webp
 	public function setExtension(string $extension)
 	{
+		die('use processAssets instead of processImages');
 		$this->extension = $extension;
 	}
 
 	public function checkAllowedExtension()
 	{
+		die('use processAssets instead of processImages');
 		if(!isset($this->allowedExtensions[$this->extension]))
 		{
 			$this->errors[] = 'Images with this extension are not allowed.';
@@ -100,6 +111,7 @@ class ProcessImage extends ProcessAssets
 	# check if image should not be resized (animated gif and svg)
 	public function isResizable()
 	{
+		die('use processAssets instead of processImages');
 		if($this->filetype == 'gif' && $this->detectAnimatedGif())
 		{
 			$this->resizable = false;
@@ -115,6 +127,7 @@ class ProcessImage extends ProcessAssets
  
 	public function detectAnimatedGif()
 	{
+		die('use processAssets instead of processImages');
 		$is_animated = preg_match('#(\x00\x21\xF9\x04.{4}\x00\x2C.*){2,}#s', $this->filedata);
 		if ($is_animated == 1)
 		{
@@ -127,6 +140,7 @@ class ProcessImage extends ProcessAssets
 	# save the original image to temp folder
 	public function saveOriginal($destinationfolder = 'ORIGINAL')
 	{
+		die('use processAssets instead of processImages');
 		$path = $this->tmpFolder . $destinationfolder . '+' . $this->filename . '.' . $this->extension;
 		
 		if(!file_put_contents($path, $this->filedata))
@@ -138,22 +152,26 @@ class ProcessImage extends ProcessAssets
 	# save the original image for all sizes/folders
 	public function saveOriginalForAll()
 	{
+		die('use processAssets instead of processImages');
 		$this->saveOriginal('LIVE');
 		$this->saveOriginal('THUMBS');
 	}
 
 	public function createImage()
 	{
+		die('use processAssets instead of processImages');
 		return imagecreatefromstring($this->filedata);
 	}
 
 	public function getImageSize($image)
 	{
+		die('use processAssets instead of processImages');
 		return ['width' => imagesx($image), 'height' => imagesy($image)];
 	}
 
 	public function calculateSize(array $originalsize, array $desiredsize)
 	{
+		die('use processAssets instead of processImages');
 		# if desired size is bigger than the actual image, then drop the desired sizes and use the actual image size instead
 		if($desiredsize['width'] > $originalsize['width'])
 		{
@@ -171,6 +189,7 @@ class ProcessImage extends ProcessAssets
 
 	public function resizeImage($image, array $desired, array $original)
 	{
+		die('use processAssets instead of processImages');
 		# resize
 		$ratio 	= max($desired['width']/$original['width'], $desired['height']/$original['height']);
 		$h 		= $desired['height'] / $ratio;
@@ -195,6 +214,7 @@ class ProcessImage extends ProcessAssets
 
 	public function saveResizedImage($resizedImage, string $destinationfolder, string $extension)
 	{
+		die('use processAssets instead of processImages');
 		$destinationfolder = strtoupper($destinationfolder);		
 
 		switch($extension)
@@ -296,6 +316,7 @@ class ProcessImage extends ProcessAssets
 	 */
 	public function moveUploadedImage(UploadedFile $uploadedFile, $overwrite = false, $name = false, $folder = NULL)
 	{
+		die('use processAssets instead of processImages');
 		$this->setFileName($uploadedFile->getClientFilename(), 'file');
 		
 		if($name)
@@ -341,6 +362,7 @@ class ProcessImage extends ProcessAssets
 
 	public function generateThumbs()
 	{
+		die('use processAssets instead of processImages');
 		# generate images from live folder to 'tmthumbs'
 		$liveImages 	= scandir($this->liveFolder);
 
@@ -358,6 +380,7 @@ class ProcessImage extends ProcessAssets
 
 	public function generateThumbFromImageFile($filename)
 	{
+		die('use processAssets instead of processImages');
 		$this->setFileName($filename, 'image', $overwrite = true);
 
 		$image 			= $this->createImageFromPath($this->liveFolder . $filename, $this->extension);
@@ -379,6 +402,7 @@ class ProcessImage extends ProcessAssets
 	# filename and imagepath can be a tmp-version after upload.
 	public function generateSizesFromImageFile($filename, $imagePath)
 	{
+		die('use processAssets instead of processImages');
 		$this->setFileName($filename, 'image');
 
 		$image 			= $this->createImageFromPath($imagePath, $this->extension);
@@ -392,6 +416,7 @@ class ProcessImage extends ProcessAssets
 
 	public function grayscale($imagePath, $extension)
 	{
+		die('use processAssets instead of processImages');
 		$image 	= $this->createImageFromPath($imagePath, $extension);
 
 		imagefilter($image, IMG_FILTER_GRAYSCALE);
@@ -401,6 +426,7 @@ class ProcessImage extends ProcessAssets
 
 	public function createImageFromPath($imagePath, $extension)
 	{
+		die('use processAssets instead of processImages');
 		switch($extension)
 		{
 			case 'gif': $image = imagecreatefromgif($imagePath); break;

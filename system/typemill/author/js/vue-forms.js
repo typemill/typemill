@@ -692,12 +692,14 @@ app.component('component-customfields', {
 
 app.component('component-image', {
 	props: ['id', 'description', 'maxlength', 'hidden', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'css', 'errors'],
+	components: {
+		medialib: medialib
+	},	
 	data: function(){
 		return {
 			maxsize: 10, // megabyte
 			imagepreview: '',
 			showmedialib: false,
-//			load: false,
 			quality: false,
 			qualitylabel: false,
 		}
@@ -716,7 +718,7 @@ app.component('component-image', {
 							<input class="absolute w-full top-0 opacity-0 bg-stone-900 cursor-pointer px-2 py-3" type="file" name="image" accept="image/*" @change="onFileChange( $event )" />
 						</div>
 						<div class="w-full mt-3">
-							<button class="w-full bg-stone-700 hover:bg-stone-900 text-white px-2 py-3 text-center cursor-pointer transition duration-100" @click.prevent="openmedialib()"><svg class="icon icon-image baseline"><use xlink:href="#icon-image"></use></svg> {{ $filters.translate('select from medialib') }}</button>
+							<button class="w-full bg-stone-700 hover:bg-stone-900 text-white px-2 py-3 text-center cursor-pointer transition duration-100" @click.prevent="showmedialib = true"><svg class="icon icon-image baseline"><use xlink:href="#icon-image"></use></svg> {{ $filters.translate('select from medialib') }}</button>
 						</div>
 						<div class="w-full mt-3">
 							<label class="block mb-1">{{ $filters.translate('Image URL (read only)') }}</label>
@@ -742,11 +744,14 @@ app.component('component-image', {
 					  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
 					</div>
 				</div>
-				<transition name="fade-editor">
-					<div v-if="showmedialib" class="modalWindow">
-						<medialib parentcomponent="images"></medialib> 
+
+				<Transition name="initial" appear>
+					<div v-if="showmedialib" class="fixed top-0 left-0 right-0 bottom-0 bg-stone-100 z-50">
+						<button class="w-full bg-stone-200 hover:bg-rose-500 hover:text-white p-2 transition duration-100" @click.prevent="showmedialib = false">{{ $filters.translate('close library') }}</button>
+						<medialib parentcomponent="images" @addFromMedialibEvent="addFromMedialibFunction"></medialib>
 					</div>
-				</transition>
+				</Transition> 
+
 			  </div>`,
 	mounted: function() {
 		if(this.hasValue(this.value))
@@ -767,6 +772,14 @@ app.component('component-image', {
 		}
 	},
 	methods: {
+		addFromMedialibFunction(value)
+		{
+		//	this.imgfile 		= value;
+			this.imagepreview 	= data.urlinfo.baseurl + '/' + value;
+			this.showmedialib 	= false;
+
+			this.update(value);
+		},
 		hasValue: function(value)
 		{
 			if(typeof this.value !== "undefined" && this.value !== false && this.value !== null && this.value !== '')
@@ -799,24 +812,22 @@ app.component('component-image', {
 		{
 			eventBus.$emit('forminput', {'name': this.name, 'value': filepath});
 		},
+		/*
 		updatemarkdown: function(markdown, url)
 		{
-			/* is called from child component medialib */
+			/* is called from child component medialib 
 			this.update(url);
 		},
 		createmarkdown: function(url)
 		{
-			/* is called from child component medialib */
+			/* is called from child component medialib 
 			this.update(url);
 		},
+		*/
 		deleteImage: function()
 		{
 			this.imagepreview = '';
 			this.update('');
-		},
-		openmedialib: function()
-		{
-			this.showmedialib = true;
 		},
 		onFileChange: function( e )
 		{
@@ -872,11 +883,6 @@ app.component('component-image', {
 app.component('component-file', {
 	props: ['id', 'description', 'maxlength', 'hidden', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
 	template: `<div class="large">
-				<transition name="fade-editor">
-					<div v-if="showmedialib" class="modalWindow">
-						<medialib parentcomponent="files"></medialib> 
-					</div>
-				</transition>
 				<label>{{ $filters.translate(label) }}</label>
 				<div v-if="load" class="loadwrapper"><span class="load"></span></div>
 				<div class="ba b--moon-gray">
@@ -902,7 +908,7 @@ app.component('component-file', {
 								<p class="relative w-100 bn br1 white pa1 h2 ma0 tc"><svg class="icon icon-upload baseline"><use xlink:href="#icon-upload"></use></svg>  {{ $filters.translate('upload') }}</p>
 							</div> 
 							<div class="dib w-100 bl b--white"> 
-								<button @click.prevent="openmedialib()" class="w-100 pointer bn bg-tm-green white pa0 h2 ma0 tc dim"><svg class="icon icon-paperclip baseline"><use xlink:href="#icon-paperclip"></use></svg> {{ $filters.translate('medialib') }}</button> 
+								<button @click.prevent="showmedialib = true" class="w-100 pointer bn bg-tm-green white pa0 h2 ma0 tc dim"><svg class="icon icon-paperclip baseline"><use xlink:href="#icon-paperclip"></use></svg> {{ $filters.translate('medialib') }}</button> 
 							</div> 
 						</div>
 					</div>
@@ -915,6 +921,14 @@ app.component('component-file', {
 						</select>
 					</div>
 				</div>
+
+				<Transition name="initial" appear>
+					<div v-if="showmedialib" class="fixed top-0 left-0 right-0 bottom-0 bg-stone-100 z-50">
+						<button class="w-full bg-stone-200 hover:bg-rose-500 hover:text-white p-2 transition duration-100" @click.prevent="showmedialib = false">{{ $filters.translate('close library') }}</button>
+						<medialib parentcomponent="images" @addFromMedialibEvent="addFromMedialibFunction"></medialib>
+					</div>
+				</Transition> 
+
 			  </div>`,
 	data: function(){
 		return {
@@ -930,6 +944,15 @@ app.component('component-file', {
 		this.getrestriction();
 	},
 	methods: {
+		addFromMedialibFunction(value)
+		{
+			this.imgfile 		= value;
+			this.imgpreview 	= data.urlinfo.baseurl + '/' + value;
+			this.showmedialib 	= false;
+			this.saveimage 		= false;
+
+			this.createmarkdown();
+		},
 		update: function(value)
 		{
 			FormBus.$emit('forminput', {'name': this.name, 'value': value});
@@ -944,10 +967,6 @@ app.component('component-file', {
 		{
 			/* is called from child component medialib */
 			this.update(url);
-		},
-		openmedialib: function()
-		{
-			this.showmedialib = true;
 		},
 		deleteFile: function()
 		{

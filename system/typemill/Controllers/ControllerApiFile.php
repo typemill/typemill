@@ -4,7 +4,7 @@ namespace Typemill\Controllers;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use Typemill\Models\ProcessFile;
+use Typemill\Models\ProcessAssets;
 use Typemill\Models\StorageWrapper;
 
 class ControllerApiFile extends Controller
@@ -204,7 +204,7 @@ class ControllerApiFile extends Controller
 			}
 		}
 
-		$fileProcessor	= new ProcessFile();
+		$fileProcessor	= new ProcessAssets();
 
 		$fileinfo = $fileProcessor->storeFile($params['file'], $params['name']);
 		$filePath = str_replace('media/files', 'media/tmp', $fileinfo['url']);

@@ -34,10 +34,11 @@ Biig blocks:
 * DONE: Media Library
 * DONE: Posts
 * DONE: Setup
-* Recover Password
+* DONE: Recover Password
 
 Small features:
 
+* DONE: Merge processAssets modell
 * Sitemap and ping
 * Captcha
 * Clear Cache
@@ -49,6 +50,8 @@ Small features:
 * Image generation on the fly
 * Assets
 * Bug: Table of content duplicated for published pages
+* Bug: Navigation frontend if unpublished pages
+* Image and files for meta
 
 Cleanups:
 
