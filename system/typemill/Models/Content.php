@@ -205,7 +205,7 @@ class Content
 	}
 
 	public function markdownArrayToText(array $markdownArray)
-	{
+	{	
 		return $this->parsedown->arrayBlocksToMarkdown($markdownArray);
 	}
 

@@ -12,20 +12,29 @@ abstract class Plugin implements EventSubscriberInterface
 {
 	protected $container;
 
-	protected $path;
+	protected $route;
 
-	protected $adminpath = false;
+	protected $adminroute = false;
 
-	/**
-	 * Constructor
-	 *
-	 */
+	protected $editorroute = false;
+
 	
 	public function __construct($container)
 	{
 		$this->container 	= $container;
 		$this->urlinfo 		= $this->container->get('urlinfo');
-		$this->path  		= $this->urlinfo['currentpath'];
+		$this->route  		= $this->urlinfo['route'];
+		$this->route 		= ltrim($this->route, '/');
+
+		if(str_starts_with($this->route, 'tm/'))
+		{
+			$this->adminroute = true;
+		}
+
+		if(str_starts_with($this->route, 'tm/content/'))
+		{
+			$this->editorroute = true;
+		}
 	}
 	
 	protected function getSettings()

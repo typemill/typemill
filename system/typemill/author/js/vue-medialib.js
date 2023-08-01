@@ -208,10 +208,16 @@ const medialib = {
 
 		var self = this;
 
+		var itempath = false;
+		if(typeof data.item !== "undefined")
+		{
+			itempath = data.item.pathWithoutType;
+		}
+
 		tmaxios.get('/api/v1/pagemedia',{
 			params: {
 				'url':	data.urlinfo.route,
-				'path': data.item.pathWithoutType
+				'path': itempath
 			}
 		})
 		.then(function (response)
@@ -339,10 +345,15 @@ const medialib = {
 
 				var imageself = this;
 
+				var itempath = false;
+				if(typeof data.item !== "undefined")
+				{
+					itempath = data.item.pathWithoutType;
+				}
 				tmaxios.get('/api/v1/images',{
 					params: {
 						'url':	data.urlinfo.route,
-						'path': data.item.pathWithoutType
+						'path': itempath,
 					}
 				})
 				.then(function (response)

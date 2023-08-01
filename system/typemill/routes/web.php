@@ -54,5 +54,34 @@ $app->redirect('/tm/', $routeParser->urlFor('auth.show'), 302);
 # downloads
 $app->get('/media/files[/{params:.*}]', ControllerWebDownload::class . ':download')->setName('download.file');
 
+foreach($routes as $pluginRoute)
+{	
+	$method 	= $pluginRoute['httpMethod'];
+	$route		= $pluginRoute['route'];
+	$class		= $pluginRoute['class'];
+	# $resource 	= isset($pluginRoute['resource']) ? $pluginRoute['resource'] : NULL;
+	# $privilege 	= isset($pluginRoute['privilege']) ? $pluginRoute['privilege'] : NULL;
+
+#	echo '<br>';
+#	echo 'method: ' . $method . ' -> route: ' . $route . ' -> class: ' . $class; 
+
+	if(isset($pluginRoute['name']))
+	{
+#		$app->{$method}($route, $class)->setName($pluginRoute['name'])->add(new accessMiddleware($container['router'], $container['acl'], $resource, $privilege));
+		$app->{$method}($route, $class)->setName($pluginRoute['name']);
+	}
+	else
+	{
+#		$app->{$method}($route, $class)->add(new accessMiddleware($container['router'], $container['acl'], $resource, $privilege));
+		$app->{$method}($route, $class);
+	}
+
+	# if api and if authorization
+	# ->add(new ApiAuthorization($acl, 'account', 'view'));
+
+	# if web and if authorization
+	# ->add(new WebAuthorization($acl, 'account', 'view'));
+}
+# die();
 # website
 $app->get('/[{route:.*}]', ControllerWebFrontend::class . ':index')->setName('home');

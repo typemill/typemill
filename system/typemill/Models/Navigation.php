@@ -4,6 +4,7 @@ namespace Typemill\Models;
 
 use Typemill\Models\StorageWrapper;
 use Typemill\Models\Folder;
+use Typemill\Events\OnSystemnaviLoaded;
 
 class Navigation extends Folder
 {
@@ -109,10 +110,10 @@ class Navigation extends Folder
 		return $allowedmainnavi;
 	}
 
-	public function getSystemNavigation($userrole, $acl, $urlinfo)
+	public function getSystemNavigation($userrole, $acl, $urlinfo, $dispatcher)
 	{
 		$systemnavi 	= $this->storage->getYaml('systemSettings', '', 'systemnavi.yaml');
-#		$systemnavi 	= $this->c->get('dispatcher')->dispatch(new OnSystemnaviLoaded($systemnavi), 'onSystemnaviLoaded')->getData();
+		$systemnavi 	= $dispatcher->dispatch(new OnSystemnaviLoaded($systemnavi), 'onSystemnaviLoaded')->getData();
 
 		$allowedsystemnavi = [];
 

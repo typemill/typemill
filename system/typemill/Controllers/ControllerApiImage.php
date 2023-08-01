@@ -4,7 +4,7 @@ namespace Typemill\Controllers;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use Typemill\Models\ProcessAssets;
+use Typemill\Models\Media;
 use Typemill\Models\StorageWrapper;
 use Typemill\Extensions\ParsedownExtension;
 
@@ -135,19 +135,19 @@ class ControllerApiImage extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 		
-		$img = new ProcessAssets();
+		$media = new Media();
 
 		if($this->settingActive('allowsvg'))
 		{
-			$img->addAllowedExtension('svg');
+			$media->addAllowedExtension('svg');
 		}
 		
 		# prepare the image
-		if(!$img->prepareImage($params['image'], $params['name']))
+		if(!$media->prepareImage($params['image'], $params['name']))
 		{
 			$response->getBody()->write(json_encode([
-				'message' 		=> $img->errors[0],
-				'fullerrors'	=> $img->errors,
+				'message' 		=> $media->errors[0],
+				'fullerrors'	=> $media->errors,
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
@@ -156,35 +156,35 @@ class ControllerApiImage extends Controller
 		# check if image name already exisits in live folder and create an unique name (do not overwrite existing files)
 		$storage 			= new StorageWrapper('\Typemill\Models\Storage');
 		$uniqueImageName 	= $storage->createUniqueImageName($img->getFilename(), $img->getExtension());
-		$img->setFilename($uniqueImageName);
+		$media->setFilename($uniqueImageName);
 
 		# store the original image
-		if(!$img->storeOriginalToTmp())
+		if(!$media->storeOriginalToTmp())
 		{
 			$response->getBody()->write(json_encode([
-				'message' 		=> $img->errors[0],
-				'fullerrors'	=> $img->errors,
+				'message' 		=> $media->errors[0],
+				'fullerrors'	=> $media->errors,
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);			
 		}
 
 		# if image is not resizable (animated gif or svg)
-		if(!$img->isResizable())
+		if(!$media->isResizable())
 		{
-			if($img->saveOriginalForAll())
+			if($media->saveOriginalForAll())
 			{
 				$response->getBody()->write(json_encode([
 					'message' => 'Image saved successfully',
-					'name' => 'media/live/' . $img->getFullName(),
+					'name' => 'media/live/' . $media->getFullName(),
 				]));
 
 				return $response->withHeader('Content-Type', 'application/json');
 			}
 
 			$response->getBody()->write(json_encode([
-				'message' 		=> $img->errors[0],
-				'fullerrors'	=> $img->errors,
+				'message' 		=> $media->errors[0],
+				'fullerrors'	=> $media->errors,
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
@@ -193,36 +193,23 @@ class ControllerApiImage extends Controller
 		# for all other image types, check if they should be transformed to webp
 		if($this->settingActive('convertwebp'))
 		{
-			$img->setExtension('webp');
+			$media->setExtension('webp');
 		}
 
-		if(!$img->storeRenditionsToTmp($this->settings['images']))
+		if(!$media->storeRenditionsToTmp($this->settings['images']))
 		{
 			$response->getBody()->write(json_encode([
-				'message' 		=> $img->errors[0],
-				'fullerrors'	=> $img->errors,
+				'message' 		=> $media->errors[0],
+				'fullerrors'	=> $media->errors,
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
 
-/*
-		if(isset($params['publish']) && $params['publish'])
-		{
-			if(!$img->publishImage($img->getFullName()))
-			{
-				$response->getBody()->write(json_encode([
-					'message' 		=> $img->errors[0],
-					'fullerrors'	=> $img->errors,
-				]));
 
-				return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
-			}
-		}
-*/
 		$response->getBody()->write(json_encode([
 			'message' => 'Image saved successfully',
-			'name' => 'media/tmp/' . $img->getFullName(),
+			'name' => 'media/tmp/' . $media->getFullName(),
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json');
@@ -317,14 +304,14 @@ class ControllerApiImage extends Controller
 		
 		$imageData64 = 'data:image/jpeg;base64,' . base64_encode($imageData);
 
-		$img = new ProcessAssets();
+		$media = new Media();
 
 		# prepare the image
-		if(!$img->prepareImage($imageData64, $class . '-' . $videoID . '.jpg'))
+		if(!$media->prepareImage($imageData64, $class . '-' . $videoID . '.jpg'))
 		{
 			$response->getBody()->write(json_encode([
-				'message' 		=> $img->errors[0],
-				'fullerrors'	=> $img->errors,
+				'message' 		=> $media->errors[0],
+				'fullerrors'	=> $media->errors,
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
@@ -332,15 +319,15 @@ class ControllerApiImage extends Controller
 
 		# check if image name already exisits in live folder and create an unique name (do not overwrite existing files)
 		$storage 			= new StorageWrapper('\Typemill\Models\Storage');
-		$uniqueImageName 	= $storage->createUniqueImageName($img->getFilename(), $img->getExtension());
-		$img->setFilename($uniqueImageName);
+		$uniqueImageName 	= $storage->createUniqueImageName($media->getFilename(), $media->getExtension());
+		$media->setFilename($uniqueImageName);
 
 		# store the original image
-		if(!$img->storeOriginalToTmp())
+		if(!$media->storeOriginalToTmp())
 		{
 			$response->getBody()->write(json_encode([
-				'message' 		=> $img->errors[0],
-				'fullerrors'	=> $img->errors,
+				'message' 		=> $media->errors[0],
+				'fullerrors'	=> $media->errors,
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);			
@@ -349,25 +336,25 @@ class ControllerApiImage extends Controller
 		# for all other image types, check if they should be transformed to webp
 		if($this->settingActive('convertwebp'))
 		{
-			$img->setExtension('webp');
+			$media->setExtension('webp');
 		}
 
 		# set to youtube size
 		$sizes = $this->settings['images'];
 		$sizes['live'] = ['width' => 560, 'height' => 315];
 
-		if(!$img->storeRenditionsToTmp($sizes))
+		if(!$media->storeRenditionsToTmp($sizes))
 		{
 			$response->getBody()->write(json_encode([
-				'message' 		=> $img->errors[0],
-				'fullerrors'	=> $img->errors,
+				'message' 		=> $media->errors[0],
+				'fullerrors'	=> $media->errors,
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
 
 		# now publish directly
-		$livePath 	= $storage->publishImage($img->getFullName());
+		$livePath 	= $storage->publishImage($media->getFullName());
 
 		if($livePath)
 		{

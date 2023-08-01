@@ -18,6 +18,8 @@ class ParsedownExtension extends \ParsedownExtra
         # show anchor next to headline? 
         $this->showAnchor = isset($settings['headlineanchors']) ? $settings['headlineanchors'] : false;
 
+        $this->headlines = [];
+
         # extend link schemes 
         $urlschemes = ( isset($settings['urlschemes']) && !empty($settings['urlschemes']) ) ? explode(",", $settings['urlschemes']) : false;
         if($urlschemes)
@@ -345,7 +347,7 @@ class ParsedownExtension extends \ParsedownExtra
 
 
     # Headlines
-    public $headlines = array();
+    public $headlines = [];
 
     protected function blockHeader($Line)
     {
@@ -372,6 +374,7 @@ class ParsedownExtension extends \ParsedownExtra
 
             if($this->showAnchor && $level > 1)
             {
+                # should we add more info like level so duplicate headline text is possible?
                 $text = "[#](#h-$headline){.tm-heading-anchor}" . $text;
             }
 
@@ -389,7 +392,11 @@ class ParsedownExtension extends \ParsedownExtra
                 )
             );
 
-            $this->headlines[]  = array('level' => $level, 'name' => $Block['element']['name'], 'attribute' => $Block['element']['attributes']['id'], 'text' => $tocText);
+            # fix: make sure no duplicates in headlines if user logged in and restrictions on
+            if(!isset($this->headlines[$headline]))
+            {
+                $this->headlines[$headline] = array('level' => $level, 'name' => $Block['element']['name'], 'attribute' => $Block['element']['attributes']['id'], 'text' => $tocText);
+            }
 
             return $Block;
         }
@@ -406,11 +413,15 @@ class ParsedownExtension extends \ParsedownExtra
     }
 
 
-    # build the markup for table of contents     
+    # build the markup for table of contents
     public function buildTOC($headlines)
     {
         $markup = '<ul class="TOC">';
         
+        # we have to reindex the array
+
+        $headlines = array_values($headlines);
+
         foreach($headlines as $key => $headline)
         {
             $thisLevel = $headline['level'];
@@ -421,9 +432,9 @@ class ParsedownExtension extends \ParsedownExtra
             {
                 $markup .= '<ul>';
             }
-            
+
             $markup .= '<li class="' . $headline['name'] . '"><a href="#' . $headline['attribute'] . '">' . $headline['text'] . '</a>';
-            
+
             if($thisLevel == $nextLevel )
             {
                 $markup .= '</li>';

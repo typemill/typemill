@@ -18,11 +18,12 @@ class ControllerApiSystemThemes extends Controller
 
 		$extension 			= new Extension();
 		$formdefinitions 	= $extension->getThemeDefinition($themename);
+		$formdefinitions 	= $this->addDatasets($formdefinitions['forms']['fields']);		
 		$themedata 			= [];
 
 		# validate input
 		$validator 			= new Validation();
-		$validatedOutput 	= $this->recursiveValidation($validator, $formdefinitions['forms']['fields'], $themeinput);
+		$validatedOutput 	= $this->recursiveValidation($validator, $formdefinitions, $themeinput);
 		if(!empty($this->errors))
 		{
 			$response->getBody()->write(json_encode([

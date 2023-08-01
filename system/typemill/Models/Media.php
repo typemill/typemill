@@ -5,7 +5,7 @@ namespace Typemill\Models;
 use Typemill\Models\Folder;
 use Typemill\Static\Slug;
 
-class ProcessAssets
+class Media
 { 
 	public $errors 					= [];
 

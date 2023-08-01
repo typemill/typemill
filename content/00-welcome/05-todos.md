@@ -39,19 +39,19 @@ Biig blocks:
 Small features:
 
 * DONE: Merge processAssets modell
+* DONE: Table of content duplicated for published pages
+* DONE: Session handling: csrf fail and session start error if restrictions are active
+* DONE: Image and files for meta
+* Backend fields
+* Proxy
+* Editor: Warn if open another block
+* Image generation on the fly
+* Assets
+* Bug: Navigation frontend if unpublished pages
 * Sitemap and ping
 * Captcha
 * Clear Cache
 * Security Log
-* Backend fields
-* Proxy
-* DONE: Session handling: csrf fail and session start error if restrictions are active
-* Editor: Warn if open another block
-* Image generation on the fly
-* Assets
-* Bug: Table of content duplicated for published pages
-* Bug: Navigation frontend if unpublished pages
-* Image and files for meta
 
 Cleanups:
 

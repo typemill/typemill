@@ -17,6 +17,7 @@ use Typemill\Events\OnMarkdownLoaded;
 use Typemill\Events\OnContentArrayLoaded;
 use Typemill\Events\OnHtmlLoaded;
 use Typemill\Events\OnRestrictionsLoaded;
+use Typemill\Events\OnPageReady;
 
 
 class ControllerWebFrontend extends Controller
@@ -231,10 +232,7 @@ class ControllerWebFrontend extends Controller
 			$assets->addMeta('twitter_card','<meta name="twitter:card" content="summary_large_image">');
 		}
 
-
-		$route = empty($args) && isset($this->settings['themes'][$theme]['cover']) ? 'cover.twig' : 'index.twig';
-
-	    return $this->c->get('view')->render($response, $route, [
+		$pagedata = [
 			'home'			=> false,
 			'navigation' 	=> $liveNavigation,
 			'title' 		=> $title,
@@ -247,7 +245,15 @@ class ControllerWebFrontend extends Controller
 			'logo'			=> $logo,
 			'favicon'		=> $favicon,
 			'currentpage'	=> $currentpage
-	    ]);
+		];
+
+		$morepagedata = $this->c->get('dispatcher')->dispatch(new OnPageReady([]), 'onPageReady')->getData();
+
+		$pagedata = array_merge($pagedata, $morepagedata);
+
+		$route = empty($args) && isset($this->settings['themes'][$theme]['cover']) ? 'cover.twig' : 'index.twig';
+
+	    return $this->c->get('view')->render($response, $route, $pagedata);
 	}
 
 

@@ -129,6 +129,16 @@ class Settings
 			# merge usersettings with new settings
 			$settings 	= array_merge($userSettings, $newSettings);
 			
+			# make sure that multidimensional arrays are merged correctly
+			# for example: only one plugin data will be passed with new settings, with array merge all others will be deleted.
+			foreach($newSettings as $key => $settingsItem)
+			{
+				if(is_array($settingsItem) && isset($userSettings[$key]))
+				{
+					$settings[$key] = array_merge($userSettings[$key], $newSettings[$key]);
+				}
+			}
+
 			if($this->storage->updateYaml('settingsFolder', '', 'settings.yaml', $settings))
 			{
 				return true;

@@ -4,7 +4,7 @@ namespace Typemill\Controllers;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use Typemill\Models\ProcessAssets;
+use Typemill\Models\Media;
 use Typemill\Models\StorageWrapper;
 
 class ControllerApiFile extends Controller
@@ -204,7 +204,7 @@ class ControllerApiFile extends Controller
 			}
 		}
 
-		$fileProcessor	= new ProcessAssets();
+		$media	= new Media();
 
 		$fileinfo = $fileProcessor->storeFile($params['file'], $params['name']);
 		$filePath = str_replace('media/files', 'media/tmp', $fileinfo['url']);
@@ -221,7 +221,7 @@ class ControllerApiFile extends Controller
 
 				if(!$mtype OR !$this->checkAllowedMimeTypes($mtype, $extension))
 				{
-					$fileProcessor->clearTempFolder();
+					$media->clearTempFolder();
 
 					$response->getBody()->write(json_encode([
 						'message' => 'The mime-type is missing, not allowed or does not fit to the file extension.'
@@ -230,14 +230,6 @@ class ControllerApiFile extends Controller
 					return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
 				}
 			}
-
-			/*
-				# publish file directly, used for example by file field for meta-tabs
-				if(isset($params['publish']) && $params['publish'])
-				{
-					$fileProcessor->publishFile();
-				}
-			*/
 
 			$response->getBody()->write(json_encode([
 				'message' => 'File has been stored',

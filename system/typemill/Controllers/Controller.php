@@ -7,13 +7,6 @@ use Slim\Routing\RouteContext;
 use Typemill\Models\StorageWrapper;
 use Typemill\Events\OnTwigLoaded;
 
-# use Psr\Container\ContainerInterface;
-# use Typemill\Models\Folder;
-# use Typemill\Models\WriteCache;
-# use Typemill\Models\WriteYaml;
-# use Typemill\Events\OnPageReady;
-# use Typemill\Events\OnPagetreeLoaded;
-
 abstract class Controller
 {
 	# holds the container
@@ -114,7 +107,7 @@ abstract class Controller
 				# always add null as first option in selectboxes.
 				$options = [null => null];
 				
-				if(is_array($field['options']))
+				if(isset($field['options']) && is_array($field['options']))
 				{
 					$options = array_merge($options, $field['options']);
 				}

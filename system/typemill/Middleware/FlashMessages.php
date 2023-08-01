@@ -5,7 +5,6 @@ namespace Typemill\Middleware;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Flash\Messages;
-# use Slim\Views\Twig;
 
 class FlashMessages
 {	

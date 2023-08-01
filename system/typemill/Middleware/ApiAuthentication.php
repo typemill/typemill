@@ -10,7 +10,7 @@ use Typemill\Models\User;
 use Typemill\Static\Session;
 
 class ApiAuthentication
-{
+{	
 	public function __invoke(Request $request, RequestHandler $handler)
 	{
 	    $routeContext 	= RouteContext::fromRequest($request);

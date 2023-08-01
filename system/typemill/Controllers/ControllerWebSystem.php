@@ -23,7 +23,8 @@ class ControllerWebSystem extends Controller
 		$systemNavigation	= $navigation->getSystemNavigation(
 									$userrole 	= $request->getAttribute('c_userrole'),
 									$acl 		= $this->c->get('acl'),
-									$urlinfo 	= $this->c->get('urlinfo')
+									$urlinfo 	= $this->c->get('urlinfo'),
+									$dispatcher = $this->c->get('dispatcher')
 								);
 
 		$settingsModel 		= new Settings();
@@ -61,7 +62,8 @@ class ControllerWebSystem extends Controller
 		$systemNavigation	= $navigation->getSystemNavigation(
 									$userrole 	= $request->getAttribute('c_userrole'),
 									$acl 		= $this->c->get('acl'),
-									$urlinfo 	= $this->c->get('urlinfo')
+									$urlinfo 	= $this->c->get('urlinfo'),
+									$dispatcher = $this->c->get('dispatcher')
 								);
 
 		$extension 			= new Extension();
@@ -112,7 +114,8 @@ class ControllerWebSystem extends Controller
 		$systemNavigation	= $navigation->getSystemNavigation(
 									$userrole 	= $request->getAttribute('c_userrole'),
 									$acl 		= $this->c->get('acl'),
-									$urlinfo 	= $this->c->get('urlinfo')
+									$urlinfo 	= $this->c->get('urlinfo'),
+									$dispatcher = $this->c->get('dispatcher'),
 								);
 
 		$extension 			= new Extension();
@@ -162,7 +165,8 @@ class ControllerWebSystem extends Controller
 		$systemNavigation	= $navigation->getSystemNavigation(
 									$userrole 	= $request->getAttribute('c_userrole'),
 									$acl 		= $this->c->get('acl'),
-									$urlinfo 	= $this->c->get('urlinfo')
+									$urlinfo 	= $this->c->get('urlinfo'),
+									$dispatcher = $this->c->get('dispatcher'),
 								);
 
 		$license 		= new License();
@@ -201,7 +205,8 @@ class ControllerWebSystem extends Controller
 		$systemNavigation	= $navigation->getSystemNavigation(
 									$userrole 	= $request->getAttribute('c_userrole'),
 									$acl 		= $this->c->get('acl'),
-									$urlinfo 	= $this->c->get('urlinfo')
+									$urlinfo 	= $this->c->get('urlinfo'),
+									$dispatcher = $this->c->get('dispatcher'),
 								);
 
 		$username			= $request->getAttribute('c_username');
@@ -238,7 +243,8 @@ class ControllerWebSystem extends Controller
 		$systemNavigation	= $navigation->getSystemNavigation(
 									$userrole 	= $request->getAttribute('c_userrole'),
 									$acl 		= $this->c->get('acl'),
-									$urlinfo 	= $this->c->get('urlinfo')
+									$urlinfo 	= $this->c->get('urlinfo'),
+									$dispatcher = $this->c->get('dispatcher'),
 								);
 
 		$user				= new User();
@@ -281,7 +287,8 @@ class ControllerWebSystem extends Controller
 		$systemNavigation	= $navigation->getSystemNavigation(
 									$userrole 	= $request->getAttribute('c_userrole'),
 									$acl 		= $this->c->get('acl'),
-									$urlinfo 	= $this->c->get('urlinfo')
+									$urlinfo 	= $this->c->get('urlinfo'),
+									$dispatcher = $this->c->get('dispatcher'),
 								);
 
 		$user				= new User();
@@ -322,7 +329,8 @@ class ControllerWebSystem extends Controller
 		$systemNavigation	= $navigation->getSystemNavigation(
 									$userrole 	= $request->getAttribute('c_userrole'),
 									$acl 		= $this->c->get('acl'),
-									$urlinfo 	= $this->c->get('urlinfo')
+									$urlinfo 	= $this->c->get('urlinfo'),
+									$dispatcher = $this->c->get('dispatcher'),
 								);
 
 	    return $this->c->get('view')->render($response, 'system/usernew.twig', [

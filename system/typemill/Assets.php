@@ -192,7 +192,7 @@ class Assets
 		{
 			$this->JS[] = $axiosUrl;
 
-			$axios = '<script>const myaxios = axios.create({ baseURL: \'' . $this->baseUrl . '\' });</script>';
+			$axios = '<script>const tmaxios = axios.create({ baseURL: \'' . $this->baseUrl . '\' });</script>';
 			$this->JS[] = $axios;
 		}
 	}

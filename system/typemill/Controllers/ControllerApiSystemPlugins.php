@@ -18,11 +18,12 @@ class ControllerApiSystemPlugins extends Controller
 
 		$extension 			= new Extension();
 		$formdefinitions 	= $extension->getPluginDefinition($pluginname);
+		$formdefinitions 	= $this->addDatasets($formdefinitions['forms']['fields']);
 		$plugindata 		= [];
 
 		# validate input
 		$validator 			= new Validation();
-		$validatedOutput 	= $this->recursiveValidation($validator, $formdefinitions['forms']['fields'], $plugininput);
+		$validatedOutput 	= $this->recursiveValidation($validator, $formdefinitions, $plugininput);
 		if(!empty($this->errors))
 		{
 			$response->getBody()->write(json_encode([
