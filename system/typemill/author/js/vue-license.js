@@ -29,20 +29,21 @@ const app = Vue.createApp({
 						</div>
 	  					<form v-else class="inline-block w-full">
 							<div>
-								<p>Buy a typemill-license and enjoy our flatrate-model for premium-plugins and -themes.</p><p>We offer two types of subscription-based licenses:</p>
+								<p>Buy a typemill-license and enjoy our flatrate-model for plugins and -themes.</p><p>We offer two types of subscription-based licenses:</p>
 								<div class="flex flex-wrap justify-between">
 									<div class="w-half border-2 border-stone-200 p-4 my-8 text-center">
 										<h2 class="text-3 font-bold mb-4">Maker License</h2>
-										<p class="mb-4">Use all maker-prodcuts (plugins and themes) for one year. The subscription will automatically renewed after a year.</p>
-										<a href="#!" class="paddle_button" data-product="44699">Buy now for 29,00 €/year</a>
+										<p class="mb-4">Use all maker-prodcuts (plugins and themes) for one year. The subscription will automatically refresh after a year until you cancel it.</p>
+										<a href="https://typemill.net/buy">Buy on Typemill</a>
 									</div>
 									<div class="w-half border-2 border-stone-200 p-4 my-8 text-center">
 										<h2 class="text-3 font-bold mb-4">Business License</h2>
-										<p class="mb-4">Use all business- and maker-products (plugins, themes, services) for one year. The subscription will automatically renewed after a year.</p>
-										<a href="#!" class="paddle_button" data-product="44700">Buy now for 229,00 €/year</a>
+										<p class="mb-4">Use all business- and maker-products (plugins, themes, services) for one year. The subscription will automatically refresh after a year until you cancel it.</p>
+										<a href="https://typemill.net/buy">Buy on Typemill</a>
 									</div>
 								</div>
 							</div>
+<!--
 							<div v-for="(fieldDefinition, fieldname) in formDefinitions">
 								<fieldset class="flex flex-wrap justify-between border-2 border-stone-200 p-4 my-8" v-if="fieldDefinition.type == 'fieldset'">
 									<legend class="text-lg font-medium">{{ fieldDefinition.legend }}</legend>
@@ -70,6 +71,7 @@ const app = Vue.createApp({
 								<div :class="messageClass" class="block w-full h-8 px-3 py-1 my-1 text-white transition duration-100">{{ message }}</div>
 								<input type="submit" @click.prevent="save()" value="save" class="w-full p-3 my-1 bg-stone-700 hover:bg-stone-900 text-white cursor-pointer transition duration-100">
 							</div>
+-->
 				  		</form>
 			  		</Transition>`,
 	data() {
