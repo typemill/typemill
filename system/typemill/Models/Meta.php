@@ -98,6 +98,8 @@ class Meta
 	{
 		$modified = false;
 
+		if(!is_array($meta['meta'])){ $meta['meta'] = []; }
+		
 		if(!isset($meta['meta']['owner']))
 		{
 			$meta['meta']['owner'] = $currentuser ? $currentuser : false;

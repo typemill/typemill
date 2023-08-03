@@ -35,7 +35,7 @@ class ControllerWebSetup extends Controller
 		if( !$storage->checkFolder('fileFolder')){ 				$systemerrors[] = $storage->getError(); }
 
 		# check php-version
-		if (version_compare(phpversion(), '8.3.0', '<')) 
+		if (version_compare(phpversion(), '8.0.0', '<')) 
 		{
 			$systemerrors[] = 'The PHP-version of your server is ' . phpversion() . ' and Typemill needs at least 8.0.0';
 		}

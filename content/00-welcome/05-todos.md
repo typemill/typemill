@@ -101,6 +101,10 @@
 * Reference feature
 * SVG checker
 * Markdown secure rendering
+* Typemill Utilities
+* Version check
+* User search only for +10 users
+* Fix error api systemnavi
 
 ## Cleanups:
 

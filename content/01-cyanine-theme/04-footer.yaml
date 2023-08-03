@@ -1,8 +1,0 @@
-meta:
-    navtitle: footer
-    owner: Sebastian
-    created: '2023-06-12'
-    time: 21-41-25
-    modified: '2021-05-18'
-    description: 'Cyanine provides a three column footer at the bottom of each page. You can use markdown for each column. Make sure that you use the correct headline-level (we'
-    title: '3-Column Footer'

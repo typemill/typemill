@@ -31,6 +31,7 @@ class Extension
 		$themeSettings = [];
 		foreach($themes as $themename => $themeinputs)
 		{
+			if(!is_array($themeinputs)){ $themeinputs = []; }
 			$themeSettings[$themename] = $themeinputs;
 			$themeSettings[$themename]['customcss'] = $this->storage->getFile('cacheFolder', '', $themename . '-custom.css');
 		}
