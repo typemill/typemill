@@ -22,6 +22,7 @@ settings/license.yaml
 settings/users
 system/vendor
 plugins/demo
+plugins/search
 zips
 build.php
 node_modules
