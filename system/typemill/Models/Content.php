@@ -113,22 +113,31 @@ class Content
 		return $this->storage->getError();
 	}
 
-	public function deletePage($item)
+	public function deletePage($item, $result = NULL)
 	{
 		$extensions = ['.md', '.txt', '.yaml'];
 
-		$result = true;
+		if($item->elementType == 'folder' && isset($item->folderContent) && is_array($item->folderContent))
+		{
+			foreach($item->folderContent as $content)
+			{
+				$result = $this->deletePage($content);
+
+				if($result !== true){ break; }
+			}
+		}
+
 		foreach($extensions as $extension)
 		{
 			$result = $this->storage->deleteFile('contentFolder', '', $item->pathWithoutType . $extension);
 		}
 
-		if($result)
+		if($result !== true)
 		{
-			return true;
+			return $this->storage->getError();
 		}
-
-		return $this->storage->getError();
+		
+		return true;
 	}
 
 	public function addDraftHtml($markdownArray)

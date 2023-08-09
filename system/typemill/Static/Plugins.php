@@ -45,28 +45,16 @@ class Plugins
 		{
 			# add the routes
 			$pluginRoutes = $className::addNewRoutes();
-			
-			# multi-dimensional or simple array of routes
-			if(isset($pluginRoutes[0]))
+
+			foreach($pluginRoutes as $pluginRoute)
 			{
-				# if they are properly formatted, add them to routes array
-				foreach($pluginRoutes as $pluginRoute)
+				if(self::checkRouteArray($routes,$pluginRoute))
 				{
-					if(self::checkRouteArray($routes,$pluginRoute))
-					{
-						$pluginRoute['route'] 	= strtolower($pluginRoute['route']);
-						$routes[] 				= $pluginRoute;
-					}
+					$routeType  			= (substr($pluginRoute['route'], 0,5) == '/api/') ? 'api' : 'web';
+					$pluginRoute['route'] 	= strtolower($pluginRoute['route']);
+					$routes[$routeType][] 	= $pluginRoute;
 				}
-			}
-			elseif(is_array($routes))
-			{
-				if(self::checkRouteArray($routes,$pluginRoutes))
-				{
-					$pluginRoutes['route'] 		= strtolower($pluginRoutes['route']);
-					$routes[] 					= $pluginRoutes;
-				}
-			}
+			}			
 		}
 		
 		return $routes;
@@ -113,7 +101,9 @@ class Plugins
 		if( 
 			isset($route['httpMethod']) AND in_array($route['httpMethod'], array('get','post','put','delete','head','patch','options'))
 			AND isset($route['route']) AND is_string($route['route'])
-			AND isset($route['class']) AND is_string($route['class']))
+			AND isset($route['class']) AND is_string($route['class'])
+			AND isset($route['name']) AND is_string($route['name'])
+		)
 		{
 			return true;
 		}

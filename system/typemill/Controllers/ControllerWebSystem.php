@@ -2,6 +2,8 @@
 
 namespace Typemill\Controllers;
 
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 use Typemill\Models\Navigation;
 use Typemill\Models\Extension;
 use Typemill\Models\User;
@@ -10,7 +12,7 @@ use Typemill\Models\Settings;
 
 class ControllerWebSystem extends Controller
 {	
-	public function showSettings($request, $response, $args)
+	public function showSettings(Request $request, Response $response, $args)
 	{
 		$navigation 		= new Navigation();
 		$mainNavigation		= $navigation->getMainNavigation(
@@ -49,7 +51,7 @@ class ControllerWebSystem extends Controller
 	    ]);
 	}
 
-	public function showThemes($request, $response, $args)
+	public function showThemes(Request $request, Response $response, $args)
 	{
 		$navigation 		= new Navigation();
 		$mainNavigation		= $navigation->getMainNavigation(
@@ -101,7 +103,7 @@ class ControllerWebSystem extends Controller
 	    ]);
 	}
 
-	public function showPlugins($request, $response, $args)
+	public function showPlugins(Request $request, Response $response, $args)
 	{
 		$navigation 		= new Navigation();
 		$mainNavigation		= $navigation->getMainNavigation(
@@ -152,7 +154,7 @@ class ControllerWebSystem extends Controller
 	    ]);
 	}
 
-	public function showLicense($request, $response, $args)
+	public function showLicense(Request $request, Response $response, $args)
 	{
 		$navigation 		= new Navigation();
 		$mainNavigation		= $navigation->getMainNavigation(
@@ -192,7 +194,7 @@ class ControllerWebSystem extends Controller
 	    ]);
 	}
 
-	public function showAccount($request, $response, $args)
+	public function showAccount(Request $request, Response $response, $args)
 	{
 		$navigation 		= new Navigation();
 		$mainNavigation		= $navigation->getMainNavigation(
@@ -230,7 +232,7 @@ class ControllerWebSystem extends Controller
 	    ]);
 	}
 
-	public function showUsers($request, $response, $args)
+	public function showUsers(Request $request, Response $response, $args)
 	{
 		$navigation 		= new Navigation();
 		$mainNavigation		= $navigation->getMainNavigation(
@@ -274,7 +276,7 @@ class ControllerWebSystem extends Controller
 	    ]);
 	}
 
-	public function showUser($request, $response, $args)
+	public function showUser(Request $request, Response $response, $args)
 	{
 		$navigation 		= new Navigation();
 		$mainNavigation		= $navigation->getMainNavigation(
@@ -316,7 +318,7 @@ class ControllerWebSystem extends Controller
 	    ]);
 	}
 
-	public function newUser($request, $response, $args)
+	public function newUser(Request $request, Response $response, $args)
 	{
 		$navigation 		= new Navigation();
 		$mainNavigation		= $navigation->getMainNavigation(
@@ -345,24 +347,37 @@ class ControllerWebSystem extends Controller
 	    ]);
 	}
 
-
-/*
-	public function showBlank($request, $response, $args)
+	public function blankSystemPage(Request $request, Response $response, $args)
 	{
-		$user				= new User();
-		$settings 			= $this->c->get('settings');
-		$route 				= $request->getAttribute('route');
-		$navigation 		= $this->getMainNavigation();
+		$navigation 		= new Navigation();
+		$mainNavigation		= $navigation->getMainNavigation(
+									$userrole 	= $request->getAttribute('c_userrole'),
+									$acl 		= $this->c->get('acl'),
+									$urlinfo 	= $this->c->get('urlinfo'),
+									$editor 	= $this->settings['editor']
+								);
+		$userrole 	= $request->getAttribute('c_userrole');
+		$acl 		= $this->c->get('acl');
+		$urlinfo 	= $this->c->get('urlinfo');
+		$editor 	= $this->settings['editor'];
 
-		$content 			= '<h1>Hello</h1><p>I am the showBlank method from the settings controller</p><p>In most cases I have been called from a plugin. But if you see this content, then the plugin does not work or has forgotten to inject its own content.</p>';
+		$systemNavigation	= $navigation->getSystemNavigation(
+									$userrole 	= $request->getAttribute('c_userrole'),
+									$acl 		= $this->c->get('acl'),
+									$urlinfo 	= $this->c->get('urlinfo'),
+									$dispatcher = $this->c->get('dispatcher')
+								);
 
-		return $this->render($response, 'settings/blank.twig', array(
-			'settings' 		=> $settings,
-			'acl' 			=> $this->c->acl, 
-			'navigation'	=> $navigation,
-			'content' 		=> $content,
-			'route' 		=> $route->getName() 
-		));
-	}			
-*/
+	    return $this->c->get('view')->render($response, 'layouts/layoutSystemBlank.twig', [
+			'settings' 			=> $this->settings,
+			'mainnavi'			=> $mainNavigation,
+			'systemnavi'		=> $systemNavigation,
+			'jsdata' 			=> [
+										'settings' 		=> $this->settings,
+										'labels'		=> $this->c->get('translations'),
+										'urlinfo'		=> $this->c->get('urlinfo'),
+										'acl'			=> $this->c->get('acl'),
+									]
+	    ]);
+	}
 }

@@ -265,7 +265,8 @@ const publisher = Vue.createApp({
 			{
 				if(error.response)
 				{
-					alert(error.response);
+					self.message = error.response.data.message;
+					self.messageClass = "bg-rose-500";
 				}
 			});
 		},
@@ -301,7 +302,8 @@ const publisher = Vue.createApp({
 			{
 				if(error.response)
 				{
-					alert(error.response);
+					self.message = error.response.data.message;
+					self.messageClass = "bg-rose-500";
 				}
 			});
 		},
@@ -326,7 +328,8 @@ const publisher = Vue.createApp({
 			{
 				if(error.response)
 				{
-					alert(error.response);
+					self.message = error.response.data.message;
+					self.messageClass = "bg-rose-500";
 				}
 			});
 		},
@@ -356,8 +359,10 @@ const publisher = Vue.createApp({
 			{
 				if(error.response)
 				{
-					alert(error.response);
-				}				
+					self.showModal = false;
+					self.message = error.response.data.message;
+					self.messageClass = "bg-rose-500";
+				}
 			});
 		},
 	},

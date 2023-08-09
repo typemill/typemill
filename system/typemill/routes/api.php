@@ -83,3 +83,25 @@ $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 	$group->post('/meta', ControllerApiAuthorMeta::class . ':updateMeta')->setName('api.metadata.update')->add(new ApiAuthorization($acl, 'mycontent', 'update'));
 
 })->add(new ApiAuthentication());
+
+# api-routes from plugins
+foreach($routes['api'] as $pluginRoute)
+{	
+	$method 	= $pluginRoute['httpMethod'] ?? false;
+	$route		= $pluginRoute['route'] ?? false;
+	$class		= $pluginRoute['class'] ?? false;
+	$name 		= $pluginRoute['name'] ?? false;
+	$resource 	= $pluginRoute['resource'] ?? false;
+	$privilege 	= $pluginRoute['privilege'] ?? false;
+
+	if($resources && $privilege)
+	{
+		# protected api requires authentication and authorization
+		$app->{$method}($route, $class)->setName($name)->add(new ApiAuthorization($acl, $resource, $privilege))->add(new ApiAuthentication());
+	}
+	else
+	{
+		# public api routes
+		$app->{$method}($route, $class)->setName($name);
+	}
+}

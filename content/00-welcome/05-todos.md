@@ -9,6 +9,8 @@
 * DONE: License feature
 * ToDo: Enhance with plugins
 
+----
+
 ## Visual Editor
 
 * DONE: Refactor and redesign

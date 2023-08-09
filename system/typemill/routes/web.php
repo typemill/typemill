@@ -54,34 +54,24 @@ $app->redirect('/tm/', $routeParser->urlFor('auth.show'), 302);
 # downloads
 $app->get('/media/files[/{params:.*}]', ControllerWebDownload::class . ':download')->setName('download.file');
 
-foreach($routes as $pluginRoute)
+# web-routes from plugins
+foreach($routes['web'] as $pluginRoute)
 {	
-	$method 	= $pluginRoute['httpMethod'];
-	$route		= $pluginRoute['route'];
-	$class		= $pluginRoute['class'];
-	# $resource 	= isset($pluginRoute['resource']) ? $pluginRoute['resource'] : NULL;
-	# $privilege 	= isset($pluginRoute['privilege']) ? $pluginRoute['privilege'] : NULL;
+	$method 	= $pluginRoute['httpMethod'] ?? false;
+	$route		= $pluginRoute['route'] ?? false;
+	$class		= $pluginRoute['class'] ?? false;
+	$name 		= $pluginRoute['name'] ?? false;
+	$resource 	= $pluginRoute['resource'] ?? false;
+	$privilege 	= $pluginRoute['privilege'] ?? false;
 
-#	echo '<br>';
-#	echo 'method: ' . $method . ' -> route: ' . $route . ' -> class: ' . $class; 
-
-	if(isset($pluginRoute['name']))
+	if($resources && $privilege)
 	{
-#		$app->{$method}($route, $class)->setName($pluginRoute['name'])->add(new accessMiddleware($container['router'], $container['acl'], $resource, $privilege));
-		$app->{$method}($route, $class)->setName($pluginRoute['name']);
+		$app->{$method}($route, $class)->setName($name)->add(new WebAuthorization($routeParser, $acl, $resource, $privilege))->add(new WebRedirectIfUnauthenticated($routeParser));
 	}
 	else
 	{
-#		$app->{$method}($route, $class)->add(new accessMiddleware($container['router'], $container['acl'], $resource, $privilege));
-		$app->{$method}($route, $class);
+		$app->{$method}($route, $class)->setName($name);
 	}
-
-	# if api and if authorization
-	# ->add(new ApiAuthorization($acl, 'account', 'view'));
-
-	# if web and if authorization
-	# ->add(new WebAuthorization($acl, 'account', 'view'));
 }
-# die();
-# website
+
 $app->get('/[{route:.*}]', ControllerWebFrontend::class . ':index')->setName('home');

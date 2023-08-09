@@ -5,7 +5,7 @@
 		<title>{% block title %}{% endblock %}</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-		<meta name="description" content="Configure your TYPEMILL website"/>
+		<meta name="description" content="TYPEMILL system extension"/>
 
 		<meta name="msapplication-TileColor" content="#F9F8F6" />
 		<meta name="msapplication-TileImage" content="{{ base_url() }}/system/author/img/favicon-144.png" />
@@ -32,19 +32,22 @@
 			{% include 'partials/mainNavi.twig' %}
 		</header>
 
-		{% include 'partials/flash.twig' %}
-
 		<div class="max-w-6xl m-auto mt-7 flex justify-between" id="main" data-url="{{ base_url() }}">
+
 			<aside class="w-1/4">
 				{% include 'partials/systemNavi.twig' %}
 			</aside>
+
 			<article class="w-3/4 bg-stone-50 shadow-md p-8">
-				{% block content %}{% endblock %}
+
+				<h1 class="text-3xl font-bold mb-4">{{ translate('System') }} </h1>
+				
+				<div id="system" v-cloak></div>
+
 			</article>
+
 		</div>
 		
-<!--		< csrf() | raw > -->
-
 		<script>
 			
 			const data = {{ jsdata | json_encode() | raw  }};
@@ -54,20 +57,26 @@
 		<script>
 			const tmaxios = axios.create();
 			tmaxios.defaults.baseURL =  "{{ base_url() }}";
-			/* header for session authentication in middleware */			
 			tmaxios.defaults.headers.common['X-Session-Auth'] = "true";
-/*			tmaxios.defaults.headers.common['Authorization'] = "Basic {{ basicauth }}"; */
 		</script>
+		<script src="{{ base_url() }}/system/typemill/author/js/highlight.min.js?v={{ settings.version }}"></script>
 		<script src="{{ base_url() }}/system/typemill/author/js/vue.js?v={{ settings.version }}"></script>
 		<script src="{{ base_url() }}/system/typemill/author/js/vue-eventbus.js?v={{ settings.version }}"></script>
 		<script src="{{ base_url() }}/system/typemill/author/js/vue-shared.js?v={{ settings.version }}"></script>
 		<script src="{{ base_url() }}/system/typemill/author/js/vue-medialib.js?v={{ settings.version }}"></script>
-		<script>
-/*			kixote.mount('#kixote'); */
-		</script>
+		<script src="{{ base_url() }}/system/typemill/author/js/vue-forms.js?v={{ settings.version }}"></script>
+
 		{% block javascript %}{% endblock %}
 
-		{{ assets.renderJS() }}		
+		{{ assets.renderJS() }}
+
+		<script>
+			app.config.globalProperties.$filters = translatefilter;
+			app.mount('#system');
+
+/*			kixote.mount('#kixote'); */
+
+		</script>
 	
 	</body>
 </html>
