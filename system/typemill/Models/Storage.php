@@ -156,6 +156,55 @@ class Storage
 		return true;
 	}
 
+	public function deleteFolder($location, $folder, $filename)
+	{
+		if(!isset($this->isWritable[$location]))
+		{
+			$this->error = "It is not allowed to write into $location";
+
+			return false;
+		}
+
+		$filepath = $this->getFolderPath($location, $folder) . $filename;
+
+		if(is_dir($filepath))
+		{
+			if(rmdir($dir))
+			{
+				return true;
+			}
+
+			$this->error = "We found the folder but could not delete $filepath";
+
+			return false;
+		}
+		
+		$this->error = "The path $filepath is not a folder.";
+
+		return false;
+	}
+
+	public function deleteContentFolder($filepath)
+	{
+		$filepath = $this->getFolderPath('contentFolder') . $filepath;
+
+		if(is_dir($filepath))
+		{
+			if(rmdir($filepath))
+			{
+				return true;
+			}
+
+			$this->error = "We found the folder but could not delete $filepath";
+
+			return false;
+		}
+		
+		$this->error = "The path $filepath is not a folder.";
+
+		return false;
+	}
+
 	public function checkFile($location, $folder, $filename)
 	{
 		$filepath = $this->getFolderPath($location, $folder) . $filename;
@@ -285,34 +334,6 @@ class Storage
 		return true;
 	}
 
-	public function deleteFolder($location, $folder, $filename)
-	{
-		if(!isset($this->isWritable[$location]))
-		{
-			$this->error = "It is not allowed to write into $location";
-
-			return false;
-		}
-
-		$filepath = $this->getFolderPath($location, $folder) . $filename;
-
-		if(is_dir($filepath))
-		{
-			if(rmdir($dir))
-			{
-				return true;
-			}
-
-			$this->error = "We found the folder but could not delete $filepath";
-
-			return false;
-		}
-		
-		$this->error = "The path $filepath is not a folder.";
-
-		return false;
-	}
-
 	public function deleteFile($location, $folder, $filename)
 	{
 		if(!isset($this->isWritable[$location]))
@@ -332,9 +353,14 @@ class Storage
 			}
 
 			$this->error = "We found the file but could not delete $filepath";
+
+			return false;
 		}
 
-		return false;
+		$this->error = "We did not find a file with that name";
+		
+		# we do not want to stop delete operation just because a file was not there, so return a message and true.
+		return true;
 	}
 
 	# used to sort the navigation / files 
@@ -351,11 +377,14 @@ class Storage
 		{
 			$oldPath = $this->contentFolder . $item->path;
 
-			if(@rename($oldPath, $newPath))
+			if(is_dir($oldPath))
 			{
-				return true;
+				if(@rename($oldPath, $newPath))
+				{
+					return true;
+				}
+				return false;
 			}
-			return false;
 		}
 		
 		# create old path but without filetype

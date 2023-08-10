@@ -70,9 +70,3 @@
     noindex: false
     path: /01-cyanine-theme/03-content-elements.md
     keyPath: '1.3'
-/folder:
-    navtitle: folder
-    hide: false
-    noindex: false
-    path: /02-folder
-    keyPath: 2

@@ -855,22 +855,26 @@ class ControllerApiAuthorArticle extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 		}
 
+		$content = new Content($urlinfo['baseurl']);
+
 		# check if it is a folder and if the folder has published pages.
 		if($item->elementType == 'folder')
 		{
-			if($this->folderHasPublishedPages($item))
-			{
-				$response->getBody()->write(json_encode([
-					'message' => 'The folder contains published pages. Please unpublish or delete the pages first.',
-				]));
-
-				return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
-			}
+			$result = $content->deleteFolder($item);
+		}
+		else
+		{
+			$result = $content->deletePage($item);
 		}
 
-	    # publish content
-		$content = new Content($urlinfo['baseurl']);
-		$content->deletePage($item);
+		if($result !== true)
+		{
+			$response->getBody()->write(json_encode([
+				'message' => $result,
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);			
+		}
 
 		# refresh navigation
 	    $navigation->clearNavigation();
@@ -896,22 +900,5 @@ class ControllerApiAuthorArticle extends Controller
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json');
-	}
-
-
-	private function folderHasPublishedPages($folder)
-	{
-		if(isset($folder->folderContent) && is_array($folder->folderContent) && count($folder->folderContent) > 0 )
-		{
-			foreach($folder->folderContent as $page)
-			{
-				if($page->status == 'published')
-				{
-					return true;
-				}
-			}
-		}
-
-		return false;
 	}
 }
