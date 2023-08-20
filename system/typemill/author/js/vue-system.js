@@ -1,6 +1,7 @@
 const app = Vue.createApp({
 	template: `<Transition name="initial" appear>
 	  					<form class="inline-block w-full">
+							<p v-if="version.system !== undefined"><a href="https://typemill.net" class="block p-2 text-center bg-rose-500 text-white">Please update typemill to version {{ version.system }}</a></p>
 							<ul class="flex mt-4 mb-4">
 								<li v-for="tab in tabs" class="">
 									<button class="px-2 py-2 border-b-2 border-stone-200 hover:border-stone-700 transition duration-100" :class="(tab == currentTab) ? 'border-stone-700' : ''" @click.prevent="activateTab(tab)">{{ $filters.translate(tab) }}</button>
@@ -34,9 +35,14 @@ const app = Vue.createApp({
 			message: '',
 			messageClass: '',
 			errors: {},
+			version: false,
 		}
 	},
 	mounted() {
+
+		eventBus.$on('forminput', formdata => {
+			this.formData[formdata.name] = formdata.value;
+		});
 
 		for (var key in this.formDefinitions)
 		{
@@ -47,10 +53,26 @@ const app = Vue.createApp({
 			}
 		}
 
-		eventBus.$on('forminput', formdata => {
-			this.formData[formdata.name] = formdata.value;
-		});
+		var self = this;
 
+		tmaxios.post('/api/v1/versioncheck',{
+			'url':	data.urlinfo.route,
+			'type': 'system',
+			'data': this.formData.version
+		})
+		.then(function (response)
+		{
+			if(response.data.system)
+			{
+				self.version = response.data.system;
+				console.info(self.version);
+			}
+		})
+		.catch(function (error)
+		{
+			self.messageClass = 'bg-rose-500';
+			self.message = error.response.data.message;
+		});
 	},
 	methods: {
 		selectComponent: function(type)

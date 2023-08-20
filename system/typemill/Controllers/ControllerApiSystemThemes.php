@@ -23,12 +23,12 @@ class ControllerApiSystemThemes extends Controller
 
 		# validate input
 		$validator 			= new Validation();
-		$validatedOutput 	= $this->recursiveValidation($validator, $formdefinitions, $themeinput);
-		if(!empty($this->errors))
+		$validatedOutput 	= $validator->recursiveValidation($formdefinitions, $themeinput);
+		if(!empty($validator->errors))
 		{
 			$response->getBody()->write(json_encode([
 				'message' 	=> 'Please correct tbe errors in form.',
-				'errors' 	=> $this->errors
+				'errors' 	=> $validator->errors
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);

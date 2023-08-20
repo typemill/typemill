@@ -55,22 +55,25 @@ $app->redirect('/tm/', $routeParser->urlFor('auth.show'), 302);
 $app->get('/media/files[/{params:.*}]', ControllerWebDownload::class . ':download')->setName('download.file');
 
 # web-routes from plugins
-foreach($routes['web'] as $pluginRoute)
-{	
-	$method 	= $pluginRoute['httpMethod'] ?? false;
-	$route		= $pluginRoute['route'] ?? false;
-	$class		= $pluginRoute['class'] ?? false;
-	$name 		= $pluginRoute['name'] ?? false;
-	$resource 	= $pluginRoute['resource'] ?? false;
-	$privilege 	= $pluginRoute['privilege'] ?? false;
+if(isset($routes['web']) && !empty($routes['web']))
+{
+	foreach($routes['web'] as $pluginRoute)
+	{			
+		$method 	= $pluginRoute['httpMethod'] ?? false;
+		$route		= $pluginRoute['route'] ?? false;
+		$class		= $pluginRoute['class'] ?? false;
+		$name 		= $pluginRoute['name'] ?? false;
+		$resource 	= $pluginRoute['resource'] ?? false;
+		$privilege 	= $pluginRoute['privilege'] ?? false;
 
-	if($resources && $privilege)
-	{
-		$app->{$method}($route, $class)->setName($name)->add(new WebAuthorization($routeParser, $acl, $resource, $privilege))->add(new WebRedirectIfUnauthenticated($routeParser));
-	}
-	else
-	{
-		$app->{$method}($route, $class)->setName($name);
+		if($resources && $privilege)
+		{
+			$app->{$method}($route, $class)->setName($name)->add(new WebAuthorization($routeParser, $acl, $resource, $privilege))->add(new WebRedirectIfUnauthenticated($routeParser));
+		}
+		else
+		{
+			$app->{$method}($route, $class)->setName($name);
+		}
 	}
 }
 

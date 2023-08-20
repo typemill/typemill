@@ -368,6 +368,14 @@ class ControllerWebSystem extends Controller
 									$dispatcher = $this->c->get('dispatcher')
 								);
 
+		$pluginDefinitions 	= false;
+		$pluginname 		= strtolower(trim(str_replace('tm/', '', $urlinfo['route']), '/'));
+		if($pluginname && $pluginname != '' && isset($this->settings['plugins'][$pluginname]))
+		{
+			$extension 			= new Extension();
+			$pluginDefinitions 	= $extension->getPluginDefinition($pluginname);
+		}
+
 	    return $this->c->get('view')->render($response, 'layouts/layoutSystemBlank.twig', [
 			'settings' 			=> $this->settings,
 			'mainnavi'			=> $mainNavigation,
@@ -377,6 +385,8 @@ class ControllerWebSystem extends Controller
 										'labels'		=> $this->c->get('translations'),
 										'urlinfo'		=> $this->c->get('urlinfo'),
 										'acl'			=> $this->c->get('acl'),
+										'userroles'		=> $this->c->get('acl')->getRoles(),
+										'plugin'		=> $pluginDefinitions
 									]
 	    ]);
 	}

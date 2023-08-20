@@ -3,6 +3,7 @@ const app = Vue.createApp({
 				<div class="w-full">
 					<ul>
 						<li v-for="(plugin,pluginname) in formDefinitions" class="w-full my-4 bg-stone-100">
+							<p v-if="versions[pluginname] !== undefined"><a href="https://plugins.typemill.net" class="block p-2 text-center bg-rose-500 text-white">Please update to version {{ versions[pluginname].version }}</a></p>
 							<div class="flex justify-between w-full px-8 py-3 border-b border-white" :class="getActiveClass(pluginname)">
 								<p class="py-2">License: {{ plugin.license }}</p>
 								<div class="flex">
@@ -90,12 +91,43 @@ const app = Vue.createApp({
 			userroles: false,
 			showModal: false,
 			modalMessage: 'default',
+			versions: false,
 		}
 	},
 	mounted() {
 		eventBus.$on('forminput', formdata => {
 			this.formData[this.current][formdata.name] = formdata.value;
 		});
+
+		var self = this;
+
+		var plugins = {};
+		for (var key in this.formDefinitions)
+		{
+			if (this.formDefinitions.hasOwnProperty(key))
+			{
+				plugins[key] = this.formDefinitions[key].version;
+			}
+		}
+
+		tmaxios.post('/api/v1/versioncheck',{
+			'url':	data.urlinfo.route,
+			'type': 'plugins',
+			'data': plugins
+		})
+		.then(function (response)
+		{
+			if(response.data.plugins)
+			{
+				self.versions = response.data.plugins;
+			}
+		})
+		.catch(function (error)
+		{
+			self.messageClass = 'bg-rose-500';
+			self.message = error.response.data.message;
+		});
+
 	},
 	methods: {
 		getActiveClass: function(pluginname)

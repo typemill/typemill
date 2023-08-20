@@ -54,7 +54,7 @@ class Plugins
 					$pluginRoute['route'] 	= strtolower($pluginRoute['route']);
 					$routes[$routeType][] 	= $pluginRoute;
 				}
-			}			
+			}
 		}
 		
 		return $routes;

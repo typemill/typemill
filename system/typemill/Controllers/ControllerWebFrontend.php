@@ -11,7 +11,6 @@ use Typemill\Models\Meta;
 use Typemill\Events\OnPagetreeLoaded;
 use Typemill\Events\OnBreadcrumbLoaded;
 use Typemill\Events\OnItemLoaded;
-use Typemill\Events\OnOriginalLoaded;
 use Typemill\Events\OnMetaLoaded;
 use Typemill\Events\OnMarkdownLoaded;
 use Typemill\Events\OnContentArrayLoaded;

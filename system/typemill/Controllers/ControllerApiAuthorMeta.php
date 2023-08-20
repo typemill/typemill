@@ -8,11 +8,15 @@ use Slim\Routing\RouteContext;
 use Typemill\Models\Validation;
 use Typemill\Models\Navigation;
 use Typemill\Models\Meta;
+use Typemill\Events\OnMetaLoaded;
+
 
 class ControllerApiAuthorMeta extends Controller
 {
 	public function getMeta(Request $request, Response $response, $args)
 	{
+
+		# is it really needed? Check middleware if rights are validated there already
 		$validRights		= $this->validateRights($request->getAttribute('c_userrole'), 'content', 'update');
 		if(!$validRights)
 		{
@@ -86,6 +90,9 @@ class ControllerApiAuthorMeta extends Controller
 
 		# store the metascheme in cache for frontend
 #		$writeMeta->updateYaml('cache', 'metatabs.yaml', $metascheme);
+
+		$metacleared 			= $this->c->get('dispatcher')->dispatch(new OnMetaLoaded($metacleared),'onMetaLoaded')->getData();
+
 
 		$response->getBody()->write(json_encode([
 			'metadata' 			=> $metacleared, 
@@ -162,7 +169,7 @@ class ControllerApiAuthorMeta extends Controller
 		$tabdefinitions = $this->flattenTabFields($tabdefinitions['fields'], []);
 
 		# create validation object
-		$errors 		= false;
+		$errors 		= [];
 
 		# take the user input data and iterate over all fields and values
 		foreach($params['data'] as $fieldname => $fieldvalue)
@@ -187,7 +194,7 @@ class ControllerApiAuthorMeta extends Controller
 		}
 
 		# return validation errors
-		if($errors)
+		if(!empty($errors))
 		{ 
 			$response->getBody()->write(json_encode([
 				'message' => 'Please correct the errors.',

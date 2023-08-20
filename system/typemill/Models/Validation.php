@@ -2,11 +2,16 @@
 
 namespace Typemill\Models;
 
-use Typemill\Models\User;
 use Valitron\Validator;
+use Typemill\Models\User;
+use Typemill\Models\StorageWrapper;
 
 class Validation
 {
+
+	# only used for recursive validation
+	public $errors = [];
+
 	/**
 	* Constructor with custom validation rules 
 	*
@@ -186,6 +191,33 @@ class Validation
 
 			return true;
 		}, 'format is not valid.');
+
+		Validator::addRule('version', function($field, $value, array $params, array $fields)
+		{
+			if( version_compare( $value, '0.0.1', '>=' ) >= 0 )
+			{
+				return true;
+			}
+			return false;
+		}, 'not a valid version format.');
+	
+		Validator::addRule('version_array', function($field, $value, array $params, array $fields)
+		{
+			foreach($value as $name => $version)
+			{
+				if(!preg_match("/^[A-Za-z0-9_\- ]+$/", $name))
+				{
+					return false;
+				}
+
+				if( version_compare( $version, '0.0.1', '>=' ) <= 0 )
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}, 'not a valid version format.');
 	}
 
 	# return valitron standard object
@@ -313,6 +345,34 @@ class Validation
 		}
 
 		return $v->errors();
+	}
+
+	public function checkVersions(array $params)
+	{
+		$v = new Validator($params);
+		$v->rule('required', ['type', 'data']);
+		$v->rule('in', 'type', ['plugins', 'themes', 'system']);
+		
+		if(!$v->validate()) 
+		{
+			return $v->errors();
+		}
+
+		if($params['type'] == 'plugins' OR $params['type'] == 'themes')
+		{
+			$v->rule('version_array', 'data');
+		}
+		else
+		{
+			$v->rule('version', 'data');
+		}
+
+		if(!$v->validate()) 
+		{
+			return $v->errors();
+		}
+
+		return true;
 	}
 
 	public function navigationSort(array $params)
@@ -498,60 +558,6 @@ class Validation
 		}
 	}
 
-
-
-
-
-	
-	public function usernameBREAK($username)
-	{
-		$v = new Validator($username);
-		$v->rule('alphaNum', 'username')->message("Only alpha-numeric characters allowed");
-		$v->rule('lengthBetween', 'username', 3, 20)->message("Length between 3 - 20"); 
-
-		return $this->validationResult($v);
-	}
-
-	/**
-	* validation for changing the password
-	* 
-	* @param array $params with form data.
-	* @return obj $v the validation object passed to a result method.
-	*/
-	
-	public function newPasswordOldBREAK(array $params)
-	{
-		$v = new Validator($params);
-		$v->rule('required', ['password', 'newpassword']);
-		$v->rule('lengthBetween', 'newpassword', 5, 20);
-		$v->rule('checkPassword', 'password')->message("Password is wrong");
-		
-		return $this->validationResult($v);
-	}
-
-
-	/**
-	* validation for changing the password api case
-	* 
-	* @param array $params with form data.
-	* @return obj $v the validation object passed to a result method.
-	*/
-	
-	public function newPasswordBREAK(array $params)
-	{
-		$v = new Validator($params);
-		$v->rule('required', ['password', 'newpassword']);
-		$v->rule('lengthBetween', 'newpassword', 5, 20);
-		$v->rule('checkPassword', 'password')->message("Password is wrong");
-		
-		if($v->validate()) 
-		{
-			return true;
-		}
-
-		return $v->errors();
-	}
-
 	/**
 	* validation for password recovery
 	* 
@@ -567,41 +573,6 @@ class Validation
 		$v->rule('equals', 'passwordrepeat', 'password');
 		
 		return $this->validationResult($v);
-	}
-
-	/**
-	* validation for system settings
-	* 
-	* @param array $params with form data.
-	* @return obj $v the validation object passed to a result method.
-	*/
-
-	public function settingsBREAK(array $params, array $copyright, array $formats, $name = false)
-	{
-		$v = new Validator($params);
-		
-		$v->rule('required', ['title', 'author', 'copyright', 'year', 'editor']);
-		$v->rule('lengthBetween', 'title', 2, 50);
-		$v->rule('lengthBetween', 'author', 2, 50);
-		$v->rule('noHTML', 'title');
-		# $v->rule('regex', 'title', '/^[\pL0-9_ \-]*$/u');
-		$v->rule('regex', 'author', '/^[\pL_ \-]*$/u');
-		$v->rule('integer', 'year');
-		$v->rule('length', 'year', 4);
-		$v->rule('length', 'langattr', 2);		
-		$v->rule('in', 'editor', ['raw', 'visual']);
-		$v->rule('values_allowed', 'formats', $formats);
-		$v->rule('in', 'copyright', $copyright);
-		$v->rule('noHTML', 'restrictionnotice');
-		$v->rule('lengthBetween', 'restrictionnotice', 2, 1000 );
-		$v->rule('email', 'recoverfrom');
-		$v->rule('noHTML', 'recoversubject');
-		$v->rule('lengthBetween', 'recoversubject', 2, 80 );
-		$v->rule('noHTML', 'recovermessage');
-		$v->rule('lengthBetween', 'recovermessage', 2, 1000 );
-		$v->rule('iplist', 'trustedproxies');
-
-		return $this->validationResult($v, $name);
 	}
 
 
@@ -762,6 +733,78 @@ class Validation
 		return true;
 	}
 	
+
+	# validate a whole formdefinition with all values
+	public function recursiveValidation(array $formdefinitions, $input, $output = [])
+	{
+		# loop through form-definitions, ignores everything that is not defined in yaml
+		foreach($formdefinitions as $fieldname => $fielddefinitions)
+		{
+			if(is_array($fielddefinitions) && $fielddefinitions['type'] == 'fieldset')
+			{
+				$output = $this->recursiveValidation($fielddefinitions['fields'], $input, $output);
+			}
+
+			# do not store values for disabled fields
+			if(isset($fielddefinitions['disabled']) && $fielddefinitions['type'])
+			{
+				continue;
+			}
+
+			if(isset($input[$fieldname]))
+			{
+				$fieldvalue = $input[$fieldname];
+
+				# fix false or null values for selectboxes
+				if($fielddefinitions['type'] == "select" && ($fieldvalue === 'NULL' OR $fieldvalue === false))
+				{ 
+					$fieldvalue = NULL; 
+				}
+
+				$validationresult = $this->field($fieldname, $fieldvalue, $fielddefinitions);
+
+				if($validationresult === true)
+				{
+					# MOVE THIS TO A SEPARATE FUNCTION SO YOU CAN STORE IMAGES ONLY IF ALL FIELDS SUCCESSFULLY VALIDATED
+					# images have special treatment, check ProcessImage-Model and ImageApiController
+					if($fielddefinitions['type'] == 'image')
+					{
+						# then check if file is there already: check for name and maybe correct image extension (if quality has been changed)
+						$storage = new StorageWrapper('\Typemill\Models\Storage');
+						$existingImagePath = $storage->checkImage($fieldvalue);
+						
+						if($existingImagePath)
+						{
+							$fieldvalue = $existingImagePath;
+						}
+						else
+						{
+							# there is no published image with that name, so check if there is an unpublished image in tmp folder and publish it
+							$newImagePath = $storage->publishImage($fieldvalue);
+							if($newImagePath)
+							{
+								$fieldvalue = $newImagePath;
+							}
+							else
+							{
+								$fieldvalue = '';
+							}
+						}
+					}
+
+					$output[$fieldname] = $fieldvalue;
+				}
+				else
+				{
+					$this->errors[$fieldname] = $validationresult[$fieldname][0];
+				}
+			}
+		}
+
+		return $output;
+	}
+
+
 	/**
 	* result for validation
 	* 
@@ -771,6 +814,8 @@ class Validation
 
 	public function checkArray($arrayvalues, $v)
 	{		
+		die('I think checkArray not in use anymore');
+
 		foreach($arrayvalues as $key => $value)
 		{
 			if(is_array($value))
@@ -785,6 +830,8 @@ class Validation
 	
 	public function validationResult($v, $name = false)
 	{
+		die("do not use validationResults in validation model anymore");
+		
 		if($v->validate())
 		{
 			return true;

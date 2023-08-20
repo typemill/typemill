@@ -3,6 +3,7 @@ const app = Vue.createApp({
 				<div class="w-full">
 					<ul>
 						<li v-for="(theme,themename) in formDefinitions" class="w-full my-4 bg-stone-100">
+							<p v-if="versions[themename] !== undefined"><a href="https://themes.typemill.net" class="block p-2 text-center bg-rose-500 text-white">Please update to version {{ versions[themename].version }}</a></p>
 							<div class="flex justify-between w-full px-8 py-3 border-b border-white" :class="getActiveClass(themename)">
 								<p class="py-2">License: {{ theme.license }}</p>
 								<div class="flex">
@@ -93,6 +94,7 @@ const app = Vue.createApp({
 			message: '',
 			messageClass: '',
 			errors: {},
+			versions: false,
 			userroles: false,
 			showModal: false,
 			modalMessage: 'default',			
@@ -104,6 +106,35 @@ const app = Vue.createApp({
 		});
 		this.deactivateThemes();
 		this.formData[this.theme].active = true;
+
+		var self = this;
+
+		var themes = {};
+		for (var key in this.formDefinitions)
+		{
+			if (this.formDefinitions.hasOwnProperty(key))
+			{
+				themes[key] = this.formDefinitions[key].version;
+			}
+		}
+
+		tmaxios.post('/api/v1/versioncheck',{
+			'url':	data.urlinfo.route,
+			'type': 'themes',
+			'data': themes
+		})
+		.then(function (response)
+		{
+			if(response.data.themes)
+			{
+				self.versions = response.data.themes;
+			}
+		})
+		.catch(function (error)
+		{
+			self.messageClass = 'bg-rose-500';
+			self.message = error.response.data.message;
+		});
 	},
 	methods: {
 		deactivateThemes: function()

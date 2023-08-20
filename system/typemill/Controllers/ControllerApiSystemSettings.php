@@ -34,13 +34,13 @@ class ControllerApiSystemSettings extends Controller
 
 		# validate input
 		$validator 			= new Validation();
-		$validatedOutput 	= $this->recursiveValidation($validator, $formdefinitions, $settingsinput);
+		$validatedOutput 	= $validator->recursiveValidation($formdefinitions, $settingsinput);
 
-		if(!empty($this->errors))
+		if(!empty($valiator->errors))
 		{
 			$response->getBody()->write(json_encode([
 				'message' 	=> 'Please correct errors in form.',
-				'errors' 	=> $this->errors
+				'errors' 	=> $validator->errors
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);

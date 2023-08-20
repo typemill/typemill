@@ -158,12 +158,12 @@ class ControllerApiSystemUsers extends Controller
 		$formdefinitions 	= $user->getUserFields($this->c->get('acl'), $request->getAttribute('c_userrole'));
 
 
-		$validatedOutput 	= $this->recursiveValidation($validate, $formdefinitions, $userdata);
-		if(!empty($this->errors))
+		$validatedOutput 	= $validate->recursiveValidation($formdefinitions, $userdata);
+		if(!empty($validate->errors))
 		{
 			$response->getBody()->write(json_encode([
 				'message' 	=> 'Please correct tbe errors in form.',
-				'errors' 	=> $this->errors
+				'errors' 	=> $validate->errors
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
@@ -254,12 +254,12 @@ class ControllerApiSystemUsers extends Controller
 		$user 				= new User();
 		$formdefinitions 	= $user->getUserFields($this->c->get('acl'), $userdata['userrole'],$inspectorrole = $request->getAttribute('c_userrole'));
 		unset($formdefinitions['username']['readonly']);
-		$validatedOutput = $this->recursiveValidation($validate, $formdefinitions, $userdata);
-		if(!empty($this->errors))
+		$validatedOutput = $validate->recursiveValidation($formdefinitions, $userdata);
+		if(!empty($validate->errors))
 		{
 			$response->getBody()->write(json_encode([
 				'message' 	=> 'Please correct tbe errors in form.',
-				'errors' 	=> $this->errors
+				'errors' 	=> $validate->errors
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);

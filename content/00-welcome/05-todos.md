@@ -7,7 +7,7 @@
 * DONE: Migrate from backend to frontend with vue and api
 * DONE: Redesign
 * DONE: License feature
-* ToDo: Enhance with plugins
+* DONE: Enhance with plugins
 
 ----
 
@@ -92,25 +92,25 @@
 
 ## Open tasks
 
+* DONE: Sitemap and ping
+* SVG checker
+* Version check
+* Markdown secure rendering
 * Responsive design
 * Backend form builder
 * Proxy support
 * Image generation on the fly
-* Sitemap and ping
 * Captcha integration
 * Clear cache
 * Show security Log
 * Reference feature
-* SVG checker
-* Markdown secure rendering
 * Typemill Utilities
-* Version check
 * User search only for +10 users
 * Fix error api systemnavi
 
 ## Cleanups:
 
-* Events
+* DONE: Events
 * Error messages
 * Translations
 
