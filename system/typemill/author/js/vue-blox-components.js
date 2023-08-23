@@ -1639,13 +1639,11 @@ bloxeditor.component('image-component', {
 
 			if(errors)
 			{
-				console.info(errors);
+				eventBus.$emit('publishermessage', errors);
 			}
 			else
 			{
 				this.compmarkdown = imgmarkdown;
-//				publishController.errors.message = false;
-//				this.$parent.activatePage();
 
 				this.$emit('updateMarkdownEvent', imgmarkdown);
 			}
@@ -1718,13 +1716,14 @@ bloxeditor.component('image-component', {
 				
 				if (!imageFile.type.match('image.*'))
 				{
-					alert("wrong format");
-//					publishController.errors.message = "Only images are allowed.";
+					let message = this.$filters.translate('Only images are allowed');
+					eventBus.$emit('publishermessage', message);
 				} 
 				else if (size > this.maxsize)
 				{
-					alert("wrong size");
-//					publishController.errors.message = "The maximal size of images is " + this.maxsize + " MB";
+					let message = "The maximal size of images is " + this.maxsize + " MB";
+					message = this.$filters.translate(message);
+					eventBus.$emit('publishermessage', message);
 				}
 				else
 				{					
@@ -1761,9 +1760,10 @@ bloxeditor.component('image-component', {
 					    {
 					      if(error.response)
 					      {
-					      	alert("errror in response");
+					      	let message = error.response.data.message;
+							message = self.$filters.translate(message);
+							eventBus.$emit('publishermessage', message);
 					      }
-
 					    });
 					}
 				}
@@ -1775,7 +1775,8 @@ bloxeditor.component('image-component', {
 
 			if(!this.imgfile)
 			{
-				alert("no file");
+				let message = this.$filters.translate("Imagefile is missing.");
+				eventBus.$emit('publishermessage', message);
 				return;
 			}
 			if(!this.saveimage)
@@ -1804,7 +1805,8 @@ bloxeditor.component('image-component', {
 				{
 					if(error.response)
 					{
-						console.info(error.response);
+						let message = self.$filters.translate(error.response.data.message);
+						eventBus.$emit('publishermessage', message);
 					}
 				});
 			}
@@ -1976,14 +1978,10 @@ bloxeditor.component('file-component', {
 			}
 			if(errors)
 			{
-				alert("errors");
-//				this.$parent.freezePage();
-//				publishController.errors.message = errors;
+				eventBus.$emit('publishermessage', this.$filters.translate(errors));
 			}
 			else
 			{
-//				publishController.errors.message = false;
-//				this.$parent.activatePage();
 				this.$emit('updateMarkdownEvent', filemarkdown);
 				this.compmarkdown = filemarkdown;
 			}
@@ -2011,7 +2009,11 @@ bloxeditor.component('file-component', {
 			})
 			.catch(function (error)
 			{
-				alert("error response");
+				if(error.response.data.message)
+				{
+					let message = myself.$filters.translate(error.response.data.message);
+					eventBus.$emit('publishermessage', message);
+				}
 			});
 		},
 		updaterestriction: function()
@@ -2033,15 +2035,13 @@ bloxeditor.component('file-component', {
 				
 				if (size > this.maxsize)
 				{
-					alert("error size");
-					// publishController.errors.message = "The maximal size of a file is " + this.maxsize + " MB";
+					let message = "The maximal size of a file is " + this.maxsize + " MB";
+					eventBus.$emit('publishermessage', message);
 				}
 				else
 				{
 					self = this;
 					
-//					self.$parent.freezePage();
-//					self.$root.$data.file = true;
 					self.load = true;
 
 					let reader = new FileReader();
@@ -2056,7 +2056,6 @@ bloxeditor.component('file-component', {
 						.then(function (response) {
 
 							self.load = false;
-//							self.$parent.activatePage();
 
 							self.filemeta 			= true;
 							self.savefile 			= true;
@@ -2070,11 +2069,10 @@ bloxeditor.component('file-component', {
 						.catch(function (error)
 						{
 							self.load = false;
-//							self.$parent.activatePage();
 							if(error.response)
 							{
-								alert("error response")
-//								publishController.errors.message = error.response.data.errors;
+								let message = self.$filters.translate(error.response.data.message);
+								eventBus.$emit('publishermessage', message);
 							}
 						});
 					}
@@ -2087,7 +2085,9 @@ bloxeditor.component('file-component', {
 
 			if(!this.fileurl)
 			{
-				alert("no file");
+				let message = this.$filters.translate('file is missing.');
+				eventBus.$emit('publishermessage', message);
+
 				return;
 			}
 
@@ -2116,7 +2116,8 @@ bloxeditor.component('file-component', {
 				{
 					if(error.response)
 					{
-						console.info(error.response);
+						let message = self.$filters.translate(error.response.data.message);
+						eventBus.$emit('publishermessage', message);
 					}
 				});
 			}
@@ -2206,7 +2207,8 @@ bloxeditor.component('video-component', {
 			if(this.provider != "youtube")
 			{
 				this.updatemarkdown("");
-				alert("we only support youtube right now");
+				let message = this.$filters.translate("We only support youtube right now.");
+				eventBus.$emit('publishermessage', message);
 			}
 		},
 		updatemarkdown(url)
@@ -2242,7 +2244,8 @@ bloxeditor.component('video-component', {
 			{
 				if(error.response)
 				{
-					console.info(error.response);
+					let message = self.$filters.translate(error.response.data.message);
+					eventBus.$emit('publishermessage', message);
 				}
 			});
 		},
@@ -2286,23 +2289,27 @@ bloxeditor.component('shortcode-component', {
 
 		var myself = this;
 		
-		tmaxios.get('/api/v1/shortcodedata',{
-		  	params: {
+		tmaxios.get('/api/v1/shortcodedata',
+		{
+		  	params: 
+		  	{
 					'url':			data.urlinfo.route,
-				}
-			})
-			.then(function (response) {
-				if(response.data.shortcodedata !== false)
-				{
-					myself.shortcodedata = response.data.shortcodedata;
-					myself.parseshortcode();
-				}
-			})
-			.catch(function (error)
+			}
+		})
+		.then(function (response)
+		{
+			if(response.data.shortcodedata !== false)
 			{
-				if(error.response)
+				myself.shortcodedata = response.data.shortcodedata;
+				myself.parseshortcode();
+			}
+		})
+		.catch(function (error)
+		{
+			if(error.response)
 		    {
-
+				let message = self.$filters.translate(error.response.data.message);
+				eventBus.$emit('publishermessage', message);
 		   	}
 		});
 	},

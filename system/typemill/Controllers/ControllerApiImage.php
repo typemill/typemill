@@ -155,7 +155,7 @@ class ControllerApiImage extends Controller
 
 		# check if image name already exisits in live folder and create an unique name (do not overwrite existing files)
 		$storage 			= new StorageWrapper('\Typemill\Models\Storage');
-		$uniqueImageName 	= $storage->createUniqueImageName($img->getFilename(), $img->getExtension());
+		$uniqueImageName 	= $storage->createUniqueImageName($media->getFilename(), $media->getExtension());
 		$media->setFilename($uniqueImageName);
 
 		# store the original image

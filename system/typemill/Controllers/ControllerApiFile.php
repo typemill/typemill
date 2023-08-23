@@ -206,45 +206,46 @@ class ControllerApiFile extends Controller
 
 		$media	= new Media();
 
-		$fileinfo = $fileProcessor->storeFile($params['file'], $params['name']);
-		$filePath = str_replace('media/files', 'media/tmp', $fileinfo['url']);
-
-		if($fileinfo)
+		$fileinfo = $media->storeFile($params['file'], $params['name']);
+		if(!$fileinfo OR !isset($fileinfo['url']))
 		{
-			# if the previous check of the mtype with the base64 string failed, then do it now again with the temporary file
-			if(!$mtype)
-			{
-				$fullPath 	= $this->settings['rootPath'] . $filePath;
-				$finfo 		= finfo_open( FILEINFO_MIME_TYPE );
-				$mtype 		= @finfo_file( $finfo, $fullPath );
-				finfo_close($finfo);
-
-				if(!$mtype OR !$this->checkAllowedMimeTypes($mtype, $extension))
-				{
-					$media->clearTempFolder();
-
-					$response->getBody()->write(json_encode([
-						'message' => 'The mime-type is missing, not allowed or does not fit to the file extension.'
-					]));
-
-					return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
-				}
-			}
-
 			$response->getBody()->write(json_encode([
-				'message' => 'File has been stored',
-				'fileinfo' => $fileinfo,
-				'filepath' => $filePath
+				'message' 	=> 'We Could not store file to temporary folder.',
+				'fullerrors'	=> $media->errors
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json');
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
 		}
 
+		# if the previous check of the mtype with the base64 string failed, then do it now again with the temporary file
+		if(!$mtype)
+		{
+			$fullPath 	= $this->settings['rootPath'] . $filePath;
+			$finfo 		= finfo_open( FILEINFO_MIME_TYPE );
+			$mtype 		= @finfo_file( $finfo, $fullPath );
+			finfo_close($finfo);
+
+			if(!$mtype OR !$this->checkAllowedMimeTypes($mtype, $extension))
+			{
+				$media->clearTempFolder();
+
+				$response->getBody()->write(json_encode([
+					'message' => 'The mime-type is missing, not allowed or does not fit to the file extension.'
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+			}
+		}
+
+		$filePath = str_replace('media/files', 'media/tmp', $fileinfo['url']);
+
 		$response->getBody()->write(json_encode([
-			'message' => 'Could not store file to temporary folder.'
+			'message' => 'File has been stored',
+			'fileinfo' => $fileinfo,
+			'filepath' => $filePath
 		]));
 
-		return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+		return $response->withHeader('Content-Type', 'application/json');
 	}
 
 	public function publishFile(Request $request, Response $response, $args)

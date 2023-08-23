@@ -3,6 +3,7 @@
 namespace Typemill\Models;
 
 use Typemill\Models\Folder;
+use Typemill\Models\SvgSanitizer;
 use Typemill\Static\Slug;
 
 class Media
@@ -93,10 +94,6 @@ class Media
 	public function decode(string $file)
 	{
 		$fileParts 		= explode(";base64,", $file);
-		$fileType		= explode("/", $fileParts[0]);
-		$fileData		= base64_decode($fileParts[1]);
-
-		$fileParts 		= explode(";base64,", $file);
 
 		if(!isset($fileParts[0]) OR !isset($fileParts[1]))
 		{
@@ -106,7 +103,7 @@ class Media
 		}
 
 		$type 				= explode("/", $fileParts[0]);
-		$this->filetype		= strtolower($fileType[0]);
+		$this->filetype		= strtolower($type[1]);
 		$this->filedata		= base64_decode($fileParts[1]);
 
 		return true;
@@ -194,6 +191,29 @@ class Media
 		$this->setPathInfo($name);
 
 		$this->decode($file);
+
+		if($this->extension == "svg")
+		{
+			$svg = new SvgSanitizer();
+			
+			$loaded = $svg->loadSVG($this->filedata);
+			if($loaded === false)
+			{
+				$this->errors[] = 'We could not load the svg file, it is probably corrupted.';
+				return false;
+			}
+
+			$svg->sanitize();
+			$sanitized 	= $svg->saveSVG();
+			if($sanitized === false)
+			{
+				$this->errors[] = 'We could not create a sanitized version of the svg, it probably has invalid content.';
+				return false;
+			}
+
+			$this->filedata = $sanitized;
+		}
+		
 
 		$fullpath = $this->getFullPath();
 
@@ -301,6 +321,28 @@ class Media
 			return false;
 		}
 
+		if($this->extension == "svg")
+		{
+			$svg = new SvgSanitizer();
+			
+			$loaded = $svg->loadSVG($this->filedata);
+			if($loaded === false)
+			{
+				$this->errors[] = 'We could not load the svg file, it is probably corrupted.';
+				return false;
+			}
+
+			$svg->sanitize();
+			$sanitized 	= $svg->saveSVG();
+			if($sanitized === false)
+			{
+				$this->errors[] = 'We could not create a sanitized version of the svg, it probably has invalid content.';
+				return false;
+			}
+
+			$this->filedata = $sanitized;
+		}
+
 		return true;
 	}
 
@@ -335,8 +377,9 @@ class Media
 	public function saveOriginal($destinationfolder = 'ORIGINAL')
 	{
 		$path = $this->tmpFolder . $destinationfolder . '+' . $this->filename . '.' . $this->extension;
-		
-		if(!file_put_contents($path, $this->filedata))
+
+		$result = file_put_contents($path, $this->filedata);
+		if($result === false)
 		{
 			$this->errors[] = 'could not store the image in the temporary folder';			
 		}
@@ -347,6 +390,12 @@ class Media
 	{
 		$this->saveOriginal('LIVE');
 		$this->saveOriginal('THUMBS');
+
+		if(empty($this->errors))
+		{
+			return true;
+		}
+		return false;
 	}
 
 	public function createImage()

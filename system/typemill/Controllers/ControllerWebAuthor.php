@@ -7,6 +7,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Routing\RouteContext;
 use Typemill\Models\Navigation;
 use Typemill\Models\Content;
+use Typemill\Models\SvgSanitizer;
 use Typemill\Events\OnPagetreeLoaded;
 use Typemill\Events\OnItemLoaded;
 use Typemill\Events\OnMarkdownLoaded;
@@ -17,6 +18,9 @@ class ControllerWebAuthor extends Controller
 {
 	public function showBlox(Request $request, Response $response, $args)
 	{
+
+		$svg = new SvgSanitizer();
+		
 		# get url for requested page
 		$url 				= isset($args['route']) ? '/' . $args['route'] : '/';
 		$urlinfo 			= $this->c->get('urlinfo');

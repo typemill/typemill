@@ -6,7 +6,10 @@
     "homepage": "https://typemill.net",
     "license": "MIT",
     "config": {
-        "vendor-dir": "system/vendor"
+        "vendor-dir": "system/vendor",
+        "allow-plugins": {
+            "composer/installers": true
+        }
     },
     "require": {
         "php": "^8.0",
@@ -26,7 +29,7 @@
         "laminas/laminas-permissions-acl": "^2.10",
         "akrabat/proxy-detection-middleware": "^1.0.0",
         "gregwar/captcha": "1.*"
-    },
+    },    
 	"autoload": {
 		"psr-4": {
 			"Typemill\\": "system/typemill/",
