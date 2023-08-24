@@ -9,6 +9,8 @@
 * DONE: License feature
 * DONE: Enhance with plugins
 
+[:contactform :]
+
 ----
 
 ## Visual Editor
@@ -93,20 +95,20 @@
 ## Open tasks
 
 * DONE: Sitemap and ping
-* SVG checker
-* Version check
+* DONE: Version check
+* DONE: Proxy support
+* DONE: SVG checker: https://github.com/TribalSystems/SVG-Sanitizer
+* NEARLY DONE: Backend form builder
 * Markdown secure rendering
 * Responsive design
-* Backend form builder
-* Proxy support
 * Image generation on the fly
 * Captcha integration
-* Clear cache
-* Show security Log
+* Fix error api systemnavi
 * Reference feature
 * Typemill Utilities
+* Clear cache
+* Show security Log
 * User search only for +10 users
-* Fix error api systemnavi
 
 ## Cleanups:
 

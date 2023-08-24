@@ -59,7 +59,7 @@ class ControllerApiAuthorArticle extends Controller
 		}
 
 	    # publish content
-		$content 			= new Content($urlinfo['baseurl']);
+		$content 			= new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
 		$draftMarkdown  	= $content->getDraftMarkdown($item);
 		$publish 			= $content->publishMarkdown($item, $draftMarkdown);
 		if($publish !== true)
@@ -141,7 +141,7 @@ class ControllerApiAuthorArticle extends Controller
 		}
 
 	    # publish content
-		$content 			= new Content($urlinfo['baseurl']);
+		$content 			= new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
 		$draftMarkdown  	= $content->getDraftMarkdown($item);
 		$content->unpublishMarkdown($item, $draftMarkdown);
 
@@ -218,7 +218,7 @@ class ControllerApiAuthorArticle extends Controller
 		}
 
 	    # save draft content
-		$content 			= new Content($urlinfo['baseurl']);
+		$content 			= new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
 		$markdown 			= $params['title'] . PHP_EOL . PHP_EOL . $params['body'];
 		$markdownArray 		= $content->markdownTextToArray($markdown);
 		$content->saveDraftMarkdown($item, $markdownArray);
@@ -281,7 +281,7 @@ class ControllerApiAuthorArticle extends Controller
 		}
 
 	    # save draft content
-		$content 			= new Content($urlinfo['baseurl']);
+		$content 			= new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
 		$markdown 			= $params['title'] . PHP_EOL . PHP_EOL . $params['body'];
 		$markdownArray 		= $content->markdownTextToArray($markdown);
 		$content->publishMarkdown($item, $markdownArray);
@@ -361,7 +361,7 @@ class ControllerApiAuthorArticle extends Controller
 		}
 
 	    # publish content
-		$content 			= new Content($urlinfo['baseurl']);
+		$content 			= new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
 		$content->deleteDraft($item);
 
 		# refresh navigation and item
@@ -896,7 +896,7 @@ class ControllerApiAuthorArticle extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 		}
 
-		$content = new Content($urlinfo['baseurl']);
+		$content = new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
 
 		# check if it is a folder and if the folder has published pages.
 		if($item->elementType == 'folder')

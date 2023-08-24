@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0cc1a21b272d67b53b9e5f448c2960ac",
+    "content-hash": "841b98a23a247d8faad15d86df8cbeba",
     "packages": [
         {
             "name": "akrabat/proxy-detection-middleware",
@@ -223,16 +223,16 @@
         },
         {
             "name": "gregwar/captcha",
-            "version": "v1.2.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Gregwar/Captcha.git",
-                "reference": "6e5b61b66ac89885b505153f4ef9a74ffa5b3074"
+                "reference": "5b8323637b502d3dbcbe28a74633dad8aed63452"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Gregwar/Captcha/zipball/6e5b61b66ac89885b505153f4ef9a74ffa5b3074",
-                "reference": "6e5b61b66ac89885b505153f4ef9a74ffa5b3074",
+                "url": "https://api.github.com/repos/Gregwar/Captcha/zipball/5b8323637b502d3dbcbe28a74633dad8aed63452",
+                "reference": "5b8323637b502d3dbcbe28a74633dad8aed63452",
                 "shasum": ""
             },
             "require": {
@@ -244,6 +244,7 @@
             "require-dev": {
                 "phpunit/phpunit": "^6.4"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -274,9 +275,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Gregwar/Captcha/issues",
-                "source": "https://github.com/Gregwar/Captcha/tree/v1.2.0"
+                "source": "https://github.com/Gregwar/Captcha/tree/master"
             },
-            "time": "2023-03-24T22:12:41+00:00"
+            "time": "2023-05-08T15:17:31+00:00"
         },
         {
             "name": "jbroadway/urlify",

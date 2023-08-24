@@ -70,8 +70,8 @@ class Extension
 			'description' 	=> 'You can overwrite the theme-css with your own css here.'
 		];
 
-		# add image preview file 
-		$themeSettings['preview'] = 'http://localhost/typemill/themes/' . $themeName . '/' . $themeName . '.png';
+# add image preview file 
+		$themeSettings['preview'] = '/themes/' . $themeName . '/' . $themeName . '.png';
 
 		return $themeSettings;
 	}

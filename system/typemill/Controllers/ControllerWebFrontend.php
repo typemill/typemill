@@ -90,7 +90,7 @@ class ControllerWebFrontend extends Controller
 
 
 		# GET THE CONTENT
-		$content 			= new Content($urlinfo['baseurl']);
+		$content 			= new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
 		$liveMarkdown		= $content->getLiveMarkdown($item);
 		$liveMarkdown 		= $this->c->get('dispatcher')->dispatch(new OnMarkdownLoaded($liveMarkdown), 'onMarkdownLoaded')->getData();
 		$markdownArray 		= $content->markdownTextToArray($liveMarkdown);

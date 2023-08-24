@@ -50,7 +50,7 @@ class ControllerApiAuthorBlock extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 		}
 
-		$content 			= new Content($urlinfo['baseurl']);
+		$content 			= new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
 		$draftMarkdown  	= $content->getDraftMarkdown($item);
 
 		# if it is a new content-block
@@ -154,7 +154,7 @@ class ControllerApiAuthorBlock extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 		}
 
-		$content 			= new Content($urlinfo['baseurl']);
+		$content 			= new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
 
 		$draftMarkdown  	= $content->getDraftMarkdown($item);
 
@@ -247,7 +247,7 @@ class ControllerApiAuthorBlock extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 		}
 
-		$content 			= new Content($urlinfo['baseurl']);
+		$content 			= new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
 
 		$draftMarkdown  	= $content->getDraftMarkdown($item);
 
@@ -353,7 +353,7 @@ class ControllerApiAuthorBlock extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 		}
 
-		$content 			= new Content($urlinfo['baseurl']);
+		$content 			= new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
 
 		$draftMarkdown  	= $content->getDraftMarkdown($item);
 

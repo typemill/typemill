@@ -736,6 +736,7 @@ class ParsedownExtension extends \ParsedownExtra
 
     protected function blockShortcode($Line)
     {
+
         if ($this->dispatcher && preg_match('/^\[:.*:\]/', $Line['text'], $matches))
         {
             return $this->createShortcodeArray($matches,$block = true);

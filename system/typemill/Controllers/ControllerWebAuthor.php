@@ -7,7 +7,6 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Routing\RouteContext;
 use Typemill\Models\Navigation;
 use Typemill\Models\Content;
-use Typemill\Models\SvgSanitizer;
 use Typemill\Events\OnPagetreeLoaded;
 use Typemill\Events\OnItemLoaded;
 use Typemill\Events\OnMarkdownLoaded;
@@ -17,10 +16,7 @@ use Typemill\Events\OnPageReady;
 class ControllerWebAuthor extends Controller
 {
 	public function showBlox(Request $request, Response $response, $args)
-	{
-
-		$svg = new SvgSanitizer();
-		
+	{		
 		# get url for requested page
 		$url 				= isset($args['route']) ? '/' . $args['route'] : '/';
 		$urlinfo 			= $this->c->get('urlinfo');
@@ -65,7 +61,7 @@ class ControllerWebAuthor extends Controller
 
 		$mainNavigation 	= $navigation->getMainNavigation($request->getAttribute('c_userrole'), $this->c->get('acl'), $urlinfo, $this->settings['editor']);
 
-		$content 			= new Content($urlinfo['baseurl']);
+		$content 			= new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
 
 		$draftMarkdown  	= $content->getDraftMarkdown($item);
 		$draftMarkdown 		= $this->c->get('dispatcher')->dispatch(new OnMarkdownLoaded($draftMarkdown), 'onMarkdownLoaded')->getData();
@@ -134,7 +130,7 @@ class ControllerWebAuthor extends Controller
 
 		$mainNavigation 	= $navigation->getMainNavigation($request->getAttribute('c_userrole'), $this->c->get('acl'), $urlinfo, $this->settings['editor']);
 
-		$content 			= new Content($urlinfo['baseurl']);
+		$content 			= new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
 
 		$draftMarkdown  	= $content->getDraftMarkdown($item);
 		$draftMarkdown 		= $this->c->get('dispatcher')->dispatch(new OnMarkdownLoaded($draftMarkdown), 'onMarkdownLoaded')->getData();

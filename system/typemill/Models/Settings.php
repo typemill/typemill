@@ -106,7 +106,7 @@ class Settings
 
 		return false;
 	}
-
+	
 	public function getObjectSettings($objectType, $objectName)
 	{
 		$objectSettings = $this->storage->getYaml($objectType, $objectName, $objectName . '.yaml');

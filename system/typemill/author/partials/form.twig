@@ -1,0 +1,56 @@
+{% if recaptcha_webkey %}
+	
+	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+{% endif %}
+<form method="POST" action="{{ url_for(routename) }}" enctype="multipart/form-data">
+
+	<fieldset class="card{{ errors[itemName] ? ' errors' : '' }}">
+
+		{% for field in fields %}
+				
+			{% if field.type == 'fieldset' %}
+
+				<fieldset class="subfield">
+					<legend>{{ field.legend }}</legend>
+					{% for field in field.fields %}
+					
+						{% include '/partials/fields.twig' with {'itemName' : itemName, 'object' : object } %}
+					
+					{% endfor %}
+				</fieldset>
+
+			{% else %}
+
+				{% include '/partials/fields.twig' with {'itemName' : itemName, 'object' : object } %}
+
+			{% endif %}
+
+		{% endfor %}
+		
+		<div class="personal-mail">
+			<label>Personal Mail</label>
+			<input type="text" name="personal-honey-mail">
+		</div>
+
+		{% if captchaoptions == 'disabled' %}
+			
+		{% elseif captchaoptions == 'aftererror' %}
+
+			{{ captcha(old) }}
+
+		{% else %}
+
+			{{ captcha(true) }}
+
+		{% endif %}
+		
+		{% if recaptcha_webkey %}
+			<p><div class="g-recaptcha" data-sitekey="{{ recaptcha_webkey }}"></div></p>
+		{% endif %}
+
+		<input type="submit" value="{{ buttonlabel ? buttonlabel : 'send' }}" />
+		
+		<style>.personal-mail{display:none}</style>
+	</fieldset>
+</form>

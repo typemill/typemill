@@ -9,10 +9,10 @@ class Content
 {
 	private $storage;
 
-	public function __construct($baseurl = NULL)
+	public function __construct($baseurl = NULL, $settings = NULL, $dispatcher = NULL)
 	{
 		$this->storage 				= new StorageWrapper('\Typemill\Models\Storage');
-		$this->parsedown 			= new ParsedownExtension($baseurl);
+		$this->parsedown 			= new ParsedownExtension($baseurl, $settings, $dispatcher);
 	}
 
 	public function getDraftMarkdown($item)

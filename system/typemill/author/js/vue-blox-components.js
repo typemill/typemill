@@ -2293,7 +2293,7 @@ bloxeditor.component('shortcode-component', {
 		{
 		  	params: 
 		  	{
-					'url':			data.urlinfo.route,
+				'url':			data.urlinfo.route,
 			}
 		})
 		.then(function (response)
@@ -2359,7 +2359,7 @@ bloxeditor.component('shortcode-component', {
 
 			this.compmarkdown = '[:' + shortcodename + attributes + ' :]';
 
-			this.$emit('updatedMarkdown', this.compmarkdown);
+			this.$emit('updateMarkdownEvent', this.compmarkdown);
 		},
 		selectsearch: function(item,attribute)
 		{

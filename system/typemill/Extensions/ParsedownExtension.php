@@ -361,7 +361,7 @@ class ParsedownExtension extends \ParsedownExtra
             }
 
             $text = trim($Line['text'], '#');
-            $headline = Slug::createSlug($Line['text'], $this->settings);
+            $headline = Slug::createSlug($Line['text'], $this->settings['langattr']);
 
             if ($this->strictMode and isset($text[0]) and $text[0] !== ' ')
             {
@@ -815,7 +815,7 @@ class ParsedownExtension extends \ParsedownExtra
             }
         }
 
-        $html = $this->dispatcher->dispatch('onShortcodeFound', new OnShortcodeFound($shortcode))->getData();
+        $html = $this->dispatcher->dispatch(new OnShortcodeFound($shortcode), 'onShortcodeFound')->getData();
 
         # if no shortcode has been processed, add the original string
         if(is_array($html) OR is_object($html))
