@@ -32,6 +32,7 @@ use Typemill\Extensions\TwigUrlExtension;
 use Typemill\Extensions\TwigUserExtension;
 use Typemill\Extensions\TwigLanguageExtension;
 use Typemill\Extensions\TwigMarkdownExtension;
+use Typemill\Extensions\TwigMetaExtension;
 use Typemill\Extensions\TwigCaptchaExtension;
 
 $timer = [];
@@ -302,6 +303,7 @@ $container->set('view', function() use ($settings, $csrf, $urlinfo, $translation
 	$twig->addExtension(new TwigUrlExtension($urlinfo));
 	$twig->addExtension(new TwigLanguageExtension( $translations ));
 	$twig->addExtension(new TwigMarkdownExtension());
+	$twig->addExtension(new TwigMetaExtension());
 	$twig->addExtension(new TwigCaptchaExtension());
 
 	# start csrf only if session is active

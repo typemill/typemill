@@ -3,6 +3,7 @@
 namespace Typemill\Models;
 
 use Typemill\Models\Folder;
+use Typemill\Models\StorageWrapper;
 use Typemill\Models\SvgSanitizer;
 use Typemill\Static\Slug;
 
@@ -444,13 +445,14 @@ class Media
 			imagesavealpha($resizedImage, true);
 		}
 
-		imagecopyresampled($resizedImage, $image, 0, 0, $x, $y, $desired['width'], $desired['height'], $w, $h);
+		imagecopyresampled($resizedImage, $image, 0, 0, intval($x), intval($y), $desired['width'], $desired['height'], intval($w), intval($h));
 
 		return $resizedImage;
 	}
 
 	public function saveResizedImage($resizedImage, string $destinationfolder, string $extension)
 	{
+		# use method in storage class???
 		$destinationfolder = strtoupper($destinationfolder);		
 
 		switch($extension)
@@ -483,6 +485,128 @@ class Media
 
 		return true;
 	}
+
+	public function createCustomSize($imageUrl, $width = NULL, $height = NULL)
+	{
+		$this->setPathInfo($imageUrl);
+
+		$resizeName = '-';
+		if(is_int($width) && $width < 10000)
+		{
+			$resizeName .= $width;
+			$desiredSize['width'] = $width;
+		}
+		$resizeName .= 'x';
+		if(is_int($height) && $height < 10000)
+		{
+			$resizeName .= $height;
+			$desiredSize['height'] = $height;
+		}
+
+		$extension 		= $this->getExtension();
+		$originalName 	= $this->getFilename();
+		$originalFile 	= $originalName . '.' . $extension;
+		$customName 	= $originalName . $resizeName;
+		$customFile 	= $customName . '.' . $extension;
+
+		$storage 	= new StorageWrapper('\Typemill\Models\Storage');
+
+		if($storage->checkFile('customFolder', '', $customFile))
+		{
+			# we should get the custom folder url dynamically from storage class
+			return '/media/custom/' . $customFile;
+		}
+
+		# if name is in customfolder (resized already)
+		if($storage->checkFile('customFolder', '', $originalFile))
+		{
+			$imagePath = $storage->getFolderPath('customFolder') . $originalFile;
+		}
+		# or in originalfolder (not resized yet)
+		elseif($storage->checkFile('originalFolder', '', $originalFile))
+		{
+			$imagePath = $storage->getFolderPath('originalFolder') . $originalFile;
+		}
+		else
+		{
+			return 'image not found';			
+		}
+
+		$image 			= $this->createImageFromPath($imagePath, $extension);
+		$originalSize 	= $this->getImageSize($image);
+		$resizedImage	= $this->resizeImage($image, $desiredSize, $originalSize);
+
+		if($resizedImage && $storage->storeCustomImage($image, $extension, $customName))
+		{
+			return '/media/custom/' . $customFile;
+		}
+
+		return 'error resizing image';
+	}
+
+	public function createGrayscale($imageUrl)
+	{
+		$this->setPathInfo($imageUrl);
+
+		$extension 		= $this->getExtension();
+		$originalName 	= $this->getFilename();
+		$originalFile 	= $originalName . '.' . $extension;
+		$customName 	= $originalName . '-grayscale';
+		$customFile 	= $customName . '.' . $extension;
+
+		$storage 	= new StorageWrapper('\Typemill\Models\Storage');
+
+		# if the grayscaled image is there already
+		if($storage->checkFile('customFolder', '', $customFile))
+		{
+			# we should get the custom folder url dynamically from storage class
+			return '/media/custom/' . $customFile;
+		}
+
+		# if name is in customfolder (resized already)
+		if($storage->checkFile('customFolder', '', $originalFile))
+		{
+			$imagePath = $storage->getFolderPath('customFolder') . $originalFile;
+		}
+		# or in originalfolder (not resized yet)
+		elseif($storage->checkFile('originalFolder', '', $originalFile))
+		{
+			$imagePath = $storage->getFolderPath('originalFolder') . $originalFile;
+		}
+		else
+		{
+			return 'image not found';			
+		}
+
+		$image = $this->createImageFromPath($imagePath, $extension);
+		imagefilter($image, IMG_FILTER_GRAYSCALE);
+
+		if($storage->storeCustomImage($image, $extension, $customName))
+		{
+			return '/media/custom/' . $customFile;
+		}
+
+		return 'error grayscaling image';
+	}
+
+	public function createImageFromPath($imagePath, $extension)
+	{
+		switch($extension)
+		{
+			case 'gif': $image = imagecreatefromgif($imagePath); break;
+			case 'jpg' :
+			case 'jpeg': $image = imagecreatefromjpeg($imagePath); break;
+			case 'png': $image = imagecreatefrompng($imagePath); break;
+			case 'webp': $image = imagecreatefromwebp($imagePath); break;
+			default: return 'image type not supported';
+		}
+		
+		return $image;		
+	}
+
+
+
+
 
 
 

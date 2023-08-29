@@ -648,6 +648,37 @@ class Storage
 		return false;
 	}
 
+	public function storeCustomImage($image, $extension, $imageName)
+	{
+		switch($extension)
+		{
+			case "png":
+				$storedImage = imagepng( $image, $this->customFolder . $imageName . '.png', 9 );
+				break;
+			case "gif":
+				$storedImage = imagegif( $image, $this->customFolder . $imageName . '.gif' );
+				break;
+			case "webp":
+				$storedImage = imagewebp( $image, $this->customFolder . $imageName . '.webp', 80);
+				break;
+			case "jpg":
+			case "jpeg":
+				$storedImage = imagejpeg( $image, $this->customFolder . $imageName . '.' . $extension, 80);
+				break;
+			default:
+				$storedImage = false;
+		}
+
+		if(!$storedImage)
+		{
+			$this->errors[] = "Could not store the custom size of $imageName";
+
+			return false;
+		}
+
+		return true;
+	}
+
 	public function deleteImage($name)
 	{
 		# validate name 
