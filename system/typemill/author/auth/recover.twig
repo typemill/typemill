@@ -4,9 +4,9 @@
 
 {% block content %}
 
-	<div class="flex justify-end">
+	<div class="lg:flex-row flex flex-col-reverse justify-end">
 		
-		<div class="bg-teal-600 text-white min-h-screen w-1/2 flex justify-center items-center">
+		<div class="lg:w-1/2 bg-teal-600 text-white min-h-screen flex justify-center items-center">
 			<div class="max-w-md content-center">
 			
 				<form method="POST" action="{{ url_for("auth.recover") }}" autocomplete="off">
@@ -37,13 +37,17 @@
                       		class="block w-full mt-6 px-3 py-3 border-0 font-medium text-xs leading-tight uppercase border-2 border-stone-50 text-stone-50 pointer hover:bg-stone-50 hover:text-stone-800 cursor-pointer focus:outline-none focus:ring-0 transition duration-100 ease-in-out"
 						/>
 
+						<div class="text-center py-4">
+							<a class="hover:underline" href="{{ url_for("auth.login") }}">{{ translate('go to login') }}</a>
+						</div>
+
 					</fieldset>
 
 				</form>	
 			</div>
 		</div>
 		
-		<div class="content-center w-1/2 flex justify-center items-center">
+		<div class="lg:w-1/2 lg:bg-white lg:text-black p-5 bg-teal-600 text-white border-b border-white content-center flex justify-center items-center">
 			<div class="max-w-md content-center">
 				<h1 class="text-4xl py-5">Forgot your password?</h1>
 				<p>Enter the email of your user-account, click the recover-button and check your mailbox for further instructions.</p>

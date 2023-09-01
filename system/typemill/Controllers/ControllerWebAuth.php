@@ -13,6 +13,7 @@ class ControllerWebAuth extends Controller
 	public function show(Request $request, Response $response)
 	{
 	    return $this->c->get('view')->render($response, 'auth/login.twig', [
+			'recover' 		=> $this->settings['recoverpw'] ?? false,
 			#'captcha' => $this->checkIfAddCaptcha(),
 	    ]);
 	}

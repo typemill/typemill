@@ -22,7 +22,7 @@ class ControllerWebRecover extends Controller
 	{
         $params 		= $request->getParsedBody();
 		$settings 		= $this->c->get('settings');
-		$urlinfo 		= $this->c->get('urlinfo');
+		$urlinfo 		= $this->c->get('urlinfo');		
 
 		if(!isset($params['email']) OR filter_var($params['email'], \FILTER_VALIDATE_EMAIL) === false )
 		{

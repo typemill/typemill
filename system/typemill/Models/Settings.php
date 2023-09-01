@@ -120,7 +120,7 @@ class Settings
 	}
 
 	public function updateSettings(array $newSettings)
-	{		
+	{
 		$userSettings 	= $this->getUserSettings();
 
 		# only allow if usersettings already exists (setup has been done)
@@ -128,14 +128,22 @@ class Settings
 		{
 			# merge usersettings with new settings
 			$settings 	= array_merge($userSettings, $newSettings);
-			
+
 			# make sure that multidimensional arrays are merged correctly
 			# for example: only one plugin data will be passed with new settings, with array merge all others will be deleted.
-			foreach($newSettings as $key => $settingsItem)
+			foreach($newSettings as $key => $settingsItems)
 			{
-				if(is_array($settingsItem) && isset($userSettings[$key]))
+				if(is_array($settingsItems) && isset($userSettings[$key]))
 				{
-					$settings[$key] = array_merge($userSettings[$key], $newSettings[$key]);
+					if($this->array_is_list($settingsItems))
+					{
+						# for numeric/list arrays instead of associative arrays we only use new values
+						$settings[$key] = $newSettings[$key];
+					}
+					else
+					{
+						$settings[$key] = array_merge($userSettings[$key], $newSettings[$key]);
+					}
 				}
 			}
 
@@ -146,6 +154,15 @@ class Settings
 		}
 
 		return false;
+	}
+
+	private function array_is_list(array $arr)
+	{
+		if ($arr === [])
+		{
+			return true;
+		}
+		return array_keys($arr) === range(0, count($arr) - 1);
 	}
 
 	public function getSettingsDefinitions()

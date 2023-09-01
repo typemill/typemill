@@ -4,9 +4,9 @@
 
 {% block content %}
 
-	<div class="flex justify-end">
+	<div class="lg:flex-row flex flex-col-reverse justify-end">
 		
-		<div class="bg-teal-600 text-white min-h-screen w-1/2 flex justify-center items-center">
+		<div class="lg:w-1/2 bg-teal-600 text-white min-h-screen flex justify-center items-center">
 			<div class="max-w-md content-center">
 			
 				<div class="my-2">
@@ -16,14 +16,14 @@
 			</div>
 		</div>
 		
-		<div class="content-center w-1/2 flex justify-center items-center">
+		<div class="lg:w-1/2 lg:bg-white lg:text-black p-5 bg-teal-600 text-white border-b border-white content-center flex justify-center items-center">
 
 			<div class="max-w-md content-center">
 				<h1 class="text-4xl py-5">{{ title }}</h1>
 				<p>{{ message }}</p>
 				<p><a 	href="{{ url_for("auth.login") }}"
 						class="block w-full mt-6 px-3 py-3 font-medium text-center text-xs leading-tight uppercase bg-teal-600 text-white pointer hover:bg-teal-700 cursor-pointer focus:outline-none focus:ring-0 transition duration-100 ease-in-out"
-						>{{ 'to the login page'|translate }}</a></p>
+						>{{ 'go to login'|translate }}</a></p>
 			</div>
 		
 		</div>

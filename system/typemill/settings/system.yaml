@@ -53,12 +53,6 @@ fieldsetsystem:
       label: Google sitemap (readonly)
       css: w-half
       disabled: true
-      description: You can ping the sitemap with the following links to google and bing
-    pingsitemap:
-      type: checkbox
-      label: Ping sitemap
-      css: w-half
-      checkboxlabel: Ping sitemap automatically after publishing a page
 fieldsetmedia:
   type: fieldset
   legend: Media

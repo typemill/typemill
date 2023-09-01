@@ -47,8 +47,7 @@ class ControllerApiAuthorMeta extends Controller
 
 		if(!$metadata)
 		{
-			die('no page meta');
-#			$pagemeta = $writeMeta->getPageMetaBlank($this->content, $this->settings, $this->item);
+			$metadata = $meta->addMetaDefaults($metadata, $item, $this->settings['author']);
 		}
 
 		# if item is a folder

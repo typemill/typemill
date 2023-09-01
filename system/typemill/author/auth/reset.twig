@@ -4,9 +4,9 @@
 
 {% block content %}
 
-	<div class="flex justify-end">
+	<div class="lg:flex-row flex flex-col-reverse justify-end">
 		
-		<div class="bg-teal-600 text-white min-h-screen w-1/2 flex justify-center items-center">
+		<div class="lg:w-1/2 bg-teal-600 text-white min-h-screen flex justify-center items-center">
 			<div class="max-w-md content-center">
 			
 				<form method="POST" action="{{ url_for("auth.reset") }}" autocomplete="off">
@@ -14,7 +14,7 @@
 					<fieldset class="">
 
 						<div class="my-2 {{ errors.password ? ' errors' : '' }}">
-							<label for="password">{{ 'Password'|translate }} <abbr title="{{ 'required'|translate }}">*</abbr></label>
+							<label for="password">{{ translate('Password') }} <abbr title="{{ 'required'|translate }}">*</abbr></label>
 							<input 
 								type="password" 
 								name="password" 
@@ -27,7 +27,7 @@
 						</div>
 
 						<div class="my-2 {{ errors.passwordrepeat ? ' errors' : '' }}">
-							<label for="passwordrepeat">{{ 'Repeat password'|translate }} <abbr title="{{ 'required'|translate }}">*</abbr></label>
+							<label for="passwordrepeat">{{ translate('Repeat password') }} <abbr title="{{ 'required'|translate }}">*</abbr></label>
 							<input 
 								type="password" 
 								name="passwordrepeat" 
@@ -49,7 +49,7 @@
 
 						<input 
 							type="submit" 
-							value="{{ 'Create new password'|translate }}" 
+							value="{{ translate('Create new password') }}" 
                       		class="block w-full mt-6 px-3 py-3 border-0 font-medium text-xs leading-tight uppercase border-2 border-stone-50 text-stone-50 pointer hover:bg-stone-50 hover:text-stone-800 cursor-pointer focus:outline-none focus:ring-0 transition duration-100 ease-in-out"
 						/>
 
@@ -59,15 +59,14 @@
 			</div>
 		</div>
 		
-		<div class="content-center w-1/2 flex justify-center items-center">
+		<div class="lg:w-1/2 lg:bg-white lg:text-black p-5 bg-teal-600 text-white border-b border-white content-center flex justify-center items-center">
 			<div class="max-w-md content-center">
 				<h1 class="text-4xl py-5">Forgot your password?</h1>
-				<p class="py-1">No problem, simply create a new one on the left.</p> 
-				<p class="py-1">Want to stay save with your passwords? Here are some tips:</p>
+				<p class="py-1">No problem, you can create a new one here. And you might find the following tips helpful:</p>
 				<ul class="list-disc pl-4 py-1">
-					<li>Let the password manager of your browser remember your passwords.</p>
-					<li>If you don't want to rely on your browser, use a separate password manager like keepass or others.</li>
-					<li>Last but not least: Do not use the same password for several applications.</li>
+					<li>Use a strong and individual password for every account.</li>
+					<li>Your browser can remember all of your passwords.</p>
+					<li>The best option is a separate password manager like keepass and others.</li>
 				</ul>
 			</div>
 		</div>

@@ -1,12 +1,12 @@
 <nav class="max-w-6xl m-auto flex justify-between">
-	<div class="p-3 flex">
-		<a class="text-2xl font-bold" href="{{ base_url() }}/tm/content/{{ settings.editor }}">Typemill</a>
+	<div class="lg:p-3 p-2 flex">
+		<a class="text-2xl font-bold" href="{{ base_url() }}/tm/content/{{ settings.editor }}">T<span class="lg:inline hidden">ypemill</span></a>
 		<div id="kixote"></div>
 	</div>
 	<ul class="flex border-l-2 border-stone-200">
 		{% for name,navitem in mainnavi %}
 			<li class="border-r-2 border-stone-200">
-				<a class="inline-block px-4 pt-4 pb-3 border-b-4 hover:border-stone-700 hover:bg-stone-50 focus:bg-stone-50 active:bg-stone-50 transition duration-100{{ navitem.active ? ' bg-stone-50 border-stone-700' : ' border-stone-100' }}" href="{{ url_for(navitem.routename) }}">{{ translate(navitem.title)|capitalize }}</a>
+				<a class="inline-block lg:px-4 lg:pt-4 lg:pb-3 lg:border-b-4 px-3 pt-3 pb-3 border-b-2 hover:border-stone-700 hover:bg-stone-50 focus:bg-stone-50 active:bg-stone-50 transition duration-100{{ navitem.active ? ' bg-stone-50 border-stone-700' : ' border-stone-100' }}" href="{{ url_for(navitem.routename) }}">{{ translate(navitem.title)|capitalize }}</a>
 			</li>
 		{% endfor %}	
 	</ul>

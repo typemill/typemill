@@ -81,6 +81,8 @@ class ControllerWebSetup extends Controller
 						
 			if($username)
 			{
+				usleep(30000);
+
 				$user->setUser($username);
 
 				$user->login();
@@ -92,6 +94,8 @@ class ControllerWebSetup extends Controller
 				$urlinfo = $this->c->get('urlinfo');
 				$route = $urlinfo['baseurl'] . '/tm/system';
 
+				usleep(30000);
+				
 				return $response->withHeader('Location', $route)->withStatus(302);
 			}
 		}

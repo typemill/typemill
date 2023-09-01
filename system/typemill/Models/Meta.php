@@ -21,18 +21,6 @@ class Meta
 		$metadata = $this->storage->getYaml('contentFolder', '', $item->pathWithoutType . '.yaml');
 	
 		return $metadata;
-
-
-
-		# compare with meta that are in use right now (e.g. changed theme, disabled plugin)
-		$metascheme = $this->getYaml('cache', 'metatabs.yaml');
-
-		if($metascheme)
-		{
-			$meta = $this->whitelistMeta($meta,$metascheme);
-		}
-
-		return $meta;
 	}
 
 	public function getMetaDefinitions($settings, $folder)
@@ -98,7 +86,14 @@ class Meta
 	{
 		$modified = false;
 
-		if(!is_array($meta['meta'])){ $meta['meta'] = []; }
+		if(!is_array($meta))
+		{
+			$meta = [];
+		}
+		if(!isset($meta['meta']) OR !is_array($meta['meta']))
+		{ 
+			$meta['meta'] = []; 
+		}
 		
 		if(!isset($meta['meta']['owner']))
 		{

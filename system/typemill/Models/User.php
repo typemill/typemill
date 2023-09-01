@@ -208,7 +208,8 @@ class User
 
 			if(isset($this->user['recovertoken']) OR isset($this->user['recoverdate']))
 			{
-				$this->unsetFromUser($this->user['username'], ['recovertoken', 'recoverdate']);
+				$this->unsetValue('recovertoken');
+				$this->unsetValue('recoverdate');
 			}
 
 			# update user last login

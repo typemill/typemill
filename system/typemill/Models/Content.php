@@ -171,6 +171,20 @@ class Content
 			}
 		}
 
+		$result = $this->deletePage($item);
+
+		if($result !== true)
+		{
+			return $result;
+		}
+
+		$result = $this->storage->deleteContentFolder($item->path);
+
+		if($result !== true)
+		{
+			return $this->storage->getError();
+		}
+
 		return true;
 	}
 

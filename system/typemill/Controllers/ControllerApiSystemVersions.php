@@ -67,7 +67,7 @@ class ControllerApiSystemVersions extends Controller
 		{
 				$latestVersion 		= $versions['system']['typemill'] ?? false;
 				$installedVersion 	= $data ?? false;
-				if($latestVersion && $installedVersion && version_compare($latestVersion, $installedVersion) <= 0)
+				if($latestVersion && $installedVersion && version_compare($latestVersion, $installedVersion) > 0)
 				{
 					$updateVersions['system'] = $latestVersion; 
 				}
@@ -78,7 +78,7 @@ class ControllerApiSystemVersions extends Controller
 			{
 				$latestVersion 		= $details['version'] ?? false;
 				$installedVersion 	= $data[$name] ?? false;
-				if($latestVersion && $installedVersion && version_compare($latestVersion, $installedVersion) <= 0)
+				if($latestVersion && $installedVersion && version_compare($latestVersion, $installedVersion) > 0)
 				{
 					$updateVersions[$name] = $details; 
 				}

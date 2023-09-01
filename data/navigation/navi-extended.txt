@@ -38,7 +38,7 @@
     navtitle: 'To Dos'
     hide: false
     noindex: false
-    path: /00-welcome/05-todos.txtmd
+    path: /00-welcome/05-todos.md
     keyPath: '0.5'
 /cyanine-theme:
     navtitle: 'cyanine theme'
@@ -70,9 +70,3 @@
     noindex: false
     path: /01-cyanine-theme/03-content-elements.md
     keyPath: '1.3'
-/blog:
-    navtitle: blog
-    hide: false
-    noindex: false
-    path: /02-blog
-    keyPath: 2

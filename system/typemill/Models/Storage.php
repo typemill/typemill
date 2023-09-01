@@ -199,10 +199,8 @@ class Storage
 
 			return false;
 		}
-		
-		$this->error = "The path $filepath is not a folder.";
 
-		return false;
+		return true;
 	}
 
 	public function checkFile($location, $folder, $filename)

@@ -4,9 +4,9 @@
 
 {% block content %}
 
-	<div class="flex justify-end">
+	<div class="lg:flex-row flex flex-col-reverse justify-end">
 		
-		<div class="bg-teal-600 text-white min-h-screen w-1/2 flex justify-center items-center">
+		<div class="lg:w-1/2 bg-teal-600 text-white min-h-screen flex justify-center items-center">
 			<div class="max-w-md content-center">
 
 				<h1 class="text-4xl py-5">{{ 'Setup'|translate }}</h1>
@@ -73,7 +73,7 @@
 			</div>
 		</div>
 		
-		<div class="content-center w-1/2 flex justify-center items-center">
+		<div class="lg:w-1/2 lg:bg-white lg:text-black p-5 bg-teal-600 text-white border-b border-white content-center flex justify-center items-center">
 			<div class="max-w-md content-center">
 				{% if systemerrors %}
 					<h2 class="text-4xl py-5">Systemcheck</h2>
@@ -84,8 +84,8 @@
 						{% endfor %}
 					</ul>
 				{% else %}
-					<h2 class="text-4xl py-5">Here comes Typemill</h2>
-					<p>Hey writer, author, editor, content-guru, or website-manager, we hope you like Typemill, because we coded it just for you.</p>
+					<h2 class="text-4xl py-5">Welcome to Typemill</h2>
+					<p>Hey writer, author, editor, content-guru, or website-manager. We hope you like Typemill, because we coded it just for you.</p>
 					<p>Get inspired and enjoy your writing!</p>
 				{% endif %}
 			</div>

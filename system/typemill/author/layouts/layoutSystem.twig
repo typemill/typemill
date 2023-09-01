@@ -34,11 +34,11 @@
 
 		{% include 'partials/flash.twig' %}
 
-		<div class="max-w-6xl m-auto mt-7 flex justify-between" id="main" data-url="{{ base_url() }}">
-			<aside class="w-1/4">
+		<div class="max-w-6xl m-auto mt-7 flex flex-col lg:flex-row justify-between" id="main" data-url="{{ base_url() }}">
+			<aside class="lg:w-1/4">
 				{% include 'partials/systemNavi.twig' %}
 			</aside>
-			<article class="w-3/4 bg-stone-50 shadow-md p-8">
+			<article class="lg:w-3/4 bg-stone-50 shadow-md p-8">
 				{% block content %}{% endblock %}
 			</article>
 		</div>
