@@ -137,3 +137,15 @@
 * MAKER: Rebuild search
 * MAKER: Rebuild contactform with shortcode
 
+## Status codes
+
+| Status code | Description | 
+|---|---|
+| 200 ok | cell | 
+| 400 bad request | The request was unacceptable due to missing or invalid parameter. | 
+| 401 unauthorized | The request requires an authorization. | 
+| (402 request failed) | The parameters where there but the request failed for other reasons. | 
+| 403 forbidden | The user is authenticated but he has not enough rights. | 
+| 404 not found | new | 
+| 500 internal server error | new |
+
