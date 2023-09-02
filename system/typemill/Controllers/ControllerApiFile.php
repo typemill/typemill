@@ -6,6 +6,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Typemill\Models\Media;
 use Typemill\Models\StorageWrapper;
+use Typemill\Static\Translations;
 
 class ControllerApiFile extends Controller
 {
@@ -34,7 +35,7 @@ class ControllerApiFile extends Controller
 		if(!$name)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 		=> 'Filename is missing.',
+				'message' 		=> Translations::translate('Filename is missing.')
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
@@ -47,10 +48,10 @@ class ControllerApiFile extends Controller
 		if(!$filedetails)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 		=> 'No File found.',
+				'message' 		=> Translations::translate('No file found.')
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 		}
 
 		$response->getBody()->write(json_encode([
@@ -97,10 +98,10 @@ class ControllerApiFile extends Controller
 		if(!$filename OR !$role)
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'Filename or userrole is missing.'
+				'message' => Translations::translate('Filename or userrole is missing.')
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
 		$userroles 		= $this->c->get("acl")->getRoles();
@@ -108,10 +109,10 @@ class ControllerApiFile extends Controller
 		if($role != 'all' AND !in_array($role, $userroles))
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'Userrole is unknown.'
+				'message' => Translations::translate('Userrole is unknown.')
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
 		$storage 		= new StorageWrapper('\Typemill\Models\Storage');
@@ -149,10 +150,10 @@ class ControllerApiFile extends Controller
 		if (!isset($params['file']))
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'No file found.'
+				'message' => Translations::translate('File not found.')
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
 		$size 		= (int) (strlen(rtrim($params['file'], '=')) * 3 / 4);
@@ -164,30 +165,30 @@ class ControllerApiFile extends Controller
 		if ($size === 0)
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'File is empty.'
+				'message' => Translations::translate('File is empty.')
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
 		# 20 MB (1 byte * 1024 * 1024 * 20 (for 20 MB))
 		if ($size > 20971520)
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'File is bigger than 20MB.'
+				'message' => Translations::translate('File is bigger than 20MB.')
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
 		# check extension first
 		if (!$this->checkAllowedExtensions($extension))
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'Filetype is not allowed.'
+				'message' => Translations::translate('Filetype is not allowed.')
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
 		# check mimetype and extension if there is a mimetype. 
@@ -197,10 +198,10 @@ class ControllerApiFile extends Controller
 			if(!$this->checkAllowedMimeTypes($mtype, $extension))
 			{
 				$response->getBody()->write(json_encode([
-					'message' => 'The mime-type is missing, not allowed or does not fit to the file extension.'
+					'message' => Translations::translate('The mime-type is missing, not allowed or does not fit to the file extension.')
 				]));
 
-				return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 			}
 		}
 
@@ -210,11 +211,11 @@ class ControllerApiFile extends Controller
 		if(!$fileinfo OR !isset($fileinfo['url']))
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'We Could not store file to temporary folder.',
+				'message' 		=> Translations::translate('We Could not store file to temporary folder.'),
 				'fullerrors'	=> $media->errors
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
 
 		# if the previous check of the mtype with the base64 string failed, then do it now again with the temporary file
@@ -230,17 +231,17 @@ class ControllerApiFile extends Controller
 				$media->clearTempFolder();
 
 				$response->getBody()->write(json_encode([
-					'message' => 'The mime-type is missing, not allowed or does not fit to the file extension.'
+					'message' => Translations::translate('The mime-type is missing, not allowed or does not fit to the file extension.')
 				]));
 
-				return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 			}
 		}
 
 		$filePath = str_replace('media/files', 'media/tmp', $fileinfo['url']);
 
 		$response->getBody()->write(json_encode([
-			'message' => 'File has been stored',
+			'message' => Translations::translate('File has been stored'),
 			'fileinfo' => $fileinfo,
 			'filepath' => $filePath
 		]));
@@ -255,7 +256,7 @@ class ControllerApiFile extends Controller
 		if(!isset($params['file']) OR !$params['file'])
 		{
 			$response->getBody()->write(json_encode([
-				'message' 		=> 'filename is missing.',
+				'message' 		=> Translations::translate('filename is missing.'),
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
@@ -271,11 +272,11 @@ class ControllerApiFile extends Controller
 				'message' 		=> $storage->getError()
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
 
 		$response->getBody()->write(json_encode([
-			'message' => 'File saved successfully',
+			'message' => Translations::translate('File saved successfully'),
 			'path' => $result,
 		]));
 
@@ -289,10 +290,10 @@ class ControllerApiFile extends Controller
 		if(!isset($params['name']))
 		{
 			$response->getBody()->write(json_encode([
-				'message' 		=> 'Filename is missing.'
+				'message' 		=> Translations::translate('Filename is missing.')
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
 		$storage = new StorageWrapper('\Typemill\Models\Storage');
@@ -302,7 +303,7 @@ class ControllerApiFile extends Controller
 		if($deleted)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 		=> 'File deleted successfully.'
+				'message' 		=> Translations::translate('File deleted successfully.')
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json');
@@ -312,7 +313,7 @@ class ControllerApiFile extends Controller
 			'message' 		=> $storage->getError()
 		]));
 
-		return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+		return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 	}
  
 	# https://www.sitepoint.com/mime-types-complete-list/

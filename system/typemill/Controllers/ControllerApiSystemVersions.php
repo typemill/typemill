@@ -5,6 +5,7 @@ namespace Typemill\Controllers;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Typemill\Models\Validation;
+use Typemill\Static\Translations;
 
 class ControllerApiSystemVersions extends Controller
 {
@@ -18,7 +19,7 @@ class ControllerApiSystemVersions extends Controller
 		if($vresult !== true)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'The version check failed because of invalid parameters.'
+				'message' 	=> Translations::translate('The version check failed because of invalid parameters.')
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);

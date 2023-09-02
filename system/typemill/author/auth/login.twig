@@ -16,7 +16,7 @@
 					<fieldset class="">
 
 						<div class="my-2 {{ errors.username ? ' errors' : '' }}">
-							<label for="username">{{ translate('Username') }} <abbr title="{{ 'required'|translate }}">*</abbr></label>
+							<label for="username">{{ translate('Username') }} <abbr title="{{ translate('required') }}">*</abbr></label>
 							<input 
 								type="text" 
 								name="username" 
@@ -29,7 +29,7 @@
 						</div>
 						
 						<div class="my-2 {{ errors.password ? ' errors' : '' }}">
-							<label for="password">{{ translate('Password') }} <abbr title="{{ 'required'|translate }}">*</abbr></label>
+							<label for="password">{{ translate('Password') }} <abbr title="{{ translate('required') }}">*</abbr></label>
 							<input 
 								type="password" 
 								name="password" 

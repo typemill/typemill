@@ -119,7 +119,7 @@ class ApiAuthentication
 
 		$response = new Response();
 
-		$response->getBody()->write('Zugriff nicht erlaubt.');
+		$response->getBody()->write('Access not allowed.');
 
 		return $response->withStatus(401);
 	}

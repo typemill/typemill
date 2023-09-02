@@ -8,6 +8,7 @@ use Typemill\Models\Validation;
 use Typemill\Models\License;
 use Typemill\Models\Extension;
 use Typemill\Models\Settings;
+use Typemill\Static\Translations;
 
 class ControllerApiSystemExtensions extends Controller
 {
@@ -22,7 +23,7 @@ class ControllerApiSystemExtensions extends Controller
 		if($vresult !== true)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'Something went wrong, the input is not valid.',
+				'message' 	=> Translations::translate('Something went wrong, the input is not valid.'),
 				'errors' 	=> $vresult
 			]));
 
@@ -32,10 +33,10 @@ class ControllerApiSystemExtensions extends Controller
 		if(!isset($this->settings[$params['type']][$params['name']]))
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'The plugin or themes was not found.',
+				'message' 	=> Translations::translate('The plugin or themes was not found.'),
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 		}
 
 		if($params['checked'] == true)
@@ -59,10 +60,10 @@ class ControllerApiSystemExtensions extends Controller
 				if(!isset($licenseScope[$definitions['license']]))
 				{
 					$response->getBody()->write(json_encode([
-						'message' => 'Activation failed because you need a valid '. $definitions['license'] .'-license for this and your website must run under the domain of your license.',
+						'message' => Translations::translate('Activation failed because you need a valid ') . $definitions['license'] . Translations::translate('-license for this and your website must run under the domain of your license.'),
 					]));
 
-					return $response->withHeader('Content-Type', 'application/json')->withStatus(400);					
+					return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 				}
 			}
 		}
@@ -83,7 +84,7 @@ class ControllerApiSystemExtensions extends Controller
 		$updatedSettings 	= $settings->updateSettings($objectdata);
 
 		$response->getBody()->write(json_encode([
-			'message' => 'settings have been saved'
+			'message' => Translations::translate('settings have been saved')
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json')->withStatus(200);

@@ -6,6 +6,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Typemill\Models\Validation;
 use Typemill\Models\User;
+use Typemill\Static\Translations;
 
 class ControllerApiSystemUsers extends Controller
 {
@@ -103,7 +104,7 @@ class ControllerApiSystemUsers extends Controller
 		if($valresult !== true)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'Please correct the errors above.',
+				'message' 	=> Translations::translate('Please correct the errors in the form.'),
 				'errors' 	=> $validate->returnFirstValidationErrors($valresult)
 			]));
 
@@ -114,7 +115,7 @@ class ControllerApiSystemUsers extends Controller
 		if(!$isAdmin AND ($username !== $request->getAttribute('username')) )
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'You are not allowed to update another user.'
+				'message' => Translations::translate('You are not allowed to update another user.')
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);			
@@ -162,7 +163,7 @@ class ControllerApiSystemUsers extends Controller
 		if(!empty($validate->errors))
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'Please correct tbe errors in form.',
+				'message' 	=> Translations::translate('Please correct tbe errors in form.'),
 				'errors' 	=> $validate->errors
 			]));
 
@@ -185,7 +186,7 @@ class ControllerApiSystemUsers extends Controller
 		}
 
 		$response->getBody()->write(json_encode([
-			'message' => 'User has been updated.'
+			'message' => Translations::translate('User has been updated.')
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json');
@@ -197,10 +198,10 @@ class ControllerApiSystemUsers extends Controller
 		if(!$userrole)
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'Userrole is required.'
+				'message' => Translations::translate('Userrole is required.')
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
 		$user 		= new User();
@@ -228,10 +229,10 @@ class ControllerApiSystemUsers extends Controller
 		if(!$userdata)
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'Userdata are required.'
+				'message' => Translations::translate('Userdata are required.')
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
 		$validate		= new Validation();
@@ -242,7 +243,7 @@ class ControllerApiSystemUsers extends Controller
 		if($valresult !== true)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'Please correct the errors above.',
+				'message' 	=> Translations::translate('Please correct the errors in the form.'),
 				'errors' 	=> $validate->returnFirstValidationErrors($valresult)
 			]));
 
@@ -258,7 +259,7 @@ class ControllerApiSystemUsers extends Controller
 		if(!empty($validate->errors))
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'Please correct tbe errors in form.',
+				'message' 	=> Translations::translate('Please correct tbe errors in form.'),
 				'errors' 	=> $validate->errors
 			]));
 
@@ -268,15 +269,15 @@ class ControllerApiSystemUsers extends Controller
 		if(!$user->createUser($validatedOutput))
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'We could not store the new user',
+				'message' 	=> Translations::translate('We could not store the new user'),
 				'error' 	=> $user->error,
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);			
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
 
 		$response->getBody()->write(json_encode([
-			'message' 	=> 'New user created.',
+			'message' 	=> Translations::translate('New user created.'),
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json');
@@ -292,17 +293,17 @@ class ControllerApiSystemUsers extends Controller
 		if(!$username)
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'Username is required.'
+				'message' => Translations::translate('Username is required.')
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
 		# if a non-admin-user tries to delete another account 
 		if(!$isAdmin AND ($username !== $request->getAttribute('c_username')) )
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'You are not allowed to delete another user.'
+				'message' => Translations::translate('You are not allowed to delete another user.')
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);			
@@ -312,21 +313,21 @@ class ControllerApiSystemUsers extends Controller
 		if(!$user->setUser($username))
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'We could not find the user',
+				'message' 	=> Translations::translate('We could not find the user'),
 				'error'		=> $user->error
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);			
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);			
 		}
 
 		if(!$user->deleteUser())
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'We could not delete the user',
+				'message' 	=> Translations::translate('We could not delete the user'),
 				'error'		=> $user->error
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);						
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);						
 		}
 /*
 		# if user deleted his own account
@@ -336,7 +337,7 @@ class ControllerApiSystemUsers extends Controller
 		}
 */
 		$response->getBody()->write(json_encode([
-			'message' 	=> 'User deleted.',
+			'message' 	=> Translations::translate('User deleted.'),
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json');

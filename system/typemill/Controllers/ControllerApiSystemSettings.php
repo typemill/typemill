@@ -8,10 +8,7 @@ use Typemill\Models\Validation;
 use Typemill\Models\Extension;
 use Typemill\Models\User;
 use Typemill\Models\Settings;
-
-
-# how to translate results in API call ???
-# we should translate in backend instead of twig or vue
+use Typemill\Static\Translations;
 
 class ControllerApiSystemSettings extends Controller
 {
@@ -39,7 +36,7 @@ class ControllerApiSystemSettings extends Controller
 		if(!empty($valiator->errors))
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'Please correct errors in form.',
+				'message' 	=> Translations::translate('Please correct errors in form.'),
 				'errors' 	=> $validator->errors
 			]));
 
@@ -50,7 +47,7 @@ class ControllerApiSystemSettings extends Controller
 		$updatedSettings 	= $settingsModel->updateSettings($validatedOutput);
 
 		$response->getBody()->write(json_encode([
-			'message' => 'settings have been saved',
+			'message' => Translations::translate('settings have been saved'),
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json')->withStatus(200);

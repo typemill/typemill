@@ -7,6 +7,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Typemill\Models\Validation;
 use Typemill\Models\Extension;
 use Typemill\Models\Settings;
+use Typemill\Static\Translations;
 
 class ControllerApiSystemThemes extends Controller
 {
@@ -27,7 +28,7 @@ class ControllerApiSystemThemes extends Controller
 		if(!empty($validator->errors))
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'Please correct tbe errors in form.',
+				'message' 	=> Translations::translate('Please correct tbe errors in form.'),
 				'errors' 	=> $validator->errors
 			]));
 
@@ -41,7 +42,7 @@ class ControllerApiSystemThemes extends Controller
 		$updatedSettings 	= $settings->updateSettings($themedata);
 
 		$response->getBody()->write(json_encode([
-			'message' => 'settings have been saved',
+			'message' => Translations::translate('settings have been saved')
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json')->withStatus(200);

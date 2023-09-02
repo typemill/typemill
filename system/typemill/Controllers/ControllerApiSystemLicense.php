@@ -6,6 +6,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Typemill\Models\Validation;
 use Typemill\Models\License;
+use Typemill\Static\Translations;
 
 class ControllerApiSystemLicense extends Controller
 {
@@ -16,7 +17,7 @@ class ControllerApiSystemLicense extends Controller
 		if(!isset($params['license']) OR !is_array($params['license']))
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'License data missing.',
+				'message' 	=> Translations::translate('License data missing.')
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
@@ -28,7 +29,7 @@ class ControllerApiSystemLicense extends Controller
 		if($validationresult !== true)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'Please correct errors in form.',
+				'message' 	=> Translations::translate('Please correct errors in form.'),
 				'errors' 	=> $validate->returnFirstValidationErrors($validationresult)
 			]));
 
@@ -49,7 +50,7 @@ class ControllerApiSystemLicense extends Controller
 		}
 
 		$response->getBody()->write(json_encode([
-			'message' => 'Licence has been stored',
+			'message' => Translations::translate('Licence has been stored'),
 			'licensedata' => $license->getLicenseData($this->c->get('urlinfo'))
 		]));
 

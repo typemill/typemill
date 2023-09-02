@@ -8,8 +8,8 @@ use Slim\Routing\RouteContext;
 use Typemill\Models\Validation;
 use Typemill\Models\Navigation;
 use Typemill\Models\Meta;
+use Typemill\Static\Translations;
 use Typemill\Events\OnMetaLoaded;
-
 
 class ControllerApiAuthorMeta extends Controller
 {
@@ -21,10 +21,10 @@ class ControllerApiAuthorMeta extends Controller
 		if(!$validRights)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'You do not have enough rights.',
+				'message' 	=> Translations::translate('You do not have enough rights.'),
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);			
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
 		}
 
 		$url 				= $request->getQueryParams()['url'] ?? false;
@@ -35,7 +35,7 @@ class ControllerApiAuthorMeta extends Controller
 		if(!$item)
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'page not found',
+				'message' => Translations::translate('page not found'),
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
@@ -107,10 +107,10 @@ class ControllerApiAuthorMeta extends Controller
 		if(!$validRights)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'You do not have enough rights.',
+				'message' 	=> Translations::translate('You do not have enough rights.'),
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);			
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);			
 		}
 
 		$params 			= $request->getParsedBody();
@@ -133,7 +133,7 @@ class ControllerApiAuthorMeta extends Controller
 		if(!$item)
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'page not found',
+				'message' => Translations::translate('page not found'),
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
@@ -159,7 +159,7 @@ class ControllerApiAuthorMeta extends Controller
 		if(!$tabdefinitions)
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'Tab not found',
+				'message' => Translations::translate('Tab not found'),
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
@@ -178,7 +178,7 @@ class ControllerApiAuthorMeta extends Controller
 
 			if(!$fielddefinition)
 			{
-				$errors[$tab][$fieldname] = 'This field is not defined';
+				$errors[$tab][$fieldname] = Translations::translate('This field is not defined');
 			}
 			else
 			{
@@ -196,11 +196,11 @@ class ControllerApiAuthorMeta extends Controller
 		if(!empty($errors))
 		{ 
 			$response->getBody()->write(json_encode([
-				'message' => 'Please correct the errors.',
+				'message' => Translations::translate('Please correct the errors.'),
 				'errors' => $errors
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
 		$pageMeta = $meta->getMetaData($item);
@@ -247,28 +247,28 @@ class ControllerApiAuthorMeta extends Controller
 				if($meta->folderContainsFolders($item))
 				{
 					$response->getBody()->write(json_encode([
-						'message' => 'The folder contains another folder so we cannot transform it. Please make sure there are only files in this folder.',
+						'message' => Translations::translate('The folder contains another folder so we cannot transform it. Please make sure there are only files in this folder.'),
 					]));
 
-					return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+					return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 				}
 
 				if($params['data']['contains'] == "posts" && !$meta->transformPagesToPosts($item))
 				{
 					$response->getBody()->write(json_encode([
-						'message' => 'One or more files could not be transformed.',
+						'message' => Translations::translate('One or more files could not be transformed.')
 					]));
 
-					return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+					return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 				}
 
 				if($params['data']['contains'] == "pages" && !$meta->transformPostsToPages($item))
 				{
 					$response->getBody()->write(json_encode([
-						'message' => 'One or more files could not be transformed.',
+						'message' => Translations::translate('One or more files could not be transformed.')
 					]));
 
-					return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+					return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 				}
 
 				$navigation->clearNavigation();
@@ -325,7 +325,7 @@ class ControllerApiAuthorMeta extends Controller
 			'message' => $store,
 		]));
 
-		return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+		return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 	}
 
 

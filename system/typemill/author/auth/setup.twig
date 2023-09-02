@@ -9,14 +9,14 @@
 		<div class="lg:w-1/2 bg-teal-600 text-white min-h-screen flex justify-center items-center">
 			<div class="max-w-md content-center">
 
-				<h1 class="text-4xl py-5">{{ 'Setup'|translate }}</h1>
+				<h1 class="text-4xl py-5">{{ translate('Setup') }}</h1>
 			
 				<form method="POST" action="{{ url_for("setup.create") }}" autocomplete="off">
 				
 					<fieldset class="">
 
 						<div class="my-2 {{ errors.username ? ' errors' : '' }}">
-							<label for="username">{{ 'Username'|translate }} <abbr title="{{ 'required'|translate }}">*</abbr></label>
+							<label for="username">{{ translate('Username') }} <abbr title="{{ translate('required') }}">*</abbr></label>
 							<input 
 								type="text" 
 								name="username" 
@@ -29,7 +29,7 @@
 						</div>
 
 						<div class="my-2 {{ errors.email ? ' errors' : '' }}">
-							<label for="email">{{ 'E-Mail'|translate }} <abbr title="{{ 'required'|translate }}">*</abbr></label>
+							<label for="email">{{ translate('E-Mail') }} <abbr title="{{ translate('required') }}">*</abbr></label>
 							<input 
 								type="text" 
 								name="email" 
@@ -42,7 +42,7 @@
 						</div>
 						
 						<div class="my-2 {{ errors.password ? ' errors' : '' }}">
-							<label for="password">{{ 'Password'|translate }} <abbr title="{{ 'required'|translate }}">*</abbr></label>
+							<label for="password">{{ translate('Password') }} <abbr title="{{ translate('required') }}">*</abbr></label>
 							<input 
 								type="password" 
 								name="password" 
@@ -61,13 +61,11 @@
 
 						<input 
 							type="submit" 
-							value="{{ 'Setup'|translate }}" 
+							value="{{ translate('Setup') }}" 
                       		class="block w-full mt-6 px-3 py-3 border-0 font-medium text-xs leading-tight uppercase border-2 border-stone-50 text-stone-50 pointer hover:bg-stone-50 hover:text-stone-800 cursor-pointer focus:outline-none focus:ring-0 transition duration-100 ease-in-out"
 						/>
 
 					</fieldset>
-
-					<div id="loginarea" class="hidden"> csrf() | raw </div>
 
 				</form>	
 			</div>
@@ -76,17 +74,17 @@
 		<div class="lg:w-1/2 lg:bg-white lg:text-black p-5 bg-teal-600 text-white border-b border-white content-center flex justify-center items-center">
 			<div class="max-w-md content-center">
 				{% if systemerrors %}
-					<h2 class="text-4xl py-5">Systemcheck</h2>
-					<p>The following requirements for the installation are missing:</p>
+					<h2 class="text-4xl py-5">{{ translate('Systemcheck') }}</h2>
+					<p>{{ translate('The following requirements for the installation are missing') }}:</p>
 					<ul style="color:red;padding: 0 14px">
 						{% for systemerror in systemerrors %}
 							<li style="margin: 5px 0">{{ systemerror }}</li>
 						{% endfor %}
 					</ul>
 				{% else %}
-					<h2 class="text-4xl py-5">Welcome to Typemill</h2>
-					<p>Hey writer, author, editor, content-guru, or website-manager. We hope you like Typemill, because we coded it just for you.</p>
-					<p>Get inspired and enjoy your writing!</p>
+					<h2 class="text-4xl py-5">{{ translate('Welcome to Typemill') }}</h2>
+					<p>{{ translate('Hey writer, author, editor, content-guru, or website-manager.') }} {{ translate(' We hope you like Typemill, because we coded it just for you.'}}</p>
+					<p>{{ translate('Get inspired and enjoy your writing') }}!</p>
 				{% endif %}
 			</div>
 		</div>

@@ -91,4 +91,10 @@ class Translations
 
 		return $lang;
 	}
+
+	# this just returns the string so you can use translate-function in system files. Everything that is wrapped in translate function will be added to translation files
+	public static function translate(string $string)
+	{
+		return $string;
+	}
 }

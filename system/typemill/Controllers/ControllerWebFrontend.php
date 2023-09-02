@@ -59,8 +59,8 @@ class ControllerWebFrontend extends Controller
 		    if(!$pageinfo)
 		    {
 			    return $this->c->get('view')->render($response->withStatus(404), '404.twig', [
-					'title'			=> 'Typemill Author Area',
-					'description'	=> 'Typemill Version 2 wird noch besser als Version 1.'
+					'title'			=> 'Page not found',
+					'description'	=> 'We did not find the page you where looking for.'
 			    ]);
 		    }
 

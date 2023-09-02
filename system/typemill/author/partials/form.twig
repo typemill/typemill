@@ -12,7 +12,7 @@
 			{% if field.type == 'fieldset' %}
 
 				<fieldset class="subfield">
-					<legend>{{ field.legend }}</legend>
+					<legend>{{ translate(field.legend) }}</legend>
 					{% for field in field.fields %}
 					
 						{% include '/partials/fields.twig' with {'itemName' : itemName, 'object' : object } %}

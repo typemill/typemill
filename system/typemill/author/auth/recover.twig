@@ -14,7 +14,7 @@
 					<fieldset class="">
 
 						<div class="my-2 {{ errors.email ? ' errors' : '' }}">
-							<label for="email">{{ 'Email'|translate }} <abbr title="{{ 'required'|translate }}">*</abbr></label>
+							<label for="email">{{ translate('Email') }} <abbr title="{{ translate('required') }}">*</abbr></label>
 							<input 
 								type="text" 
 								name="email" 
@@ -33,7 +33,7 @@
 
 						<input 
 							type="submit" 
-							value="{{ 'Recover password'|translate }}" 
+							value="{{ translate('Recover password') }}" 
                       		class="block w-full mt-6 px-3 py-3 border-0 font-medium text-xs leading-tight uppercase border-2 border-stone-50 text-stone-50 pointer hover:bg-stone-50 hover:text-stone-800 cursor-pointer focus:outline-none focus:ring-0 transition duration-100 ease-in-out"
 						/>
 
@@ -49,8 +49,8 @@
 		
 		<div class="lg:w-1/2 lg:bg-white lg:text-black p-5 bg-teal-600 text-white border-b border-white content-center flex justify-center items-center">
 			<div class="max-w-md content-center">
-				<h1 class="text-4xl py-5">Forgot your password?</h1>
-				<p>Enter the email of your user-account, click the recover-button and check your mailbox for further instructions.</p>
+				<h1 class="text-4xl py-5">{{ translate('Forgot your password') }}?</h1>
+				<p>{{ translate('Enter the email of your user-account, click the recover-button and check your mailbox for further instructions.') }}</p>
 			</div>
 		</div>
 	

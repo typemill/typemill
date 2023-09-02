@@ -7,6 +7,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Routing\RouteContext;
 use Typemill\Models\Validation;
 use Typemill\Models\User;
+use Typemill\Static\Translations;
 
 class ControllerWebAuth extends Controller
 {
@@ -20,12 +21,14 @@ class ControllerWebAuth extends Controller
 	
 	public function login(Request $request, Response $response)
 	{
+		/*
 	    if( ( null !== $request->getattribute('csrf_result') ) OR ( $request->getattribute('csrf_result') === false ) )
 	    {
 			$this->c->flash->addMessage('error', 'The form has a timeout, please try again.');
 
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'));
 	    }
+		*/
 
         $input 			= $request->getParsedBody();
 		$validation		= new Validation();
@@ -37,7 +40,7 @@ class ControllerWebAuth extends Controller
 
 			if(!$user->setUserWithPassword($input['username']))
 			{
-				$this->c->get('flash')->addMessage('error', 'Ups, wrong password or username, please try again!!');
+				$this->c->get('flash')->addMessage('error', Translations::translate('Wrong password or username, please try again.'));
 
 				return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
 			}
@@ -49,7 +52,7 @@ class ControllerWebAuth extends Controller
 				# check if user has confirmed the account 
 				if(isset($userdata['optintoken']) && $userdata['optintoken'])
 				{
-					$this->c->get('flash')->addMessage('error', 'Your registration is not confirmed yet. Please check your e-mails and use the confirmation link.');
+					$this->c->get('flash')->addMessage('error', Translations::translate('Your registration is not confirmed yet. Please check your e-mails and use the confirmation link.'));
 					return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
 				}
 
@@ -75,7 +78,7 @@ class ControllerWebAuth extends Controller
 			\Typemill\Static\Helpers::addLogEntry('wrong login');
 		}
 
-		$this->c->get('flash')->addMessage('error', 'Ups, wrong password or username, please try again.');
+		$this->c->get('flash')->addMessage('error', Translations::translate('Wrong password or username, please try again.'));
 
 		return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
 	}

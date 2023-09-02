@@ -14,7 +14,7 @@
 					<fieldset class="">
 
 						<div class="my-2 {{ errors.password ? ' errors' : '' }}">
-							<label for="password">{{ translate('Password') }} <abbr title="{{ 'required'|translate }}">*</abbr></label>
+							<label for="password">{{ translate('Password') }} <abbr title="{{ translate('required') }}">*</abbr></label>
 							<input 
 								type="password" 
 								name="password" 
@@ -27,7 +27,7 @@
 						</div>
 
 						<div class="my-2 {{ errors.passwordrepeat ? ' errors' : '' }}">
-							<label for="passwordrepeat">{{ translate('Repeat password') }} <abbr title="{{ 'required'|translate }}">*</abbr></label>
+							<label for="passwordrepeat">{{ translate('Repeat password') }} <abbr title="{{ translate('required') }}">*</abbr></label>
 							<input 
 								type="password" 
 								name="passwordrepeat" 
@@ -61,12 +61,12 @@
 		
 		<div class="lg:w-1/2 lg:bg-white lg:text-black p-5 bg-teal-600 text-white border-b border-white content-center flex justify-center items-center">
 			<div class="max-w-md content-center">
-				<h1 class="text-4xl py-5">Forgot your password?</h1>
-				<p class="py-1">No problem, you can create a new one here. And you might find the following tips helpful:</p>
+				<h1 class="text-4xl py-5">{{ translate('Forgot your password') }}?</h1>
+				<p class="py-1">{{ translate('No problem, you can create a new one here.') }} {{ translate('And you might find the following tips helpful') }}:</p>
 				<ul class="list-disc pl-4 py-1">
-					<li>Use a strong and individual password for every account.</li>
-					<li>Your browser can remember all of your passwords.</p>
-					<li>The best option is a separate password manager like keepass and others.</li>
+					<li>{{ translate('Use a strong and individual password for every account.') }}</li>
+					<li>{{ translate('Your browser can remember all of your passwords.') }}</p>
+					<li>{{ translate('The best option is a separate password manager like keepass and others.') }}</li>
 				</ul>
 			</div>
 		</div>

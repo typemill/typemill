@@ -3,6 +3,7 @@
 namespace Typemill\Controllers;
 
 use Typemill\Models\StorageWrapper;
+use Typemill\Static\Translations;
 
 class ControllerWebDownload extends Controller
 {
@@ -11,7 +12,8 @@ class ControllerWebDownload extends Controller
 		$filename 		= isset($args['params']) ? $args['params'] : false;
 		if(!$filename)
 		{
-			die('the requested file does not exist.');
+			$response->getBody()->write(Translations::translate('the requested file does not exist.'))->withStatus(404);
+			return $response;
 		}
 
 		$storage 		= new StorageWrapper('\Typemill\Models\Storage');
@@ -24,7 +26,8 @@ class ControllerWebDownload extends Controller
 		$allowedFiletypes = [];
 		if(!$this->validate($filepath, $filename, $allowedFiletypes))
 		{
-			die('the requested filetype is not allowed.');
+			$response->getBody()->write(Translations::translate('the requested filetype does not exist.'))->withStatus(404);
+			return $response;
 		}
 
 		if($restrictions && isset($restrictions[$filefolder . $filename]))
@@ -34,7 +37,7 @@ class ControllerWebDownload extends Controller
 
 			if(!$userrole)
 			{
-				$this->c->get('flash')->addMessage('error', "You have to be an authenticated $allowedrole to download this file.");
+				$this->c->get('flash')->addMessage('error', Translations::translate('To download this file you need to be authenticated with the role') . ' ' . $allowedrole );
 				
 				return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
 			}
@@ -44,7 +47,7 @@ class ControllerWebDownload extends Controller
 				AND !$this->c->get('acl')->inheritsRole($userrole, $allowedrole)
 			)
 			{
-				$this->c->get('flash')->addMessage('error', "You have to be a $allowedrole to download this file.");
+				$this->c->get('flash')->addMessage('error', Translations::translate('To download this file you need to be authenticated with the role') . ' ' . $allowedrole );
 
 				return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
 			}

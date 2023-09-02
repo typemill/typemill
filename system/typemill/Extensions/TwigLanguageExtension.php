@@ -14,14 +14,14 @@ class TwigLanguageExtension extends AbstractExtension
 	{
 		$this->labels = $labels;
 	}
-	
+/*	
 	public function getFilters()
 	{
 		return [
 			new TwigFilter('translate', [$this, 'translate'] ),
 		];
 	}
-
+*/
 	public function getFunctions()
 	{
 		return [

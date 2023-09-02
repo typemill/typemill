@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Typemill\Models\Media;
 use Typemill\Models\StorageWrapper;
 use Typemill\Extensions\ParsedownExtension;
-
+use Typemill\Static\Translations;
 
 class ControllerApiImage extends Controller
 {
@@ -27,7 +27,7 @@ class ControllerApiImage extends Controller
 		if(!$path)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 		=> 'Path is missing.',
+				'message' 		=> Translations::translate('Path is missing.')
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
@@ -95,7 +95,7 @@ class ControllerApiImage extends Controller
 		if(!$name)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 		=> 'Imagename is missing.',
+				'message' 		=> Translations::translate('Imagename is missing.')
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
@@ -108,10 +108,10 @@ class ControllerApiImage extends Controller
 		if(!$imagedetails)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 		=> 'No image found.',
+				'message' 		=> Translations::translate('No image found.')
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 		}
 
 		$response->getBody()->write(json_encode([
@@ -129,7 +129,7 @@ class ControllerApiImage extends Controller
 		if(!isset($params['image']) OR !isset($params['name']))
 		{
 			$response->getBody()->write(json_encode([
-				'message' 		=> 'Image or name is missing.',
+				'message' 		=> Translations::translate('Image or name is missing.')
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
@@ -150,7 +150,7 @@ class ControllerApiImage extends Controller
 				'fullerrors'	=> $media->errors,
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
 
 		# check if image name already exisits in live folder and create an unique name (do not overwrite existing files)
@@ -166,7 +166,7 @@ class ControllerApiImage extends Controller
 				'fullerrors'	=> $media->errors,
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);			
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);			
 		}
 
 		# if image is not resizable (animated gif or svg)
@@ -175,7 +175,7 @@ class ControllerApiImage extends Controller
 			if($media->saveOriginalForAll())
 			{
 				$response->getBody()->write(json_encode([
-					'message' => 'Image saved successfully',
+					'message' => Translations::translate('Image saved successfully'),
 					'name' => 'media/live/' . $media->getFullName(),
 				]));
 
@@ -187,7 +187,7 @@ class ControllerApiImage extends Controller
 				'fullerrors'	=> $media->errors,
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
 
 		# for all other image types, check if they should be transformed to webp
@@ -208,7 +208,7 @@ class ControllerApiImage extends Controller
 
 
 		$response->getBody()->write(json_encode([
-			'message' => 'Image saved successfully',
+			'message' => Translations::translate('Image saved successfully'),
 			'name' => 'media/tmp/' . $media->getFullName(),
 		]));
 
@@ -224,7 +224,7 @@ class ControllerApiImage extends Controller
 		if(!isset($params['imgfile']) OR !$params['imgfile'])
 		{
 			$response->getBody()->write(json_encode([
-				'message' 		=> 'Image or filename is missing.',
+				'message' 		=> Translations::translate('Image or filename is missing.'),
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
@@ -240,11 +240,11 @@ class ControllerApiImage extends Controller
 				'message' 		=> $storage->getError()
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
 
 		$response->getBody()->write(json_encode([
-			'message' => 'Image saved successfully',
+			'message' => Translations::translate('Image saved successfully'),
 			'path' => $result,
 		]));
 
@@ -258,7 +258,7 @@ class ControllerApiImage extends Controller
 		if(!isset($params['videourl']) OR !$params['videourl'])
 		{
 			$response->getBody()->write(json_encode([
-				'message' 		=> 'Markdown is missing.',
+				'message' 		=> Translations::translate('Markdown is missing.'),
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
@@ -298,7 +298,11 @@ class ControllerApiImage extends Controller
 			$imageData = @file_get_contents($videoURL0, 0, $ctx);
 			if($imageData === false)
 			{
-				return $response->withJson(array('errors' => 'could not get the video image'));
+				$response->getBody()->write(json_encode([
+					'message' 		=> Translations::translate('could not get the video image'),
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 			}
 		}
 		
@@ -314,7 +318,7 @@ class ControllerApiImage extends Controller
 				'fullerrors'	=> $media->errors,
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
 
 		# check if image name already exisits in live folder and create an unique name (do not overwrite existing files)
@@ -330,7 +334,7 @@ class ControllerApiImage extends Controller
 				'fullerrors'	=> $media->errors,
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);			
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);			
 		}
 
 		# for all other image types, check if they should be transformed to webp
@@ -359,7 +363,7 @@ class ControllerApiImage extends Controller
 		if($livePath)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'Image saved successfully',
+				'message' 	=> Translations::translate('Image saved successfully'),
 				'path' 		=> $livePath,
 			]));
 
@@ -380,10 +384,10 @@ class ControllerApiImage extends Controller
 		if(!isset($params['name']))
 		{
 			$response->getBody()->write(json_encode([
-				'message' 		=> 'Imagename is missing.'
+				'message' 		=> Translations::translate('Imagename is missing.')
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
 		$storage = new StorageWrapper('\Typemill\Models\Storage');
@@ -393,7 +397,7 @@ class ControllerApiImage extends Controller
 		if($deleted)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 		=> 'Image deleted successfully.'
+				'message' 		=> Translations::translate('Image deleted successfully.')
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json');
@@ -403,6 +407,6 @@ class ControllerApiImage extends Controller
 			'message' 		=> $storage->getError()
 		]));
 
-		return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+		return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 	}
 }

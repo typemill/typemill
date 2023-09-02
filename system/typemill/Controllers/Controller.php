@@ -28,6 +28,7 @@ abstract class Controller
 		$this->c->get('dispatcher')->dispatch(new OnTwigLoaded(false), 'onTwigLoaded');		
 	}
 
+/*
 	public function getCsrfData($request)
 	{
         $nameKey = $this->csrf->getTokenNameKey();
@@ -38,7 +39,7 @@ abstract class Controller
             $valueKey => $request->getAttribute($valueKey)
         ];
 	}	
-
+*/
 	protected function settingActive($setting)
 	{
 		if(isset($this->settings[$setting]) && $this->settings[$setting])

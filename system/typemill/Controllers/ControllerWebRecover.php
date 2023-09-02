@@ -7,6 +7,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Routing\RouteContext;
 use Typemill\Models\User;
 use Typemill\Models\Validation;
+use Typemill\Static\Translations;
 use Typemill\Extensions\ParsedownExtension;
 
 class ControllerWebRecover extends Controller
@@ -26,13 +27,13 @@ class ControllerWebRecover extends Controller
 
 		if(!isset($params['email']) OR filter_var($params['email'], \FILTER_VALIDATE_EMAIL) === false )
 		{
-			$this->c->get('flash')->addMessage('error', 'Please enter a valid email.');
+			$this->c->get('flash')->addMessage('error', Translations::translate('Please enter a valid email.'));
 
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.recoverform'))->withStatus(302);
 		}
 
-		$title 			= 'Please check your inbox';
-		$message 		= 'Dear user, please check the inbox of your email account for more instructions.';
+		$title 			= Translations::translate('Check your inbox');
+		$message 		= Translations::translate('Please check the inbox of your email account for more instructions.');
 
 		$user 			= new User();
 		$requiredUser 	= $user->findUsersByEmail($params['email']);
@@ -59,7 +60,9 @@ class ControllerWebRecover extends Controller
 			$subjectline 	= (isset($settings['recoversubject']) && ($settings['recoversubject'] != '') )  ? $settings['recoversubject'] : 'Recover your password';
 			$subject 		= '=?UTF-8?B?' . base64_encode($subjectline) . '?=';
 
-			$messagetext	= "Dear user,<br/><br/>please use the following link to set a new password:";
+			$messagetext	= Translations::translate('Dear user');
+			$messagetext 	.= ",<br/><br/>";
+			$messagetext	.= Translations::translate('please use the following link to set a new password') . ':';
 			if(isset($settings['recovermessage']) && ($settings['recovermessage'] != ''))
 			{
 				$parsedown 		= new ParsedownExtension($urlinfo['baseurl']);
@@ -77,8 +80,8 @@ class ControllerWebRecover extends Controller
 
 			if($send == 'delete')
 			{
-				$title 		= 'Error sending email';
-				$message 	= 'Dear ' . $requiredUser['username'] . ', we could not send the email with the password instructions to your address. Please contact the website owner and ask for help.';
+				$title 		= Translations::translate('Error sending email');
+				$message 	= Translations::translate('Dear ') . $requiredUser['username'] . ', ' . Translations::translate('we could not send the email with the password instructions to your address. Please contact the website owner and ask for help.');
 			}
 			else
 			{
@@ -87,8 +90,8 @@ class ControllerWebRecover extends Controller
 				$user->setValue('recovertoken', $recovertoken);
 				$user->updateUser();
 
-				$title 		= 'Please check your inbox';
-				$message 	= 'Dear ' . $requiredUser['username'] . ', please check the inbox of your email account for more instructions. Do not forget to check your spam-folder if your inbox is empty.';
+				$title 		= Translations::translate('Check your inbox');
+				$message 	= Translations::translate('Dear ') . $requiredUser['username'] . ', ' . Translations::translate('please check the inbox of your email account for more instructions. Do not forget to check your spam-folder if your inbox is empty.');
 			}			
 		}
 		elseif(isset($settings['securitylog']) && $settings['securitylog'])
@@ -114,7 +117,7 @@ class ControllerWebRecover extends Controller
 				\Typemill\Static\Helpers::addLogEntry('wrong password reset link');
 			}
 
-			$this->c->get('flash')->addMessage('error', 'You tried to open the password reset page but the link was invalid.');
+			$this->c->get('flash')->addMessage('error', Translations::translate('You tried to open the password reset page but the link was invalid.'));
 
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.login'))->withStatus(302);		
 		}
@@ -129,7 +132,7 @@ class ControllerWebRecover extends Controller
 				\Typemill\Static\Helpers::addLogEntry('password reset link user not found');
 			}
 
-			$this->c->get('flash')->addMessage('error', 'You tried to open the password reset page but the link was invalid.');
+			$this->c->get('flash')->addMessage('error', Translations::translate('You tried to open the password reset page but the link was invalid.'));
 
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.login'))->withStatus(302);
 		}
@@ -143,7 +146,7 @@ class ControllerWebRecover extends Controller
 				\Typemill\Static\Helpers::addLogEntry('password reset link wrong token');
 			}
 
-			$this->c->get('flash')->addMessage('error', 'You tried to open the password reset page but the link was invalid.');
+			$this->c->get('flash')->addMessage('error', Translations::translate('You tried to open the password reset page but the link was invalid.'));
 
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.login'))->withStatus(302);
 		}
@@ -160,7 +163,7 @@ class ControllerWebRecover extends Controller
 				\Typemill\Static\Helpers::addLogEntry('password reset link outdated');
 			}
 
-			$this->c->get('flash')->addMessage('error', 'The link to recover the password was too old. Please create a new one.');
+			$this->c->get('flash')->addMessage('error', Translations::translate('The link to recover the password was too old. Please create a new one.'));
 
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.login'))->withStatus(302);
 		}
@@ -179,7 +182,7 @@ class ControllerWebRecover extends Controller
 				\Typemill\Static\Helpers::addLogEntry('password reset link wrong date format');
 			}
 
-			$this->c->get('flash')->addMessage('error', 'The link to recover the password was too old. Please create a new one.');
+			$this->c->get('flash')->addMessage('error', Translations::translate('The link to recover the password was too old. Please create a new one.'));
 
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.login'))->withStatus(302);
 		}
@@ -198,7 +201,7 @@ class ControllerWebRecover extends Controller
 				\Typemill\Static\Helpers::addLogEntry('password reset link outdated');
 			}
 
-			$this->c->get('flash')->addMessage('error', 'The link to recover the password was too old. Please create a new one.');
+			$this->c->get('flash')->addMessage('error', Translations::translate('The link to recover the password was too old. Please create a new one.'));
 
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.login'))->withStatus(302);
 		}
@@ -222,7 +225,7 @@ class ControllerWebRecover extends Controller
 				\Typemill\Static\Helpers::addLogEntry('create reset password username or token missing');
 			}
 
-			$this->c->get('flash')->addMessage('error', 'You tried to set a new password but username or token was invalid.');
+			$this->c->get('flash')->addMessage('error', Translations::translate('You tried to set a new password but username or token was invalid.'));
 
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.login'))->withStatus(302);
 		}
@@ -236,7 +239,7 @@ class ControllerWebRecover extends Controller
 				\Typemill\Static\Helpers::addLogEntry('create reset password wrong input');
 			}
 
-			$this->c->get('flash')->addMessage('error', 'Please correct your input.');
+			$this->c->get('flash')->addMessage('error', Translations::translate('Please correct your input.'));
 
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.resetform', [], ['username' => $params['username'], 'recovertoken' => $params['recovertoken']]))->withStatus(302);
 		}
@@ -250,7 +253,7 @@ class ControllerWebRecover extends Controller
 				\Typemill\Static\Helpers::addLogEntry('create reset password user not found');
 			}
 
-			$this->c->get('flash')->addMessage('error', 'You tried to open the password reset page but the link was invalid.');
+			$this->c->get('flash')->addMessage('error', Translations::translate('You tried to open the password reset page but the link was invalid.'));
 
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.login'))->withStatus(302);
 		}
@@ -264,7 +267,7 @@ class ControllerWebRecover extends Controller
 				\Typemill\Static\Helpers::addLogEntry('create reset password wrong token');
 			}
 
-			$this->c->get('flash')->addMessage('error', 'You tried to open the password reset page but the link was invalid.');
+			$this->c->get('flash')->addMessage('error', Translations::translate('You tried to open the password reset page but the link was invalid.'));
 
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.login'))->withStatus(302);
 		}
@@ -281,7 +284,7 @@ class ControllerWebRecover extends Controller
 				\Typemill\Static\Helpers::addLogEntry('create reset password date outdated');
 			}
 
-			$this->c->get('flash')->addMessage('error', 'The link to recover the password was too old. Please create a new one.');
+			$this->c->get('flash')->addMessage('error', Translations::translate('The link to recover the password was too old. Please create a new one.'));
 
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.login'))->withStatus(302);
 		}
@@ -300,7 +303,7 @@ class ControllerWebRecover extends Controller
 				\Typemill\Static\Helpers::addLogEntry('create reset password wrong date format');
 			}
 
-			$this->c->get('flash')->addMessage('error', 'The link to recover the password was too old. Please create a new one.');
+			$this->c->get('flash')->addMessage('error', Translations::translate('The link to recover the password was too old. Please create a new one.'));
 
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.login'))->withStatus(302);
 		}
@@ -319,7 +322,7 @@ class ControllerWebRecover extends Controller
 				\Typemill\Static\Helpers::addLogEntry('create reset password outdated');
 			}
 
-			$this->c->get('flash')->addMessage('error', 'The link to recover the password was too old. Please create a new one.');
+			$this->c->get('flash')->addMessage('error', Translations::translate('The link to recover the password was too old. Please create a new one.'));
 
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.login'))->withStatus(302);
 		}
@@ -332,7 +335,7 @@ class ControllerWebRecover extends Controller
 
 		unset($_SESSION['old']);
 
-		$this->c->get('flash')->addMessage('info', 'Please login with your new password.');
+		$this->c->get('flash')->addMessage('info', Translations::translate('Please login with your new password.'));
 		return $response->withHeader('Location', $this->routeParser->urlFor('auth.login'))->withStatus(302);
 	}
 }

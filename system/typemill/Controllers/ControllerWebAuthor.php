@@ -40,8 +40,8 @@ class ControllerWebAuthor extends Controller
 		    if(!$pageinfo)
 		    {
 			    return $this->c->get('view')->render($response->withStatus(404), '404.twig', [
-					'title'			=> 'Typemill Author Area',
-					'description'	=> 'Typemill Version 2 wird noch besser als Version 1.'
+					'title'			=> 'Blox editor',
+					'description'	=> 'Edit your content with the visual blox editor'
 			    ]);
 		    }
 
@@ -110,8 +110,8 @@ class ControllerWebAuthor extends Controller
 		    if(!$pageinfo)
 		    {
 			    return $this->c->get('view')->render($response->withStatus(404), '404.twig', [
-					'title'			=> 'Typemill Author Area',
-					'description'	=> 'Typemill Version 2 wird noch besser als Version 1.'
+					'title'			=> 'Raw editor',
+					'description'	=> 'Edit your content with the raw editor in pure markdown syntax.'
 			    ]);
 		    }
 

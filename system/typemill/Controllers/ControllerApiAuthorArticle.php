@@ -12,6 +12,7 @@ use Typemill\Models\Content;
 use Typemill\Models\Meta;
 use Typemill\Models\Sitemap;
 use Typemill\Static\Slug;
+use Typemill\Static\Translations;
 use Typemill\Events\OnPagePublished;
 use Typemill\Events\OnPageUnpublished;
 use Typemill\Events\OnPageDeleted;
@@ -26,10 +27,10 @@ class ControllerApiAuthorArticle extends Controller
 		if(!$validRights)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'You do not have enough rights.',
+				'message' 	=> Translations::translate('You do not have enough rights.'),
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);			
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
 		}
 
 		$params 			= $request->getParsedBody();
@@ -52,7 +53,7 @@ class ControllerApiAuthorArticle extends Controller
 		if(!$item)
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'page not found',
+				'message' => Translations::translate('page not found'),
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
@@ -68,7 +69,7 @@ class ControllerApiAuthorArticle extends Controller
 				'message' => $publish,
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
 
 		# refresh navigation and item
@@ -108,10 +109,10 @@ class ControllerApiAuthorArticle extends Controller
 		if(!$validRights)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'You do not have enough rights.',
+				'message' 	=> Translations::translate('You do not have enough rights.'),
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);			
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
 		}
 
 		$params 			= $request->getParsedBody();
@@ -134,7 +135,7 @@ class ControllerApiAuthorArticle extends Controller
 		if(!$item)
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'page not found',
+				'message' => Translations::translate('page not found'),
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
@@ -162,7 +163,7 @@ class ControllerApiAuthorArticle extends Controller
 			{
 				if($folderContent->status == 'published' OR $folderContent->status == 'modified')
 				{
-					$message = 'There are published pages within this folder. The pages are not visible on your website anymore.';
+					$message = Translations::translate('There are published pages within this folder. The pages are not visible on your website anymore.');
 				}
 			}
 		}
@@ -185,10 +186,10 @@ class ControllerApiAuthorArticle extends Controller
 		if(!$validRights)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'You do not have enough rights.',
+				'message' 	=> Translations::translate('You do not have enough rights.'),
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);			
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(401);
 		}
 
 		$params 			= $request->getParsedBody();
@@ -248,10 +249,10 @@ class ControllerApiAuthorArticle extends Controller
 		if(!$validRights)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'You do not have enough rights.',
+				'message' 	=> Translations::translate('You do not have enough rights.'),
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);			
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(401);
 		}
 
 		$params 			= $request->getParsedBody();
@@ -274,7 +275,7 @@ class ControllerApiAuthorArticle extends Controller
 		if(!$item)
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'page not found',
+				'message' => Translations::translate('page not found'),
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
@@ -328,10 +329,10 @@ class ControllerApiAuthorArticle extends Controller
 		if(!$validRights)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'You do not have enough rights.',
+				'message' 	=> Translations::translate('You do not have enough rights.'),
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);			
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
 		}
 
 		$params 			= $request->getParsedBody();
@@ -354,7 +355,7 @@ class ControllerApiAuthorArticle extends Controller
 		if(!$item)
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'page not found',
+				'message' => Translations::translate('page not found'),
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
@@ -389,10 +390,10 @@ class ControllerApiAuthorArticle extends Controller
 		if(!$validRights)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'You do not have enough rights.',
+				'message' 	=> Translations::translate('You do not have enough rights.'),
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);			
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
 		}
 
 		$params 			= $request->getParsedBody();
@@ -431,10 +432,10 @@ class ControllerApiAuthorArticle extends Controller
 			if(!$folder)
 			{ 
 				$response->getBody()->write(json_encode([
-					'message' 	=> 'We could not find this page. Please refresh and try again.'
+					'message' 	=> Translations::translate('We could not find this page. Please refresh and try again.')
 				]));
 
-				return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 			}
 
 			$folderContent		= $folder->folderContent;
@@ -454,10 +455,10 @@ class ControllerApiAuthorArticle extends Controller
 			if($folderItem->slug == $slug)
 			{
 				$response->getBody()->write(json_encode([
-					'message' 	=> 'There is already a page with this name. Please choose another name.'
+					'message' 	=> Translations::translate('There is already a page with this name. Please choose another name.')
 				]));
 
-				return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(402);
 			}
 			
 			# rename files just in case that index is not in line (because file has been moved before)
@@ -471,10 +472,10 @@ class ControllerApiAuthorArticle extends Controller
 		if($writeError)
 		{ 
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'Something went wrong. Please refresh the page and check, if all folders and files are writable.'
+				'message' 	=> Translations::translate('Something went wrong. Please refresh the page and check, if all folders and files are writable.')
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
 
 		# add prefix number to the name
@@ -488,10 +489,10 @@ class ControllerApiAuthorArticle extends Controller
 			if(!$storage->writeFile('contentFolder', $folderPath, $namePath . '.txt', $content))
 			{
 				$response->getBody()->write(json_encode([
-					'message' 	=> 'We could not create the file. Please refresh the page and check, if all folders and files are writable.'
+					'message' 	=> Translations::translate('We could not create the file. Please refresh the page and check, if all folders and files are writable.')
 				]));
 
-				return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 			}
 			$storage->updateYaml('contentFolder', $folderPath, $namePath . '.yaml', ['meta' => ['navtitle' => $params['item_name']]]);
 		}
@@ -500,10 +501,10 @@ class ControllerApiAuthorArticle extends Controller
 			if(!$storage->checkFolder('contentFolder', $folderPath, $namePath))
 			{
 				$response->getBody()->write(json_encode([
-					'message' 	=> 'We could not create the folder. Please refresh the page and check, if all folders and files are writable.'
+					'message' 	=> Translations::translate('We could not create the folder. Please refresh the page and check, if all folders and files are writable.')
 				]));
 
-				return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 			}
 			$storage->writeFile('contentFolder', $folderPath . DIRECTORY_SEPARATOR . $namePath, 'index.txt', $content);
 			$storage->updateYaml('contentFolder', $folderPath . DIRECTORY_SEPARATOR . $namePath, 'index.yaml', ['meta' => ['navtitle' => $params['item_name']]]);
@@ -529,10 +530,10 @@ class ControllerApiAuthorArticle extends Controller
 		if(!$validRights)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'You do not have enough rights.',
+				'message' 	=> Translations::translate('You do not have enough rights.'),
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);			
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
 		}
 
 		$params 			= $request->getParsedBody();
@@ -571,10 +572,10 @@ class ControllerApiAuthorArticle extends Controller
 			if(!$folder)
 			{ 
 				$response->getBody()->write(json_encode([
-					'message' 	=> 'We could not find this page. Please refresh and try again.'
+					'message' 	=> Translations::translate('We could not find this page. Please refresh and try again.')
 				]));
 
-				return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 			}
 
 			$folderContent		= $folder->folderContent;
@@ -594,10 +595,10 @@ class ControllerApiAuthorArticle extends Controller
 			if($folderItem->slug == $slug)
 			{
 				$response->getBody()->write(json_encode([
-					'message' 	=> 'There is already a page with this name. Please choose another name.'
+					'message' 	=> Translations::translate('There is already a page with this name. Please choose another name.')
 				]));
 
-				return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(402);
 			}
 		}
 
@@ -612,20 +613,20 @@ class ControllerApiAuthorArticle extends Controller
 			if(!$storage->writeFile('contentFolder', $folderPath, $namePath . '.txt', $content))
 			{
 				$response->getBody()->write(json_encode([
-					'message' 	=> 'We could not create the file. Please refresh the page and check, if all folders and files are writable.'
+					'message' 	=> Translations::translate('We could not create the file. Please refresh the page and check, if all folders and files are writable.')
 				]));
 
-				return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 			}
 			$storage->updateYaml('contentFolder', $folderPath, $namePath . '.yaml', ['meta' => ['navtitle' => $params['item_name']]]);
 		}
 		elseif($params['type'] == 'folder')
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'We cannot create a folder, only files.'
+				'message' 	=> Translations::translate('We cannot create a folder, only files.')
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(402);
 		}
 
 		$navigation->clearNavigation();
@@ -647,10 +648,10 @@ class ControllerApiAuthorArticle extends Controller
 		if(!$validRights)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'You do not have enough rights.',
+				'message' 	=> Translations::translate('You do not have enough rights.'),
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);			
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
 		}
 
 		$params 			= $request->getParsedBody();
@@ -673,7 +674,7 @@ class ControllerApiAuthorArticle extends Controller
 		if(!$item)
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'page not found',
+				'message' => Translations::translate('page not found'),
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
@@ -696,10 +697,10 @@ class ControllerApiAuthorArticle extends Controller
 			if($sibling->slug == $params['slug'])
 			{
 				$response->getBody()->write(json_encode([
-					'message' => 'There is already a page with that slug',
+					'message' => Translations::translate('There is already a page with that slug'),
 				]));
 
-				return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(402);
 			}
 		}
 
@@ -735,10 +736,10 @@ class ControllerApiAuthorArticle extends Controller
 		if(!$validRights)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'You do not have enough rights.',
+				'message' 	=> Translations::translate('You do not have enough rights.'),
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);			
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
 		}
 
 		$params 			= $request->getParsedBody();
@@ -832,12 +833,12 @@ class ControllerApiAuthorArticle extends Controller
 		if($writeError)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 		=> 'Something went wrong. Please refresh the page and check, if all folders and files are writable.',
+				'message' 		=> Translations::translate('Something went wrong. Please refresh the page and check, if all folders and files are writable.'),
 				'navigation' 	=> $draftNavigation,
 				'url'			=> false
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
 
 		# refresh navigation and item
@@ -864,10 +865,10 @@ class ControllerApiAuthorArticle extends Controller
 		if(!$validRights)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'You do not have enough rights.',
+				'message' 	=> Translations::translate('You do not have enough rights.'),
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);			
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);			
 		}
 
 		$params 			= $request->getParsedBody();
@@ -890,7 +891,7 @@ class ControllerApiAuthorArticle extends Controller
 		if(!$item)
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'page not found',
+				'message' => Translations::translate('page not found'),
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
@@ -914,7 +915,7 @@ class ControllerApiAuthorArticle extends Controller
 				'message' => $result,
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);			
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
 
 		# refresh navigation

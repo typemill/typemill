@@ -8,6 +8,7 @@ use Slim\Routing\RouteContext;
 use Typemill\Models\Navigation;
 use Typemill\Models\Validation;
 use Typemill\Models\Content;
+use Typemill\Static\Translations;
 
 class ControllerApiAuthorBlock extends Controller
 {
@@ -17,10 +18,10 @@ class ControllerApiAuthorBlock extends Controller
 		if(!$validRights)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'You do not have enough rights.',
+				'message' 	=> Translations::translate('You do not have enough rights.'),
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);			
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
 		}
 
 		$params 			= $request->getParsedBody();
@@ -44,7 +45,7 @@ class ControllerApiAuthorBlock extends Controller
 		if(!$item)
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'page not found',
+				'message' => Translations::translate('page not found'),
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
@@ -65,7 +66,7 @@ class ControllerApiAuthorBlock extends Controller
 		elseif(($params['block_id'] == 0) OR !isset($draftMarkdown[$params['block_id']]))
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'Block-id not found.',
+				'message' => Translations::translate('Block-id not found.'),
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
@@ -81,10 +82,10 @@ class ControllerApiAuthorBlock extends Controller
 		if($store !== true)
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'We could not store the content: ' . $store,
+				'message' => Translations::translate('We could not store the content: ') . $store,
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
 
 		$draftMarkdownHtml	= $content->addDraftHtml($draftMarkdown);
@@ -122,10 +123,10 @@ class ControllerApiAuthorBlock extends Controller
 		if(!$validRights)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'You do not have enough rights.',
+				'message' 	=> Translations::translate('You do not have enough rights.'),
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);			
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);			
 		}
 
 		$params 			= $request->getParsedBody();
@@ -148,7 +149,7 @@ class ControllerApiAuthorBlock extends Controller
 		if(!$item)
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'page not found',
+				'message' => Translations::translate('page not found'),
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
@@ -161,7 +162,7 @@ class ControllerApiAuthorBlock extends Controller
 		if(!isset($draftMarkdown[$params['index_old']]))
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'Block-id not found',
+				'message' => Translations::translate('Block-id not found'),
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
@@ -174,10 +175,10 @@ class ControllerApiAuthorBlock extends Controller
 		if($store !== true)
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'We could not store the content: ' . $store,
+				'message' => Translations::translate('We could not store the content: ') . $store,
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
 
 		$draftMarkdownHtml	= $content->addDraftHtml($draftMarkdown);
@@ -215,10 +216,10 @@ class ControllerApiAuthorBlock extends Controller
 		if(!$validRights)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'You do not have enough rights.',
+				'message' 	=> Translations::translate('You do not have enough rights.'),
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);			
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);			
 		}
 
 		$params 			= $request->getParsedBody();
@@ -241,7 +242,7 @@ class ControllerApiAuthorBlock extends Controller
 		if(!$item)
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'page not found',
+				'message' => Translations::translate('page not found'),
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
@@ -254,7 +255,7 @@ class ControllerApiAuthorBlock extends Controller
 		if(!isset($draftMarkdown[$params['block_id']]))
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'Block-id not found.',
+				'message' => Translations::translate('Block-id not found.'),
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
@@ -280,10 +281,10 @@ class ControllerApiAuthorBlock extends Controller
 		if($store !== true)
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'We could not store the content: ' . $store,
+				'message' => Translations::translate('We could not store the content: ') . $store,
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
 
 		$draftMarkdownHtml	= $content->addDraftHtml($draftMarkdown);
@@ -321,10 +322,10 @@ class ControllerApiAuthorBlock extends Controller
 		if(!$validRights)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> 'You do not have enough rights.',
+				'message' 	=> Translations::translate('You do not have enough rights.'),
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(422);			
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);			
 		}
 
 		$params 			= $request->getParsedBody();
@@ -347,7 +348,7 @@ class ControllerApiAuthorBlock extends Controller
 		if(!$item)
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'page not found',
+				'message' => Translations::translate('page not found'),
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
@@ -361,7 +362,7 @@ class ControllerApiAuthorBlock extends Controller
 		if(!isset($draftMarkdown[$params['block_id']]))
 		{ 
 			$response->getBody()->write(json_encode([
-				'message' => 'The ID of the content-block is wrong.',
+				'message' => Translations::translate('The ID of the content-block is wrong.'),
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
@@ -377,10 +378,10 @@ class ControllerApiAuthorBlock extends Controller
 		if($store !== true)
 		{
 			$response->getBody()->write(json_encode([
-				'message' => 'We could not store the content: ' . $store,
+				'message' => Translations::translate('We could not store the content: ') . $store,
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
 
 		$draftMarkdownHtml	= $content->addDraftHtml($draftMarkdown);
