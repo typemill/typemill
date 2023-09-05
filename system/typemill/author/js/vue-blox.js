@@ -122,7 +122,8 @@ bloxeditor.component('new-block',{
 			formats: bloxFormats,
 			componentType: false,
 			disabled: false,
-			newblockmarkdown: ''
+			newblockmarkdown: '',
+			unsafedcontent: false,
 		}
 	},
 	mounted: function()
@@ -132,20 +133,39 @@ bloxeditor.component('new-block',{
 		eventBus.$on('inlineFormat', content => {
 			this.newblockmarkdown = content;
 		});
+
+		eventBus.$on('lockcontent', content => {
+			this.unsafedcontent = true;
+		});
+
+		eventBus.$on('unlockcontent', content => {
+			this.unsafedcontent = false;
+		});
 	},
 	methods: {
 		setComponentType(event, componenttype)
 		{
-			this.componentType = componenttype;
+			if(this.unsafedcontent)
+			{
+				eventBus.$emit('publishermessage', 'Save or cancel your changes first.');
+			}
+			else
+			{
+				eventBus.$emit('freezeblocks');
+
+				this.componentType = componenttype;
+			}
 		},
 		closeComponent()
 		{
 			this.componentType = false;
 			this.newblockmarkdown = '';
+			eventBus.$emit('unlockcontent');
 			eventBus.$emit('publisherclear');
 		},
 		updateMarkdownFunction(value)
 		{
+			eventBus.$emit('lockcontent');
 			this.newblockmarkdown = value;
 		},
 		beforeSaveNew()
@@ -248,6 +268,7 @@ bloxeditor.component('content-block', {
 			newblock: false,
 			formats: bloxFormats,
 			load: false,
+			unsafedcontent: false,
 		}
 	},
 	mounted: function()
@@ -259,17 +280,33 @@ bloxeditor.component('content-block', {
 		eventBus.$on('inlineFormat', content => {
 			this.updatedmarkdown = content;
 		});
+
+		eventBus.$on('lockcontent', content => {
+			this.unsafedcontent = true;
+		});
+
+		eventBus.$on('unlockcontent', content => {
+			this.unsafedcontent = false;
+		});
 	},
 	methods: {
 		openNewBlock()
 		{
-			eventBus.$emit('freeze');
+			if(this.unsafedcontent)
+			{
+				eventBus.$emit('publishermessage', 'Save or cancel your changes first.');
+			}
+			else
+			{
+				eventBus.$emit('freeze');
 
-			this.newblock 			= true;
-			this.edit 				= false;
+				this.newblock 		= true;
+				this.edit 			= false;
+			}
 		},
 		closeNewBlock()
 		{
+			eventBus.$emit('unlockcontent');
 			eventBus.$emit('unfreeze');
 			eventBus.$emit('publisherclear');
 
@@ -277,6 +314,7 @@ bloxeditor.component('content-block', {
 		},
 		closeEditor()
 		{
+			eventBus.$emit('unlockcontent');			
 			eventBus.$emit('closeEditor');
 			eventBus.$emit('unfreeze');
 			eventBus.$emit('publisherclear');
@@ -288,14 +326,21 @@ bloxeditor.component('content-block', {
 		},
 		showEditor()
 		{
-			eventBus.$emit('closeComponents');
-			eventBus.$emit('freeze');
+			if(this.unsafedcontent)
+			{
+				eventBus.$emit('publishermessage', 'Save or cancel your changes first.');
+			}
+			else
+			{
+				eventBus.$emit('closeComponents');
+				eventBus.$emit('freeze');
 
-			this.edit = true;
+				this.edit = true;
 
-			this.componentType = this.determineBlockType();
+				this.componentType = this.determineBlockType();
 
-			this.updatedmarkdown = this.element.markdown;
+				this.updatedmarkdown = this.element.markdown;
+			}
 		},
 		determineBlockType()
 		{
@@ -322,6 +367,7 @@ bloxeditor.component('content-block', {
 		},
 		updateMarkdownFunction(value)
 		{
+			eventBus.$emit('lockcontent');
 			this.updatedmarkdown = value;
 		},
 		disableSort()
@@ -344,6 +390,7 @@ bloxeditor.component('content-block', {
 			})
 			.then(function (response)
 			{
+				eventBus.$emit('unlockcontent');
 				self.load = false;
 				self.$root.$data.content = response.data.content;
 				if(response.data.navigation)
@@ -389,14 +436,6 @@ bloxeditor.component('content-block', {
 				return;
 			}
 
-/*
-			if(typeof this.$refs.activeComponent.saveBlock === "function")
-			{
-				this.$refs.activeComponent.saveBlock(this.updatedmarkdown);
-				return; 
-			}
-*/
-
 			var self = this;
 			
 			this.load = true;
@@ -409,6 +448,7 @@ bloxeditor.component('content-block', {
 			})
 			.then(function (response)
 			{
+				eventBus.$emit('unlockcontent');
 				self.load = false;
 				self.$root.$data.content = response.data.content;
 				if(response.data.navigation)
