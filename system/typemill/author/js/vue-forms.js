@@ -204,12 +204,12 @@ app.component('component-checkboxlist', {
 				  	@change="update(checkedoptions, name)">
 				  	<span class="ml-2 text-sm">{{ $filters.translate(option) }}</span>
 			  	</label>
-			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
-			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
+				<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
+				<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
 			  </div>`,
 	mounted: function()
 	{
-		if(typeof this.value === 'object')
+		if(this.value && typeof this.value === 'object')
 		{
 			this.checkedoptions = this.value;
 		}
@@ -563,7 +563,7 @@ app.component('component-hidden', {
 })
 
 app.component('component-customfields', {
-	props: ['id', 'description', 'readonly', 'required', 'disabled', 'options', 'label', 'name', 'type', 'value', 'errors'],
+	props: ['id', 'description', 'readonly', 'required', 'disabled', 'options', 'label', 'name', 'type', 'css', 'value', 'errors'],
 	data: function () {
 		return {
 			fielderrors: false,
@@ -572,20 +572,47 @@ app.component('component-customfields', {
 			cfvalue: [{}]
 		 }
 	},
-	template: `<div>
-				<label class="mb2">{{ $filters.translate(label) }}</label>
-			  	<div class="fielddescription mb2 f7">{{ $filters.translate(description) }}</div>
-			  	<div v-if="errors[name]" class="error mb2 f7">{{ errors[name] }}</div>
-			  	<transition name="fade"><div v-if="fielderrors" class="error mb2 f7">{{ fielderrors }}</div></transition>
-	  			<transition-group name="fade" tag="div"> 
-	  				<div class="customrow flex items-start mb3" v-for="(pairobject, pairindex) in cfvalue" :key="pairindex">
-						<input type="text" placeholder="key" class="customkey" :class="pairobject.keyerror" :value="pairobject.key" @input="updatePairKey(pairindex,$event)">
-				  		<div class="mt3"><svg class="icon icon-dots-two-vertical"><use xlink:href="#icon-dots-two-vertical"></use></svg></div> 
-		  			  	<textarea placeholder="value" class="customvalue pa3" :class="pairobject.valueerror" v-html="pairobject.value" @input="updatePairValue(pairindex,$event)"></textarea>
-						<button class="bg-tm-red white bn ml2 h1 w2 br1" @click.prevent="deleteField(pairindex)"><svg class="icon icon-minus"><use xlink:href="#icon-minus"></use></svg></button>
+	template: `<div :class="css ? css : 'w-full'" class="mt-5 mb-5">
+				<label :for="name" class="block mb-1 font-medium">{{ $filters.translate(label) }}</label>
+			  	<p v-if="fielderrors" class="text-xs text-red-500">{{ fielderrors }}</p>
+			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
+	  			<transition-group name="fade" tag="div">
+	  				<div class="relative flex mb-3" v-for="(pairobject, pairindex) in cfvalue" :key="pairindex">
+						<div>
+							<input 
+								type="text" 
+								placeholder="key" 
+								class="h-12 w-full border px-2 py-3 border-stone-300 bg-stone-200" 
+								:class="pairobject.keyerror" 
+								:value="pairobject.key" 
+								@input="updatePairKey(pairindex,$event)">
+				  		</div>
+				  		<div class="flex-grow">
+				  			<div class="flex">
+					  			<svg class="icon icon-dots-two-vertical mt-3">
+					  				<use xlink:href="#icon-dots-two-vertical"></use>
+					  			</svg>
+				  			  	<textarea 
+				  			  		placeholder="value" 
+									class="w-full border px-2 py-3 border-stone-300 bg-stone-200" 
+				  			  		:class="pairobject.valueerror" 
+				  			  		v-html="pairobject.value" 
+				  			  		@input="updatePairValue(pairindex,$event)"></textarea>
+								<button class="text-white bg-stone-700 w-6 h-6 text-xs hover:bg-rose-500 ml-1" @click.prevent="deleteField(pairindex)">
+									<svg class="icon icon-minus">
+										<use xlink:href="#icon-minus"></use>
+									</svg>
+								</button>
+							</div>
+				  		</div> 
 					</div>
 				</transition-group>
-				<button :disabled="disableaddbutton" class="bg-tm-green white bn br1 pa2 f6" @click.prevent="addField()"><svg class="icon icon-plus f7"><use xlink:href="#icon-plus"></use></svg> Add Fields</button>
+  				<button :disabled="disableaddbutton" class="text-white bg-stone-700 w-6 h-6 text-xs hover:bg-teal-500 mr-2" @click.prevent="addField()">
+	  				<svg class="icon icon-plus">
+	  					<use xlink:href="#icon-plus"></use>
+	  				</svg>
+	  			</button>
+	  			<span class="text-sm">{{ $filters.translate('add entry') }}</span>	
 			  </div>`,
 	mounted: function(){
 		if(typeof this.value === 'undefined' || this.value === null || this.value.length == 0)
@@ -606,7 +633,7 @@ app.component('component-customfields', {
 		update: function(value, name)
 		{
 			this.fielderrors = false;
-			this.errors = false;
+			this.mainerror = false;
 
 			/* transform array of objects [{key:mykey, value:myvalue}] into array [[mykey,myvalue]] */
 			var storedvalue = value.map(function(item){ return [item.key, item.value]; });
@@ -614,10 +641,10 @@ app.component('component-customfields', {
 			/* transform array [[mykey,myvalue]] into object { mykey:myvalue } */
 			storedvalue = Object.fromEntries(storedvalue);
 						
-			FormBus.$emit('forminput', {'name': name, 'value': storedvalue});
+			eventBus.$emit('forminput', {'name': name, 'value': storedvalue});
 		},
 		updatePairKey: function(index,event)
-		{
+		{			
 			this.cfvalue[index].key = event.target.value;
 
 			var regex = /^[a-z0-9]+$/i;
