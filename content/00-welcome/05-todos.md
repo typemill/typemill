@@ -103,17 +103,19 @@
 * Clear cache
 * Show security Log
 * User search only for +10 users
-* fix error messages
+* DONE: fix error messages (check models)
+* DONE: error status codes (check middleware)
 * Wrong frontend navigation if unpublished pages
 * Customfields not styled yet.
 * Warn if open another block
 * finish youtube component
 * Solution for logo and favicon
+* For api translations should be done completely in backoffice
 
 ## Cleanups:
 
 * DONE: Events
-* Error messages
+* DONE: Error messages
 * Translations
 * https://stackoverflow.com/questions/15041608/searching-all-files-in-folder-for-strings
 * https://github.com/skfaisal93/AnyWhereInFiles/blob/master/anywhereinfiles-1.4.php

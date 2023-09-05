@@ -21,7 +21,6 @@ class ApiAuthorization implements MiddlewareInterface
 	{
 		if(!$this->acl->isAllowed($request->getAttribute('c_userrole'), $this->resource, $this->action))
 		{
-
 			$message = 'userrole: ' . $request->getAttribute('c_userrole') . ' resource: ' . $this->resource . ' action: ' . $this->action;
 			$response = new Response();
 			
@@ -29,7 +28,7 @@ class ApiAuthorization implements MiddlewareInterface
 				'message' => $message
 			]));
 
-			return $response->withStatus(401);			
+			return $response->withStatus(403);			
 		}
 	
 		$response = $handler->handle($request);

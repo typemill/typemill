@@ -641,7 +641,6 @@ class ControllerApiAuthorArticle extends Controller
 		return $response->withHeader('Content-Type', 'application/json');
 	}
 
-
 	public function renameArticle(Request $request, Response $response, $args)
 	{
 		$validRights		= $this->validateRights($request->getAttribute('c_userrole'), 'mycontent', 'edit');
@@ -902,7 +901,15 @@ class ControllerApiAuthorArticle extends Controller
 		# check if it is a folder and if the folder has published pages.
 		if($item->elementType == 'folder')
 		{
-			$result = $content->deleteFolder($item);
+			# check if folder has published pages
+			if($content->hasPublishedItems($item))
+			{
+				$result = Translations::translate('The folder contains published pages. Please unpublish or delete them first.');
+			}
+			else
+			{
+				$result = $content->deleteFolder($item);
+			}
 		}
 		else
 		{

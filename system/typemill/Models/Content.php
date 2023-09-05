@@ -130,65 +130,18 @@ class Content
 		return true;
 	}
 
+	# overcomplicated. Next time just use a recursive delete everything method in storage
 	public function deleteFolder($item, $result = true)
 	{
-		if($item->elementType == 'folder' && isset($item->folderContent) && is_array($item->folderContent) && !empty($item->folderContent))
+		if($this->storage->deleteContentFolderRecursive($item->path))
 		{
-			if($this->hasPublishedItems($item))
-			{
-				return 'The folder contains published pages. Please unpublish or delete them first.';
-			}
-
-			foreach($item->folderContent as $subitem)
-			{
-				if($subitem->elementType == 'folder')
-				{
-					$result = $this->deleteFolder($subitem);
-				}
-				else
-				{
-					$result = $this->deletePage($subitem);
-				}
-
-				if($result !== true)
-				{ 
-					return $result; 
-				}
-			}
-
-			$result = $this->deletePage($item);
-
-			if($result !== true)
-			{
-				return $result;
-			}
-
-			$result = $this->storage->deleteContentFolder($item->path);
-
-			if($result !== true)
-			{
-				return $this->storage->getError();
-			}
+			return true;
 		}
-
-		$result = $this->deletePage($item);
-
-		if($result !== true)
-		{
-			return $result;
-		}
-
-		$result = $this->storage->deleteContentFolder($item->path);
-
-		if($result !== true)
-		{
-			return $this->storage->getError();
-		}
-
-		return true;
+			
+		return $this->storage->getError();
 	}
 
-	private function hasPublishedItems($folder, $published = false)
+	public function hasPublishedItems($folder, $published = false)
 	{
 		$published = false;
 

@@ -203,6 +203,48 @@ class Storage
 		return true;
 	}
 
+	public function deleteContentFolderRecursive($folderpath)
+	{
+		$folderdir = $this->getFolderPath('contentFolder');
+
+		if(!is_dir($folderdir . $folderpath))
+		{
+			$this->error = "$folderpath is not a directory";
+			return false;
+		}
+
+		$filelist = array_diff(scandir($folderdir . $folderpath), array('..', '.'));
+		if(!empty($filelist))
+		{
+			foreach($filelist as $filepath)
+			{
+				$fullfilepath = $folderdir . $folderpath . DIRECTORY_SEPARATOR . $filepath;
+				if(is_dir($fullfilepath))
+				{
+					$this->deleteContentFolderRecursive($folderpath . DIRECTORY_SEPARATOR . $filepath);
+				}
+				else
+				{
+					if(!unlink($fullfilepath))
+					{
+						$this->error = "Could not delete file $fullfilepath.";
+
+						return false;
+					}
+				}
+			}
+		}
+
+		if(!rmdir($folderdir . $folderpath))
+		{
+			$this->error = "Could not delete folder $folderpath.";
+			
+			return false;
+		}
+		
+		return true;
+	}
+
 	public function checkFile($location, $folder, $filename)
 	{
 		$filepath = $this->getFolderPath($location, $folder) . $filename;
