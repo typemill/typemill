@@ -119,8 +119,10 @@ class ApiAuthentication
 
 		$response = new Response();
 
-		$response->getBody()->write('Access not allowed.');
-
+		$response->getBody()->write(json_encode([
+			'message' => 'Authentication required.'
+		]));
+		
 		return $response->withStatus(401);
 	}
 }

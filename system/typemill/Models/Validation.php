@@ -303,7 +303,7 @@ class Validation
 		$v->rule('noHTML', 'firstname')->message(" contains HTML");
 		$v->rule('lengthBetween', 'firstname', 2, 40);
 		$v->rule('noHTML', 'lastname')->message(" contains HTML");
-		$v->rule('lengthBetween', 'lastname', 2, 40);		
+		$v->rule('lengthBetween', 'lastname', 2, 40);
 		$v->rule('email', 'email')->message("e-mail is invalid");
 		$v->rule('emailChanged', 'email')->message("Email already taken");
 		$v->rule('in', 'userrole', $userroles);
@@ -314,6 +314,33 @@ class Validation
 		}
 
 		return $v->errors();
+	}
+
+	public function username(array $params)
+	{
+		$v = new Validator($params);
+		$v->rule('required', ['username'])->message("required");
+		$v->rule('alphaNum', 'username')->message("invalid");
+		$v->rule('lengthBetween', 'username', 3, 20)->message("Length between 3 - 20");
+		if($v->validate()) 
+		{
+			return true;
+		}
+		return false;
+	}
+
+	public function emailsearch(array $params)
+	{
+		# param can be "trend*"
+		$v = new Validator($params);
+		$v->rule('required', ['email'])->message("required");
+		$v->rule('noHTML', 'email')->message(" contains HTML");
+		$v->rule('lengthBetween', 'email', 3, 50)->message("Length between 3 - 50");
+		if($v->validate()) 
+		{
+			return true;
+		}
+		return false;
 	}
 
 	public function newLicense(array $params)

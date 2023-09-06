@@ -10,24 +10,26 @@ use Typemill\Static\Translations;
 
 class ControllerApiSystemUsers extends Controller
 {
-	# getCurrentUser
-	# getUserByName
-
-	#returns userdata
+	#returns userdata no in use???
 	public function getUsersByNames(Request $request, Response $response, $args)
 	{
 		$usernames 		= $request->getQueryParams()['usernames'] ?? false;
 		$user			= new User();
 		$userdata 		= [];
 
-		if($usernames)
+		$validate		= new Validation();		
+
+		if($usernames && is_array($usernames))
 		{
 			foreach($usernames as $username)
 			{
-				$existinguser = $user->setUser($username);
-				if($existinguser)
+				if($validate->username(['username' => $username]))
 				{
-					$userdata[] = $user->getUserData();
+					$existinguser = $user->setUser($username);
+					if($existinguser)
+					{
+						$userdata[] = $user->getUserData();
+					}
 				}
 			}
 		}
@@ -46,14 +48,20 @@ class ControllerApiSystemUsers extends Controller
 		$user			= new User();
 		$userdata 		= [];
 
-		$usernames 		= $user->findUsersByEmail($email);
+		$validate		= new Validation();
+		$valresult 		= $validate->emailsearch(['email' => $email]);
 
-		if($usernames)
+		if($valresult)
 		{
-			foreach($usernames as $username)
+			$usernames 		= $user->findUsersByEmail($email);
+
+			if($usernames)
 			{
-				$user->setUser($username);
-				$userdata[] = $user->getUserData();
+				foreach($usernames as $username)
+				{
+					$user->setUser($username);
+					$userdata[] = $user->getUserData();
+				}
 			}
 		}
 
@@ -71,14 +79,21 @@ class ControllerApiSystemUsers extends Controller
 		$user			= new User();
 		$userdata 		= [];
 
-		$usernames 		= $user->findUsersByRole($role);
+		$userroles 		= $this->c->get('acl')->getRoles();
 
-		if($usernames)
+		if($role && in_array($role, $userroles))
 		{
-			foreach($usernames as $username)
+			$usernames 		= $user->findUsersByRole($role);
+
+			if($usernames)
 			{
-				$user->setUser($username);
-				$userdata[] = $user->getUserData();
+				foreach($usernames as $username)
+				{
+					if($user->setUser($username))
+					{
+						$userdata[] = $user->getUserData();
+					}
+				}
 			}
 		}
 

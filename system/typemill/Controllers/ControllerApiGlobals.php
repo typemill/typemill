@@ -14,7 +14,8 @@ class ControllerApiGlobals extends Controller
 		$systemNavigation	= $navigation->getSystemNavigation(
 									$userrole 	= $request->getAttribute('c_userrole'),
 									$acl 		= $this->c->get('acl'),
-									$urlinfo 	= $this->c->get('urlinfo')
+									$urlinfo 	= $this->c->get('urlinfo'),
+									$dispatcher = $this->c->get('dispatcher')
 								);
 
 		# won't work because api has no session, instead you have to pass user

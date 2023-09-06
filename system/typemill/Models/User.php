@@ -217,7 +217,7 @@ class User
 		}
 	}
 	
-	public function generatePassword($password)
+	public function generatePassword(string $password)
 	{
 		return \password_hash($password, PASSWORD_DEFAULT, ['cost' => 10]);
 	}
@@ -232,7 +232,7 @@ class User
 */
 
 	# accepts email with or without asterix and returns userdata
-	public function findUsersByEmail($email)
+	public function findUsersByEmail(string $email)
 	{
 		$usernames = [];
 
@@ -269,7 +269,7 @@ class User
 		}
 	}
 
-	private function searchEmailSimple($usernames, $email)
+	private function searchEmailSimple(array $usernames, string $email)
 	{
 		foreach($usernames as $username)
 		{
@@ -284,7 +284,7 @@ class User
 		return false;
 	}
 
-	private function searchEmailByIndex($email)
+	private function searchEmailByIndex(string $email)
 	{
 		# if there are more than 10 users, search with an index
 		$usermails 	= $this->getUserMailIndex();
@@ -388,7 +388,9 @@ class User
 
 		foreach($usernames as $username)
 		{
-			$userdata = $this->getSecureUser($username);
+
+			$this->setUser($username);
+			$userdata = $this->getUserData();
 
 			$userroleindex[$userdata['userrole']][] = $username;
 		}
@@ -400,12 +402,15 @@ class User
 
 	protected function deleteUserIndex()
 	{
-		$userDir = __DIR__ . '/../../settings/users';
-				
-		if(file_exists($userDir . DIRECTORY_SEPARATOR . 'tmuserindex-mail.txt'))
+
+		if(file_exists($this->userDir . DIRECTORY_SEPARATOR . 'tmuserindex-mail.txt'))
 		{
-			# read and return the file
-			unlink($userDir . DIRECTORY_SEPARATOR . 'tmuserindex-mail.txt');
+			unlink($this->userDir . DIRECTORY_SEPARATOR . 'tmuserindex-mail.txt');
+		}
+
+		if(file_exists($this->userDir . DIRECTORY_SEPARATOR . 'tmuserindex-role.txt'))
+		{
+			unlink($this->userDir . DIRECTORY_SEPARATOR . 'tmuserindex-role.txt');
 		}
 	}
 }
