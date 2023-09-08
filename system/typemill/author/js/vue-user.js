@@ -6,23 +6,23 @@ const app = Vue.createApp({
 							<fieldset class="flex flex-wrap justify-between border-2 border-stone-200 p-4 my-8" v-if="fieldDefinition.type == 'fieldset'">
 								<legend class="text-lg font-medium">{{ $filters.translate(fieldDefinition.legend) }}</legend>
 								<component v-for="(subfieldDefinition, subfieldname) in fieldDefinition.fields"
-				            	    :key="subfieldname"
-				                	:is="selectComponent(subfieldDefinition.type)"
-				                	:errors="errors"
-				                	:name="subfieldname"
-				                	:userroles="userroles"
-				                	:value="formData[subfieldname]" 
-				                	v-bind="subfieldDefinition">
+									:key="subfieldname"
+									:is="selectComponent(subfieldDefinition.type)"
+									:errors="errors"
+									:name="subfieldname"
+									:userroles="userroles"
+									:value="formData[subfieldname]" 
+									v-bind="subfieldDefinition">
 								</component>
 							</fieldset>
 							<component v-else
-			            	    :key="fieldname"
-			                	:is="selectComponent(fieldDefinition.type)"
-			                	:errors="errors"
-			                	:name="fieldname"
-			                	:userroles="userroles"
-			                	:value="formData[fieldname]" 
-			                	v-bind="fieldDefinition">
+								:key="fieldname"
+								:is="selectComponent(fieldDefinition.type)"
+								:errors="errors"
+								:name="fieldname"
+								:userroles="userroles"
+								:value="formData[fieldname]" 
+								v-bind="fieldDefinition">
 							</component>
 						</div>
 						<div class="my-5">
@@ -33,15 +33,15 @@ const app = Vue.createApp({
 					<div class="my-5 text-center">
 						<button @click.prevent="showModal = true" class="p-3 px-4 text-rose-500 border border-rose-100 hover:border-rose-500 cursor-pointer transition duration-100">{{ $filters.translate('delete user') }}</button>
 						<modal v-if="showModal" @close="showModal = false">
-					    	<template #header>
-					    		<h3>{{ $filters.translate('Delete user') }}</h3>
-					    	</template>
-					    	<template #body>
-					    		<p>{{ $filters.translate('Do you really want to delete this user') }}?</p>
-					    	</template>
-					    	<template #button>
-					    		<button @click="deleteuser()" class="focus:outline-none px-4 p-3 mr-3 text-white bg-rose-500 hover:bg-rose-700 transition duration-100">{{ $filters.translate('delete user') }}</button>
-					    	</template>
+							<template #header>
+								<h3>{{ $filters.translate('Delete user') }}</h3>
+							</template>
+							<template #body>
+								<p>{{ $filters.translate('Do you really want to delete this user') }}?</p>
+							</template>
+							<template #button>
+								<button @click="deleteuser()" class="focus:outline-none px-4 p-3 mr-3 text-white bg-rose-500 hover:bg-rose-700 transition duration-100">{{ $filters.translate('delete user') }}</button>
+							</template>
 						</modal>
 					</div>
 				</div>
@@ -89,11 +89,14 @@ const app = Vue.createApp({
 			})
 			.catch(function (error)
 			{
-				self.messageClass = 'bg-rose-500';
-				self.message = error.response.data.message;
-				if(error.response.data.errors !== undefined)
+				if(error.response)
 				{
-					self.errors = error.response.data.errors;
+					self.messageClass = 'bg-rose-500';
+					self.message = handleErrorMessage(error);
+					if(error.response.data.errors !== undefined)
+					{
+						self.errors = error.response.data.errors;
+					}
 				}
 			});
 		},
@@ -117,12 +120,15 @@ const app = Vue.createApp({
 			})
 			.catch(function (error)
 			{
-				self.showModal = false;
-				self.messageClass = 'bg-rose-500';
-				self.message = error.response.data.message;
-				if(error.response.data.errors !== undefined)
+				if(error.response)
 				{
-					self.errors = error.response.data.errors;
+					self.showModal = false;
+					self.messageClass = 'bg-rose-500';
+					self.message = handleErrorMessage(error);
+					if(error.response.data.errors !== undefined)
+					{
+						self.errors = error.response.data.errors;
+					}
 				}
 			});
 		},

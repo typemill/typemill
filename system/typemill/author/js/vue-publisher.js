@@ -86,48 +86,48 @@ const publisher = Vue.createApp({
 				</div>
 				<transition name="fade">
 					<modal v-if="showModal == 'discard'" @close="showModal = false">
-				    	<template #header>
-				    		<h3>{{ $filters.translate('Discard changes') }}</h3>
-				    	</template>
-				    	<template #body>
-				    		<p>{{ $filters.translate('Do you want to discard your changes and set the content back to the live version') }}?</p>
-				    	</template>
-				    	<template #button>
-				    		<button @click="discardChanges" class="focus:outline-none px-4 p-3 mr-3 text-white bg-rose-500 hover:bg-rose-700 transition duration-100">{{ $filters.translate('Discard changes') }}</button>
-				    	</template>
+						<template #header>
+							<h3>{{ $filters.translate('Discard changes') }}</h3>
+						</template>
+						<template #body>
+							<p>{{ $filters.translate('Do you want to discard your changes and set the content back to the live version') }}?</p>
+						</template>
+						<template #button>
+							<button @click="discardChanges" class="focus:outline-none px-4 p-3 mr-3 text-white bg-rose-500 hover:bg-rose-700 transition duration-100">{{ $filters.translate('Discard changes') }}</button>
+						</template>
 					</modal>
 				</transition>
 				<transition name="fade">
 					<modal v-if="showModal == 'delete'" @close="showModal = false">
-				    	<template #header>
-				    		<h3>{{ $filters.translate('Delete page') }}</h3>
-				    	</template>
-				    	<template #body>
-				    		<p>
-				    			{{ $filters.translate('Do you really want to delete this page') }}? 
-				    			{{ $filters.translate('Please confirm') }}.
-				    		</p>
-				    	</template>
-				    	<template #button>
-				    		<button @click="deleteArticle" class="focus:outline-none px-4 p-3 mr-3 text-white bg-rose-500 hover:bg-rose-700 transition duration-100">{{ $filters.translate('Delete page') }}</button>
-				    	</template>
+						<template #header>
+							<h3>{{ $filters.translate('Delete page') }}</h3>
+						</template>
+						<template #body>
+							<p>
+								{{ $filters.translate('Do you really want to delete this page') }}? 
+								{{ $filters.translate('Please confirm') }}.
+							</p>
+						</template>
+						<template #button>
+							<button @click="deleteArticle" class="focus:outline-none px-4 p-3 mr-3 text-white bg-rose-500 hover:bg-rose-700 transition duration-100">{{ $filters.translate('Delete page') }}</button>
+						</template>
 					</modal>
 				</transition>
 				<transition name="fade">
 					<modal v-if="showModal == 'unpublish'" @close="showModal = false">
-				    	<template #header>
-				    		<h3>{{ $filters.translate('Unpublish page') }}</h3>
-				    	</template>
-				    	<template #body>
-				    		<p>
-				    			{{ $filters.translate('This page has been modified') }}. 
-				    			{{ $filters.translate('If you unpublish the page, then we will delete the published version and keep the modified version') }}. 
-				    			{{ $filters.translate('Please confirm') }}.
-				    		</p>
-				    	</template>
-				    	<template #button>
-				    		<button @click="unpublishArticle" class="focus:outline-none px-4 p-3 mr-3 text-white bg-rose-500 hover:bg-rose-700 transition duration-100">{{ $filters.translate('Unpublish page') }}</button>
-				    	</template>
+						<template #header>
+							<h3>{{ $filters.translate('Unpublish page') }}</h3>
+						</template>
+						<template #body>
+							<p>
+								{{ $filters.translate('This page has been modified') }}. 
+								{{ $filters.translate('If you unpublish the page, then we will delete the published version and keep the modified version') }}. 
+								{{ $filters.translate('Please confirm') }}.
+							</p>
+						</template>
+						<template #button>
+							<button @click="unpublishArticle" class="focus:outline-none px-4 p-3 mr-3 text-white bg-rose-500 hover:bg-rose-700 transition duration-100">{{ $filters.translate('Unpublish page') }}</button>
+						</template>
 					</modal>
 				</transition>
 			</div>`,
@@ -175,47 +175,47 @@ const publisher = Vue.createApp({
 		isPublished()
 		{
 			return this.item.status == 'published' ? true : false;
-	    },
+		},
 		isModified()
 		{
 			return this.item.status == 'modified' ? true : false;
-	    },
+		},
 		isUnpublished()
 		{
 			return this.item.status == 'unpublished' ? true : false;
-	    },
-	    publishClass()
-	    {
-	    	if(this.item.status == 'unpublished')
-	    	{
-	    		return 'bg-teal-500 hover:bg-teal-600';
-	    	}
-	    	else
-	    	{
-	    		return 'bg-yellow-500 hover:bg-yellow-600';
-	    	}
-	    	/*
-	    	if(this.item.status == 'modified')
-	    	{
-	    		return 'bg-yellow-500 hover:bg-yellow-600';
-	    	}*/
-	    },
-	    nopublish()
-	    {
-	    	if(this.item.status != 'published')
-	    	{
-	    		return false;
-	    	}
-	    	return this.nochanges;
-	    },
-	    rawUrl()
-	    {
-	    	return data.urlinfo.baseurl + '/tm/content/raw' + this.item.urlRelWoF;
-	    },
-	    visualUrl()
-	    {
-	    	return data.urlinfo.baseurl + '/tm/content/visual' + this.item.urlRelWoF;
-	    },
+		},
+		publishClass()
+		{
+			if(this.item.status == 'unpublished')
+			{
+				return 'bg-teal-500 hover:bg-teal-600';
+			}
+			else
+			{
+				return 'bg-yellow-500 hover:bg-yellow-600';
+			}
+			/*
+			if(this.item.status == 'modified')
+			{
+				return 'bg-yellow-500 hover:bg-yellow-600';
+			}*/
+		},
+		nopublish()
+		{
+			if(this.item.status != 'published')
+			{
+				return false;
+			}
+			return this.nochanges;
+		},
+		rawUrl()
+		{
+			return data.urlinfo.baseurl + '/tm/content/raw' + this.item.urlRelWoF;
+		},
+		visualUrl()
+		{
+			return data.urlinfo.baseurl + '/tm/content/visual' + this.item.urlRelWoF;
+		},
 	},
 	methods: {
 		clearPublisher()
@@ -224,14 +224,14 @@ const publisher = Vue.createApp({
 			this.messageClass 	= false;
 			this.showModal 		= false;
 		},
-	    markChanges()
-	    {
-	    	this.nochanges = false;
-	    },
-	    unmarkChanges()
-	    {
-	    	this.nochanges = true;
-	    },
+		markChanges()
+		{
+			this.nochanges = false;
+		},
+		unmarkChanges()
+		{
+			this.nochanges = true;
+		},
 		getStatusClass(status)
 		{
 			if(status == 'published')
@@ -265,8 +265,13 @@ const publisher = Vue.createApp({
 			{
 				if(error.response)
 				{
-					self.message = error.response.data.message;
-					self.messageClass = "bg-rose-500";
+					let message = handleErrorMessage(error);
+
+					if(message)
+					{
+						self.message = message;
+						self.messageClass = "bg-rose-500";
+					}
 				}
 			});
 		},
@@ -286,7 +291,7 @@ const publisher = Vue.createApp({
 		{
 			self = this;
 
-	        tmaxios.delete('/api/v1/article/unpublish',{
+			tmaxios.delete('/api/v1/article/unpublish',{
 				data: {
 					'url':	data.urlinfo.route,
 					'item_id': this.item.keyPath,
@@ -300,10 +305,17 @@ const publisher = Vue.createApp({
 			})
 			.catch(function (error)
 			{
+				self.showModal = false;
+
 				if(error.response)
 				{
-					self.message = error.response.data.message;
-					self.messageClass = "bg-rose-500";
+					let message = handleErrorMessage(error);
+
+					if(message)
+					{
+						self.message = message;
+						self.messageClass = "bg-rose-500";
+					}
 				}
 			});
 		},
@@ -317,7 +329,7 @@ const publisher = Vue.createApp({
 					'item_id': this.item.keyPath,
 				}
 			})
-	        .then(function (response)
+			.then(function (response)
 			{
 				self.clearPublisher();
 				eventBus.$emit('item', response.data.item);
@@ -326,10 +338,17 @@ const publisher = Vue.createApp({
 			})
 			.catch(function (error)
 			{
+				self.showModal = false;
+
 				if(error.response)
 				{
-					self.message = error.response.data.message;
-					self.messageClass = "bg-rose-500";
+					let message = handleErrorMessage(error);
+
+					if(message)
+					{
+						self.message = message;
+						self.messageClass = "bg-rose-500";
+					}
 				}
 			});
 		},
@@ -345,23 +364,29 @@ const publisher = Vue.createApp({
 		{
 			var self = this;
 
-	        tmaxios.delete('/api/v1/article',{
+			tmaxios.delete('/api/v1/article',{
 				data: {
 					'url':	data.urlinfo.route,
 					'item_id': this.item.keyPath,
 				}
 			})
-	        .then(function (response)
-	        {
+			.then(function (response)
+			{
 				window.location.replace(response.data.url);
-	        })
+			})
 			.catch(function (error)
 			{
+				self.showModal = false;
+				
 				if(error.response)
 				{
-					self.showModal = false;
-					self.message = error.response.data.message;
-					self.messageClass = "bg-rose-500";
+					let message = handleErrorMessage(error);
+
+					if(message)
+					{
+						self.message = message;
+						self.messageClass = "bg-rose-500";
+					}
 				}
 			});
 		},

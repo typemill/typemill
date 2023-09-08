@@ -42,6 +42,7 @@
 				{% block content %}{% endblock %}
 			</article>
 		</div>
+		<div id="loginform"></div>
 		
 <!--		< csrf() | raw > -->
 
@@ -67,6 +68,7 @@
 		<script>
 			navigation.config.globalProperties.$filters = translatefilter;
 			navigation.mount('#contentNavigation');			
+			loginform.mount("#loginform");
 		</script>
 		{% block javascript %}{% endblock %}
 

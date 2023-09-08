@@ -1,5 +1,5 @@
 const posts = Vue.createApp({
-  	template: `<section id="posts" v-if="showPosts" class="px-12 py-8 bg-stone-50 shadow-md mb-16">
+	template: `<section id="posts" v-if="showPosts" class="px-12 py-8 bg-stone-50 shadow-md mb-16">
 				<div class="w-full relative">
 					<label class="block mb-1 font-medium">{{ $filters.translate('Short title for post') }}</label>
 					<div class="flex">
@@ -86,61 +86,66 @@ const posts = Vue.createApp({
 
 			var self = this;
 
-	        tmaxios.post('/api/v1/post',{
+			tmaxios.post('/api/v1/post',{
 					'folder_id': 	this.item.keyPath,
 					'item_name': 	this.posttitle,
 					'type':			'file',
 			})
-	        .then(function (response) 
-	        {
-	        	if(response.data.item)
-	        	{
-	        		self.posts = response.data.item.folderContent;
-	        		self.posttitle = '';
-	        	}
-	        })
-	        .catch(function (error)
-	        {
-	           	if(error.response)
-	            {
-					eventBus.$emit('publishermessage', error.response.data.errors);
-	            }
-	        });
+			.then(function (response) 
+			{
+				if(response.data.item)
+				{
+					self.posts = response.data.item.folderContent;
+					self.posttitle = '';
+				}
+			})
+			.catch(function (error)
+			{
+				if(error.response)
+				{
+					let message = handleErrorMessage(error);
+
+					if(message)
+					{
+						eventBus.$emit('publishermessage', message);
+					}
+				}
+			});
 		}
 	}
 })
 
 posts.component('single-post',{
-  	props: ['post', 'baseurl', 'editormode'],
-  	template: `<div class="my-4">
-      			<a :href="getUrl(post.urlRelWoF)" :class="getBorderStyle(post.status)" class="border-l border-l-4 w-full inline-block p-4 bg-stone-100 hover:bg-stone-200 transition duration-100">
-      				<h4 class="text-l font-bold">{{ post.name }} <span class="float-right text-xs font-normal">{{ getDate(post.order) }}</span></h4>
-      			</a>
-    		</div>`,
-    methods: {
-    	getBorderStyle(status)
-    	{
-    		if(status == 'published')
-    		{
-    			return "border-teal-500";
-    		}
-    		if(status == 'modified')
-    		{
-    			return "border-yellow-400";
-    		}
-    		if(status == 'unpublished')
-    		{
-    			return "border-rose-500";
-    		}
-    	},
-    	getUrl(posturl)
-    	{
+	props: ['post', 'baseurl', 'editormode'],
+	template: `<div class="my-4">
+				<a :href="getUrl(post.urlRelWoF)" :class="getBorderStyle(post.status)" class="border-l border-l-4 w-full inline-block p-4 bg-stone-100 hover:bg-stone-200 transition duration-100">
+					<h4 class="text-l font-bold">{{ post.name }} <span class="float-right text-xs font-normal">{{ getDate(post.order) }}</span></h4>
+				</a>
+			</div>`,
+	methods: {
+		getBorderStyle(status)
+		{
+			if(status == 'published')
+			{
+				return "border-teal-500";
+			}
+			if(status == 'modified')
+			{
+				return "border-yellow-400";
+			}
+			if(status == 'unpublished')
+			{
+				return "border-rose-500";
+			}
+		},
+		getUrl(posturl)
+		{
 			return this.baseurl + '/tm/content/' + this.editormode + this.post.urlRelWoF;
-    	},
-    	getDate(str)
-    	{
-    		var cleandate = [str.slice(0,4), str.slice(4,6), str.slice(6,8)];
-    		return cleandate.join("-");
-    	}
-    }
+		},
+		getDate(str)
+		{
+			var cleandate = [str.slice(0,4), str.slice(4,6), str.slice(6,8)];
+			return cleandate.join("-");
+		}
+	}
 })

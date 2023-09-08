@@ -97,9 +97,14 @@ const app = Vue.createApp({
 		})
 		.catch(function (error)
 		{
-		  if(error.response)
-		  {
-		  }
+			if(error.response)
+			{
+				let message = handleErrorMessage(error);
+				if(message)
+				{
+					eventBus.$emit('publishermessage', message);
+				}
+			}
 		});
 
 		eventBus.$on('forminput', formdata => {
@@ -146,9 +151,18 @@ const app = Vue.createApp({
 			{
 				if(error.response)
 				{
-					self.formErrors 	= error.response.data.errors;
 					self.message 		= 'please correct the errors above';
 					self.messageClass 	= 'bg-rose-500';
+					self.formErrors 	= error.response.data.errors;
+
+					let message = handleErrorMessage(error);
+
+/* does it make sense to change logic and show errors in publisher?
+					if(message)
+					{
+						eventBus.$emit('publishermessage', message);
+					}
+*/
 				}
 			});
 		},
@@ -175,7 +189,7 @@ app.component('tab-meta', {
 										class="h-12 w-3/4 border px-2 py-3 border-stone-300 bg-stone-200"
 										type="text" 
 										v-model="slug" 
-										pattern="[a-z0-9\- ]" 
+										pattern="[a-z0-9]" 
 										@input="changeSlug()"
 									/>
 									<button 
@@ -281,9 +295,17 @@ app.component('tab-meta', {
 				})
 				.catch(function (error)
 				{
-					eventBus.$emit('publishermessage', error.response.data.message);
+					if(error.response)
+					{
+						let message = handleErrorMessage(error);
+
+						if(message)
+						{
+							eventBus.$emit('publishermessage', message);
+						}
+					}
 				});
-		  	}
+			}
 		}
 	}
 })

@@ -10,7 +10,7 @@ const navigation = Vue.createApp({
 					<a :href="getUrl(home.urlRelWoF)" class="flex-grow p-1 pl-3 border-l-2 border-stone-50 hover:bg-teal-500 hover:text-stone-50" :class="home.active ? 'text-stone-50 bg-teal-500' : ''">
 						{{ $filters.translate(home.name) }}
 					</a>
-		  		</div>
+				</div>
 				<div class="pl-2 pl-3 pl-4 pl-6 pl-8 pl-9 pl-10 pl-12 pl-15 text-stone-50"></div>
 				<navilevel :navigation="navigation" :expanded="expanded" />
 			</div>`,
@@ -151,7 +151,7 @@ navigation.component('navilevel',{
 			}"
 			:expanded="expanded"
 		  >
-		    <template #item="{ element }">
+			<template #item="{ element }">
 				<li :class="element.elementType" :id="element.keyPath" :data-url="element.urlRelWoF" :data-active="element.active">
 					<div class="flex w-full my-px border-b border-stone-200 relative" :class="element.elementType == 'folder' ? 'font-bold' : ''">
 						<div class="border-l-4" :class="getStatusClass(element.status)"></div>
@@ -163,7 +163,7 @@ navigation.component('navilevel',{
 								<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
 								<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
 							</svg>
-      					</div>
+						</div>
 						<div v-if="element.elementType == 'folder' && element.contains == 'pages'" class=" p-1 bg-transparent absolute right-0" @click="callToggle(element.name)">
 							<svg v-if="isExpanded(element.name)" class="icon icon-cheveron-up">
 								<use xlink:href="#icon-cheveron-up"></use>
@@ -365,10 +365,15 @@ navigation.component('navilevel',{
 			})
 			.catch(function (error)
 			{
-				if(error.response.data.errors.message)
+				if(error.response)
 				{
 					eventBus.$emit('revertNavigation');
-//					publishController.errors.message = error.response.data.errors;
+
+					let message = handleErrorMessage(error);
+					if(message)
+					{
+						eventBus.$emit('publishermessage', message);
+					}
 				}
 			});
 		},
@@ -408,7 +413,14 @@ navigation.component('navilevel',{
 			})
 			.catch(function (error)
 			{
-				eventBus.$emit('publishermessage', error.response.data.message);
+				if(error.response)
+				{
+					let message = handleErrorMessage(error);
+					if(message)
+					{
+						eventBus.$emit('publishermessage', message);
+					}
+				}
 			});
 		},
 		emitter(value) {

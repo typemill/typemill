@@ -8,12 +8,12 @@ const app = Vue.createApp({
 								<p class="py-2">License: {{ theme.license }}</p>
 								<div class="flex">
 									<label :for="themename" class="p-2">{{ $filters.translate('active') }}</label>
-								    <input type="checkbox" class="w-6 h-6 my-2 accent-white"
-								      :name="themename"
-								      v-model="formData[themename]['active']"
-								      @change="activate(themename)">
+									<input type="checkbox" class="w-6 h-6 my-2 accent-white"
+									  :name="themename"
+									  v-model="formData[themename]['active']"
+									  @change="activate(themename)">
 								</div>
-			  				</div>
+							</div>
 							<div class="w-full p-8">
 								<div class="flex pb-4">
 									<div class="w-1/2">
@@ -71,15 +71,15 @@ const app = Vue.createApp({
 					</ul>
 					<div class="my-5 text-center">
 						<modal v-if="showModal" @close="showModal = false">
-					    	<template #header>
-					    		<h3>{{ $filters.translate('License required') }}</h3>
-					    	</template>
-					    	<template #body>
-					    		<p>{{ $filters.translate(modalMessage) }}</p>
-					    	</template>
-					    	<template #button>
-					    		<a :href="getLinkToLicense()" class="focus:outline-none px-4 p-3 mr-3 text-white bg-teal-500 hover:bg-teal-700 transition duration-100">{{ $filters.translate('Check your license') }}</a>
-					    	</template>
+							<template #header>
+								<h3>{{ $filters.translate('License required') }}</h3>
+							</template>
+							<template #body>
+								<p>{{ $filters.translate(modalMessage) }}</p>
+							</template>
+							<template #button>
+								<a :href="getLinkToLicense()" class="focus:outline-none px-4 p-3 mr-3 text-white bg-teal-500 hover:bg-teal-700 transition duration-100">{{ $filters.translate('Check your license') }}</a>
+							</template>
 						</modal>
 					</div>					
 				</div>
@@ -132,8 +132,11 @@ const app = Vue.createApp({
 		})
 		.catch(function (error)
 		{
-			self.messageClass = 'bg-rose-500';
-			self.message = error.response.data.message;
+			if(error.response)
+			{
+				self.messageClass = 'bg-rose-500';
+				self.message = handleErrorMessage(error);
+			}
 		});
 	},
 	methods: {
@@ -182,8 +185,12 @@ const app = Vue.createApp({
 			})
 			.catch(function (error)
 			{
-				self.modalMessage = error.response.data.message;
-				self.showModal = true;
+				if(error.response)
+				{
+					self.showModal = true;
+					self.modalMessage = handleErrorMessage(error);
+					self.messageClass = 'bg-rose-500';
+				}
 			});
 		},
 		setCurrent: function(name)
@@ -219,11 +226,14 @@ const app = Vue.createApp({
 			})
 			.catch(function (error)
 			{
-				self.messageClass = 'bg-rose-500';
-				self.message = error.response.data.message;
-				if(error.response.data.errors !== undefined)
+				if(error.response)
 				{
-					self.errors = error.response.data.errors;
+					self.message = handleErrorMessage(error);
+					self.messageClass = 'bg-rose-500';
+					if(error.response.data.errors !== undefined)
+					{
+						self.errors = error.response.data.errors;
+					}
 				}
 			});			
 		},

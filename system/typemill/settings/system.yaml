@@ -32,7 +32,7 @@ fieldsetsystem:
       maxlength: 4
     language:
       type: select
-      label: Language (admin ui)
+      label: Language (author area)
       css: w-half
       maxlength: 60
       options:

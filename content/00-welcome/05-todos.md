@@ -107,6 +107,9 @@
 * Wrong frontend navigation if unpublished pages
 * finish youtube component
 * Solution for logo and favicon
+* BUG: Raw editor jumps if you edit long text at the end
+* BUG: System stores html or sends wrong error messsages
+* BUG: Error fields in account form not styled correctly
 
 ## later
 
@@ -114,6 +117,7 @@
 * Show security Log
 * User search only for +10 users
 * For api translations should be done completely in backoffice
+* Change translation files so they are loaded in settings instead of adding them manually to settings-defaults.yaml
 
 ## Cleanups:
 

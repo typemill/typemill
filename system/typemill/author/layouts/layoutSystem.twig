@@ -42,7 +42,7 @@
 				{% block content %}{% endblock %}
 			</article>
 		</div>
-		
+		<div id="loginform"></div>
 <!--		< csrf() | raw > -->
 
 		<script>
@@ -64,6 +64,7 @@
 		<script src="{{ base_url() }}/system/typemill/author/js/vue-medialib.js?v={{ settings.version }}"></script>
 		<script>
 /*			kixote.mount('#kixote'); */
+			loginform.mount("#loginform");
 		</script>
 		{% block javascript %}{% endblock %}
 

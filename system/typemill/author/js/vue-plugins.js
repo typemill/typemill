@@ -8,12 +8,12 @@ const app = Vue.createApp({
 								<p class="py-2">License: {{ plugin.license }}</p>
 								<div class="flex">
 									<label :for="pluginname" class="p-2">{{ $filters.translate('active') }}</label>
-								    <input type="checkbox" class="w-6 h-6 my-2 accent-white"
-								      :name="pluginname"
-								      v-model="formData[pluginname]['active']"
-								      @change="activate(pluginname)">
+									<input type="checkbox" class="w-6 h-6 my-2 accent-white"
+									  :name="pluginname"
+									  v-model="formData[pluginname]['active']"
+									  @change="activate(pluginname)">
 								</div>
-			  				</div>
+							</div>
 							<div class="w-full p-8">
 								<div class="w-full">
 									<h2 class="text-xl font-bold mb-3">{{plugin.name}}</h2>
@@ -34,23 +34,23 @@ const app = Vue.createApp({
 									<fieldset class="flex flex-wrap justify-between border-2 border-stone-200 p-4 my-8" v-if="fieldDefinition.type == 'fieldset'">
 										<legend class="text-lg font-medium">{{ fieldDefinition.legend }}</legend>
 										<component v-for="(subfieldDefinition, subfieldname) in fieldDefinition.fields"
-						            	    :key="subfieldname"
-						                	:is="selectComponent(subfieldDefinition.type)"
-						                	:errors="errors"
-						                	:name="subfieldname"
-						                	:userroles="userroles"
-						                	:value="formData[pluginname][subfieldname]" 
-						                	v-bind="subfieldDefinition">
+											:key="subfieldname"
+											:is="selectComponent(subfieldDefinition.type)"
+											:errors="errors"
+											:name="subfieldname"
+											:userroles="userroles"
+											:value="formData[pluginname][subfieldname]" 
+											v-bind="subfieldDefinition">
 										</component>
 									</fieldset>
 									<component v-else
-					            	    :key="fieldname"
-					                	:is="selectComponent(fieldDefinition.type)"
-					                	:errors="errors"
-					                	:name="fieldname"
-					                	:userroles="userroles"
-					                	:value="formData[pluginname][fieldname]" 
-					                	v-bind="fieldDefinition">
+										:key="fieldname"
+										:is="selectComponent(fieldDefinition.type)"
+										:errors="errors"
+										:name="fieldname"
+										:userroles="userroles"
+										:value="formData[pluginname][fieldname]" 
+										v-bind="fieldDefinition">
 									</component>
 								</div>
 								<div class="my-5">
@@ -66,15 +66,15 @@ const app = Vue.createApp({
 					</ul>
 					<div class="my-5 text-center">
 						<modal v-if="showModal" @close="showModal = false">
-					    	<template #header>
-					    		<h3>{{ $filters.translate('License required') }}</h3>
-					    	</template>
-					    	<template #body>
-					    		<p>{{ $filters.translate(modalMessage) }}</p>
-					    	</template>
-					    	<template #button>
-					    		<a :href="getLinkToLicense()" class="focus:outline-none px-4 p-3 mr-3 text-white bg-teal-500 hover:bg-teal-700 transition duration-100">{{ $filters.translate('Check your license') }}</a>
-					    	</template>
+							<template #header>
+								<h3>{{ $filters.translate('License required') }}</h3>
+							</template>
+							<template #body>
+								<p>{{ $filters.translate(modalMessage) }}</p>
+							</template>
+							<template #button>
+								<a :href="getLinkToLicense()" class="focus:outline-none px-4 p-3 mr-3 text-white bg-teal-500 hover:bg-teal-700 transition duration-100">{{ $filters.translate('Check your license') }}</a>
+							</template>
 						</modal>
 					</div>
 				</div>
@@ -124,8 +124,11 @@ const app = Vue.createApp({
 		})
 		.catch(function (error)
 		{
-			self.messageClass = 'bg-rose-500';
-			self.message = error.response.data.message;
+			if(error.response)
+			{
+				self.message = handleErrorMessage(error);
+				self.messageClass = 'bg-rose-500';
+			}
 		});
 
 	},
@@ -167,9 +170,12 @@ const app = Vue.createApp({
 			})
 			.catch(function (error)
 			{
-				self.formData[pluginname]['active']	= false;
-				self.modalMessage = error.response.data.message;
-				self.showModal = true;
+				if(error.response)
+				{
+					self.formData[pluginname]['active']	= false;
+					self.modalMessage = handleErrorMessage(error);
+					self.showModal = true;
+				}
 			});
 		},
 		setCurrent: function(name)
@@ -203,11 +209,14 @@ const app = Vue.createApp({
 			})
 			.catch(function (error)
 			{
-				self.messageClass = 'bg-rose-500';
-				self.message = error.response.data.message;
-				if(error.response.data.errors !== undefined)
+				if(error.response)
 				{
-					self.errors = error.response.data.errors;
+					self.message = handleErrorMessage(error);
+					self.messageClass = 'bg-rose-500';
+					if(error.response.data.errors !== undefined)
+					{
+						self.errors = error.response.data.errors;
+					}
 				}
 			});
 		},

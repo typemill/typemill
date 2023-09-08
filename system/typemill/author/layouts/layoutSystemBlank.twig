@@ -45,7 +45,8 @@
 			</article>
 
 		</div>
-		
+		<div id="loginform"></div>	
+
 		<script>
 			
 			const data = {{ jsdata | json_encode() | raw  }};
@@ -72,6 +73,8 @@
 		<script>
 			app.config.globalProperties.$filters = translatefilter;
 			app.mount('#system');
+
+			loginform.mount("#loginform");
 
 /*			kixote.mount('#kixote'); */
 

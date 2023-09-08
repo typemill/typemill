@@ -27,7 +27,7 @@ const app = Vue.createApp({
 								</div>
 							</div>
 						</div>
-	  					<form v-else class="inline-block w-full">
+						<form v-else class="inline-block w-full">
 							<div>
 								<p>Buy a typemill-license and enjoy our flatrate-model for plugins and -themes.</p><p>We offer two types of subscription-based licenses:</p>
 								<div class="flex flex-wrap justify-between">
@@ -48,23 +48,23 @@ const app = Vue.createApp({
 								<fieldset class="flex flex-wrap justify-between border-2 border-stone-200 p-4 my-8" v-if="fieldDefinition.type == 'fieldset'">
 									<legend class="text-lg font-medium">{{ fieldDefinition.legend }}</legend>
 									<component v-for="(subfieldDefinition, subfieldname) in fieldDefinition.fields"
-					            	    :key="subfieldname"
-					                	:is="selectComponent(subfieldDefinition.type)"
-					                	:errors="errors"
-					                	:name="subfieldname"
-					                	:userroles="userroles"
-					                	:value="formData[subfieldname]" 
-					                	v-bind="subfieldDefinition">
+										:key="subfieldname"
+										:is="selectComponent(subfieldDefinition.type)"
+										:errors="errors"
+										:name="subfieldname"
+										:userroles="userroles"
+										:value="formData[subfieldname]" 
+										v-bind="subfieldDefinition">
 									</component>
 								</fieldset>
 								<component v-else
-				            	    :key="fieldname"
-				                	:is="selectComponent(fieldDefinition.type)"
-				                	:errors="errors"
-				                	:name="fieldname"
-				                	:userroles="userroles"
-				                	:value="formData[fieldname]" 
-				                	v-bind="fieldDefinition">
+									:key="fieldname"
+									:is="selectComponent(fieldDefinition.type)"
+									:errors="errors"
+									:name="fieldname"
+									:userroles="userroles"
+									:value="formData[fieldname]" 
+									v-bind="fieldDefinition">
 								</component>
 							</div>
 							<div class="my-5">
@@ -72,8 +72,8 @@ const app = Vue.createApp({
 								<input type="submit" @click.prevent="save()" value="save" class="w-full p-3 my-1 bg-stone-700 hover:bg-stone-900 text-white cursor-pointer transition duration-100">
 							</div>
 -->
-				  		</form>
-			  		</Transition>`,
+						</form>
+					</Transition>`,
 	data() {
 		return {
 			licenseData: data.licensedata,
@@ -111,13 +111,14 @@ const app = Vue.createApp({
 			})
 			.catch(function (error)
 			{
-				self.messageClass = 'bg-rose-500';
-				self.message = error.response.data.message;
-
-				/* form validation errors */
-				if(error.response.data.errors !== undefined)
+				if(error.response)
 				{
-					self.errors = error.response.data.errors;
+					self.message = handleErrorMessage(error);
+					self.messageClass = 'bg-rose-500';
+					if(error.response.data.errors !== undefined)
+					{
+						self.errors = error.response.data.errors;
+					}
 				}
 			});
 		},

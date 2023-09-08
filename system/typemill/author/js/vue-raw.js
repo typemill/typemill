@@ -130,7 +130,14 @@ const raweditor = Vue.createApp({
 			})
 			.catch(function (error)
 			{
-
+				if(error.response)
+				{
+					let message = handleErrorMessage(error);
+					if(message)
+					{
+						eventBus.$emit('publishermessage', message);
+					}
+				}
 			});
 		},
 		publishDraft()
@@ -150,7 +157,14 @@ const raweditor = Vue.createApp({
 			})
 			.catch(function (error)
 			{
-
+				if(error.response)
+				{
+					let message = handleErrorMessage(error);
+					if(message)
+					{
+						eventBus.$emit('publishermessage', message);
+					}
+				}
 			});
 		},
 	},

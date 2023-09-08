@@ -193,7 +193,7 @@ bloxeditor.component('new-block',{
 
 			eventBus.$emit('publisherclear');
 
-	        tmaxios.post('/api/v1/block',{
+			tmaxios.post('/api/v1/block',{
 				'url':				data.urlinfo.route,
 				'block_id':			this.index,
 				'markdown': 		this.newblockmarkdown.trim(),
@@ -216,7 +216,11 @@ bloxeditor.component('new-block',{
 			{
 				if(error.response)
 				{
-					eventBus.$emit('publishermessage', error.response.data.message);
+					let message = handleErrorMessage(error);
+					if(message)
+					{
+						eventBus.$emit('publishermessage', message);
+					}
 				}
 			});
 		},
@@ -236,9 +240,9 @@ bloxeditor.component('content-block', {
 					<new-block :index="index"></new-block>
 				</div>
 				<div class="relative blox-wrapper mb-1">
-	 				<div v-if="index != 0" class="sideaction hidden absolute -top-3 left-1/2 -translate-x-1/2 z-10 text-xs">
+					<div v-if="index != 0" class="sideaction hidden absolute -top-3 left-1/2 -translate-x-1/2 z-10 text-xs">
 						<button class="delete w-16 p-1 border-r border-stone-700 bg-stone-200 hover:bg-rose-500 hover:text-white transition-1" @mousedown.prevent="disableSort()" @click.prevent="deleteBlock">{{ $filters.translate('delete') }}</button>
-		 				<button class="add w-16 p-1 border-l border-stone-700 bg-stone-200 hover:bg-teal-500 hover:text-white transition-1" :disabled="disabled" @mousedown.prevent="disableSort()" @click.prevent="openNewBlock">{{ $filters.translate('add') }}</button> 
+						<button class="add w-16 p-1 border-l border-stone-700 bg-stone-200 hover:bg-teal-500 hover:text-white transition-1" :disabled="disabled" @mousedown.prevent="disableSort()" @click.prevent="openNewBlock">{{ $filters.translate('add') }}</button> 
 					</div>
 					<div v-if="!edit" class="blox-preview px-6 py-3 hover:bg-stone-100 overflow-hidden transition-1" @click="showEditor" v-html="getHtml(element.html)"></div>
 					<div v-else class="blox-editor bg-stone-100">
@@ -247,7 +251,7 @@ bloxeditor.component('content-block', {
 								<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
 								<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
 							</svg>
-      					</div>
+						</div>
 						<component ref="activeComponent" :disabled="disabled" :markdown="updatedmarkdown" :index="index" @saveBlockEvent="saveBlock" @updateMarkdownEvent="updateMarkdownFunction" :is="componentType"></component>
 						<div class="edit-buttons absolute -bottom-3 right-4 z-10 text-xs">
 							<button class="cancel w-20  p-1 border-r border-stone-700 bg-stone-200 hover:bg-rose-500 hover:text-white transition-1" :disabled="disabled" @click.prevent="closeEditor">{{ $filters.translate('cancel') }}</button>
@@ -382,7 +386,7 @@ bloxeditor.component('content-block', {
 
 			eventBus.$emit('publisherclear');
 
-	        tmaxios.delete('/api/v1/block',{
+			tmaxios.delete('/api/v1/block',{
 				data: {
 					'url':				data.urlinfo.route,
 					'block_id':			this.index,
@@ -407,7 +411,11 @@ bloxeditor.component('content-block', {
 				self.load = false;
 				if(error.response)
 				{
-					eventBus.$emit('publishermessage', error.response.data.message);
+					let message = handleErrorMessage(error);
+					if(message)
+					{
+						eventBus.$emit('publishermessage', message);
+					}
 				}
 			});
 		},
@@ -441,7 +449,7 @@ bloxeditor.component('content-block', {
 			this.load = true;
 			eventBus.$emit('publisherclear');
 
-	        tmaxios.put('/api/v1/block',{
+			tmaxios.put('/api/v1/block',{
 				'url':				data.urlinfo.route,
 				'block_id':			this.index,
 				'markdown': 		this.updatedmarkdown.trim(),
@@ -466,7 +474,11 @@ bloxeditor.component('content-block', {
 				self.load = false;
 				if(error.response)
 				{
-					eventBus.$emit('publishermessage', error.response.data.message);
+					let message = handleErrorMessage(error);
+					if(message)
+					{
+						eventBus.$emit('publishermessage', message);
+					}
 				}
 			});
 		},

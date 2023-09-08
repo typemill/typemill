@@ -33,7 +33,7 @@ class ControllerApiSystemSettings extends Controller
 		$validator 			= new Validation();
 		$validatedOutput 	= $validator->recursiveValidation($formdefinitions, $settingsinput);
 
-		if(!empty($valiator->errors))
+		if(!empty($validator->errors))
 		{
 			$response->getBody()->write(json_encode([
 				'message' 	=> Translations::translate('Please correct errors in form.'),

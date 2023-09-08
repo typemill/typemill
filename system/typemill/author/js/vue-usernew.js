@@ -10,28 +10,28 @@ const app = Vue.createApp({
 								<option v-for="option,optionkey in userroles">{{option}}</option>
 						</select>
 					</div>
-			    	<form v-if="formDefinitions" class="w-full my-8">
+					<form v-if="formDefinitions" class="w-full my-8">
 						<div v-for="(fieldDefinition, fieldname) in formDefinitions">
 							<fieldset class="flex flex-wrap justify-between border-2 border-stone-200 p-4 my-8" v-if="fieldDefinition.type == 'fieldset'">
 								<legend class="text-lg font-medium">{{ fieldDefinition.legend }}</legend>
 								<component v-for="(subfieldDefinition, subfieldname) in fieldDefinition.fields"
-				            	    :key="subfieldname"
-				                	:is="selectComponent(subfieldDefinition.type)"
-				                	:errors="errors"
-				                	:name="subfieldname"
-				                	:userroles="userroles"
-				                	:value="formData[subfieldname]" 
-				                	v-bind="subfieldDefinition">
+									:key="subfieldname"
+									:is="selectComponent(subfieldDefinition.type)"
+									:errors="errors"
+									:name="subfieldname"
+									:userroles="userroles"
+									:value="formData[subfieldname]" 
+									v-bind="subfieldDefinition">
 								</component>
 							</fieldset>
 							<component v-else
-			            	    :key="fieldname"
-			                	:is="selectComponent(fieldDefinition.type)"
-			                	:errors="errors"
-			                	:name="fieldname"
-			                	:userroles="userroles"
-			                	:value="formData[fieldname]" 
-			                	v-bind="fieldDefinition">
+								:key="fieldname"
+								:is="selectComponent(fieldDefinition.type)"
+								:errors="errors"
+								:name="fieldname"
+								:userroles="userroles"
+								:value="formData[fieldname]" 
+								v-bind="fieldDefinition">
 							</component>
 						</div>
 						<div class="my-5">
@@ -67,10 +67,10 @@ const app = Vue.createApp({
 			this.reset();
 			var self = this;
 
-	        tmaxios.get('/api/v1/userform',{
-	        	params: {
+			tmaxios.get('/api/v1/userform',{
+				params: {
 					'userrole': 	this.selectedrole
-	        	}
+				}
 			})
 			.then(function (response)
 			{
@@ -79,13 +79,16 @@ const app = Vue.createApp({
 			})
 			.catch(function (error)
 			{
-				self.messageClass = 'bg-rose-500';
-				self.message = error.response.data.message;
-				if(error.response.data.errors !== undefined)
+				if(error.response)
 				{
-					self.errors = error.response.data.errors;
+					self.messageClass = 'bg-rose-500';
+					self.message = handleErrorMessage(error);
+					if(error.response.data.errors !== undefined)
+					{
+						self.errors = error.response.data.errors;
+					}
 				}
-			});		
+			});
 		},
 		save: function()
 		{
@@ -104,11 +107,14 @@ const app = Vue.createApp({
 			})
 			.catch(function (error)
 			{
-				self.messageClass = 'bg-rose-500';
-				self.message = error.response.data.message;
-				if(error.response.data.errors !== undefined)
+				if(error.response)
 				{
-					self.errors = error.response.data.errors;
+					self.messageClass = 'bg-rose-500';
+					self.message = handleErrorMessage(error);
+					if(error.response.data.errors !== undefined)
+					{
+						self.errors = error.response.data.errors;
+					}
 				}
 			});
 		},
