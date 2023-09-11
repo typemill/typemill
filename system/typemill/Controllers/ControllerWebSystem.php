@@ -26,7 +26,8 @@ class ControllerWebSystem extends Controller
 									$userrole 	= $request->getAttribute('c_userrole'),
 									$acl 		= $this->c->get('acl'),
 									$urlinfo 	= $this->c->get('urlinfo'),
-									$dispatcher = $this->c->get('dispatcher')
+									$dispatcher = $this->c->get('dispatcher'),
+									$parser 	= $this->routeParser
 								);
 
 		$settingsModel 		= new Settings();
@@ -41,10 +42,10 @@ class ControllerWebSystem extends Controller
 #			'basicauth'			=> $user->getBasicAuth(),
 			'settings' 			=> $this->settings,
 			'mainnavi'			=> $mainNavigation,
-			'systemnavi'		=> $systemNavigation,
 			'jsdata' 			=> [
 										'settings' 		=> $this->settings,
 										'system'		=> $systemfields,
+										'systemnavi'	=> $systemNavigation,
 										'labels'		=> $this->c->get('translations'),
 										'urlinfo'		=> $this->c->get('urlinfo')
 									]
@@ -65,7 +66,8 @@ class ControllerWebSystem extends Controller
 									$userrole 	= $request->getAttribute('c_userrole'),
 									$acl 		= $this->c->get('acl'),
 									$urlinfo 	= $this->c->get('urlinfo'),
-									$dispatcher = $this->c->get('dispatcher')
+									$dispatcher = $this->c->get('dispatcher'),
+									$parser 	= $this->routeParser
 								);
 
 		$extension 			= new Extension();
@@ -91,8 +93,8 @@ class ControllerWebSystem extends Controller
 	    return $this->c->get('view')->render($response, 'system/themes.twig', [
 			'settings' 			=> $this->settings,
 			'mainnavi'			=> $mainNavigation,
-			'systemnavi'		=> $systemNavigation,
 			'jsdata' 			=> [
+										'systemnavi'		=> $systemNavigation,
 										'settings' 		=> $themeSettings,
 										'definitions'	=> $themeDefinitions,
 										'theme'			=> $this->settings['theme'],
@@ -118,6 +120,7 @@ class ControllerWebSystem extends Controller
 									$acl 		= $this->c->get('acl'),
 									$urlinfo 	= $this->c->get('urlinfo'),
 									$dispatcher = $this->c->get('dispatcher'),
+									$parser 	= $this->routeParser
 								);
 
 		$extension 			= new Extension();
@@ -143,8 +146,8 @@ class ControllerWebSystem extends Controller
 	    return $this->c->get('view')->render($response, 'system/plugins.twig', [
 			'settings' 			=> $this->settings,
 			'mainnavi'			=> $mainNavigation,
-			'systemnavi'		=> $systemNavigation,
 			'jsdata' 			=> [
+										'systemnavi'		=> $systemNavigation,
 										'settings' 		=> $pluginSettings,
 										'definitions'	=> $pluginDefinitions,
 										'license'		=> $license,
@@ -169,6 +172,7 @@ class ControllerWebSystem extends Controller
 									$acl 		= $this->c->get('acl'),
 									$urlinfo 	= $this->c->get('urlinfo'),
 									$dispatcher = $this->c->get('dispatcher'),
+									$parser 	= $this->routeParser
 								);
 
 		$license 		= new License();
@@ -185,8 +189,8 @@ class ControllerWebSystem extends Controller
 	    return $this->c->get('view')->render($response, 'system/license.twig', [
 			'settings' 			=> $this->settings,
 			'mainnavi'			=> $mainNavigation,
-			'systemnavi'		=> $systemNavigation,
 			'jsdata' 			=> [
+										'systemnavi'		=> $systemNavigation,
 										'licensedata' 	=> $licensedata,
 										'licensefields'	=> $licensefields,
 										'labels'		=> $this->c->get('translations'),
@@ -209,6 +213,7 @@ class ControllerWebSystem extends Controller
 									$acl 		= $this->c->get('acl'),
 									$urlinfo 	= $this->c->get('urlinfo'),
 									$dispatcher = $this->c->get('dispatcher'),
+									$parser 	= $this->routeParser
 								);
 
 		$username			= $request->getAttribute('c_username');
@@ -221,8 +226,8 @@ class ControllerWebSystem extends Controller
 	    return $this->c->get('view')->render($response, 'system/account.twig', [
 			'settings' 			=> $this->settings,
 			'mainnavi'			=> $mainNavigation,
-			'systemnavi'		=> $systemNavigation,
 			'jsdata' 			=> [
+										'systemnavi'		=> $systemNavigation,
 										'userdata'		=> $userdata,
 										'userfields'	=> $userfields,
 										'userroles'		=> $this->c->get('acl')->getRoles(),
@@ -247,6 +252,7 @@ class ControllerWebSystem extends Controller
 									$acl 		= $this->c->get('acl'),
 									$urlinfo 	= $this->c->get('urlinfo'),
 									$dispatcher = $this->c->get('dispatcher'),
+									$parser 	= $this->routeParser
 								);
 
 		$user				= new User();
@@ -264,8 +270,8 @@ class ControllerWebSystem extends Controller
 	    return $this->c->get('view')->render($response, 'system/users.twig', [
 			'settings' 			=> $this->settings,
 			'mainnavi'			=> $mainNavigation,
-			'systemnavi'		=> $systemNavigation,
 			'jsdata' 			=> [
+										'systemnavi'		=> $systemNavigation,
 										'totalusers'	=> count($usernames),
 										'usernames' 	=> $usernames,
 										'userdata'		=> $userdata,
@@ -291,6 +297,7 @@ class ControllerWebSystem extends Controller
 									$acl 		= $this->c->get('acl'),
 									$urlinfo 	= $this->c->get('urlinfo'),
 									$dispatcher = $this->c->get('dispatcher'),
+									$parser 	= $this->routeParser
 								);
 
 		$user				= new User();
@@ -307,8 +314,8 @@ class ControllerWebSystem extends Controller
 	    return $this->c->get('view')->render($response, 'system/user.twig', [
 			'settings' 			=> $this->settings,
 			'mainnavi'			=> $mainNavigation,
-			'systemnavi'		=> $systemNavigation,
 			'jsdata' 			=> [
+										'systemnavi'		=> $systemNavigation,
 										'userdata'		=> $userdata,
 										'userfields'	=> $userfields,
 										'userroles'		=> $this->c->get('acl')->getRoles(),
@@ -333,13 +340,14 @@ class ControllerWebSystem extends Controller
 									$acl 		= $this->c->get('acl'),
 									$urlinfo 	= $this->c->get('urlinfo'),
 									$dispatcher = $this->c->get('dispatcher'),
+									$parser 	= $this->routeParser
 								);
 
 	    return $this->c->get('view')->render($response, 'system/usernew.twig', [
 			'settings' 			=> $this->settings,
 			'mainnavi'			=> $mainNavigation,
-			'systemnavi'		=> $systemNavigation,
 			'jsdata' 			=> [
+										'systemnavi'		=> $systemNavigation,
 										'userroles'		=> $this->c->get('acl')->getRoles(),
 										'labels'		=> $this->c->get('translations'),
 										'urlinfo'		=> $this->c->get('urlinfo')
@@ -365,7 +373,8 @@ class ControllerWebSystem extends Controller
 									$userrole 	= $request->getAttribute('c_userrole'),
 									$acl 		= $this->c->get('acl'),
 									$urlinfo 	= $this->c->get('urlinfo'),
-									$dispatcher = $this->c->get('dispatcher')
+									$dispatcher = $this->c->get('dispatcher'),
+									$parser 	= $this->routeParser
 								);
 
 		$pluginDefinitions 	= false;
@@ -379,8 +388,8 @@ class ControllerWebSystem extends Controller
 	    return $this->c->get('view')->render($response, 'layouts/layoutSystemBlank.twig', [
 			'settings' 			=> $this->settings,
 			'mainnavi'			=> $mainNavigation,
-			'systemnavi'		=> $systemNavigation,
 			'jsdata' 			=> [
+										'systemnavi'	=> $systemNavigation,
 										'settings' 		=> $this->settings,
 										'labels'		=> $this->c->get('translations'),
 										'urlinfo'		=> $this->c->get('urlinfo'),

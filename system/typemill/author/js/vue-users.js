@@ -183,14 +183,14 @@ app.component('searchbox', {
 					<button @click.prevent="setFilter('userrole')" :class="checkActive('userrole')" class="px-2 py-2 border-b-4 hover:bg-stone-200 hover:border-stone-700 transition duration-100">{{ $filters.translate('userrole') }}</button>
 					<button @click.prevent="setFilter('usermail')" :class="checkActive('usermail')" class="px-2 py-2 border-b-4 hover:bg-stone-200 hover:border-stone-700 transition duration-100">{{ $filters.translate('e-mail') }}</button>
 				  </div>
-				  <div class="w-100 flex">
-					<select v-if="this.filter == 'userrole'" v-model="searchterm" class="w-3/4 h-12 px-2 py-3 border border-stone-300 bg-stone-200"> 
+				  <div class="w-100 lg:flex">
+					<select v-if="this.filter == 'userrole'" v-model="searchterm" class="lg:w-3/4 w-full h-12 px-2 py-3 border border-stone-300 bg-stone-200"> 
 						<option v-for="role in userroles">{{role}}</option>
 					</select>
-					<input v-else type="text" v-model="searchterm" class="w-3/4 h-12 px-2 py-3 border border-stone-300 bg-stone-200">
-					<div class="w-1/4 flex justify-around">
-						<button class="w-half bg-stone-200 hover:bg-stone-100" @click.prevent="clearSearch()">{{ $filters.translate('Clear') }}</button>
-						<button class="w-half bg-stone-700 hover:bg-stone-900 text-white" @click.prevent="startSearch()">{{ $filters.translate('Search') }}</button>
+					<input v-else type="text" v-model="searchterm" class="lg:w-3/4 w-full h-12 px-2 py-3 border border-stone-300 bg-stone-200">
+					<div class="lg:w-1/4 lg:mt-0 mt-2 w-full flex justify-around">
+						<button class="p-2 w-1/2 bg-stone-200 hover:bg-stone-100" @click.prevent="clearSearch()">{{ $filters.translate('Clear') }}</button>
+						<button class="p-2 w-1/2 bg-stone-700 hover:bg-stone-900 text-white" @click.prevent="startSearch()">{{ $filters.translate('Search') }}</button>
 					</div>
 				 </div>
 				 <div v-if="error" class="error pt1 f6">{{error}}</div>
@@ -240,24 +240,28 @@ app.component('searchbox', {
 app.component('usertable', {
 	props: ['userdata'],
 	template: `<table class="w-full mt-8" cellspacing="0">
-				<tr>
-					<th class="p-3 bg-stone-200 border-2 border-stone-50">{{ $filters.translate('Username') }}</th>
-					<th class="p-3 bg-stone-200 border-2 border-stone-50">{{ $filters.translate('Userrole') }}</th>
-					<th class="p-3 bg-stone-200 border-2 border-stone-50">{{ $filters.translate('E-Mail') }}</th>
-					<th class="p-3 bg-stone-200 border-2 border-stone-50">{{ $filters.translate('Edit') }}</th>
-				</tr>
-				<tr v-for="user,index in userdata" key="username">
-					<td class="p-3 bg-stone-100 border-2 border-white">{{ user.username }}</td>
-					<td class="p-3 bg-stone-100 border-2 border-white">{{ user.userrole }}</td>
-					<td class="p-3 bg-stone-100 border-2 border-white">{{ user.email }}</td>
-					<td class="bg-stone-100 border-2 border-white text-center hover:bg-teal-500 hover:text-white pointer transition duration-100"><a :href="getEditLink(user.username)" class="block w-full p-3">{{ $filters.translate('edit') }}</a></td>
-				</tr>
-				<tr>
-					<td class="p-3 bg-stone-100 border-2 border-white"><a class="text-teal-500 hover:underline" :href="getNewUserLink()">{{ $filters.translate('New user') }}</a></td>
-					<td class="p-3 bg-stone-100 border-2 border-white"></td>
-					<td class="p-3 bg-stone-100 border-2 border-white"></td>
-					<td class="bg-stone-100 border-2 border-white text-center text-teal-500 hover:bg-teal-500 hover:text-white transition duration-100"><a class="block w-full p-3" :href="getNewUserLink()">{{ $filters.translate('add') }}</a></td>
-				</tr>
+				<thead>
+					<tr>
+						<th class="p-3 bg-stone-200 border-2 border-stone-50">{{ $filters.translate('Username') }}</th>
+						<th class="p-3 bg-stone-200 border-2 border-stone-50">{{ $filters.translate('Userrole') }}</th>
+						<th class="p-3 bg-stone-200 border-2 border-stone-50">{{ $filters.translate('E-Mail') }}</th>
+						<th class="p-3 bg-stone-200 border-2 border-stone-50">{{ $filters.translate('Edit') }}</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="user,index in userdata" key="username">
+						<td class="p-3 bg-stone-100 border-2 border-white">{{ user.username }}</td>
+						<td class="p-3 bg-stone-100 border-2 border-white">{{ user.userrole }}</td>
+						<td class="p-3 bg-stone-100 border-2 border-white">{{ user.email }}</td>
+						<td class="bg-stone-100 border-2 border-white text-center hover:bg-teal-500 hover:text-white pointer transition duration-100"><a :href="getEditLink(user.username)" class="block w-full p-3">{{ $filters.translate('edit') }}</a></td>
+					</tr>
+					<tr>
+						<td class="p-3 bg-stone-100 border-2 border-white"><a class="text-teal-500 hover:underline" :href="getNewUserLink()">{{ $filters.translate('New user') }}</a></td>
+						<td class="p-3 bg-stone-100 border-2 border-white"></td>
+						<td class="p-3 bg-stone-100 border-2 border-white"></td>
+						<td class="bg-stone-100 border-2 border-white text-center text-teal-500 hover:bg-teal-500 hover:text-white transition duration-100"><a class="block w-full p-3" :href="getNewUserLink()">{{ $filters.translate('add') }}</a></td>
+					</tr>
+				</tbody>
 			 </table>`,
 	methods: {
 		getEditLink: function(username){

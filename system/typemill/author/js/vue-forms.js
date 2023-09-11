@@ -1,6 +1,6 @@
 app.component('component-text', {
 	props: ['id', 'description', 'maxlength', 'hidden', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'css', 'errors'],	
-	template: `<div :class="css ? css : 'w-full'" class="mt-5 mb-5">
+	template: `<div :class="css ? css : ''" class="w-full mt-5 mb-5">
 				<label :for="name" class="block mb-1 font-medium">{{ $filters.translate(label) }}</label>
 				<input type="text" class="h-12 w-full border px-2 py-3" :class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
 					:id="id"
@@ -26,7 +26,7 @@ app.component('component-text', {
 
 app.component('component-textarea', {
 	props: ['id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'css', 'value', 'errors'],
-	template: `<div :class="css ? css : 'w-full'" class="mt-5 mb-5">
+	template: `<div :class="css ? css : ''" class="w-full mt-5 mb-5">
 				<label :for="name" class="block mb-1 font-medium">{{ $filters.translate(label) }}</label>
 				<textarea rows="8" class="w-full border border-stone-300 bg-stone-200 px-2 py-3"
 					:id="id"
@@ -67,7 +67,7 @@ app.component('component-codearea', {
 			highlighted: '',
 		}
 	},
-	template: `<div :class="css ? css : 'w-full'" class="plain mt-5 mb-5">
+	template: `<div :class="css ? css : ''" class="w-full plain mt-5 mb-5">
 				<label :for="name" class="block mb-1 font-medium">{{ $filters.translate(label) }}</label>
 				<div class="codearea">
 					<textarea data-el="editor" class="editor" ref="editor" 
@@ -126,7 +126,7 @@ app.component('component-codearea', {
 
 app.component('component-select', {
 	props: ['id', 'description', 'readonly', 'required', 'disabled', 'label', 'name', 'type', 'css', 'options', 'value', 'errors', 'dataset', 'userroles'],
-	template: `<div :class="css ? css : 'w-full'" class="mt-5 mb-5">
+	template: `<div :class="css ? css : ''" class="w-full mt-5 mb-5">
 				<label :for="name" class="block mb-1 font-medium">{{ $filters.translate(label) }}</label>
 			    <select class="form-select block w-full border border-stone-300 bg-stone-200 px-2 py-3 h-12 transition ease-in-out"
 					:id="id"
@@ -156,7 +156,7 @@ app.component('component-checkbox', {
 	    	checked: false
 		}
 	},
-	template: `<div :class="css ? css : 'w-full'" class="mt-5 mb-5">
+	template: `<div :class="css ? css : ''" class="w-full mt-5 mb-5">
 				<div class="block mb-1 font-medium">{{ $filters.translate(label) }}</div>
 				<label :for="name" class="inline-flex items-start">
 				  <input type="checkbox" class="w-6 h-6"
@@ -194,7 +194,7 @@ app.component('component-checkboxlist', {
 	    	checkedoptions: []
 		}
 	},
-	template: `<div :class="css ? css : 'w-full'" class="mt-5 mb-5">
+	template: `<div :class="css ? css : ''" class="w-full mt-5 mb-5">
 				<div class="block mb-1 font-medium">{{ $filters.translate(label) }}</div>
 				<label class="flex items-start mb-2 mt-2" v-for="option, optionvalue in options" >
 				  <input type="checkbox" class="w-6 h-6"
@@ -229,7 +229,7 @@ app.component('component-radio', {
 	    	picked: this.value
 		}
 	},
-	template: `<div :class="css ? css : 'w-full'" class="mt-5 mb-5">
+	template: `<div :class="css ? css : ''" class="w-full mt-5 mb-5">
 				<div class="block mb-1 font-medium">{{ $filters.translate(label) }}</div>
 				<label class="flex items-start mb-2 mt-2" v-for="option,optionvalue in options">
 				  <input type="radio" class="w-6 h-6"
@@ -256,7 +256,7 @@ app.component('component-radio', {
 
 app.component('component-number', {
 	props: ['id', 'description', 'min', 'max', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'css', 'value', 'errors'],
-	template: `<div :class="css ? css : 'w-full'" class="mt-5 mb-5">
+	template: `<div :class="css ? css : ''" class="w-full mt-5 mb-5">
 				<label :for="name" class="block mb-1 font-medium">{{ $filters.translate(label) }}</label>
 				<input type="number" class="h-12 w-full border border-stone-300 bg-stone-200 px-2 py-3"
 					:id="id"
@@ -283,7 +283,7 @@ app.component('component-number', {
 
 app.component('component-date', {
 	props: ['id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'css', 'value', 'errors'],
-	template: `<div :class="css ? css : 'w-full'" class="mt-5 mb-5">
+	template: `<div :class="css ? css : ''" class="w-full mt-5 mb-5">
 				<label :for="name" class="block mb-1 font-medium">{{ $filters.translate(label) }}</label>
 				<div class="relative">
 					<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">				
@@ -314,7 +314,7 @@ app.component('component-date', {
 
 app.component('component-email', {
 	props: ['id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'css', 'value', 'errors'],
-	template: `<div :class="css ? css : 'w-full'" class="mt-5 mb-5">
+	template: `<div :class="css ? css : ''" class="w-full mt-5 mb-5">
 				<label :for="name" class="block mb-1 font-medium">{{ $filters.translate(label) }}</label>
 				<div class="relative">
 					<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">				
@@ -347,7 +347,7 @@ app.component('component-email', {
 
 app.component('component-tel', {
 	props: ['id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'css', 'value', 'errors'],
-	template: `<div :class="css ? css : 'w-full'" class="mt-5 mb-5">
+	template: `<div :class="css ? css : ''" class="w-full mt-5 mb-5">
 				<label :for="name" class="block mb-1 font-medium">{{ $filters.translate(label) }}</label>
 				<div class="relative">
 					<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">				
@@ -379,7 +379,7 @@ app.component('component-tel', {
 
 app.component('component-url', {
 	props: ['id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'css', 'value', 'errors'],
-	template: `<div :class="css ? css : 'w-full'" class="mt-5 mb-5">
+	template: `<div :class="css ? css : ''" class="w-full mt-5 mb-5">
 				<label :for="name" class="block mb-1 font-medium">{{ $filters.translate(label) }}</label>
 				<div class="relative">
 					<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">				
@@ -412,7 +412,7 @@ app.component('component-url', {
 
 app.component('component-color', {
 	props: ['id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'css', 'value', 'errors'],
-	template: `<div :class="css ? css : 'w-full'" class="mt-5 mb-5">
+	template: `<div :class="css ? css : ''" class="w-full mt-5 mb-5">
 				<label :for="name" class="block mb-1 font-medium">{{ $filters.translate(label) }}</label>
 				<div class="relative">
 					<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">				
@@ -449,7 +449,7 @@ app.component('component-password', {
 	    	fieldType: "password"
 		};
 	},	
-	template: `<div :class="css ? css : 'w-full'" class="mt-5 mb-5">
+	template: `<div :class="css ? css : ''" class="w-full mt-5 mb-5">
 				<label :for="name" class="block mb-1 font-medium">{{ $filters.translate(label) }}</label>
 				<div class="relative">
 					<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -572,7 +572,7 @@ app.component('component-customfields', {
 			cfvalue: [{}]
 		 }
 	},
-	template: `<div :class="css ? css : 'w-full'" class="mt-5 mb-5">
+	template: `<div :class="css ? css : ''" class="w-full mt-5 mb-5">
 				<label :for="name" class="block mb-1 font-medium">{{ $filters.translate(label) }}</label>
 			  	<p v-if="fielderrors" class="text-xs text-red-500">{{ fielderrors }}</p>
 			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
@@ -731,15 +731,15 @@ app.component('component-image', {
 			qualitylabel: false,
 		}
 	},
-	template: `<div :class="css ? css : 'w-full'" class="mt-5 mb-5">
+	template: `<div :class="css ? css : ''" class="w-full mt-5 mb-5">
 				<label :for="name" class="block mb-1 font-medium">{{ $filters.translate(label) }}</label>
 				<div class="flex flex-wrap items-start">
-					<div class="w-half">
+					<div class="lg:w-half w-full">
 						<div class="w-80 h-80 table-cell align-middle bg-chess">
 							<img :src="imagepreview" class="max-w-xs max-h-80 table mx-auto">
 						</div>
 					</div>
-					<div class="w-half ph3 lh-copy f6 relative">
+					<div class="lg:w-half w-full ph3 lh-copy f6 relative">
 						<div class="relative w-full bg-stone-700 hover:bg-stone-900">
 							<p class="relative w-full text-white text-center px-2 py-3"><svg class="icon icon-upload baseline"><use xlink:href="#icon-upload"></use></svg> {{ $filters.translate('upload an image') }}</p>
 							<input class="absolute w-full top-0 opacity-0 bg-stone-900 cursor-pointer px-2 py-3" type="file" name="image" accept="image/*" @change="onFileChange( $event )" />

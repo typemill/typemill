@@ -28,22 +28,17 @@
 
 		{% include 'partials/symbols.twig' %}
 		
-		<header class="border-b-2 border-stone-200">
+		<header class="border-b-2 border-stone-200"> 
 			{% include 'partials/mainNavi.twig' %}
 		</header>
 
-		<div class="max-w-6xl m-auto mt-7 flex justify-between" id="main" data-url="{{ base_url() }}">
-
-			<aside class="w-1/4">
+		<div class="max-w-6xl m-auto mt-7 flex flex-col lg:flex-row justify-between" id="main" data-url="{{ base_url() }}">
+			<aside class="lg:w-1/4">
 				{% include 'partials/systemNavi.twig' %}
 			</aside>
-
-			<article class="w-3/4 bg-stone-50 shadow-md p-8">
-				
+			<article class="lg:w-3/4 bg-stone-50 shadow-md p-8">
 				<div id="system" v-cloak></div>
-
 			</article>
-
 		</div>
 		<div id="loginform"></div>	
 
@@ -62,6 +57,7 @@
 		<script src="{{ base_url() }}/system/typemill/author/js/vue.js?v={{ settings.version }}"></script>
 		<script src="{{ base_url() }}/system/typemill/author/js/vue-eventbus.js?v={{ settings.version }}"></script>
 		<script src="{{ base_url() }}/system/typemill/author/js/vue-shared.js?v={{ settings.version }}"></script>
+		<script src="{{ base_url() }}/system/typemill/author/js/vue-systemnavi.js?v={{ settings.version }}"></script>
 		<script src="{{ base_url() }}/system/typemill/author/js/vue-medialib.js?v={{ settings.version }}"></script>
 
 		{% block javascript %}{% endblock %}
@@ -74,6 +70,10 @@
 			app.config.globalProperties.$filters = translatefilter;
 			app.mount('#system');
 
+			systemnavi.config.globalProperties.$filters = translatefilter;
+			systemnavi.mount('#systemNavigation');
+
+			loginform.config.globalProperties.$filters = translatefilter;
 			loginform.mount("#loginform");
 
 /*			kixote.mount('#kixote'); */

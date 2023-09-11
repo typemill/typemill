@@ -15,13 +15,13 @@ const app = Vue.createApp({
 								</div>
 							</div>
 							<div class="w-full p-8">
-								<div class="flex pb-4">
-									<div class="w-1/2">
+								<div class="lg:flex pb-4">
+									<div class="lg:w-1/2 w-full">
 										<h2 class="text-xl font-bold mb-3">{{theme.name}}</h2>
 										<div class="text-xs my-3">author: <a :href="theme.homepage" class="hover:underline text-teal-500">{{theme.author}}</a> | version: {{theme.version}}</div>
 										<p>{{theme.description}}</p>
 									</div>
-									<div class="w-1/2 h-48 overflow-hidden">
+									<div class="lg:w-1/2 w-full h-48 overflow-hidden">
 										<img :src="theme.preview" class="w-full">
 									</div>
 								</div>

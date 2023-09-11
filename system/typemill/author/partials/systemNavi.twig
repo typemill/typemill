@@ -1,14 +1,3 @@
-<nav id="sidebar-menu" class="sidebar-menu">
-	<div id="mobile-menu" class="lg:hidden menu-action">{{ translate('Menu') }} <span class="button-arrow"></span></div>
-	<ul class="mr-4">
-
-		{% for name, navitem in systemnavi %}
-			<li class="mb-1">
-				<a class="block p-2 border-l-4 hover:bg-stone-50 hover:border-teal-500 transition duration-100{{ navitem.active ? ' active bg-stone-50 border-cyan-500' : ' border-slate-200' }}" href="{{ url_for(navitem.routename) }}">
-					<svg class="icon {{ navitem.icon }} mr-2"><use xlink:href="#{{ navitem.icon }}"></use></svg> {{ translate(navitem.title) }}
-				</a>
-			</li>
-		{% endfor %}
-
-	</ul>
+<nav class="max-w-6xl m-auto flex justify-between">
+	<div id="systemNavigation" v-cloak class="w-full"></div>
 </nav>

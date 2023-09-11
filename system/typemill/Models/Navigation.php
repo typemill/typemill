@@ -110,7 +110,7 @@ class Navigation extends Folder
 		return $allowedmainnavi;
 	}
 
-	public function getSystemNavigation($userrole, $acl, $urlinfo, $dispatcher)
+	public function getSystemNavigation($userrole, $acl, $urlinfo, $dispatcher, $routeparser)
 	{
 		$systemnavi 	= $this->storage->getYaml('systemSettings', '', 'systemnavi.yaml');
 		$systemnavi 	= $dispatcher->dispatch(new OnSystemnaviLoaded($systemnavi), 'onSystemnaviLoaded')->getData();
@@ -119,9 +119,9 @@ class Navigation extends Folder
 
 		foreach($systemnavi as $name => $naviitem)
 		{
-			# check if the navi-item is active (e.g if segments like "content" or "system" is in current url)
-			# a bit fragile because url-segment and name/key in systemnavi.yaml and plugins have to be the same
-			if(strpos($urlinfo['route'], 'tm/' . $name))
+			$naviitem['url'] = $routeparser->urlFor($naviitem['routename']);
+
+			if(strpos( trim($naviitem['url'], '/'), trim($urlinfo['route'], '/')))
 			{
 				$naviitem['active'] = true;
 			}
@@ -131,7 +131,7 @@ class Navigation extends Folder
 				$allowedsystemnavi[$name] = $naviitem;
 			}
 		}
-
+		
 		return $allowedsystemnavi;
 	}
 
