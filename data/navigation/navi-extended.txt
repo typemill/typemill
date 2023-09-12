@@ -38,7 +38,7 @@
     navtitle: 'To Dos'
     hide: false
     noindex: false
-    path: /00-welcome/05-todos.txtmd
+    path: /00-welcome/05-todos.txt
     keyPath: '0.5'
 /cyanine-theme:
     navtitle: 'cyanine theme'

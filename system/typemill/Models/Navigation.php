@@ -461,7 +461,6 @@ class Navigation extends Folder
 		return false;		
 	}
 
-
 	public function removeHiddenPages($liveNavigation)
 	{
 		foreach($liveNavigation as $key => $item)
@@ -514,9 +513,67 @@ class Navigation extends Folder
 		}
 
 		return $breadcrumb;
-	}	
+	}
 
 	public function getPagingForItem($navigation, $item)
+	{
+		# if page is home
+		if(trim($item->pathWithoutType, DIRECTORY_SEPARATOR) == 'index')
+		{
+			return $item;
+		}
+
+		$keyPos 			= count($item->keyPathArray)-1;
+		$thisChapArray		= $item->keyPathArray;
+		
+		$item->thisChapter 	= false;
+		$item->prevItem 	= false;
+		$item->nextItem 	= false;
+		
+		if($keyPos > 0)
+		{
+			array_pop($thisChapArray);
+			$item->thisChapter = $this->getItemWithKeyPath($navigation, $thisChapArray);
+		}
+
+		$flat = $this->flatten($navigation, $item->keyPath);
+
+		$itemkey = $flat[0];
+		if($itemkey > 1)
+		{
+			$item->prevItem = $flat[$itemkey-1];
+		}
+		if(isset($flat[$itemkey+1]))
+		{
+			$item->nextItem = $flat[$itemkey+1];
+		}
+
+		return $item;
+	}
+
+	public function flatten($navigation, $keyPath, $flat = [])
+	{		
+		foreach($navigation as $key => $item)
+		{
+			$flat[] = clone($item);
+
+			if($keyPath === $item->keyPath)
+			{
+				array_unshift($flat, count($flat));
+			}
+
+			if($item->elementType == 'folder' && !empty($item->folderContent))
+			{
+				$last = array_key_last($flat);
+				unset($flat[$last]->folderContent);
+				$flat = $this->flatten($item->folderContent, $keyPath, $flat);
+			}
+		}
+
+		return $flat;
+	}
+
+	public function getPagingForItemOld($navigation, $item)
 	{
 		# if page is home
 		if(trim($item->pathWithoutType, DIRECTORY_SEPARATOR) == 'index')
