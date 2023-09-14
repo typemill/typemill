@@ -73,7 +73,7 @@ You can use your ftp-software for that.
 
 Clone and edit the config.example.php you find in this repository and move it as config.php
 ```
-git clone git://github.com/trendschau/typemill.git
+git clone git://github.com/typemill/typemill.git
 cd typemill
 ```
 
