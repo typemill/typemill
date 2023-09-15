@@ -152,7 +152,7 @@ navigation.component('navilevel',{
 			:expanded="expanded"
 		  >
 			<template #item="{ element }">
-				<li :class="element.elementType" :id="element.keyPath" :data-url="element.urlRelWoF" :data-active="element.active">
+				<li :class="element.elementType" :id="element.keyPath" :data-url="element.urlRelWoF" :data-active="element.active" :data-hide="element.hide">
 					<div class="flex w-full my-px border-b border-stone-200 relative" :class="element.elementType == 'folder' ? 'font-bold' : ''">
 						<div class="border-l-4" :class="getStatusClass(element.status)"></div>
 						<a :href="getUrl(element.urlRelWoF)" class="flex-grow border-l-2 border-stone-50 p-1 hover:bg-teal-500 hover:text-stone-50" :class="getNaviClass(element.active, element.activeParent, element.keyPathArray)">
@@ -163,6 +163,11 @@ navigation.component('navilevel',{
 								<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
 								<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
 							</svg>
+						</div>
+						<div v-if="element.hide" class="p-1 absolute right-0">
+							<svg  class="icon icon-eye-blocked">
+								<use xlink:href="#icon-eye-blocked"></use>
+							</svg> 
 						</div>
 						<div v-if="element.elementType == 'folder' && element.contains == 'pages'" class=" p-1 bg-transparent absolute right-0" @click="callToggle(element.name)">
 							<svg v-if="isExpanded(element.name)" class="icon icon-cheveron-up">

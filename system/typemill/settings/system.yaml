@@ -154,10 +154,21 @@ fieldsetaccess:
       type: checkbox
       label: Wrap restriction notice
       checkboxlabel: Wrap the restriction notice above into a notice-4 element (which can be designed as special box)
-fieldsetrecovery:
+fieldsetsecurity:
   type: fieldset
-  legend: PW recovery
+  legend: Security
   fields:
+    securitylog:
+      type: checkbox
+      label: Security log
+      checkboxlabel: Track spam and suspicious actions in a logfile
+    authcaptcha:
+      type: radio
+      label: Use captcha in authentication forms
+      options:
+        disabled: Disable    
+        standard: Always show
+        aftererror: Show after first wrong input
     recoverpw:
       type: checkbox
       label: Recover password
@@ -184,10 +195,6 @@ fieldsetdeveloper:
       type: checkbox
       label: Error reporting
       checkboxlabel: Display application errors
-    securitylog:
-      type: checkbox
-      label: Security log
-      checkboxlabel: Track spam and suspicious actions in a logfile
     twigcache:
       type: checkbox
       label: Twig cache

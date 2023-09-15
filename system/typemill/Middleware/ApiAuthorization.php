@@ -28,7 +28,7 @@ class ApiAuthorization implements MiddlewareInterface
 				'message' => $message
 			]));
 
-			return $response->withStatus(403);			
+			return $response->withStatus(403);
 		}
 	
 		$response = $handler->handle($request);

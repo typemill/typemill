@@ -27,6 +27,7 @@ use Typemill\Middleware\ValidationErrorsMiddleware;
 use Typemill\Middleware\JsonBodyParser;
 use Typemill\Middleware\FlashMessages;
 use Typemill\Middleware\AssetMiddleware;
+use Typemill\Middleware\SecurityMiddleware;
 use Typemill\Extensions\TwigCsrfExtension;
 use Typemill\Extensions\TwigUrlExtension;
 use Typemill\Extensions\TwigUserExtension;
@@ -53,7 +54,6 @@ error_reporting(E_ALL);
 $settingsModel = new Settings();
 
 $settings = $settingsModel->loadSettings();
-# $settings = Settings::loadSettings();
 
 /****************************
 * HANDLE DISPLAY ERRORS 	  *
@@ -244,39 +244,11 @@ $container->set('dispatcher', function() use ($dispatcher){ return $dispatcher; 
 $assets = new \Typemill\Assets($urlinfo['basepath']);
 $container->set('assets', function() use ($assets){ return $assets; });
 
-# Register Middleware On Container
-$csrf = false;
-
-/*
-if(isset($_SESSION))
-{
-	# add flash messsages
-	$container->set('flash', function(){ return new Messages(); });
-
-	# Register Middleware On Container
-	$csrf = new Guard($responseFactory);
-	$csrf->setPersistentTokenMode(true);
-	$request = $responseFactory->;
-	$csrf->setFailureHandler(
-		function (ServerRequestInterface $request, RequestHandlerInterface $handler)
-		{
-			$request = $request->withAttribute("csrf_status", false);
-			return $handler->handle($request);
-		}
-	);
-	$container->set('csrf', function () use ($csrf){ return $csrf; });
-
-	# Add Validation Errors Middleware
-	# $app->add(new ValidationErrors($container->get('view')));
-}
-
-*/
-
 /****************************
 * TWIG TO CONTAINER					*
 ****************************/
 
-$container->set('view', function() use ($settings, $csrf, $urlinfo, $translations) {
+$container->set('view', function() use ($settings, $urlinfo, $translations) {
 
 	$twig = Twig::create(
 		[
@@ -306,19 +278,9 @@ $container->set('view', function() use ($settings, $csrf, $urlinfo, $translation
 	$twig->addExtension(new TwigMetaExtension());
 	$twig->addExtension(new TwigCaptchaExtension());
 
-	# start csrf only if session is active
-	/*
-	if($csrf)
-	{
-		$twig->addExtension(new TwigCsrfExtension($csrf));
-	}
-	*/
-
-
 	return $twig;
 
 });
-
 
 /****************************
 * MIDDLEWARE				*
@@ -327,6 +289,8 @@ $container->set('view', function() use ($settings, $csrf, $urlinfo, $translation
 $app->add(new AssetMiddleware($assets, $container->get('view')));
 
 $app->add(new ValidationErrorsMiddleware($container->get('view')));
+
+$app->add(new SecurityMiddleware($routeParser, $container->get('settings')));
 
 $app->add(new OldInputMiddleware($container->get('view')));
 

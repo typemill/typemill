@@ -2,3 +2,11 @@
 127.0.0.1;2023-07-26 15:24:27;wrong input for password recovery
 127.0.0.1;2023-07-26 15:25:30;wrong input for password recovery
 127.0.0.1;2023-07-29 22:34:30;wrong login
+127.0.0.1;2023-09-13 21:18:22;honeypot http://localhost/typemill/tm/login
+127.0.0.1;2023-09-13 21:26:34;honeypot http://localhost/typemill/tm/login
+127.0.0.1;2023-09-13 21:29:10;honeypot http://localhost/typemill/tm/login
+127.0.0.1;2023-09-13 21:42:59;wrong captcha http://localhost/typemill/tm/login
+127.0.0.1;2023-09-13 22:18:42;wrong captcha http://localhost/typemill/tm/login
+127.0.0.1;2023-09-13 22:20:17;wrong captcha http://localhost/typemill/tm/login
+127.0.0.1;2023-09-15 06:06:46;wrong login
+127.0.0.1;2023-09-15 22:03:38;wrong login
