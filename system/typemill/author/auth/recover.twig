@@ -31,6 +31,16 @@
 							<input type="text" name="personal-honey-mail">
 						</div>
 
+						{% if captcha == 'standard' %}
+							
+							{{ captcha(true) }}
+						
+						{% elseif captcha == 'aftererror' %}
+
+							{{ captcha(old) }}
+
+						{% endif %}
+
 						<input 
 							type="submit" 
 							value="{{ translate('Recover password') }}" 

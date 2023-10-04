@@ -14,7 +14,6 @@ class ControllerApiImage extends Controller
 
 	# MISSING
 	# 
-	# solution for logo
 	# return error messages and display in image component
 	# check if resized is bigger than original, then use original
 

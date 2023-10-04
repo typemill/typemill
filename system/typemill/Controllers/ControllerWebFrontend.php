@@ -178,13 +178,13 @@ class ControllerWebFrontend extends Controller
 		{
 			$favicon = true;
 			$assets->addMeta('tilecolor','<meta name="msapplication-TileColor" content="#F9F8F6" />');
-			$assets->addMeta('tileimage','<meta name="msapplication-TileImage" content="' . $urlinfo['baseurl'] . '/media/files/favicon-144.png" />');
-			$assets->addMeta('icon16','<link rel="icon" type="image/png" href="' . $urlinfo['baseurl'] . '/media/files/favicon-16.png" sizes="16x16" />');
-			$assets->addMeta('icon32','<link rel="icon" type="image/png" href="' . $urlinfo['baseurl'] . '/media/files/favicon-32.png" sizes="32x32" />');
-			$assets->addMeta('icon72','<link rel="apple-touch-icon" sizes="72x72" href="' . $urlinfo['baseurl'] . '/media/files/favicon-72.png" />');
-			$assets->addMeta('icon114','<link rel="apple-touch-icon" sizes="114x114" href="' . $urlinfo['baseurl'] . '/media/files/favicon-114.png" />');
-			$assets->addMeta('icon144','<link rel="apple-touch-icon" sizes="144x144" href="' . $urlinfo['baseurl'] . '/media/files/favicon-144.png" />');
-			$assets->addMeta('icon180','<link rel="apple-touch-icon" sizes="180x180" href="' . $urlinfo['baseurl'] . '/media/files/favicon-180.png" />');
+			$assets->addMeta('tileimage','<meta name="msapplication-TileImage" content="' . $urlinfo['baseurl'] . '/media/custom/favicon-144x144.png" />');
+			$assets->addMeta('icon16','<link rel="icon" type="image/png" href="' . $urlinfo['baseurl'] . '/media/custom/favicon-16x16.png" sizes="16x16" />');
+			$assets->addMeta('icon32','<link rel="icon" type="image/png" href="' . $urlinfo['baseurl'] . '/media/custom/favicon-32x32.png" sizes="32x32" />');
+			$assets->addMeta('icon72','<link rel="apple-touch-icon" sizes="72x72" href="' . $urlinfo['baseurl'] . '/media/custom/favicon-72x72.png" />');
+			$assets->addMeta('icon114','<link rel="apple-touch-icon" sizes="114x114" href="' . $urlinfo['baseurl'] . '/media/custom/favicon-114x114.png" />');
+			$assets->addMeta('icon144','<link rel="apple-touch-icon" sizes="144x144" href="' . $urlinfo['baseurl'] . '/media/custom/favicon-144x144.png" />');
+			$assets->addMeta('icon180','<link rel="apple-touch-icon" sizes="180x180" href="' . $urlinfo['baseurl'] . '/media/custom/favicon-180x180.png" />');
 		}
 
 

@@ -328,7 +328,6 @@ class ControllerApiAuthorMeta extends Controller
 		return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 	}
 
-
 	# we have to flatten field definitions for tabs if there are fieldsets in it
 	public function flattenTabFields($tabfields, $flattab, $fieldset = null)
 	{
@@ -349,18 +348,5 @@ class ControllerApiAuthorMeta extends Controller
 			}
 		}
 		return $flattab;
-	}
-
-	protected function hasChanged($input, $page, $field)
-	{
-		if(isset($input[$field]) && isset($page[$field]) && $input[$field] == $page[$field])
-		{
-			return false;
-		}
-		if(!isset($input[$field]) && !isset($input[$field]))
-		{
-			return false;
-		}
-		return true;
 	}
 }

@@ -486,7 +486,7 @@ class Media
 		return true;
 	}
 
-	public function createCustomSize($imageUrl, $width = NULL, $height = NULL)
+	public function createCustomSize($imageUrl, $width = NULL, $height = NULL, $forcename = NULL)
 	{
 		$this->setPathInfo($imageUrl);
 
@@ -506,19 +506,18 @@ class Media
 		$extension 		= $this->getExtension();
 		$originalName 	= $this->getFilename();
 		$originalFile 	= $originalName . '.' . $extension;
-		$customName 	= $originalName . $resizeName;
+		$customName 	= $forcename ? $forcename . $resizeName : $originalName . $resizeName;
 		$customFile 	= $customName . '.' . $extension;
 
 		$storage 	= new StorageWrapper('\Typemill\Models\Storage');
 
-		if($storage->checkFile('customFolder', '', $customFile))
+		if(!$forcename && $storage->checkFile('customFolder', '', $customFile))
 		{
 			# we should get the custom folder url dynamically from storage class
 			return '/media/custom/' . $customFile;
 		}
-
 		# if name is in customfolder (resized already)
-		if($storage->checkFile('customFolder', '', $originalFile))
+		if(!$forcename && $storage->checkFile('customFolder', '', $originalFile))
 		{
 			$imagePath = $storage->getFolderPath('customFolder') . $originalFile;
 		}
@@ -536,7 +535,7 @@ class Media
 		$originalSize 	= $this->getImageSize($image);
 		$resizedImage	= $this->resizeImage($image, $desiredSize, $originalSize);
 
-		if($resizedImage && $storage->storeCustomImage($image, $extension, $customName))
+		if($resizedImage && $storage->storeCustomImage($resizedImage, $extension, $customName))
 		{
 			return '/media/custom/' . $customFile;
 		}

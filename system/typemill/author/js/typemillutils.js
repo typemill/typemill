@@ -114,3 +114,5 @@ let typemillUtilities = {
 		this.listenToChange();
 	},
 };
+
+typemillUtilities.start();

@@ -17,6 +17,7 @@ const raweditor = Vue.createApp({
 						<label for="raweditor" class="block mb-1 font-medium">{{ $filters.translate('Markdown') }}</label>
 						<div class="codearea">
 							<textarea 
+								id="rawcontent"
 								name="raweditor" 
 								data-el="editor" 
 								class="editor" 
@@ -38,7 +39,8 @@ const raweditor = Vue.createApp({
 			highlighted: '',
 			errors: false,
 			freeze: false,
-			showraw: true,		
+			showraw: true,
+			editorsize: false,	
 		}
 	},
 	mounted() {
@@ -51,6 +53,7 @@ const raweditor = Vue.createApp({
 		eventBus.$on('content', content => {
 			this.initializeContent(content);
 		});
+
 	},
 	methods: {
 		showEditor()
@@ -62,10 +65,10 @@ const raweditor = Vue.createApp({
 		},
 		hideEditor()
 		{
-			this.showraw =false;
+			this.showraw = false;
 		},		
 		initializeContent(contentArray)
-		{
+		{ 
 			let markdown = '';
 			let title = contentArray.shift();
 
@@ -87,18 +90,27 @@ const raweditor = Vue.createApp({
 		{
 			this.highlight(this.content);
 			this.resizeCodearea();
+
 			eventBus.$emit('editdraft');
 		},
 		resizeCodearea()
 		{
-			let codeeditor = this.$refs["raweditor"];
+			let codeeditor 		= this.$refs["raweditor"];
 
 			window.requestAnimationFrame(() => {
-				codeeditor.style.height = '200px';
-				if (codeeditor.scrollHeight > 200)
+
+				autosize(codeeditor);
+
+				if(codeeditor.style.height > this.editorsize)
 				{
-					codeeditor.style.height = `${codeeditor.scrollHeight + 2}px`;
+					window.scrollBy({
+						top: 18,
+						left: 0,
+						behavior: "smooth",
+					});
 				}
+
+				this.editorsize = codeeditor.style.height;
 			});
 		},
 		highlight(code)

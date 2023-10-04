@@ -50,6 +50,19 @@ abstract class Controller
 		return false;
 	}
 
+	protected function hasChanged($input, $stored, $field)
+	{
+		if(isset($input[$field]) && isset($stored[$field]) && $input[$field] == $stored[$field])
+		{
+			return false;
+		}
+		if(!isset($input[$field]) && !isset($input[$field]))
+		{
+			return false;
+		}
+		return true;
+	}
+
 	protected function getItem($navigation, $url, $urlinfo)
 	{
 		$url 				= $this->removeEditorFromUrl($url);
