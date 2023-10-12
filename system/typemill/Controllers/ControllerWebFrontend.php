@@ -29,12 +29,10 @@ class ControllerWebFrontend extends Controller
 		$userrole 			= $request->getAttribute('c_userrole');
 		$username 			= $request->getAttribute('c_username');
 
-
 		# GET THE NAVIGATION
 	    $navigation 		= new Navigation();
-		$liveNavigation 	= $navigation->getLiveNavigation($urlinfo, $langattr);
+		$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $langattr);
 	    $home 				= false;
-
 
 		# GET THE PAGINATION
 		$currentpage 		= $navigation->getCurrentPage($args);
@@ -56,6 +54,7 @@ class ControllerWebFrontend extends Controller
 		    $extendedNavigation	= $navigation->getExtendedNavigation($urlinfo, $langattr);
 
 		    $pageinfo 			= $extendedNavigation[$url] ?? false;
+
 		    if(!$pageinfo)
 		    {
 			    return $this->c->get('view')->render($response->withStatus(404), '404.twig', [
@@ -66,23 +65,46 @@ class ControllerWebFrontend extends Controller
 
 			$keyPathArray 		= explode(".", $pageinfo['keyPath']);
 
-			$liveNavigation 	= $navigation->setActiveNaviItems($liveNavigation, $keyPathArray);
+#
+			$item 				= $navigation->getItemWithKeyPath($draftNavigation, $keyPathArray);
 
-			$item 				= $navigation->getItemWithKeyPath($liveNavigation, $keyPathArray);
+			# but what if parent is unpublished ??
+			if(!$item)
+			{
+				return $this->c->get('view')->render($response->withStatus(404), '404.twig', [
+					'title'			=> 'Page not found',
+					'description'	=> 'We did not find the page you where looking for.'
+				]);
+			}
 		}
 
-		$liveNavigation = $this->c->get('dispatcher')->dispatch(new OnPagetreeLoaded($liveNavigation), 'onPagetreeLoaded')->getData();
-
-
 		# CREATE THE BREADCRUMB
-		$breadcrumb = $navigation->getBreadcrumb($liveNavigation, $item->keyPathArray);
+		$breadcrumb = $navigation->getBreadcrumb($draftNavigation, $item->keyPathArray);
 		$breadcrumb = $this->c->get('dispatcher')->dispatch(new OnBreadcrumbLoaded($breadcrumb), 'onBreadcrumbLoaded')->getData();
 
+		# CHECK IF WHOLE TREE IS PUBLISHED
+		foreach($breadcrumb as $page)
+		{
+			if($page->status == 'unpublished')
+			{
+				return $this->c->get('view')->render($response->withStatus(404), '404.twig', [
+					'title'			=> 'Page not found',
+					'description'	=> 'We did not find the page you where looking for.'
+				]);
+			}
+		}
+
+		# GET THE LIVE NAVIGATION (keyPathArray does not match here!!!)
+		$liveNavigation = $navigation->getLiveNavigation($urlinfo, $langattr);	
 
 		# STRIP OUT HIDDEN PAGES
 		$liveNavigation = $navigation->removeHiddenPages($liveNavigation);
-		# we could cache navigation without hidden pages??
 
+		# SET PAGEs ACTIVE
+		$liveNavigation = $navigation->setActiveNaviItems($liveNavigation, $breadcrumb);
+
+		# DISPATCH LIVE NAVIGATION
+		$liveNavigation = $this->c->get('dispatcher')->dispatch(new OnPagetreeLoaded($liveNavigation), 'onPagetreeLoaded')->getData();
 
 		# ADD BACKWARD-/FORWARD PAGINATION
 		$item = $navigation->getPagingForItem($liveNavigation, $item);

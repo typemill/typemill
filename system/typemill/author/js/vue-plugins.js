@@ -2,7 +2,7 @@ const app = Vue.createApp({
 	template: `<Transition name="initial" appear>
 				<div class="w-full">
 					<ul>
-						<li v-for="(plugin,pluginname) in formDefinitions" class="w-full my-4 bg-stone-100">
+						<li v-for="(plugin,pluginname) in formDefinitions" class="w-full my-8 bg-stone-100 border border-stone-200">
 							<p v-if="versions[pluginname] !== undefined"><a href="https://plugins.typemill.net" class="block p-2 text-center bg-rose-500 text-white">Please update to version {{ versions[pluginname].version }}</a></p>
 							<div class="flex justify-between w-full px-8 py-3 border-b border-white" :class="getActiveClass(pluginname)">
 								<p class="py-2">License: {{ plugin.license }}</p>
@@ -21,7 +21,7 @@ const app = Vue.createApp({
 									<p>{{plugin.description}}</p>
 								</div>
 								<div class="w-full mt-6 flex justify-between">
-									<button @click="setCurrent(pluginname)" class="flex-1 flex items-center justify-center space-x-4 p-3 bg-stone-700 hover:bg-stone-900 text-white cursor-pointer transition duration-100">
+									<button v-if="hasSettings(pluginname)" @click="setCurrent(pluginname)" class="flex-1 flex items-center justify-center space-x-4 p-3 bg-stone-700 hover:bg-stone-900 text-white cursor-pointer transition duration-100">
 										<span>{{ $filters.translate('Configure') }}</span>
 										<span :class="(current == pluginname) ? 'border-b-8 border-b-white' : 'border-t-8 border-t-white'" class="h-0 w-0 border-x-8 border-x-transparent"></span>
 									</button>
@@ -133,18 +133,18 @@ const app = Vue.createApp({
 
 	},
 	methods: {
-		getActiveClass: function(pluginname)
+		getActiveClass(pluginname)
 		{
 			if(this.formData[pluginname]['active'])
 			{
 				return 'bg-stone-200';
 			}
 		},
-		getLinkToLicense: function()
+		getLinkToLicense()
 		{
 			return tmaxios.defaults.baseURL + "/tm/license";
 		},
-		checkLicense: function(haystack, needle)
+		checkLicense(haystack, needle)
 		{
 			if(needle == 'MAKER' || needle == 'BUSINESS')
 			{
@@ -155,7 +155,7 @@ const app = Vue.createApp({
 			}
 			return true;
 		},		
-		activate: function(pluginname)
+		activate(pluginname)
 		{
 			var self = this;
 
@@ -178,7 +178,15 @@ const app = Vue.createApp({
 				}
 			});
 		},
-		setCurrent: function(name)
+		hasSettings(pluginname)
+		{
+			if(this.formDefinitions[pluginname].forms !== undefined)
+			{
+				return true;
+			}
+			return false;
+		},
+		setCurrent(name)
 		{
 			if(this.current == name)
 			{
@@ -189,11 +197,11 @@ const app = Vue.createApp({
 				this.current = name;
 			}
 		},
-		selectComponent: function(type)
+		selectComponent(type)
 		{
 			return 'component-'+type;
 		},
-		save: function()
+		save()
 		{
 			this.reset();
 			var self = this;
@@ -220,7 +228,7 @@ const app = Vue.createApp({
 				}
 			});
 		},
-		reset: function()
+		reset()
 		{
 			this.errors 			= {};
 			this.message 			= '';

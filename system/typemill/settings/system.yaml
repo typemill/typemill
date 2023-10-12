@@ -53,6 +53,11 @@ fieldsetsystem:
       label: Google sitemap (readonly)
       css: lg:w-half
       disabled: true
+#    darkmode:
+#      type: checkbox
+#      label: Darkmode
+#      checkboxlabel: Switch to darkmode for the authoring area
+#      css: lg:w-half
 fieldsetmedia:
   type: fieldset
   legend: Media
@@ -200,10 +205,6 @@ fieldsetdeveloper:
       type: checkbox
       label: Twig cache
       checkboxlabel: Activate the cache for twig templates
-    refreshcache:
-      type: checkbox
-      label: Refresh cache
-      checkboxlabel: Refresh the cache every 10 minutes. Use this option if you change content-files via FTP.
     proxy:
       type: checkbox
       label: Proxy
@@ -211,7 +212,3 @@ fieldsetdeveloper:
     trustedproxies:
       type: text
       label: Trusted IPs for proxies (comma separated)
-    headersoff:
-      type: checkbox
-      label: Disable headers
-      checkboxlabel: Disable the typemill headers and send your owwn

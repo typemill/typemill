@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./system/typemill/author/**/*.{html,js,twig}"],
+  darkMode: 'class',
   theme: {
     extend: {
       screens: {

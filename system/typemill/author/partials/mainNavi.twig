@@ -1,13 +1,19 @@
 <nav class="max-w-6xl m-auto flex justify-between">
 	<div class="lg:p-3 p-2 flex">
-		<a class="text-2xl font-bold" href="{{ base_url() }}/tm/content/{{ settings.editor }}">T<span class="lg:inline hidden">ypemill</span></a>
+		<a class="text-2xl font-bold dark:text-stone-200" href="{{ base_url() }}/tm/content/{{ settings.editor }}">T<span class="lg:inline hidden">ypemill</span></a>
 		<div id="kixote"></div>
 	</div>
-	<ul class="flex border-l-2 border-stone-200">
+	<ul class="flex border-l-2 border-stone-200 dark:border-stone-600">
 		{% for name,navitem in mainnavi %}
-			<li class="border-r-2 border-stone-200">
-				<a class="inline-block lg:px-4 lg:pt-4 lg:pb-3 lg:border-b-4 px-3 pt-3 pb-3 border-b-2 hover:border-stone-700 hover:bg-stone-50 focus:bg-stone-50 active:bg-stone-50 transition duration-100{{ navitem.active ? ' bg-stone-50 border-stone-700' : ' border-stone-100' }}" href="{{ url_for(navitem.routename) }}">{{ translate(navitem.title)|capitalize }}</a>
-			</li>
+			{% if settings.darkmode %}
+				<li class="border-r-2 border-stone-200 dark:border-stone-600">
+					<a class="inline-block lg:px-4 lg:pt-4 lg:pb-3 lg:border-b-4 px-3 pt-3 pb-3 border-b-2 dark:text-stone-200 hover:bg-stone-50 hover:dark:bg-stone-200 hover:dark:text-stone-900 focus:dark:text-stone-900 active:dark:text-stone-900 hover:dark:border-stone-600 focus:dark:border-stone-600 active:dark:border-stone-600 transition duration-100{{ navitem.active ? ' dark:bg-stone-200 dark:text-stone-900 dark:border-stone-600' : ' dark:border-stone-900' }}" href="{{ url_for(navitem.routename) }}">{{ translate(navitem.title)|capitalize }}</a>
+				</li>
+			{% else %}
+				<li class="border-r-2 border-stone-200 dark:border-stone-600">
+					<a class="inline-block lg:px-4 lg:pt-4 lg:pb-3 lg:border-b-4 px-3 pt-3 pb-3 border-b-2 hover:border-stone-700 hover:bg-stone-50 focus:bg-stone-50 active:bg-stone-50 transition duration-100{{ navitem.active ? ' bg-stone-50 border-stone-700' : ' border-stone-100' }}" href="{{ url_for(navitem.routename) }}">{{ translate(navitem.title)|capitalize }}</a>
+				</li>
+			{% endif %}
 		{% endfor %}	
 	</ul>
 </nav>

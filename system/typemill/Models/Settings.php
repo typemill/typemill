@@ -156,6 +156,16 @@ class Settings
 		return false;
 	}
 
+	public function updateThemeCss(string $name, string $css)
+	{
+		if($this->storage->writeFile('cacheFolder', '', $name . '-custom.css', $css))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
 	private function array_is_list(array $arr)
 	{
 		if ($arr === [])

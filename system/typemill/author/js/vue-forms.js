@@ -2,7 +2,7 @@ app.component('component-text', {
 	props: ['id', 'description', 'maxlength', 'hidden', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'css', 'errors'],	
 	template: `<div :class="css ? css : ''" class="w-full mt-5 mb-5">
 				<label :for="name" class="block mb-1 font-medium">{{ $filters.translate(label) }}</label>
-				<input type="text" class="h-12 w-full border px-2 py-3" :class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
+				<input type="text" class="text-stone-900 h-12 w-full border px-2 py-3" :class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
 					:id="id"
 					:maxlength="maxlength"
 					:readonly="readonly"
@@ -28,7 +28,7 @@ app.component('component-textarea', {
 	props: ['id', 'description', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'css', 'value', 'errors'],
 	template: `<div :class="css ? css : ''" class="w-full mt-5 mb-5">
 				<label :for="name" class="block mb-1 font-medium">{{ $filters.translate(label) }}</label>
-				<textarea rows="8" class="w-full border border-stone-300 bg-stone-200 px-2 py-3"
+				<textarea rows="8" class="w-full border border-stone-300 text-stone-900 bg-stone-200 px-2 py-3"
 					:id="id"
 					:class="css"
 					:readonly="readonly"
@@ -128,7 +128,7 @@ app.component('component-select', {
 	props: ['id', 'description', 'readonly', 'required', 'disabled', 'label', 'name', 'type', 'css', 'options', 'value', 'errors', 'dataset', 'userroles'],
 	template: `<div :class="css ? css : ''" class="w-full mt-5 mb-5">
 				<label :for="name" class="block mb-1 font-medium">{{ $filters.translate(label) }}</label>
-			    <select class="form-select block w-full border border-stone-300 bg-stone-200 px-2 py-3 h-12 transition ease-in-out"
+			    <select class="form-select block w-full border border-stone-300 text-stone-900 bg-stone-200 px-2 py-3 h-12 transition ease-in-out"
 					:id="id"
 					:name="name"
 					:required="required"  
@@ -258,7 +258,7 @@ app.component('component-number', {
 	props: ['id', 'description', 'min', 'max', 'maxlength', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'css', 'value', 'errors'],
 	template: `<div :class="css ? css : ''" class="w-full mt-5 mb-5">
 				<label :for="name" class="block mb-1 font-medium">{{ $filters.translate(label) }}</label>
-				<input type="number" class="h-12 w-full border border-stone-300 bg-stone-200 px-2 py-3"
+				<input type="number" class="h-12 w-full border border-stone-300 text-stone-900 bg-stone-200 px-2 py-3"
 					:id="id"
 					:min="min"
 					:max="max"
@@ -291,7 +291,7 @@ app.component('component-date', {
 				    		<path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
 				    	</svg>
 					</div>
-					<input type="date" class="h-12 w-full border pl-10 pr-2 py-3" :class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
+					<input type="date" class="h-12 w-full border pl-10 pr-2 py-3 text-stone-900" :class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
 						:id="id"
 						:readonly="readonly"
 						:required="required"  
@@ -323,7 +323,7 @@ app.component('component-email', {
 					    	<path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
 					    </svg>
 					</div>
-					<input type="email" class="h-12 w-full border pl-10 pr-2 py-3" :class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
+					<input type="email" class="h-12 w-full border pl-10 pr-2 py-3 text-stone-900" :class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
 						:id="id"
 						:maxlength="maxlength"
 						:readonly="readonly"
@@ -355,7 +355,7 @@ app.component('component-tel', {
 							<path d="M22 20c-2 2-2 4-4 4s-4-2-6-4-4-4-4-6 2-2 4-4-4-8-6-8-6 6-6 6c0 4 4.109 12.109 8 16s12 8 16 8c0 0 6-4 6-6s-6-8-8-6z"></path>
 					    </svg>
 					</div>
-					<input type="tel" class="h-12 w-full border pl-10 pr-2 py-3" :class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
+					<input type="tel" class="h-12 w-full border pl-10 pr-2 py-3 text-stone-900" :class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
 						:id="id"
 						:maxlength="maxlength"
 						:readonly="readonly"
@@ -388,7 +388,7 @@ app.component('component-url', {
 							<path d="M8 31.625c-2.037 0-3.952-0.793-5.392-2.233-2.973-2.973-2.973-7.81 0-10.783l2.743-2.743c0.635-0.635 1.664-0.635 2.298 0s0.635 1.663 0 2.298l-2.743 2.743c-1.706 1.706-1.706 4.481 0 6.187 0.826 0.826 1.925 1.281 3.094 1.281s2.267-0.455 3.094-1.281l6-6c1.706-1.706 1.706-4.481 0-6.187-0.635-0.635-0.635-1.663 0-2.298s1.663-0.635 2.298 0c2.973 2.973 2.973 7.81 0 10.783l-6 6c-1.44 1.44-3.355 2.233-5.392 2.233z"></path>
 					    </svg>
 					</div>
-					<input type="url" class="h-12 w-full border pl-10 pr-2 py-3" :class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
+					<input type="url" class="h-12 w-full border pl-10 pr-2 py-3 text-stone-900" :class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
 						:id="id"
 						:maxlength="maxlength"
 						:readonly="readonly"
@@ -457,7 +457,7 @@ app.component('component-password', {
 							<path d="M18.5 14h-0.5v-6c0-3.308-2.692-6-6-6h-4c-3.308 0-6 2.692-6 6v6h-0.5c-0.825 0-1.5 0.675-1.5 1.5v15c0 0.825 0.675 1.5 1.5 1.5h17c0.825 0 1.5-0.675 1.5-1.5v-15c0-0.825-0.675-1.5-1.5-1.5zM6 8c0-1.103 0.897-2 2-2h4c1.103 0 2 0.897 2 2v6h-8v-6z"></path>
 					    </svg>
 					</div>
-					<input :type="fieldType" class="h-12 w-full border pl-10 pr-10 py-1" :class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
+					<input :type="fieldType" class="h-12 w-full border pl-10 pr-10 py-1 text-stone-900" :class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
 						:id="id"
 						:maxlength="maxlength"
 						:readonly="readonly"
@@ -582,7 +582,7 @@ app.component('component-customfields', {
 							<input 
 								type="text" 
 								placeholder="key" 
-								class="h-12 w-full border px-2 py-3 border-stone-300 bg-stone-200" 
+								class="h-12 w-full border px-2 py-3 border-stone-300 bg-stone-200 text-stone-900" 
 								:class="pairobject.keyerror" 
 								:value="pairobject.key" 
 								@input="updatePairKey(pairindex,$event)">
@@ -594,7 +594,7 @@ app.component('component-customfields', {
 					  			</svg>
 				  			  	<textarea 
 				  			  		placeholder="value" 
-									class="w-full border px-2 py-3 border-stone-300 bg-stone-200" 
+									class="w-full border px-2 py-3 border-stone-300 bg-stone-200 text-stone-900" 
 				  			  		:class="pairobject.valueerror" 
 				  			  		v-html="pairobject.value" 
 				  			  		@input="updatePairValue(pairindex,$event)"></textarea>
@@ -751,7 +751,7 @@ app.component('component-image', {
 							<label class="block mb-1">{{ $filters.translate('Image URL (read only)') }}</label>
 							<div class="flex">
 								<button @click.prevent="deleteImage()" class="w-1/6 bg-stone-200 hover:bg-rose-500 hover:text-white">x</button>
-								<input type="text" class="h-12 w-5/6 border px-1 py-1" :class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'" 
+								<input type="text" class="h-12 w-5/6 border px-1 py-1 text-stone-900" :class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'" 
 									:id="id"
 									:maxlength="maxlength"
 									readonly="readonly"

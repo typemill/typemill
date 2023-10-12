@@ -14,5 +14,5 @@ meta:
     time: 22-09-48
     reference: null
     referencetype: null
-    hide: false
+    hide: true
     noindex: false

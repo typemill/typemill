@@ -1,6 +1,6 @@
 {% extends 'layouts/layoutAuth.twig' %}
 
-{% block title %}{{ 'Setup'|translate }}{% endblock %}
+{% block title %}{{ translate('Setup') }}{% endblock %}
 
 {% block content %}
 
@@ -83,7 +83,7 @@
 					</ul>
 				{% else %}
 					<h2 class="text-4xl py-5">{{ translate('Welcome to Typemill') }}</h2>
-					<p>{{ translate('Hey writer, author, editor, content-guru, or website-manager.') }} {{ translate(' We hope you like Typemill, because we coded it just for you.'}}</p>
+					<p>{{ translate('Hey writer, author, editor, content-guru, or website-manager.') }} {{ translate(' We hope you like Typemill, because we coded it just for you.') }}</p>
 					<p>{{ translate('Get inspired and enjoy your writing') }}!</p>
 				{% endif %}
 			</div>

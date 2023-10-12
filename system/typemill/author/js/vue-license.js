@@ -34,12 +34,12 @@ const app = Vue.createApp({
 									<div class="w-half border-2 border-stone-200 p-4 my-8 text-center">
 										<h2 class="text-3 font-bold mb-4">Maker License</h2>
 										<p class="mb-4">Use all maker-prodcuts (plugins and themes) for one year. The subscription will automatically refresh after a year until you cancel it.</p>
-										<a href="https://typemill.net/buy">Buy on Typemill</a>
+										<a class="p-2 block dark:bg-stone-600 hover:dark:bg-stone-900 dark:text-stone-200" href="https://typemill.net/buy">Buy on Typemill</a>
 									</div>
 									<div class="w-half border-2 border-stone-200 p-4 my-8 text-center">
 										<h2 class="text-3 font-bold mb-4">Business License</h2>
 										<p class="mb-4">Use all business- and maker-products (plugins, themes, services) for one year. The subscription will automatically refresh after a year until you cancel it.</p>
-										<a href="https://typemill.net/buy">Buy on Typemill</a>
+										<a class="p-2 block dark:bg-stone-600 hover:dark:bg-stone-900 dark:text-stone-200" href="https://typemill.net/buy">Buy on Typemill</a>
 									</div>
 								</div>
 							</div>

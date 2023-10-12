@@ -47,4 +47,25 @@ class ControllerApiSystemThemes extends Controller
 
 		return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
 	}
+
+	public function updateThemeCss(Request $request, Response $response)
+	{
+		$params 			= $request->getParsedBody();
+		$themename 			= $params['theme'];
+		$themecss 			= $params['css'];
+
+		# validate css input
+		$themecss 			= strip_tags($themecss);
+
+		# store updated css
+		$settings 			= new Settings();
+		$updatedSettings 	= $settings->updateThemeCss($themename, $themecss);
+
+		$response->getBody()->write(json_encode([
+			'message' => Translations::translate('settings have been saved'),
+			'code' => $updatedSettings
+		]));
+
+		return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+	}	
 }

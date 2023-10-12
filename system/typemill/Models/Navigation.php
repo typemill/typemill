@@ -80,15 +80,19 @@ class Navigation extends Folder
 
 		$allowedmainnavi = [];
 
+		$activeitem = false;
+
 		foreach($mainnavi as $name => $naviitem)
 		{
 			if($acl->isAllowed($userrole, $naviitem['aclresource'], $naviitem['aclprivilege']))
 			{
 				# set the navi of current route active
 				$thisRoute = '/tm/' . $name;
+
 				if(strpos($urlinfo['route'], $thisRoute) !== false)
 				{
 					$naviitem['active'] = true;
+					$activeitem = true;
 				}
 
 				$allowedmainnavi[$name] = $naviitem;
@@ -99,6 +103,12 @@ class Navigation extends Folder
 		if(isset($allowedmainnavi['system']))
 		{
 			unset($allowedmainnavi['account']);
+			
+			# if no active item has been found, then it is submenu under system
+			if(!$activeitem)
+			{
+				$allowedmainnavi['system']['active'] = true;
+			}
 		}
 
 		# set correct editor mode according to user settings
@@ -112,16 +122,19 @@ class Navigation extends Folder
 
 	public function getSystemNavigation($userrole, $acl, $urlinfo, $dispatcher, $routeparser)
 	{
-		$systemnavi 	= $this->storage->getYaml('systemSettings', '', 'systemnavi.yaml');
-		$systemnavi 	= $dispatcher->dispatch(new OnSystemnaviLoaded($systemnavi), 'onSystemnaviLoaded')->getData();
+		$systemnavi 		= $this->storage->getYaml('systemSettings', '', 'systemnavi.yaml');
+		$systemnavi 		= $dispatcher->dispatch(new OnSystemnaviLoaded($systemnavi), 'onSystemnaviLoaded')->getData();
 
-		$allowedsystemnavi = [];
+		$allowedsystemnavi 	= [];
+
+		$route 				= trim($urlinfo['route'], '/');
 
 		foreach($systemnavi as $name => $naviitem)
 		{
-			$naviitem['url'] = $routeparser->urlFor($naviitem['routename']);
+			$naviitem['url'] 	= $routeparser->urlFor($naviitem['routename']);
+			$itemurl 			= trim($naviitem['url'], '/');
 
-			if(strpos( trim($naviitem['url'], '/'), trim($urlinfo['route'], '/')))
+			if(strpos( $itemurl, $route ) !== false)
 			{
 				$naviitem['active'] = true;
 			}
@@ -224,7 +237,6 @@ class Navigation extends Folder
 		return $this->basicLiveNavigation;
 	}
 
-	# creates a fresh structure with published and non-published pages for the author
 	public function createBasicLiveNavigation($urlinfo, $language)
 	{
 		# scan the content of the folder
@@ -330,6 +342,7 @@ class Navigation extends Folder
 
 	public function getItemWithKeyPath($navigation, array $searchArray, $baseUrl = null)
 	{
+
 		$item = false;
 
 		# if it is the homepage
@@ -352,7 +365,37 @@ class Navigation extends Folder
 		return $item;
 	}
 
-	public function setActiveNaviItems($navigation, array $searchArray)
+	# used with scan folder that generates own indexes for live version
+	public function setActiveNaviItems($navigation, $breadcrumb)
+	{
+		foreach($breadcrumb as $crumbkey => $page)
+		{
+			foreach($navigation as $itemkey => $item)
+			{
+				if($page->urlRelWoF == $item->urlRelWoF)
+				{
+					unset($breadcrumb[$crumbkey]);
+
+					if(empty($breadcrumb))
+					{
+						$navigation[$itemkey]->active = true;
+					}
+					elseif(isset($navigation[$itemkey]->folderContent))
+					{
+						$navigation[$itemkey]->activeParent = true;
+						$navigation[$itemkey]->folderContent = $this->setActiveNaviItems($navigation[$itemkey]->folderContent, $breadcrumb);
+					}
+
+					break;
+				}
+			}
+		}
+
+		return $navigation;
+	}
+
+	# used with scan folder that keeps index from draft version
+	public function setActiveNaviItemsWithKeyPath($navigation, array $searchArray)
 	{
 		foreach($searchArray as $key => $itemKey)
 		{
@@ -491,6 +534,7 @@ class Navigation extends Folder
 			if(!isset($navigation[$searchArray[$i]])){ return false; }
 			$item = $navigation[$searchArray[$i]];
 
+
 			if($i == count($searchArray)-1)
 			{
 				$item->active = true;
@@ -536,9 +580,16 @@ class Navigation extends Folder
 			$item->thisChapter = $this->getItemWithKeyPath($navigation, $thisChapArray);
 		}
 
-		$flat = $this->flatten($navigation, $item->keyPath);
+		$flat = $this->flatten($navigation, $item->urlRel);
 
 		$itemkey = $flat[0];
+
+		# if no previous or next is found (e.g. hidden page)
+		if(!is_int($itemkey))
+		{
+			return $item;
+		}
+
 		if($itemkey > 1)
 		{
 			$item->prevItem = $flat[$itemkey-1];
@@ -551,13 +602,13 @@ class Navigation extends Folder
 		return $item;
 	}
 
-	public function flatten($navigation, $keyPath, $flat = [])
-	{		
+	public function flatten($navigation, $urlRel, $flat = [])
+	{
 		foreach($navigation as $key => $item)
 		{
 			$flat[] = clone($item);
 
-			if($keyPath === $item->keyPath)
+			if($item->urlRel == $urlRel)
 			{
 				array_unshift($flat, count($flat));
 			}
@@ -566,132 +617,11 @@ class Navigation extends Folder
 			{
 				$last = array_key_last($flat);
 				unset($flat[$last]->folderContent);
-				$flat = $this->flatten($item->folderContent, $keyPath, $flat);
+				$flat = $this->flatten($item->folderContent, $urlRel, $flat);
 			}
 		}
 
 		return $flat;
-	}
-
-	public function getPagingForItemOld($navigation, $item)
-	{
-		# if page is home
-		if(trim($item->pathWithoutType, DIRECTORY_SEPARATOR) == 'index')
-		{
-			return $item;
-		}
-
-		$keyPos 			= count($item->keyPathArray)-1;
-		$thisChapArray		= $item->keyPathArray;
-		$nextItemArray 		= $item->keyPathArray;
-		$prevItemArray 		= $item->keyPathArray;
-		
-		$item->thisChapter 	= false;
-		$item->prevItem 	= false;
-		$item->nextItem 	= false;
-		
-		
-		/************************
-		* 	ADD THIS CHAPTER 	*
-		************************/
-
-		if($keyPos > 0)
-		{
-			array_pop($thisChapArray);
-			$item->thisChapter = $this->getItemWithKeyPath($navigation, $thisChapArray);
-		}
-		
-		/************************
-		* 	ADD NEXT ITEM	 	*
-		************************/
-				
-		if($item->elementType == 'folder')
-		{
-			# get the first element in the folder
-			$item->nextItem = isset($item->folderContent[0]) ? clone($item->folderContent[0]) : false;
-		}
-		
-		# the item is a file or an empty folder
-		if(!$item->nextItem)
-		{
-			# walk to the next file in the same hierarchy
-			$nextItemArray[$keyPos]++;
-
-			# get the key of the last element in this hierarchy level
-			# if there is no chapter, then it is probably an empty first-level-folder. Count content to get the number of first level items
-			$lastKey = $item->thisChapter ? array_key_last($item->thisChapter->folderContent) : count($navigation);
-
-			# as long as the nextItemArray is smaller than the last key in this hierarchy level, search for the next item
-			# this ensures that it does not stop if key is missing (e.g. if the next page is hidden)
-			while( ($nextItemArray[$keyPos] <= $lastKey) && !$item->nextItem = $this->getItemWithKeyPath($navigation, $nextItemArray) )
-			{
-				$nextItemArray[$keyPos]++;
-			}
-		}
-		
-		# there is no next file or folder in this level, so walk up the hierarchy to the next folder or file
-		while(!$item->nextItem)
-		{
-			# delete the array level with the current item, so you are in the parent folder
-			array_pop($nextItemArray);
-
-			# if the array is empty now, then you where in the base level already, so break
-			if(empty($nextItemArray)) break; 
-
-			# define the key position where you are right now
-			$newKeyPos = count($nextItemArray)-1;
-
-			# go to the next position
-			$nextItemArray[$newKeyPos]++;
-
-			# search for 5 items in case there are some hidden elements
-			$maxlength = $nextItemArray[$newKeyPos]+5;
-			while( ($nextItemArray[$newKeyPos] <= $maxlength) && !$item->nextItem = $this->getItemWithKeyPath($navigation, $nextItemArray) )
-			{
-				$nextItemArray[$newKeyPos]++;
-			}
-		}
-
-		/************************
-		* 	ADD PREVIOUS ITEM	*
-		************************/
-		
-		# check if element is the first in the array
-		$first = ($prevItemArray[$keyPos] == 0) ? true : false;
-
-		if(!$first)
-		{
-			$prevItemArray[$keyPos]--;
-			
-			while($prevItemArray[$keyPos] >= 0 && !$item->prevItem = $this->getItemWithKeyPath($navigation, $prevItemArray))
-			{
-				$prevItemArray[$keyPos]--;
-			}
-			
-			# if no item is found, then all previous items are hidden, so set first item to true and it will walk up the array later
-			if(!$item->prevItem)
-			{
-				$first = true;
-			}
-			elseif($item->prevItem && $item->prevItem->elementType == 'folder' && !empty($item->prevItem->folderContent))
-			{
-				# if the previous item is a folder, the get the last item of that folder
-				$item->prevItem = $this->getLastItemOfFolder($item->prevItem);
-			}
-		}
-
-		# if it is the first item in the folder (or all other files are hidden)
-		if($first)
-		{
-			# then the previous item is the containing chapter
-			$item->prevItem = $item->thisChapter;
-		}
-		
-		if($item->prevItem && $item->prevItem->elementType == 'folder'){ unset($item->prevItem->folderContent); }
-		if($item->nextItem && $item->nextItem->elementType == 'folder'){ unset($item->nextItem->folderContent); }
-		if($item->thisChapter){unset($item->thisChapter->folderContent); }
-		
-		return $item;
 	}
 
 	public function getLastItemOfFolder($folder)

@@ -2,7 +2,7 @@ const app = Vue.createApp({
 	template: `<Transition name="initial" appear>
 				<div class="w-full">
 					<ul>
-						<li v-for="(theme,themename) in formDefinitions" class="w-full my-4 bg-stone-100">
+						<li v-for="(theme,themename) in formDefinitions" class="w-full my-8 bg-stone-100 dark:bg-stone-600 border border-stone-200">
 							<p v-if="versions[themename] !== undefined"><a href="https://themes.typemill.net" class="block p-2 text-center bg-rose-500 text-white">Please update to version {{ versions[themename].version }}</a></p>
 							<div class="flex justify-between w-full px-8 py-3 border-b border-white" :class="getActiveClass(themename)">
 								<p class="py-2">License: {{ theme.license }}</p>
@@ -22,7 +22,7 @@ const app = Vue.createApp({
 										<p>{{theme.description}}</p>
 									</div>
 									<div class="lg:w-1/2 w-full h-48 overflow-hidden">
-										<img :src="theme.preview" class="w-full">
+										<img :src="getSrc(theme.preview)" class="w-full">
 									</div>
 								</div>
 								<div class="w-full mt-6 flex justify-between">
@@ -140,24 +140,28 @@ const app = Vue.createApp({
 		});
 	},
 	methods: {
-		deactivateThemes: function()
+		deactivateThemes()
 		{
 			for (const theme in this.formData) {
 			  delete this.formData[theme].active;
 			}
 		},
-		getActiveClass: function(themename)
+		getActiveClass(themename)
 		{
 			if(this.formData[themename]['active'])
 			{
-				return 'bg-stone-200';
+				return 'bg-stone-200 dark:bg-stone-900';
 			}
 		},
-		getLinkToLicense: function()
+		getSrc(preview)
+		{
+			return data.urlinfo.baseurl + preview;
+		},
+		getLinkToLicense()
 		{
 			return tmaxios.defaults.baseURL + "/tm/license";
 		},
-		checkLicense: function(haystack, needle)
+		checkLicense(haystack, needle)
 		{
 			if(needle == 'MAKER' || needle == 'BUSINESS')
 			{
@@ -168,7 +172,7 @@ const app = Vue.createApp({
 			}
 			return true;
 		},
-		activate: function(themename)
+		activate(themename)
 		{
 			var self = this;
 
@@ -193,7 +197,7 @@ const app = Vue.createApp({
 				}
 			});
 		},
-		setCurrent: function(name)
+		setCurrent(name)
 		{
 			if(this.current == name)
 			{
@@ -204,13 +208,14 @@ const app = Vue.createApp({
 				this.current = name;
 			}
 		},
-		selectComponent: function(type)
+		selectComponent(type)
 		{
 			return 'component-'+type;
 		},
-		save: function()
+		save()
 		{
 			this.reset();
+
 			var self = this;
 
 			tmaxios.post('/api/v1/theme',{
@@ -235,14 +240,35 @@ const app = Vue.createApp({
 						self.errors = error.response.data.errors;
 					}
 				}
-			});			
+			});
 		},
-		updateCSS: function()
+		updateCSS()
 		{
-			/* check if css has been modified */
-			/* if so, send to api endpoint */
+			var selfcss = this;
+
+			tmaxios.post('/api/v1/themecss',{
+				'theme': this.current,
+				'css': this.formData[this.current].customcss
+			})
+			.then(function (response)
+			{
+				self.messageClass = 'bg-teal-500';
+				self.message = response.data.message;
+			})
+			.catch(function (error)
+			{
+				if(error.response)
+				{
+					self.message = handleErrorMessage(error);
+					self.messageClass = 'bg-rose-500';
+					if(error.response.data.errors !== undefined)
+					{
+						self.errors = error.response.data.errors;
+					}
+				}
+			});
 		},
-		reset: function()
+		reset()
 		{
 			this.errors 			= {};
 			this.message 			= '';

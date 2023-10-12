@@ -82,14 +82,79 @@ class Folder
 						$folderContent[] = $item;
 					}
 					
-					/* store the name of the last file */
+					# store the name of the last file
 					$last = implode($nameParts);
 				}
 			}
 		}
 		return $folderContent;
 	}
-	
+
+	/*
+	* scans content of a folder recursively and keeps the index order
+	* vars: folder path as string
+	* returns: multi-dimensional array with names of folders and files
+	*/
+	public function scanFolderCheckIndex($folderPath, $draft = false)
+	{
+		$folderItems 	= scandir($folderPath);
+		$folderContent 	= array();
+
+		# if it is the live version and if it is a folder that is not published, then do not show the folder and its content.
+		if(!$draft && !in_array('index.md', $folderItems)){ return false; }
+
+		foreach ($folderItems as $key => $item)
+		{
+			if (!in_array($item, array(".","..")) && substr($item, 0, 1) != '.')
+			{
+				if (is_dir($folderPath . DIRECTORY_SEPARATOR . $item))
+				{
+
+					$subFolder 		 	= $item;
+					$folderPublished 	= file_exists($folderPath . DIRECTORY_SEPARATOR . $item . DIRECTORY_SEPARATOR . 'index.md');
+
+					# scan that folder only if it is a draft or if the folder is published (contains index.md)
+					if($draft OR $folderPublished)
+					{
+						# we need s countable index here 
+						$folderContent[$subFolder] 	= $this->scanFolder($folderPath . DIRECTORY_SEPARATOR . $subFolder, $draft);
+					}
+				}
+				else
+				{
+					$nameParts 					= $this->getStringParts($item);
+					$fileType 					= array_pop($nameParts);
+					
+					if($fileType == 'md')
+					{
+						$folderContent[] 			= $item;		
+					}
+					
+					if($fileType == 'txt')
+					{
+						if(isset($last) && ($last == implode($nameParts)) )
+						{
+							array_pop($folderContent);
+							$item = $item . 'md';
+						}
+						$folderContent[] = $item;
+
+						if(!$draft)
+						{
+							$index = count($folderContent)-1;
+							unset($folderContent[$index]);
+						}
+					}
+					
+					# store the name of the last file
+					$last = implode($nameParts);
+
+				}
+			}
+		}
+		return $folderContent;
+	}
+
 
 	/*
 	* Transforms array of folder item into an array of item-objects with additional information for each item
