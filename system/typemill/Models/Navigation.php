@@ -413,13 +413,14 @@ class Navigation extends Folder
 				if(!empty($searchArray) && isset($navigation[$itemKey]->folderContent))
 				{
 					$navigation[$itemKey]->activeParent = true;
-					$navigation[$itemKey]->folderContent = $this->setActiveNaviItems($navigation[$itemKey]->folderContent, $searchArray);
+					$navigation[$itemKey]->folderContent = $this->setActiveNaviItemsWithKeyPath($navigation[$itemKey]->folderContent, $searchArray);
 				}
 				
 				# break to avoid other items with that key are set active
 				break;
 			}
 		}
+
 		return $navigation;
 	}
 
