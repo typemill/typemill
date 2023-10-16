@@ -2,7 +2,7 @@ const modal = {
 	props: ['labelconfirm', 'labelcancel'],
 	template: `<transition name="initial" appear>
 				<div class="fixed w-full h-100 inset-0 z-50 overflow-hidden flex justify-center items-center bg-stone-700 bg-opacity-90">
-					<div class="border border-teal-500 shadow-lg bg-white w-11/12 md:max-w-md mx-auto shadow-lg z-50 overflow-y-auto">
+					<div class="border border-teal-500 dark:border-stone-200 shadow-lg bg-white dark:bg-stone-600  w-11/12 md:max-w-md mx-auto shadow-lg z-50 overflow-y-auto">
 						<div class="text-left p-6">
 							<div class="text-2xl font-bold">
 								<slot name="header">
@@ -71,7 +71,7 @@ function handleErrorMessage(error)
 const loginform = Vue.createApp({
 	template: `<transition name="initial" appear>
 				<div v-if="show" class="fixed w-full h-100 inset-0 z-50 overflow-hidden flex justify-center items-center bg-stone-700 bg-opacity-90">
-					<div class="border border-teal-500 shadow-lg bg-white w-11/12 md:max-w-md mx-auto shadow-lg z-50 overflow-y-auto">
+					<div class="border border-teal-500 dark:border-stone-200 shadow-lg bg-white dark:bg-stone-600 w-11/12 md:max-w-md mx-auto shadow-lg z-50 overflow-y-auto">
 						<div class="text-left p-6">
 							<div class="text-2xl font-bold"><h2>You are logged out</h2></div>
 							<div class="my-5">

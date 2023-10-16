@@ -260,6 +260,7 @@ const publisher = Vue.createApp({
 				self.clearPublisher();
 				eventBus.$emit('item', response.data.item);
 				eventBus.$emit('navigation', response.data.navigation);
+				eventBus.$emit('meta', response.data.metadata);
 			})
 			.catch(function (error)
 			{

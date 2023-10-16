@@ -361,7 +361,8 @@ class ParsedownExtension extends \ParsedownExtra
             }
 
             $text = trim($Line['text'], '#');
-            $headline = Slug::createSlug($Line['text'], $this->settings['langattr']);
+            $lang = $this->settings['langattr'] ?? false;
+            $headline = Slug::createSlug($Line['text'], $lang);
 
             if ($this->strictMode and isset($text[0]) and $text[0] !== ' ')
             {

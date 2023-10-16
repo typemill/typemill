@@ -2,7 +2,7 @@ const app = Vue.createApp({
 	template: `<Transition name="initial" appear>
 				<div class="w-full">
 					<ul>
-						<li v-for="(plugin,pluginname) in formDefinitions" class="w-full my-8 bg-stone-100 border border-stone-200">
+						<li v-for="(plugin,pluginname) in formDefinitions" class="w-full my-8 bg-stone-100 dark:bg-stone-600 border border-stone-200">
 							<p v-if="versions[pluginname] !== undefined"><a href="https://plugins.typemill.net" class="block p-2 text-center bg-rose-500 text-white">Please update to version {{ versions[pluginname].version }}</a></p>
 							<div class="flex justify-between w-full px-8 py-3 border-b border-white" :class="getActiveClass(pluginname)">
 								<p class="py-2">License: {{ plugin.license }}</p>
@@ -137,7 +137,7 @@ const app = Vue.createApp({
 		{
 			if(this.formData[pluginname]['active'])
 			{
-				return 'bg-stone-200';
+				return 'bg-stone-200 dark:bg-stone-900';
 			}
 		},
 		getLinkToLicense()

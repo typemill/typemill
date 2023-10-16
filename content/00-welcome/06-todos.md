@@ -111,6 +111,9 @@
 * finish youtube component
 * Handle formdata centrally ???
 * BUG: Error fields in account form not styled correctly
+* DONE: Update CSS for themes
+* BUG: Codefield jumps on editing
+* False for owner on live?
 
 ## later
 
@@ -160,7 +163,10 @@
 
 * Delete content of system folder
 * Upload new content of system folder with folders typemill and vendor
-* Delete settings file 
+* Backup and delete settings file 
 * upload new index.php file
 * Upload new htaccess file
+* Delete theme folder
+* Uplload new cyanine-theme
+* Deactivate and delete all plugins.
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="{{ settings.darkmode ? 'dark' :'darkmodeoff' }}" >
+<html lang="en" class="{{ settings.darkmode ? 'dark' : 'darkmodeoff' }}" >
 	<head>
 		<meta charset="UTF-8">
 		<title>{% block title %}{% endblock %}</title>
@@ -24,11 +24,11 @@
 		{{ assets.renderCSS() }}
 		
 	</head>
-	<body class="bg-stone-100">
+	<body class="bg-stone-100 dark:bg-stone-900">
 
 		{% include 'partials/symbols.twig' %}
 		
-		<header class="border-b-2 border-stone-200">
+		<header class="border-b-2 border-stone-200 dark:border-stone-600">
 			{% include 'partials/mainNavi.twig' %}
 		</header>
 

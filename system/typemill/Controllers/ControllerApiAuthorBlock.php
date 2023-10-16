@@ -96,7 +96,7 @@ class ControllerApiAuthorBlock extends Controller
 			$navigation->clearNavigation();
 
 			$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']);
-			$draftNavigation 	= $navigation->setActiveNaviItems($draftNavigation, $item->keyPathArray);
+			$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
 			$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
 
 			$response->getBody()->write(json_encode([
@@ -189,7 +189,7 @@ class ControllerApiAuthorBlock extends Controller
 			$navigation->clearNavigation();
 
 			$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']);
-			$draftNavigation 	= $navigation->setActiveNaviItems($draftNavigation, $item->keyPathArray);
+			$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
 			$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
 
 			$response->getBody()->write(json_encode([
@@ -295,7 +295,7 @@ class ControllerApiAuthorBlock extends Controller
 			$navigation->clearNavigation();
 
 			$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']);
-			$draftNavigation 	= $navigation->setActiveNaviItems($draftNavigation, $item->keyPathArray);
+			$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
 			$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
 
 			$response->getBody()->write(json_encode([
@@ -392,7 +392,7 @@ class ControllerApiAuthorBlock extends Controller
 			$navigation->clearNavigation();
 
 			$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']);
-			$draftNavigation 	= $navigation->setActiveNaviItems($draftNavigation, $item->keyPathArray);
+			$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
 			$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
 
 			$response->getBody()->write(json_encode([

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="{{ settings.darkmode ? 'dark' :'darkmodeoff' }}" >
+<html lang="en" class="{{ settings.darkmode ? 'dark' : 'darkmodeoff' }}" >
 	<head>
 		<meta charset="UTF-8">
 		<title>{% block title %}{% endblock %}</title>
@@ -32,8 +32,6 @@
 			{% include 'partials/mainNavi.twig' %}
 		</header>
 
-		{% include 'partials/flash.twig' %}
-
 		<div class="max-w-6xl m-auto mt-7 flex flex-col lg:flex-row justify-between" id="main" data-url="{{ base_url() }}">
 			<aside class="lg:w-1/4">
 				{% include 'partials/systemNavi.twig' %} 
@@ -54,7 +52,6 @@
 		<script>
 			const tmaxios = axios.create();
 			tmaxios.defaults.baseURL =  "{{ base_url() }}";
-			/* header for session authentication in middleware */			
 			tmaxios.defaults.headers.common['X-Session-Auth'] = "true";
 		</script>
 		<script src="{{ base_url() }}/system/typemill/author/js/vue.js?v={{ settings.version }}"></script>
@@ -63,13 +60,14 @@
 		<script src="{{ base_url() }}/system/typemill/author/js/vue-systemnavi.js?v={{ settings.version }}"></script>
 		<script src="{{ base_url() }}/system/typemill/author/js/vue-medialib.js?v={{ settings.version }}"></script>
 		<script>
-/*			kixote.mount('#kixote'); */
 
 			systemnavi.config.globalProperties.$filters = translatefilter;
 			systemnavi.mount('#systemNavigation');
 			
 			loginform.config.globalProperties.$filters = translatefilter;
 			loginform.mount("#loginform");
+
+/*			kixote.mount('#kixote'); */
 
 		</script>
 		{% block javascript %}{% endblock %}

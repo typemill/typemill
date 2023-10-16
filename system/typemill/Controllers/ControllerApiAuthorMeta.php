@@ -310,7 +310,7 @@ class ControllerApiAuthorMeta extends Controller
 		if($store === true)
 		{
 			$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']);
-			$draftNavigation 	= $navigation->setActiveNaviItems($draftNavigation, $item->keyPathArray);
+			$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
 			$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
 
 			$response->getBody()->write(json_encode([

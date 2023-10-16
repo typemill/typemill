@@ -111,14 +111,9 @@ const app = Vue.createApp({
 			this.formData[this.currentTab][formdata.name] = formdata.value;
 		});
 
-/*  
-		update values that are objects 
-		this.someObject = Object.assign({}, this.someObject, { a: 1, b: 2 })
-
-		eventBus.$on('forminputobject', formdata => {
-			this.formData[this.currentTab][formdata.name] = Object.assign({}, this.formData[this.currentTab][formdata.name], formdata.value);			
+		eventBus.$on('meta', metadata => {
+			this.formData.meta = metadata.meta;
 		});
-*/
 	},
 	methods: {
 		saveForm: function()

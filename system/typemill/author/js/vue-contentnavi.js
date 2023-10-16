@@ -1,13 +1,13 @@
 const navigation = Vue.createApp({
 	template: `
-			<div class="mr-3">
+			<div class="mr-3 dark:text-stone-200">
 				<div class="flex w-100 mb-8">
-					<button class="w-1/2 hover:bg-stone-700 hover:border-stone-700 hover:text-stone-50 border-b-2 border-stone-200 px-2 py-2 transition duration-100" @click.prevent="collapseNavigation()">{{ $filters.translate('collapse all') }}</button>
-					<button class="w-1/2 hover:bg-stone-700 hover:border-stone-700 hover:text-stone-50 border-b-2 border-stone-200 px-2 py-2 transition duration-100" @click.prevent="expandNavigation()">{{ $filters.translate('expand all') }}</button>
+					<button class="w-1/2 hover:bg-stone-700  hover:border-stone-700 hover:text-stone-50 border-b-2 border-stone-200 dark:border-stone-600 px-2 py-2 transition duration-100" @click.prevent="collapseNavigation()">{{ $filters.translate('collapse all') }}</button>
+					<button class="w-1/2 hover:bg-stone-700 hover:border-stone-700 hover:text-stone-50 border-b-2 border-stone-200 dark:border-stone-600 px-2 py-2 transition duration-100" @click.prevent="expandNavigation()">{{ $filters.translate('expand all') }}</button>
 				</div>
-				<div class="flex w-full my-px border-y border-stone-200 font-bold">
+				<div class="flex w-full my-px border-y border-stone-200 dark:border-stone-900 font-bold">
 					<div class="border-l-4" :class="getStatusClass(home.status)"></div>
-					<a :href="getUrl(home.urlRelWoF)" class="flex-grow p-1 pl-3 border-l-2 border-stone-50 hover:bg-teal-500 hover:text-stone-50" :class="home.active ? 'text-stone-50 bg-teal-500' : ''">
+					<a :href="getUrl(home.urlRelWoF)" class="flex-grow p-1 pl-3 border-stone-50 hover:bg-teal-500 hover:text-stone-50 dark:hover:bg-stone-200 hover:dark:text-stone-900" :class="home.active ? 'text-stone-50 bg-teal-500' : ''">
 						{{ $filters.translate(home.name) }}
 					</a>
 				</div>
@@ -153,9 +153,9 @@ navigation.component('navilevel',{
 		  >
 			<template #item="{ element }">
 				<li :class="element.elementType" :id="element.keyPath" :data-url="element.urlRelWoF" :data-active="element.active" :data-hide="element.hide">
-					<div class="flex w-full my-px border-b border-stone-200 relative" :class="element.elementType == 'folder' ? 'font-bold' : ''">
-						<div class="border-l-4" :class="getStatusClass(element.status)"></div>
-						<a :href="getUrl(element.urlRelWoF)" class="flex-grow border-l-2 border-stone-50 p-1 hover:bg-teal-500 hover:text-stone-50" :class="getNaviClass(element.active, element.activeParent, element.keyPathArray)">
+					<div class="flex w-full my-px border-b border-stone-200 dark:border-stone-900 hover:dark:text-stone-900 hover:bg-teal-500 hover:text-stone-50 dark:bg-stone-700 hover:dark:bg-stone-200 hover:dark:text-stone-900 relative transition duration-100" :class="getNaviClass(element.active, element.activeParent, element.elementType)">
+						<div class="border-l-4" :class="getStatusClass(element.status, element.keyPathArray)"></div>
+						<a :href="getUrl(element.urlRelWoF)" class="flex-grow p-1">
 							{{ element.name }}
 						</a>
 						<div v-if="load == element.keyPath" class="p-1 absolute right-0">
@@ -248,22 +248,7 @@ navigation.component('navilevel',{
 	},
 	methods: 
 	{
-		getStatusClass(status)
-		{
-			if(status == 'published')
-			{
-				return "border-teal-500";				
-			}
-			else if(status == 'unpublished')
-			{
-				return "border-rose-500";
-			}
-			else if(status == 'modified')
-			{
-				return "border-yellow-400";
-			}
-		},
-		getNaviClass(active, activeParent, keyPathArray)
+		getStatusClass(status, keyPathArray)
 		{
 			var level = 3;
 			if(keyPathArray.length > 1)
@@ -272,16 +257,38 @@ navigation.component('navilevel',{
 			}
 			let naviclass = 'pl-' + level;
 			this.navilevel = naviclass;
+
+			if(status == 'published')
+			{
+				return naviclass += " border-teal-500";				
+			}
+			else if(status == 'unpublished')
+			{
+				return naviclass += " border-rose-500";
+			}
+			else if(status == 'modified')
+			{
+				return naviclass += " border-yellow-400";
+			}
+		},
+		getNaviClass(active, activeParent, type)
+		{
+			let fontweight = 'font-normal';
+			if(type == 'folder')
+			{
+				fontweight = 'font-bold'
+			}
+
 			if(activeParent)
 			{ 
-				naviclass += " activeParent";
+				return fontweight += " activeParent";
 			}
 			else if(active)
 			{ 
-				naviclass += " text-stone-50 bg-teal-500";
+				return fontweight += " text-stone-50 bg-teal-500 dark:text-stone-900 dark:bg-stone-200";
 			}
 
-			return naviclass;
+			return fontweight;
 		},
 		getNaviInputLevel(keyPathArray)
 		{

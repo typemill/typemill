@@ -119,7 +119,7 @@ class ControllerWebAuthor extends Controller
 
 		    # extend : $request->getAttribute('c_userrole')
 		    $draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $langattr);
-			$draftNavigation 	= $navigation->setActiveNaviItems($draftNavigation, $keyPathArray);
+			$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $keyPathArray);
 			$draftNavigation 	= $this->c->get('dispatcher')->dispatch(new OnPagetreeLoaded($draftNavigation), 'onPagetreeLoaded')->getData();
 
 			$item 				= $navigation->getItemWithKeyPath($draftNavigation, $keyPathArray);

@@ -75,7 +75,7 @@ class ControllerApiAuthorArticle extends Controller
 		# refresh navigation and item
 	    $navigation->clearNavigation();
 		$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']);
-		$draftNavigation 	= $navigation->setActiveNaviItems($draftNavigation, $item->keyPathArray);
+		$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
 		$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
 
 		$sitemap 			= new Sitemap();
@@ -84,20 +84,21 @@ class ControllerApiAuthorArticle extends Controller
 		# META is important e.g. for newsletter, so send it, too
 		$meta 				= new Meta();
 		$metadata  			= $meta->getMetaData($item);
-		$metadata 			= $meta->addMetaDefaults($metadata, $item, $this->settings['author']);
-#		$metadata 			= $meta->addMetaTitleDescription($metadata, $item, $markdownArray);
+		$metadata 			= $meta->addMetaDefaults($metadata, $item, $this->settings['author'], $request->getAttribute('c_username'));
+		$metadata 			= $meta->addMetaTitleDescription($metadata, $item, $draftMarkdown);
 
 		# dispatch event, e.g. send newsletter and more
 		$data = [
 			'markdown' 	=> $draftMarkdown, 
 			'item' 		=> $item,
-			'meta'		=> $metadata
+			'metadata'	=> $metadata
 		];
 		$this->c->get('dispatcher')->dispatch(new OnPagePublished($data), 'onPagePublished');
 
 		$response->getBody()->write(json_encode([
 			'navigation'	=> $draftNavigation,
-			'item'			=> $item
+			'item'			=> $item,
+			'metadata'		=> $metadata
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json');
@@ -149,7 +150,7 @@ class ControllerApiAuthorArticle extends Controller
 		# refresh navigation and item
 	    $navigation->clearNavigation();
 		$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']);
-		$draftNavigation 	= $navigation->setActiveNaviItems($draftNavigation, $item->keyPathArray);
+		$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
 		$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
 		
 		$sitemap 			= new Sitemap();
@@ -227,7 +228,7 @@ class ControllerApiAuthorArticle extends Controller
 		# refresh navigation and item
 	    $navigation->clearNavigation();
 		$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']);
-		$draftNavigation 	= $navigation->setActiveNaviItems($draftNavigation, $item->keyPathArray);
+		$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
 		$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
 		
 		# refresh content
@@ -290,7 +291,7 @@ class ControllerApiAuthorArticle extends Controller
 		# refresh navigation and item
 	    $navigation->clearNavigation();
 		$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']);
-		$draftNavigation 	= $navigation->setActiveNaviItems($draftNavigation, $item->keyPathArray);
+		$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
 		$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
 
 		$sitemap 			= new Sitemap();
@@ -368,7 +369,7 @@ class ControllerApiAuthorArticle extends Controller
 		# refresh navigation and item
 	    $navigation->clearNavigation();
 		$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']);
-		$draftNavigation 	= $navigation->setActiveNaviItems($draftNavigation, $item->keyPathArray);
+		$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
 		$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
 		
 		# refresh content

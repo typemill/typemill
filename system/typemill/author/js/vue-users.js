@@ -187,10 +187,10 @@ app.component('searchbox', {
 					<select v-if="this.filter == 'userrole'" v-model="searchterm" class="lg:w-3/4 w-full h-12 px-2 py-3 border border-stone-300 bg-stone-200"> 
 						<option v-for="role in userroles">{{role}}</option>
 					</select>
-					<input v-else type="text" v-model="searchterm" class="lg:w-3/4 w-full h-12 px-2 py-3 border border-stone-300 bg-stone-200">
+					<input v-else type="text" v-model="searchterm" class="lg:w-3/4 w-full h-12 px-2 py-3 border border-stone-300 bg-stone-200 text-stone-900">
 					<div class="lg:w-1/4 lg:mt-0 mt-2 w-full flex justify-around">
-						<button class="p-2 w-1/2 bg-stone-200 hover:bg-stone-100" @click.prevent="clearSearch()">{{ $filters.translate('Clear') }}</button>
-						<button class="p-2 w-1/2 bg-stone-700 hover:bg-stone-900 text-white" @click.prevent="startSearch()">{{ $filters.translate('Search') }}</button>
+						<button class="p-2 w-1/2 bg-stone-200 hover:bg-stone-100 text-stone-900" @click.prevent="clearSearch()">{{ $filters.translate('Clear') }}</button>
+						<button class="p-2 w-1/2 bg-stone-700 hover:bg-stone-900 dark:bg-stone-600 hover:dark:bg-stone-900 text-white" @click.prevent="startSearch()">{{ $filters.translate('Search') }}</button>
 					</div>
 				 </div>
 				 <div v-if="error" class="error pt1 f6">{{error}}</div>
@@ -230,9 +230,9 @@ app.component('searchbox', {
 		{
 			if(this.filter == filter)
 			{
-				return 'border-stone-700 bg-stone-200';
+				return 'border-stone-700 bg-stone-200 dark:text-stone-900';
 			}
-			return 'border-stone-100 bg-stone-100';
+			return 'border-stone-100 bg-stone-100 dark:bg-stone-600 hover:dark:bg-stone-200 hover:dark:text-stone-900 dark:border-stone-700';
 		}
 	}
 })
@@ -242,24 +242,24 @@ app.component('usertable', {
 	template: `<table class="w-full mt-8" cellspacing="0">
 				<thead>
 					<tr>
-						<th class="p-3 bg-stone-200 border-2 border-stone-50">{{ $filters.translate('Username') }}</th>
-						<th class="p-3 bg-stone-200 border-2 border-stone-50">{{ $filters.translate('Userrole') }}</th>
-						<th class="p-3 bg-stone-200 border-2 border-stone-50">{{ $filters.translate('E-Mail') }}</th>
-						<th class="p-3 bg-stone-200 border-2 border-stone-50">{{ $filters.translate('Edit') }}</th>
+						<th class="p-3 bg-stone-200 dark:bg-stone-900 border-2 border-stone-50 dark:border-stone-600">{{ $filters.translate('Username') }}</th>
+						<th class="p-3 bg-stone-200 dark:bg-stone-900 border-2 border-stone-50 dark:border-stone-600">{{ $filters.translate('Userrole') }}</th>
+						<th class="p-3 bg-stone-200 dark:bg-stone-900 border-2 border-stone-50 dark:border-stone-600">{{ $filters.translate('E-Mail') }}</th>
+						<th class="p-3 bg-stone-200 dark:bg-stone-900 border-2 border-stone-50 dark:border-stone-600">{{ $filters.translate('Edit') }}</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr v-for="user,index in userdata" key="username">
-						<td class="p-3 bg-stone-100 border-2 border-white">{{ user.username }}</td>
-						<td class="p-3 bg-stone-100 border-2 border-white">{{ user.userrole }}</td>
-						<td class="p-3 bg-stone-100 border-2 border-white">{{ user.email }}</td>
-						<td class="bg-stone-100 border-2 border-white text-center hover:bg-teal-500 hover:text-white pointer transition duration-100"><a :href="getEditLink(user.username)" class="block w-full p-3">{{ $filters.translate('edit') }}</a></td>
+						<td class="p-3 bg-stone-100 dark:bg-stone-700 border-2 border-white dark:border-stone-600">{{ user.username }}</td>
+						<td class="p-3 bg-stone-100 dark:bg-stone-700 border-2 border-white dark:border-stone-600">{{ user.userrole }}</td>
+						<td class="p-3 bg-stone-100 dark:bg-stone-700 border-2 border-white dark:border-stone-600">{{ user.email }}</td>
+						<td class="bg-stone-100 dark:bg-stone-700 border-2 border-white dark:border-stone-600 text-center hover:bg-teal-500 dark:hover:bg-teal-500 hover:text-white pointer transition duration-100"><a :href="getEditLink(user.username)" class="block w-full p-3">{{ $filters.translate('edit') }}</a></td>
 					</tr>
 					<tr>
-						<td class="p-3 bg-stone-100 border-2 border-white"><a class="text-teal-500 hover:underline" :href="getNewUserLink()">{{ $filters.translate('New user') }}</a></td>
-						<td class="p-3 bg-stone-100 border-2 border-white"></td>
-						<td class="p-3 bg-stone-100 border-2 border-white"></td>
-						<td class="bg-stone-100 border-2 border-white text-center text-teal-500 hover:bg-teal-500 hover:text-white transition duration-100"><a class="block w-full p-3" :href="getNewUserLink()">{{ $filters.translate('add') }}</a></td>
+						<td class="p-3 bg-stone-100 dark:bg-stone-700 border-2 border-white dark:border-stone-600"><a class="text-teal-500 hover:underline" :href="getNewUserLink()">{{ $filters.translate('New user') }}</a></td>
+						<td class="p-3 bg-stone-100 dark:bg-stone-700 border-2 border-white dark:border-stone-600"></td>
+						<td class="p-3 bg-stone-100 dark:bg-stone-700 border-2 border-white dark:border-stone-600"></td>
+						<td class="bg-stone-100 dark:bg-stone-700 border-2 border-white dark:border-stone-600 text-center text-teal-500 hover:bg-teal-500 dark:hover:bg-teal-500 hover:text-white transition duration-100"><a class="block w-full p-3" :href="getNewUserLink()">{{ $filters.translate('add') }}</a></td>
 					</tr>
 				</tbody>
 			 </table>`,
@@ -275,7 +275,7 @@ app.component('usertable', {
 
 app.component('pagination', {
 	props: ['page'],
-	template: '<li><button class="p-1 border-2 border-stone-50 hover:bg-stone-200" :class="checkActive()" @click="goto(page)">{{ page }}</button></li>',
+	template: '<li><button class="p-1 dark:bg-stone-700 border-2 border-stone-50 dark:border-stone-600 hover:bg-stone-200" :class="checkActive()" @click="goto(page)">{{ page }}</button></li>',
 	methods: {
 		goto: function(page){
 

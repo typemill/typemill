@@ -368,25 +368,28 @@ class Navigation extends Folder
 	# used with scan folder that generates own indexes for live version
 	public function setActiveNaviItems($navigation, $breadcrumb)
 	{
-		foreach($breadcrumb as $crumbkey => $page)
+		if($breadcrumb)
 		{
-			foreach($navigation as $itemkey => $item)
+			foreach($breadcrumb as $crumbkey => $page)
 			{
-				if($page->urlRelWoF == $item->urlRelWoF)
+				foreach($navigation as $itemkey => $item)
 				{
-					unset($breadcrumb[$crumbkey]);
-
-					if(empty($breadcrumb))
+					if($page->urlRelWoF == $item->urlRelWoF)
 					{
-						$navigation[$itemkey]->active = true;
-					}
-					elseif(isset($navigation[$itemkey]->folderContent))
-					{
-						$navigation[$itemkey]->activeParent = true;
-						$navigation[$itemkey]->folderContent = $this->setActiveNaviItems($navigation[$itemkey]->folderContent, $breadcrumb);
-					}
+						unset($breadcrumb[$crumbkey]);
 
-					break;
+						if(empty($breadcrumb))
+						{
+							$navigation[$itemkey]->active = true;
+						}
+						elseif(isset($navigation[$itemkey]->folderContent))
+						{
+							$navigation[$itemkey]->activeParent = true;
+							$navigation[$itemkey]->folderContent = $this->setActiveNaviItems($navigation[$itemkey]->folderContent, $breadcrumb);
+						}
+
+						break;
+					}
 				}
 			}
 		}

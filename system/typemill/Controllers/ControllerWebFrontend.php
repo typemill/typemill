@@ -83,14 +83,17 @@ class ControllerWebFrontend extends Controller
 		$breadcrumb = $this->c->get('dispatcher')->dispatch(new OnBreadcrumbLoaded($breadcrumb), 'onBreadcrumbLoaded')->getData();
 
 		# CHECK IF WHOLE TREE IS PUBLISHED
-		foreach($breadcrumb as $page)
+		if($breadcrumb)
 		{
-			if($page->status == 'unpublished')
+			foreach($breadcrumb as $page)
 			{
-				return $this->c->get('view')->render($response->withStatus(404), '404.twig', [
-					'title'			=> 'Page not found',
-					'description'	=> 'We did not find the page you where looking for.'
-				]);
+				if($page->status == 'unpublished')
+				{
+					return $this->c->get('view')->render($response->withStatus(404), '404.twig', [
+						'title'			=> 'Page not found',
+						'description'	=> 'We did not find the page you where looking for.'
+					]);
+				}
 			}
 		}
 

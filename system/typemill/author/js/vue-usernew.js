@@ -3,7 +3,7 @@ const app = Vue.createApp({
 				<div class="w-full">
 					<div class="mt-5 mb-5">
 						<label for="roleselector" class="block mb-1 font-medium">{{ $filters.translate("Select a role") }}</label>
-						<select class="form-select block w-full border border-stone-300 bg-stone-200 px-2 py-3 h-12 transition ease-in-out"
+						<select class="form-select block w-full border border-stone-300 bg-stone-200 text-stone-900 px-2 py-3 h-12 transition ease-in-out"
 							v-model="selectedrole" 
 							@change="generateForm()">
 								<option disabled value="">Please select</option>
@@ -36,7 +36,7 @@ const app = Vue.createApp({
 						</div>
 						<div class="my-5">
 							<div :class="messageClass" class="block w-full h-8 px-3 py-1 my-1 text-white transition duration-100">{{ $filters.translate(message) }}</div>
-							<button type="submit" @click.prevent="save()" class="w-full p-3 my-1 bg-stone-700 hover:bg-stone-900 text-white cursor-pointer transition duration-100">{{ $filters.translate('Save') }}</button>
+							<button type="submit" @click.prevent="save()" class="w-full p-3 my-1 dark:bg-stone-600 hover:dark:bg-stone-900 bg-stone-700 hover:bg-stone-900 text-white cursor-pointer transition duration-100">{{ $filters.translate('Save') }}</button>
 						</div>
 					</form>
 				</div>
