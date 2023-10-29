@@ -48,6 +48,7 @@ class ControllerWebFrontend extends Controller
 		{
 			$item 				= $navigation->getHomepageItem($urlinfo['baseurl']);
 			$item->active 		= true;
+			$home 				= true;
 		}
 		else
 		{
@@ -65,10 +66,8 @@ class ControllerWebFrontend extends Controller
 
 			$keyPathArray 		= explode(".", $pageinfo['keyPath']);
 
-#
 			$item 				= $navigation->getItemWithKeyPath($draftNavigation, $keyPathArray);
 
-			# but what if parent is unpublished ??
 			if(!$item)
 			{
 				return $this->c->get('view')->render($response->withStatus(404), '404.twig', [
@@ -257,7 +256,7 @@ class ControllerWebFrontend extends Controller
 		}
 
 		$pagedata = [
-			'home'			=> false,
+			'home'			=> $home,
 			'navigation' 	=> $liveNavigation,
 			'title' 		=> $title,
 			'content' 		=> $contentHtml, 

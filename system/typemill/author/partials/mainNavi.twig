@@ -5,7 +5,7 @@
 	</div>
 	<ul class="flex border-l-2 border-stone-200 dark:border-stone-600">
 		{% for name,navitem in mainnavi %}
-			{% if settings.darkmode %}
+			{% if darkmode %}
 				<li class="border-r-2 border-stone-200 dark:border-stone-600">
 					<a class="inline-block lg:px-4 lg:pt-4 lg:pb-3 lg:border-b-4 px-3 pt-3 pb-3 border-b-2 dark:text-stone-200 hover:bg-stone-50 hover:dark:bg-stone-200 hover:dark:text-stone-900 focus:dark:text-stone-900 active:dark:text-stone-900 hover:dark:border-stone-600 focus:dark:border-stone-600 active:dark:border-stone-600 transition duration-100{{ navitem.active ? ' dark:bg-stone-200 dark:text-stone-900 dark:border-stone-600' : ' dark:border-stone-900' }}" href="{{ url_for(navitem.routename) }}">{{ translate(navitem.title)|capitalize }}</a>
 				</li>

@@ -184,7 +184,7 @@ app.component('searchbox', {
 					<button @click.prevent="setFilter('usermail')" :class="checkActive('usermail')" class="px-2 py-2 border-b-4 hover:bg-stone-200 hover:border-stone-700 transition duration-100">{{ $filters.translate('e-mail') }}</button>
 				  </div>
 				  <div class="w-100 lg:flex">
-					<select v-if="this.filter == 'userrole'" v-model="searchterm" class="lg:w-3/4 w-full h-12 px-2 py-3 border border-stone-300 bg-stone-200"> 
+					<select v-if="this.filter == 'userrole'" v-model="searchterm" class="lg:w-3/4 w-full h-12 px-2 py-3 text-stone-900 border border-stone-300 bg-stone-200"> 
 						<option v-for="role in userroles">{{role}}</option>
 					</select>
 					<input v-else type="text" v-model="searchterm" class="lg:w-3/4 w-full h-12 px-2 py-3 border border-stone-300 bg-stone-200 text-stone-900">

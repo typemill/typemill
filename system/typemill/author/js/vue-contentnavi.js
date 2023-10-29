@@ -7,11 +7,11 @@ const navigation = Vue.createApp({
 				</div>
 				<div class="flex w-full my-px border-y border-stone-200 dark:border-stone-900 font-bold">
 					<div class="border-l-4" :class="getStatusClass(home.status)"></div>
-					<a :href="getUrl(home.urlRelWoF)" class="flex-grow p-1 pl-3 border-stone-50 hover:bg-teal-500 hover:text-stone-50 dark:hover:bg-stone-200 hover:dark:text-stone-900" :class="home.active ? 'text-stone-50 bg-teal-500' : ''">
+					<a :href="getUrl(home.urlRelWoF)" class="flex-grow p-1 pl-3 border-stone-50 hover:bg-teal-500 hover:text-stone-50 dark:hover:bg-stone-200 hover:dark:text-stone-900" :class="home.active ? 'text-stone-50 bg-teal-500 dark:bg-stone-200 dark:text-stone-900' : 'dark:bg-stone-700'">
 						{{ $filters.translate(home.name) }}
 					</a>
 				</div>
-				<div class="pl-2 pl-3 pl-4 pl-6 pl-8 pl-9 pl-10 pl-12 pl-15 text-stone-50"></div>
+				<div class="pl-2 pl-3 pl-4 pl-6 pl-8 pl-9 pl-10 pl-12 pl-15 pl-18 pl-21 pl-24 text-stone-50"></div>
 				<navilevel :navigation="navigation" :expanded="expanded" />
 			</div>`,
 	data: function () {
@@ -183,10 +183,10 @@ navigation.component('navilevel',{
 			</template>
 			<template #footer>
 				<li>
-					<div class="flex w-full my-px border-b border-stone-200 hover:bg-stone-200 group">
+					<div class="flex w-full my-px border mt-1 mb-1 border-stone-300 dark:border-stone-600 hover:bg-stone-200 group">
 						<div class="border-l-4 border-stone-200"></div>
 						<div class="flex-grow">
-							<input :class="getNaviInputLevel(parentId)" class="w-full p-1 bg-transparent border-0 border-stone-100 hover:border-stone-200 focus:border-stone-200 focus:bg-stone-200 focus:outline-none" placeholder="..." v-model="newItem">
+							<input :class="getNaviInputLevel(parentId)" class="w-full p-1 bg-transparent focus:bg-stone-200 focus:outline-none dark:text-stone-600" placeholder="..." v-model="newItem">
 						</div>
 <!--						<div class="w-1/4 invisible group-hover:visible"> -->
 						<div class="flex">

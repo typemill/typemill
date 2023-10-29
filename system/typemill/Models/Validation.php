@@ -44,6 +44,7 @@ class Validation
 		# checks if email is available if user is created
 		Validator::addRule('emailAvailable', function($field, $value, array $params, array $fields) use ($user)
 		{
+			if(!$value){ return false; }
 			$email = trim($value);
 			if($email == '' OR $user->findUsersByEmail($email)){ return false; }
 			return true;
@@ -255,10 +256,8 @@ class Validation
 		{
 			return true;
 		}
-		else
-		{
-			return false;
-		}
+		
+		return false;
 	}
 	
 	/**
@@ -322,10 +321,12 @@ class Validation
 		$v->rule('required', ['username'])->message("required");
 		$v->rule('alphaNum', 'username')->message("invalid");
 		$v->rule('lengthBetween', 'username', 3, 20)->message("Length between 3 - 20");
+
 		if($v->validate()) 
 		{
 			return true;
 		}
+
 		return false;
 	}
 
@@ -336,10 +337,12 @@ class Validation
 		$v->rule('required', ['email'])->message("required");
 		$v->rule('noHTML', 'email')->message(" contains HTML");
 		$v->rule('lengthBetween', 'email', 3, 50)->message("Length between 3 - 50");
+
 		if($v->validate()) 
 		{
 			return true;
 		}
+
 		return false;
 	}
 
@@ -431,14 +434,12 @@ class Validation
 		$v->rule('lengthBetween', 'item_name', 1, 60);
 		$v->rule('in', 'type', ['file', 'folder']);
 		
-		if($v->validate()) 
+		if($v->validate())
 		{
 			return true;
-		} 
-		else
-		{
-			return $v->errors();
 		}
+
+		return $v->errors();
 	}	
 
 	public function blockInput(array $params)
@@ -452,11 +453,9 @@ class Validation
 		if($v->validate())
 		{
 			return true;
-		} 
-		else
-		{
-			return $v->errors();
 		}
+
+		return $v->errors();
 	}
 
 	public function blockMove(array $params)
@@ -471,10 +470,8 @@ class Validation
 		{
 			return true;
 		} 
-		else
-		{
-			return $v->errors();
-		}
+		
+		return $v->errors();
 	}
 
 	public function blockDelete(array $params)
@@ -488,10 +485,8 @@ class Validation
 		{
 			return true;
 		} 
-		else
-		{
-			return $v->errors();
-		}
+		
+		return $v->errors();
 	}
 
 	public function articlePublish(array $params)
@@ -515,10 +510,8 @@ class Validation
 		{
 			return true;
 		} 
-		else
-		{
-			return $v->errors();
-		}
+		
+		return $v->errors();
 	}
 
 	public function articleUpdate(array $params)
@@ -544,10 +537,8 @@ class Validation
 		{
 			return true;
 		} 
-		else
-		{
-			return $v->errors();
-		}
+		
+		return $v->errors();
 	}
 
 	public function articleRename(array $params)
@@ -562,11 +553,9 @@ class Validation
 		if($v->validate())
 		{
 			return true;
-		} 
-		else
-		{
-			return $v->errors();
 		}
+
+		return $v->errors();
 	}
 
 	public function metaInput(array $params)
@@ -578,11 +567,9 @@ class Validation
 		if($v->validate())
 		{
 			return true;
-		} 
-		else
-		{
-			return $v->errors();
 		}
+
+		return $v->errors();
 	}
 
 	/**
@@ -599,7 +586,27 @@ class Validation
 		$v->rule('lengthBetween', 'password', 5, 50);
 		$v->rule('equals', 'passwordrepeat', 'password');
 		
-		return $this->validationResult($v);
+		if($v->validate())
+		{
+			return true;
+		}
+
+		return $v->errors();
+	}
+
+	public function newPassword(array $params)
+	{
+		$v = new Validator($params);
+		$v->rule('required', ['password', 'newpassword']);
+		$v->rule('lengthBetween', 'newpassword', 5, 50);
+		$v->rule('equals', 'passwordrepeat', 'password');
+		
+		if($v->validate())
+		{
+			return true;
+		}
+
+		return $v->errors();
 	}
 
 
@@ -619,14 +626,12 @@ class Validation
 		$v->rule('noHTML', 'title');
 		$v->rule('markdownSecure', 'content');
 		
-		if($v->validate()) 
+		if($v->validate())
 		{
 			return true;
-		} 
-		else
-		{
-			return $v->errors();
-		}		
+		}
+		 
+		return $v->errors();
 	}
 	
 	/**
@@ -687,7 +692,8 @@ class Validation
 				}
 				break;
 			case "codearea":
-				$v->rule('lengthMax', $fieldName, 10000);
+				$v->rule('lengthMax', $fieldName, 50000);
+# how prevent bad code here?				
 				break;
 			case "color":
 				$v->rule('regex', $fieldName, '/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/');
@@ -829,66 +835,5 @@ class Validation
 		}
 
 		return $output;
-	}
-
-
-	/**
-	* result for validation
-	* 
-	* @param obj $v the validation object.
-	* @return bool
-	*/
-
-	public function checkArray($arrayvalues, $v)
-	{		
-		die('I think checkArray not in use anymore');
-
-		foreach($arrayvalues as $key => $value)
-		{
-			if(is_array($value))
-			{
-				$this->checkArray($value, $v);
-			}
-			$v->rule('noHTML', $value);
-			$v->rule('lengthMax', $value, 1000);
-		}
-		return $v;
-	}
-	
-	public function validationResult($v, $name = false)
-	{
-		die("do not use validationResults in validation model anymore");
-		
-		if($v->validate())
-		{
-			return true;
-		}
-		else
-		{
-			if($name == 'meta')
-			{
-				return $v->errors();
-			}
-			elseif($name)
-			{
-				if(isset($_SESSION['errors'][$name]))
-				{
-					foreach ($v->errors() as $key => $val)
-					{
-						$_SESSION['errors'][$name][$key] = $val;
-						break;
-					}
-				}
-				else
-				{
-					$_SESSION['errors'][$name] = $v->errors();
-				}
-			}
-			else
-			{
-				$_SESSION['errors'] = $v->errors();
-			}
-			return false;
-		}
 	}
 }

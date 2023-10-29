@@ -32,13 +32,13 @@
     navtitle: 'markdown test'
     hide: false
     noindex: false
-    path: /00-welcome/05-markdown-test.md
+    path: /00-welcome/04-markdown-test.md
     keyPath: '0.4'
-/welcome/todos:
+/welcome/todoss:
     navtitle: 'To Dos'
     hide: false
     noindex: false
-    path: /00-welcome/06-todos.md
+    path: /00-welcome/05-todoss.md
     keyPath: '0.5'
 /cyanine-theme:
     navtitle: 'cyanine theme'

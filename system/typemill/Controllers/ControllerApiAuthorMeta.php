@@ -15,18 +15,6 @@ class ControllerApiAuthorMeta extends Controller
 {
 	public function getMeta(Request $request, Response $response, $args)
 	{
-
-		# is it really needed? Check middleware if rights are validated there already
-		$validRights		= $this->validateRights($request->getAttribute('c_userrole'), 'content', 'update');
-		if(!$validRights)
-		{
-			$response->getBody()->write(json_encode([
-				'message' 	=> Translations::translate('You do not have enough rights.'),
-			]));
-
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
-		}
-
 		$url 				= $request->getQueryParams()['url'] ?? false;
 
 		$navigation 		= new Navigation();
@@ -48,6 +36,20 @@ class ControllerApiAuthorMeta extends Controller
 		if(!$metadata)
 		{
 			$metadata = $meta->addMetaDefaults($metadata, $item, $this->settings['author']);
+		}
+
+		# if user is not allowed to perform this action (e.g. not admin)
+		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'view'))
+		{
+			# then check if user is the owner of this content
+			if(!$this->userIsAllowed($request->getAttribute('c_username'), $metadata))
+			{
+				$response->getBody()->write(json_encode([
+					'message' 	=> Translations::translate('You do not have enough rights.'),
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(403);				
+			}
 		}
 
 		# if item is a folder
@@ -103,16 +105,6 @@ class ControllerApiAuthorMeta extends Controller
 
 	public function updateMeta(Request $request, Response $response, $args)
 	{
-		$validRights		= $this->validateRights($request->getAttribute('c_userrole'), 'content', 'update');
-		if(!$validRights)
-		{
-			$response->getBody()->write(json_encode([
-				'message' 	=> Translations::translate('You do not have enough rights.'),
-			]));
-
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);			
-		}
-
 		$params 			= $request->getParsedBody();
 		$validate			= new Validation();
 		$validInput 		= $validate->metaInput($params);
@@ -140,11 +132,26 @@ class ControllerApiAuthorMeta extends Controller
 		}
 
 		$meta 				= new Meta();
+		$metadata 			= $meta->getMetaData($item);
+
+		# if user is not allowed to perform this action (e.g. not admin)
+		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'update'))
+		{
+			# then check if user is the owner of this content
+			if(!$this->userIsAllowed($request->getAttribute('c_username'), $metadata))
+			{
+				$response->getBody()->write(json_encode([
+					'message' 	=> Translations::translate('You do not have enough rights.'),
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(403);				
+			}
+		}
 
 		# if item is a folder
 		if($item->elementType == "folder" && isset($item->contains))
 		{
-			$metadata['meta']['contains'] = isset($pagemeta['meta']['contains']) ? $pagemeta['meta']['contains'] : $item->contains;
+			$metadata['meta']['contains'] = isset($metadata['meta']['contains']) ? $metadata['meta']['contains'] : $item->contains;
 
 			# get global metadefinitions
 			$metadefinitions = $meta->getMetaDefinitions($this->settings, $folder = true);
@@ -167,7 +174,20 @@ class ControllerApiAuthorMeta extends Controller
 		$tabdefinitions['fields'] = $this->addDatasets($tabdefinitions['fields']);
 		$tabdefinitions = $this->flattenTabFields($tabdefinitions['fields'], []);
 
-		# create validation object
+		$validated['data'] 	= $validate->recursiveValidation($tabdefinitions, $params['data']);
+
+		if(!empty($validate->errors))
+		{
+			$errors[$params['tab']] = $validate->errors;
+			$response->getBody()->write(json_encode([
+				'message' 	=> Translations::translate('Please correct the errors in the form.'),
+				'errors' 	=> $errors
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+		}
+
+/*
 		$errors 		= [];
 
 		# take the user input data and iterate over all fields and values
@@ -202,8 +222,7 @@ class ControllerApiAuthorMeta extends Controller
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
-
-		$pageMeta = $meta->getMetaData($item);
+*/
 
 		# extended
 		$navigation = new Navigation();
@@ -213,10 +232,10 @@ class ControllerApiAuthorMeta extends Controller
 		if($params['tab'] == 'meta')
 		{
 			# if manual date has been modified
-			if( $this->hasChanged($params['data'], $pageMeta['meta'], 'manualdate'))
+			if( $this->hasChanged($params['data'], $metadata['meta'], 'manualdate'))
 			{
 				# update the time
-				$params['data']['time'] = date('H-i-s', time());
+				$validated['data']['time'] = date('H-i-s', time());
 
 				# if it is a post, then rename the post
 				if($item->elementType == "file" && strlen($item->order) == 12)
@@ -225,7 +244,7 @@ class ControllerApiAuthorMeta extends Controller
 					$metadate 	= $params['data']['manualdate'];
 					if($metadate == '')
 					{ 
-						$metadate = $pageMeta['meta']['created']; 
+						$metadate = $metadata['meta']['created']; 
 					} 
 					$datetime 	= $metadate . '-' . $params['data']['time'];
 					$datetime 	= implode(explode('-', $datetime));
@@ -242,8 +261,8 @@ class ControllerApiAuthorMeta extends Controller
 			}
 
 			# if folder has changed and contains pages instead of posts or posts instead of pages
-			if($item->elementType == "folder" && isset($params['data']['contains']) && isset($pageMeta['meta']['contains']) && $this->hasChanged($params['data'], $pageMeta['meta'], 'contains'))
-			{				
+			if($item->elementType == "folder" && isset($params['data']['contains']) && isset($metadata['meta']['contains']) && $this->hasChanged($params['data'], $metadata['meta'], 'contains'))
+			{
 				if($meta->folderContainsFolders($item))
 				{
 					$response->getBody()->write(json_encode([
@@ -275,9 +294,9 @@ class ControllerApiAuthorMeta extends Controller
 			}
 
 			# normalize the meta-input
-			$params['data']['navtitle'] 	= (isset($params['data']['navtitle']) && $params['data']['navtitle'] !== null )? $params['data']['navtitle'] : '';
-			$params['data']['hide'] 		= (isset($params['data']['hide']) && $params['data']['hide'] !== null) ? $params['data']['hide'] : false;
-			$params['data']['noindex'] 		= (isset($params['data']['noindex']) && $params['data']['noindex'] !== null) ? $params['data']['noindex'] : false;
+			$validated['data']['navtitle'] 	= (isset($params['data']['navtitle']) && $params['data']['navtitle'] !== null )? $params['data']['navtitle'] : '';
+			$validated['data']['hide'] 		= (isset($params['data']['hide']) && $params['data']['hide'] !== null) ? $params['data']['hide'] : false;
+			$validated['data']['noindex'] 	= (isset($params['data']['noindex']) && $params['data']['noindex'] !== null) ? $params['data']['noindex'] : false;
 
 			# input values are empty but entry in structure exists
 			if(
@@ -290,11 +309,11 @@ class ControllerApiAuthorMeta extends Controller
 			}
 			elseif(
 				# check if navtitle or hide-value has been changed
-				($this->hasChanged($params['data'], $pageMeta['meta'], 'navtitle'))
+				($this->hasChanged($params['data'], $metadata['meta'], 'navtitle'))
 				OR 
-				($this->hasChanged($params['data'], $pageMeta['meta'], 'hide'))
+				($this->hasChanged($params['data'], $metadata['meta'], 'hide'))
 				OR
-				($this->hasChanged($params['data'], $pageMeta['meta'], 'noindex'))
+				($this->hasChanged($params['data'], $metadata['meta'], 'noindex'))
 			)
 			{
 				$navigation->clearNavigation();
@@ -302,10 +321,10 @@ class ControllerApiAuthorMeta extends Controller
 		}
 		
 		# add the new/edited metadata
-		$pageMeta[$params['tab']] = $params['data'];
+		$metadata[$params['tab']] = $validated['data'];
 
 		# store the metadata
-		$store = $meta->updateMeta($pageMeta, $item);
+		$store = $meta->updateMeta($metadata, $item);
 
 		if($store === true)
 		{

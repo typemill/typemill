@@ -14,22 +14,22 @@ contributor:
       - 'view'
       - 'create'
       - 'update'
+      - 'delete'
 author:
   name: author
   inherits: contributor
   permissions: 
     content:
+      - 'create'
       - 'view'
 editor:
   name: editor
   inherits: author
   permissions: 
     mycontent:
-      - 'delete'
       - 'publish'
       - 'unpublish'
     content:
-      - 'create'
       - 'update'
       - 'delete'
       - 'publish'

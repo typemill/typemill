@@ -105,18 +105,45 @@
 * DONE: Captcha integration
 * DONE: Solution for logo and favicon
 * FIXED: Raw editor jumps if you edit long text at the end
-* Reference feature
-* Typemill Utilities
+* DONE: Typemill Utilities
+* DONE: Update CSS for themes
+* DONE: test with different user rights
 * Markdown secure rendering
 * finish youtube component
-* Handle formdata centrally ???
 * BUG: Error fields in account form not styled correctly
-* DONE: Update CSS for themes
 * BUG: Codefield jumps on editing
 * False for owner on live?
 
+## Dark Mode
+
+* DONE: system 
+* DONE: content-navigation
+* DONE: visual editor preview
+* DONE:  visual editor edit modes
+* DONE: raw editor
+* DONE: meta
+* DONE: other tabs
+* DONE: modals
+* DONE: medialib
+* DONE: publish-bar.
+
+## Feedback GitHub
+
+* FIXED: Website restriction
+* NO ERROR: Change slug of blog
+* FIXED: undefined array key "title" in TwigMetaExtension on line 25
+* FIXED: CSS for navigation
+* DONE: Test with 8.2.7 (deprecation reports)
+* NOT REPRODUCED: Meta from home folder?
+* automatic generated password in firefox
+* FIXED: upload hero image in landinpage
+* FIXED: Restriction for custom css to 10000 characters
+* NOT REPRODUCED: Custom css löschen => false
+
 ## later
 
+* Handle formdata centrally ???
+* Reference Feature
 * Clear cache
 * Show security Log
 * User search only for +10 users
@@ -161,7 +188,8 @@
 
 ## Upgrade
 
-* Delete content of system folder
+* Switch server to php 8.0 at least
+* Delete content of system folders
 * Upload new content of system folder with folders typemill and vendor
 * Backup and delete settings file 
 * upload new index.php file

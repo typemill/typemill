@@ -77,4 +77,13 @@ if(isset($routes['web']) && !empty($routes['web']))
 	}
 }
 
-$app->get('/[{route:.*}]', ControllerWebFrontend::class . ':index')->setName('home');
+if(isset($settings['access']) && $settings['access'] != '')
+{
+	# if access for website is restricted
+	$app->get('/[{route:.*}]', ControllerWebFrontend::class . ':index')->setName('home')->add(new WebAuthorization($routeParser, $acl, 'account', 'view'));
+}
+else
+{
+	# if access is not restricted
+	$app->get('/[{route:.*}]', ControllerWebFrontend::class . ':index')->setName('home');
+}

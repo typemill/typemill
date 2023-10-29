@@ -5,8 +5,8 @@ const app = Vue.createApp({
 					v-for="tab in tabs"
 					v-on:click="currentTab = tab"
 					:key="tab"
-					class="px-4 py-2 border-b-2 border-stone-200 hover:border-stone-700 hover:bg-stone-50 transition duration-100"
-					:class="(tab == currentTab) ? 'bg-stone-50 border-stone-700' : ''"
+					class="px-4 py-2 border-b-2 border-stone-200 hover:border-stone-700 hover:bg-stone-50 dark:text-stone-200 dark:bg-stone-700 dark:border-stone-600 hover:dark:bg-stone-200 hover:dark:text-stone-900 transition duration-100"
+					:class="(tab == currentTab) ? 'bg-stone-50 border-stone-700 dark:bg-stone-200 dark:text-stone-900' : ''"
 				>
 				{{ $filters.translate(tab) }}
 				</button>
@@ -146,18 +146,17 @@ const app = Vue.createApp({
 			{
 				if(error.response)
 				{
-					self.message 		= 'please correct the errors above';
 					self.messageClass 	= 'bg-rose-500';
-					self.formErrors 	= error.response.data.errors;
+					self.message 		= 'please correct the errors above';
 
-					let message = handleErrorMessage(error);
-
-/* does it make sense to change logic and show errors in publisher?
-					if(message)
+					if(typeof error.response.data.message != "undefined")
 					{
-						eventBus.$emit('publishermessage', message);
+						self.message 	= error.response.data.message;
 					}
-*/
+					if(typeof error.response.data.errors != "undefined")
+					{
+						self.formErrors 	= error.response.data.errors;
+					}
 				}
 			});
 		},
@@ -174,14 +173,14 @@ app.component('tab-meta', {
 			disabled: true,
 		}
 	},
-	template: `<section>
+	template: `<section class="dark:bg-stone-700 dark:text-stone-200">
 					<form>
 						<div v-if="slug !== false">
 							<div class="w-full relative">
 								<label class="block mb-1 font-medium">{{ $filters.translate('Slug') }}</label>
 								<div class="flex">
 									<input 
-										class="h-12 w-3/4 border px-2 py-3 border-stone-300 bg-stone-200"
+										class="h-12 w-3/4 border px-2 py-3 border-stone-300 bg-stone-200 text-stone-900"
 										type="text" 
 										v-model="slug" 
 										pattern="[a-z0-9]" 
@@ -223,7 +222,7 @@ app.component('tab-meta', {
 						</div>
 						<div class="my-5">
 							<div :class="messageClass" class="block w-full h-8 px-3 py-1 my-1 text-white transition duration-100">{{ $filters.translate(message) }}</div>
-							<input type="submit" @click.prevent="saveInput()" :value="$filters.translate('save')" class="w-full p-3 my-1 bg-stone-700 hover:bg-stone-900 text-white cursor-pointer transition duration-100">
+							<input type="submit" @click.prevent="saveInput()" :value="$filters.translate('save')" class="w-full p-3 my-1 bg-stone-700 dark:bg-stone-600 hover:bg-stone-900 hover:dark:bg-stone-900 text-white cursor-pointer transition duration-100">
 						</div>
 					</form>
 				</section>`,

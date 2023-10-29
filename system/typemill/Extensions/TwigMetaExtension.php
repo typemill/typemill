@@ -22,7 +22,13 @@ class TwigMetaExtension extends AbstractExtension
 
 		$metadata = $meta->getMetaData($item);
 
-		if(!$metadata OR $metadata['meta']['title'] == '' OR $metadata['meta']['description'] == '')
+		if(
+			!$metadata 
+			OR !isset($metadata['meta']['title']) 
+			OR $metadata['meta']['title'] == '' 
+			OR !isset($metadata['meta']['description']) 
+			OR $metadata['meta']['description'] == ''
+		)
 		{
 			$metadata = $meta->addMetaDefaults($metadata, $item, $settings['author']);
 		}

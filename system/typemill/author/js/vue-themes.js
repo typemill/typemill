@@ -2,7 +2,7 @@ const app = Vue.createApp({
 	template: `<Transition name="initial" appear>
 				<div class="w-full">
 					<ul>
-						<li v-for="(theme,themename) in formDefinitions" class="w-full my-8 bg-stone-100 dark:bg-stone-600 border border-stone-200">
+						<li v-for="(theme,themename) in formDefinitions" class="w-full my-8 bg-stone-100 dark:bg-stone-700 border border-stone-200">
 							<p v-if="versions[themename] !== undefined"><a href="https://themes.typemill.net" class="block p-2 text-center bg-rose-500 text-white">Please update to version {{ versions[themename].version }}</a></p>
 							<div class="flex justify-between w-full px-8 py-3 border-b border-white" :class="getActiveClass(themename)">
 								<p class="py-2">License: {{ theme.license }}</p>
@@ -26,7 +26,7 @@ const app = Vue.createApp({
 									</div>
 								</div>
 								<div class="w-full mt-6 flex justify-between">
-									<button @click="setCurrent(themename)" class="flex-1 flex items-center justify-center space-x-4 p-3 bg-stone-700 hover:bg-stone-900 text-white cursor-pointer transition duration-100">
+									<button @click="setCurrent(themename)" class="flex-1 flex items-center justify-center space-x-4 p-3 bg-stone-700 dark:bg-stone-600 hover:bg-stone-900 hover:dark:bg-stone-900 text-white cursor-pointer transition duration-100">
 										<span>Configure</span>
 										<span :class="(current == themename) ? 'border-b-8 border-b-white' : 'border-t-8 border-t-white'" class="h-0 w-0 border-x-8 border-x-transparent"></span>
 									</button>
@@ -61,7 +61,7 @@ const app = Vue.createApp({
 								<div class="my-5">
 									<div :class="messageClass" class="block w-full h-8 px-3 py-1 my-1 text-white transition duration-100">{{ message }}</div>
 									<div class="w-full mt-6 flex justify-between">
-										<button type="submit" @click.prevent="save()" class="flex-1 p-3 bg-stone-700 hover:bg-stone-900 text-white cursor-pointer transition duration-100">Save</button>
+										<button type="submit" @click.prevent="save()" class="flex-1 p-3 bg-stone-700 dark:bg-stone-600 hover:bg-stone-900 hover:dark:bg-stone-900 text-white cursor-pointer transition duration-100">Save</button>
 										<a v-if="!checkLicense(license, theme.license)" href="https://typemill.net/buy" target="_blank" class="flex-1 ml-3 p-3 py-4 text-center bg-teal-500 hover:bg-teal-600 text-white cursor-pointer transition duration-100">Buy a license</a>
 										<a v-else-if="theme.paypal" :href="theme.paypal" target="_blank" class="flex-1 ml-3 p-3 py-4 text-center bg-teal-500 hover:bg-teal-600 text-white cursor-pointer transition duration-100">Donate {{theme.amount}},-</a>
 									</div>

@@ -71,7 +71,7 @@ bloxeditor.component('headline-component', {
 							<use xlink:href="#icon-header"></use>
 						</svg>
 					</div>
-					<button class="absolute w-6 top-0 bottom-0 left-0 border-r-2 border-stone-700 bg-stone-200 hover:bg-teal-500 hover:text-stone-50 transition-1" @click.prevent="headlinedown">
+					<button class="absolute w-6 top-0 bottom-0 left-0 border-r-2 border-stone-700 bg-stone-200 dark:bg-stone-600 hover:bg-teal-500 hover:dark:bg-teal-500 hover:text-stone-50 transition-1" @click.prevent="headlinedown">
 						<div class="absolute w-6 top-3 text-center">{{ level }}</div>
 					</button>
 					<input class="opacity-1 w-full bg-transparent pr-6 pl-10 py-3 outline-none" :class="hlevel" type="text" v-model="compmarkdown" ref="markdown" :disabled="disabled" @input="updatemarkdown">
@@ -334,9 +334,9 @@ bloxeditor.component('code-component', {
 						<use xlink:href="#icon-embed"></use>
 					</svg>
 				</div>
-				<div class="w-full flex p-3 border-b-2 border-stone-700 bg-stone-200">
+				<div class="w-full flex p-3 border-b-2 border-stone-700 bg-stone-100 dark:bg-stone-900">
 				  <label class="pr-2 py-1" for="language">{{ $filters.translate('Language') }}: </label> 
-				  <input class="px-2 py-1 flex-grow text-stone-700 focus:outline-none" name="language" type="text" v-model="language" :disabled="disabled" @input="createlanguage">
+				  <input class="px-2 py-1 flex-grow focus:outline-none bg-stone-200 text-stone-900" name="language" type="text" v-model="language" :disabled="disabled" @input="createlanguage">
 				</div>
 				<textarea class="font-mono text-sm opacity-1 w-full bg-transparent px-6 py-3 outline-none" ref="markdown" v-model="codeblock" :disabled="disabled" @input="createmarkdown"></textarea>
 			</div>`,
@@ -562,7 +562,7 @@ bloxeditor.component('notice-component', {
 							<use xlink:href="#icon-exclamation-circle"></use>
 						</svg>
 					</div>
-					<button class="absolute w-6 top-0 bottom-0 left-0 border-r-2 border-stone-700 bg-stone-200 hover:bg-teal-500 hover:text-stone-50 transition-1" :class="noteclass" @click.prevent="noticedown">
+					<button class="absolute w-6 top-0 bottom-0 left-0 border-r-2 border-stone-700 bg-stone-200 dark:bg-stone-600 hover:bg-teal-500 hover:dark:bg-teal-500 hover:text-stone-50 transition-1" :class="noteclass" @click.prevent="noticedown">
 						<div class="absolute w-6 top-3 text-center">{{ prefix }}</div>
 					</button>
 					<textarea class="opacity-1 w-full bg-transparent pr-6 pl-10 py-3 outline-none notice" ref="markdown" v-model="notice" :disabled="disabled"  @input="updatemarkdown($event.target.value)"></textarea>
@@ -884,7 +884,7 @@ bloxeditor.component('definition-component', {
 			definitionList: [],
 		}
 	},
-	template: `<div class="definitionList">
+	template: `<div class="definitionList dark:border dark:border-stone-600">
 					<div class="absolute top-3 -left-5 text-stone-400">
 						<svg class="icon icon-dots-two-vertical">
 							<use xlink:href="#icon-dots-two-vertical"></use>
@@ -895,15 +895,15 @@ bloxeditor.component('definition-component', {
 						item-key="id" 
 						@end="moveDefinition">
 							<template #item="{element, index}">
-    							<div class="definitionRow border-b border-stone-300">
+    							<div class="definitionRow border-b border-stone-300 dark:border-stone-600">
     								<div class="relative flex p-6">
 										<div class="definitionTerm"> 
-											<input type="text" class="p-2 w-100 text-stone-700 focus:outline-none" :placeholder="element.term" :value="element.term" :disabled="disabled" @input="updateterm($event,index)" @blur="updateMarkdown">
+											<input type="text" class="p-2 w-100 text-stone-900 bg-stone-200 focus:outline-none" :placeholder="element.term" :value="element.term" :disabled="disabled" @input="updateterm($event,index)" @blur="updateMarkdown">
 						  		  		</div>
 						  		  		<div class="flex-grow">
 							  		  		<div class="flex mb-2" v-for="(description,ddindex) in element.descriptions">
 								  		  		<svg class="icon icon-dots-two-vertical mt-3"><use xlink:href="#icon-dots-two-vertical"></use></svg> 
-							  					<textarea class="flex-grow p-2 focus:outline-none" :placeholder="description" v-html="element.descriptions[ddindex]" :disabled="disabled" @input="updatedescription($event, index, ddindex)" @keydown.13.prevent="enter" @blur="updateMarkdown"></textarea>
+							  					<textarea class="flex-grow p-2 focus:outline-none bg-stone-200 text-stone-900" :placeholder="description" v-html="element.descriptions[ddindex]" :disabled="disabled" @input="updatedescription($event, index, ddindex)" @keydown.13.prevent="enter" @blur="updateMarkdown"></textarea>
 								  				<button title="delete description" class="text-white bg-stone-700 w-6 h-6 text-xs hover:bg-rose-500" @click.prevent="deleteItem($event,index,ddindex)">
 								  					<svg class="icon icon-minus">
 								  						<use xlink:href="#icon-minus"></use>
@@ -1308,8 +1308,8 @@ bloxeditor.component('image-component', {
 				</div>
 
 				<Transition name="initial" appear>
-					<div v-if="showmedialib" class="fixed top-0 left-0 right-0 bottom-0 bg-stone-100 z-50">
-						<button class="w-full bg-stone-200 hover:bg-rose-500 hover:text-white p-2 transition duration-100" @click.prevent="showmedialib = false">{{ $filters.translate('close library') }}</button>
+					<div v-if="showmedialib" class="fixed top-0 left-0 right-0 bottom-0 bg-stone-100 dark:bg-stone-700 z-50">
+						<button class="w-full bg-stone-200 dark:bg-stone-900 hover:dark:bg-rose-500 hover:bg-rose-500 hover:text-white p-2 transition duration-100" @click.prevent="showmedialib = false">{{ $filters.translate('close library') }}</button>
 						<medialib parentcomponent="images" @addFromMedialibEvent="addFromMedialibFunction"></medialib>
 					</div>
 				</Transition> 
@@ -1326,23 +1326,23 @@ bloxeditor.component('image-component', {
 				<div class="imgmeta p-8" v-if="imgmeta">
 					<div class="flex mb-2">
 						<label class="w-1/5 py-2" for="imgalt">{{ $filters.translate('Alt-Text') }}: </label>
-						<input class="w-4/5 p-2" name="imgalt" type="text" placeholder="alt" @input="createmarkdown" v-model="imgalt" max="100" />
+						<input class="w-4/5 p-2 bg-stone-200 text-stone-900" name="imgalt" type="text" placeholder="alt" @input="createmarkdown" v-model="imgalt" max="100" />
 					</div>
 					<div class="flex mb-2">
 						<label class="w-1/5 py-2" for="imgtitle">{{ $filters.translate('Title') }}: </label>
-						<input class="w-4/5 p-2" name="imgtitle" type="text" placeholder="title" v-model="imgtitle" @input="createmarkdown" max="64" />
+						<input class="w-4/5 p-2 bg-stone-200 text-stone-900" name="imgtitle" type="text" placeholder="title" v-model="imgtitle" @input="createmarkdown" max="64" />
 					</div>
 					<div class="flex mb-2">
 						<label class="w-1/5 py-2" for="imgcaption">{{ $filters.translate('Caption') }}: </label>
-						<input class="w-4/5 p-2" title="imgcaption" type="text" placeholder="caption" v-model="imgcaption" @input="createmarkdown" max="140" />
+						<input class="w-4/5 p-2 bg-stone-200 text-stone-900" title="imgcaption" type="text" placeholder="caption" v-model="imgcaption" @input="createmarkdown" max="140" />
 					</div>
 					<div class="flex mb-2">
 						<label class="w-1/5 py-2" for="imgurl">{{ $filters.translate('Link') }}: </label>
-						<input class="w-4/5 p-2" title="imgurl" type="url" placeholder="url" v-model="imglink" @input="createmarkdown" />
+						<input class="w-4/5 p-2 bg-stone-200 text-stone-900" title="imgurl" type="url" placeholder="url" v-model="imglink" @input="createmarkdown" />
 					</div>
 					<div class="flex mb-2">
 						<label class="w-1/5 py-2" for="imgclass">{{ $filters.translate('Class') }}: </label>
-						<select class="w-4/5 p-2 bg-white" title="imgclass" v-model="imgclass" @change="createmarkdown">
+						<select class="w-4/5 p-2 bg-stone-200 text-stone-900" title="imgclass" v-model="imgclass" @change="createmarkdown">
 							<option value="center">{{ $filters.translate('Center') }}</option>
 							<option value="left">{{ $filters.translate('Left') }}</option>
 							<option value="right">{{ $filters.translate('Right') }}</option>
@@ -1350,8 +1350,8 @@ bloxeditor.component('image-component', {
 					</div>
 					<div class="flex mb-2">
 						<label class="w-1/5 py-2" for="imgsizes">{{ $filters.translate('width/height') }}:</label>
-						<input class="w-2/5 p-2 mr-1" title="imgwidth" type="text" :placeholder="originalwidth" v-model="imgwidth" @input="changewidth" max="6" />
-						<input class="w-2/5 p-2 ml-1" title="imgheight" type="text" :placeholder="originalheight" v-model="imgheight" @input="changeheight" max="6" />
+						<input class="w-2/5 p-2 mr-1 bg-stone-200 text-stone-900" title="imgwidth" type="text" :placeholder="originalwidth" v-model="imgwidth" @input="changewidth" max="6" />
+						<input class="w-2/5 p-2 ml-1 bg-stone-200 text-stone-900" title="imgheight" type="text" :placeholder="originalheight" v-model="imgheight" @input="changeheight" max="6" />
 					</div>
 					<div class="mb-2">
 						<label v-if="showresize" for="saveoriginal" class="flex w-full">
@@ -1504,6 +1504,7 @@ bloxeditor.component('image-component', {
 			this.imgpreview 	= data.urlinfo.baseurl + '/' + value;
 			this.showmedialib 	= false;
 			this.saveimage 		= false;
+			this.imgmeta 		= true;
 
 			this.createmarkdown();
 		},
@@ -1856,11 +1857,11 @@ bloxeditor.component('file-component', {
 					<input title="fileid" type="hidden" placeholder="id" v-model="fileid" @input="createmarkdown" max="140" />
 					<div class="flex mb-2">
 						<label class="w-1/5 py-2" for="filetitle">{{ $filters.translate('Title') }}: </label>
-						<input class="w-4/5 p-2" name="filetitle" type="text" placeholder="Add a title for the download-link" v-model="filetitle" @input="createmarkdown" max="64" />
+						<input class="w-4/5 p-2 bg-stone-200 text-stone-900" name="filetitle" type="text" placeholder="Add a title for the download-link" v-model="filetitle" @input="createmarkdown" max="64" />
 					</div>
 					<div class="flex mb-2">
 						<label class="w-1/5 py-2" for="filerestriction">Access for: </label>
-						<select class="w-4/5 p-2 bg-white" name="filerestriction" v-model="selectedrole" @change="updaterestriction">
+						<select class="w-4/5 p-2 bg-stone-200 text-stone-900" name="filerestriction" v-model="selectedrole" @change="updaterestriction">
 							<option disabled value="">{{ $filters.translate('Please select') }}</option>
 							<option v-for="role in userroles">{{ role }}</option>
 						</select>
@@ -2133,10 +2134,9 @@ bloxeditor.component('video-component', {
 							<use xlink:href="#icon-play"></use>
 						</svg>
 					</div>
-					<div>{{ markdown }}</div>
 					<div class="flex mt-2 mb-2">
 						<label class="w-1/5 py-2" for="video">{{ $filters.translate('Link to youtube') }}: </label> 
-						<input class="w-4/5 p-2 bg-white" type="url" ref="markdown" placeholder="https://www.youtube.com/watch?v=" :value="markdown" :disabled="disabled" @input="updatemarkdown($event.target.value)">
+						<input class="w-4/5 p-2 bg-stone-200 text-stone-900" type="url" ref="markdown" placeholder="https://www.youtube.com/watch?v=" :value="markdown" :disabled="disabled" @input="updatemarkdown($event.target.value)">
 					</div>
 			</div>`,
 	data: function(){
@@ -2268,14 +2268,14 @@ bloxeditor.component('shortcode-component', {
 							<use xlink:href="#icon-square-brackets"></use>
 						</svg>
 					</div>
-					<div v-if="shortcodedata" class="p-8 bg-stone-100" ref="markdown">
+					<div v-if="shortcodedata" class="p-8 bg-stone-100 dark:bg-stone-900" ref="markdown">
 						<div class="flex mt-2 mb-2">
 							<label class="w-1/5 py-2" for="shortcodename">{{ $filters.translate('Shortcode') }}: </label> 
-							<select class="w-4/5 p-2 bg-white" title="shortcodename" v-model="shortcodename" @change="createmarkdown(shortcodename)"><option v-for="shortcode,name in shortcodedata" :value="name">{{ name }}</option></select>
+							<select class="w-4/5 p-2 bg-stone-200 text-stone-900" title="shortcodename" v-model="shortcodename" @change="createmarkdown(shortcodename)"><option v-for="shortcode,name in shortcodedata" :value="name">{{ name }}</option></select>
 						</div>
 						<div class="flex mt-2 mb-2" v-for="key,attribute in shortcodedata[shortcodename]">
 							<label class="w-1/5 py-2" for="key">{{ attribute }}: </label> 
-							<input class="w-4/5 p-2 bg-white" type="search" list="shortcodedata[shortcodename][attribute]" v-model="shortcodedata[shortcodename][attribute].value" @input="createmarkdown(shortcodename,attribute)">
+							<input class="w-4/5 p-2 bg-stone-200 text-stone-900" type="search" list="shortcodedata[shortcodename][attribute]" v-model="shortcodedata[shortcodename][attribute].value" @input="createmarkdown(shortcodename,attribute)">
 							<datalist id="shortcodedata[shortcodename][attribute]">
 								<option v-for="item in shortcodedata[shortcodename][attribute].content" @click="selectsearch(item,attribute)" :value="item"></option>
 							</datalist>

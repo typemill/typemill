@@ -2,7 +2,7 @@ const app = Vue.createApp({
 	template: `<Transition name="initial" appear>
 				<div class="w-full">
 					<ul>
-						<li v-for="(plugin,pluginname) in formDefinitions" class="w-full my-8 bg-stone-100 dark:bg-stone-600 border border-stone-200">
+						<li v-for="(plugin,pluginname) in formDefinitions" class="w-full my-8 bg-stone-100 dark:bg-stone-700 border border-stone-200">
 							<p v-if="versions[pluginname] !== undefined"><a href="https://plugins.typemill.net" class="block p-2 text-center bg-rose-500 text-white">Please update to version {{ versions[pluginname].version }}</a></p>
 							<div class="flex justify-between w-full px-8 py-3 border-b border-white" :class="getActiveClass(pluginname)">
 								<p class="py-2">License: {{ plugin.license }}</p>
@@ -21,7 +21,7 @@ const app = Vue.createApp({
 									<p>{{plugin.description}}</p>
 								</div>
 								<div class="w-full mt-6 flex justify-between">
-									<button v-if="hasSettings(pluginname)" @click="setCurrent(pluginname)" class="flex-1 flex items-center justify-center space-x-4 p-3 bg-stone-700 hover:bg-stone-900 text-white cursor-pointer transition duration-100">
+									<button v-if="hasSettings(pluginname)" @click="setCurrent(pluginname)" class="flex-1 flex items-center justify-center space-x-4 p-3 bg-stone-700 dark:bg-stone-600 hover:bg-stone-900 hover:dark:bg-stone-900 text-white cursor-pointer transition duration-100">
 										<span>{{ $filters.translate('Configure') }}</span>
 										<span :class="(current == pluginname) ? 'border-b-8 border-b-white' : 'border-t-8 border-t-white'" class="h-0 w-0 border-x-8 border-x-transparent"></span>
 									</button>
@@ -56,7 +56,7 @@ const app = Vue.createApp({
 								<div class="my-5">
 									<div :class="messageClass" class="block w-full h-8 px-3 py-1 my-1 text-white transition duration-100">{{ message }}</div>
 									<div class="w-full mt-6 flex justify-between">
-										<button type="submit" @click.prevent="save()" class="flex-1 p-3 bg-stone-700 hover:bg-stone-900 text-white cursor-pointer transition duration-100">{{ $filters.translate('Save') }}</button>
+										<button type="submit" @click.prevent="save()" class="flex-1 p-3 bg-stone-700 dark:bg-stone-600 hover:bg-stone-900 hover:dark:bg-stone-900 text-white cursor-pointer transition duration-100">{{ $filters.translate('Save') }}</button>
 										<a v-if="!checkLicense(license, plugin.license)" href="https://typemill.net/buy" target="_blank" class="flex-1 ml-3 p-3 py-4 text-center bg-teal-500 hover:bg-teal-600 text-white cursor-pointer transition duration-100">{{ $filters.translate('Buy a license') }}</a>
 										<a v-else-if="plugin.paypal" :href="plugin.paypal" target="_blank" class="flex-1 ml-3 p-3 py-4 text-center bg-teal-500 hover:bg-teal-600 text-white cursor-pointer transition duration-100">{{ $filters.translate('Donate') }} {{plugin.amount}},-</a>
 									</div>

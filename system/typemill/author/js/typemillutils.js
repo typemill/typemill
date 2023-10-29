@@ -14,7 +14,9 @@ let typemillUtilities = {
 				var youtubeItem = this.youtubeItems[i];
 				this.addYoutubePlayButton(youtubeItem);
 			}	
-		}	
+		}
+
+		console.info(this.youtubeItems);
 	},
 
 	addYoutubePlayButton: function(element)

@@ -21,7 +21,7 @@ class ApiAuthorization implements MiddlewareInterface
 	{
 		if(!$this->acl->isAllowed($request->getAttribute('c_userrole'), $this->resource, $this->action))
 		{
-			$message = 'userrole: ' . $request->getAttribute('c_userrole') . ' resource: ' . $this->resource . ' action: ' . $this->action;
+			$message = 'Permission denied. Your are an ' . $request->getAttribute('c_userrole') . ' and you cannot ' . $this->action . ' this ' . $this->resource;
 			$response = new Response();
 			
 			$response->getBody()->write(json_encode([

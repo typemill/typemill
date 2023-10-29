@@ -26,7 +26,7 @@ class WebAuthorization implements MiddlewareInterface
 
 			return $response->withHeader('Location', $this->router->urlFor('user.account'))->withStatus(302);
 		}
-	
+
 		$response = $handler->handle($request);
 	
 		return $response;

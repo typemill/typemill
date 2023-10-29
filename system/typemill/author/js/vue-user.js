@@ -31,7 +31,7 @@ const app = Vue.createApp({
 						</div>
 					</form>
 					<div class="my-5 text-center">
-						<button @click.prevent="showModal = true" class="p-3 px-4 text-rose-500 border border-rose-100 hover:border-rose-500 cursor-pointer transition duration-100">{{ $filters.translate('delete user') }}</button>
+						<button @click.prevent="showModal = true" class="p-3 px-4 text-rose-500 border border-rose-100 dark:border-stone-600 hover:dark:border-rose-500 hover:border-rose-500 cursor-pointer transition duration-100">{{ $filters.translate('delete user') }}</button>
 						<modal v-if="showModal" @close="showModal = false">
 							<template #header>
 								<h3>{{ $filters.translate('Delete user') }}</h3>

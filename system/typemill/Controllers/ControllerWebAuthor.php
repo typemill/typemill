@@ -71,6 +71,7 @@ class ControllerWebAuthor extends Controller
 
 	    return $this->c->get('view')->render($response, 'content/blox-editor.twig', [
 			'settings' 			=> $this->settings,
+			'darkmode'			=> $request->getAttribute('c_darkmode'),
 			'mainnavi'			=> $mainNavigation,
 			'content' 			=> $draftMarkdownHtml,
 			'jsdata' 			=> [
@@ -139,6 +140,7 @@ class ControllerWebAuthor extends Controller
 
 	    return $this->c->get('view')->render($response, 'content/raw-editor.twig', [
 			'settings' 			=> $this->settings,
+			'darkmode'			=> $request->getAttribute('c_darkmode'),
 			'mainnavi'			=> $mainNavigation,
 			'content' 			=> $draftMarkdownHtml,
 			'jsdata' 			=> [

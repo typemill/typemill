@@ -177,6 +177,9 @@
 .sideaction:hover ~ .blox-preview{
   background: rgb(245 245 244);
 }
+.dark .sideaction:hover ~ .blox-preview{
+  background: rgb(28 25 23);
+}
 
 
 
@@ -225,6 +228,14 @@
 .blox-preview tr:nth-child(even){ background-color:rgb(245 245 244); }
 .blox-preview td{ padding: 5px;}
 
+.dark .blox-preview thead{
+  background: rgb(28 25 23);
+}
+.dark .blox-preview tr:nth-child(even){ background-color:transparent; }
+.dark table, .dark th, .dark td {
+  border: 1px solid rgb(87 83 78);
+}
+
 .blox-preview dl{
   border-top: 1px solid rgb(20 184 166);
   border-bottom: 1px solid rgb(20 184 166);
@@ -249,11 +260,15 @@
 .blox-preview dd{
   padding-left: 40px;
 }
-
 .blox-preview pre,.blox-preview code{
   white-space: pre;
   color: #333; 
   background: rgb(245 245 244);
+}
+.dark .blox-preview pre,.dark .blox-preview code{
+  white-space: pre;
+  color: #fff; 
+  background: rgb(87 83 78);
 }
 .blox-preview code{
   display: inline-block;
@@ -286,6 +301,11 @@
   padding-top:12px;
   padding-bottom:12px;
 }
+.dark .blox-preview blockquote{
+  color: #fff; 
+  background: rgb(87 83 78);
+}
+
 .blox-preview blockquote:before {
   position: absolute;
   left: 0px;
@@ -323,6 +343,13 @@
   background: rgb(245 245 244);
   padding: 10px;
 }
+.dark .blox-preview .notice1,
+.dark .blox-preview .notice2,
+.dark .blox-preview .notice3,
+.dark .blox-preview .notice4{
+  color: #fff; 
+  background: rgb(87 83 78);
+}
 .blox-preview .notice1:before,
 .blox-preview .notice2:before,
 .blox-preview .notice3:before,
@@ -353,11 +380,13 @@
   position: relative;
   text-align: center;
 }
-.blox-preview img.youtube{
+.blox-preview figure.youtube{
   position: relative;
 }
-.blox-preview button.play-video { 
+
+.blox-preview .youtube::before { 
   position: absolute;
+  left:50%;
   top: 50%;
   margin-top: -50px;
   margin-left: -50px;
@@ -369,21 +398,21 @@
   border: 0px;
   padding: 0;
   text-align: center;
+  content: '';
 }
-.blox-preview button.play-video:hover {
-  background: #cc4146;
-}
-.blox-preview button.play-video::after {
+.blox-preview .youtube::after {
   position: absolute;
   top: 50%;
+  left:50%;
   margin: -20px 0 0 -15px;
   height: 0;
   width: 0;
   border-style: solid;
   border-width: 20px 0 20px 40px;
   border-color: transparent transparent transparent rgba(255, 255, 255, 0.75);
-  content: ' ';
+  content: '';
 }
+
 
 .blox-preview ul.TOC,
 .blox-preview .TOC ul{
@@ -402,6 +431,7 @@
 }
 .blox-preview ul.TOC{
   background: rgb(245 245 244);
+  background: transparent;
   width: 100%;
   padding: 20px;
   box-sizing:border-box;
@@ -528,4 +558,18 @@
 .blox-editor input.urlinput:focus{
   outline: 0px;
   border: 0px;
+}
+
+/****************
+** NAVIGATION  **
+****************/
+
+.pl-15{
+  padding-left: 3.6rem;
+}
+.pl-18{
+  padding-left: 4rem;
+}
+.pl-21{
+  padding-left: 5rem;
 }

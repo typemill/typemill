@@ -34,6 +34,10 @@ class WebRedirectIfUnauthenticated implements MiddlewareInterface
 
 				$request = $request->withAttribute('c_username', $userdata['username']);
 				$request = $request->withAttribute('c_userrole', $userdata['userrole']);
+                if(isset($userdata['darkmode']))
+                {
+                    $request = $request->withAttribute('c_darkmode', $userdata['darkmode']);
+                }
 
 			    # this executes code from routes first and then executes middleware
 				$response = $handler->handle($request);

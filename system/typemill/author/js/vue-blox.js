@@ -1,5 +1,5 @@
 const bloxeditor = Vue.createApp({
-	template: `<div v-if="showblox" class="px-12 py-8 bg-stone-50 shadow-md mb-16">
+	template: `<div v-if="showblox" class="px-12 py-8 bg-stone-50 dark:bg-stone-700 dark:text-stone-200 shadow-md mb-16">
 					<draggable 
 						v-model="content" 
 						@start="onStart"
@@ -100,19 +100,19 @@ bloxeditor.component('new-block',{
 	props: ['markdown', 'index'],
 	template: `
 		<div class="w-full mb-4">
-			<div v-if="!componentType" class="w-full flex p-4">
+			<div v-if="!componentType" class="w-full flex p-4 dark:bg-stone-900">
 				<button v-for="button in formats" 
-					class="p-2 m-1 border border-stone-300 bg-stone-100 hover:bg-stone-700 hover:text-stone-50 transition-1"  
+					class="p-2 m-1 border border-stone-300 bg-stone-100 dark:border-stone-700 dark:bg-stone-700 hover:bg-stone-700 hover:dark:bg-stone-600 hover:text-stone-50 transition-1"  
 					@click.prevent="setComponentType( $event, button.component )" 
 					:title="button.title" 
 					v-html="button.label">
 				</button>
 			</div>
-			<div v-if="componentType" class="relative bg-stone-100">
+			<div v-if="componentType" class="relative bg-stone-100 dark:bg-stone-900">
 				<component ref="activeComponent" :disabled="disabled" :markdown="newblockmarkdown" :index="index" @saveBlockEvent="saveNewBlock" @updateMarkdownEvent="updateMarkdownFunction" :is="componentType"></component>
 				<div class="edit-buttons absolute -bottom-3 right-4 z-2 text-xs">
-					<button class="cancel w-20  p-1 border-r border-stone-700 bg-stone-200 hover:bg-rose-500 hover:text-white transition-1" :disabled="disabled" @click.prevent="closeComponent">{{ $filters.translate('cancel') }}</button>
-					<button class="save w-20 p-1 border-l border-stone-700 bg-stone-200 hover:bg-teal-500 hover:text-white transition-1" :disabled="disabled" @click.prevent="beforeSaveNew()">{{ $filters.translate('save') }}</button>
+					<button class="cancel w-20 p-1 border-r border-stone-700 bg-stone-200 dark:bg-stone-600 hover:bg-rose-500 hover:dark:bg-rose-500 hover:text-white transition-1" :disabled="disabled" @click.prevent="closeComponent">{{ $filters.translate('cancel') }}</button>
+					<button class="save w-20 p-1 border-l border-stone-700 bg-stone-200 dark:bg-stone-600 hover:bg-teal-500 hover:dark:bg-teal-500 hover:text-white transition-1" :disabled="disabled" @click.prevent="beforeSaveNew()">{{ $filters.translate('save') }}</button>
 				</div>
 			</div>
 		</div>
@@ -232,8 +232,8 @@ bloxeditor.component('content-block', {
 	props: ['element', 'index'],
 	template: `
 			<div :class="{'edit': edit}">
-				<div v-if="newblock" class="bg-stone-100">
-					<div class="w-full flex justify-between bg-stone-200">
+				<div v-if="newblock" class="bg-stone-100 dark:bg-stone-600">
+					<div class="w-full flex justify-between bg-stone-200 dark:bg-stone-600">
 						<p class="p-2 pl-4">Choose a content type</p>
 						<button class="p-2 border-l border-stone-700 hover:text-white hover:bg-rose-500 transition-1" @click="closeNewBlock">{{ $filters.translate('close') }}</button>
 					</div>
@@ -241,11 +241,11 @@ bloxeditor.component('content-block', {
 				</div>
 				<div class="relative blox-wrapper mb-1">
 					<div v-if="index != 0" class="sideaction hidden absolute -top-3 left-1/2 -translate-x-1/2 z-10 text-xs">
-						<button class="delete w-16 p-1 border-r border-stone-700 bg-stone-200 hover:bg-rose-500 hover:text-white transition-1" @mousedown.prevent="disableSort()" @click.prevent="deleteBlock">{{ $filters.translate('delete') }}</button>
-						<button class="add w-16 p-1 border-l border-stone-700 bg-stone-200 hover:bg-teal-500 hover:text-white transition-1" :disabled="disabled" @mousedown.prevent="disableSort()" @click.prevent="openNewBlock">{{ $filters.translate('add') }}</button> 
+						<button class="delete w-16 p-1 border-r border-stone-700 bg-stone-200 dark:bg-stone-600 hover:bg-rose-500 hover:dark:bg-rose-500 hover:text-white transition-1" @mousedown.prevent="disableSort()" @click.prevent="deleteBlock">{{ $filters.translate('delete') }}</button>
+						<button class="add w-16 p-1 border-l border-stone-700 bg-stone-200 dark:bg-stone-600 hover:bg-teal-500 hover:dark:bg-teal-500 hover:text-white transition-1" :disabled="disabled" @mousedown.prevent="disableSort()" @click.prevent="openNewBlock">{{ $filters.translate('add') }}</button> 
 					</div>
-					<div v-if="!edit" class="blox-preview px-6 py-3 hover:bg-stone-100 overflow-hidden transition-1" @click="showEditor" v-html="getHtml(element.html)"></div>
-					<div v-else class="blox-editor bg-stone-100">
+					<div v-if="!edit" class="blox-preview px-6 py-3 hover:bg-stone-100 hover:dark:bg-stone-900 overflow-hidden transition-1" @click="showEditor" v-html="getHtml(element.html)"></div>
+					<div v-else class="blox-editor bg-stone-100 dark:bg-stone-900">
 						<div v-if="load" class="absolute right-0 top-0 left-0 bottom-0 bg-stone-100 opacity-75">
 							<svg class="animate-spin h-5 w-5 text-stone-900 absolute top-0 right-0 bottom-0 left-0 m-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
 								<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -254,8 +254,8 @@ bloxeditor.component('content-block', {
 						</div>
 						<component ref="activeComponent" :disabled="disabled" :markdown="updatedmarkdown" :index="index" @saveBlockEvent="saveBlock" @updateMarkdownEvent="updateMarkdownFunction" :is="componentType"></component>
 						<div class="edit-buttons absolute -bottom-3 right-4 z-10 text-xs">
-							<button class="cancel w-20  p-1 border-r border-stone-700 bg-stone-200 hover:bg-rose-500 hover:text-white transition-1" :disabled="disabled" @click.prevent="closeEditor">{{ $filters.translate('cancel') }}</button>
-							<button class="save w-20 p-1 border-l border-stone-700 bg-stone-200 hover:bg-teal-500 hover:text-white transition-1" :disabled="disabled" @click.prevent="beforeSave()">{{ $filters.translate('save') }}</button>
+							<button class="cancel w-20  p-1 border-r border-stone-700 bg-stone-200 dark:bg-stone-600 hover:bg-rose-500 hover:dark:bg-rose-500 hover:text-white transition-1" :disabled="disabled" @click.prevent="closeEditor">{{ $filters.translate('cancel') }}</button>
+							<button class="save w-20 p-1 border-l border-stone-700 bg-stone-200 dark:bg-stone-600 hover:bg-teal-500 hover:dark:bg-teal-500 hover:text-white transition-1" :disabled="disabled" @click.prevent="beforeSave()">{{ $filters.translate('save') }}</button>
 						</div>
 					</div>
 				</div>

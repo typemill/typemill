@@ -32,3 +32,8 @@ newpassword:
   type: 'password'
   autocomplete: 'new-password'
   generator: true
+darkmode: 
+  name: darkmode
+  label: 'Darkmode'
+  checkboxlabel: 'Activate the darkmode for me'
+  type: 'checkbox'

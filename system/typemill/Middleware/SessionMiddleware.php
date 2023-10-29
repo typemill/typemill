@@ -44,6 +44,10 @@ class SessionMiddleware implements MiddlewareInterface
 
                 $request = $request->withAttribute('c_username', $userdata['username']);
                 $request = $request->withAttribute('c_userrole', $userdata['userrole']);
+                if(isset($userdata['darkmode']))
+                {
+                    $request = $request->withAttribute('c_darkmode', $userdata['darkmode']);
+                }
             }
         }
 

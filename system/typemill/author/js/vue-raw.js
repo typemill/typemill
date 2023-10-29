@@ -1,12 +1,12 @@
 const raweditor = Vue.createApp({
 	template: `
-				<fieldset v-if="showraw" class="px-12 py-8 bg-stone-50 shadow-md mb-16">
+				<fieldset v-if="showraw" class="px-12 py-8 bg-stone-50 dark:bg-stone-700 dark:text-stone-200 shadow-md mb-16">
 					<div class="w-full px-6 py-3" :class="{'error' : errors.title}">
 						<label class="block mb-1 font-medium" for="title">{{ $filters.translate('Title') }}*</label>
 						<input 
 							name="title" 
 							type="text" 
-							class="w-full p-4 text-white bg-stone-700 text-3xl" 
+							class="w-full p-4 text-white bg-stone-700 dark:bg-stone-900 text-3xl" 
 							v-model="title" 
 							@input="updateTitle" 
 							required 
@@ -20,7 +20,7 @@ const raweditor = Vue.createApp({
 								id="rawcontent"
 								name="raweditor" 
 								data-el="editor" 
-								class="editor" 
+								class="editor dark:bg-stone-900 dark:border-stone-600" 
 								ref="raweditor" 
 								v-model="content"
 								@input="updateBody"

@@ -41,6 +41,7 @@ class ControllerWebSystem extends Controller
 #			'captcha' 			=> $this->checkIfAddCaptcha(),
 #			'basicauth'			=> $user->getBasicAuth(),
 			'settings' 			=> $this->settings,
+			'darkmode'			=> $request->getAttribute('c_darkmode'),
 			'mainnavi'			=> $mainNavigation,
 			'jsdata' 			=> [
 										'settings' 		=> $this->settings,
@@ -92,6 +93,7 @@ class ControllerWebSystem extends Controller
 
 	    return $this->c->get('view')->render($response, 'system/themes.twig', [
 			'settings' 			=> $this->settings,
+			'darkmode'			=> $request->getAttribute('c_darkmode'),
 			'mainnavi'			=> $mainNavigation,
 			'jsdata' 			=> [
 										'systemnavi'		=> $systemNavigation,
@@ -145,6 +147,7 @@ class ControllerWebSystem extends Controller
 
 	    return $this->c->get('view')->render($response, 'system/plugins.twig', [
 			'settings' 			=> $this->settings,
+			'darkmode'			=> $request->getAttribute('c_darkmode'),
 			'mainnavi'			=> $mainNavigation,
 			'jsdata' 			=> [
 										'systemnavi'		=> $systemNavigation,
@@ -188,6 +191,7 @@ class ControllerWebSystem extends Controller
 
 	    return $this->c->get('view')->render($response, 'system/license.twig', [
 			'settings' 			=> $this->settings,
+			'darkmode'			=> $request->getAttribute('c_darkmode'),
 			'mainnavi'			=> $mainNavigation,
 			'jsdata' 			=> [
 										'systemnavi'		=> $systemNavigation,
@@ -225,6 +229,7 @@ class ControllerWebSystem extends Controller
 
 	    return $this->c->get('view')->render($response, 'system/account.twig', [
 			'settings' 			=> $this->settings,
+			'darkmode'			=> $request->getAttribute('c_darkmode'),
 			'mainnavi'			=> $mainNavigation,
 			'jsdata' 			=> [
 										'systemnavi'		=> $systemNavigation,
@@ -269,6 +274,7 @@ class ControllerWebSystem extends Controller
 
 	    return $this->c->get('view')->render($response, 'system/users.twig', [
 			'settings' 			=> $this->settings,
+			'darkmode'			=> $request->getAttribute('c_darkmode'),
 			'mainnavi'			=> $mainNavigation,
 			'jsdata' 			=> [
 										'systemnavi'		=> $systemNavigation,
@@ -313,6 +319,7 @@ class ControllerWebSystem extends Controller
 
 	    return $this->c->get('view')->render($response, 'system/user.twig', [
 			'settings' 			=> $this->settings,
+			'darkmode'			=> $request->getAttribute('c_darkmode'),
 			'mainnavi'			=> $mainNavigation,
 			'jsdata' 			=> [
 										'systemnavi'		=> $systemNavigation,
@@ -345,6 +352,7 @@ class ControllerWebSystem extends Controller
 
 	    return $this->c->get('view')->render($response, 'system/usernew.twig', [
 			'settings' 			=> $this->settings,
+			'darkmode'			=> $request->getAttribute('c_darkmode'),
 			'mainnavi'			=> $mainNavigation,
 			'jsdata' 			=> [
 										'systemnavi'		=> $systemNavigation,
@@ -387,6 +395,7 @@ class ControllerWebSystem extends Controller
 
 	    return $this->c->get('view')->render($response, 'layouts/layoutSystemBlank.twig', [
 			'settings' 			=> $this->settings,
+			'darkmode'			=> $request->getAttribute('c_darkmode'),
 			'mainnavi'			=> $mainNavigation,
 			'jsdata' 			=> [
 										'systemnavi'	=> $systemNavigation,

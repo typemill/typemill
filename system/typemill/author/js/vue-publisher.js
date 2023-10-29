@@ -2,16 +2,16 @@ const publisher = Vue.createApp({
 	template: `
 			<div id="publishController" class="text-sm" v-cloak>
 				<div v-if="message" :class="messageClass" class="block w-full px-3 py-1 text-white transition duration-100">{{ message }}</div>
-				<div class="flex justify-between px-6 py-3">
+				<div class="flex justify-between px-6 py-3 dark:bg-stone-900">
 					<div class="flex">
-						<div class="border-l-4 w-32 px-2 py-2" :class="getStatusClass(item.status)">
+						<div class="border-l-4 w-32 px-2 py-2 dark:text-stone-200" :class="getStatusClass(item.status)">
 							{{ $filters.translate(item.status) }}
 						</div>
 						<button 
 							v-if="raw" 
 							@click.prevent="saveDraft" 
 							:disabled="nochanges"
-							class="cursor-pointer ml-1 w-24 px-4 py-2 border border-stone-200 text-white disabled:bg-stone-50 disabled:text-stone-900 disabled:cursor-not-allowed transition" 
+							class="cursor-pointer ml-1 w-24 px-4 py-2 border dark:border-0 border-stone-200 text-white disabled:bg-stone-200 disabled:text-stone-900 disabled:dark:bg-stone-600 disabled:dark:text-stone-200 disabled:cursor-not-allowed transition" 
 							:class="publishClass"
 							>
 							{{ $filters.translate('draft') }}
@@ -20,7 +20,7 @@ const publisher = Vue.createApp({
 							v-if="raw"
 							@click.prevent="publishDraft"
 							:disabled="nopublish"
-							class="cursor-pointer ml-1 w-24 px-4 py-2 border border-stone-200 text-white disabled:bg-stone-50 disabled:text-stone-900 disabled:cursor-not-allowed transition" 
+							class="cursor-pointer ml-1 w-24 px-4 py-2 border dark:border-0 border-stone-200 text-white disabled:bg-stone-200 disabled:text-stone-900 disabled:dark:bg-stone-600 disabled:dark:text-stone-200 disabled:cursor-not-allowed transition" 
 							:class="publishClass"
 							>
 							{{ $filters.translate('publish') }}
@@ -29,7 +29,7 @@ const publisher = Vue.createApp({
 							v-if="visual"
 							@click.prevent="publishArticle"
 							:disabled="isPublished"
-							class="cursor-pointer ml-1 w-24 px-4 py-2 border border-stone-200 text-white disabled:bg-stone-50 disabled:text-stone-900 disabled:cursor-not-allowed transition" 
+							class="cursor-pointer ml-1 w-24 px-4 py-2 border dark:border-0 border-stone-200 text-white disabled:bg-stone-200 disabled:text-stone-900 disabled:dark:bg-stone-600 disabled:dark:text-stone-200 disabled:cursor-not-allowed transition" 
 							:class="publishClass"
 							>
 							{{ $filters.translate('publish') }}
@@ -37,7 +37,7 @@ const publisher = Vue.createApp({
 						<button 
 							@click.prevent="showModal = 'discard'" 
 							:disabled="!isModified"
-							class="cursor-pointer ml-1 w-24 px-4 py-2 border border-stone-200 text-white bg-yellow-500 hover:bg-yellow-600 disabled:bg-stone-50 disabled:text-stone-900 disabled:cursor-not-allowed transition" 
+							class="cursor-pointer ml-1 w-24 px-4 py-2 border dark:border-0 border-stone-200 text-white bg-yellow-500 hover:bg-yellow-600 disabled:bg-stone-200 disabled:text-stone-900 disabled:dark:bg-stone-600 disabled:dark:text-stone-200 disabled:cursor-not-allowed transition" 
 							>
 							{{ $filters.translate('discard') }}
 						</button>
@@ -45,14 +45,14 @@ const publisher = Vue.createApp({
 							v-if="item.originalName != 'home'"
 							@click.prevent="checkUnpublish" 
 							:disabled="isUnpublished"
-							class="cursor-pointer ml-1 w-24 px-4 py-2 border border-stone-200 text-white bg-teal-500 hover:bg-teal-600 disabled:bg-stone-50 disabled:text-stone-900 disabled:cursor-not-allowed transition" 
+							class="cursor-pointer ml-1 w-24 px-4 py-2 border dark:border-0 border-stone-200 text-white bg-teal-500 hover:bg-teal-600 disabled:bg-stone-200 disabled:text-stone-900 disabled:dark:bg-stone-600 disabled:dark:text-stone-200 disabled:cursor-not-allowed transition" 
 							>
 							{{ $filters.translate('unpublish') }}
 						</button>
 						<button 
 							v-if="item.originalName != 'home'"
 							@click.prevent="showModal = 'delete'"
-							class="cursor-pointer ml-1 w-24 px-4 py-2 border border-stone-200 bg-stone-50 hover:bg-rose-500 hover:text-white transition" 
+							class="cursor-pointer ml-1 w-24 px-4 py-2 border dark:border-0 border-stone-200 bg-stone-50 hover:bg-rose-500 hover:text-white transition" 
 							>
 							{{ $filters.translate('delete') }}
 						</button>

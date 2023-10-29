@@ -141,8 +141,7 @@ abstract class Controller
 		return $formDefinitions;
 	}
 
-	# used to protect api access, can we do it with middleware?
-	protected function validateRights($userrole, $resource, $action)
+	protected function userroleIsAllowed($userrole, $resource, $action)
 	{
 		$acl = $this->c->get('acl');
 
@@ -151,9 +150,44 @@ abstract class Controller
 			return true;
 		}
 
-		die("PLEASE UPDATE THE METHOD validateRights in controller.php");
+		return false;
+	}
+
+	protected function userIsAllowed($username, $pagemeta)
+	{
+		if(
+			isset($pagemeta['meta']['owner']) && 
+			$pagemeta['meta']['owner'] && 
+			$pagemeta['meta']['owner'] !== '' 
+		)
+		{
+			$allowedusers = array_map('trim', explode(",", $pagemeta['meta']['owner']));
+			if(
+				in_array($username, $allowedusers)
+			)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+
+	# used to protect api access, can we do it with middleware?
+	protected function validateRights($userrole, $resource, $action)
+	{
 		# check ownership. THIS WILL FAIL ANYWAY!!!
 		# MAYBE WE SHOUD ADD THIS CHECK INTO MIDDLEWARE, TOO ?
+
+		$acl = $this->c->get('acl');
+
+		if($acl->isAllowed($userrole, $resource, $action))
+		{
+			return true;
+		}
+
+		die("PLEASE UPDATE THE METHOD validateRights in controller.php");
 
 		$writeMeta = new writeMeta();
 		$pagemeta = $writeMeta->getPageMeta($this->settings, $this->item);

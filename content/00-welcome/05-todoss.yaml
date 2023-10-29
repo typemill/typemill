@@ -2,17 +2,13 @@ meta:
     navtitle: 'To Dos'
     title: 'A list of open tasks'
     description: ' Visual Editor with more stuff'
-    heroimage: null
-    heroimagealt: null
-    owner: Sebastian
-    author: null
+    heroimage: media/live/screenshot-2023-08-03-at-15-23-44-setup-3.png
+    heroimagealt: ''
+    owner: 'Sebastian, testauthor'
+    author: ''
     allowedrole: ''
-    alloweduser: null
-    manualdate: null
     modified: '2023-06-19'
     created: '2023-06-19'
     time: 15-15-01
-    reference: null
-    referencetype: null
     hide: false
     noindex: false

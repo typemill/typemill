@@ -2,8 +2,9 @@ app.component('component-text', {
 	props: ['id', 'description', 'maxlength', 'hidden', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'css', 'errors'],	
 	template: `<div :class="css ? css : ''" class="w-full mt-5 mb-5">
 				<label :for="name" class="block mb-1 font-medium">{{ $filters.translate(label) }}</label>
-				<input type="text" class="text-stone-900 h-12 w-full border px-2 py-3" :class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
+				<input type="text" class="text-stone-900 h-12 w-full border px-2 py-3" 
 					:id="id"
+					:class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
 					:maxlength="maxlength"
 					:readonly="readonly"
 					:hidden="hidden"
@@ -30,6 +31,7 @@ app.component('component-textarea', {
 				<label :for="name" class="block mb-1 font-medium">{{ $filters.translate(label) }}</label>
 				<textarea rows="8" class="w-full border border-stone-300 text-stone-900 bg-stone-200 px-2 py-3"
 					:id="id"
+					:class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
 					:class="css"
 					:readonly="readonly"
 					:required="required"  
@@ -72,6 +74,7 @@ app.component('component-codearea', {
 				<div class="codearea">
 					<textarea data-el="editor" class="editor" ref="editor" 
 						:id="id"
+						:class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
 						:readonly="readonly"
 						:required="required"  
 						:disabled="disabled"  
@@ -130,6 +133,7 @@ app.component('component-select', {
 				<label :for="name" class="block mb-1 font-medium">{{ $filters.translate(label) }}</label>
 			    <select class="form-select block w-full border border-stone-300 text-stone-900 bg-stone-200 px-2 py-3 h-12 transition ease-in-out"
 					:id="id"
+					:class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
 					:name="name"
 					:required="required"  
 					:disabled="disabled"
@@ -159,8 +163,9 @@ app.component('component-checkbox', {
 	template: `<div :class="css ? css : ''" class="w-full mt-5 mb-5">
 				<div class="block mb-1 font-medium">{{ $filters.translate(label) }}</div>
 				<label :for="name" class="inline-flex items-start">
-				  <input type="checkbox" class="w-6 h-6"
+				  <input type="checkbox" class="w-6 h-6"  
 					:id="id"
+					:class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"					
 					:readonly="readonly"
 					:required="required"  
 					:disabled="disabled"
@@ -199,6 +204,7 @@ app.component('component-checkboxlist', {
 				<label class="flex items-start mb-2 mt-2" v-for="option, optionvalue in options" >
 				  <input type="checkbox" class="w-6 h-6"
 					:id="optionvalue"
+					:class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
 				  	:value="optionvalue" 
 				  	v-model="checkedoptions" 
 				  	@change="update(checkedoptions, name)">
@@ -234,6 +240,7 @@ app.component('component-radio', {
 				<label class="flex items-start mb-2 mt-2" v-for="option,optionvalue in options">
 				  <input type="radio" class="w-6 h-6"
 					:id="id"
+					:class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
 					:readonly="readonly"
 					:required="required"  
 					:disabled="disabled"
@@ -260,6 +267,7 @@ app.component('component-number', {
 				<label :for="name" class="block mb-1 font-medium">{{ $filters.translate(label) }}</label>
 				<input type="number" class="h-12 w-full border border-stone-300 text-stone-900 bg-stone-200 px-2 py-3"
 					:id="id"
+					:class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
 					:min="min"
 					:max="max"
 					:maxlength="maxlength"
@@ -291,8 +299,9 @@ app.component('component-date', {
 				    		<path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
 				    	</svg>
 					</div>
-					<input type="date" class="h-12 w-full border pl-10 pr-2 py-3 text-stone-900" :class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
+					<input type="date" class="h-12 w-full border pl-10 pr-2 py-3 text-stone-900" 
 						:id="id"
+						:class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
 						:readonly="readonly"
 						:required="required"  
 						:disabled="disabled"  
@@ -323,8 +332,9 @@ app.component('component-email', {
 					    	<path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
 					    </svg>
 					</div>
-					<input type="email" class="h-12 w-full border pl-10 pr-2 py-3 text-stone-900" :class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
+					<input type="email" class="h-12 w-full border pl-10 pr-2 py-3 text-stone-900"
 						:id="id"
+						:class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
 						:maxlength="maxlength"
 						:readonly="readonly"
 						:required="required"
@@ -355,8 +365,9 @@ app.component('component-tel', {
 							<path d="M22 20c-2 2-2 4-4 4s-4-2-6-4-4-4-4-6 2-2 4-4-4-8-6-8-6 6-6 6c0 4 4.109 12.109 8 16s12 8 16 8c0 0 6-4 6-6s-6-8-8-6z"></path>
 					    </svg>
 					</div>
-					<input type="tel" class="h-12 w-full border pl-10 pr-2 py-3 text-stone-900" :class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
+					<input type="tel" class="h-12 w-full border pl-10 pr-2 py-3 text-stone-900"
 						:id="id"
+						:class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
 						:maxlength="maxlength"
 						:readonly="readonly"
 						:required="required"
@@ -388,8 +399,9 @@ app.component('component-url', {
 							<path d="M8 31.625c-2.037 0-3.952-0.793-5.392-2.233-2.973-2.973-2.973-7.81 0-10.783l2.743-2.743c0.635-0.635 1.664-0.635 2.298 0s0.635 1.663 0 2.298l-2.743 2.743c-1.706 1.706-1.706 4.481 0 6.187 0.826 0.826 1.925 1.281 3.094 1.281s2.267-0.455 3.094-1.281l6-6c1.706-1.706 1.706-4.481 0-6.187-0.635-0.635-0.635-1.663 0-2.298s1.663-0.635 2.298 0c2.973 2.973 2.973 7.81 0 10.783l-6 6c-1.44 1.44-3.355 2.233-5.392 2.233z"></path>
 					    </svg>
 					</div>
-					<input type="url" class="h-12 w-full border pl-10 pr-2 py-3 text-stone-900" :class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
+					<input type="url" class="h-12 w-full border pl-10 pr-2 py-3 text-stone-900"
 						:id="id"
+						:class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
 						:maxlength="maxlength"
 						:readonly="readonly"
 						:required="required"
@@ -420,9 +432,10 @@ app.component('component-color', {
 							<path d="M30.828 1.172c-1.562-1.562-4.095-1.562-5.657 0l-5.379 5.379-3.793-3.793-4.243 4.243 3.326 3.326-14.754 14.754c-0.252 0.252-0.358 0.592-0.322 0.921h-0.008v5c0 0.552 0.448 1 1 1h5c0 0 0.083 0 0.125 0 0.288 0 0.576-0.11 0.795-0.329l14.754-14.754 3.326 3.326 4.243-4.243-3.793-3.793 5.379-5.379c1.562-1.562 1.562-4.095 0-5.657zM5.409 30h-3.409v-3.409l14.674-14.674 3.409 3.409-14.674 14.674z"></path>
 					    </svg>
 					</div>
-					<input type="color" class="h-12 w-full border pl-10 pr-1 py-1" :class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
+					<input type="color" class="h-12 w-full border pl-10 pr-1 py-1"
 						:id="id"
-						:maxlength="maxlength"
+ 						:class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
+ 						:maxlength="maxlength"
 						:readonly="readonly"
 						:required="required"
 						:disabled="disabled"
@@ -457,8 +470,9 @@ app.component('component-password', {
 							<path d="M18.5 14h-0.5v-6c0-3.308-2.692-6-6-6h-4c-3.308 0-6 2.692-6 6v6h-0.5c-0.825 0-1.5 0.675-1.5 1.5v15c0 0.825 0.675 1.5 1.5 1.5h17c0.825 0 1.5-0.675 1.5-1.5v-15c0-0.825-0.675-1.5-1.5-1.5zM6 8c0-1.103 0.897-2 2-2h4c1.103 0 2 0.897 2 2v6h-8v-6z"></path>
 					    </svg>
 					</div>
-					<input :type="fieldType" class="h-12 w-full border pl-10 pr-10 py-1 text-stone-900" :class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
+					<input :type="fieldType" class="h-12 w-full border pl-10 pr-10 py-1 text-stone-900"
 						:id="id"
+ 						:class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
 						:maxlength="maxlength"
 						:readonly="readonly"
 						:required="required"
@@ -740,17 +754,17 @@ app.component('component-image', {
 						</div>
 					</div>
 					<div class="lg:w-half w-full ph3 lh-copy f6 relative">
-						<div class="relative w-full bg-stone-700 hover:bg-stone-900">
-							<p class="relative w-full text-white text-center px-2 py-3"><svg class="icon icon-upload baseline"><use xlink:href="#icon-upload"></use></svg> {{ $filters.translate('upload an image') }}</p>
+						<div class="relative w-full bg-stone-600 hover:bg-stone-900">
+							<p class="relative w-full text-white text-center px-2 py-3"><svg class="icon icon-upload mr-1"><use xlink:href="#icon-upload"></use></svg> {{ $filters.translate('upload an image') }}</p>
 							<input class="absolute w-full top-0 opacity-0 bg-stone-900 cursor-pointer px-2 py-3" type="file" name="image" accept="image/*" @change="onFileChange( $event )" />
 						</div>
 						<div class="w-full mt-3">
-							<button class="w-full bg-stone-700 hover:bg-stone-900 text-white px-2 py-3 text-center cursor-pointer transition duration-100" @click.prevent="showmedialib = true"><svg class="icon icon-image baseline"><use xlink:href="#icon-image"></use></svg> {{ $filters.translate('select from medialib') }}</button>
+							<button class="w-full bg-stone-600 hover:bg-stone-900 text-white px-2 py-3 text-center cursor-pointer transition duration-100" @click.prevent="showmedialib = true"><svg class="icon icon-image mr-1"><use xlink:href="#icon-image"></use></svg> {{ $filters.translate('select from medialib') }}</button>
 						</div>
 						<div class="w-full mt-3">
 							<label class="block mb-1">{{ $filters.translate('Image URL (read only)') }}</label>
 							<div class="flex">
-								<button @click.prevent="deleteImage()" class="w-1/6 bg-stone-200 hover:bg-rose-500 hover:text-white">x</button>
+								<button @click.prevent="deleteImage()" class="w-1/6 bg-stone-200 dark:bg-stone-600 hover:bg-rose-500 hover:dark:bg-rose-500 hover:text-white">x</button>
 								<input type="text" class="h-12 w-5/6 border px-1 py-1 text-stone-900" :class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'" 
 									:id="id"
 									:maxlength="maxlength"
@@ -764,7 +778,7 @@ app.component('component-image', {
 									@input="update($event, name)">
 							</div>
 							<div v-if="qualitylabel" class="w-full mt-3">
-								<button class="w-full cursor-pointer bg-stone-200 hover:bg-stone-300 text-center px-1 py-1 transition duration-100" @click.prevent="switchQuality(value)">{{ qualitylabel }}</button>
+								<button class="w-full cursor-pointer bg-stone-200 dark:bg-stone-600 hover:bg-stone-300 hover:dark:bg-stone-900 text-center px-1 py-1 transition duration-100" @click.prevent="switchQuality(value)">{{ qualitylabel }}</button>
 							</div>
 						</div>
 					  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
@@ -773,11 +787,11 @@ app.component('component-image', {
 				</div>
 
 				<Transition name="initial" appear>
-					<div v-if="showmedialib" class="fixed top-0 left-0 right-0 bottom-0 bg-stone-100 z-50">
-						<button class="w-full bg-stone-200 hover:bg-rose-500 hover:text-white p-2 transition duration-100" @click.prevent="showmedialib = false">{{ $filters.translate('close library') }}</button>
+					<div v-if="showmedialib" class="fixed top-0 left-0 right-0 bottom-0 bg-stone-100 dark:bg-stone-700 z-50">
+						<button class="w-full bg-stone-200 dark:bg-stone-900 hover:dark:bg-rose-500 hover:bg-rose-500 hover:text-white p-2 transition duration-100" @click.prevent="showmedialib = false">{{ $filters.translate('close library') }}</button>
 						<medialib parentcomponent="images" @addFromMedialibEvent="addFromMedialibFunction"></medialib>
 					</div>
-				</Transition> 
+				</Transition>
 
 			  </div>`,
 	mounted: function() {
@@ -896,7 +910,7 @@ app.component('component-image', {
 							sharedself.load = false;
 					    	if(error.response)
 					    	{
-					    		console.info(error.response);
+				    		console.info(error.response);
 /*				        	publishController.errors.message = error.response.data.errors; */
 					      	}
 					    });

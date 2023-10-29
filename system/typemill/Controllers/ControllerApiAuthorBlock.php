@@ -8,22 +8,13 @@ use Slim\Routing\RouteContext;
 use Typemill\Models\Navigation;
 use Typemill\Models\Validation;
 use Typemill\Models\Content;
+use Typemill\Models\Meta;
 use Typemill\Static\Translations;
 
 class ControllerApiAuthorBlock extends Controller
 {
 	public function addBlock(Request $request, Response $response, $args)
 	{
-		$validRights		= $this->validateRights($request->getAttribute('c_userrole'), 'content', 'update');
-		if(!$validRights)
-		{
-			$response->getBody()->write(json_encode([
-				'message' 	=> Translations::translate('You do not have enough rights.'),
-			]));
-
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
-		}
-
 		$params 			= $request->getParsedBody();
 
 		$validate			= new Validation();
@@ -49,6 +40,22 @@ class ControllerApiAuthorBlock extends Controller
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+		}
+
+		# if user is not allowed to perform this action (e.g. not admin)
+		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'update'))
+		{
+			# then check if user is the owner of this content
+			$meta = new Meta();
+			$metadata = $meta->getMetaData($item);
+			if(!$this->userIsAllowed($request->getAttribute('c_username'), $metadata))
+			{
+				$response->getBody()->write(json_encode([
+					'message' 	=> Translations::translate('You do not have enough rights.'),
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(403);				
+			}
 		}
 
 		$content 			= new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
@@ -119,16 +126,6 @@ class ControllerApiAuthorBlock extends Controller
 
 	public function moveBlock(Request $request, Response $response, $args)
 	{
-		$validRights		= $this->validateRights($request->getAttribute('c_userrole'), 'content', 'update');
-		if(!$validRights)
-		{
-			$response->getBody()->write(json_encode([
-				'message' 	=> Translations::translate('You do not have enough rights.'),
-			]));
-
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);			
-		}
-
 		$params 			= $request->getParsedBody();
 		$validate			= new Validation();
 		$validInput 		= $validate->blockMove($params);
@@ -153,6 +150,22 @@ class ControllerApiAuthorBlock extends Controller
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+		}
+
+		# if user is not allowed to perform this action (e.g. not admin)
+		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'update'))
+		{
+			# then check if user is the owner of this content
+			$meta = new Meta();
+			$metadata = $meta->getMetaData($item);
+			if(!$this->userIsAllowed($request->getAttribute('c_username'), $metadata))
+			{
+				$response->getBody()->write(json_encode([
+					'message' 	=> Translations::translate('You do not have enough rights.'),
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(403);				
+			}
 		}
 
 		$content 			= new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
@@ -212,16 +225,6 @@ class ControllerApiAuthorBlock extends Controller
 
 	public function updateBlock(Request $request, Response $response, $args)
 	{
-		$validRights		= $this->validateRights($request->getAttribute('c_userrole'), 'content', 'update');
-		if(!$validRights)
-		{
-			$response->getBody()->write(json_encode([
-				'message' 	=> Translations::translate('You do not have enough rights.'),
-			]));
-
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);			
-		}
-
 		$params 			= $request->getParsedBody();
 		$validate			= new Validation();
 		$validInput 		= $validate->blockInput($params);
@@ -246,6 +249,22 @@ class ControllerApiAuthorBlock extends Controller
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+		}
+
+		# if user is not allowed to perform this action (e.g. not admin)
+		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'update'))
+		{
+			# then check if user is the owner of this content
+			$meta = new Meta();
+			$metadata = $meta->getMetaData($item);
+			if(!$this->userIsAllowed($request->getAttribute('c_username'), $metadata))
+			{
+				$response->getBody()->write(json_encode([
+					'message' 	=> Translations::translate('You do not have enough rights.'),
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(403);				
+			}
 		}
 
 		$content 			= new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
@@ -318,16 +337,6 @@ class ControllerApiAuthorBlock extends Controller
 
 	public function deleteBlock(Request $request, Response $response, $args)
 	{
-		$validRights		= $this->validateRights($request->getAttribute('c_userrole'), 'content', 'update');
-		if(!$validRights)
-		{
-			$response->getBody()->write(json_encode([
-				'message' 	=> Translations::translate('You do not have enough rights.'),
-			]));
-
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);			
-		}
-
 		$params 			= $request->getParsedBody();
 		$validate			= new Validation();
 		$validInput 		= $validate->blockDelete($params);
@@ -352,6 +361,22 @@ class ControllerApiAuthorBlock extends Controller
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+		}
+
+		# if user is not allowed to perform this action (e.g. not admin)
+		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'update'))
+		{
+			# then check if user is the owner of this content
+			$meta = new Meta();
+			$metadata = $meta->getMetaData($item);
+			if(!$this->userIsAllowed($request->getAttribute('c_username'), $metadata))
+			{
+				$response->getBody()->write(json_encode([
+					'message' 	=> Translations::translate('You do not have enough rights.'),
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(403);				
+			}
 		}
 
 		$content 			= new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));

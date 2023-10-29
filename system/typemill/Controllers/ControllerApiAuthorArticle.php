@@ -23,16 +23,6 @@ class ControllerApiAuthorArticle extends Controller
 {
 	public function publishArticle(Request $request, Response $response, $args)
 	{
-		$validRights		= $this->validateRights($request->getAttribute('c_userrole'), 'content', 'update');
-		if(!$validRights)
-		{
-			$response->getBody()->write(json_encode([
-				'message' 	=> Translations::translate('You do not have enough rights.'),
-			]));
-
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
-		}
-
 		$params 			= $request->getParsedBody();
 		$validate			= new Validation();
 		$validInput 		= $validate->articlePublish($params);
@@ -57,6 +47,22 @@ class ControllerApiAuthorArticle extends Controller
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+		}
+
+		# if user is not allowed to perform this action (e.g. not admin)
+		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'publish'))
+		{
+			# then check if user is the owner of this content
+			$meta = new Meta();
+			$metadata = $meta->getMetaData($item);
+			if(!$this->userIsAllowed($request->getAttribute('c_username'), $metadata))
+			{
+				$response->getBody()->write(json_encode([
+					'message' 	=> Translations::translate('You do not have enough rights.'),
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(403);				
+			}
 		}
 
 	    # publish content
@@ -106,16 +112,6 @@ class ControllerApiAuthorArticle extends Controller
 
 	public function unpublishArticle(Request $request, Response $response, $args)
 	{
-		$validRights		= $this->validateRights($request->getAttribute('c_userrole'), 'content', 'update');
-		if(!$validRights)
-		{
-			$response->getBody()->write(json_encode([
-				'message' 	=> Translations::translate('You do not have enough rights.'),
-			]));
-
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
-		}
-
 		$params 			= $request->getParsedBody();
 		$validate			= new Validation();
 		$validInput 		= $validate->articlePublish($params);
@@ -140,6 +136,22 @@ class ControllerApiAuthorArticle extends Controller
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+		}
+
+		# if user is not allowed to perform this action (e.g. not admin)
+		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'publish'))
+		{
+			# then check if user is the owner of this content
+			$meta = new Meta();
+			$metadata = $meta->getMetaData($item);
+			if(!$this->userIsAllowed($request->getAttribute('c_username'), $metadata))
+			{
+				$response->getBody()->write(json_encode([
+					'message' 	=> Translations::translate('You do not have enough rights.'),
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(403);				
+			}
 		}
 
 	    # publish content
@@ -183,16 +195,6 @@ class ControllerApiAuthorArticle extends Controller
 
 	public function updateDraft(Request $request, Response $response, $args)
 	{
-		$validRights		= $this->validateRights($request->getAttribute('c_userrole'), 'mycontent', 'edit');
-		if(!$validRights)
-		{
-			$response->getBody()->write(json_encode([
-				'message' 	=> Translations::translate('You do not have enough rights.'),
-			]));
-
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(401);
-		}
-
 		$params 			= $request->getParsedBody();
 		$validate			= new Validation();
 		$validInput 		= $validate->articleUpdate($params);
@@ -217,6 +219,22 @@ class ControllerApiAuthorArticle extends Controller
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+		}
+
+		# if user is not allowed to perform this action (e.g. not admin)
+		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'update'))
+		{
+			# then check if user is the owner of this content
+			$meta = new Meta();
+			$metadata = $meta->getMetaData($item);
+			if(!$this->userIsAllowed($request->getAttribute('c_username'), $metadata))
+			{
+				$response->getBody()->write(json_encode([
+					'message' 	=> Translations::translate('You do not have enough rights.'),
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(403);				
+			}
 		}
 
 	    # save draft content
@@ -246,16 +264,6 @@ class ControllerApiAuthorArticle extends Controller
 
 	public function publishDraft(Request $request, Response $response, $args)
 	{
-		$validRights		= $this->validateRights($request->getAttribute('c_userrole'), 'mycontent', 'edit');
-		if(!$validRights)
-		{
-			$response->getBody()->write(json_encode([
-				'message' 	=> Translations::translate('You do not have enough rights.'),
-			]));
-
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(401);
-		}
-
 		$params 			= $request->getParsedBody();
 		$validate			= new Validation();
 		$validInput 		= $validate->articleUpdate($params);
@@ -280,6 +288,22 @@ class ControllerApiAuthorArticle extends Controller
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+		}
+
+		# if user is not allowed to perform this action (e.g. not admin)
+		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'update'))
+		{
+			# then check if user is the owner of this content
+			$meta = new Meta();
+			$metadata = $meta->getMetaData($item);
+			if(!$this->userIsAllowed($request->getAttribute('c_username'), $metadata))
+			{
+				$response->getBody()->write(json_encode([
+					'message' 	=> Translations::translate('You do not have enough rights.'),
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(403);				
+			}
 		}
 
 	    # save draft content
@@ -326,16 +350,6 @@ class ControllerApiAuthorArticle extends Controller
 
 	public function discardArticleChanges(Request $request, Response $response, $args)
 	{
-		$validRights		= $this->validateRights($request->getAttribute('c_userrole'), 'mycontent', 'edit');
-		if(!$validRights)
-		{
-			$response->getBody()->write(json_encode([
-				'message' 	=> Translations::translate('You do not have enough rights.'),
-			]));
-
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
-		}
-
 		$params 			= $request->getParsedBody();
 		$validate			= new Validation();
 		$validInput 		= $validate->articlePublish($params);
@@ -360,6 +374,22 @@ class ControllerApiAuthorArticle extends Controller
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+		}
+
+		# if user is not allowed to perform this action (e.g. not admin)
+		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'update'))
+		{
+			# then check if user is the owner of this content
+			$meta = new Meta();
+			$metadata = $meta->getMetaData($item);
+			if(!$this->userIsAllowed($request->getAttribute('c_username'), $metadata))
+			{
+				$response->getBody()->write(json_encode([
+					'message' 	=> Translations::translate('You do not have enough rights.'),
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(403);				
+			}
 		}
 
 	    # publish content
@@ -387,16 +417,6 @@ class ControllerApiAuthorArticle extends Controller
 
 	public function createArticle(Request $request, Response $response, $args)
 	{
-		$validRights		= $this->validateRights($request->getAttribute('c_userrole'), 'mycontent', 'create');
-		if(!$validRights)
-		{
-			$response->getBody()->write(json_encode([
-				'message' 	=> Translations::translate('You do not have enough rights.'),
-			]));
-
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
-		}
-
 		$params 			= $request->getParsedBody();
 		$validate			= new Validation();
 		$validInput 		= $validate->navigationItem($params);
@@ -495,7 +515,13 @@ class ControllerApiAuthorArticle extends Controller
 
 				return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 			}
-			$storage->updateYaml('contentFolder', $folderPath, $namePath . '.yaml', ['meta' => ['navtitle' => $params['item_name']]]);
+			$storage->updateYaml('contentFolder', $folderPath, $namePath . '.yaml', 
+				['meta' => [
+					'navtitle' 	=> $params['item_name'],
+					'owner' 	=> $request->getAttribute('c_username'),
+					'created'	=> date("Y-m-d"),
+					'time'		=> date("H-i-s")
+				]]);
 		}
 		elseif($params['type'] == 'folder')
 		{
@@ -508,7 +534,13 @@ class ControllerApiAuthorArticle extends Controller
 				return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 			}
 			$storage->writeFile('contentFolder', $folderPath . DIRECTORY_SEPARATOR . $namePath, 'index.txt', $content);
-			$storage->updateYaml('contentFolder', $folderPath . DIRECTORY_SEPARATOR . $namePath, 'index.yaml', ['meta' => ['navtitle' => $params['item_name']]]);
+			$storage->updateYaml('contentFolder', $folderPath . DIRECTORY_SEPARATOR . $namePath, 'index.yaml', 
+				['meta' => [
+					'navtitle' 	=> $params['item_name'],
+					'owner' 	=> $request->getAttribute('c_username'),
+					'created'	=> date("Y-m-d"),
+					'time'		=> date("H-i-s")
+				]]);
 
 			# always redirect to a folder
 #			$url = $urlinfo['baseurl'] . '/tm/content/' . $this->settings['editor'] . $folder->urlRelWoF . '/' . $slug;
@@ -527,16 +559,6 @@ class ControllerApiAuthorArticle extends Controller
 
 	public function createPost(Request $request, Response $response, $args)
 	{
-		$validRights		= $this->validateRights($request->getAttribute('c_userrole'), 'mycontent', 'create');
-		if(!$validRights)
-		{
-			$response->getBody()->write(json_encode([
-				'message' 	=> Translations::translate('You do not have enough rights.'),
-			]));
-
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
-		}
-
 		$params 			= $request->getParsedBody();
 		$validate			= new Validation();
 		$validInput 		= $validate->navigationItem($params);
@@ -619,7 +641,13 @@ class ControllerApiAuthorArticle extends Controller
 
 				return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 			}
-			$storage->updateYaml('contentFolder', $folderPath, $namePath . '.yaml', ['meta' => ['navtitle' => $params['item_name']]]);
+			$storage->updateYaml('contentFolder', $folderPath, $namePath . '.yaml', 
+				['meta' => [
+					'navtitle' 	=> $params['item_name'],
+					'owner' 	=> $request->getAttribute('c_username'),
+					'created'	=> date("Y-m-d"),
+					'time'		=> date("H-i-s")
+				]]);
 		}
 		elseif($params['type'] == 'folder')
 		{
@@ -644,16 +672,6 @@ class ControllerApiAuthorArticle extends Controller
 
 	public function renameArticle(Request $request, Response $response, $args)
 	{
-		$validRights		= $this->validateRights($request->getAttribute('c_userrole'), 'mycontent', 'edit');
-		if(!$validRights)
-		{
-			$response->getBody()->write(json_encode([
-				'message' 	=> Translations::translate('You do not have enough rights.'),
-			]));
-
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
-		}
-
 		$params 			= $request->getParsedBody();
 		$validate			= new Validation();
 		$validInput 		= $validate->articleRename($params);
@@ -678,6 +696,22 @@ class ControllerApiAuthorArticle extends Controller
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+		}
+
+		# if user is not allowed to perform this action (e.g. not admin)
+		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'update'))
+		{
+			# then check if user is the owner of this content
+			$meta = new Meta();
+			$metadata = $meta->getMetaData($item);
+			if(!$this->userIsAllowed($request->getAttribute('c_username'), $metadata))
+			{
+				$response->getBody()->write(json_encode([
+					'message' 	=> Translations::translate('You do not have enough rights.'),
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(403);				
+			}
 		}
 
 		# check if name exists
@@ -732,16 +766,6 @@ class ControllerApiAuthorArticle extends Controller
 
 	public function sortArticle(Request $request, Response $response, $args)
 	{ 
-		$validRights		= $this->validateRights($request->getAttribute('c_userrole'), 'content', 'update');
-		if(!$validRights)
-		{
-			$response->getBody()->write(json_encode([
-				'message' 	=> Translations::translate('You do not have enough rights.'),
-			]));
-
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
-		}
-
 		$params 			= $request->getParsedBody();
 		$validate			= new Validation();
 		$validInput 		= $validate->navigationSort($params);
@@ -768,6 +792,31 @@ class ControllerApiAuthorArticle extends Controller
 	    $navigation 		= new Navigation();
 	    $draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $langattr);
 		$item 				= $navigation->getItemWithKeyPath($draftNavigation, $itemKeyPath);
+		if(!$item)
+		{
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('page not found'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+		}
+
+		# if user is not allowed to perform this action (e.g. not admin)
+		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'update'))
+		{
+			# then check if user is the owner of this content
+			$meta = new Meta();
+			$metadata = $meta->getMetaData($item);
+			if(!$this->userIsAllowed($request->getAttribute('c_username'), $metadata))
+			{
+				$response->getBody()->write(json_encode([
+					'message' 	=> Translations::translate('You do not have enough rights.'),
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(403);				
+			}
+		}	    
+
 	    $extendedNavigation	= $navigation->getExtendedNavigation($urlinfo, $langattr);
 	    $pageinfo 			= $extendedNavigation[$params['url']] ?? false;
 	    if(!$pageinfo)
@@ -861,16 +910,6 @@ class ControllerApiAuthorArticle extends Controller
 
 	public function deleteArticle(Request $request, Response $response, $args)
 	{
-		$validRights		= $this->validateRights($request->getAttribute('c_userrole'), 'content', 'delete');
-		if(!$validRights)
-		{
-			$response->getBody()->write(json_encode([
-				'message' 	=> Translations::translate('You do not have enough rights.'),
-			]));
-
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);			
-		}
-
 		$params 			= $request->getParsedBody();
 		$validate			= new Validation();
 		$validInput 		= $validate->articlePublish($params);
@@ -895,6 +934,22 @@ class ControllerApiAuthorArticle extends Controller
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+		}
+
+		# if user is not allowed to perform this action (e.g. not admin)
+		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'delete'))
+		{
+			# then check if user is the owner of this content
+			$meta = new Meta();
+			$metadata = $meta->getMetaData($item);
+			if(!$this->userIsAllowed($request->getAttribute('c_username'), $metadata))
+			{
+				$response->getBody()->write(json_encode([
+					'message' 	=> Translations::translate('You do not have enough rights.'),
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(403);				
+			}
 		}
 
 		$content = new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));

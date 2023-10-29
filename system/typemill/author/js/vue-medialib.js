@@ -5,8 +5,8 @@ const medialib = {
                     <div class="w-1/4">
                         <div class="w-full relative"> 
                             <div class="flex">
-                                <input v-model="search" class="h-12 px-2 py-3 border border-stone-300 bg-stone-200">
-                                <div class="w-1/4 h-12 px-2 py-3 center bg-stone-700 hover:bg-stone-900 text-white">
+                                <input v-model="search" class="h-12 px-2 py-3 text-stone-900 border border-stone-300 bg-stone-200">
+                                <div class="w-1/4 h-12 px-2 py-3 center text-center bg-stone-700 dark:bg-stone-600 hover:bg-stone-900 hover:dark:bg-stone-900 text-white">
                                     <svg class="icon icon-search">
                                         <use xlink:href="#icon-search"></use>
                                     </svg>
@@ -16,8 +16,8 @@ const medialib = {
                         <div v-if="showimages">
                             <h3 class="border-b-2 border-stone-700 pt-6 pb-3">Images</h3>
                             <div class="my-3">
-                                <button @click.prevent="showImages('pageImages')" :class="isActive('pageImages')" class="px-2 py-1 mr-2 hover:bg-stone-700 hover:text-stone-50 transition duration-100">{{ $filters.translate('this page') }}</button>
-                                <button @click.prevent="showImages('allImages')" :class="isActive('allImages')" class="px-2 py-1 hover:bg-stone-700 hover:text-stone-50 transition duration-100">{{ $filters.translate('all pages') }}</button>
+                                <button @click.prevent="showImages('pageImages')" :class="isActive('pageImages')" class="px-2 py-1 mr-2 hover:bg-stone-700 hover:dark:bg-stone-900 hover:text-stone-50 transition duration-100">{{ $filters.translate('this page') }}</button>
+                                <button @click.prevent="showImages('allImages')" :class="isActive('allImages')" class="px-2 py-1 hover:bg-stone-700 hover:dark:bg-stone-900 hover:text-stone-50 transition duration-100">{{ $filters.translate('all pages') }}</button>
                             </div>
                         </div>
                         <div v-if="showfiles">
@@ -40,10 +40,10 @@ const medialib = {
                                             </svg> click to select
                                         </span>
                                     </a>
-                                    <div class="flex"> 
+                                    <div class="flex bg-stone-50 dark:bg-stone-600"> 
                                         <div class="w-3/4 truncate p-3">{{ image.name }}</div>
                                         <div class="w-1/4 flex">
-                                            <button @click.prevent="showImageDetails(image,index)" class="w-1/2 bg-stone-50 hover:bg-teal-500 hover:text-white transition duration-100">
+                                            <button @click.prevent="showImageDetails(image,index)" class="w-1/2 hover:bg-teal-500 hover:text-white transition duration-100">
                                                 <svg class="icon icon-info">
                                                     <use xlink:href="#icon-info"></use>
                                                 </svg>
@@ -61,41 +61,41 @@ const medialib = {
                         <Transition name="fade">
                             <div class="px-5" v-if="showimagedetails">
                                 <div class="flex flex-wrap item-start relative">
-                                    <div class="w-1/2 bg-stone-50">
+                                    <div class="w-1/2 bg-stone-50 dark:bg-stone-600">
                                         <div class="w-80 h-80 table-cell align-middle bg-chess">
                                             <img :src="getImageUrl(imagedetaildata.src_live)" class="max-w-xs max-h-80 table mx-auto">
                                         </div>
                                     </div>
-                                    <div class="w-1/2 bg-stone-50 p-4 text-xs">
-                                        <div class="text-stone-500 mt-3 mb-1">Name</div>
+                                    <div class="w-1/2 bg-stone-50 dark:bg-stone-600 p-4 text-xs">
+                                        <div class="text-stone-500 dark:text-stone-300 mt-3 mb-1">Name</div>
                                         <div class="font-bold">{{ imagedetaildata.name}}</div>
-                                        <div class="text-stone-500 mt-3 mb-1">URL</div>
+                                        <div class="text-stone-500 dark:text-stone-300 mt-3 mb-1">URL</div>
                                         <div class="font-bold">{{ getImageUrl(imagedetaildata.src_live)}}</div>
                                         <div class="flex flex-wrap item-start"> 
                                             <div class="w-1/2">
-                                                <div class="text-stone-500 mt-3 mb-1">Size</div>
+                                                <div class="text-stone-500 dark:text-stone-300 mt-3 mb-1">Size</div>
                                                 <div class="font-bold">{{ getSize(imagedetaildata.bytes) }}</div>
                                             </div>
                                             <div class="w-1/2">
-                                                <div class="text-stone-500 mt-3 mb-1">Dimensions</div>
+                                                <div class="text-stone-500 dark:text-stone-300 mt-3 mb-1">Dimensions</div>
                                                 <div class="font-bold">{{ imagedetaildata.width }}x{{ imagedetaildata.height }} px</div>
                                             </div>
                                             <div class="w-1/2">
-                                                <div class="text-stone-500 mt-3 mb-1">Type</div>
+                                                <div class="text-stone-500 dark:text-stone-300 mt-3 mb-1">Type</div>
                                                 <div class="font-bold">{{ imagedetaildata.type }}</div>
                                             </div>
                                             <div class="w-1/2">
-                                                <div class="text-stone-500 mt-3 mb-1">Date</div>
+                                                <div class="text-stone-500 dark:text-stone-300 mt-3 mb-1">Date</div>
                                                 <div class="font-bold">{{ getDate(imagedetaildata.timestamp) }}</div>
                                             </div>
                                         </div>
                                         <div class="w-full flex justify-between mt-8">
-                                            <button @click.prevent="selectImage(imagedetaildata)" class="w-1/2 p-2 mr-2 bg-stone-200 hover:bg-teal-500 hover:text-white transition duration-100">
+                                            <button @click.prevent="selectImage(imagedetaildata)" class="w-1/2 p-2 mr-2 bg-stone-200 dark:bg-stone-900 hover:bg-teal-500 hover:dark:bg-teal-500 hover:text-white transition duration-100">
                                                 <svg class="icon icon-check">
                                                     <use xlink:href="#icon-check"></use>
                                                 </svg> select
                                             </button>
-                                            <button @click.prevent="deleteImage(imagedetaildata, detailindex)" class="w-1/2 p-2 bg-stone-200 hover:bg-rose-500 hover:text-white transition duration-100">
+                                            <button @click.prevent="deleteImage(imagedetaildata, detailindex)" class="w-1/2 p-2 bg-stone-200 dark:bg-stone-900 hover:bg-rose-500 hover:dark:bg-rose-500 hover:text-white transition duration-100">
                                                 <svg class="icon icon-trash-o baseline">
                                                     <use xlink:href="#icon-trash-o"></use>
                                                 </svg> delete
@@ -316,9 +316,9 @@ const medialib = {
         {
             if(this.active == activestring)
             {
-                return 'bg-stone-700 text-stone-50';
+                return 'bg-stone-700 dark:bg-stone-900 text-stone-50';
             }
-            return 'bg-stone-200';
+            return 'bg-stone-200 dark:bg-stone-600';
         },
         getBackgroundImage(image)
         {

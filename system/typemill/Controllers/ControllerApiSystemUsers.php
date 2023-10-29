@@ -126,14 +126,21 @@ class ControllerApiSystemUsers extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
-		# if a non-admin-user tries to update another account 
-		if(!$isAdmin AND ($username !== $request->getAttribute('username')) )
+		# if it is a non-admin-user
+		if(!$isAdmin)
 		{
-			$response->getBody()->write(json_encode([
-				'message' => Translations::translate('You are not allowed to update another user.')
-			]));
+			# do not change userrole
+			unset($userdata['userrole']);
+				
+			# if a non-admin-user tries to update another account 
+			if(($username !== $request->getAttribute('c_username')))
+			{
+				$response->getBody()->write(json_encode([
+					'message' => Translations::translate('You are not allowed to update another user.')
+				]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);			
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
+			}
 		}
 
 		# cleanup password entry

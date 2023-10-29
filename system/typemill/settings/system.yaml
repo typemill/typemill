@@ -53,11 +53,6 @@ fieldsetsystem:
       label: Google sitemap (readonly)
       css: lg:w-half
       disabled: true
-    darkmode:
-      type: checkbox
-      label: Darkmode
-      checkboxlabel: Switch to darkmode for the authoring area
-      css: lg:w-half
 fieldsetmedia:
   type: fieldset
   legend: Media
