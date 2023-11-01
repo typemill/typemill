@@ -34,6 +34,13 @@ class securityMiddleware implements MiddlewareInterface
 			$params 	= $request->getParsedBody();
 			$referer 	= $request->getHeader('HTTP_REFERER');
 
+			if(!$referer OR $referer == '')
+			{
+				$response = new Response();
+				
+				return $response->withHeader('Location', $this->router->urlFor('auth.login'))->withStatus(302);
+			}
+
 			# simple bot check with honeypot
 			if( 
 				(isset($params['personal-honey-mail']))
@@ -49,7 +56,6 @@ class securityMiddleware implements MiddlewareInterface
 				$response = new Response();
 				
 				return $response->withHeader('Location', $referer[0])->withStatus(302);
-#				return $response->withHeader('Location', $this->router->urlFor('auth.login'))->withStatus(302);
 			}
 
 		    # check captcha

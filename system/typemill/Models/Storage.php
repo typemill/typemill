@@ -3,6 +3,7 @@
 namespace Typemill\Models;
 
 use Typemill\Static\Helpers;
+use Typemill\Static\Translations;
 
 class Storage
 {
@@ -110,7 +111,7 @@ class Storage
 			{
 				# do not allow direct access to basepath files
 
-				$this->error = "Access to basepath is not allowed.";
+				$this->error = Translations::translate('Access to basepath is not allowed.');
 				
 				return false;
 			}
@@ -118,7 +119,7 @@ class Storage
 			return $path;
 		}
 
-		$this->error = "We could not find a folderPath for $location";
+		$this->error = Translations::translate('We could not find a folderPath for') . ' ' . $location;
 		
 		return false;
 	}
@@ -129,7 +130,7 @@ class Storage
 
 		if(!is_dir($folderpath) OR !is_writable($folderpath))
 		{
-			$this->error = "The folder $folderpath does not exist or is not writable.";
+			$this->error = $folderpath . ' ' . Translations::translate('does not exist or is not writable') . '.';
 
 			return false;
 		}
@@ -148,7 +149,7 @@ class Storage
 
 		if(!mkdir($folderpath, 0755, true))
 		{
-			$this->error = "Could not create folder $folderpath.";
+			$this->error = Translations::translate('Could not create folder') . ' ' . $folderpath;
 
 			return false;
 		}
@@ -160,7 +161,7 @@ class Storage
 	{
 		if(!isset($this->isWritable[$location]))
 		{
-			$this->error = "It is not allowed to write into $location";
+			$this->error = Translations::translate('It is not allowed to write into') . ' ' . $location;
 
 			return false;
 		}
@@ -174,12 +175,12 @@ class Storage
 				return true;
 			}
 
-			$this->error = "We found the folder but could not delete $filepath";
+			$this->error = Translations::translate('We found the folder but could not delete') . ' ' . $filepath;
 
 			return false;
 		}
 		
-		$this->error = "The path $filepath is not a folder.";
+		$this->error = $filepath . ' ' .Translations::translate('is not a folder') . '.';
 
 		return false;
 	}
@@ -195,7 +196,7 @@ class Storage
 				return true;
 			}
 
-			$this->error = "We found the folder but could not delete $filepath";
+			$this->error = Translations::translate('We found the folder but could not delete it') . ' ' . $filepath;
 
 			return false;
 		}
@@ -209,7 +210,7 @@ class Storage
 
 		if(!is_dir($folderdir . $folderpath))
 		{
-			$this->error = "$folderpath is not a directory";
+			$this->error = $folderpath . ' ' . Translations::translate('is not a directory');
 			return false;
 		}
 
@@ -227,7 +228,7 @@ class Storage
 				{
 					if(!unlink($fullfilepath))
 					{
-						$this->error = "Could not delete file $fullfilepath.";
+						$this->error = Translations::translate('Could not delete file') . ' ' . $fullfilepath;
 
 						return false;
 					}
@@ -237,7 +238,7 @@ class Storage
 
 		if(!rmdir($folderdir . $folderpath))
 		{
-			$this->error = "Could not delete folder $folderpath.";
+			$this->error = Translations::translate('Could not delete folder') . ' ' . $folderpath;
 			
 			return false;
 		}
@@ -251,7 +252,7 @@ class Storage
 
 		if(!file_exists($filepath))
 		{
-			$this->error = "The file $filepath does not exist.";
+			$this->error = $filepath . ' ' . Translations::translate('does not exist');
 
 			return false;
 		}
@@ -285,7 +286,7 @@ class Storage
 
 		if(!file_exists($filepath))
 		{
-			$this->error = "The file $filepath does not exist.";
+			$this->error = $filepath . ' ' . Translations::translate('does not exist');
 
 			return false;
 		}
@@ -297,7 +298,7 @@ class Storage
 	{
 		if(!isset($this->isWritable[$location]))
 		{
-			$this->error = "It is not allowed to write into $location";
+			$this->error = Translations::translate('It is not allowed to write into') . ' ' . $location;
 
 			return false;
 		}
@@ -320,7 +321,7 @@ class Storage
 		$openfile = @fopen($filepath, "w");
 		if(!$openfile)
 		{
-			$this->error = "Could not open and read the file $filepath";
+			$this->error = Translations::translate('Could not open and read the file') . ' ' . $filepath;
 
 			return false;
 		}
@@ -334,7 +335,7 @@ class Storage
 		$writefile = fwrite($openfile, $data);
 		if(!$writefile)
 		{
-			$this->error = "Could not write to the file $filepath";
+			$this->error = Translations::translate('Could not write to the file') . ' ' . $filepath;
 
 			return false;
 		}
@@ -348,7 +349,7 @@ class Storage
 	{
 		if(!isset($this->isWritable[$location]))
 		{
-			$this->error = "It is not allowed to write into $location";
+			$this->error = Translations::translate('It is not allowed to write into') . ' ' . $location;
 
 			return false;
 		}
@@ -378,7 +379,7 @@ class Storage
 	{
 		if(!isset($this->isWritable[$location]))
 		{
-			$this->error = "It is not allowed to write into $location";
+			$this->error = Translations::translate('It is not allowed to write into') . ' ' . $location;
 
 			return false;
 		}
@@ -392,12 +393,12 @@ class Storage
 				return true;
 			}
 
-			$this->error = "We found the file but could not delete $filepath";
+			$this->error = Translations::translate('We found the file but could not delete') . ' ' . $filepath;
 
 			return false;
 		}
 
-		$this->error = "We did not find a file with that name";
+		$this->error = Translations::translate('We did not find a file with that name');
 		
 		# we do not want to stop delete operation just because a file was not there, so return a message and true.
 		return true;
@@ -471,7 +472,7 @@ class Storage
 	{
 		if(!isset($this->isWritable[$location]))
 		{
-			$this->error = "It is not allowed to write into $location";
+			$this->error = Translations::translate('It is not allowed to write into') . ' ' . $location;
 
 			return false;
 		}
@@ -510,7 +511,7 @@ class Storage
 		$pathinfo = pathinfo($name);
 		if(!$pathinfo)
 		{
-			$this->error = 'Could not read pathinfo.';
+			$this->error = Translations::translate('Could not read pathinfo') . '.';
 
 			return false;
 		}
@@ -520,14 +521,14 @@ class Storage
 
 		if(!$extension OR !$imagename)
 		{
-			$this->error = "Extension or name for image is missing.";
+			$this->error = Translations::translate('Extension or name for image is missing') . '.';
 			return false;
 		}
 
 		$imagesInTmp = glob($this->tmpFolder . "*$imagename.*"); 
 		if(empty($imagesInTmp) OR !$imagesInTmp)
 		{
-			$this->error = "We did not find the image in the tmp-folder or could not read it.";
+			$this->error = Translations::translate('We did not find the image in the tmp-folder or could not read it') . '.';
 			return false;
 		}
 
@@ -552,7 +553,7 @@ class Storage
 				
 					if(!$result)
 					{
-						$this->error = "We could not store the original image";
+						$this->error = Translations::translate('We could not store the original image') . '.';
 					}
 				
 					break;
@@ -563,13 +564,13 @@ class Storage
 					}
 					if(!rename($imagepath, $this->liveFolder . $filename))
 					{
-						$this->error = "We could not store the live image to the live folder";
+						$this->error = Translations::translate('We could not store the live image to the live folder');
 					}
 					break;
 				case 'thumbs':
 					if(!rename($imagepath, $this->thumbsFolder . $filename))
 					{
-						$this->error = "We could not store the thumb to the thumb folder";
+						$this->error = Translations::translate('We could not store the thumb to the thumb folder');
 					}
 					break;
 			}
@@ -593,7 +594,7 @@ class Storage
 		$pathinfo = pathinfo($imagepath);
 		if(!$pathinfo)
 		{
-			$this->error = 'Could not read pathinfo.';
+			$this->error = Translations::translate('Could not read pathinfo');
 
 			return false;
 		}
@@ -711,7 +712,7 @@ class Storage
 
 		if(!$storedImage)
 		{
-			$this->errors[] = "Could not store the custom size of $imageName";
+			$this->errors[] = Translations::translate('Could not store the custom size of') . ' ' . $imageName;
 
 			return false;
 		}
@@ -726,12 +727,12 @@ class Storage
 
 		if(!file_exists($this->liveFolder . $name) OR !unlink($this->liveFolder . $name))
 		{
-			$this->error .= "We could not delete the live image. ";
+			$this->error .= Translations::translate('We could not delete the live image.') . ' ';
 		}
 
 		if(!file_exists($this->thumbsFolder . $name) OR !unlink($this->thumbsFolder . $name))
 		{
-			$this->error .= "We could not delete the thumb image. ";
+			$this->error .= Translations::translate('We could not delete the thumb image.') . ' ';
 		}
 
 		# delete custom images (resized and grayscaled) array_map('unlink', glob("some/dir/*.txt"));
@@ -742,7 +743,7 @@ class Storage
 			# you could check if extension is the same here
 			if(!unlink($image))
 			{
-				$this->error = "We could not delete the original image in $this->originalFolder $image. ";
+				$this->error = Translations::translate('We could not delete the original image in') . ' ' . $this->originalFolder;
 			}
 		}
 
@@ -751,7 +752,7 @@ class Storage
 			# you could check if extension is the same here
 			if(!unlink($image))
 			{
-				$this->error .= "we could not delete a custom image (grayscale or resized). ";
+				$this->error .= Translations::translate('we could not delete a custom image (grayscale or resized).') . ' ';
 			}
 		}
 		
@@ -772,7 +773,7 @@ class Storage
 		$pathinfo = pathinfo($name);
 		if(!$pathinfo)
 		{
-			$this->error = 'Could not read pathinfo.';
+			$this->error = Translations::translate('Could not read pathinfo');
 
 			return false;
 		}
@@ -782,7 +783,7 @@ class Storage
 
 		if(!file_exists($this->tmpFolder . $filename))
 		{
-			$this->error = "We did not find the file in the tmp-folder or could not read it.";
+			$this->error = Translations::translate('We did not find the file in the tmp-folder or could not read it') . '.';
 			return false;
 		}
 

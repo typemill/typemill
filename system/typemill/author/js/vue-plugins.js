@@ -5,7 +5,7 @@ const app = Vue.createApp({
 						<li v-for="(plugin,pluginname) in formDefinitions" class="w-full my-8 bg-stone-100 dark:bg-stone-700 border border-stone-200">
 							<p v-if="versions[pluginname] !== undefined"><a href="https://plugins.typemill.net" class="block p-2 text-center bg-rose-500 text-white">Please update to version {{ versions[pluginname].version }}</a></p>
 							<div class="flex justify-between w-full px-8 py-3 border-b border-white" :class="getActiveClass(pluginname)">
-								<p class="py-2">License: {{ plugin.license }}</p>
+								<p class="py-2">{{ $filters.translate('License') }}: {{ plugin.license }}</p>
 								<div class="flex">
 									<label :for="pluginname" class="p-2">{{ $filters.translate('active') }}</label>
 									<input type="checkbox" class="w-6 h-6 my-2 accent-white"

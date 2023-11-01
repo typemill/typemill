@@ -176,8 +176,25 @@ class Settings
 	}
 
 	public function getSettingsDefinitions()
-	{		
-		return $this->storage->getYaml('systemSettings', '', 'system.yaml');
+	{	
+		$settingsDefinitions = $this->storage->getYaml('systemSettings', '', 'system.yaml');
+
+		if(!isset($settingsDefinitions['fieldsetsystem']['fields']['language']))
+		{
+			die('languages in settings-definitions are missing');
+		}
+	
+		# get languages dynamically from existing translation-files	
+		$languages = Translations::getLanguages();
+		$langs = [];
+		foreach($languages as $language)
+		{
+			$langs[$language] = $language;
+		}
+
+		$settingsDefinitions['fieldsetsystem']['fields']['language']['options'] = $langs;
+
+		return $settingsDefinitions;
 	}
 
 	public function createSettings()

@@ -5,6 +5,7 @@ namespace Typemill\Middleware;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Views\Twig;
+use Typemill\Static\Translations;
 
 class ValidationErrorsMiddleware
 {	
@@ -26,7 +27,7 @@ class ValidationErrorsMiddleware
 
 		if(isset($_SESSION['phrase']))
 		{
-			$this->view->getEnvironment()->addGlobal('errors', ['captcha' => 'the captcha is wrong, please try again']);
+			$this->view->getEnvironment()->addGlobal('errors', ['captcha' => Translations::translate('the captcha is wrong, please try again')]);
 			
 			unset($_SESSION['phrase']);
 		}

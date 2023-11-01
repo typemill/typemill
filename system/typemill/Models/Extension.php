@@ -3,6 +3,7 @@
 namespace Typemill\Models;
 
 use Typemill\Models\StorageWrapper;
+use Typemill\Static\Translations;
 
 class Extension
 {
@@ -65,9 +66,9 @@ class Extension
 		# add standard-textarea for custom css
 		$themeSettings['forms']['fields']['customcss'] = [
 			'type' 			=> 'codearea', 
-			'label' 		=> 'Custom CSS', 
+			'label' 		=> Translations::translate('Custom CSS'), 
 			'class' 		=> 'codearea', 
-			'description' 	=> 'You can overwrite the theme-css with your own css here.'
+			'description' 	=> Translations::translate('You can overwrite the theme-css with your own css here.')
 		];
 
 # add image preview file 

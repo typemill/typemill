@@ -1,268 +1,550 @@
 # Russian (Русский)
 # Author: Paul (https://paul.bid) paulbid@protonmail.com
+'-LICENSE_AND_YOUR_WEBSITE_MUST_RUN_UNDER_THE_DOMAIN_OF_YOUR_LICENSE.': ''
+'ACCESS_&_RIGHTS': ''
+ACCESS_FOR: ''
+ACCESS_TO_BASEPATH_IS_NOT_ALLOWED.: ''
 ACCOUNT: Аккаунт
+ACTIVATE_API_ACCESS_FOR_THIS_USER._USE_USERNAME_AND_PASSWORD_FOR_API_CALLS: ''
+ACTIVATE_INDIVIDUAL_RESTRICTIONS_FOR_PAGES_IN_THE_META-TAB_OF_EACH_PAGE.: ''
+ACTIVATE_THE_CACHE_FOR_TWIG_TEMPLATES: ''
+ACTIVATE_THE_DARKMODE_FOR_ME: ''
+ACTIVATE_THE_PASSWORD_RECOVERY.: ''
+ACTIVATION_FAILED_BECAUSE_YOU_NEED_A_VALID_: ''
 ACTIVE: Активный
-ACTUAL_PASSWORD: Текущий пароль
+ACTUAL_PASSWORD: 'Текущий пароль'
 ADD: Добавить
-ADD_CONTENT_BLOCK: Добавить блок
-ADD_DEFINITION: добавить определение
-ADD_FILE: добавить запись
-ADD_FOLDER: добавить раздел
-ADD_FOLDER_TO_BASE_LEVEL: добавить раздел на корневой уровень
-ADD_ITEM: Добавить
-ADD_LEFT_COLUMN: добавить колонку слева
-ADD_RIGHT_COLUMN: добавить колонку справа
-ADD_ROW_ABOVE: добавить строку выше
-ADD_ROW_BELOW: добавить строку ниже
-ADMINISTRATOR: Администратор
-ALL: Всех посетителей
-ALL_USERS: Все пользователи
-ALTERNATIVE_TEXT_FOR_THE_HERO_IMAGE: Альтернативный текст-описание главного изображения для записи
-ALT_TEXT: Альтернативный текст
+ADD_DEFINITION: 'добавить определение'
+ADD_ENTRY: ''
+ADD_LEFT_COLUMN: 'добавить колонку слева'
+'ADD_MORE_URL_SCHEMES_FOR_EXTERNAL_LINKS_E.G._LIKE_DICT://_(COMMA_SEPARATED_LIST)': ''
+ADD_NOINDEX_TAG_AND_EXCLUDE_FROM_SITEMAP: ''
+ADD_ONE_OR_MORE_USERNAMES_SEPARATED_WITH_COMMA.: ''
+ADD_RIGHT_COLUMN: 'добавить колонку справа'
+ADD_ROW_ABOVE: 'добавить строку выше'
+ADD_ROW_BELOW: 'добавить строку ниже'
+ALLOW_SVG: ''
+ALLOW_THE_UPLOAD_OF_SVG_IMAGES: ''
+ALL_PAGES: ''
+ALT-TEXT: ''
+ALTERNATIVE_TEXT_FOR_THE_HERO_IMAGE: 'Альтернативный текст-описание главного изображения для записи'
+ALWAYS_SHOW: ''
+AND_YOU_MIGHT_FIND_THE_FOLLOWING_TIPS_HELPFUL: ''
+API_ACCESS: ''
+ARTICLE_DATE: ''
 AUTHOR: Автор
-AUTHOR_DESCRIPTION_(MARKDOWN): Об авторе (Markdown)
-BACK_TO_STARTPAGE: Назад на главную страницу
+AUTHOR-DESCRIPTION_(MARKDOWN): ''
+BLOCK-ID_NOT_FOUND: ''
+BLOCK-ID_NOT_FOUND.: ''
 BOLD: Полужирный
-BOTTOM: Внизу
-BROWSE: ОБЗОР
-BULLET_LIST: Маркированный список
-BY: от
+BOOKMARK: ''
+BULLET_LIST: 'Маркированный список'
+BUY_A_LICENSE: ''
 CANCEL: Отмена
-CAN_BE_USED_FOR_AUTHOR_LINE_IN_FRONTEND_: Может использоваться в качестве описания автора на странице с записью.
+CAN_BE_USED_FOR_AUTHOR_LINE_IN_FRONTEND.: ''
 CAPTION: Название
-CELL: ячейка
-CENTER: По центру
+CC-BY: ''
+CC-BY-NC: ''
+CC-BY-NC-ND: ''
+CC-BY-NC-SA: ''
+CC-BY-ND: ''
+CC-BY-SA: ''
+CENTER: 'По центру'
+CHANGE_SLUG: ''
 CHECK: проверить
-CHOOSE_FILE: Выберите файл
+CHECK_YOUR_INBOX: ''
+CHECK_YOUR_LICENSE: ''
 CLASS: Класс
-CLOSE_LIBRARY: Закрыть библиотеку
+CLEAR: ''
+CLOSE: ''
+CLOSE_LIBRARY: 'Закрыть библиотеку'
 CODE: Код
 COG: cog
-CONTENT: Контент
+COLLAPSE_ALL: ''
+CONFIGURE: ''
+CONTENT_BREAK: ''
+CONVERT_TO_WEBP: ''
 COPYRIGHT: Копирайт
-CREATED_AT_(READONLY): Создано (нельзя изменить)
-CREATED_AT_(READ_ONLY): Создано (нельзя изменить)
-CREATE_NEW_USER: Создание нового пользователя
-CREATE_USER: Создать пользователя
+COULD_NOT_CREATE_FOLDER: ''
+'COULD_NOT_DECODE_IMAGE_OR_FILE,_PROBABLY_NOT_A_BASE64_ENCODING': ''
+COULD_NOT_DELETE_FILE: ''
+COULD_NOT_DELETE_FOLDER: ''
+COULD_NOT_GET_THE_VIDEO_IMAGE: ''
+COULD_NOT_OPEN_AND_READ_THE_FILE: ''
+COULD_NOT_READ_PATHINFO: ''
+COULD_NOT_STORE_THE_CUSTOM_SIZE_OF: ''
+COULD_NOT_STORE_THE_IMAGE_IN_THE_TEMPORARY_FOLDER: ''
+COULD_NOT_STORE_THE_RESIZED_VERSION: ''
+COULD_NOT_WRITE_TO_THE_FILE: ''
+CREATED_AT_(READ_ONLY): 'Создано (нельзя изменить)'
+CREATE_NEW_PASSWORD: ''
+CREATE_POST: ''
+CREATE_USER: 'Создать пользователя'
 CROSS: Зачёркнутый
-CUSTOM_CSS: Дополнительный CSS
-DEFINITION: Список определений
-DEFINITION_LIST: Список определений
+CUSTOM_CSS: 'Дополнительный CSS'
+CUT_RESTRICTED_CONTENT_AFTER_THE_FIRST_HR-ELEMENT_ON_A_PAGE_(PER_DEFAULT_CONTENT_WILL_BE_CUT_AFTER_TITLE).: ''
+DARKMODE: ''
+DEAR_: ''
+DEAR_USER: ''
+DEFAULT_WIDTH_OF_LIVE_IMAGES_IS_820PX._CHANGES_WILL_APPLY_TO_FUTURE_UPLOADS.: ''
+DEFINITION: 'Список определений'
+DEFINITION_LIST: 'Список определений'
 DELETE: Удалить
 DELETE_CLOSE: Удалить/закрыть
-DELETE_COLUMN: Удалить колонку
-DELETE_CONTENT_BLOCK: Удалить блок
-DELETE_PAGE: Удалить страницу
-DELETE_ROW: Удалить строку
-DELETE_USER: Удалить пользователя
-DESCRIPTION: описание
+DELETE_COLUMN: 'Удалить колонку'
+DELETE_PAGE: 'Удалить страницу'
+DELETE_ROW: 'Удалить строку'
+DELETE_USER: 'Удалить пользователя'
+DEVELOPER: 'Настройки разработчика'
+DISABLE: ''
 DISCARD: Сбросить
-DISCARD_CHANGES: Сбросить изменения
-DO_YOU_REALLY_WANT_TO_DELETE_THE_USER: Вы действительно хотите удалить пользователя
-DO_YOU_REALLY_WANT_TO_DELETE_THIS_PAGE: Вы действительно хотите удалить эту страницу?
-DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES_AND_SET_THE_CONTENT_BACK_TO_THE_LIVE_VERSION: Вы хотите сбросить изменения и вернуться к предыдущей версии?
+DISCARD_CHANGES: 'Сбросить изменения'
+DISPLAY_APPLICATION_ERRORS: 'Отображение ошибок'
+DOES_NOT_EXIST: ''
+DOES_NOT_EXIST_OR_IS_NOT_WRITABLE: ''
+DOMAIN_FOR_LICENSE: ''
+DONATE: ''
+DONE: ''
+DO_NOT_RESIZE: ''
+DO_YOU_REALLY_WANT_TO_DELETE_THIS_PAGE: 'Вы действительно хотите удалить эту страницу?'
+DO_YOU_REALLY_WANT_TO_DELETE_THIS_USER: ''
+DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES_AND_SET_THE_CONTENT_BACK_TO_THE_LIVE_VERSION: 'Вы хотите сбросить изменения и вернуться к предыдущей версии?'
 DRAFT: Черновик
-DRAG_A_PICTURE_OR_CLICK_TO_SELECT: загрузить изображение
-DUTCH__FLEMISH: Dutch, Flemish (Голландский, Фламандский)
+'DUTCH,_FLEMISH': ''
+E-MAIL: ''
 EDIT: редактировать
-EDITOR: Редактор
-EDIT_USER: Редактирование профиля
-ENGLISH: English (Английский)
-EXTERNAL_LINK: внешняя ссылка
-E_G_: например
-E_MAIL: Email
-FAVICON: Иконка сайта (Favicon)
+EMAIL: ''
+EMAIL_SUBJECT: ''
+ENGLISH: 'English (Английский)'
+'ENTER_THE_EMAIL_OF_YOUR_USER-ACCOUNT,_CLICK_THE_RECOVER-BUTTON_AND_CHECK_YOUR_MAILBOX_FOR_FURTHER_INSTRUCTIONS.': ''
+ERROR_REPORTING: 'Отчёты об ошибках'
+ERROR_SENDING_EMAIL: ''
+EXPAND_ALL: ''
+EXTENSION_OR_FILENAME_ARE_MISSING: ''
+EXTENSION_OR_NAME_FOR_IMAGE_IS_MISSING: ''
+EXTERNAL_LINK: 'внешняя ссылка'
+EYE_BLOCKED: ''
+FAVICON: 'Иконка сайта (Favicon)'
 FILE: Файл
-FILES: Файлы
+FILENAME_IS_MISSING.: ''
+FILENAME_OR_USERROLE_IS_MISSING.: ''
+FILETYPE_IS_NOT_ALLOWED.: ''
+FILE_DELETED_SUCCESSFULLY.: ''
+FILE_HAS_BEEN_STORED: ''
+FILE_IS_BIGGER_THAN_20MB.: ''
+FILE_IS_EMPTY.: ''
+FILE_IS_MISSING.: ''
+FILE_NOT_FOUND.: ''
+FILE_SAVED_SUCCESSFULLY: ''
 FIRST_NAME: Имя
 FOLDER: раздел
-FORGOT_PASSWORD: Забыл пароль
-FORMAT: Формат
-FRENCH: French (Французский)
-GENERAL_PRESENTATION: Графическая атрибутика
-GERMAN: German (Немецкий)
-GOOGLE_SITEMAP: Google Sitemap
-HAS_EDIT_RIGHTS_FOR_THIS_ARTICLE_: Имеет права на редактирование этой записи.
-HEAD: Заголовок
+FORGOT_PASSWORD: 'Забыл пароль'
+FORGOT_YOUR_PASSWORD: ''
+FORMAT_OPTIONS_FOR_VISUAL_EDITOR: ''
+FRENCH: 'French (Французский)'
+GERMAN: 'German (Немецкий)'
+GET_INSPIRED_AND_ENJOY_YOUR_WRITING: ''
+GOOGLE_SITEMAP_(READONLY): ''
+GO_TO_LOGIN: ''
+HAS_EDIT_RIGHTS_FOR_THIS_ARTICLE.: ''
 HEADLINE: Заголовок
-HEADLINE_ANCHORS: Якорные ссылки в заголовках
-HERO_IMAGE: Главное изображение для записи
+HEADLINE_ANCHORS: 'Якорные ссылки в заголовках'
+HERO_IMAGE: 'Главное изображение для записи'
+'HEY_WRITER,_AUTHOR,_EDITOR,_CONTENT-GURU,_OR_WEBSITE-MANAGER.': ''
 HIDE: Скрыть
-HIDE_PAGE_FROM_NAVIGATION: Скрыть страницу из меню навигации
+HIDE_PAGE_FROM_NAVIGATION: 'Скрыть страницу из меню навигации'
 HOME: главная
 HOMEPAGE: Главная
-HORIZONTAL_LINE: Горизонтальная линия
-HR: Горизонтальная линия
-IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: Если не заполнено, описание генерируется из содержимого.
+HORIZONTAL_LINE: 'Горизонтальная линия'
+HR: 'Горизонтальная линия'
+'IF_NOT_FILLED,_THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT.': ''
+'IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT,_THEN_THE_IMAGE_WILL_BE_CROPPED.': ''
+'IF_YOU_UNPUBLISH_THE_PAGE,_THEN_WE_WILL_DELETE_THE_PUBLISHED_VERSION_AND_KEEP_THE_MODIFIED_VERSION': ''
 IMAGE: Изображение
-IMAGES: Изображения
-IMAGE_URL: URL изображения
-IMAGE_URL_(READ_ONLY): URL изображения (нельзя изменить)
-ITALIAN: Italian (Итальянский)
+IMAGENAME_IS_MISSING.: ''
+IMAGES_WITH_THIS_EXTENSION_ARE_NOT_ALLOWED.: ''
+IMAGE_DELETED_SUCCESSFULLY.: ''
+IMAGE_OR_FILENAME_IS_MISSING.: ''
+IMAGE_OR_NAME_IS_MISSING.: ''
+IMAGE_SAVED_SUCCESSFULLY: ''
+IMAGE_URL: 'URL изображения'
+IMAGE_URL_(READ_ONLY): 'URL изображения (нельзя изменить)'
+INFO: ''
+IS_NOT_A_DIRECTORY: ''
+IS_NOT_A_FOLDER: ''
+ITALIAN: 'Italian (Итальянский)'
 ITALIC: Наклонный
+IT_IS_NOT_ALLOWED_TO_WRITE_INTO: ''
 LANGUAGE: Язык
-LANGUAGE_ADMIN: Язык (для панели администратора)
-LANGUAGE_ATTR: Атрибут языка (для сайта)
-LAST_MODIFIED_LIVE_(READONLY): Последнее изменение было (нельзя изменить)
+LANGUAGE_(AUTHOR_AREA): ''
+LANGUAGE_ATTRIBUTE_(WEBSITE): ''
+LAST_MODIFIED_LIVE_(READONLY): 'Последнее изменение было (нельзя изменить)'
 LAST_NAME: Фамилия
 LEFT: Слева
-LICENCE: Лицензия
+LICENCE_HAS_BEEN_STORED: ''
+LICENSE: ''
+LICENSE_DATA_ARE_INVALID: ''
+LICENSE_DATA_INCOMPLETE: ''
+LICENSE_DATA_MISSING.: ''
+LICENSE_DATA_NOT_COMPLETE: ''
+LICENSE_REQUIRED: ''
 LINK: Ссылка
-LINK_TO_VIDEO: Ссылка на видео
+LINK_TO_YOUTUBE: ''
 LOGIN: Войти
+LOGIN_TO_THE_AUTHOR_AREA_OR_GO_TO_THE: ''
 LOGO: Логотип
-LOGOUT: Выйти
-MANUAL_DATE: Выбор даты вручную
+MANUAL_DATE: 'Выбор даты вручную'
 MARKDOWN: Markdown
-MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB__HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES_: Максимальный размер изображения - 5 MB. Главные изображения для записей поддерживаются не всеми темами.
-MEMBER: Зарегистрированный пользователь
+MARKDOWN_IS_MISSING.: ''
+MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB._HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES.: ''
+MAXIMUM_SIZE_FOR_FILE_UPLOADS_IN_MB: ''
+MAXIMUM_SIZE_FOR_IMAGE_UPLOADS_IN_MB: ''
+MAXIMUM_SIZE_OF_IMAGE_ALT-TEXT_IS_100_CHARACTERS: ''
+MAXIMUM_SIZE_OF_IMAGE_CAPTION_IS_140_CHARACTERS: ''
+MAXIMUM_SIZE_OF_IMAGE_CLASS_IS_100_CHARACTERS: ''
+MAXIMUM_SIZE_OF_IMAGE_ID_IS_100_CHARACTERS: ''
+MAXIMUM_SIZE_OF_IMAGE_LINK_IS_100_CHARACTERS: ''
+MAXIMUM_SIZE_OF_IMAGE_TITLE_IS_100_CHARACTERS: ''
+MEDIA: ''
+MEDIALIB: ''
 MENU: Меню
-META: Метаданные
+META-CONTENT: ''
 META_DESCRIPTION: Мета-описание
 META_TITLE: Мета-заголовок
-MISSING_REQUIREMENTS: Отсутствующие требования
-MOVE_VERTICAL: двигаться по вертикали
-NAVIGATION_TITLE: Название страницы в меню навигации
-NEW_PASSWORD: Новый пароль
-NONE: Нет
+MINIMUM_USER-ROLE_TO_ACCESS_THIS_PAGE: ''
+MOVE_VERTICAL: 'двигаться по вертикали'
+NAVIGATION_TITLE: 'Название страницы в меню навигации'
+NEW_PASSWORD: 'Новый пароль'
+NEW_USER: ''
+NEW_USER_CREATED.: ''
+NOINDEX: ''
 NOTICE: Заметка
-NOT_EDITABLE: нельзя отредактировать
-NO_DESCRIPTION: Нет описания
-NO_PREVIEW: Нет предпросмотра
-NO_SETTINGS: Нет настроек
-NUMBERED_LIST: Упорядоченный список
-OLIST: Упорядоченный список
-ONLINE: онлайн
-ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: Разрешены только следующие специальные символы -
-OWNER_(USERNAME): Владелец (имя пользователя)
+NO_FILE_FOUND.: ''
+NO_IMAGE_FOUND.: ''
+NO_LICENSE_FOUND: ''
+'NO_PROBLEM,_YOU_CAN_CREATE_A_NEW_ONE_HERE.': ''
+NUMBERED_LIST: 'Упорядоченный список'
+OLIST: 'Упорядоченный список'
+ONE_OR_MORE_FILES_COULD_NOT_BE_TRANSFORMED.: ''
+ONLY_IMAGES_ARE_ALLOWED: ''
+ONLY_PNG_FORMAT_WILL_WORK.: ''
+ONLY_THE_FOLLOWING_USERS_HAVE_ACCESS: 'Только следующие пользователи имеют доступ к этой странице'
+OWNER_(USERNAME): 'Владелец (имя пользователя)'
+'PAGES_(SORT_IN_NAVIGATION_WITH_DRAG_&_DROP)': ''
+PAGE_NOT_FOUND: ''
+PAGE_RESTRICTION: ''
+PAPERCLIP: ''
 PARAGRAPH: Параграф
 PASSWORD: Пароль
-PLEASE_CONFIRM: Пожалуйста подтвердите
-PLEASE_CORRECT_THE_ERRORS_ABOVE: Пожалуйста, исправьте ошибки выше
+PATH_IS_MISSING.: ''
+PERMISSION_DENIED: ''
+PLEASE_CHECK_THE_INBOX_OF_YOUR_EMAIL_ACCOUNT_FOR_MORE_INSTRUCTIONS.: ''
+PLEASE_CHECK_THE_INBOX_OF_YOUR_EMAIL_ACCOUNT_FOR_MORE_INSTRUCTIONS._DO_NOT_FORGET_TO_CHECK_YOUR_SPAM-FOLDER_IF_YOUR_INBOX_IS_EMPTY.: ''
+PLEASE_CONFIRM: 'Пожалуйста подтвердите'
+PLEASE_CORRECT_ERRORS_IN_FORM.: ''
+PLEASE_CORRECT_TBE_ERRORS_IN_FORM.: ''
+PLEASE_CORRECT_THE_ERRORS.: ''
+PLEASE_CORRECT_THE_ERRORS_IN_THE_FORM.: ''
+PLEASE_CORRECT_YOUR_INPUT.: ''
+PLEASE_ENTER_A_VALID_EMAIL.: ''
+PLEASE_LOGIN_WITH_YOUR_NEW_PASSWORD.: ''
+PLEASE_SELECT: ''
+'PLEASE_USE_ISO_639-1_CODES_LIKE_"EN"': ''
+PLEASE_USE_THE_FOLLOWING_LINK_TO_SET_A_NEW_PASSWORD: ''
 PLUGINS: Плагины
-PLUGIN_STORE: Магазин Плагинов
+PLUGIN_SETTINGS: ''
+'POSTS_(SORTED_BY_PUBLISH_DATE,_FOR_NEWS_OR_BLOGS)': ''
 POWER_OFF: выключить
-PROFILE_IMAGE: Изображение профиля (аватар)
+PROFILE-IMAGE: ''
+PROXY: Прокси
 PUBLISH: Опубликовать
 QUOTE: Цитата
 QUOTES: Цитирует
-RAW: исходный код
-RAW_CONTENT_EDITOR: Редактор исходного кода
-RAW_MARKDOWN_EDITOR: Редактор кода Markdown
-RAW_MODE: Режим исходного кода
-RAW_USERDATA_(READONLY_FOR_ADMINS): Пользовательские данные (только для администраторов и только просмотр)
-READONLY: Нельзя изменить
-REGISTERED_USERS_ONLY: Только зарегистрированных пользователей
-REMEMBER_TO_BOOKMARK_THIS_PAGE: Не забудьте добавить в закладки эту страницу
+RAW: 'исходный код'
+RAW_EDITOR: ''
+RECOVER_PASSWORD: ''
+REPEAT_PASSWORD: ''
 REQUIRED: Обязательно
+RESTRICTIONS: ''
+RESTRICTION_NOTICE_(USE_MARKDOWN): ''
 RIGHT: Справа
 ROLE: Роль
-RUSSIAN: Russian (Русский)
+RUSSIAN: 'Russian (Русский)'
 SAVE: Сохранить
-SAVED_SUCCESSFULLY: Успешно сохранено
-SAVE_ALL_SETTINGS: Сохранить все настройки
-SAVE_THEME: Сохранить настройки Темы
-SELECT_FROM_MEDIALIB: Выбрать из библиотеки
-SETTINGS: Настройки
-SETTINGS_ARE_STORED: Настройки сохранены
+SEARCH: ''
+SECURITY: ''
+SECURITY_LOG: ''
+SELECT_FROM_MEDIALIB: 'Выбрать из библиотеки'
+SELECT_THE_LOWEST_USERROLE._HIGHER_ROLES_WILL_HAVE_ACCESS_TOO.: ''
+SENDER_EMAIL: ''
+SETTINGS_HAVE_BEEN_SAVED: ''
 SETUP: Установка
-SHOW_ANCHORS_NEXT_TO_HEADLINES: Показывать якорные ссылки рядом с заголовками
-STANDARD_EDITOR_MODE: Стандартный режим редактора
-START: Начать
+SHORTCODE: ''
+SHORT_TITLE_FOR_POST: ''
+SHOW_AFTER_FIRST_WRONG_INPUT: ''
+SHOW_ANCHORS_NEXT_TO_HEADLINE_IN_FRONTEND: ''
+SHOW_THE_WEBSITE_ONLY_TO_AUTHENTICATED_USERS_AND_REDIRECT_ALL_OTHER_USERS_TO_THE_LOGIN_PAGE.: ''
+SLUG: ''
+'SOMETHING_WENT_WRONG,_THE_INPUT_IS_NOT_VALID.': ''
+'SOMETHING_WENT_WRONG._PLEASE_REFRESH_THE_PAGE_AND_CHECK,_IF_ALL_FOLDERS_AND_FILES_ARE_WRITABLE.': ''
+STANDARD_EDITOR_MODE: 'Стандартный режим редактора'
+STANDARD_HEIGHT_FOR_LIVE_PICTURES: ''
+STANDARD_WIDTH_FOR_LIVE_PICTURES: ''
 SYSTEM: Настройки
+SYSTEMCHECK: ''
+SYSTEM_SETTINGS: ''
 TABLE: Таблица
 TABLE_OF_CONTENTS: Оглавление
-TAKEN_FROM_YOUR_USER_ACCOUNT_IF_SET_: Взято из вашего профиля, если в профиле заполнено
-TERM: термин
-TEXT_FILE: текстовый файл
+TAB_NOT_FOUND: ''
+TEXT_BEFORE_RECOVER_LINK_IN_EMAIL_MESSAGE: ''
+TEXT_FILE: 'текстовый файл'
 THEMES: Темы
-THEME_STORE: Магазин Тем
-THE_FORMAT_BUTTONS: Кнопки для форматирования
+THEME_SETTINGS: ''
+THERE_ARE_PUBLISHED_PAGES_WITHIN_THIS_FOLDER._THE_PAGES_ARE_NOT_VISIBLE_ON_YOUR_WEBSITE_ANYMORE.: ''
+THERE_IS_ALREADY_A_PAGE_WITH_THAT_SLUG: ''
+THERE_IS_ALREADY_A_PAGE_WITH_THIS_NAME._PLEASE_CHOOSE_ANOTHER_NAME.: ''
+THERE_WAS_AN_ERROR_CHECKING_THE_LICENSE_SIGNATURE: ''
+THE_BEST_OPTION_IS_A_SEPARATE_PASSWORD_MANAGER_LIKE_KEEPASS_AND_OTHERS.: ''
+'THE_CAPTCHA_IS_WRONG,_PLEASE_TRY_AGAIN': ''
+THE_FOLDER_CONTAINS_ANOTHER_FOLDER_SO_WE_CANNOT_TRANSFORM_IT._PLEASE_MAKE_SURE_THERE_ARE_ONLY_FILES_IN_THIS_FOLDER.: ''
+THE_FOLDER_CONTAINS_PUBLISHED_PAGES._PLEASE_UNPUBLISH_OR_DELETE_THEM_FIRST.: ''
+THE_FOLLOWING_REQUIREMENTS_FOR_THE_INSTALLATION_ARE_MISSING: ''
+THE_ID_OF_THE_CONTENT-BLOCK_IS_WRONG.: ''
+'THE_LICENSE_SERVER_RESPONDED_WITH:_': ''
+THE_LINK_TO_RECOVER_THE_PASSWORD_WAS_TOO_OLD._PLEASE_CREATE_A_NEW_ONE.: ''
+THE_MAXIMUM_FILE_SIZE_MIGHT_BE_LIMITED_BY_YOUR_SERVER_SETTINGS.: ''
+THE_MAXIMUM_IMAGE_SIZE_MIGHT_BE_LIMITED_BY_YOUR_SERVER_SETTINGS.: ''
+'THE_MIME-TYPE_IS_MISSING,_NOT_ALLOWED_OR_DOES_NOT_FIT_TO_THE_FILE_EXTENSION.': ''
+THE_PLUGIN_OR_THEMES_WAS_NOT_FOUND.: ''
+THE_REQUESTED_FILETYPE_DOES_NOT_EXIST.: ''
+THE_REQUESTED_FILE_DOES_NOT_EXIST.: ''
+THE_VERSION_CHECK_FAILED_BECAUSE_OF_INVALID_PARAMETERS.: ''
+THIS_FIELD_IS_NOT_DEFINED: ''
+THIS_FOLDER_CONTAINS: ''
+THIS_PAGE: ''
+THIS_PAGE_HAS_BEEN_MODIFIED: ''
 TITLE: Название
 TOC: Оглавление
-TOP: Наверху
-TYPEMILL_DESCRIPTION: Стандартная тема для Typemill. Отзывчивая, минималистичная и без каких-либо зависимостей. Используются системные шрифты Calibri и Helvetica. А вот JavaScript не используется.
-ULIST: Маркированный список
-UNKNOWN: Неизвестен
-UPDATE_USER: Обновить данные профиля
+TO_DOWNLOAD_THIS_FILE_YOU_NEED_TO_BE_AUTHENTICATED_WITH_THE_ROLE: ''
+TRACK_SPAM_AND_SUSPICIOUS_ACTIONS_IN_A_LOGFILE: ''
+TRASH: ''
+TRUSTED_IPS_FOR_PROXIES_(COMMA_SEPARATED): ''
+TRY_TO_CONVERT_UPLOADED_IMAGES_INTO_THE_WEBP-FORMAT: ''
+TWIG_CACHE: 'Twig кэш'
+ULIST: 'Маркированный список'
+UNPUBLISH: ''
+UNPUBLISH_PAGE: ''
 UPLOAD: загрузить
-UPLOAD_AN_IMAGE: Загрузить изображение
-UPLOAD_FILE: Загрузить файл
-UPS__WRONG_PASSWORD_OR_USERNAME__PLEASE_TRY_AGAIN_: Упс... неправильный пароль или имя пользователя, попробуйте войти ещё раз.
-USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Используется как запасной вариант, когда дата не установлена в ручную.
+UPLOAD_AN_IMAGE: 'Загрузить изображение'
+UPLOAD_FILE: 'Загрузить файл'
+URL_SCHEMES: ''
+USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET.: ''
 USER: Пользователь
-USERNAME: Имя пользователя
-USERNAME_(READ_ONLY): Имя пользователя (не изменяется) 
+USERDATA_ARE_REQUIRED.: ''
+USERNAME: 'Имя пользователя'
+USERNAME_(READ_ONLY): 'Имя пользователя (не изменяется)'
+USERNAME_IS_REQUIRED.: ''
+USERROLE: ''
+USERROLE_IS_REQUIRED.: ''
+USERROLE_IS_UNKNOWN.: ''
 USERS: Пользователи
-USE_2_TO_20_CHARACTERS: Изпользуйте от 2 до 20 символов.
-USE_2_TO_40_CHARACTERS: Используйте от 2 до 40 символов.
-USE_A_VALID_LANGUAGE_ATTRIBUTE: Используйте допустимый языковой атрибут
-USE_A_VALID_YEAR: Используйте правильный формат для указания года
+USER_DELETED.: ''
+USER_HAS_BEEN_UPDATED.: ''
+USER_NOT_FOUND: ''
+USE_A_STRONG_AND_INDIVIDUAL_PASSWORD_FOR_EVERY_ACCOUNT.: ''
+USE_CAPTCHA_IN_AUTHENTICATION_FORMS: ''
+USE_X-FORWARDED-HEADER.: ''
+VERSION: ''
 VIDEO: Видео
-VIEW_SITE: На сайт
+VISIBILITY: ''
 VISUAL: визуально
-VISUAL_CONTENT_EDITOR: Визуальный редактор контента
-VISUAL_EDITOR: Визуальный редактор
-VISUAL_MARKDOWN_EDITOR: Визуальный редактор Markdown
-VISUAL_MODE: визульный режим
+VISUAL_EDITOR: 'Визуальный редактор'
+WEBSITE_RESTRICTION: 'Ограничения доступа к сайту'
+WEBSITE_TITLE: 'Название сайта'
+WELCOME_BACK: ''
+WELCOME_TO_TYPEMILL: ''
+'WE_CANNOT_CREATE_A_FOLDER,_ONLY_FILES.': ''
+'WE_COULD_NOT_CREATE_A_SANITIZED_VERSION_OF_THE_SVG,_IT_PROBABLY_HAS_INVALID_CONTENT.': ''
+'WE_COULD_NOT_CREATE_THE_FILE._PLEASE_REFRESH_THE_PAGE_AND_CHECK,_IF_ALL_FOLDERS_AND_FILES_ARE_WRITABLE.': ''
+'WE_COULD_NOT_CREATE_THE_FOLDER._PLEASE_REFRESH_THE_PAGE_AND_CHECK,_IF_ALL_FOLDERS_AND_FILES_ARE_WRITABLE.': ''
+WE_COULD_NOT_DELETE_A_CUSTOM_IMAGE_(GRAYSCALE_OR_RESIZED).: ''
+WE_COULD_NOT_DELETE_THE_LIVE_IMAGE.: ''
+WE_COULD_NOT_DELETE_THE_ORIGINAL_IMAGE_IN: ''
+WE_COULD_NOT_DELETE_THE_THUMB_IMAGE.: ''
+WE_COULD_NOT_DELETE_THE_USER: ''
+WE_COULD_NOT_FIND_A_FOLDERPATH_FOR: ''
+WE_COULD_NOT_FIND_THE_USER: ''
+WE_COULD_NOT_FIND_THIS_PAGE._PLEASE_REFRESH_AND_TRY_AGAIN.: ''
+'WE_COULD_NOT_LOAD_THE_SVG_FILE,_IT_IS_PROBABLY_CORRUPTED.': ''
+WE_COULD_NOT_SEND_THE_EMAIL_WITH_THE_PASSWORD_INSTRUCTIONS_TO_YOUR_ADDRESS._PLEASE_CONTACT_THE_WEBSITE_OWNER_AND_ASK_FOR_HELP.: ''
+WE_COULD_NOT_STORE_FILE_TO_TEMPORARY_FOLDER.: ''
+'WE_COULD_NOT_STORE_THE_CONTENT:_': ''
+WE_COULD_NOT_STORE_THE_LIVE_IMAGE_TO_THE_LIVE_FOLDER: ''
+WE_COULD_NOT_STORE_THE_NEW_USER: ''
+WE_COULD_NOT_STORE_THE_ORIGINAL_IMAGE: ''
+WE_COULD_NOT_STORE_THE_THUMB_TO_THE_THUMB_FOLDER: ''
+WE_DID_NOT_FIND_A_FILE_WITH_THAT_NAME: ''
+WE_DID_NOT_FIND_THE_FILE_IN_THE_TMP-FOLDER_OR_COULD_NOT_READ_IT: ''
+WE_DID_NOT_FIND_THE_IMAGE_IN_THE_TMP-FOLDER_OR_COULD_NOT_READ_IT: ''
+WE_FOUND_THE_FILE_BUT_COULD_NOT_DELETE: ''
+WE_FOUND_THE_FOLDER_BUT_COULD_NOT_DELETE: ''
+WE_FOUND_THE_FOLDER_BUT_COULD_NOT_DELETE_IT: ''
+WIDTH/HEIGHT: ''
+WRAP_RESTRICTION_NOTICE: ''
+WRAP_THE_RESTRICTION_NOTICE_ABOVE_INTO_A_NOTICE-4_ELEMENT_(WHICH_CAN_BE_DESIGNED_AS_SPECIAL_BOX): ''
+WRITING: 'Настройки редактора'
+'WRONG_PASSWORD_OR_USERNAME,_PLEASE_TRY_AGAIN.': ''
+YEAR: Год
+YOUR_ARE_AN_: ''
+YOUR_BROWSER_CAN_REMEMBER_ALL_OF_YOUR_PASSWORDS.: ''
+YOUR_EMAIL: ''
+YOUR_LICENSE_KEY: ''
+YOUR_REGISTRATION_IS_NOT_CONFIRMED_YET._PLEASE_CHECK_YOUR_E-MAILS_AND_USE_THE_CONFIRMATION_LINK.: ''
+YOU_ARE_NOT_ALLOWED_TO_DELETE_ANOTHER_USER.: ''
+YOU_ARE_NOT_ALLOWED_TO_UPDATE_ANOTHER_USER.: ''
+YOU_CAN_OVERWRITE_THE_THEME-CSS_WITH_YOUR_OWN_CSS_HERE.: ''
+'YOU_CAN_USE_THE_ASTERISK_(*)_WILDCARD_TO_SEARCH_FOR_NAME@*_OR_*@DOMAIN.COM': ''
+YOU_DO_NOT_HAVE_ENOUGH_RIGHTS.: ''
+YOU_TRIED_TO_OPEN_THE_PASSWORD_RESET_PAGE_BUT_THE_LINK_WAS_INVALID.: ''
+YOU_TRIED_TO_SET_A_NEW_PASSWORD_BUT_USERNAME_OR_TOKEN_WAS_INVALID.: ''
+_AND_YOU_CANNOT_: ''
+_THIS_: ''
+'_WE_HOPE_YOU_LIKE_TYPEMILL,_BECAUSE_WE_CODED_IT_JUST_FOR_YOU.': ''
+©: ''
+'-LICENSE_FOR_THIS_AND_YOUR_WEBSITE_MUST_RUN_UNDER_THE_DOMAIN_OF_YOUR_LICENSE.': ''
+ADD_CONTENT_BLOCK: 'Добавить блок'
+ADD_FILE: 'добавить запись'
+ADD_FOLDER: 'добавить раздел'
+ADD_FOLDER_TO_BASE_LEVEL: 'добавить раздел на корневой уровень'
+ADD_ITEM: Добавить
+ADMINISTRATOR: Администратор
+ALL: 'Всех посетителей'
+ALL_USERS: 'Все пользователи'
+ALT_TEXT: 'Альтернативный текст'
+AUTHOR_DESCRIPTION_(MARKDOWN): 'Об авторе (Markdown)'
+BACK_TO_STARTPAGE: 'Назад на главную страницу'
+BOTTOM: Внизу
+BROWSE: ОБЗОР
+BY: от
+CAN_BE_USED_FOR_AUTHOR_LINE_IN_FRONTEND_: 'Может использоваться в качестве описания автора на странице с записью.'
+CELL: ячейка
+CHOOSE_FILE: 'Выберите файл'
+CONTENT: Контент
+CREATED_AT_(READONLY): 'Создано (нельзя изменить)'
+CREATE_NEW_USER: 'Создание нового пользователя'
+DELETE_CONTENT_BLOCK: 'Удалить блок'
+DESCRIPTION: описание
+DO_YOU_REALLY_WANT_TO_DELETE_THE_USER: 'Вы действительно хотите удалить пользователя'
+DRAG_A_PICTURE_OR_CLICK_TO_SELECT: 'загрузить изображение'
+DUTCH__FLEMISH: 'Dutch, Flemish (Голландский, Фламандский)'
+EDITOR: Редактор
+EDIT_USER: 'Редактирование профиля'
+E_G_: например
+E_MAIL: Email
+FILES: Файлы
+FORMAT: Формат
+GENERAL_PRESENTATION: 'Графическая атрибутика'
+GOOGLE_SITEMAP: 'Google Sitemap'
+HAS_EDIT_RIGHTS_FOR_THIS_ARTICLE_: 'Имеет права на редактирование этой записи.'
+HEAD: Заголовок
+IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: 'Если не заполнено, описание генерируется из содержимого.'
+IMAGES: Изображения
+LANGUAGE_ADMIN: 'Язык (для панели администратора)'
+LANGUAGE_ATTR: 'Атрибут языка (для сайта)'
+LICENCE: Лицензия
+LINK_TO_VIDEO: 'Ссылка на видео'
+LOGOUT: Выйти
+MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB__HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES_: 'Максимальный размер изображения - 5 MB. Главные изображения для записей поддерживаются не всеми темами.'
+MEMBER: 'Зарегистрированный пользователь'
+META: Метаданные
+MISSING_REQUIREMENTS: 'Отсутствующие требования'
+NONE: Нет
+NOT_EDITABLE: 'нельзя отредактировать'
+NO_DESCRIPTION: 'Нет описания'
+NO_PREVIEW: 'Нет предпросмотра'
+NO_SETTINGS: 'Нет настроек'
+ONLINE: онлайн
+ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: 'Разрешены только следующие специальные символы -'
+PLEASE_CORRECT_THE_ERRORS_ABOVE: 'Пожалуйста, исправьте ошибки выше'
+PLUGIN_STORE: 'Магазин Плагинов'
+PROFILE_IMAGE: 'Изображение профиля (аватар)'
+RAW_CONTENT_EDITOR: 'Редактор исходного кода'
+RAW_MARKDOWN_EDITOR: 'Редактор кода Markdown'
+RAW_MODE: 'Режим исходного кода'
+RAW_USERDATA_(READONLY_FOR_ADMINS): 'Пользовательские данные (только для администраторов и только просмотр)'
+READONLY: 'Нельзя изменить'
+REGISTERED_USERS_ONLY: 'Только зарегистрированных пользователей'
+REMEMBER_TO_BOOKMARK_THIS_PAGE: 'Не забудьте добавить в закладки эту страницу'
+SAVED_SUCCESSFULLY: 'Успешно сохранено'
+SAVE_ALL_SETTINGS: 'Сохранить все настройки'
+SAVE_THEME: 'Сохранить настройки Темы'
+SETTINGS: Настройки
+SETTINGS_ARE_STORED: 'Настройки сохранены'
+SHOW_ANCHORS_NEXT_TO_HEADLINES: 'Показывать якорные ссылки рядом с заголовками'
+START: Начать
+TAKEN_FROM_YOUR_USER_ACCOUNT_IF_SET_: 'Взято из вашего профиля, если в профиле заполнено'
+TERM: термин
+THEME_STORE: 'Магазин Тем'
+THE_FORMAT_BUTTONS: 'Кнопки для форматирования'
+TOP: Наверху
+TYPEMILL_DESCRIPTION: 'Стандартная тема для Typemill. Отзывчивая, минималистичная и без каких-либо зависимостей. Используются системные шрифты Calibri и Helvetica. А вот JavaScript не используется.'
+UNKNOWN: Неизвестен
+UPDATE_USER: 'Обновить данные профиля'
+UPS__WRONG_PASSWORD_OR_USERNAME__PLEASE_TRY_AGAIN_: 'Упс... неправильный пароль или имя пользователя, попробуйте войти ещё раз.'
+USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: 'Используется как запасной вариант, когда дата не установлена в ручную.'
+USE_2_TO_20_CHARACTERS: 'Изпользуйте от 2 до 20 символов.'
+USE_2_TO_40_CHARACTERS: 'Используйте от 2 до 40 символов.'
+USE_A_VALID_LANGUAGE_ATTRIBUTE: 'Используйте допустимый языковой атрибут'
+USE_A_VALID_YEAR: 'Используйте правильный формат для указания года'
+VIEW_SITE: 'На сайт'
+VISUAL_CONTENT_EDITOR: 'Визуальный редактор контента'
+VISUAL_MARKDOWN_EDITOR: 'Визуальный редактор Markdown'
+VISUAL_MODE: 'визульный режим'
 WAIT: подождите
 WEB: Сайт
-WEBSITE_TITLE: Название сайта
-WEBSITE_VISIBLE_FOR: Сайт виден для
-WRITING: Настройки редактора
-YEAR: Год
-YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: Вы можете изменить CSS стиль Темы на свой собственный CSS здесь.
-
-ADD_NEW_FEATURES_TO_YOUR_WEBSITE_WITH_PLUGINS_AND_CONFIGURE_THEM_: Добавляйте новые функции на свой сайт с помощью плагинов и настраивайте их.
+WEBSITE_VISIBLE_FOR: 'Сайт виден для'
+YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: 'Вы можете изменить CSS стиль Темы на свой собственный CSS здесь.'
+ADD_NEW_FEATURES_TO_YOUR_WEBSITE_WITH_PLUGINS_AND_CONFIGURE_THEM_: 'Добавляйте новые функции на свой сайт с помощью плагинов и настраивайте их.'
 BY_THE: от
-CHOOSE_A_THEME_FOR_YOUR_WEBSITE_AND_CONFIGURE_THE_THEME_DETAILS_: Выберите тему для своего сайта и настройте детали темы.
-CODED_WITH: Разработано с
+CHOOSE_A_THEME_FOR_YOUR_WEBSITE_AND_CONFIGURE_THE_THEME_DETAILS_: 'Выберите тему для своего сайта и настройте детали темы.'
+CODED_WITH: 'Разработано с'
 COMMUNITY: сообщество
-CONFIGURE_YOUR_WEBSITE: Настройте свой сайт
+CONFIGURE_YOUR_WEBSITE: 'Настройте свой сайт'
 DOCS: документация
 GET_HELP: Помощь
-GIVE_YOUR_NEW_WEBSITE_A_NAME__ADD_THE_AUTHOR_AND_CHOOSE_A_COPYRIGHT_: Дайте вашему новому сайту имя, добавьте автора и выберите тип авторского права (лицензии).
+GIVE_YOUR_NEW_WEBSITE_A_NAME__ADD_THE_AUTHOR_AND_CHOOSE_A_COPYRIGHT_: 'Дайте вашему новому сайту имя, добавьте автора и выберите тип авторского права (лицензии).'
 HURRA: Урашечки
-IF_YOU_HAVE_ANY_QUESTIONS__PLEASE_READ_THE: Если у вас есть вопросы, пожалуйста прочтите
-NEXT_STEP: Следующий шаг
-OR_OPEN_A_NEW_ISSUE_ON: или откройте новое обсуждение проблемы на
-SETUP_WELCOME: Первоначальные настройки
-TRENDSCHAU_DIGITAL: Trendschau Digital
-VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: Посетите панель администратора и настройте свой новый сайт. Вы можете настроить систему, выбрать темы и добавить плагины.
-YOUR_ACCOUNT_HAS_BEEN_CREATED_AND_YOU_ARE_LOGGED_IN_NOW_: Ваша учётная запись создана, и вы вошли в систему.
-
-ACCESS_CONTROL: Настройки доступа
-ACTIVATE_INDIVIDUAL_RESTRICTIONS_FOR_PAGES_IN_THE_META_TAB_OF_EACH_PAGE_: Активировать индивидуальные ограничения для страниц во вкладке метаданные у каждой страницы.
-ADD_ONE_OR_MORE_USERNAMES_SEPARATED_WITH_COMMA_: Добавьте одно или несколько имен пользователей через запятую.
-CUT_RESTRICTED_CONTENT_AFTER_THE_FIRST_HR_ELEMENT_ON_A_PAGE_(PER_DEFAULT_CONTENT_WILL_BE_CUT_AFTER_TITLE)_: Скрыть контент после первого hr-элемента на странице (по умолчанию контент скрывается после заголовка).
-FOR_ACCESS_THE_USER_MUST_HAVE_THIS_MINIMUM_ROLE: Для доступа к этой странице пользователь должен иметь как минимум выбранную роль
-LIMIT_THE_ACCESS_FOR_THE_WHOLE_WEBSITE_OR_FOR_EACH_PAGE_INDIVIDUALLY__IF_YOU_ACTIVATE_THE_WEBSITE_RESTRICTION_OR_THE_PAGE_RESTRICTIONS__THEN_SESSIONS_WILL_BE_USED_IN_FRONTEND_: Ограничьте доступ для всего сайта или для каждой страницы в отдельности. Если вы активируете ограничение сайта или ограничения страниц, то сеансы пользователей (сессии) будут храниться на стороне пользователей (во фронтенд части).
-ONLY_THE_FOLLOWING_USERS_HAVE_ACCESS: Только следующие пользователи имеют доступ к этой странице
-PAGE_RESTRICTIONS___ACTIVATE: Настройки страниц - Активация ограничения доступа
-PAGE_RESTRICTIONS___CUT_RESTRICTED_CONTENT: Настройки страниц - Скрытие ограниченного контента
-PAGE_RESTRICTIONS___NOTICE: Настройки страниц - Примечание об ограничении доступа
-PAGE_RESTRICTIONS___WRAP_NOTICE_INTO_A_BOX: Настройки страниц - Оборачивание примечания об ограничении доступа в рамку
-SELECT_THE_LOWEST_USERROLE__HIGHER_ROLES_WILL_HAVE_ACCESS_TOO_: Выберите роль пользователя. Более важные роли также будут иметь доступ к странице.
-SHOW_THE_WEBSITE_ONLY_TO_AUTHENTICATED_USERS_AND_REDIRECT_ALL_OTHER_USERS_TO_THE_LOGIN_PAGE_: Показывать сайт только аутентифицированным пользователям и перенаправлять всех остальных пользователей на страницу входа.
-USE_MARKDOWN: поддерживается Markdown
-WEBSITE_RESTRICTION: Ограничения доступа к сайту
-WRAP_THE_RESTRICTION_NOTICE_ABOVE_INTO_A_NOTICE_4_ELEMENT_(WHICH_CAN_BE_DESIGNED_AS_SPECIAL_BOX): Обернуть указанное выше примечание об ограничении доступа в элемент notice-4 (который может быть выполнен в виде специальной рамки).
-
-ACTIVATE_CACHE_FOR_TWIG_TEMPLATES: Активировать кэш для шаблонов Twig
-ADD_MORE_URL_SCHEMES_FOR_EXTERNAL_LINKS_E_G__LIKE_DICT://_(COMMA_SEPARATED_LIST): Добавьте дополнительные схемы URL для внешних ссылок, например как dict:// (список, разделенный запятыми)
-CLEAR_CACHE: Очистить кэш
-DELETE_ALL_CACHE_FILES: Удалить все файлы кэша
-DEVELOPER: Настройки разработчика
-DISABLE_HEADERS: Отключение заголовков
-DISABLE_TYPEMILL_HEADERS_AND_SEND_YOUR_OWN: Отключить заголовки Typemill и отправлять свои заголовки
-DISPLAY_APPLICATION_ERRORS: Отображение ошибок
-ERROR_REPORTING: Отчёты об ошибках
-IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT__THEN_THE_IMAGE_WILL_BE_CROPPED_: Если вы добавите значение высоты, изображение будет обрезано.
-PROXY: Прокси
-STANDARD_HEIGHT_FOR_IMAGES: Стандартная высота для изображений
-STANDARD_WIDTH_FOR_IMAGES: Стандартная ширина для изображений
-THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: Следующие параметры предназначены только для разработчиков и опытных администраторов. Изменяйте параметры только в том случае, если вы действительно их понимаете. Например: никогда не активируйте отчет об ошибках для действующего сайта, используйте эту опцию только для исправления ошибок.
-THIS_APPLIES_ONLY_FOR_FUTURE_IMAGES_IN_THE_CONTENT_AREA_: Это относится только к будущим изображениям в области содержимого.
-TRUSTED_IPS_FOR_PROXY_(COMMA_SEPARATED): Список надежных IP-адресов для прокси (список, разделенный запятыми)
-TWIG_CACHE: Twig кэш
-USE_X_FORWARDED_HEADERS: Использовать X-Forwarded Заголовки
+IF_YOU_HAVE_ANY_QUESTIONS__PLEASE_READ_THE: 'Если у вас есть вопросы, пожалуйста прочтите'
+NEXT_STEP: 'Следующий шаг'
+OR_OPEN_A_NEW_ISSUE_ON: 'или откройте новое обсуждение проблемы на'
+SETUP_WELCOME: 'Первоначальные настройки'
+TRENDSCHAU_DIGITAL: 'Trendschau Digital'
+VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: 'Посетите панель администратора и настройте свой новый сайт. Вы можете настроить систему, выбрать темы и добавить плагины.'
+YOUR_ACCOUNT_HAS_BEEN_CREATED_AND_YOU_ARE_LOGGED_IN_NOW_: 'Ваша учётная запись создана, и вы вошли в систему.'
+ACCESS_CONTROL: 'Настройки доступа'
+ACTIVATE_INDIVIDUAL_RESTRICTIONS_FOR_PAGES_IN_THE_META_TAB_OF_EACH_PAGE_: 'Активировать индивидуальные ограничения для страниц во вкладке метаданные у каждой страницы.'
+ADD_ONE_OR_MORE_USERNAMES_SEPARATED_WITH_COMMA_: 'Добавьте одно или несколько имен пользователей через запятую.'
+CUT_RESTRICTED_CONTENT_AFTER_THE_FIRST_HR_ELEMENT_ON_A_PAGE_(PER_DEFAULT_CONTENT_WILL_BE_CUT_AFTER_TITLE)_: 'Скрыть контент после первого hr-элемента на странице (по умолчанию контент скрывается после заголовка).'
+FOR_ACCESS_THE_USER_MUST_HAVE_THIS_MINIMUM_ROLE: 'Для доступа к этой странице пользователь должен иметь как минимум выбранную роль'
+LIMIT_THE_ACCESS_FOR_THE_WHOLE_WEBSITE_OR_FOR_EACH_PAGE_INDIVIDUALLY__IF_YOU_ACTIVATE_THE_WEBSITE_RESTRICTION_OR_THE_PAGE_RESTRICTIONS__THEN_SESSIONS_WILL_BE_USED_IN_FRONTEND_: 'Ограничьте доступ для всего сайта или для каждой страницы в отдельности. Если вы активируете ограничение сайта или ограничения страниц, то сеансы пользователей (сессии) будут храниться на стороне пользователей (во фронтенд части).'
+PAGE_RESTRICTIONS___ACTIVATE: 'Настройки страниц - Активация ограничения доступа'
+PAGE_RESTRICTIONS___CUT_RESTRICTED_CONTENT: 'Настройки страниц - Скрытие ограниченного контента'
+PAGE_RESTRICTIONS___NOTICE: 'Настройки страниц - Примечание об ограничении доступа'
+PAGE_RESTRICTIONS___WRAP_NOTICE_INTO_A_BOX: 'Настройки страниц - Оборачивание примечания об ограничении доступа в рамку'
+SELECT_THE_LOWEST_USERROLE__HIGHER_ROLES_WILL_HAVE_ACCESS_TOO_: 'Выберите роль пользователя. Более важные роли также будут иметь доступ к странице.'
+SHOW_THE_WEBSITE_ONLY_TO_AUTHENTICATED_USERS_AND_REDIRECT_ALL_OTHER_USERS_TO_THE_LOGIN_PAGE_: 'Показывать сайт только аутентифицированным пользователям и перенаправлять всех остальных пользователей на страницу входа.'
+USE_MARKDOWN: 'поддерживается Markdown'
+WRAP_THE_RESTRICTION_NOTICE_ABOVE_INTO_A_NOTICE_4_ELEMENT_(WHICH_CAN_BE_DESIGNED_AS_SPECIAL_BOX): 'Обернуть указанное выше примечание об ограничении доступа в элемент notice-4 (который может быть выполнен в виде специальной рамки).'
+ACTIVATE_CACHE_FOR_TWIG_TEMPLATES: 'Активировать кэш для шаблонов Twig'
+'ADD_MORE_URL_SCHEMES_FOR_EXTERNAL_LINKS_E_G__LIKE_DICT://_(COMMA_SEPARATED_LIST)': 'Добавьте дополнительные схемы URL для внешних ссылок, например как dict:// (список, разделенный запятыми)'
+CLEAR_CACHE: 'Очистить кэш'
+DELETE_ALL_CACHE_FILES: 'Удалить все файлы кэша'
+DISABLE_HEADERS: 'Отключение заголовков'
+DISABLE_TYPEMILL_HEADERS_AND_SEND_YOUR_OWN: 'Отключить заголовки Typemill и отправлять свои заголовки'
+IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT__THEN_THE_IMAGE_WILL_BE_CROPPED_: 'Если вы добавите значение высоты, изображение будет обрезано.'
+STANDARD_HEIGHT_FOR_IMAGES: 'Стандартная высота для изображений'
+STANDARD_WIDTH_FOR_IMAGES: 'Стандартная ширина для изображений'
+THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: 'Следующие параметры предназначены только для разработчиков и опытных администраторов. Изменяйте параметры только в том случае, если вы действительно их понимаете.'
+THIS_APPLIES_ONLY_FOR_FUTURE_IMAGES_IN_THE_CONTENT_AREA_: 'Это относится только к будущим изображениям в области содержимого.'
+TRUSTED_IPS_FOR_PROXY_(COMMA_SEPARATED): 'Список надежных IP-адресов для прокси (список, разделенный запятыми)'
+USE_X_FORWARDED_HEADERS: 'Использовать X-Forwarded Заголовки'

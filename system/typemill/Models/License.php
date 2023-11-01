@@ -3,6 +3,7 @@
 namespace Typemill\Models;
 
 use Typemill\Models\StorageWrapper;
+use Typemill\Static\Translations;
 
 class License
 {
@@ -87,14 +88,14 @@ class License
 
 		if(!$licensedata)
 		{
-			$this->message = 'no license found';
+			$this->message = Translations::translate('no license found');
 
 			return false;
 		}
 
 		if(!isset($licensedata['license'],$licensedata['email'],$licensedata['domain'],$licensedata['plan'],$licensedata['payed_until'],$licensedata['signature']))
 		{
-			$this->message = 'License data incomplete';
+			$this->message = Translations::translate('License data incomplete');
 
 			return false;
 		}
@@ -140,7 +141,7 @@ class License
 		} 
 		else
 		{
-			$this->message = 'There was an error checking the license signature';
+			$this->message = Translations::translate('There was an error checking the license signature');
 
 			return false;
 		}
@@ -178,7 +179,7 @@ class License
 
 		if(substr($http_response_header[0], -6) != "200 OK")
 		{
-			$this->message = 'the license server responded with: ' . $http_response_header[0];
+			$this->message = Translations::translate('the license server responded with: ') . $http_response_header[0];
 
 			return false;
 		}

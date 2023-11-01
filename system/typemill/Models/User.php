@@ -3,6 +3,7 @@
 namespace Typemill\Models;
 
 use Typemill\Models\StorageWrapper;
+use Typemill\Static\Translations;
 
 class User
 {
@@ -26,7 +27,7 @@ class User
 	
 		if(!$this->user)
 		{
-			$this->error = 'User not found';
+			$this->error = Translations::translate('User not found');
 
 			return false;
 		}
@@ -43,7 +44,7 @@ class User
 
 		if(!$this->user)
 		{
-			$this->error = 'User not found.';
+			$this->error = Translations::translate('User not found');
 
 			return false;
 		}
@@ -76,7 +77,7 @@ class User
 		# check if users directory exists
 		if(!is_dir($this->userDir))
 		{
-			$this->error = "Directory $this->userDir does not exist."; 
+			$this->error = $this->userDir . Translations::translate('does not exist'); 
 			
 			return false;
 		}
@@ -168,8 +169,8 @@ class User
 		# only roles who can edit content need profile image and description
 		if($acl->isAllowed($userrole, 'mycontent', 'create'))
 		{
-			$newfield['image'] 			= ['label' => 'Profile-Image', 'type' => 'image'];
-			$newfield['description'] 	= ['label' => 'Author-Description (Markdown)', 'type' => 'textarea'];
+			$newfield['image'] 			= ['label' => Translations::translate('Profile-Image'), 'type' => 'image'];
+			$newfield['description'] 	= ['label' => Translations::translate('Author-Description (Markdown)'), 'type' => 'textarea'];
 			
 			$userfields = array_slice($userfields, 0, 1, true) + $newfield + array_slice($userfields, 1, NULL, true);
 			# array_splice($fields,1,0,$newfield);
@@ -188,10 +189,10 @@ class User
 				$options[$role] = $role;
  			}
 
-			$userfields['userrole'] = ['label' => 'Role', 'type' => 'select', 'options' => $options];
+			$userfields['userrole'] = ['label' => Translations::translate('Role'), 'type' => 'select', 'options' => $options];
 
 			# can activate api access
-			$userfields['apiaccess'] = ['label' => 'API access', 'checkboxlabel' => 'Activate API access for this user. Use username and password for api calls.', 'type' => 'checkbox'];
+			$userfields['apiaccess'] = ['label' => Translations::translate('API access'), 'checkboxlabel' => Translations::translate('Activate API access for this user. Use username and password for api calls'), 'type' => 'checkbox'];
 		}
 
 		return $userfields;

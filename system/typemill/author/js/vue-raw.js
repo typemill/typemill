@@ -127,6 +127,8 @@ const raweditor = Vue.createApp({
 		},
 		saveDraft()
 		{
+			eventBus.$emit('publisherclear');
+			
 			var self = this;
 			tmaxios.put('/api/v1/draft',{
 				'url':	data.urlinfo.route,
@@ -154,6 +156,8 @@ const raweditor = Vue.createApp({
 		},
 		publishDraft()
 		{
+			eventBus.$emit('publisherclear');
+
 			var self = this;
 			tmaxios.post('/api/v1/draft/publish',{
 				'url':	data.urlinfo.route,

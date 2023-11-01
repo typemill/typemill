@@ -156,18 +156,32 @@ class Validation
 		
 		Validator::addRule('markdownSecure', function($field, $value, array $params, array $fields)
 		{
-			/* strip out code blocks and blockquotes */
+			# strip out code blocks
 			$value = preg_replace('/`{4,}[\s\S]+?`{4,}/', '', $value);
 			$value = preg_replace('/`{3,}[\s\S]+?`{3,}/', '', $value);
 			$value = preg_replace('/`{2,}[\s\S]+?`{2,}/', '', $value);
 			$value = preg_replace('/`{1,}[\s\S]+?`{1,}/', '', $value);
-			$value = preg_replace('/>[\s\S]+?[\n\r]/', '', $value);			
+
+			# check blockquotes
+			preg_match_all('/^ ?>[\s\S]+?[\n\r]/m', $value, $matches);
+			foreach($matches as $match)
+			{
+				$content = $match[0] ?? false;
+				if($content && (strip_tags($content) !== $content) )
+				{
+					return false;
+				}
+			}
 			
+			# strip out blockquotes
+			$value = preg_replace('/^ ?>[\s\S]+?[\n\r]/m', '', $value);
+
 			if ( $value == strip_tags($value) )
 			{
 				return true;
 			}
-			return false;
+			return false;			
+
 		}, 'not secure. For code please use markdown `inline-code` or ````fenced code blocks````.');
 
 		Validator::addRule('checkLicense', function($field, $value, array $params, array $fields)
@@ -532,7 +546,7 @@ class Validation
 			$v->rule('markdownSecure', 'title');
 			$v->rule('markdownSecure', 'body');
 		}
-		
+
 		if($v->validate())
 		{
 			return true;
@@ -629,7 +643,7 @@ class Validation
 		if($v->validate())
 		{
 			return true;
-		}
+		} 
 		 
 		return $v->errors();
 	}

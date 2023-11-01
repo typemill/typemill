@@ -1,268 +1,548 @@
-# French (Français)
-# Author: 
+'-LICENSE_AND_YOUR_WEBSITE_MUST_RUN_UNDER_THE_DOMAIN_OF_YOUR_LICENSE.': ''
+'ACCESS_&_RIGHTS': ''
+ACCESS_FOR: ''
+ACCESS_TO_BASEPATH_IS_NOT_ALLOWED.: ''
 ACCOUNT: Compte
+ACTIVATE_API_ACCESS_FOR_THIS_USER._USE_USERNAME_AND_PASSWORD_FOR_API_CALLS: ''
+ACTIVATE_INDIVIDUAL_RESTRICTIONS_FOR_PAGES_IN_THE_META-TAB_OF_EACH_PAGE.: ''
+ACTIVATE_THE_CACHE_FOR_TWIG_TEMPLATES: ''
+ACTIVATE_THE_DARKMODE_FOR_ME: ''
+ACTIVATE_THE_PASSWORD_RECOVERY.: ''
+ACTIVATION_FAILED_BECAUSE_YOU_NEED_A_VALID_: ''
 ACTIVE: Actif
-ACTUAL_PASSWORD: Mot de passe actuel
+ACTUAL_PASSWORD: 'Mot de passe actuel'
 ADD: Ajouter
-ADD_CONTENT_BLOCK: ajouter un bloc
-ADD_DEFINITION: ajouter une définition
-ADD_FILE: Ajouter un article
-ADD_FOLDER: Ajouter un dossier
-ADD_FOLDER_TO_BASE_LEVEL: Ajouter un dossier de premier niveau
-ADD_ITEM: Ajouter un élément
-ADD_LEFT_COLUMN: Ajouter une colonne à gauche
-ADD_RIGHT_COLUMN: Ajouter une colonne à droite
-ADD_ROW_ABOVE: Ajouter une rangée en haut
-ADD_ROW_BELOW: Ajouter une rangée en bas
-ADMINISTRATOR: administrateur
-ALL: tous
-ALL_USERS: Tous les utilisateurs
-ALTERNATIVE_TEXT_FOR_THE_HERO_IMAGE: Texte alternatif pour la bannière d'accueil
-ALT_TEXT: Texte alternatif
+ADD_DEFINITION: 'ajouter une définition'
+ADD_ENTRY: ''
+ADD_LEFT_COLUMN: 'Ajouter une colonne à gauche'
+'ADD_MORE_URL_SCHEMES_FOR_EXTERNAL_LINKS_E.G._LIKE_DICT://_(COMMA_SEPARATED_LIST)': ''
+ADD_NOINDEX_TAG_AND_EXCLUDE_FROM_SITEMAP: ''
+ADD_ONE_OR_MORE_USERNAMES_SEPARATED_WITH_COMMA.: ''
+ADD_RIGHT_COLUMN: 'Ajouter une colonne à droite'
+ADD_ROW_ABOVE: 'Ajouter une rangée en haut'
+ADD_ROW_BELOW: 'Ajouter une rangée en bas'
+ALLOW_SVG: ''
+ALLOW_THE_UPLOAD_OF_SVG_IMAGES: ''
+ALL_PAGES: ''
+ALT-TEXT: ''
+ALTERNATIVE_TEXT_FOR_THE_HERO_IMAGE: 'Texte alternatif pour la bannière d''accueil'
+ALWAYS_SHOW: ''
+AND_YOU_MIGHT_FIND_THE_FOLLOWING_TIPS_HELPFUL: ''
+API_ACCESS: ''
+ARTICLE_DATE: ''
 AUTHOR: Auteur
-AUTHOR_DESCRIPTION_(MARKDOWN): Auteur-Description (Markdown)
-BACK_TO_STARTPAGE: Revenir à la page d'accueil
+AUTHOR-DESCRIPTION_(MARKDOWN): ''
+BLOCK-ID_NOT_FOUND: ''
+BLOCK-ID_NOT_FOUND.: ''
 BOLD: Gras
-BOTTOM: En bas
-BROWSE: Parcourir
-BULLET_LIST: Liste à puces
-BY: de
+BOOKMARK: ''
+BULLET_LIST: 'Liste à puces'
+BUY_A_LICENSE: ''
 CANCEL: Annuler
-CAN_BE_USED_FOR_AUTHOR_LINE_IN_FRONTEND_: Sera affiché comme auteur sur le site web.
+CAN_BE_USED_FOR_AUTHOR_LINE_IN_FRONTEND.: ''
 CAPTION: Légende
-CELL: Cellule
+CC-BY: ''
+CC-BY-NC: ''
+CC-BY-NC-ND: ''
+CC-BY-NC-SA: ''
+CC-BY-ND: ''
+CC-BY-SA: ''
 CENTER: Center
+CHANGE_SLUG: ''
 CHECK: Vérifier
-CHOOSE_FILE: Sélectionner un fichier
+CHECK_YOUR_INBOX: ''
+CHECK_YOUR_LICENSE: ''
 CLASS: Classe
-CLOSE_LIBRARY: Fermer la bibliothèque
+CLEAR: ''
+CLOSE: ''
+CLOSE_LIBRARY: 'Fermer la bibliothèque'
 CODE: Code
 COG: cog
-CONTENT: Contenu
+COLLAPSE_ALL: ''
+CONFIGURE: ''
+CONTENT_BREAK: ''
+CONVERT_TO_WEBP: ''
 COPYRIGHT: Copyright
-CREATED_AT_(READONLY): Date de création (lecture seule)
-CREATED_AT_(READ_ONLY): Date de création (lecture seule)
-CREATE_NEW_USER: Créer un nouvel utilisateur
-CREATE_USER: Créer un utilisateur
+COULD_NOT_CREATE_FOLDER: ''
+'COULD_NOT_DECODE_IMAGE_OR_FILE,_PROBABLY_NOT_A_BASE64_ENCODING': ''
+COULD_NOT_DELETE_FILE: ''
+COULD_NOT_DELETE_FOLDER: ''
+COULD_NOT_GET_THE_VIDEO_IMAGE: ''
+COULD_NOT_OPEN_AND_READ_THE_FILE: ''
+COULD_NOT_READ_PATHINFO: ''
+COULD_NOT_STORE_THE_CUSTOM_SIZE_OF: ''
+COULD_NOT_STORE_THE_IMAGE_IN_THE_TEMPORARY_FOLDER: ''
+COULD_NOT_STORE_THE_RESIZED_VERSION: ''
+COULD_NOT_WRITE_TO_THE_FILE: ''
+CREATED_AT_(READ_ONLY): 'Date de création (lecture seule)'
+CREATE_NEW_PASSWORD: ''
+CREATE_POST: ''
+CREATE_USER: 'Créer un utilisateur'
 CROSS: croix
-CUSTOM_CSS: CSS personnalisé
-DEFINITION: Liste de définition
-DEFINITION_LIST: Liste de définition
+CUSTOM_CSS: 'CSS personnalisé'
+CUT_RESTRICTED_CONTENT_AFTER_THE_FIRST_HR-ELEMENT_ON_A_PAGE_(PER_DEFAULT_CONTENT_WILL_BE_CUT_AFTER_TITLE).: ''
+DARKMODE: ''
+DEAR_: ''
+DEAR_USER: ''
+DEFAULT_WIDTH_OF_LIVE_IMAGES_IS_820PX._CHANGES_WILL_APPLY_TO_FUTURE_UPLOADS.: ''
+DEFINITION: 'Liste de définition'
+DEFINITION_LIST: 'Liste de définition'
 DELETE: Supprimer
 DELETE_CLOSE: Supprimer/Fermer
-DELETE_COLUMN: Supprimer cette colonne
-DELETE_CONTENT_BLOCK: Supprimer un bloc
-DELETE_PAGE: Supprimer la page
-DELETE_ROW: Supprimer une rangée
-DELETE_USER: Supprimer l'utilisateur
-DESCRIPTION: Description
-DISCARD: Annuler les modifications
-DISCARD_CHANGES: Ne pas sauvegarder les modifications
-DO_YOU_REALLY_WANT_TO_DELETE_THE_USER: Voulez-vous vraiment supprimer cet utilisateur ?
-DO_YOU_REALLY_WANT_TO_DELETE_THIS_PAGE: Voulez-vous vraiment supprimer cette page ?
-DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES_AND_SET_THE_CONTENT_BACK_TO_THE_LIVE_VERSION: Voulez-vous annuler les modifications et revenir à la version précédente ?
-DRAFT: comme brouillon
-DRAG_A_PICTURE_OR_CLICK_TO_SELECT: faire glisser une image ou cliquer pour sélectionner
-DUTCH__FLEMISH: Néerlandais, Flamand
+DELETE_COLUMN: 'Supprimer cette colonne'
+DELETE_PAGE: 'Supprimer la page'
+DELETE_ROW: 'Supprimer une rangée'
+DELETE_USER: 'Supprimer l''utilisateur'
+DEVELOPER: Développeur
+DISABLE: ''
+DISCARD: 'Annuler les modifications'
+DISCARD_CHANGES: 'Ne pas sauvegarder les modifications'
+DISPLAY_APPLICATION_ERRORS: 'Afficher les erreurs de l''application'
+DOES_NOT_EXIST: ''
+DOES_NOT_EXIST_OR_IS_NOT_WRITABLE: ''
+DOMAIN_FOR_LICENSE: ''
+DONATE: ''
+DONE: ''
+DO_NOT_RESIZE: ''
+DO_YOU_REALLY_WANT_TO_DELETE_THIS_PAGE: 'Voulez-vous vraiment supprimer cette page ?'
+DO_YOU_REALLY_WANT_TO_DELETE_THIS_USER: ''
+DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES_AND_SET_THE_CONTENT_BACK_TO_THE_LIVE_VERSION: 'Voulez-vous annuler les modifications et revenir à la version précédente ?'
+DRAFT: 'comme brouillon'
+'DUTCH,_FLEMISH': ''
+E-MAIL: ''
 EDIT: Éditer
-EDITOR: editor
-EDIT_USER: Modifier l'utilisateur
+EMAIL: ''
+EMAIL_SUBJECT: ''
 ENGLISH: Anglais
-EXTERNAL_LINK: Lien externe
-E_G_: ex.:
-E_MAIL: Courriel
+'ENTER_THE_EMAIL_OF_YOUR_USER-ACCOUNT,_CLICK_THE_RECOVER-BUTTON_AND_CHECK_YOUR_MAILBOX_FOR_FURTHER_INSTRUCTIONS.': ''
+ERROR_REPORTING: 'Rapport d''erreur'
+ERROR_SENDING_EMAIL: ''
+EXPAND_ALL: ''
+EXTENSION_OR_FILENAME_ARE_MISSING: ''
+EXTENSION_OR_NAME_FOR_IMAGE_IS_MISSING: ''
+EXTERNAL_LINK: 'Lien externe'
+EYE_BLOCKED: ''
 FAVICON: Favicon
 FILE: Fichier
-FILES: Fichiers
+FILENAME_IS_MISSING.: ''
+FILENAME_OR_USERROLE_IS_MISSING.: ''
+FILETYPE_IS_NOT_ALLOWED.: ''
+FILE_DELETED_SUCCESSFULLY.: ''
+FILE_HAS_BEEN_STORED: ''
+FILE_IS_BIGGER_THAN_20MB.: ''
+FILE_IS_EMPTY.: ''
+FILE_IS_MISSING.: ''
+FILE_NOT_FOUND.: ''
+FILE_SAVED_SUCCESSFULLY: ''
 FIRST_NAME: Nom
 FOLDER: Dossier
-FORGOT_PASSWORD: Mot de passe oublié
-FORMAT: Mise en forme
+FORGOT_PASSWORD: 'Mot de passe oublié'
+FORGOT_YOUR_PASSWORD: ''
+FORMAT_OPTIONS_FOR_VISUAL_EDITOR: ''
 FRENCH: Français
-GENERAL_PRESENTATION: Presentation générale
 GERMAN: Allemand
-GOOGLE_SITEMAP: Google Sitemap
-HAS_EDIT_RIGHTS_FOR_THIS_ARTICLE_: Possède les droits d'édition sur cette article.
-HEAD: Tête de colonne
+GET_INSPIRED_AND_ENJOY_YOUR_WRITING: ''
+GOOGLE_SITEMAP_(READONLY): ''
+GO_TO_LOGIN: ''
+HAS_EDIT_RIGHTS_FOR_THIS_ARTICLE.: ''
 HEADLINE: Titre
-HEADLINE_ANCHORS: Ancres de titre
-HERO_IMAGE: Bannière d'accueil (Hero image)
+HEADLINE_ANCHORS: 'Ancres de titre'
+HERO_IMAGE: 'Bannière d''accueil (Hero image)'
+'HEY_WRITER,_AUTHOR,_EDITOR,_CONTENT-GURU,_OR_WEBSITE-MANAGER.': ''
 HIDE: Masquer
-HIDE_PAGE_FROM_NAVIGATION: Masquer dans le menu de navigation du site
+HIDE_PAGE_FROM_NAVIGATION: 'Masquer dans le menu de navigation du site'
 HOME: Accueil
-HOMEPAGE: Page d'accueil
-HORIZONTAL_LINE: Ligne horizontale
-HR: Ligne horizontale
-IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: Si non renseignée ici, la description est extraite du contenu.
+HOMEPAGE: 'Page d''accueil'
+HORIZONTAL_LINE: 'Ligne horizontale'
+HR: 'Ligne horizontale'
+'IF_NOT_FILLED,_THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT.': ''
+'IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT,_THEN_THE_IMAGE_WILL_BE_CROPPED.': ''
+'IF_YOU_UNPUBLISH_THE_PAGE,_THEN_WE_WILL_DELETE_THE_PUBLISHED_VERSION_AND_KEEP_THE_MODIFIED_VERSION': ''
 IMAGE: Image
-IMAGES: Images
-IMAGE_URL: URL de l'image
-IMAGE_URL_(READ_ONLY): URL de l'image (lecture seule)
+IMAGENAME_IS_MISSING.: ''
+IMAGES_WITH_THIS_EXTENSION_ARE_NOT_ALLOWED.: ''
+IMAGE_DELETED_SUCCESSFULLY.: ''
+IMAGE_OR_FILENAME_IS_MISSING.: ''
+IMAGE_OR_NAME_IS_MISSING.: ''
+IMAGE_SAVED_SUCCESSFULLY: ''
+IMAGE_URL: 'URL de l''image'
+IMAGE_URL_(READ_ONLY): 'URL de l''image (lecture seule)'
+INFO: ''
+IS_NOT_A_DIRECTORY: ''
+IS_NOT_A_FOLDER: ''
 ITALIAN: Italien
 ITALIC: Italique
+IT_IS_NOT_ALLOWED_TO_WRITE_INTO: ''
 LANGUAGE: Langue
-LANGUAGE_ADMIN: Langue de l'interface d'administration
-LANGUAGE_ATTR: Langue du site (website)
-LAST_MODIFIED_LIVE_(READONLY): Dernière modification (lecture seule)
+LANGUAGE_(AUTHOR_AREA): ''
+LANGUAGE_ATTRIBUTE_(WEBSITE): ''
+LAST_MODIFIED_LIVE_(READONLY): 'Dernière modification (lecture seule)'
 LAST_NAME: Prénom
 LEFT: Gauche
-LICENCE: Licence
+LICENCE_HAS_BEEN_STORED: ''
+LICENSE: ''
+LICENSE_DATA_ARE_INVALID: ''
+LICENSE_DATA_INCOMPLETE: ''
+LICENSE_DATA_MISSING.: ''
+LICENSE_DATA_NOT_COMPLETE: ''
+LICENSE_REQUIRED: ''
 LINK: Lien
-LINK_TO_VIDEO: Lien vers une vidéo
+LINK_TO_YOUTUBE: ''
 LOGIN: Connexion
+LOGIN_TO_THE_AUTHOR_AREA_OR_GO_TO_THE: ''
 LOGO: Logo
-LOGOUT: Déconnexion
-MANUAL_DATE: Date manuelle
+MANUAL_DATE: 'Date manuelle'
 MARKDOWN: Markdown
-MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB__HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES_: La taille maximale pour une image est 5 Mo. Les bannières d'accueil ne sont pas gérées dans tous les thèmes.
-MEMBER: membre
+MARKDOWN_IS_MISSING.: ''
+MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB._HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES.: ''
+MAXIMUM_SIZE_FOR_FILE_UPLOADS_IN_MB: ''
+MAXIMUM_SIZE_FOR_IMAGE_UPLOADS_IN_MB: ''
+MAXIMUM_SIZE_OF_IMAGE_ALT-TEXT_IS_100_CHARACTERS: ''
+MAXIMUM_SIZE_OF_IMAGE_CAPTION_IS_140_CHARACTERS: ''
+MAXIMUM_SIZE_OF_IMAGE_CLASS_IS_100_CHARACTERS: ''
+MAXIMUM_SIZE_OF_IMAGE_ID_IS_100_CHARACTERS: ''
+MAXIMUM_SIZE_OF_IMAGE_LINK_IS_100_CHARACTERS: ''
+MAXIMUM_SIZE_OF_IMAGE_TITLE_IS_100_CHARACTERS: ''
+MEDIA: ''
+MEDIALIB: ''
 MENU: Menu
-META: Métadonnées
-META_DESCRIPTION: Meta description
-META_TITLE: Meta titre
-MISSING_REQUIREMENTS: Prérequis non satisfaits
-MOVE_VERTICAL: Déplacer verticalement
-NAVIGATION_TITLE: Titre dans le menu de navigation
-NEW_PASSWORD: Nouveau mot de passe
-NONE: Aucune
+META-CONTENT: ''
+META_DESCRIPTION: 'Meta description'
+META_TITLE: 'Meta titre'
+MINIMUM_USER-ROLE_TO_ACCESS_THIS_PAGE: ''
+MOVE_VERTICAL: 'Déplacer verticalement'
+NAVIGATION_TITLE: 'Titre dans le menu de navigation'
+NEW_PASSWORD: 'Nouveau mot de passe'
+NEW_USER: ''
+NEW_USER_CREATED.: ''
+NOINDEX: ''
 NOTICE: Note
-NOT_EDITABLE: Non modifiable
-NO_DESCRIPTION: Aucune description
-NO_PREVIEW: Pas de prévisualisation
-NO_SETTINGS: Aucun paramètre
-NUMBERED_LIST: Liste numérotée
-OLIST: Liste ordonnée
-ONLINE: Online
-ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: Seuls sont autorisés les caractères spéciaux suivants
-OWNER_(USERNAME): propriétaire (nom d'utilisateur)
+NO_FILE_FOUND.: ''
+NO_IMAGE_FOUND.: ''
+NO_LICENSE_FOUND: ''
+'NO_PROBLEM,_YOU_CAN_CREATE_A_NEW_ONE_HERE.': ''
+NUMBERED_LIST: 'Liste numérotée'
+OLIST: 'Liste ordonnée'
+ONE_OR_MORE_FILES_COULD_NOT_BE_TRANSFORMED.: ''
+ONLY_IMAGES_ARE_ALLOWED: ''
+ONLY_PNG_FORMAT_WILL_WORK.: ''
+ONLY_THE_FOLLOWING_USERS_HAVE_ACCESS: 'Seuls les utilisateurs suivants ont accès'
+OWNER_(USERNAME): 'propriétaire (nom d''utilisateur)'
+'PAGES_(SORT_IN_NAVIGATION_WITH_DRAG_&_DROP)': ''
+PAGE_NOT_FOUND: ''
+PAGE_RESTRICTION: ''
+PAPERCLIP: ''
 PARAGRAPH: Paragraphe
-PASSWORD: Mot de passe
+PASSWORD: 'Mot de passe'
+PATH_IS_MISSING.: ''
+PERMISSION_DENIED: ''
+PLEASE_CHECK_THE_INBOX_OF_YOUR_EMAIL_ACCOUNT_FOR_MORE_INSTRUCTIONS.: ''
+PLEASE_CHECK_THE_INBOX_OF_YOUR_EMAIL_ACCOUNT_FOR_MORE_INSTRUCTIONS._DO_NOT_FORGET_TO_CHECK_YOUR_SPAM-FOLDER_IF_YOUR_INBOX_IS_EMPTY.: ''
 PLEASE_CONFIRM: Confirmer
-PLEASE_CORRECT_THE_ERRORS_ABOVE: Veuillez corriger les erreurs ci-dessus
+PLEASE_CORRECT_ERRORS_IN_FORM.: ''
+PLEASE_CORRECT_TBE_ERRORS_IN_FORM.: ''
+PLEASE_CORRECT_THE_ERRORS.: ''
+PLEASE_CORRECT_THE_ERRORS_IN_THE_FORM.: ''
+PLEASE_CORRECT_YOUR_INPUT.: ''
+PLEASE_ENTER_A_VALID_EMAIL.: ''
+PLEASE_LOGIN_WITH_YOUR_NEW_PASSWORD.: ''
+PLEASE_SELECT: ''
+'PLEASE_USE_ISO_639-1_CODES_LIKE_"EN"': ''
+PLEASE_USE_THE_FOLLOWING_LINK_TO_SET_A_NEW_PASSWORD: ''
 PLUGINS: Plugins
-PLUGIN_STORE: Dépôt des plugins
+PLUGIN_SETTINGS: ''
+'POSTS_(SORTED_BY_PUBLISH_DATE,_FOR_NEWS_OR_BLOGS)': ''
 POWER_OFF: Éteindre
-PROFILE_IMAGE: Image du Profil
+PROFILE-IMAGE: ''
+PROXY: Proxy
 PUBLISH: Publier
 QUOTE: Citation
 QUOTES: Citations
-RAW: Texte brut
-RAW_CONTENT_EDITOR: Editeur de contenu brut
-RAW_MARKDOWN_EDITOR: Editeur Markdown brut
-RAW_MODE: Mode texte brut
-RAW_USERDATA_(READONLY_FOR_ADMINS): Données utilisateur brutes (lecture seule pour les administrateurs)
-READONLY: Lecture seule
-REGISTERED_USERS_ONLY: réservé aux utilisateurs enregistrés
-REMEMBER_TO_BOOKMARK_THIS_PAGE: Pensez à marquer cette page
+RAW: 'Texte brut'
+RAW_EDITOR: ''
+RECOVER_PASSWORD: ''
+REPEAT_PASSWORD: ''
 REQUIRED: Requis
+RESTRICTIONS: ''
+RESTRICTION_NOTICE_(USE_MARKDOWN): ''
 RIGHT: Droit
 ROLE: Rôle
 RUSSIAN: Russe
 SAVE: Enregistrer
-SAVED_SUCCESSFULLY: Enregistré avec succès
-SAVE_ALL_SETTINGS: Sauvegarder tous les paramètres
-SAVE_THEME: Enregistrer et activer ce thème
-SELECT_FROM_MEDIALIB: Sélectionner dans la bibliothèque de médias
-SETTINGS: Paramètres
-SETTINGS_ARE_STORED: Les paramètres sont mis en mémoire
+SEARCH: ''
+SECURITY: ''
+SECURITY_LOG: ''
+SELECT_FROM_MEDIALIB: 'Sélectionner dans la bibliothèque de médias'
+SELECT_THE_LOWEST_USERROLE._HIGHER_ROLES_WILL_HAVE_ACCESS_TOO.: ''
+SENDER_EMAIL: ''
+SETTINGS_HAVE_BEEN_SAVED: ''
 SETUP: Configuration
-SHOW_ANCHORS_NEXT_TO_HEADLINES: Afficher les ancres à coté des titres
-STANDARD_EDITOR_MODE: Mode éditeur standard
-START: Démarrer
+SHORTCODE: ''
+SHORT_TITLE_FOR_POST: ''
+SHOW_AFTER_FIRST_WRONG_INPUT: ''
+SHOW_ANCHORS_NEXT_TO_HEADLINE_IN_FRONTEND: ''
+SHOW_THE_WEBSITE_ONLY_TO_AUTHENTICATED_USERS_AND_REDIRECT_ALL_OTHER_USERS_TO_THE_LOGIN_PAGE.: ''
+SLUG: ''
+'SOMETHING_WENT_WRONG,_THE_INPUT_IS_NOT_VALID.': ''
+'SOMETHING_WENT_WRONG._PLEASE_REFRESH_THE_PAGE_AND_CHECK,_IF_ALL_FOLDERS_AND_FILES_ARE_WRITABLE.': ''
+STANDARD_EDITOR_MODE: 'Mode éditeur standard'
+STANDARD_HEIGHT_FOR_LIVE_PICTURES: ''
+STANDARD_WIDTH_FOR_LIVE_PICTURES: ''
 SYSTEM: Système
+SYSTEMCHECK: ''
+SYSTEM_SETTINGS: ''
 TABLE: Tableau
 TABLE_OF_CONTENTS: Sommaire
-TAKEN_FROM_YOUR_USER_ACCOUNT_IF_SET_: Si non renseigné ici, le nom est tiré du compte utilisateur courant.
-TERM: Terme
-TEXT_FILE: Fichier texte
+TAB_NOT_FOUND: ''
+TEXT_BEFORE_RECOVER_LINK_IN_EMAIL_MESSAGE: ''
+TEXT_FILE: 'Fichier texte'
 THEMES: Thèmes
-THEME_STORE: Dépôt des thèmes
-THE_FORMAT_BUTTONS: Boutons de mise en forme
+THEME_SETTINGS: ''
+THERE_ARE_PUBLISHED_PAGES_WITHIN_THIS_FOLDER._THE_PAGES_ARE_NOT_VISIBLE_ON_YOUR_WEBSITE_ANYMORE.: ''
+THERE_IS_ALREADY_A_PAGE_WITH_THAT_SLUG: ''
+THERE_IS_ALREADY_A_PAGE_WITH_THIS_NAME._PLEASE_CHOOSE_ANOTHER_NAME.: ''
+THERE_WAS_AN_ERROR_CHECKING_THE_LICENSE_SIGNATURE: ''
+THE_BEST_OPTION_IS_A_SEPARATE_PASSWORD_MANAGER_LIKE_KEEPASS_AND_OTHERS.: ''
+'THE_CAPTCHA_IS_WRONG,_PLEASE_TRY_AGAIN': ''
+THE_FOLDER_CONTAINS_ANOTHER_FOLDER_SO_WE_CANNOT_TRANSFORM_IT._PLEASE_MAKE_SURE_THERE_ARE_ONLY_FILES_IN_THIS_FOLDER.: ''
+THE_FOLDER_CONTAINS_PUBLISHED_PAGES._PLEASE_UNPUBLISH_OR_DELETE_THEM_FIRST.: ''
+THE_FOLLOWING_REQUIREMENTS_FOR_THE_INSTALLATION_ARE_MISSING: ''
+THE_ID_OF_THE_CONTENT-BLOCK_IS_WRONG.: ''
+'THE_LICENSE_SERVER_RESPONDED_WITH:_': ''
+THE_LINK_TO_RECOVER_THE_PASSWORD_WAS_TOO_OLD._PLEASE_CREATE_A_NEW_ONE.: ''
+THE_MAXIMUM_FILE_SIZE_MIGHT_BE_LIMITED_BY_YOUR_SERVER_SETTINGS.: ''
+THE_MAXIMUM_IMAGE_SIZE_MIGHT_BE_LIMITED_BY_YOUR_SERVER_SETTINGS.: ''
+'THE_MIME-TYPE_IS_MISSING,_NOT_ALLOWED_OR_DOES_NOT_FIT_TO_THE_FILE_EXTENSION.': ''
+THE_PLUGIN_OR_THEMES_WAS_NOT_FOUND.: ''
+THE_REQUESTED_FILETYPE_DOES_NOT_EXIST.: ''
+THE_REQUESTED_FILE_DOES_NOT_EXIST.: ''
+THE_VERSION_CHECK_FAILED_BECAUSE_OF_INVALID_PARAMETERS.: ''
+THIS_FIELD_IS_NOT_DEFINED: ''
+THIS_FOLDER_CONTAINS: ''
+THIS_PAGE: ''
+THIS_PAGE_HAS_BEEN_MODIFIED: ''
 TITLE: Titre
 TOC: Sommaire
-TOP: En haut
-TYPEMILL_DESCRIPTION: Le thème standard pour Typemill. Responsive, minimal et sans aucune dépendance. Il emploie les polices système Calibri et Helvetica. Pas de javascript utilisé.
-ULIST: Liste simple
-UNKNOWN: Inconnu
-UPDATE_USER: Mettre à jour l'utilisateur
+TO_DOWNLOAD_THIS_FILE_YOU_NEED_TO_BE_AUTHENTICATED_WITH_THE_ROLE: ''
+TRACK_SPAM_AND_SUSPICIOUS_ACTIONS_IN_A_LOGFILE: ''
+TRASH: ''
+TRUSTED_IPS_FOR_PROXIES_(COMMA_SEPARATED): ''
+TRY_TO_CONVERT_UPLOADED_IMAGES_INTO_THE_WEBP-FORMAT: ''
+TWIG_CACHE: 'Cache Twig'
+ULIST: 'Liste simple'
+UNPUBLISH: ''
+UNPUBLISH_PAGE: ''
 UPLOAD: Télécharger
-UPLOAD_AN_IMAGE: Télécharger une image
-UPLOAD_FILE: Télécharger un fichier
-UPS__WRONG_PASSWORD_OR_USERNAME__PLEASE_TRY_AGAIN_: Oups, mot de passe ou nom d'utilisateur incorrect, veuillez réessayer.
-USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Utilisée si aucune date manuelle n'est définie.
+UPLOAD_AN_IMAGE: 'Télécharger une image'
+UPLOAD_FILE: 'Télécharger un fichier'
+URL_SCHEMES: ''
+USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET.: ''
 USER: Utilisateur
-USERNAME: Nom de l'utilisateur
-USERNAME_(READ_ONLY): Nom de l'utilisateur (lecture seule)
+USERDATA_ARE_REQUIRED.: ''
+USERNAME: 'Nom de l''utilisateur'
+USERNAME_(READ_ONLY): 'Nom de l''utilisateur (lecture seule)'
+USERNAME_IS_REQUIRED.: ''
+USERROLE: ''
+USERROLE_IS_REQUIRED.: ''
+USERROLE_IS_UNKNOWN.: ''
 USERS: Utilisateurs
-USE_2_TO_20_CHARACTERS: Vous devez saisir au moins 2 caractères et au maximum 20.
-USE_2_TO_40_CHARACTERS: Vous devez saisir au moins 2 caractères et au maximum 40.
-USE_A_VALID_LANGUAGE_ATTRIBUTE: Veuillez indiquer un attribut de langue valide
-USE_A_VALID_YEAR: Entrez une année valide
+USER_DELETED.: ''
+USER_HAS_BEEN_UPDATED.: ''
+USER_NOT_FOUND: ''
+USE_A_STRONG_AND_INDIVIDUAL_PASSWORD_FOR_EVERY_ACCOUNT.: ''
+USE_CAPTCHA_IN_AUTHENTICATION_FORMS: ''
+USE_X-FORWARDED-HEADER.: ''
+VERSION: ''
 VIDEO: Vidéo
-VIEW_SITE: Voir le site
+VISIBILITY: ''
 VISUAL: Visuel
-VISUAL_CONTENT_EDITOR: Editeur visuel de contenu
-VISUAL_EDITOR: Editeur visuel
-VISUAL_MARKDOWN_EDITOR: Editeur visuel Markdown
-VISUAL_MODE: Mode visuel
+VISUAL_EDITOR: 'Editeur visuel'
+WEBSITE_RESTRICTION: 'Restriction sur le site'
+WEBSITE_TITLE: 'Titre du site'
+WELCOME_BACK: ''
+WELCOME_TO_TYPEMILL: ''
+'WE_CANNOT_CREATE_A_FOLDER,_ONLY_FILES.': ''
+'WE_COULD_NOT_CREATE_A_SANITIZED_VERSION_OF_THE_SVG,_IT_PROBABLY_HAS_INVALID_CONTENT.': ''
+'WE_COULD_NOT_CREATE_THE_FILE._PLEASE_REFRESH_THE_PAGE_AND_CHECK,_IF_ALL_FOLDERS_AND_FILES_ARE_WRITABLE.': ''
+'WE_COULD_NOT_CREATE_THE_FOLDER._PLEASE_REFRESH_THE_PAGE_AND_CHECK,_IF_ALL_FOLDERS_AND_FILES_ARE_WRITABLE.': ''
+WE_COULD_NOT_DELETE_A_CUSTOM_IMAGE_(GRAYSCALE_OR_RESIZED).: ''
+WE_COULD_NOT_DELETE_THE_LIVE_IMAGE.: ''
+WE_COULD_NOT_DELETE_THE_ORIGINAL_IMAGE_IN: ''
+WE_COULD_NOT_DELETE_THE_THUMB_IMAGE.: ''
+WE_COULD_NOT_DELETE_THE_USER: ''
+WE_COULD_NOT_FIND_A_FOLDERPATH_FOR: ''
+WE_COULD_NOT_FIND_THE_USER: ''
+WE_COULD_NOT_FIND_THIS_PAGE._PLEASE_REFRESH_AND_TRY_AGAIN.: ''
+'WE_COULD_NOT_LOAD_THE_SVG_FILE,_IT_IS_PROBABLY_CORRUPTED.': ''
+WE_COULD_NOT_SEND_THE_EMAIL_WITH_THE_PASSWORD_INSTRUCTIONS_TO_YOUR_ADDRESS._PLEASE_CONTACT_THE_WEBSITE_OWNER_AND_ASK_FOR_HELP.: ''
+WE_COULD_NOT_STORE_FILE_TO_TEMPORARY_FOLDER.: ''
+'WE_COULD_NOT_STORE_THE_CONTENT:_': ''
+WE_COULD_NOT_STORE_THE_LIVE_IMAGE_TO_THE_LIVE_FOLDER: ''
+WE_COULD_NOT_STORE_THE_NEW_USER: ''
+WE_COULD_NOT_STORE_THE_ORIGINAL_IMAGE: ''
+WE_COULD_NOT_STORE_THE_THUMB_TO_THE_THUMB_FOLDER: ''
+WE_DID_NOT_FIND_A_FILE_WITH_THAT_NAME: ''
+WE_DID_NOT_FIND_THE_FILE_IN_THE_TMP-FOLDER_OR_COULD_NOT_READ_IT: ''
+WE_DID_NOT_FIND_THE_IMAGE_IN_THE_TMP-FOLDER_OR_COULD_NOT_READ_IT: ''
+WE_FOUND_THE_FILE_BUT_COULD_NOT_DELETE: ''
+WE_FOUND_THE_FOLDER_BUT_COULD_NOT_DELETE: ''
+WE_FOUND_THE_FOLDER_BUT_COULD_NOT_DELETE_IT: ''
+WIDTH/HEIGHT: ''
+WRAP_RESTRICTION_NOTICE: ''
+WRAP_THE_RESTRICTION_NOTICE_ABOVE_INTO_A_NOTICE-4_ELEMENT_(WHICH_CAN_BE_DESIGNED_AS_SPECIAL_BOX): ''
+WRITING: Rédaction
+'WRONG_PASSWORD_OR_USERNAME,_PLEASE_TRY_AGAIN.': ''
+YEAR: Année
+YOUR_ARE_AN_: ''
+YOUR_BROWSER_CAN_REMEMBER_ALL_OF_YOUR_PASSWORDS.: ''
+YOUR_EMAIL: ''
+YOUR_LICENSE_KEY: ''
+YOUR_REGISTRATION_IS_NOT_CONFIRMED_YET._PLEASE_CHECK_YOUR_E-MAILS_AND_USE_THE_CONFIRMATION_LINK.: ''
+YOU_ARE_NOT_ALLOWED_TO_DELETE_ANOTHER_USER.: ''
+YOU_ARE_NOT_ALLOWED_TO_UPDATE_ANOTHER_USER.: ''
+YOU_CAN_OVERWRITE_THE_THEME-CSS_WITH_YOUR_OWN_CSS_HERE.: ''
+'YOU_CAN_USE_THE_ASTERISK_(*)_WILDCARD_TO_SEARCH_FOR_NAME@*_OR_*@DOMAIN.COM': ''
+YOU_DO_NOT_HAVE_ENOUGH_RIGHTS.: ''
+YOU_TRIED_TO_OPEN_THE_PASSWORD_RESET_PAGE_BUT_THE_LINK_WAS_INVALID.: ''
+YOU_TRIED_TO_SET_A_NEW_PASSWORD_BUT_USERNAME_OR_TOKEN_WAS_INVALID.: ''
+_AND_YOU_CANNOT_: ''
+_THIS_: ''
+'_WE_HOPE_YOU_LIKE_TYPEMILL,_BECAUSE_WE_CODED_IT_JUST_FOR_YOU.': ''
+©: ''
+'-LICENSE_FOR_THIS_AND_YOUR_WEBSITE_MUST_RUN_UNDER_THE_DOMAIN_OF_YOUR_LICENSE.': ''
+ADD_CONTENT_BLOCK: 'ajouter un bloc'
+ADD_FILE: 'Ajouter un article'
+ADD_FOLDER: 'Ajouter un dossier'
+ADD_FOLDER_TO_BASE_LEVEL: 'Ajouter un dossier de premier niveau'
+ADD_ITEM: 'Ajouter un élément'
+ADMINISTRATOR: administrateur
+ALL: tous
+ALL_USERS: 'Tous les utilisateurs'
+ALT_TEXT: 'Texte alternatif'
+AUTHOR_DESCRIPTION_(MARKDOWN): 'Auteur-Description (Markdown)'
+BACK_TO_STARTPAGE: 'Revenir à la page d''accueil'
+BOTTOM: 'En bas'
+BROWSE: Parcourir
+BY: de
+CAN_BE_USED_FOR_AUTHOR_LINE_IN_FRONTEND_: 'Sera affiché comme auteur sur le site web.'
+CELL: Cellule
+CHOOSE_FILE: 'Sélectionner un fichier'
+CONTENT: Contenu
+CREATED_AT_(READONLY): 'Date de création (lecture seule)'
+CREATE_NEW_USER: 'Créer un nouvel utilisateur'
+DELETE_CONTENT_BLOCK: 'Supprimer un bloc'
+DESCRIPTION: Description
+DO_YOU_REALLY_WANT_TO_DELETE_THE_USER: 'Voulez-vous vraiment supprimer cet utilisateur ?'
+DRAG_A_PICTURE_OR_CLICK_TO_SELECT: 'faire glisser une image ou cliquer pour sélectionner'
+DUTCH__FLEMISH: 'Néerlandais, Flamand'
+EDITOR: editor
+EDIT_USER: 'Modifier l''utilisateur'
+E_G_: 'ex.:'
+E_MAIL: Courriel
+FILES: Fichiers
+FORMAT: 'Mise en forme'
+GENERAL_PRESENTATION: 'Presentation générale'
+GOOGLE_SITEMAP: 'Google Sitemap'
+HAS_EDIT_RIGHTS_FOR_THIS_ARTICLE_: 'Possède les droits d''édition sur cette article.'
+HEAD: 'Tête de colonne'
+IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: 'Si non renseignée ici, la description est extraite du contenu.'
+IMAGES: Images
+LANGUAGE_ADMIN: 'Langue de l''interface d''administration'
+LANGUAGE_ATTR: 'Langue du site (website)'
+LICENCE: Licence
+LINK_TO_VIDEO: 'Lien vers une vidéo'
+LOGOUT: Déconnexion
+MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB__HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES_: 'La taille maximale pour une image est 5 Mo. Les bannières d''accueil ne sont pas gérées dans tous les thèmes.'
+MEMBER: membre
+META: Métadonnées
+MISSING_REQUIREMENTS: 'Prérequis non satisfaits'
+NONE: Aucune
+NOT_EDITABLE: 'Non modifiable'
+NO_DESCRIPTION: 'Aucune description'
+NO_PREVIEW: 'Pas de prévisualisation'
+NO_SETTINGS: 'Aucun paramètre'
+ONLINE: Online
+ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: 'Seuls sont autorisés les caractères spéciaux suivants'
+PLEASE_CORRECT_THE_ERRORS_ABOVE: 'Veuillez corriger les erreurs ci-dessus'
+PLUGIN_STORE: 'Dépôt des plugins'
+PROFILE_IMAGE: 'Image du Profil'
+RAW_CONTENT_EDITOR: 'Editeur de contenu brut'
+RAW_MARKDOWN_EDITOR: 'Editeur Markdown brut'
+RAW_MODE: 'Mode texte brut'
+RAW_USERDATA_(READONLY_FOR_ADMINS): 'Données utilisateur brutes (lecture seule pour les administrateurs)'
+READONLY: 'Lecture seule'
+REGISTERED_USERS_ONLY: 'réservé aux utilisateurs enregistrés'
+REMEMBER_TO_BOOKMARK_THIS_PAGE: 'Pensez à marquer cette page'
+SAVED_SUCCESSFULLY: 'Enregistré avec succès'
+SAVE_ALL_SETTINGS: 'Sauvegarder tous les paramètres'
+SAVE_THEME: 'Enregistrer et activer ce thème'
+SETTINGS: Paramètres
+SETTINGS_ARE_STORED: 'Les paramètres sont mis en mémoire'
+SHOW_ANCHORS_NEXT_TO_HEADLINES: 'Afficher les ancres à coté des titres'
+START: Démarrer
+TAKEN_FROM_YOUR_USER_ACCOUNT_IF_SET_: 'Si non renseigné ici, le nom est tiré du compte utilisateur courant.'
+TERM: Terme
+THEME_STORE: 'Dépôt des thèmes'
+THE_FORMAT_BUTTONS: 'Boutons de mise en forme'
+TOP: 'En haut'
+TYPEMILL_DESCRIPTION: 'Le thème standard pour Typemill. Responsive, minimal et sans aucune dépendance. Il emploie les polices système Calibri et Helvetica. Pas de javascript utilisé.'
+UNKNOWN: Inconnu
+UPDATE_USER: 'Mettre à jour l''utilisateur'
+UPS__WRONG_PASSWORD_OR_USERNAME__PLEASE_TRY_AGAIN_: 'Oups, mot de passe ou nom d''utilisateur incorrect, veuillez réessayer.'
+USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: 'Utilisée si aucune date manuelle n''est définie.'
+USE_2_TO_20_CHARACTERS: 'Vous devez saisir au moins 2 caractères et au maximum 20.'
+USE_2_TO_40_CHARACTERS: 'Vous devez saisir au moins 2 caractères et au maximum 40.'
+USE_A_VALID_LANGUAGE_ATTRIBUTE: 'Veuillez indiquer un attribut de langue valide'
+USE_A_VALID_YEAR: 'Entrez une année valide'
+VIEW_SITE: 'Voir le site'
+VISUAL_CONTENT_EDITOR: 'Editeur visuel de contenu'
+VISUAL_MARKDOWN_EDITOR: 'Editeur visuel Markdown'
+VISUAL_MODE: 'Mode visuel'
 WAIT: Attendez
 WEB: Site
-WEBSITE_TITLE: Titre du site
-WEBSITE_VISIBLE_FOR: Site visible pour
-WRITING: Rédaction
-YEAR: Année
-YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: Vous pouvez surcharger ici le css du thème avec vos propres styles.
-
-ADD_NEW_FEATURES_TO_YOUR_WEBSITE_WITH_PLUGINS_AND_CONFIGURE_THEM_: Ajoutez de nouvelles fonctionnalités à votre site grâce aux plugins et configurez-les.
-BY_THE: par la
-CHOOSE_A_THEME_FOR_YOUR_WEBSITE_AND_CONFIGURE_THE_THEME_DETAILS_: Choisissez un thème pour votre site et configurez les details du thème.
-CODED_WITH: Codé avec
+WEBSITE_VISIBLE_FOR: 'Site visible pour'
+YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: 'Vous pouvez surcharger ici le css du thème avec vos propres styles.'
+ADD_NEW_FEATURES_TO_YOUR_WEBSITE_WITH_PLUGINS_AND_CONFIGURE_THEM_: 'Ajoutez de nouvelles fonctionnalités à votre site grâce aux plugins et configurez-les.'
+BY_THE: 'par la'
+CHOOSE_A_THEME_FOR_YOUR_WEBSITE_AND_CONFIGURE_THE_THEME_DETAILS_: 'Choisissez un thème pour votre site et configurez les details du thème.'
+CODED_WITH: 'Codé avec'
 COMMUNITY: Communauté
-CONFIGURE_YOUR_WEBSITE: Configurez votre site
+CONFIGURE_YOUR_WEBSITE: 'Configurez votre site'
 DOCS: documentation
-GET_HELP: Obtenir de l'aide
-GIVE_YOUR_NEW_WEBSITE_A_NAME__ADD_THE_AUTHOR_AND_CHOOSE_A_COPYRIGHT_: Donnez un nom à votre nouveau site, ajouter un auteur et choisissez un copyright.
+GET_HELP: 'Obtenir de l''aide'
+GIVE_YOUR_NEW_WEBSITE_A_NAME__ADD_THE_AUTHOR_AND_CHOOSE_A_COPYRIGHT_: 'Donnez un nom à votre nouveau site, ajouter un auteur et choisissez un copyright.'
 HURRA: Hourrah
-IF_YOU_HAVE_ANY_QUESTIONS__PLEASE_READ_THE: Pour toutes questions, veuillez consulter la
-NEXT_STEP: Prochaine étape
-OR_OPEN_A_NEW_ISSUE_ON: ou ouvrir un nouveau bug sur
-SETUP_WELCOME: Bienvenue dans l'installation
-TRENDSCHAU_DIGITAL: Trendschau Digital
-VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: Visitez le volet Auteur et configurez votre nouveau site. Vous pouvez paramétrer le système, choisir un thème et ajouter des plugins.
-YOUR_ACCOUNT_HAS_BEEN_CREATED_AND_YOU_ARE_LOGGED_IN_NOW_: Votre compte a été créé et vous êtes maintenant connecté
-
-ACCESS_CONTROL: Contrôle d'accès
-ACTIVATE_INDIVIDUAL_RESTRICTIONS_FOR_PAGES_IN_THE_META_TAB_OF_EACH_PAGE_: Activer les restrictions par page dans l'onglet Métadonnées de chaque page.
-ADD_ONE_OR_MORE_USERNAMES_SEPARATED_WITH_COMMA_: Ajouter un ou plusieurs noms séparés par une virgule.
-CUT_RESTRICTED_CONTENT_AFTER_THE_FIRST_HR_ELEMENT_ON_A_PAGE_(PER_DEFAULT_CONTENT_WILL_BE_CUT_AFTER_TITLE)_: Couper le contenu restreint après le premier élément hr de la page (par défaut, le contenu sera coupé après le titre).
-FOR_ACCESS_THE_USER_MUST_HAVE_THIS_MINIMUM_ROLE: Pour accéder l'utlisateur doit avoir au moins le rôle minimal.
-LIMIT_THE_ACCESS_FOR_THE_WHOLE_WEBSITE_OR_FOR_EACH_PAGE_INDIVIDUALLY__IF_YOU_ACTIVATE_THE_WEBSITE_RESTRICTION_OR_THE_PAGE_RESTRICTIONS__THEN_SESSIONS_WILL_BE_USED_IN_FRONTEND_: Limitez l'accès pour la totalité du site ou pour chaque page séparément. Si vous activez la restriction globale ou par page, les sessions seront utilisées en frontend.
-ONLY_THE_FOLLOWING_USERS_HAVE_ACCESS: Seuls les utilisateurs suivants ont accès
-PAGE_RESTRICTIONS___ACTIVATE: Restrictions par page - Activer
-PAGE_RESTRICTIONS___CUT_RESTRICTED_CONTENT: Restrictions par page - Retirer le contenu restreint
-PAGE_RESTRICTIONS___NOTICE: Restrictions par page - Avis
-PAGE_RESTRICTIONS___WRAP_NOTICE_INTO_A_BOX: Restrictions par page - Insérer la note dans une box
-SELECT_THE_LOWEST_USERROLE__HIGHER_ROLES_WILL_HAVE_ACCESS_TOO_: Selectionner le rôle minimal. Les rôles plus élevés accèderont également.
-SHOW_THE_WEBSITE_ONLY_TO_AUTHENTICATED_USERS_AND_REDIRECT_ALL_OTHER_USERS_TO_THE_LOGIN_PAGE_: Afficher le site uniquement pour les utilisateurs authentifiés et rediriger tous les autres vers la page de login.
-USE_MARKDOWN: Utiliser le markdown
-WEBSITE_RESTRICTION: Restriction sur le site
-WRAP_THE_RESTRICTION_NOTICE_ABOVE_INTO_A_NOTICE_4_ELEMENT_(WHICH_CAN_BE_DESIGNED_AS_SPECIAL_BOX): Insérer l'avis de restriction ci-dessus dans un élément notice-4 (qui peut être conçu comme special box)
-
-ACTIVATE_CACHE_FOR_TWIG_TEMPLATES: Activer le cache pour les templates Twig
-ADD_MORE_URL_SCHEMES_FOR_EXTERNAL_LINKS_E_G__LIKE_DICT://_(COMMA_SEPARATED_LIST): "Ajouter d'autres schémas d'url pour les liens externes. ex: dict:// (liste séparée par des virgules)"
-CLEAR_CACHE: Vider le cache
-DELETE_ALL_CACHE_FILES: Vider tous les fichiers de cache
-DEVELOPER: Développeur
-DISABLE_HEADERS: Désactiver les entêtes
-DISABLE_TYPEMILL_HEADERS_AND_SEND_YOUR_OWN: Désactiver les entêtes de Typemill et envoyer le vôtre
-DISPLAY_APPLICATION_ERRORS: Afficher les erreurs de l'application
-ERROR_REPORTING: Rapport d'erreur
-IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT__THEN_THE_IMAGE_WILL_BE_CROPPED_: Si vous ajoutez une valeur pour la hauteur, l'image sera recadrée.
-PROXY: Proxy
-STANDARD_HEIGHT_FOR_IMAGES: Hauteur standard pour les images
-STANDARD_WIDTH_FOR_IMAGES: Largeur standard pour les images
-THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: Les options suivantes sont destinés uniquement aux développeurs et administrateurs expérimentés. Ne les modifiez que si vous les comprenez vraiment. Par exemple, n'activez jamais un rapport d'erreur sur un site en production. Ne l'utilisez que pour une résolution de bug.
-THIS_APPLIES_ONLY_FOR_FUTURE_IMAGES_IN_THE_CONTENT_AREA_: Ceci s'applique seulement aux futures images qui seront stockées dans la zone de contenu.
-TRUSTED_IPS_FOR_PROXY_(COMMA_SEPARATED): IPs de confiance pour le proxy (séparateur virgule)
-TWIG_CACHE: Cache Twig
-USE_X_FORWARDED_HEADERS: Utiliser des entêtes X-Forwarded
+IF_YOU_HAVE_ANY_QUESTIONS__PLEASE_READ_THE: 'Pour toutes questions, veuillez consulter la'
+NEXT_STEP: 'Prochaine étape'
+OR_OPEN_A_NEW_ISSUE_ON: 'ou ouvrir un nouveau bug sur'
+SETUP_WELCOME: 'Bienvenue dans l''installation'
+TRENDSCHAU_DIGITAL: 'Trendschau Digital'
+VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: 'Visitez le volet Auteur et configurez votre nouveau site. Vous pouvez paramétrer le système, choisir un thème et ajouter des plugins.'
+YOUR_ACCOUNT_HAS_BEEN_CREATED_AND_YOU_ARE_LOGGED_IN_NOW_: 'Votre compte a été créé et vous êtes maintenant connecté'
+ACCESS_CONTROL: 'Contrôle d''accès'
+ACTIVATE_INDIVIDUAL_RESTRICTIONS_FOR_PAGES_IN_THE_META_TAB_OF_EACH_PAGE_: 'Activer les restrictions par page dans l''onglet Métadonnées de chaque page.'
+ADD_ONE_OR_MORE_USERNAMES_SEPARATED_WITH_COMMA_: 'Ajouter un ou plusieurs noms séparés par une virgule.'
+CUT_RESTRICTED_CONTENT_AFTER_THE_FIRST_HR_ELEMENT_ON_A_PAGE_(PER_DEFAULT_CONTENT_WILL_BE_CUT_AFTER_TITLE)_: 'Couper le contenu restreint après le premier élément hr de la page (par défaut, le contenu sera coupé après le titre).'
+FOR_ACCESS_THE_USER_MUST_HAVE_THIS_MINIMUM_ROLE: 'Pour accéder l''utlisateur doit avoir au moins le rôle minimal.'
+LIMIT_THE_ACCESS_FOR_THE_WHOLE_WEBSITE_OR_FOR_EACH_PAGE_INDIVIDUALLY__IF_YOU_ACTIVATE_THE_WEBSITE_RESTRICTION_OR_THE_PAGE_RESTRICTIONS__THEN_SESSIONS_WILL_BE_USED_IN_FRONTEND_: 'Limitez l''accès pour la totalité du site ou pour chaque page séparément. Si vous activez la restriction globale ou par page, les sessions seront utilisées en frontend.'
+PAGE_RESTRICTIONS___ACTIVATE: 'Restrictions par page - Activer'
+PAGE_RESTRICTIONS___CUT_RESTRICTED_CONTENT: 'Restrictions par page - Retirer le contenu restreint'
+PAGE_RESTRICTIONS___NOTICE: 'Restrictions par page - Avis'
+PAGE_RESTRICTIONS___WRAP_NOTICE_INTO_A_BOX: 'Restrictions par page - Insérer la note dans une box'
+SELECT_THE_LOWEST_USERROLE__HIGHER_ROLES_WILL_HAVE_ACCESS_TOO_: 'Selectionner le rôle minimal. Les rôles plus élevés accèderont également.'
+SHOW_THE_WEBSITE_ONLY_TO_AUTHENTICATED_USERS_AND_REDIRECT_ALL_OTHER_USERS_TO_THE_LOGIN_PAGE_: 'Afficher le site uniquement pour les utilisateurs authentifiés et rediriger tous les autres vers la page de login.'
+USE_MARKDOWN: 'Utiliser le markdown'
+WRAP_THE_RESTRICTION_NOTICE_ABOVE_INTO_A_NOTICE_4_ELEMENT_(WHICH_CAN_BE_DESIGNED_AS_SPECIAL_BOX): 'Insérer l''avis de restriction ci-dessus dans un élément notice-4 (qui peut être conçu comme special box)'
+ACTIVATE_CACHE_FOR_TWIG_TEMPLATES: 'Activer le cache pour les templates Twig'
+'ADD_MORE_URL_SCHEMES_FOR_EXTERNAL_LINKS_E_G__LIKE_DICT://_(COMMA_SEPARATED_LIST)': 'Ajouter d''autres schémas d''url pour les liens externes. ex: dict:// (liste séparée par des virgules)'
+CLEAR_CACHE: 'Vider le cache'
+DELETE_ALL_CACHE_FILES: 'Vider tous les fichiers de cache'
+DISABLE_HEADERS: 'Désactiver les entêtes'
+DISABLE_TYPEMILL_HEADERS_AND_SEND_YOUR_OWN: 'Désactiver les entêtes de Typemill et envoyer le vôtre'
+IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT__THEN_THE_IMAGE_WILL_BE_CROPPED_: 'Si vous ajoutez une valeur pour la hauteur, l''image sera recadrée.'
+STANDARD_HEIGHT_FOR_IMAGES: 'Hauteur standard pour les images'
+STANDARD_WIDTH_FOR_IMAGES: 'Largeur standard pour les images'
+THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: 'Les options suivantes sont destinés uniquement aux développeurs et administrateurs expérimentés. Ne les modifiez que si vous les comprenez vraiment. Par exemple, n''activez jamais un rapport d''erreur sur un site en production. Ne l''utilisez que pour une résolution de bug.'
+THIS_APPLIES_ONLY_FOR_FUTURE_IMAGES_IN_THE_CONTENT_AREA_: 'Ceci s''applique seulement aux futures images qui seront stockées dans la zone de contenu.'
+TRUSTED_IPS_FOR_PROXY_(COMMA_SEPARATED): 'IPs de confiance pour le proxy (séparateur virgule)'
+USE_X_FORWARDED_HEADERS: 'Utiliser des entêtes X-Forwarded'

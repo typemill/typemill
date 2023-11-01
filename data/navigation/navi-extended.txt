@@ -34,11 +34,11 @@
     noindex: false
     path: /00-welcome/04-markdown-test.md
     keyPath: '0.4'
-/welcome/todoss:
+/welcome/todos:
     navtitle: 'To Dos'
     hide: false
     noindex: false
-    path: /00-welcome/05-todoss.md
+    path: /00-welcome/05-todos.md
     keyPath: '0.5'
 /cyanine-theme:
     navtitle: 'cyanine theme'

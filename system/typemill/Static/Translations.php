@@ -77,19 +77,27 @@ class Translations
 	public static function whichLanguage()
 	{
 		# Check which languages are available
-		$langs = [];
-		$path = __DIR__ . '/author/languages/*.yaml';
-		
-		foreach (glob($path) as $filename) 
-		{
-			$langs[] = basename($filename,'.yaml');
-		}
+		$langs = self::getLanguages();
 	
 		# Detect browser language
 		$accept_lang = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2) : false;
 		$lang = in_array($accept_lang, $langs) ? $accept_lang : 'en';
 
 		return $lang;
+	}
+
+	public static function getLanguages()
+	{
+		# Check which languages are available
+		$langs = [];
+		$path = __DIR__ . '/../author/translations/*.yaml';
+		
+		foreach (glob($path) as $filename) 
+		{
+			$langs[] = basename($filename,'.yaml');
+		}
+		
+		return $langs;
 	}
 
 	# this just returns the string so you can use translate-function in system files. Everything that is wrapped in translate function will be added to translation files

@@ -9,7 +9,7 @@
 * DONE: License feature
 * DONE: Enhance with plugins
 
-## Visual Editor
+## Visual Editor 
 
 * DONE: Refactor and redesign
 * DONE: Fix toc component in new block

@@ -170,6 +170,8 @@ class Content
 
 		$toc_id = false;
 
+		$this->parsedown->setSafeMode(true);
+		
 		foreach($markdownArray as $key => $markdown)
 		{
 			if($markdown == "[TOC]")
@@ -187,6 +189,9 @@ class Content
 			];
 		}
 
+		$this->parsedown->setSafeMode(false);
+
+
 		if($toc_id)
 		{
 			# generate the toc markup
@@ -201,6 +206,8 @@ class Content
 
 	public function getDraftHtml($markdownArray)
 	{
+		$this->parsedown->setSafeMode(true);
+
 		foreach($markdownArray as $key => $block)
 		{
 			# parse markdown-file to content-array
@@ -210,17 +217,31 @@ class Content
 			$content[$key]	= $this->parsedown->markup($contentArray);
 		}
 
+		$this->parsedown->setSafeMode(false);
+
 		return $content;
 	}
 
 	public function getContentArray($markdown)
 	{
-		return $this->parsedown->text($markdown);
+		$this->parsedown->setSafeMode(true);
+
+		$contentArray = $this->parsedown->text($markdown);
+
+		$this->parsedown->setSafeMode(false);
+
+		return $contentArray;
 	}
 
 	public function getContentHtml($contentArray)
 	{
-		return $this->parsedown->markup($contentArray);
+		$this->parsedown->setSafeMode(true);
+
+		$markdown = $this->parsedown->markup($contentArray);
+
+		$this->parsedown->setSafeMode(false);
+
+		return $markdown;
 	}
 
 	public function arrayBlocksToMarkdown($arrayBlocks)

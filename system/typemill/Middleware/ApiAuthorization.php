@@ -7,6 +7,7 @@ use Slim\Routing\RouteParser;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Psr7\Response;
+use Typemill\Static\Translations;
 
 class ApiAuthorization implements MiddlewareInterface
 {
@@ -21,9 +22,13 @@ class ApiAuthorization implements MiddlewareInterface
 	{
 		if(!$this->acl->isAllowed($request->getAttribute('c_userrole'), $this->resource, $this->action))
 		{
-			$message = 'Permission denied. Your are an ' . $request->getAttribute('c_userrole') . ' and you cannot ' . $this->action . ' this ' . $this->resource;
-			$response = new Response();
-			
+			$message = Translations::translate('Permission denied') . '. ';
+			$message .= Translations::translate('Your are an ');
+			$message .= $request->getAttribute('c_userrole'); 
+			$message .= Translations::translate(' and you cannot '); 
+			$message .= $this->action . Translations::translate(' this ') . $this->resource;
+
+			$response = new Response();			
 			$response->getBody()->write(json_encode([
 				'message' => $message
 			]));

@@ -2,6 +2,7 @@
 
 namespace Typemill\Static;
 use Typemill\Models\StorageWrapper;
+use Typemill\Static\Translations;
 
 class License
 {
@@ -24,12 +25,12 @@ class License
 
 		if(!$licensedata)
 		{
-			return ['result' => false, 'message' => 'no license found'];
+			return ['result' => false, 'message' => Translations::translate('no license found')];
 		}
 
 		if(!isset($licensedata['license'],$licensedata['email'],$licensedata['domain'],$licensedata['plan'],$licensedata['payed_until'],$licensedata['signature']))
 		{
-			return ['result' => false, 'message' => 'License data not complete'];
+			return ['result' => false, 'message' => Translations::translate('License data not complete')];
 		}
 
 		$licenseStatus = self::validateLicense($licensedata);
@@ -38,7 +39,7 @@ class License
 
 		if($licenseStatus === false)
 		{
-			return ['result' => false, 'message' => 'License data are invalid'];
+			return ['result' => false, 'message' => Translations::translate('License data are invalid')];
 		}
 		elseif($licenseStatus === true)
 		{

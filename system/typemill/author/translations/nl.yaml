@@ -1,268 +1,550 @@
 # Dutch (Nederlands)
 # Author: 
+'-LICENSE_AND_YOUR_WEBSITE_MUST_RUN_UNDER_THE_DOMAIN_OF_YOUR_LICENSE.': ''
+'ACCESS_&_RIGHTS': ''
+ACCESS_FOR: ''
+ACCESS_TO_BASEPATH_IS_NOT_ALLOWED.: ''
 ACCOUNT: Account
+ACTIVATE_API_ACCESS_FOR_THIS_USER._USE_USERNAME_AND_PASSWORD_FOR_API_CALLS: ''
+ACTIVATE_INDIVIDUAL_RESTRICTIONS_FOR_PAGES_IN_THE_META-TAB_OF_EACH_PAGE.: ''
+ACTIVATE_THE_CACHE_FOR_TWIG_TEMPLATES: ''
+ACTIVATE_THE_DARKMODE_FOR_ME: ''
+ACTIVATE_THE_PASSWORD_RECOVERY.: ''
+ACTIVATION_FAILED_BECAUSE_YOU_NEED_A_VALID_: ''
 ACTIVE: Actief
-ACTUAL_PASSWORD: Actueel wachtwoord
+ACTUAL_PASSWORD: 'Actueel wachtwoord'
 ADD: toevoegen
-ADD_CONTENT_BLOCK: inhoudblok toevoegen
-ADD_DEFINITION: definitie toevoegen
-ADD_FILE: Bestand toevoegen
-ADD_FOLDER: Map toevoegen
-ADD_FOLDER_TO_BASE_LEVEL: map toevoegen op basisniveau
-ADD_ITEM: Item toevoegen
-ADD_LEFT_COLUMN: linkerkolom toevoegen
-ADD_RIGHT_COLUMN: rechter kolom toevoegen
-ADD_ROW_ABOVE: rij boven toevoegen
-ADD_ROW_BELOW: rij hieronder toevoegen
-ADMINISTRATOR: administrator
-ALL: All visitors
-ALL_USERS: Alle gebruikers
-ALTERNATIVE_TEXT_FOR_THE_HERO_IMAGE: Alternative Text for the hero image
-ALT_TEXT: Alt-tekst
+ADD_DEFINITION: 'definitie toevoegen'
+ADD_ENTRY: ''
+ADD_LEFT_COLUMN: 'linkerkolom toevoegen'
+'ADD_MORE_URL_SCHEMES_FOR_EXTERNAL_LINKS_E.G._LIKE_DICT://_(COMMA_SEPARATED_LIST)': ''
+ADD_NOINDEX_TAG_AND_EXCLUDE_FROM_SITEMAP: ''
+ADD_ONE_OR_MORE_USERNAMES_SEPARATED_WITH_COMMA.: ''
+ADD_RIGHT_COLUMN: 'rechter kolom toevoegen'
+ADD_ROW_ABOVE: 'rij boven toevoegen'
+ADD_ROW_BELOW: 'rij hieronder toevoegen'
+ALLOW_SVG: ''
+ALLOW_THE_UPLOAD_OF_SVG_IMAGES: ''
+ALL_PAGES: ''
+ALT-TEXT: ''
+ALTERNATIVE_TEXT_FOR_THE_HERO_IMAGE: 'Alternative Text for the hero image'
+ALWAYS_SHOW: ''
+AND_YOU_MIGHT_FIND_THE_FOLLOWING_TIPS_HELPFUL: ''
+API_ACCESS: ''
+ARTICLE_DATE: ''
 AUTHOR: Auteur
-AUTHOR_DESCRIPTION_(MARKDOWN): Author-Description (Markdown)
-BACK_TO_STARTPAGE: terug naar startpagina
+AUTHOR-DESCRIPTION_(MARKDOWN): ''
+BLOCK-ID_NOT_FOUND: ''
+BLOCK-ID_NOT_FOUND.: ''
 BOLD: vetgedrukt
-BOTTOM: bodem
-BROWSE: BROWSE
-BULLET_LIST: Lijst met opsommingstekens
-BY: door
+BOOKMARK: ''
+BULLET_LIST: 'Lijst met opsommingstekens'
+BUY_A_LICENSE: ''
 CANCEL: annuleren
-CAN_BE_USED_FOR_AUTHOR_LINE_IN_FRONTEND_: Can be used for author line in frontend.
+CAN_BE_USED_FOR_AUTHOR_LINE_IN_FRONTEND.: ''
 CAPTION: Bijschrift
-CELL: cel
+CC-BY: ''
+CC-BY-NC: ''
+CC-BY-NC-ND: ''
+CC-BY-NC-SA: ''
+CC-BY-ND: ''
+CC-BY-SA: ''
 CENTER: Midden
+CHANGE_SLUG: ''
 CHECK: check
-CHOOSE_FILE: Choose file
+CHECK_YOUR_INBOX: ''
+CHECK_YOUR_LICENSE: ''
 CLASS: Class
-CLOSE_LIBRARY: Close Library
+CLEAR: ''
+CLOSE: ''
+CLOSE_LIBRARY: 'Close Library'
 CODE: Code
 COG: tandwiel
-CONTENT: Inhoud
+COLLAPSE_ALL: ''
+CONFIGURE: ''
+CONTENT_BREAK: ''
+CONVERT_TO_WEBP: ''
 COPYRIGHT: Auteursrecht
-CREATED_AT_(READONLY): Created at (read only)
-CREATED_AT_(READ_ONLY): Created at (readonly)
-CREATE_NEW_USER: Nieuwe gebruiker maken
-CREATE_USER: Gebruiker maken
+COULD_NOT_CREATE_FOLDER: ''
+'COULD_NOT_DECODE_IMAGE_OR_FILE,_PROBABLY_NOT_A_BASE64_ENCODING': ''
+COULD_NOT_DELETE_FILE: ''
+COULD_NOT_DELETE_FOLDER: ''
+COULD_NOT_GET_THE_VIDEO_IMAGE: ''
+COULD_NOT_OPEN_AND_READ_THE_FILE: ''
+COULD_NOT_READ_PATHINFO: ''
+COULD_NOT_STORE_THE_CUSTOM_SIZE_OF: ''
+COULD_NOT_STORE_THE_IMAGE_IN_THE_TEMPORARY_FOLDER: ''
+COULD_NOT_STORE_THE_RESIZED_VERSION: ''
+COULD_NOT_WRITE_TO_THE_FILE: ''
+CREATED_AT_(READ_ONLY): 'Created at (readonly)'
+CREATE_NEW_PASSWORD: ''
+CREATE_POST: ''
+CREATE_USER: 'Gebruiker maken'
 CROSS: kruis
-CUSTOM_CSS: Custom CSS
+CUSTOM_CSS: 'Custom CSS'
+CUT_RESTRICTED_CONTENT_AFTER_THE_FIRST_HR-ELEMENT_ON_A_PAGE_(PER_DEFAULT_CONTENT_WILL_BE_CUT_AFTER_TITLE).: ''
+DARKMODE: ''
+DEAR_: ''
+DEAR_USER: ''
+DEFAULT_WIDTH_OF_LIVE_IMAGES_IS_820PX._CHANGES_WILL_APPLY_TO_FUTURE_UPLOADS.: ''
 DEFINITION: Definitielijst
 DEFINITION_LIST: Definitielijst
 DELETE: verwijderen
-DELETE_CLOSE: verwijderen / sluiten
-DELETE_COLUMN: kolom verwijderen
-DELETE_CONTENT_BLOCK: content-block verwijderen
-DELETE_PAGE: pagina verwijderen
-DELETE_ROW: rij verwijderen
-DELETE_USER: Gebruiker verwijderen
-DESCRIPTION: omschrijving
+DELETE_CLOSE: 'verwijderen / sluiten'
+DELETE_COLUMN: 'kolom verwijderen'
+DELETE_PAGE: 'pagina verwijderen'
+DELETE_ROW: 'rij verwijderen'
+DELETE_USER: 'Gebruiker verwijderen'
+DEVELOPER: Ontwikkelaar
+DISABLE: ''
 DISCARD: weggooien
-DISCARD_CHANGES: Wijzigingen negeren
-DO_YOU_REALLY_WANT_TO_DELETE_THE_USER: Wilt u de gebruiker echt verwijderen
-DO_YOU_REALLY_WANT_TO_DELETE_THIS_PAGE: Wilt u deze pagina echt verwijderen?
-DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES_AND_SET_THE_CONTENT_BACK_TO_THE_LIVE_VERSION: Wilt u uw wijzigingen annuleren en de inhoud terugzetten naar de live versie?
+DISCARD_CHANGES: 'Wijzigingen negeren'
+DISPLAY_APPLICATION_ERRORS: 'Applicatiefouten weergeven'
+DOES_NOT_EXIST: ''
+DOES_NOT_EXIST_OR_IS_NOT_WRITABLE: ''
+DOMAIN_FOR_LICENSE: ''
+DONATE: ''
+DONE: ''
+DO_NOT_RESIZE: ''
+DO_YOU_REALLY_WANT_TO_DELETE_THIS_PAGE: 'Wilt u deze pagina echt verwijderen?'
+DO_YOU_REALLY_WANT_TO_DELETE_THIS_USER: ''
+DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES_AND_SET_THE_CONTENT_BACK_TO_THE_LIVE_VERSION: 'Wilt u uw wijzigingen annuleren en de inhoud terugzetten naar de live versie?'
 DRAFT: Ontwerp
-DRAG_A_PICTURE_OR_CLICK_TO_SELECT: sleep een foto of klik om te selecteren
-DUTCH__FLEMISH: Dutch, Flemish
+'DUTCH,_FLEMISH': ''
+E-MAIL: ''
 EDIT: bewerken
-EDITOR: editor
-EDIT_USER: Gebruiker bewerken
+EMAIL: ''
+EMAIL_SUBJECT: ''
 ENGLISH: English
-EXTERNAL_LINK: externe link
-E_G_: bijv.
-E_MAIL: e-mail
+'ENTER_THE_EMAIL_OF_YOUR_USER-ACCOUNT,_CLICK_THE_RECOVER-BUTTON_AND_CHECK_YOUR_MAILBOX_FOR_FURTHER_INSTRUCTIONS.': ''
+ERROR_REPORTING: Foutmelding
+ERROR_SENDING_EMAIL: ''
+EXPAND_ALL: ''
+EXTENSION_OR_FILENAME_ARE_MISSING: ''
+EXTENSION_OR_NAME_FOR_IMAGE_IS_MISSING: ''
+EXTERNAL_LINK: 'externe link'
+EYE_BLOCKED: ''
 FAVICON: Favicon
 FILE: File
-FILES: Files
+FILENAME_IS_MISSING.: ''
+FILENAME_OR_USERROLE_IS_MISSING.: ''
+FILETYPE_IS_NOT_ALLOWED.: ''
+FILE_DELETED_SUCCESSFULLY.: ''
+FILE_HAS_BEEN_STORED: ''
+FILE_IS_BIGGER_THAN_20MB.: ''
+FILE_IS_EMPTY.: ''
+FILE_IS_MISSING.: ''
+FILE_NOT_FOUND.: ''
+FILE_SAVED_SUCCESSFULLY: ''
 FIRST_NAME: Voornaam
 FOLDER: map
-FORGOT_PASSWORD: Wachtwoord vergeten
-FORMAT: Formaat
+FORGOT_PASSWORD: 'Wachtwoord vergeten'
+FORGOT_YOUR_PASSWORD: ''
+FORMAT_OPTIONS_FOR_VISUAL_EDITOR: ''
 FRENCH: French
-GENERAL_PRESENTATION: General Presentation
 GERMAN: German
-GOOGLE_SITEMAP: Google Sitemap
-HAS_EDIT_RIGHTS_FOR_THIS_ARTICLE_: Has edit rights for this article.
-HEAD: Kop
+GET_INSPIRED_AND_ENJOY_YOUR_WRITING: ''
+GOOGLE_SITEMAP_(READONLY): ''
+GO_TO_LOGIN: ''
+HAS_EDIT_RIGHTS_FOR_THIS_ARTICLE.: ''
 HEADLINE: Kop
-HEADLINE_ANCHORS: Headline Anchors
-HERO_IMAGE: Hero Image
+HEADLINE_ANCHORS: 'Headline Anchors'
+HERO_IMAGE: 'Hero Image'
+'HEY_WRITER,_AUTHOR,_EDITOR,_CONTENT-GURU,_OR_WEBSITE-MANAGER.': ''
 HIDE: Hide
-HIDE_PAGE_FROM_NAVIGATION: Hide page from navigation
+HIDE_PAGE_FROM_NAVIGATION: 'Hide page from navigation'
 HOME: home
 HOMEPAGE: Homepage
-HORIZONTAL_LINE: Horizontale lijn
+HORIZONTAL_LINE: 'Horizontale lijn'
 HR: hr
-IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: Indien niet ingevuld, wordt de beschrijving uit de inhoud gehaald.
+'IF_NOT_FILLED,_THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT.': ''
+'IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT,_THEN_THE_IMAGE_WILL_BE_CROPPED.': ''
+'IF_YOU_UNPUBLISH_THE_PAGE,_THEN_WE_WILL_DELETE_THE_PUBLISHED_VERSION_AND_KEEP_THE_MODIFIED_VERSION': ''
 IMAGE: Afbeelding
-IMAGES: Images
-IMAGE_URL: Image URL
-IMAGE_URL_(READ_ONLY): Image URL (read only)
+IMAGENAME_IS_MISSING.: ''
+IMAGES_WITH_THIS_EXTENSION_ARE_NOT_ALLOWED.: ''
+IMAGE_DELETED_SUCCESSFULLY.: ''
+IMAGE_OR_FILENAME_IS_MISSING.: ''
+IMAGE_OR_NAME_IS_MISSING.: ''
+IMAGE_SAVED_SUCCESSFULLY: ''
+IMAGE_URL: 'Image URL'
+IMAGE_URL_(READ_ONLY): 'Image URL (read only)'
+INFO: ''
+IS_NOT_A_DIRECTORY: ''
+IS_NOT_A_FOLDER: ''
 ITALIAN: Italian
 ITALIC: cursief
+IT_IS_NOT_ALLOWED_TO_WRITE_INTO: ''
 LANGUAGE: Taal
-LANGUAGE_ADMIN: Taal (admin-ui)
-LANGUAGE_ATTR: Taal Attribute (website)
-LAST_MODIFIED_LIVE_(READONLY): Last modified live (readonly)
+LANGUAGE_(AUTHOR_AREA): ''
+LANGUAGE_ATTRIBUTE_(WEBSITE): ''
+LAST_MODIFIED_LIVE_(READONLY): 'Last modified live (readonly)'
 LAST_NAME: achternaam
 LEFT: Links
-LICENCE: Licentie
+LICENCE_HAS_BEEN_STORED: ''
+LICENSE: ''
+LICENSE_DATA_ARE_INVALID: ''
+LICENSE_DATA_INCOMPLETE: ''
+LICENSE_DATA_MISSING.: ''
+LICENSE_DATA_NOT_COMPLETE: ''
+LICENSE_REQUIRED: ''
 LINK: Link
-LINK_TO_VIDEO: Link naar video
+LINK_TO_YOUTUBE: ''
 LOGIN: Inloggen
+LOGIN_TO_THE_AUTHOR_AREA_OR_GO_TO_THE: ''
 LOGO: Logo
-LOGOUT: Uitloggen
-MANUAL_DATE: Handmatige datum
+MANUAL_DATE: 'Handmatige datum'
 MARKDOWN: Markdown
-MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB__HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES_: Maximum size for an image is 5 MB. Hero images are not supported by all themes.
-MEMBER: Lid
+MARKDOWN_IS_MISSING.: ''
+MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB._HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES.: ''
+MAXIMUM_SIZE_FOR_FILE_UPLOADS_IN_MB: ''
+MAXIMUM_SIZE_FOR_IMAGE_UPLOADS_IN_MB: ''
+MAXIMUM_SIZE_OF_IMAGE_ALT-TEXT_IS_100_CHARACTERS: ''
+MAXIMUM_SIZE_OF_IMAGE_CAPTION_IS_140_CHARACTERS: ''
+MAXIMUM_SIZE_OF_IMAGE_CLASS_IS_100_CHARACTERS: ''
+MAXIMUM_SIZE_OF_IMAGE_ID_IS_100_CHARACTERS: ''
+MAXIMUM_SIZE_OF_IMAGE_LINK_IS_100_CHARACTERS: ''
+MAXIMUM_SIZE_OF_IMAGE_TITLE_IS_100_CHARACTERS: ''
+MEDIA: ''
+MEDIALIB: ''
 MENU: Menu
-META: Meta
+META-CONTENT: ''
 META_DESCRIPTION: Metabeschrijving
 META_TITLE: Metatitel
-MISSING_REQUIREMENTS: ontbrekende vereisten
-MOVE_VERTICAL: verplaats verticaal
-NAVIGATION_TITLE: Navigation Title
-NEW_PASSWORD: Nieuw wachtwoord
-NONE: Geen
+MINIMUM_USER-ROLE_TO_ACCESS_THIS_PAGE: ''
+MOVE_VERTICAL: 'verplaats verticaal'
+NAVIGATION_TITLE: 'Navigation Title'
+NEW_PASSWORD: 'Nieuw wachtwoord'
+NEW_USER: ''
+NEW_USER_CREATED.: ''
+NOINDEX: ''
 NOTICE: Opmerking
-NOT_EDITABLE: niet bewerkbaar
-NO_DESCRIPTION: Geen beschrijving
-NO_PREVIEW: Geen voorbeeld
-NO_SETTINGS: Geen instellingen
-NUMBERED_LIST: Genummerde lijst
+NO_FILE_FOUND.: ''
+NO_IMAGE_FOUND.: ''
+NO_LICENSE_FOUND: ''
+'NO_PROBLEM,_YOU_CAN_CREATE_A_NEW_ONE_HERE.': ''
+NUMBERED_LIST: 'Genummerde lijst'
 OLIST: olist
-ONLINE: online
-ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: alleen de volgende speciale tekens zijn toegestaan:
-OWNER_(USERNAME): owner (username)
+ONE_OR_MORE_FILES_COULD_NOT_BE_TRANSFORMED.: ''
+ONLY_IMAGES_ARE_ALLOWED: ''
+ONLY_PNG_FORMAT_WILL_WORK.: ''
+ONLY_THE_FOLLOWING_USERS_HAVE_ACCESS: 'Alleen de volgende gebruikers hebben toegang'
+OWNER_(USERNAME): 'owner (username)'
+'PAGES_(SORT_IN_NAVIGATION_WITH_DRAG_&_DROP)': ''
+PAGE_NOT_FOUND: ''
+PAGE_RESTRICTION: ''
+PAPERCLIP: ''
 PARAGRAPH: Paragraaf
 PASSWORD: Wachtwoord
-PLEASE_CONFIRM: bevestig alstublieft
-PLEASE_CORRECT_THE_ERRORS_ABOVE: Corrigeer bovenstaande fouten
+PATH_IS_MISSING.: ''
+PERMISSION_DENIED: ''
+PLEASE_CHECK_THE_INBOX_OF_YOUR_EMAIL_ACCOUNT_FOR_MORE_INSTRUCTIONS.: ''
+PLEASE_CHECK_THE_INBOX_OF_YOUR_EMAIL_ACCOUNT_FOR_MORE_INSTRUCTIONS._DO_NOT_FORGET_TO_CHECK_YOUR_SPAM-FOLDER_IF_YOUR_INBOX_IS_EMPTY.: ''
+PLEASE_CONFIRM: 'bevestig alstublieft'
+PLEASE_CORRECT_ERRORS_IN_FORM.: ''
+PLEASE_CORRECT_TBE_ERRORS_IN_FORM.: ''
+PLEASE_CORRECT_THE_ERRORS.: ''
+PLEASE_CORRECT_THE_ERRORS_IN_THE_FORM.: ''
+PLEASE_CORRECT_YOUR_INPUT.: ''
+PLEASE_ENTER_A_VALID_EMAIL.: ''
+PLEASE_LOGIN_WITH_YOUR_NEW_PASSWORD.: ''
+PLEASE_SELECT: ''
+'PLEASE_USE_ISO_639-1_CODES_LIKE_"EN"': ''
+PLEASE_USE_THE_FOLLOWING_LINK_TO_SET_A_NEW_PASSWORD: ''
 PLUGINS: plug-ins
-PLUGIN_STORE: Plugin Store
+PLUGIN_SETTINGS: ''
+'POSTS_(SORTED_BY_PUBLISH_DATE,_FOR_NEWS_OR_BLOGS)': ''
 POWER_OFF: power-off
-PROFILE_IMAGE: Profiel afbeelding
+PROFILE-IMAGE: ''
+PROXY: Proxy
 PUBLISH: Publiceren
 QUOTE: Citeer
 QUOTES: Citeren
 RAW: rauw
-RAW_CONTENT_EDITOR: Ruwe Content Editor
-RAW_MARKDOWN_EDITOR: Ruwe Markdown Editor
-RAW_MODE: onbewerkte modus
-RAW_USERDATA_(READONLY_FOR_ADMINS): Ruwe Gebruikersdata (alleen lezen voor admins)
-READONLY: Alleen lezen
-REGISTERED_USERS_ONLY: Alleen geregistreerde gebruikers
-REMEMBER_TO_BOOKMARK_THIS_PAGE: vergeet deze pagina niet te bookmarken
+RAW_EDITOR: ''
+RECOVER_PASSWORD: ''
+REPEAT_PASSWORD: ''
 REQUIRED: verplicht
+RESTRICTIONS: ''
+RESTRICTION_NOTICE_(USE_MARKDOWN): ''
 RIGHT: Rechts
 ROLE: rol
 RUSSIAN: Russisch
 SAVE: Opslaan
-SAVED_SUCCESSFULLY: Succesvol opgeslagen
-SAVE_ALL_SETTINGS: Sla alle instellingen op
-SAVE_THEME: Thema opslaan
-SELECT_FROM_MEDIALIB: Selecteer uit medialib 
-SETTINGS: Instellingen
-SETTINGS_ARE_STORED: Instellingen zijn opgeslagen
+SEARCH: ''
+SECURITY: ''
+SECURITY_LOG: ''
+SELECT_FROM_MEDIALIB: 'Selecteer uit medialib'
+SELECT_THE_LOWEST_USERROLE._HIGHER_ROLES_WILL_HAVE_ACCESS_TOO.: ''
+SENDER_EMAIL: ''
+SETTINGS_HAVE_BEEN_SAVED: ''
 SETUP: Instellen
-SHOW_ANCHORS_NEXT_TO_HEADLINES: Ankers naast koppen weergeven
+SHORTCODE: ''
+SHORT_TITLE_FOR_POST: ''
+SHOW_AFTER_FIRST_WRONG_INPUT: ''
+SHOW_ANCHORS_NEXT_TO_HEADLINE_IN_FRONTEND: ''
+SHOW_THE_WEBSITE_ONLY_TO_AUTHENTICATED_USERS_AND_REDIRECT_ALL_OTHER_USERS_TO_THE_LOGIN_PAGE.: ''
+SLUG: ''
+'SOMETHING_WENT_WRONG,_THE_INPUT_IS_NOT_VALID.': ''
+'SOMETHING_WENT_WRONG._PLEASE_REFRESH_THE_PAGE_AND_CHECK,_IF_ALL_FOLDERS_AND_FILES_ARE_WRITABLE.': ''
 STANDARD_EDITOR_MODE: Standaardeditormodus
-START: Start
+STANDARD_HEIGHT_FOR_LIVE_PICTURES: ''
+STANDARD_WIDTH_FOR_LIVE_PICTURES: ''
 SYSTEM: Systeem
+SYSTEMCHECK: ''
+SYSTEM_SETTINGS: ''
 TABLE: Tabel
 TABLE_OF_CONTENTS: Inhoudsopgave
-TAKEN_FROM_YOUR_USER_ACCOUNT_IF_SET_: Genomen uit uw gebruikersaccount indien ingesteld.
-TERM: term
+TAB_NOT_FOUND: ''
+TEXT_BEFORE_RECOVER_LINK_IN_EMAIL_MESSAGE: ''
 TEXT_FILE: tekstbestand
 THEMES: Themes
-THEME_STORE: Theme Store
-THE_FORMAT_BUTTONS: De opmaakknoppen
+THEME_SETTINGS: ''
+THERE_ARE_PUBLISHED_PAGES_WITHIN_THIS_FOLDER._THE_PAGES_ARE_NOT_VISIBLE_ON_YOUR_WEBSITE_ANYMORE.: ''
+THERE_IS_ALREADY_A_PAGE_WITH_THAT_SLUG: ''
+THERE_IS_ALREADY_A_PAGE_WITH_THIS_NAME._PLEASE_CHOOSE_ANOTHER_NAME.: ''
+THERE_WAS_AN_ERROR_CHECKING_THE_LICENSE_SIGNATURE: ''
+THE_BEST_OPTION_IS_A_SEPARATE_PASSWORD_MANAGER_LIKE_KEEPASS_AND_OTHERS.: ''
+'THE_CAPTCHA_IS_WRONG,_PLEASE_TRY_AGAIN': ''
+THE_FOLDER_CONTAINS_ANOTHER_FOLDER_SO_WE_CANNOT_TRANSFORM_IT._PLEASE_MAKE_SURE_THERE_ARE_ONLY_FILES_IN_THIS_FOLDER.: ''
+THE_FOLDER_CONTAINS_PUBLISHED_PAGES._PLEASE_UNPUBLISH_OR_DELETE_THEM_FIRST.: ''
+THE_FOLLOWING_REQUIREMENTS_FOR_THE_INSTALLATION_ARE_MISSING: ''
+THE_ID_OF_THE_CONTENT-BLOCK_IS_WRONG.: ''
+'THE_LICENSE_SERVER_RESPONDED_WITH:_': ''
+THE_LINK_TO_RECOVER_THE_PASSWORD_WAS_TOO_OLD._PLEASE_CREATE_A_NEW_ONE.: ''
+THE_MAXIMUM_FILE_SIZE_MIGHT_BE_LIMITED_BY_YOUR_SERVER_SETTINGS.: ''
+THE_MAXIMUM_IMAGE_SIZE_MIGHT_BE_LIMITED_BY_YOUR_SERVER_SETTINGS.: ''
+'THE_MIME-TYPE_IS_MISSING,_NOT_ALLOWED_OR_DOES_NOT_FIT_TO_THE_FILE_EXTENSION.': ''
+THE_PLUGIN_OR_THEMES_WAS_NOT_FOUND.: ''
+THE_REQUESTED_FILETYPE_DOES_NOT_EXIST.: ''
+THE_REQUESTED_FILE_DOES_NOT_EXIST.: ''
+THE_VERSION_CHECK_FAILED_BECAUSE_OF_INVALID_PARAMETERS.: ''
+THIS_FIELD_IS_NOT_DEFINED: ''
+THIS_FOLDER_CONTAINS: ''
+THIS_PAGE: ''
+THIS_PAGE_HAS_BEEN_MODIFIED: ''
 TITLE: Titel
 TOC: Toc
-TOP: Top
-TYPEMILL_DESCRIPTION: Het standaardthema voor typemill. Responsief, minimaal en zonder afhankelijkheden. Het gebruikt de systeemlettertypen Calibri en Helvetica. Er is geen JavaScript gebruikt.
+TO_DOWNLOAD_THIS_FILE_YOU_NEED_TO_BE_AUTHENTICATED_WITH_THE_ROLE: ''
+TRACK_SPAM_AND_SUSPICIOUS_ACTIONS_IN_A_LOGFILE: ''
+TRASH: ''
+TRUSTED_IPS_FOR_PROXIES_(COMMA_SEPARATED): ''
+TRY_TO_CONVERT_UPLOADED_IMAGES_INTO_THE_WEBP-FORMAT: ''
+TWIG_CACHE: 'Twig Cache'
 ULIST: ulist
-UNKNOWN: onbekend
-UPDATE_USER: Gebruiker bijwerken
+UNPUBLISH: ''
+UNPUBLISH_PAGE: ''
 UPLOAD: Upload
-UPLOAD_AN_IMAGE: Upload een afbeelding
-UPLOAD_FILE: Upload een bestand
-UPS__WRONG_PASSWORD_OR_USERNAME__PLEASE_TRY_AGAIN_: Oops, verkeerd wachtwoord of gebruikersnaam, probeer het opnieuw.
-USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: Gebruikt als fallback als er geen handmatige datum is ingesteld.
+UPLOAD_AN_IMAGE: 'Upload een afbeelding'
+UPLOAD_FILE: 'Upload een bestand'
+URL_SCHEMES: ''
+USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET.: ''
 USER: Gebruiker
+USERDATA_ARE_REQUIRED.: ''
 USERNAME: Gebruikersnaam
-USERNAME_(READ_ONLY): Gebruikersnaam (alleen lezen) 
+USERNAME_(READ_ONLY): 'Gebruikersnaam (alleen lezen)'
+USERNAME_IS_REQUIRED.: ''
+USERROLE: ''
+USERROLE_IS_REQUIRED.: ''
+USERROLE_IS_UNKNOWN.: ''
 USERS: Gebruikers
-USE_2_TO_20_CHARACTERS: Gebruik 2 tot 20 tekens.
-USE_2_TO_40_CHARACTERS: Gebruik 2 tot 40 tekens.
-USE_A_VALID_LANGUAGE_ATTRIBUTE: Gebruik een geldig taalkenmerk 
-USE_A_VALID_YEAR: Gebruik een geldig jaar
+USER_DELETED.: ''
+USER_HAS_BEEN_UPDATED.: ''
+USER_NOT_FOUND: ''
+USE_A_STRONG_AND_INDIVIDUAL_PASSWORD_FOR_EVERY_ACCOUNT.: ''
+USE_CAPTCHA_IN_AUTHENTICATION_FORMS: ''
+USE_X-FORWARDED-HEADER.: ''
+VERSION: ''
 VIDEO: Video
-VIEW_SITE: Site bekijken
+VISIBILITY: ''
 VISUAL: visual
-VISUAL_CONTENT_EDITOR: Visual Content Editor
-VISUAL_EDITOR: visuele editor
-VISUAL_MARKDOWN_EDITOR: Visual Markdown Editor
-VISUAL_MODE: visuele modus
+VISUAL_EDITOR: 'visuele editor'
+WEBSITE_RESTRICTION: Websitebeperking
+WEBSITE_TITLE: 'Titel van de website'
+WELCOME_BACK: ''
+WELCOME_TO_TYPEMILL: ''
+'WE_CANNOT_CREATE_A_FOLDER,_ONLY_FILES.': ''
+'WE_COULD_NOT_CREATE_A_SANITIZED_VERSION_OF_THE_SVG,_IT_PROBABLY_HAS_INVALID_CONTENT.': ''
+'WE_COULD_NOT_CREATE_THE_FILE._PLEASE_REFRESH_THE_PAGE_AND_CHECK,_IF_ALL_FOLDERS_AND_FILES_ARE_WRITABLE.': ''
+'WE_COULD_NOT_CREATE_THE_FOLDER._PLEASE_REFRESH_THE_PAGE_AND_CHECK,_IF_ALL_FOLDERS_AND_FILES_ARE_WRITABLE.': ''
+WE_COULD_NOT_DELETE_A_CUSTOM_IMAGE_(GRAYSCALE_OR_RESIZED).: ''
+WE_COULD_NOT_DELETE_THE_LIVE_IMAGE.: ''
+WE_COULD_NOT_DELETE_THE_ORIGINAL_IMAGE_IN: ''
+WE_COULD_NOT_DELETE_THE_THUMB_IMAGE.: ''
+WE_COULD_NOT_DELETE_THE_USER: ''
+WE_COULD_NOT_FIND_A_FOLDERPATH_FOR: ''
+WE_COULD_NOT_FIND_THE_USER: ''
+WE_COULD_NOT_FIND_THIS_PAGE._PLEASE_REFRESH_AND_TRY_AGAIN.: ''
+'WE_COULD_NOT_LOAD_THE_SVG_FILE,_IT_IS_PROBABLY_CORRUPTED.': ''
+WE_COULD_NOT_SEND_THE_EMAIL_WITH_THE_PASSWORD_INSTRUCTIONS_TO_YOUR_ADDRESS._PLEASE_CONTACT_THE_WEBSITE_OWNER_AND_ASK_FOR_HELP.: ''
+WE_COULD_NOT_STORE_FILE_TO_TEMPORARY_FOLDER.: ''
+'WE_COULD_NOT_STORE_THE_CONTENT:_': ''
+WE_COULD_NOT_STORE_THE_LIVE_IMAGE_TO_THE_LIVE_FOLDER: ''
+WE_COULD_NOT_STORE_THE_NEW_USER: ''
+WE_COULD_NOT_STORE_THE_ORIGINAL_IMAGE: ''
+WE_COULD_NOT_STORE_THE_THUMB_TO_THE_THUMB_FOLDER: ''
+WE_DID_NOT_FIND_A_FILE_WITH_THAT_NAME: ''
+WE_DID_NOT_FIND_THE_FILE_IN_THE_TMP-FOLDER_OR_COULD_NOT_READ_IT: ''
+WE_DID_NOT_FIND_THE_IMAGE_IN_THE_TMP-FOLDER_OR_COULD_NOT_READ_IT: ''
+WE_FOUND_THE_FILE_BUT_COULD_NOT_DELETE: ''
+WE_FOUND_THE_FOLDER_BUT_COULD_NOT_DELETE: ''
+WE_FOUND_THE_FOLDER_BUT_COULD_NOT_DELETE_IT: ''
+WIDTH/HEIGHT: ''
+WRAP_RESTRICTION_NOTICE: ''
+WRAP_THE_RESTRICTION_NOTICE_ABOVE_INTO_A_NOTICE-4_ELEMENT_(WHICH_CAN_BE_DESIGNED_AS_SPECIAL_BOX): ''
+WRITING: Schrijven
+'WRONG_PASSWORD_OR_USERNAME,_PLEASE_TRY_AGAIN.': ''
+YEAR: Jaar
+YOUR_ARE_AN_: ''
+YOUR_BROWSER_CAN_REMEMBER_ALL_OF_YOUR_PASSWORDS.: ''
+YOUR_EMAIL: ''
+YOUR_LICENSE_KEY: ''
+YOUR_REGISTRATION_IS_NOT_CONFIRMED_YET._PLEASE_CHECK_YOUR_E-MAILS_AND_USE_THE_CONFIRMATION_LINK.: ''
+YOU_ARE_NOT_ALLOWED_TO_DELETE_ANOTHER_USER.: ''
+YOU_ARE_NOT_ALLOWED_TO_UPDATE_ANOTHER_USER.: ''
+YOU_CAN_OVERWRITE_THE_THEME-CSS_WITH_YOUR_OWN_CSS_HERE.: ''
+'YOU_CAN_USE_THE_ASTERISK_(*)_WILDCARD_TO_SEARCH_FOR_NAME@*_OR_*@DOMAIN.COM': ''
+YOU_DO_NOT_HAVE_ENOUGH_RIGHTS.: ''
+YOU_TRIED_TO_OPEN_THE_PASSWORD_RESET_PAGE_BUT_THE_LINK_WAS_INVALID.: ''
+YOU_TRIED_TO_SET_A_NEW_PASSWORD_BUT_USERNAME_OR_TOKEN_WAS_INVALID.: ''
+_AND_YOU_CANNOT_: ''
+_THIS_: ''
+'_WE_HOPE_YOU_LIKE_TYPEMILL,_BECAUSE_WE_CODED_IT_JUST_FOR_YOU.': ''
+©: ''
+'-LICENSE_FOR_THIS_AND_YOUR_WEBSITE_MUST_RUN_UNDER_THE_DOMAIN_OF_YOUR_LICENSE.': ''
+ADD_CONTENT_BLOCK: 'inhoudblok toevoegen'
+ADD_FILE: 'Bestand toevoegen'
+ADD_FOLDER: 'Map toevoegen'
+ADD_FOLDER_TO_BASE_LEVEL: 'map toevoegen op basisniveau'
+ADD_ITEM: 'Item toevoegen'
+ADMINISTRATOR: administrator
+ALL: 'All visitors'
+ALL_USERS: 'Alle gebruikers'
+ALT_TEXT: Alt-tekst
+AUTHOR_DESCRIPTION_(MARKDOWN): 'Author-Description (Markdown)'
+BACK_TO_STARTPAGE: 'terug naar startpagina'
+BOTTOM: bodem
+BROWSE: BROWSE
+BY: door
+CAN_BE_USED_FOR_AUTHOR_LINE_IN_FRONTEND_: 'Can be used for author line in frontend.'
+CELL: cel
+CHOOSE_FILE: 'Choose file'
+CONTENT: Inhoud
+CREATED_AT_(READONLY): 'Created at (read only)'
+CREATE_NEW_USER: 'Nieuwe gebruiker maken'
+DELETE_CONTENT_BLOCK: 'content-block verwijderen'
+DESCRIPTION: omschrijving
+DO_YOU_REALLY_WANT_TO_DELETE_THE_USER: 'Wilt u de gebruiker echt verwijderen'
+DRAG_A_PICTURE_OR_CLICK_TO_SELECT: 'sleep een foto of klik om te selecteren'
+DUTCH__FLEMISH: 'Dutch, Flemish'
+EDITOR: editor
+EDIT_USER: 'Gebruiker bewerken'
+E_G_: bijv.
+E_MAIL: e-mail
+FILES: Files
+FORMAT: Formaat
+GENERAL_PRESENTATION: 'General Presentation'
+GOOGLE_SITEMAP: 'Google Sitemap'
+HAS_EDIT_RIGHTS_FOR_THIS_ARTICLE_: 'Has edit rights for this article.'
+HEAD: Kop
+IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: 'Indien niet ingevuld, wordt de beschrijving uit de inhoud gehaald.'
+IMAGES: Images
+LANGUAGE_ADMIN: 'Taal (admin-ui)'
+LANGUAGE_ATTR: 'Taal Attribute (website)'
+LICENCE: Licentie
+LINK_TO_VIDEO: 'Link naar video'
+LOGOUT: Uitloggen
+MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB__HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES_: 'Maximum size for an image is 5 MB. Hero images are not supported by all themes.'
+MEMBER: Lid
+META: Meta
+MISSING_REQUIREMENTS: 'ontbrekende vereisten'
+NONE: Geen
+NOT_EDITABLE: 'niet bewerkbaar'
+NO_DESCRIPTION: 'Geen beschrijving'
+NO_PREVIEW: 'Geen voorbeeld'
+NO_SETTINGS: 'Geen instellingen'
+ONLINE: online
+ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: 'alleen de volgende speciale tekens zijn toegestaan:'
+PLEASE_CORRECT_THE_ERRORS_ABOVE: 'Corrigeer bovenstaande fouten'
+PLUGIN_STORE: 'Plugin Store'
+PROFILE_IMAGE: 'Profiel afbeelding'
+RAW_CONTENT_EDITOR: 'Ruwe Content Editor'
+RAW_MARKDOWN_EDITOR: 'Ruwe Markdown Editor'
+RAW_MODE: 'onbewerkte modus'
+RAW_USERDATA_(READONLY_FOR_ADMINS): 'Ruwe Gebruikersdata (alleen lezen voor admins)'
+READONLY: 'Alleen lezen'
+REGISTERED_USERS_ONLY: 'Alleen geregistreerde gebruikers'
+REMEMBER_TO_BOOKMARK_THIS_PAGE: 'vergeet deze pagina niet te bookmarken'
+SAVED_SUCCESSFULLY: 'Succesvol opgeslagen'
+SAVE_ALL_SETTINGS: 'Sla alle instellingen op'
+SAVE_THEME: 'Thema opslaan'
+SETTINGS: Instellingen
+SETTINGS_ARE_STORED: 'Instellingen zijn opgeslagen'
+SHOW_ANCHORS_NEXT_TO_HEADLINES: 'Ankers naast koppen weergeven'
+START: Start
+TAKEN_FROM_YOUR_USER_ACCOUNT_IF_SET_: 'Genomen uit uw gebruikersaccount indien ingesteld.'
+TERM: term
+THEME_STORE: 'Theme Store'
+THE_FORMAT_BUTTONS: 'De opmaakknoppen'
+TOP: Top
+TYPEMILL_DESCRIPTION: 'Het standaardthema voor typemill. Responsief, minimaal en zonder afhankelijkheden. Het gebruikt de systeemlettertypen Calibri en Helvetica. Er is geen JavaScript gebruikt.'
+UNKNOWN: onbekend
+UPDATE_USER: 'Gebruiker bijwerken'
+UPS__WRONG_PASSWORD_OR_USERNAME__PLEASE_TRY_AGAIN_: 'Oops, verkeerd wachtwoord of gebruikersnaam, probeer het opnieuw.'
+USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: 'Gebruikt als fallback als er geen handmatige datum is ingesteld.'
+USE_2_TO_20_CHARACTERS: 'Gebruik 2 tot 20 tekens.'
+USE_2_TO_40_CHARACTERS: 'Gebruik 2 tot 40 tekens.'
+USE_A_VALID_LANGUAGE_ATTRIBUTE: 'Gebruik een geldig taalkenmerk'
+USE_A_VALID_YEAR: 'Gebruik een geldig jaar'
+VIEW_SITE: 'Site bekijken'
+VISUAL_CONTENT_EDITOR: 'Visual Content Editor'
+VISUAL_MARKDOWN_EDITOR: 'Visual Markdown Editor'
+VISUAL_MODE: 'visuele modus'
 WAIT: wacht
 WEB: Web
-WEBSITE_TITLE: Titel van de website
-WEBSITE_VISIBLE_FOR: Website visible for
-WRITING: Schrijven
-YEAR: Jaar
-YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: Je kunt de thema-css hier overschrijven met je eigen css. 
-
-ADD_NEW_FEATURES_TO_YOUR_WEBSITE_WITH_PLUGINS_AND_CONFIGURE_THEM_: Voeg nieuwe functies toe aan uw website met plug-ins en configureer ze. 
-BY_THE: door de
-CHOOSE_A_THEME_FOR_YOUR_WEBSITE_AND_CONFIGURE_THE_THEME_DETAILS_: Kies een thema voor uw website en configureer de themadetails. 
-CODED_WITH: Geprogrammeerd met
+WEBSITE_VISIBLE_FOR: 'Website visible for'
+YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: 'Je kunt de thema-css hier overschrijven met je eigen css.'
+ADD_NEW_FEATURES_TO_YOUR_WEBSITE_WITH_PLUGINS_AND_CONFIGURE_THEM_: 'Voeg nieuwe functies toe aan uw website met plug-ins en configureer ze.'
+BY_THE: 'door de'
+CHOOSE_A_THEME_FOR_YOUR_WEBSITE_AND_CONFIGURE_THE_THEME_DETAILS_: 'Kies een thema voor uw website en configureer de themadetails.'
+CODED_WITH: 'Geprogrammeerd met'
 COMMUNITY: gemeenschap
-CONFIGURE_YOUR_WEBSITE: Configureer uw website 
+CONFIGURE_YOUR_WEBSITE: 'Configureer uw website'
 DOCS: Documentatie
-GET_HELP: Krijg hulp
-GIVE_YOUR_NEW_WEBSITE_A_NAME__ADD_THE_AUTHOR_AND_CHOOSE_A_COPYRIGHT_: Geef je nieuwe website een naam, voeg de auteur toe en kies een copyright.
+GET_HELP: 'Krijg hulp'
+GIVE_YOUR_NEW_WEBSITE_A_NAME__ADD_THE_AUTHOR_AND_CHOOSE_A_COPYRIGHT_: 'Geef je nieuwe website een naam, voeg de auteur toe en kies een copyright.'
 HURRA: Hoera
-IF_YOU_HAVE_ANY_QUESTIONS__PLEASE_READ_THE: Als je vragen hebt, lees dan de
-NEXT_STEP: Volgende stap
-OR_OPEN_A_NEW_ISSUE_ON: of open een nieuw issue op
-SETUP_WELCOME: Installatie Welkom
-TRENDSCHAU_DIGITAL: Trendschau Digital
-VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: Ga naar het auteurspaneel en stel uw nieuwe website in. U kunt het systeem configureren, thema's kiezen en plug-ins toevoegen.
-YOUR_ACCOUNT_HAS_BEEN_CREATED_AND_YOU_ARE_LOGGED_IN_NOW_: Uw account is aangemaakt en u bent nu ingelogd.
-
+IF_YOU_HAVE_ANY_QUESTIONS__PLEASE_READ_THE: 'Als je vragen hebt, lees dan de'
+NEXT_STEP: 'Volgende stap'
+OR_OPEN_A_NEW_ISSUE_ON: 'of open een nieuw issue op'
+SETUP_WELCOME: 'Installatie Welkom'
+TRENDSCHAU_DIGITAL: 'Trendschau Digital'
+VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: 'Ga naar het auteurspaneel en stel uw nieuwe website in. U kunt het systeem configureren, thema''s kiezen en plug-ins toevoegen.'
+YOUR_ACCOUNT_HAS_BEEN_CREATED_AND_YOU_ARE_LOGGED_IN_NOW_: 'Uw account is aangemaakt en u bent nu ingelogd.'
 ACCESS_CONTROL: Toegangscontrole
-ACTIVATE_INDIVIDUAL_RESTRICTIONS_FOR_PAGES_IN_THE_META_TAB_OF_EACH_PAGE_: Activeer individuele beperkingen voor pagina's in de meta-tab van elke pagina. 
-ADD_ONE_OR_MORE_USERNAMES_SEPARATED_WITH_COMMA_: Voeg een of meer gebruikersnamen toe, gescheiden door komma's. 
-CUT_RESTRICTED_CONTENT_AFTER_THE_FIRST_HR_ELEMENT_ON_A_PAGE_(PER_DEFAULT_CONTENT_WILL_BE_CUT_AFTER_TITLE)_: Beperkte inhoud knippen na het eerste hr-element op een pagina (standaard wordt inhoud na titel geknipt). 
-FOR_ACCESS_THE_USER_MUST_HAVE_THIS_MINIMUM_ROLE: Voor toegang moet de gebruiker deze minimale rol hebben
-LIMIT_THE_ACCESS_FOR_THE_WHOLE_WEBSITE_OR_FOR_EACH_PAGE_INDIVIDUALLY__IF_YOU_ACTIVATE_THE_WEBSITE_RESTRICTION_OR_THE_PAGE_RESTRICTIONS__THEN_SESSIONS_WILL_BE_USED_IN_FRONTEND_: Beperk de toegang voor de hele website of voor elke pagina afzonderlijk. Als u de websitebeperking of de paginabeperkingen activeert, worden sessies in de frontend gebruikt.
-ONLY_THE_FOLLOWING_USERS_HAVE_ACCESS: Alleen de volgende gebruikers hebben toegang
-PAGE_RESTRICTIONS___ACTIVATE: Paginabeperkingen - Activeren 
-PAGE_RESTRICTIONS___CUT_RESTRICTED_CONTENT: Paginabeperkingen - Beperkte inhoud knippen 
-PAGE_RESTRICTIONS___NOTICE: Paginabeperkingen - Kennisgeving 
-PAGE_RESTRICTIONS___WRAP_NOTICE_INTO_A_BOX: Paginabeperkingen - Verpak kennisgeving in een doos 
-SELECT_THE_LOWEST_USERROLE__HIGHER_ROLES_WILL_HAVE_ACCESS_TOO_: Selecteer de laagste gebruikersrol. Hogere rollen hebben ook toegang. 
-SHOW_THE_WEBSITE_ONLY_TO_AUTHENTICATED_USERS_AND_REDIRECT_ALL_OTHER_USERS_TO_THE_LOGIN_PAGE_: Toon de website alleen aan geverifieerde gebruikers en stuur alle andere gebruikers door naar de inlogpagina. 
-USE_MARKDOWN: gebruik markdown
-WEBSITE_RESTRICTION: Websitebeperking
-WRAP_THE_RESTRICTION_NOTICE_ABOVE_INTO_A_NOTICE_4_ELEMENT_(WHICH_CAN_BE_DESIGNED_AS_SPECIAL_BOX): Wikkel de beperkingskennisgeving hierboven in een bericht-4-element (dat kan worden ontworpen als een speciaal vak) 
-
-ACTIVATE_CACHE_FOR_TWIG_TEMPLATES: Cache activeren voor Twig-sjablonen 
-ADD_MORE_URL_SCHEMES_FOR_EXTERNAL_LINKS_E_G__LIKE_DICT://_(COMMA_SEPARATED_LIST): Voeg meer url-schema's toe voor externe links, b.v. zoals dict:// (door komma's gescheiden lijst) 
-CLEAR_CACHE: Cache wissen
-DELETE_ALL_CACHE_FILES: Alle cachebestanden verwijderen
-DEVELOPER: Ontwikkelaar 
-DISABLE_HEADERS: Headers uitschakelen
-DISABLE_TYPEMILL_HEADERS_AND_SEND_YOUR_OWN: Schakel Typemill-headers uit en verzend uw eigen
-DISPLAY_APPLICATION_ERRORS: Applicatiefouten weergeven
-ERROR_REPORTING: Foutmelding
-IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT__THEN_THE_IMAGE_WILL_BE_CROPPED_: Als u een waarde voor de hoogte toevoegt, wordt de afbeelding bijgesneden.
-PROXY: Proxy
-STANDARD_HEIGHT_FOR_IMAGES: Standaard hoogte voor afbeeldingen
-STANDARD_WIDTH_FOR_IMAGES: Standaardbreedte voor afbeeldingen 
-THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: De volgende opties zijn alleen voor ontwikkelaars en ervaren beheerders. Wijzig de opties alleen als u ze echt begrijpt. Bijvoorbeeld: Activeer nooit de foutrapportage voor een live website, gebruik deze optie alleen voor het oplossen van fouten.
-THIS_APPLIES_ONLY_FOR_FUTURE_IMAGES_IN_THE_CONTENT_AREA_: Dit geldt alleen voor toekomstige afbeeldingen in het inhoudsgebied.
-TRUSTED_IPS_FOR_PROXY_(COMMA_SEPARATED): Vertrouwde IP's voor proxy (gescheiden door komma's) 
-TWIG_CACHE: Twig Cache
-USE_X_FORWARDED_HEADERS: Gebruik X-Forwarded Headers
+ACTIVATE_INDIVIDUAL_RESTRICTIONS_FOR_PAGES_IN_THE_META_TAB_OF_EACH_PAGE_: 'Activeer individuele beperkingen voor pagina''s in de meta-tab van elke pagina.'
+ADD_ONE_OR_MORE_USERNAMES_SEPARATED_WITH_COMMA_: 'Voeg een of meer gebruikersnamen toe, gescheiden door komma''s.'
+CUT_RESTRICTED_CONTENT_AFTER_THE_FIRST_HR_ELEMENT_ON_A_PAGE_(PER_DEFAULT_CONTENT_WILL_BE_CUT_AFTER_TITLE)_: 'Beperkte inhoud knippen na het eerste hr-element op een pagina (standaard wordt inhoud na titel geknipt).'
+FOR_ACCESS_THE_USER_MUST_HAVE_THIS_MINIMUM_ROLE: 'Voor toegang moet de gebruiker deze minimale rol hebben'
+LIMIT_THE_ACCESS_FOR_THE_WHOLE_WEBSITE_OR_FOR_EACH_PAGE_INDIVIDUALLY__IF_YOU_ACTIVATE_THE_WEBSITE_RESTRICTION_OR_THE_PAGE_RESTRICTIONS__THEN_SESSIONS_WILL_BE_USED_IN_FRONTEND_: 'Beperk de toegang voor de hele website of voor elke pagina afzonderlijk. Als u de websitebeperking of de paginabeperkingen activeert, worden sessies in de frontend gebruikt.'
+PAGE_RESTRICTIONS___ACTIVATE: 'Paginabeperkingen - Activeren'
+PAGE_RESTRICTIONS___CUT_RESTRICTED_CONTENT: 'Paginabeperkingen - Beperkte inhoud knippen'
+PAGE_RESTRICTIONS___NOTICE: 'Paginabeperkingen - Kennisgeving'
+PAGE_RESTRICTIONS___WRAP_NOTICE_INTO_A_BOX: 'Paginabeperkingen - Verpak kennisgeving in een doos'
+SELECT_THE_LOWEST_USERROLE__HIGHER_ROLES_WILL_HAVE_ACCESS_TOO_: 'Selecteer de laagste gebruikersrol. Hogere rollen hebben ook toegang.'
+SHOW_THE_WEBSITE_ONLY_TO_AUTHENTICATED_USERS_AND_REDIRECT_ALL_OTHER_USERS_TO_THE_LOGIN_PAGE_: 'Toon de website alleen aan geverifieerde gebruikers en stuur alle andere gebruikers door naar de inlogpagina.'
+USE_MARKDOWN: 'gebruik markdown'
+WRAP_THE_RESTRICTION_NOTICE_ABOVE_INTO_A_NOTICE_4_ELEMENT_(WHICH_CAN_BE_DESIGNED_AS_SPECIAL_BOX): 'Wikkel de beperkingskennisgeving hierboven in een bericht-4-element (dat kan worden ontworpen als een speciaal vak)'
+ACTIVATE_CACHE_FOR_TWIG_TEMPLATES: 'Cache activeren voor Twig-sjablonen'
+'ADD_MORE_URL_SCHEMES_FOR_EXTERNAL_LINKS_E_G__LIKE_DICT://_(COMMA_SEPARATED_LIST)': 'Voeg meer url-schema''s toe voor externe links, b.v. zoals dict:// (door komma''s gescheiden lijst)'
+CLEAR_CACHE: 'Cache wissen'
+DELETE_ALL_CACHE_FILES: 'Alle cachebestanden verwijderen'
+DISABLE_HEADERS: 'Headers uitschakelen'
+DISABLE_TYPEMILL_HEADERS_AND_SEND_YOUR_OWN: 'Schakel Typemill-headers uit en verzend uw eigen'
+IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT__THEN_THE_IMAGE_WILL_BE_CROPPED_: 'Als u een waarde voor de hoogte toevoegt, wordt de afbeelding bijgesneden.'
+STANDARD_HEIGHT_FOR_IMAGES: 'Standaard hoogte voor afbeeldingen'
+STANDARD_WIDTH_FOR_IMAGES: 'Standaardbreedte voor afbeeldingen'
+THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: 'De volgende opties zijn alleen voor ontwikkelaars en ervaren beheerders.'
+THIS_APPLIES_ONLY_FOR_FUTURE_IMAGES_IN_THE_CONTENT_AREA_: 'Dit geldt alleen voor toekomstige afbeeldingen in het inhoudsgebied.'
+TRUSTED_IPS_FOR_PROXY_(COMMA_SEPARATED): 'Vertrouwde IP''s voor proxy (gescheiden door komma''s)'
+USE_X_FORWARDED_HEADERS: 'Gebruik X-Forwarded Headers'

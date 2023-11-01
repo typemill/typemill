@@ -6,6 +6,7 @@ use Typemill\Models\Folder;
 use Typemill\Models\StorageWrapper;
 use Typemill\Models\SvgSanitizer;
 use Typemill\Static\Slug;
+use Typemill\Static\Translations;
 
 class Media
 { 
@@ -74,7 +75,7 @@ class Media
 		$pathinfo			= pathinfo($name);
 		if(!$pathinfo)
 		{
-			$this->errors[] = 'Could not read pathinfo.';
+			$this->errors[] = Translations::translate('Could not read pathinfo') . '.';
 
 			return false;
 		}
@@ -84,7 +85,7 @@ class Media
 
 		if(!$this->extension OR !$this->filename)
 		{
-			$this->errors[] = 'Extension or filename are missing.';
+			$this->errors[] = Translations::translate('Extension or filename are missing') . '.';
 
 			return false;
 		}
@@ -98,7 +99,7 @@ class Media
 
 		if(!isset($fileParts[0]) OR !isset($fileParts[1]))
 		{
-			$this->errors[] = 'Could not decode image or file, probably not a base64 encoding.';
+			$this->errors[] = Translations::translate('Could not decode image or file, probably not a base64 encoding') . '.';
 
 			return false;
 		}
@@ -200,7 +201,7 @@ class Media
 			$loaded = $svg->loadSVG($this->filedata);
 			if($loaded === false)
 			{
-				$this->errors[] = 'We could not load the svg file, it is probably corrupted.';
+				$this->errors[] = Translations::translate('We could not load the svg file, it is probably corrupted.');
 				return false;
 			}
 
@@ -208,7 +209,7 @@ class Media
 			$sanitized 	= $svg->saveSVG();
 			if($sanitized === false)
 			{
-				$this->errors[] = 'We could not create a sanitized version of the svg, it probably has invalid content.';
+				$this->errors[] = Translations::translate('We could not create a sanitized version of the svg, it probably has invalid content.');
 				return false;
 			}
 
@@ -317,7 +318,7 @@ class Media
 	{
 		if(!isset($this->allowedExtensions[$this->extension]))
 		{
-			$this->errors[] = 'Images with this extension are not allowed.';
+			$this->errors[] = Translations::translate('Images with this extension are not allowed.');
 
 			return false;
 		}
@@ -329,7 +330,7 @@ class Media
 			$loaded = $svg->loadSVG($this->filedata);
 			if($loaded === false)
 			{
-				$this->errors[] = 'We could not load the svg file, it is probably corrupted.';
+				$this->errors[] = Translations::translate('We could not load the svg file, it is probably corrupted.');
 				return false;
 			}
 
@@ -337,7 +338,7 @@ class Media
 			$sanitized 	= $svg->saveSVG();
 			if($sanitized === false)
 			{
-				$this->errors[] = 'We could not create a sanitized version of the svg, it probably has invalid content.';
+				$this->errors[] = Translations::translate('We could not create a sanitized version of the svg, it probably has invalid content.');
 				return false;
 			}
 
@@ -382,7 +383,7 @@ class Media
 		$result = file_put_contents($path, $this->filedata);
 		if($result === false)
 		{
-			$this->errors[] = 'could not store the image in the temporary folder';			
+			$this->errors[] = Translations::translate('could not store the image in the temporary folder');
 		}
 	}
 
@@ -478,7 +479,7 @@ class Media
 		{
 			$failedImage = $this->tmpFolder . $destinationfolder . '+' . $this->filename . '.' . $extension;
 
-			$this->errors[] = "Could not store the resized version $failedImage";
+			$this->errors[] = Translations::translate('Could not store the resized version') . ' ' . $failedImage;
 
 			return false;
 		}
