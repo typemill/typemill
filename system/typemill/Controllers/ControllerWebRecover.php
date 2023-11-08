@@ -232,7 +232,7 @@ class ControllerWebRecover extends Controller
 
 		$validation		= new Validation();
 		
-		if(!$validation->recoverPassword($params))
+		if($validation->recoverPassword($params) !== true)
 		{
 			if($securitylog)
 			{

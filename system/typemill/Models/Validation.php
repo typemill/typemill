@@ -1,5 +1,5 @@
 <?php
-
+ 
 namespace Typemill\Models;
 
 use Valitron\Validator;
@@ -273,6 +273,44 @@ class Validation
 		
 		return false;
 	}
+
+
+	/**
+	* validation for setup user (in backoffice)
+	* 
+	* @param array $params with form data.
+	* @return obj $v the validation object passed to a result method.
+	*/
+	
+	public function newSetupUser(array $params, array $userroles)
+	{
+		$v = new Validator($params);
+		$v->rule('required', ['username', 'email', 'password'])->message("required");
+		$v->rule('alphaNum', 'username')->message("invalid characters");
+		$v->rule('lengthBetween', 'password', 5, 40)->message("Length between 5 - 40");
+		$v->rule('lengthBetween', 'username', 3, 20)->message("Length between 3 - 20"); 
+		$v->rule('userAvailable', 'username')->message("User already exists");
+		$v->rule('noHTML', 'firstname')->message(" contains HTML");
+		$v->rule('lengthBetween', 'firstname', 2, 40);
+		$v->rule('noHTML', 'lastname')->message(" contains HTML");
+		$v->rule('lengthBetween', 'lastname', 2, 40);
+		$v->rule('email', 'email')->message("e-mail is invalid");
+		$v->rule('emailAvailable', 'email')->message("Email already taken");
+		$v->rule('in', 'userrole', $userroles);
+		
+		if($v->validate()) 
+		{
+			return true;
+		}
+
+		if(isset($_SESSION))
+		{
+			$_SESSION['errors'] = $v->errors();
+		}
+
+		return $v->errors();
+	}
+
 	
 	/**
 	* validation for new user (in backoffice)
@@ -341,7 +379,7 @@ class Validation
 			return true;
 		}
 
-		return false;
+		return $v->errors();
 	}
 
 	public function emailsearch(array $params)
@@ -357,7 +395,7 @@ class Validation
 			return true;
 		}
 
-		return false;
+		return $v->errors();
 	}
 
 	public function newLicense(array $params)

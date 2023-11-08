@@ -13,7 +13,7 @@
 			
 				<form method="POST" action="{{ url_for("setup.create") }}" autocomplete="off">
 				
-					<fieldset class="">
+					<fieldset>
 
 						<div class="my-2 {{ errors.username ? ' errors' : '' }}">
 							<label for="username">{{ translate('Username') }} <abbr title="{{ translate('required') }}">*</abbr></label>
@@ -23,8 +23,8 @@
 								value="{{ old.username }}" 
 								class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
 							required>
-							{% if errors.signup_username %}
-								<span class="">{{ errors.username|first }}</span>
+							{% if errors.username %}
+								<span class="text-rose-300">{{ errors.username|first }}</span>
 							{% endif %}
 						</div>
 
@@ -36,8 +36,8 @@
 								value="{{ old.email }}" 
 								class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
 							required>
-							{% if errors.signup_email %}
-								<span class="">{{ errors.email|first }}</span>
+							{% if errors.email %}
+								<span class="text-rose-300">{{ errors.email|first }}</span>
 							{% endif %}
 						</div>
 						
@@ -50,7 +50,7 @@
 								class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
 							required>
 							{% if errors.password %}
-								<span class="error">{{ errors.password|first }}</span>
+								<span class="text-rose-300">{{ errors.password|first }}</span>
 							{% endif %}
 						</div>
 

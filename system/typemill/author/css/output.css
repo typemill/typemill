@@ -1626,6 +1626,10 @@ video {
   padding-left: 3rem;
 }
 
+.pl-24 {
+  padding-left: 6rem;
+}
+
 .pr-1 {
   padding-right: 0.25rem;
 }
@@ -1656,10 +1660,6 @@ video {
 
 .pt-3 {
   padding-top: 0.75rem;
-}
-
-.pl-24 {
-  padding-left: 6rem;
 }
 
 .text-left {
@@ -1767,6 +1767,11 @@ video {
 .text-stone-50 {
   --tw-text-opacity: 1;
   color: rgb(250 250 249 / var(--tw-text-opacity));
+}
+
+.text-rose-300 {
+  --tw-text-opacity: 1;
+  color: rgb(253 164 175 / var(--tw-text-opacity));
 }
 
 .text-stone-400 {

@@ -9,6 +9,7 @@ use Typemill\Models\StorageWrapper;
 use Typemill\Models\Validation;
 use Typemill\Models\User;
 use Typemill\Models\Settings;
+use Typemill\Static\Translations;
 
 class ControllerWebSetup extends Controller
 {
@@ -65,39 +66,49 @@ class ControllerWebSetup extends Controller
 		$userroles 			= $this->c->get('acl')->getRoles();
 
 		# validate user
-		if($validate->newUser($params, $userroles))
+		if($validate->newSetupUser($params, $userroles) !== true)
 		{
-			$userdata = [
-					'username' 	=> $params['username'], 
-					'email' 	=> $params['email'], 
-					'userrole' 	=> $params['userrole'], 
-					'password' 	=> $params['password']
-			];
+			$this->c->get('flash')->addMessage('error', Translations::translate('Please correct the errors in the form.'));
 
-			$user = new User();
-			
-			# create initial user
-			$username = $user->createUser($userdata);
-						
-			if($username)
-			{
-				usleep(30000);
-
-				$user->setUser($username);
-
-				$user->login();
-
-				# create initial settings file
-				$settingsModel = new Settings();
-				$settingsModel->createSettings();
-
-				$urlinfo = $this->c->get('urlinfo');
-				$route = $urlinfo['baseurl'] . '/tm/system';
-
-				usleep(30000);
-				
-				return $response->withHeader('Location', $route)->withStatus(302);
-			}
+			return $response->withHeader('Location', $this->routeParser->urlFor('setup.show'))->withStatus(302);
 		}
+
+		$userdata = [
+				'username' 	=> $params['username'], 
+				'email' 	=> $params['email'], 
+				'userrole' 	=> $params['userrole'], 
+				'password' 	=> $params['password']
+		];
+
+		$user = new User();
+		
+		# create initial user
+		$username = $user->createUser($userdata);
+					
+		if($username)
+		{
+			usleep(30000);
+
+			$user->setUser($username);
+
+			$user->login();
+
+			# create initial settings file
+			$settingsModel = new Settings();
+			$settingsModel->createSettings();
+
+			$urlinfo = $this->c->get('urlinfo');
+			$route = $urlinfo['baseurl'] . '/tm/system';
+
+			usleep(30000);
+
+			$this->c->get('flash')->addMessage('error', Translations::translate('Account created. Please login with your username and password now.'));
+			
+			return $response->withHeader('Location', $route)->withStatus(302);
+		}
+
+		$this->c->get('flash')->addMessage('error', Translations::translate('We could not create the user. Please check if the settings folde is writable.'));
+
+		return $response->withHeader('Location', $this->routeParser->urlFor('setup.show'))->withStatus(302);
 	}
 }

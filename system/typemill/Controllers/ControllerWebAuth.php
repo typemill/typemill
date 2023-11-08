@@ -34,7 +34,7 @@ class ControllerWebAuth extends Controller
 		$validation		= new Validation();
 #		$settings 		= $this->c->get('settings');
 		
-		if($validation->signin($input))
+		if($validation->signin($input) === true)
 		{
 			$user = new User();
 

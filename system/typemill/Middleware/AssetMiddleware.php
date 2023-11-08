@@ -3,9 +3,10 @@
 namespace Typemill\Middleware;
 
 use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
-use Slim\Psr7\Response;
+#use Slim\Psr7\Response;
 
 class AssetMiddleware implements MiddlewareInterface
 {
@@ -34,8 +35,8 @@ class AssetMiddleware implements MiddlewareInterface
 #		$this->container['view']['base_url']	 	= $uri->getBaseUrl();
 #		$this->container['view']['current_url'] 	= $uri->getPath();
 
-		$response = $handler->handle($request);
-	
-		return $response;
+        $response = $handler->handle($request);
+    
+        return $response;
     }
 }

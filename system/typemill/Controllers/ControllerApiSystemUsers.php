@@ -23,7 +23,7 @@ class ControllerApiSystemUsers extends Controller
 		{
 			foreach($usernames as $username)
 			{
-				if($validate->username(['username' => $username]))
+				if($validate->username(['username' => $username]) === true)
 				{
 					$existinguser = $user->setUser($username);
 					if($existinguser)
@@ -51,7 +51,7 @@ class ControllerApiSystemUsers extends Controller
 		$validate		= new Validation();
 		$valresult 		= $validate->emailsearch(['email' => $email]);
 
-		if($valresult)
+		if($valresult === true)
 		{
 			$usernames 		= $user->findUsersByEmail($email);
 
