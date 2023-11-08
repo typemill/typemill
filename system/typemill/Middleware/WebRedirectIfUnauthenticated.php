@@ -11,6 +11,8 @@ use Typemill\Models\User;
 
 class WebRedirectIfUnauthenticated implements MiddlewareInterface
 {
+	private $router;
+	
 	public function __construct(RouteParser $router)
 	{
 		$this->router 	= $router;

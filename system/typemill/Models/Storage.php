@@ -41,7 +41,7 @@ class Storage
 
 	protected $isReadable 			= [];
 
-	protected $isWrtiable 			= [];
+	protected $isWritable 			= [];
  
 	public function __construct()
 	{

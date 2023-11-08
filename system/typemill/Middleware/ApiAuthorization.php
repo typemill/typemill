@@ -11,6 +11,13 @@ use Typemill\Static\Translations;
 
 class ApiAuthorization implements MiddlewareInterface
 {
+
+	private $acl;
+
+	private $resource;
+
+	private $action;
+	
 	public function __construct($acl, string $resource = NULL, string $action = NULL)
 	{
 		$this->acl 			= $acl;

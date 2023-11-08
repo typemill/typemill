@@ -10,6 +10,15 @@ use Slim\Psr7\Response;
 
 class WebAuthorization implements MiddlewareInterface
 {
+
+	private $router;
+
+	private $acl;
+
+	private $resource;
+
+	private $action;
+	
 	public function __construct(RouteParser $router, $acl, string $resource = NULL, string $action = NULL)
 	{
 		$this->router 		= $router;

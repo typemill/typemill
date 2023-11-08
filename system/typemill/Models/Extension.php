@@ -14,31 +14,53 @@ class Extension
 		$this->storage 	= new StorageWrapper('\Typemill\Models\Storage');
 	}
 
-	public function getThemeDetails()
+	public function getThemeDetails($activeThemeName = NULL)
 	{
 		$themes = $this->getThemes();
 
 		$themeDetails = [];
 		foreach($themes as $themeName)
 		{
-			$themeDetails[$themeName] = $this->getThemeDefinition($themeName);
+			$details = $this->getThemeDefinition($themeName);
+			if($details && isset($details['name']))
+			{
+				# add to first position if active
+				if($activeThemeName && ($activeThemeName == $themeName))
+				{
+					$themeDetails = array_merge(array($themeName => $details), $themeDetails);
+				}
+				else
+				{
+					$themeDetails[$themeName] = $details;
+				}
+			}
 		}
 
 		return $themeDetails;
 	}
 
-	public function getThemeSettings($themes)
+	public function getThemeSettings($themesInSettings)
 	{
+		# WHAT ABOUT DEFAULT-SETTINGS FROM THEME YAMLs?
+
+		$themes = $this->getThemes();
+
 		$themeSettings = [];
-		foreach($themes as $themename => $themeinputs)
+		foreach($themes as $themename)
 		{
-			if(!is_array($themeinputs)){ $themeinputs = []; }
+			$themeinputs = [];
+			if(isset($themesInSettings[$themename]))
+			{
+				$themeinputs = $themesInSettings[$themename];
+			}
+
 			$themeSettings[$themename] = $themeinputs;
 			$themeSettings[$themename]['customcss'] = $this->storage->getFile('cacheFolder', '', $themename . '-custom.css');
 		}
 
 		return $themeSettings;
 	}
+
 
 	public function getThemes()
 	{
@@ -71,34 +93,37 @@ class Extension
 			'description' 	=> Translations::translate('You can overwrite the theme-css with your own css here.')
 		];
 
-# add image preview file 
 		$themeSettings['preview'] = '/themes/' . $themeName . '/' . $themeName . '.png';
 
 		return $themeSettings;
 	}
 
-	public function getPluginDetails()
+	public function getPluginDetails($userSettings = NULL)
 	{
 		$plugins = $this->getPlugins();
 
 		$pluginDetails = [];
 		foreach($plugins as $pluginName)
 		{
-			$pluginDetails[$pluginName] = $this->getPluginDefinition($pluginName);
+			$details = $this->getPluginDefinition($pluginName);
+			if($details && $details['name'])
+			{
+				# add active plugins first
+				if(
+					$userSettings
+					&& isset($userSettings[$pluginName]) 
+					&& ($userSettings[$pluginName]['active'] == true) 
+				)
+				{
+					$pluginDetails = array_merge(array($pluginName => $details), $pluginDetails);
+				}
+				else
+				{
+					$pluginDetails[$pluginName] = $details;
+				}
+			}
 		}
-
 		return $pluginDetails;
-	}
-
-	public function getPluginSettings($plugins)
-	{
-		$pluginSettings 	= [];
-		foreach($plugins as $pluginname => $plugininputs)
-		{
-			$pluginSettings[$pluginname] = $plugininputs;
-		}
-
-		return $pluginSettings;
 	}
 
 	public function getPlugins()

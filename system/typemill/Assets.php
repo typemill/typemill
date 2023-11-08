@@ -10,7 +10,29 @@ use Typemill\Models\StorageWrapper;
 class Assets
 {
 	public $baseUrl;
-	
+
+	public $JS;
+
+	public $CSS;
+
+	public $inlineJS;
+
+	public $inlineCSS;
+
+	public $editorJS;
+
+	public $editorCSS;
+
+	public $editorInlineJS;
+
+	public $svgSymbols;
+
+	public $meta;
+
+	public $imageUrl;
+
+	public $imageFolder;
+
 	public function __construct($baseUrl)
 	{
 		$this->baseUrl			= $baseUrl;
@@ -69,7 +91,7 @@ class Assets
 
 	public function activateVue()
 	{
-		$vueUrl = '<script src="' . $this->baseUrl . '/system/author/js/vue.min.js"></script>';
+		$vueUrl = '<script src="' . $this->baseUrl . '/system/author/js/vue.js"></script>';
 		if(!in_array($vueUrl, $this->JS))
 		{
 			$this->JS[] = $vueUrl;
@@ -90,6 +112,7 @@ class Assets
 	
 	public function activateTachyons()
 	{
+		die('Hi from asset class, Tachyons not available in Typemill v2');		
 		$tachyonsUrl = '<link rel="stylesheet" href="' . $this->baseUrl . '/system/author/css/tachyons.min.css" />';
 		if(!in_array($tachyonsUrl, $this->CSS))
 		{

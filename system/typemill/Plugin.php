@@ -16,6 +16,8 @@ abstract class Plugin implements EventSubscriberInterface
 
 	protected $route;
 
+	protected $urlinfo;
+
 	protected $adminroute = false;
 
 	protected $editorroute = false;
@@ -26,7 +28,11 @@ abstract class Plugin implements EventSubscriberInterface
 		$this->container 	= $container;
 		$this->urlinfo 		= $this->container->get('urlinfo');
 		$this->route  		= $this->urlinfo['route'];
-		$this->route 		= ltrim($this->route, '/');
+
+		if($this->route != '/')
+		{
+			$this->route 		= ltrim($this->route, '/');
+		}
 
 		if(str_starts_with($this->route, 'tm/'))
 		{

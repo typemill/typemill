@@ -9,6 +9,8 @@ class Content
 {
 	private $storage;
 
+	private $parsedown;
+
 	public function __construct($baseurl = NULL, $settings = NULL, $dispatcher = NULL)
 	{
 		$this->storage 				= new StorageWrapper('\Typemill\Models\Storage');

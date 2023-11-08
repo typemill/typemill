@@ -241,7 +241,7 @@ $container->set('translations', $translations);
 $container->set('dispatcher', function() use ($dispatcher){ return $dispatcher; });
 
 # asset function for plugins
-$assets = new \Typemill\Assets($urlinfo['basepath']);
+$assets = new \Typemill\Assets($urlinfo['baseurl']);
 $container->set('assets', function() use ($assets){ return $assets; });
 
 /****************************
@@ -285,6 +285,16 @@ $container->set('view', function() use ($settings, $urlinfo, $translations) {
 /****************************
 * MIDDLEWARE				*
 ****************************/
+
+foreach($middleware as $pluginMiddleware)
+{
+	$middlewareClass 	= $pluginMiddleware['classname'];
+	$middlewareParams	= $pluginMiddleware['params'];
+	if(class_exists($middlewareClass))
+	{
+		$app->add(new $middlewareClass($middlewareParams));
+	}
+}
 
 $app->add(new AssetMiddleware($assets, $container->get('view')));
 

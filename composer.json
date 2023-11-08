@@ -9,7 +9,10 @@
         "vendor-dir": "system/vendor",
         "allow-plugins": {
             "composer/installers": true
-        }
+        },
+        "platform": {
+            "php": "8.0.0"
+        }    
     },
     "require": {
         "php": "^8.0",
@@ -21,8 +24,8 @@
         "slim/flash": "^0.4.0",
         "slim/csrf": "^1.2",
         "vlucas/valitron": "^1.4",
-        "symfony/yaml": "^6.0",
-        "symfony/event-dispatcher": "^6.0",
+        "symfony/yaml": "^5.4",
+        "symfony/event-dispatcher": "^5.4",
         "erusev/parsedown": "^1.8.0-beta-4",
         "erusev/parsedown-extra": "dev-master",
         "jbroadway/urlify": "1.1.3",

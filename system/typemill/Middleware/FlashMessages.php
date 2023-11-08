@@ -7,7 +7,9 @@ use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Flash\Messages;
 
 class FlashMessages
-{	
+{
+	private $container;
+
 	public function __construct($container)
 	{
 		$this->container = $container;

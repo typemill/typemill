@@ -72,7 +72,7 @@ class ControllerWebSystem extends Controller
 								);
 
 		$extension 			= new Extension();
-		$themeDefinitions 	= $extension->getThemeDetails();
+		$themeDefinitions 	= $extension->getThemeDetails($this->settings['theme']);
 
 		# add userroles and other datasets
 		foreach($themeDefinitions as $name => $definitions)
@@ -126,7 +126,7 @@ class ControllerWebSystem extends Controller
 								);
 
 		$extension 			= new Extension();
-		$pluginDefinitions 	= $extension->getPluginDetails();
+		$pluginDefinitions 	= $extension->getPluginDetails($this->settings['plugins']);
 
 		# add userroles and other datasets
 		foreach($pluginDefinitions as $name => $definitions)
@@ -137,7 +137,8 @@ class ControllerWebSystem extends Controller
 			}
 		}
 
-		$pluginSettings 	= $extension->getPluginSettings($this->settings['plugins']);
+#		$pluginSettings 	= $extension->getPluginSettings($this->settings['plugins']);
+		$pluginSettings 	= $this->settings['plugins'];
 
 		$license = [];
 		if(is_array($this->settings['license']))
@@ -150,7 +151,7 @@ class ControllerWebSystem extends Controller
 			'darkmode'			=> $request->getAttribute('c_darkmode'),
 			'mainnavi'			=> $mainNavigation,
 			'jsdata' 			=> [
-										'systemnavi'		=> $systemNavigation,
+										'systemnavi'	=> $systemNavigation,
 										'settings' 		=> $pluginSettings,
 										'definitions'	=> $pluginDefinitions,
 										'license'		=> $license,

@@ -7,6 +7,17 @@ use Typemill\Events\OnShortcodeFound;
 
 class ParsedownExtension extends \ParsedownExtra
 {
+
+    private $settings;
+
+    private $dispatcher;
+
+    private $showAnchor;
+
+    private $visualMode;
+
+    private $baseUrl;
+
     function __construct($baseUrl = '', $settings = NULL, $dispatcher = NULL)
     {
         parent::__construct();

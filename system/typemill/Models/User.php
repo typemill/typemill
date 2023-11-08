@@ -9,6 +9,8 @@ class User
 {
 	private $userDir;
 
+	private $storage;
+	
 	private $yaml;
 
 	private $user = false;

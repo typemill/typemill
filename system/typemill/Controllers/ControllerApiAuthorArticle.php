@@ -99,12 +99,16 @@ class ControllerApiAuthorArticle extends Controller
 			'item' 		=> $item,
 			'metadata'	=> $metadata
 		];
-		$this->c->get('dispatcher')->dispatch(new OnPagePublished($data), 'onPagePublished');
+
+		$message = $this->c->get('dispatcher')->dispatch(new OnPagePublished($data), 'onPagePublished')->getData();
+
+		# validate message
 
 		$response->getBody()->write(json_encode([
 			'navigation'	=> $draftNavigation,
 			'item'			=> $item,
-			'metadata'		=> $metadata
+			'metadata'		=> $metadata,
+			'message'		=> $message
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json');

@@ -9,7 +9,11 @@ use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Slim\Psr7\Response;
 
 class WebRedirectIfAuthenticated implements MiddlewareInterface
-{			
+{	
+	private $router;
+
+	private $settings;
+	
 	public function __construct(RouteParser $router, $settings)
 	{
 		$this->router 	= $router;

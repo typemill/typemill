@@ -30,19 +30,11 @@ class ControllerApiSystemExtensions extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
-		if(!isset($this->settings[$params['type']][$params['name']]))
-		{
-			$response->getBody()->write(json_encode([
-				'message' 	=> Translations::translate('The plugin or themes was not found.'),
-			]));
-
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
-		}
-
 		if($params['checked'] == true)
 		{
 			$extension			= new Extension();
 
+			$definitions = false;
 			if($params['type'] == 'plugins')
 			{
 				$definitions = $extension->getPluginDefinition($params['name']);
@@ -50,6 +42,14 @@ class ControllerApiSystemExtensions extends Controller
 			elseif($params['type'] == 'themes')
 			{
 				$definitions = $extension->getThemeDefinition($params['name']);
+			}
+			if(!$definitions)
+			{
+				$response->getBody()->write(json_encode([
+					'message' 	=> Translations::translate('The plugin or themes was not found.'),
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 			}
 
 			if(isset($definitions['license']) && in_array($definitions['license'], ['MAKER', 'BUSINESS']))
