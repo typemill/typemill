@@ -160,7 +160,7 @@ class License
 
 		$authstring = $this->getPublicKeyPem();
 		$authstring = hash('sha256', substr($authstring, 0, 50));
-
+		
 		$options = array (
     		'http' => array (
         		'method' 	=> 'POST',

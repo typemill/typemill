@@ -6,6 +6,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Typemill\Models\Validation;
 use Typemill\Static\Translations;
+use Typemill\Static\License;
 
 class ControllerApiSystemVersions extends Controller
 {
@@ -28,6 +29,7 @@ class ControllerApiSystemVersions extends Controller
 		$type 				= $params['type'];
 		$data 				= $params['data'];
 		$url 				= 'https://typemill.net/api/v1/checkversion';
+		$url2 				= 'http://localhost/typemillPlugins/api/v1/checkversion';
 
 		if($type == 'plugins')
 		{
@@ -48,19 +50,33 @@ class ControllerApiSystemVersions extends Controller
 			}
 			
 			$url = 'https://themes.typemill.net/api/v1/getthemes?themes=' . urlencode($themeList);
+		}	    
+
+		$authstring = License::getPublicKeyPem();
+		if(!$authstring)
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> Translations::translate('Please check if there is a readable file public_key.pem in your settings folder.')
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
+		$authstring = hash('sha256', substr($authstring, 0, 50));
 
 		$opts = array(
-		  'http'=>array(
-		    'method'=>"GET",
+		  'http' => array(
+		    'method'		=>"GET",
 			'ignore_errors' => true,
-		    'timeout' => 5,
-		    'header'=>"Referer: http://typemill-version2.net"
+		    'timeout' 		=> 5,
+    		'header'		=>
+								"Accept: application/json\r\n" .
+								"Authorization: $authstring\r\n" .
+								"Connection: close\r\n",
 		  )
 		);
 
 		$context 			= stream_context_create($opts);
-		$versions 			= file_get_contents($url, false, $context);
+		$versions 			= file_get_contents($url2, false, $context);
 		$versions 			= json_decode($versions, true);
 		$updateVersions 	= [];
 
