@@ -3,7 +3,7 @@
 
 {% block content %}
 	
-	<h1 class="text-3xl font-bold mb-4">{{ translate('System') }} </h1>
+	<h1 class="text-3xl font-bold mb-4">{{ translate('System') }} <span class="text-xs font-normal text-stone-700">version {{settings.version}}</span></h1>
 	
 	<div id="system" v-cloak></div>
 

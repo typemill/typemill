@@ -160,7 +160,7 @@ class License
 
 		$authstring = $this->getPublicKeyPem();
 		$authstring = hash('sha256', substr($authstring, 0, 50));
-		
+
 		$options = array (
     		'http' => array (
         		'method' 	=> 'POST',
@@ -248,6 +248,7 @@ class License
 		return hash('sha256', trim($mail) . 'TYla5xa8JUur');
 	}
 
+	# we have it in static license, too so use it from static and delete this duplicate.
 	private function getPublicKeyPem()
 	{
 		$pkeyfile = getcwd() . DIRECTORY_SEPARATOR . 'settings' . DIRECTORY_SEPARATOR . "public_key.pem";

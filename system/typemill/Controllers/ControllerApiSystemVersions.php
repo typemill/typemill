@@ -29,7 +29,7 @@ class ControllerApiSystemVersions extends Controller
 		$type 				= $params['type'];
 		$data 				= $params['data'];
 		$url 				= 'https://typemill.net/api/v1/checkversion';
-		$url2 				= 'http://localhost/typemillPlugins/api/v1/checkversion';
+#		$url2 				= 'http://localhost/typemillPlugins/api/v1/checkversion';
 
 		if($type == 'plugins')
 		{
@@ -76,7 +76,7 @@ class ControllerApiSystemVersions extends Controller
 		);
 
 		$context 			= stream_context_create($opts);
-		$versions 			= file_get_contents($url2, false, $context);
+		$versions 			= file_get_contents($url, false, $context);
 		$versions 			= json_decode($versions, true);
 		$updateVersions 	= [];
 

@@ -19,6 +19,10 @@ const app = Vue.createApp({
 									<h2 class="text-xl font-bold mb-3">{{plugin.name}}</h2>
 									<div class="text-xs my-3">{{ $filters.translate('author') }}: <a :href="plugin.homepage" class="hover:underline text-teal-500">{{plugin.author}}</a> | {{ $filters.translate('version') }}: {{plugin.version}}</div>
 									<p>{{plugin.description}}</p>
+									<ul v-if="plugin.dependencies" class="flex text-xs my-3">
+										<li class="py-1 mr-1">Dependencies: </li>
+										<li v-for="dependency in plugin.dependencies" class="py-1 px-2 mr-1 text-white bg-stone-700 dark:bg-stone-600">{{ dependency }}</li> 
+									</ul>
 								</div>
 								<div class="w-full mt-6 flex justify-between">
 									<button v-if="hasSettings(pluginname)" @click="setCurrent(pluginname)" class="flex-1 flex items-center justify-center space-x-4 p-3 bg-stone-700 dark:bg-stone-600 hover:bg-stone-900 hover:dark:bg-stone-900 text-white cursor-pointer transition duration-100">
