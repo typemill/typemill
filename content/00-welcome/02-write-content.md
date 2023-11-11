@@ -1,6 +1,13 @@
 # Write Content
 
-Typemill provides easy and intuitive authoring tools and we work hard to create a good author experience. With the interactive navigation you can create pages and structure your websites. The visual markdown editor will help you to create content in a wysiwyg mode. The publish bar gives you full control over the status of each page. Watch the following video tutorial to learn all the details.
+Typemill provides easy and intuitive authoring tools and we work hard to create a good author experience.
+
+* With the **interactive navigation** you can create pages and structure your websites.
+* The **visual markdown editor** will help you to create content in a wysiwyg mode. 
+* With the **raw markdown editor** you can write markdown syntax in textarea.
+* The **publish bar** gives you full control over the status of each page.
+
+Watch the following video tutorial to learn all the details.
 
 ![youtube-video](media/live/youtube-6i2-uv88gke.jpeg "click to load video"){#6I2-uV88GkE .youtube}
 

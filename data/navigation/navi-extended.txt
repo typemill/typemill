@@ -18,7 +18,7 @@
     keyPath: '0.1'
 /welcome/write-content:
     navtitle: 'write content'
-    hide: true
+    hide: false
     noindex: false
     path: /00-welcome/02-write-content.md
     keyPath: '0.2'
@@ -34,12 +34,6 @@
     noindex: false
     path: /00-welcome/04-markdown-test.md
     keyPath: '0.4'
-/welcome/todos:
-    navtitle: 'To Dos'
-    hide: false
-    noindex: false
-    path: /00-welcome/05-todos.txtmd
-    keyPath: '0.5'
 /cyanine-theme:
     navtitle: 'cyanine theme'
     hide: false
