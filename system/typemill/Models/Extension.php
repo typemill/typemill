@@ -128,18 +128,14 @@ class Extension
 
 	public function getPlugins()
 	{
-		$pluginFolder 	= $this->storage->getFolderPath('pluginsFolder');
-		$pluginFolderC 	= scandir($pluginFolder);
-		$plugins 		= [];
-		foreach ($pluginFolderC as $key => $plugin)
+
+		$pluginlist = \Typemill\Static\Plugins::loadPlugins();
+
+		$plugins = [];
+
+		foreach($pluginlist as $plugin)
 		{
-			if (!in_array($plugin, [".",".."]))
-			{
-				if (is_dir($pluginFolder . DIRECTORY_SEPARATOR . $plugin))
-				{
-					$plugins[] = $plugin;
-				}
-			}
+			$plugins[] = $plugin['name'];
 		}
 
 		return $plugins;

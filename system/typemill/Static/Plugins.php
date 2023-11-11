@@ -9,7 +9,7 @@ class Plugins
 		$rootpath 			= getcwd();
 		$pluginFolder 		= self::scanPluginFolder($rootpath);
 		$classNames 		= [];
-
+		
 		# iterate over plugin folders
 		foreach($pluginFolder as $plugin)
 		{

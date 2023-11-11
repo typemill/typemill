@@ -91,7 +91,7 @@ class Assets
 
 	public function activateVue()
 	{
-		$vueUrl = '<script src="' . $this->baseUrl . '/system/author/js/vue.js"></script>';
+		$vueUrl = '<script src="' . $this->baseUrl . '/system/typemill/author/js/vue.js"></script>';
 		if(!in_array($vueUrl, $this->JS))
 		{
 			$this->JS[] = $vueUrl;
@@ -100,7 +100,7 @@ class Assets
 
 	public function activateAxios()
 	{
-		$axiosUrl = '<script src="' . $this->baseUrl . '/system/author/js/axios.min.js"></script>';
+		$axiosUrl = '<script src="' . $this->baseUrl . '/system/typemill/author/js/axios.min.js"></script>';
 		if(!in_array($axiosUrl, $this->JS))
 		{
 			$this->JS[] = $axiosUrl;

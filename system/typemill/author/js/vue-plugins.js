@@ -139,6 +139,11 @@ const app = Vue.createApp({
 	methods: {
 		getActiveClass(pluginname)
 		{
+			if(typeof this.formData[pluginname] == "undefined")
+			{
+				console.info(pluginname);
+				return;
+			}
 			if(this.formData[pluginname]['active'])
 			{
 				return 'bg-stone-200 dark:bg-stone-900';

@@ -58,7 +58,6 @@ $settings = $settingsModel->loadSettings();
 /****************************
 * HANDLE DISPLAY ERRORS 	  *
 ****************************/
-
 if(isset($settings['displayErrorDetails']) && $settings['displayErrorDetails'])
 {
 	ini_set('display_errors', 1);
