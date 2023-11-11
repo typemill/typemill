@@ -36,7 +36,7 @@ class User
 		
 		# delete password from public userdata
 		unset($this->user['password']);
-
+		
 		return $this;
 	}
 
