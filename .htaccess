@@ -1,4 +1,4 @@
-<IfModule mod_rewrite.c>
+<IfModule mod_rewrite.c> 
 
 RewriteEngine On
 
@@ -64,9 +64,6 @@ RewriteRule (^|/)\.(?!well-known\/) index.php [L]
 RewriteRule ^(system\/typemill\/author\/css\/) - [L]
 RewriteRule ^(system\/typemill\/author\/img\/) - [L]
 RewriteRule ^(system\/typemill\/author\/js\/) - [L]
-RewriteRule ^(system\/author\/css\/) - [L]
-RewriteRule ^(system\/author\/img\/) - [L]
-RewriteRule ^(system\/author\/js\/) - [L]
 
 # redirect all other direct requests to the following physical folders to the index.php so pages with same name work
 RewriteRule ^(system|content|data|settings|(media\/files\/)) index.php [QSA,L]
