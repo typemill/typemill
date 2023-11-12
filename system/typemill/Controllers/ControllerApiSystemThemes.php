@@ -35,6 +35,9 @@ class ControllerApiSystemThemes extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
+		# delete themecss
+		unset($validatedOutput['customcss']);
+				
 		$themedata['themes'][$themename] = $validatedOutput;
 
 		# store updated settings here

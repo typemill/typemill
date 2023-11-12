@@ -55,7 +55,8 @@ class Extension
 			}
 
 			$themeSettings[$themename] = $themeinputs;
-			$themeSettings[$themename]['customcss'] = $this->storage->getFile('cacheFolder', '', $themename . '-custom.css');
+			$customcss = $this->storage->getFile('cacheFolder', '', $themename . '-custom.css');
+			$themeSettings[$themename]['customcss'] = $customcss ? $customcss : '';
 		}
 
 		return $themeSettings;

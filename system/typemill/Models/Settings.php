@@ -158,9 +158,19 @@ class Settings
 
 	public function updateThemeCss(string $name, string $css)
 	{
-		if($this->storage->writeFile('cacheFolder', '', $name . '-custom.css', $css))
+		if($css == '')
 		{
-			return true;
+			if($this->storage->deleteFile('cacheFolder', '', $name . '-custom.css', $css))
+			{
+				return true;
+			}
+		}
+		else
+		{
+			if($this->storage->writeFile('cacheFolder', '', $name . '-custom.css', $css))
+			{
+				return true;
+			}
 		}
 
 		return false;

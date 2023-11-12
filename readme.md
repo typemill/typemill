@@ -1,38 +1,50 @@
-# Typemill
+# Typemill: A Flat File CMS for Publishers
 
-Typemill is a simple, fast, and flexible flat file cms with a focus on writing and publishing websites and ebooks with Markdown.
+Typemill is a lightweight, flat-file CMS designed for simple, fast, and flexible website and eBook creation using Markdown. 
 
-![TYPEMILL Screenshot](/typemill.png)
+![Typemill Screenshot](/typemill.png)
 
-With a flat file approach, Typemill does not require a database. With a modern tech-stack (vue.js, tailwind-css, and slim-php) and a lightweight approach (about 2mb gzip), it provides a high performance for small websites.
+With a focus on content and text, it perfectly fits use cases such as documentations, manuals, and other text-heavy websites.
 
-Typemill is often used for documentations, manuals, and other websites with a focus on content and text.
+## Key Features (Selection)
+
+* No database required (flat-file approach).
+* High performance, with a modern tech stack including Vue.js, Tailwind CSS, and Slim PHP.
+* Lightweight, with a gzip size of about 2MB.
+* Markdown editing with a visual block editor or a raw markdown editor.
+* Easy extendible with plugins, themes, and page-tabs.
+* Generation of ebooks (pdf, epub) with an ebook-plugin.
+* Flexible form-generation.
+* API-architecture and headless mode.
 
 ## Resources
 
-* Download and documentation: https:typemill.net
-* Plugins: https://plugins.typemill.net
-* Themes: https://themes.typemill.net
-* Book-layouts: https://books.typemill.net
-* Issues and bug-reports: https://github.com/typemill/typemill/issues
-* Newsletter: https://typemill.net/news
+* Download and Documentation: [Typemill Website](https://typemill.net)
+* Plugins: [Typemill Plugins](https://plugins.typemill.net)
+* Themes: [Typemill Themes](https://themes.typemill.net)
+* Book Layouts: [Typemill Book Layouts](https://books.typemill.net)
+* Issues and Bug Reports: [GitHub Issues](https://github.com/typemill/typemill/issues)
+* Discussions: [GitHub Discussions](https://github.com/typemill/typemill/discussions)
+* Newsletter: [Typemill Newsletter](https://typemill.net/news)
 
 ## Requirements
 
-* Webserver (apache, not tested on other servers)
-* PHP 8.0 or higher
-* Some standard PHP-libraries like mod_rewrite, gd-image, mbstring, fileinfo, session, iconv, and more.
+To run Typemill, you need the following:
+
+* Web server (Apache, not tested on other servers).
+* PHP 8.0 or higher.
+* Standard PHP libraries like mod_rewrite, gd-image, mbstring, fileinfo, session, iconv, and more.
 
 ## Installation
 
-### With zip-file and ftp
+### Using ZIP File and FTP
 
-* Download and upack the latest version of typemill as zip-file from https://typemill.net.
-* Upload all files to your server.
-* Visit your new website www.your-typemill-website.com/tm/setup and create and admin user.
-* login and start publishing.
+1. Download and unpack the latest version of Typemill as a zip file from [Typemill Website](https://typemill.net).
+2. Upload all files to your server.
+3. Visit your new website at `www.your-typemill-website.com/tm/setup` and create an admin user.
+4. Log in and start publishing.
 
-### With github and composer 
+### Using GitHub and Composer 
 
 Clone this repository:
 
@@ -45,30 +57,30 @@ Then update composer to load the libraries:
 composer update
 ```
 
-### With docker
+### Using Docker
 
-Will follow soon ...
+(Details to be provided soon)
 
-## Folder permissions
+## Folder Permissions
 
-make sure that the following folders are writable:
+Ensure that the following folders are writable:
 
-* /cache
-* /content
-* /data
-* /media
-* /settings
+* `/cache`
+* `/content`
+* `/data`
+* `/media`
+* `/settings`
 
-## Tech-stack
+## Tech Stack
 
-* Slim framework version 4
-* Vue.js version 3
-* Tailwind css
+* PHP (Slim Framework Version 4)
+* JavaScript (Vue.js Version 3)
+* CSS (Tailwind)
 
-## Security issues
+## Security Issues
 
-If you discover a possible security issue related to Typemill, please send an email to security@typemill.net and we'll address it as soon as possible.
+If you discover a potential security issue related to Typemill, please report it via email to security@typemill.net, and we'll address it promptly.
 
 ## License
 
-Typemill is an open source project published under the MIT-license. Plugins, themes, and services are published under MIT and commercial licenses.
+Typemill is an open-source project published under the MIT License. Plugins, themes, and services are published under MIT and commercial licenses.
