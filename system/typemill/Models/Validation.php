@@ -461,7 +461,7 @@ class Validation
 	{
 		$v = new Validator($params);
 				
-		$v->rule('required', ['item_id', 'parent_id_from', 'parent_id_to']);
+		$v->rule('required', ['item_id']);
 		$v->rule('regex', 'item_id', '/^[0-9.]+$/i');
 		$v->rule('regex', 'parent_id_from', '/^[a-zA-Z0-9.]+$/i');
 		$v->rule('regex', 'parent_id_to', '/^[a-zA-Z0-9.]+$/i');

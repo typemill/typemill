@@ -108,6 +108,12 @@ class ControllerWebFrontend extends Controller
 		# DISPATCH LIVE NAVIGATION
 		$liveNavigation = $this->c->get('dispatcher')->dispatch(new OnPagetreeLoaded($liveNavigation), 'onPagetreeLoaded')->getData();
 
+		# For FOLDERS use item without drafts and hidden pages
+		if(!$home && $item->elementType == 'folder')
+		{
+			$item = $navigation->getItemWithKeyPath($liveNavigation, $keyPathArray);
+		}
+
 		# ADD BACKWARD-/FORWARD PAGINATION
 		$item = $navigation->getPagingForItem($liveNavigation, $item);
 		$item = $this->c->get('dispatcher')->dispatch(new OnItemLoaded($item), 'onItemLoaded')->getData();
