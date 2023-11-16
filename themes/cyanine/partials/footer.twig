@@ -1,13 +1,15 @@
-{% if (settings.themes.cyanine.footercolumns.footer1 or settings.themes.cyanine.footercolumns.footer2 or settings.themes.cyanine.footercolumns.footer3) %}
+{% if settings.themes.cyanine.footercolumns is not empty %}
 
 	<footer class="w-100 bl br bb lh-copy">
-		<div class="grid-container center pv3 flex-l">
+		<div class="center pv3 flex-l">
 			{% for column,key in settings.themes.cyanine.footercolumns %}
-				{% if settings.themes.cyanine[column] %}
+
+				{% if settings.themes.cyanine[key] %}
 					<div class="w-100 pv3 ph3 ph4-l">
-						{{ markdown(settings.themes.cyanine[column]) }}
+						{{ markdown(settings.themes.cyanine[key]) }}
 					</div>
 				{% endif %}
+
 			{% endfor %}
 		</div>
 	</footer>
