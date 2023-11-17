@@ -365,6 +365,32 @@ class Navigation extends Folder
 		return $item;
 	}
 
+	# only used for folders to get items from live-navigation without hidden and unpublished pages
+	public function getItemWithUrl($navigation, $url, $result = NULL)
+	{
+		foreach($navigation as $key => $item)
+		{
+			# set item active, needed to move item in navigation
+			if($item->urlRelWoF === $url)
+			{
+				$result = $item;
+				break;
+			}
+			elseif($item->elementType === "folder")
+			{
+				$result = self::getItemWithUrl($item->folderContent, $url, $result);
+
+				if($result)
+				{
+					break;
+				}
+			}
+		}
+
+		return $result;
+	}	
+	
+
 	# used with scan folder that generates own indexes for live version
 	public function setActiveNaviItems($navigation, $breadcrumb)
 	{

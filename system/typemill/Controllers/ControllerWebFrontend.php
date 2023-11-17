@@ -111,7 +111,7 @@ class ControllerWebFrontend extends Controller
 		# For FOLDERS use item without drafts and hidden pages
 		if(!$home && $item->elementType == 'folder')
 		{
-			$item = $navigation->getItemWithKeyPath($liveNavigation, $keyPathArray);
+			$item = $navigation->getItemWithUrl($liveNavigation, $item->urlRelWoF);
 		}
 
 		# ADD BACKWARD-/FORWARD PAGINATION
