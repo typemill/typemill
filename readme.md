@@ -49,8 +49,9 @@ To run Typemill, you need the following:
 Clone this repository:
 
 ```
-git clone "https://github.com/typemill/typemill.git"
+git clone https://github.com/typemill/typemill.git
 ```
+
 Then update composer to load the libraries:
 
 ```
