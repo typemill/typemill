@@ -5,7 +5,7 @@
 {% endif %}
 <form method="POST" action="{{ url_for(routename) }}" enctype="multipart/form-data">
 
-	<fieldset class="card{{ errors[itemName] ? ' errors' : '' }}">
+	<fieldset class="card{{ errors ? ' errors' : '' }}">
 
 		{% for field in fields %}
 				
@@ -22,7 +22,7 @@
 
 			{% else %}
 
-				{% include '/partials/fields.twig' with {'itemName' : itemName, 'object' : object } %}
+				{% include '/partials/fields.twig' with {'itemName' : itemName, 'object' : object} %}
 
 			{% endif %}
 
@@ -33,16 +33,18 @@
 			<input type="text" name="personal-honey-mail">
 		</div>
 
-		{% if captchaoptions == 'disabled' %}
+		{% if captchaoptions == 'standard' %}
 			
+			{{ captcha(true) }}
+		
 		{% elseif captchaoptions == 'aftererror' %}
 
 			{{ captcha(old) }}
 
 		{% else %}
 
-			{{ captcha(true) }}
-
+			{{ clearcaptcha() }}
+		
 		{% endif %}
 		
 		{% if recaptcha_webkey %}
@@ -51,6 +53,11 @@
 
 		<input type="submit" value="{{ buttonlabel ? buttonlabel : 'send' }}" />
 		
-		<style>.personal-mail{display:none}</style>
+		<style>
+			.personal-mail{ display:none }
+			.error{ margin-top:4px; background:red; color:#FFF; padding: 2px; font-size:.9rem;}
+			.errorfield label{ color:red; }
+			.errorfield input{ outline: 1px solid red; }
+		</style>
 	</fieldset>
 </form>

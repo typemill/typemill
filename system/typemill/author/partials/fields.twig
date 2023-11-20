@@ -1,4 +1,4 @@
-<div class="{{ class ? class : 'cardField' }}{{ errors[itemName][field.name] ? ' error' : '' }}{{field.fieldsize ? ' ' ~ field.fieldsize : ''}}">
+<div class="{{ class ? class : 'cardField' }}{{ errors[field.name] ? ' errorfield' : '' }}{{field.fieldsize ? ' ' ~ field.fieldsize : ''}}">
 	
 	<label for="{{ itemName }}[{{ field.name }}]">{{ translate( field.getLabel() ) }}
 		{% if field.getAttribute('required') %}<strong><abbr title="{{ translate('required') }}">*</abbr></strong>{% endif %}
@@ -24,8 +24,8 @@
 						<input class="function-img-url w-90 mbfix" type="text" name="{{ itemName }}[{{ field.name }}]" value="{{ settings[object][itemName][field.name] }}" readonly>
 					</div>
 				</div>
-				{% if errors[itemName][field.name] %}
-					<div class="error f6">{{ errors[itemName][field.name] | first }}</div>
+				{% if errors[field.name] %}
+					<div class="error f6">{{ errors[field.name] }}</div>
 				{% endif %}
 
 				{% if field.description %}<div class="description pv3">{{ translate(field.description) }}</div>{% endif %}
@@ -94,8 +94,8 @@
 
 		{% if field.description %}<div class="description">{{ translate(field.description) }}</div>{% endif %}
 		
-		{% if errors[itemName][field.name] %}
-			<span class="error">{{ errors[itemName][field.name] | first }}</span>
+		{% if errors[field.name] %}
+			<div class="error">{{ errors[field.name] }}</div>
 		{% endif %}
 
 	{% endif %}

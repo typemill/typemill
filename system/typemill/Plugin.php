@@ -10,6 +10,7 @@ use Typemill\Models\Validation;
 use Typemill\Models\Fields;
 use Typemill\Extensions\ParsedownExtension;
 
+
 abstract class Plugin implements EventSubscriberInterface
 {
 	protected $container;
@@ -141,7 +142,7 @@ abstract class Plugin implements EventSubscriberInterface
 		return $storage->getError();
 	}
 
-	private function getPluginName($pluginname)
+	private function getPluginName($pluginname = NULL)
 	{
 		if(!$pluginname)
 		{
@@ -340,75 +341,40 @@ abstract class Plugin implements EventSubscriberInterface
 
 	protected function validateParams($params)
 	{
-		$pluginName = key($params);
+		$pluginname 		= $this->getPluginName();
+		$userinput 			= $params[$pluginname] ?? false;
 
-		if(isset($params[$pluginName]))
+		if(!$userinput)
 		{
-			$userInput 			= $params[$pluginName];
-			$settings 			= $this->getSettings();
-
-			# get settings and start validation
-			$originalSettings 	= \Typemill\Settings::getObjectSettings('plugins', $pluginName);
-			if(isset($settings['plugins'][$pluginName]['publicformdefinitions']) && $settings['plugins'][$pluginName]['publicformdefinitions'] != '')
-			{
-				$arrayFromYaml 	= \Symfony\Component\Yaml\Yaml::parse($settings['plugins'][$pluginName]['publicformdefinitions']);
-				$originalSettings['public']['fields'] = $arrayFromYaml;
-			}
-			elseif(isset($originalSettings['settings']['publicformdefinitions']))
-			{
-				$arrayFromYaml 	= \Symfony\Component\Yaml\Yaml::parse($originalSettings['settings']['publicformdefinitions']);
-				$originalSettings['public']['fields'] = $arrayFromYaml;
-			}
-
-			$validate			= new Validation();
-
-			if(isset($originalSettings['public']['fields']))
-			{
-				# flaten the multi-dimensional array with fieldsets to a one-dimensional array
-				$originalFields = array();
-				foreach($originalSettings['public']['fields'] as $fieldName => $fieldValue)
-				{
-					if(isset($fieldValue['fields']))
-					{
-						foreach($fieldValue['fields'] as $subFieldName => $subFieldValue)
-						{
-							$originalFields[$subFieldName] = $subFieldValue;
-						}
-					}
-					else
-					{
-						$originalFields[$fieldName] = $fieldValue;
-					}
-				}
-
-				# take the user input data and iterate over all fields and values
-				foreach($userInput as $fieldName => $fieldValue)
-				{
-					# get the corresponding field definition from original plugin settings
-					$fieldDefinition = isset($originalFields[$fieldName]) ? $originalFields[$fieldName] : false;
-
-					if($fieldDefinition)
-					{
-						# validate user input for this field
-						$validate->objectField($fieldName, $fieldValue, $pluginName, $fieldDefinition);
-					}
-					if(!$fieldDefinition && $fieldName != 'active')
-					{
-						$_SESSION['errors'][$pluginName][$fieldName] = array('This field is not defined!');
-					}
-				}
-
-				if(isset($_SESSION['errors']))
-				{
-					$this->container->flash->addMessage('error', 'Please correct the errors');
-					return false;
-				}
-
-				return $params[$pluginName];
-			}
+			return false;
 		}
 
-		$this->container->flash->addMessage('error', 'The data from the form was invalid (missing or not defined)');
-		return false;
+		$pluginsettings 	= $this->getPluginSettings($pluginname);
+		$extension 			= new Extension();
+		$formdefinitions 	= $extension->getPluginDefinition($pluginname);
+
+		# if there are public form definitions, add them to the formdefinitions
+		if(isset($pluginsettings['publicformdefinitions']) && $pluginsettings['publicformdefinitions'] != '')
+		{
+			$arrayFromYaml 	= \Symfony\Component\Yaml\Yaml::parse($pluginsettings['publicformdefinitions']);
+			$formdefinitions['public']['fields'] = $arrayFromYaml;
+		}
+		elseif(isset($formdefinitions['settings']['publicformdefinitions']))
+		{
+			$arrayFromYaml 	= \Symfony\Component\Yaml\Yaml::parse($formdefinitions['settings']['publicformdefinitions']);
+			$formdefinitions['public']['fields'] = $arrayFromYaml;
+		}
+
+		$validate			= new Validation();
+		$validatedOutput 	= $validate->recursiveValidation($formdefinitions['public']['fields'], $userinput);
+		
+		if(!empty($validate->errors))
+		{
+			$_SESSION['errors'] = $validate->errors;
+			
+			return false;
+		}
+
+		return $validatedOutput;
 	}
 }

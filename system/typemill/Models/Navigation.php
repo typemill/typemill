@@ -342,7 +342,6 @@ class Navigation extends Folder
 
 	public function getItemWithKeyPath($navigation, array $searchArray, $baseUrl = null)
 	{
-
 		$item = false;
 
 		# if it is the homepage

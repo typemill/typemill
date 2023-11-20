@@ -54,8 +54,12 @@
 
 							{{ captcha(old) }}
 
-						{% endif %}
+						{% else %}
+
+							{{ clearcaptcha() }}
 						
+						{% endif %}
+
 						<input 
 							type="submit" 
 							value="{{ translate('Login') }}" 
