@@ -14,18 +14,24 @@ class SessionMiddleware implements MiddlewareInterface
     protected $segments;
 
     protected $route;
+
+    protected $uri;
     
-    public function __construct($segments, $route)
+    public function __construct($segments, $route, $uri)
     {
         $this->segments = $segments;
 
         $this->route = $route;
+
+        $this->uri = $uri;
     }
     
 	public function process(Request $request, RequestHandler $handler) :response
     {
+        $scheme = $request->getUri()->getScheme();
+        
         # start session
-        Session::startSessionForSegments($this->segments, $this->route);
+        Session::startSessionForSegments($this->segments, $this->route, $scheme);
 
         $authenticated = ( 
                 (isset($_SESSION['username'])) && 
@@ -50,7 +56,6 @@ class SessionMiddleware implements MiddlewareInterface
                 }
             }
         }
-
 
 		$response = $handler->handle($request);
 	

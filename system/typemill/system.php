@@ -336,7 +336,7 @@ $errorMiddleware->setErrorHandler(HttpNotFoundException::class, function ($reque
 
 $app->add($errorMiddleware);
 
-$app->add(new SessionMiddleware($session_segments, $urlinfo['route']));
+$app->add(new SessionMiddleware($session_segments, $urlinfo['route'], $uri));
 
 if(isset($settings['proxy']) && $settings['proxy'])
 {
