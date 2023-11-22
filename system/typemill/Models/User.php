@@ -69,6 +69,11 @@ class User
 		return $this->user;
 	}
 
+	public function getFullName()
+	{
+		return trim($this->user['firstname'] . ' ' . $this->user['lastname']);
+	}
+
 	public function getError()
 	{
 		return $this->error;

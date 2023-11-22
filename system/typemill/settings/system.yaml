@@ -4,12 +4,12 @@ fieldsetsystem:
   fields:
     title:
       type: text
-      label: Website Title
+      label: Website title
       maxlength: 60
       css: lg:w-half
     author:
       type: text
-      label: Author
+      label: Website owner
       css: lg:w-half
       maxlength: 60
     copyright:

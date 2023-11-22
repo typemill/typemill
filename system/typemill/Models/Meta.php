@@ -4,6 +4,7 @@ namespace Typemill\Models;
 
 use Typemill\Models\StorageWrapper;
 use Typemill\Models\Content;
+use Typemill\Models\User;
 use Typemill\Models\Settings;
 
 class Meta
@@ -70,18 +71,34 @@ class Meta
 		return $metadefinitions;
 	}
 
-	public function updateMeta($meta, $item)
+	# used if new articel/post is created
+	public function createInitialMeta(string $username, string $navtitle)
 	{
-		$filename 	= $item->pathWithoutType . '.yaml';
-
-		if($this->storage->updateYaml('contentFolder', '', $filename, $meta))
+		$author = '';
+		$user = new User();
+		if($user->setUser($username))
 		{
-			return true;
+			$author = $user->getFullName();
 		}
 
-		return $this->storage->getError();
+		$meta = [];
+
+		$meta['meta'] = []; 
+		
+		$meta['meta']['owner'] = $username;
+
+		$meta['meta']['author'] = $author;
+
+		$meta['meta']['created'] = date("Y-m-d");
+
+		$meta['meta']['time'] = date("H-i-s");
+
+		$meta['meta']['navtitle'] = $navtitle;
+
+		return $meta;
 	}
 
+	# used to fill meta data for existing page
 	public function addMetaDefaults($meta, $item, $authorFromSettings, $currentuser = false)
 	{
 		$modified = false;
@@ -97,13 +114,24 @@ class Meta
 		
 		if(!isset($meta['meta']['owner']))
 		{
-			$meta['meta']['owner'] = $currentuser ? $currentuser : false;
+			$meta['meta']['owner'] = $currentuser;
 			$modified = true;
 		}
 
 		if(!isset($meta['meta']['author']))
 		{
-			$meta['meta']['owner'] = $currentuser ? $currentuser : $authorFromSettings;
+			$author = $authorFromSettings;
+
+			if($currentuser)
+			{
+				$user = new User();
+				if($user->setUser($currentuser))
+				{
+					$author = $user->getFullName();
+				}
+			}
+
+			$meta['meta']['author'] = $author;
 			$modified = true;
 		}
 
@@ -165,6 +193,18 @@ class Meta
 		return $meta;
 	}
 
+	public function updateMeta($meta, $item)
+	{
+		$filename 	= $item->pathWithoutType . '.yaml';
+
+		if($this->storage->updateYaml('contentFolder', '', $filename, $meta))
+		{
+			return true;
+		}
+
+		return $this->storage->getError();
+	}
+
 	public function folderContainsFolders($folder)
 	{
 		foreach($folder->folderContent as $page)
@@ -218,133 +258,5 @@ class Meta
 
 #		return $this->storage->getError();
 		return false;
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	public function getNavtitle($url)
-	{
-		die("meta moddel this method is outdated");
-
-		# get the extended structure where the navigation title is stored
-		$extended = $this->getYaml('cache', 'structure-extended.yaml');
-		
-		if(isset($extended[$url]['navtitle']))
-		{ 
-			return $extended[$url]['navtitle'];
-		}
-		return '';
-	}
-
-	# used by articleApiController and pageController to add title and description if an article is published
-	public function completePageMeta($content, $settings, $item)
-	{
-
-		die("meta moddel this method is outdated");
-
-		$meta = $this->getPageMeta($settings, $item);
-
-		if(!$meta)
-		{
-			return $this->getPageMetaDefaults($content, $settings, $item);
-		}
-
-		$title = (isset($meta['meta']['title']) AND $meta['meta']['title'] !== '') ? true : false;
-		$description = (isset($meta['meta']['description']) AND $meta['meta']['description'] !== '') ? true : false;
-
-		if($title && $description)
-		{
-			return $meta;
-		}
-
-		# initialize parsedown extension
-		$parsedown = new ParsedownExtension();
-
-		# if content is not an array, then transform it
-		if(!is_array($content))
-		{
-			# turn markdown into an array of markdown-blocks
-			$content = $parsedown->markdownToArrayBlocks($content);
-		}
-
-		# delete markdown from title
-		if(!$title && isset($content[0]))
-		{
-			$meta['meta']['title'] = trim($content[0], "# ");
-		}
-
-		if(!$description && isset($content[1]))
-		{
-			$meta['meta']['description'] = $this->generateDescription($content, $parsedown, $item);
-		}
-
-		$this->updateYaml($settings['contentFolder'], $item->pathWithoutType . '.yaml', $meta);
-		
-		return $meta;
-	}
-
-	private function whitelistMeta($meta, $metascheme)
-	{
-
-		die("meta moddel this method is outdated");
-
-		# we have only 2 dimensions, so no recursive needed
-		foreach($meta as $tab => $values)
-		{
-			if(!isset($metascheme[$tab]))
-			{
-				unset($meta[$tab]);
-			}
-			foreach($values as $key => $value)
-			{
-				if(!isset($metascheme[$tab][$key]))
-				{
-					unset($meta[$tab][$key]);
-				}
-			}
-		}
-		return $meta;
-	}
-
-	public function generateDescription($content, $parsedown, $item)
-	{
-		die("meta moddel this method is outdated");
-
-		$description = isset($content[1]) ? $content[1] : '';
-
-		# create description or abstract from content
-		if($description !== '')
-		{
-			$firstLineArray = $parsedown->text($description);
-			$description 	= strip_tags($parsedown->markup($firstLineArray, $item->urlAbs));
-
-			# if description is very short
-			if(strlen($description) < 100 && isset($content[2]))
-			{
-				$secondLineArray = $parsedown->text($content[2]);
-				$description 	.= ' ' . strip_tags($parsedown->markup($secondLineArray, $item->urlAbs));
-			}
-
-			# if description is too long
-			if(strlen($description) > 300)
-			{
-				$description	= substr($description, 0, 300);
-				$lastSpace 		= strrpos($description, ' ');
-				$description 	= substr($description, 0, $lastSpace);
-			}
-		}
-		return $description;
 	}
 }

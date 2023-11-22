@@ -507,8 +507,11 @@ class ControllerApiAuthorArticle extends Controller
 		$namePath 	= $index > 9 ? $index . '-' . $slug : '0' . $index . '-' . $slug;
 		
 		# create default content
-		$content = json_encode(['# ' . $params['item_name'], 'Content']);
+		$content 	= json_encode(['# ' . $params['item_name'], 'Content']);
 		
+		# for initial metadata
+		$meta 		= new Meta();
+
 		if($params['type'] == 'file')
 		{
 			if(!$storage->writeFile('contentFolder', $folderPath, $namePath . '.txt', $content))
@@ -519,13 +522,10 @@ class ControllerApiAuthorArticle extends Controller
 
 				return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 			}
-			$storage->updateYaml('contentFolder', $folderPath, $namePath . '.yaml', 
-				['meta' => [
-					'navtitle' 	=> $params['item_name'],
-					'owner' 	=> $request->getAttribute('c_username'),
-					'created'	=> date("Y-m-d"),
-					'time'		=> date("H-i-s")
-				]]);
+
+			$metadata = $meta->createInitialMeta($request->getAttribute('c_username'), $params['item_name']);
+
+			$storage->updateYaml('contentFolder', $folderPath, $namePath . '.yaml', $metadata);
 		}
 		elseif($params['type'] == 'folder')
 		{
@@ -537,14 +537,12 @@ class ControllerApiAuthorArticle extends Controller
 
 				return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 			}
+
 			$storage->writeFile('contentFolder', $folderPath . DIRECTORY_SEPARATOR . $namePath, 'index.txt', $content);
-			$storage->updateYaml('contentFolder', $folderPath . DIRECTORY_SEPARATOR . $namePath, 'index.yaml', 
-				['meta' => [
-					'navtitle' 	=> $params['item_name'],
-					'owner' 	=> $request->getAttribute('c_username'),
-					'created'	=> date("Y-m-d"),
-					'time'		=> date("H-i-s")
-				]]);
+
+			$metadata = $meta->createInitialMeta($request->getAttribute('c_username'), $params['item_name']);
+
+			$storage->updateYaml('contentFolder', $folderPath . DIRECTORY_SEPARATOR . $namePath, 'index.yaml', $metadata);
 
 			# always redirect to a folder
 #			$url = $urlinfo['baseurl'] . '/tm/content/' . $this->settings['editor'] . $folder->urlRelWoF . '/' . $slug;
@@ -634,6 +632,9 @@ class ControllerApiAuthorArticle extends Controller
 		
 		# create default content
 		$content = json_encode(['# ' . $params['item_name'], 'Content']);
+
+		# for initial metadata
+		$meta 		= new Meta();
 		
 		if($params['type'] == 'file')
 		{
@@ -645,13 +646,10 @@ class ControllerApiAuthorArticle extends Controller
 
 				return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 			}
-			$storage->updateYaml('contentFolder', $folderPath, $namePath . '.yaml', 
-				['meta' => [
-					'navtitle' 	=> $params['item_name'],
-					'owner' 	=> $request->getAttribute('c_username'),
-					'created'	=> date("Y-m-d"),
-					'time'		=> date("H-i-s")
-				]]);
+
+			$metadata = $meta->createInitialMeta($request->getAttribute('c_username'), $params['item_name']);
+
+			$storage->updateYaml('contentFolder', $folderPath, $namePath . '.yaml', $metadata);
 		}
 		elseif($params['type'] == 'folder')
 		{
