@@ -254,9 +254,13 @@ class ControllerApiAuthorMeta extends Controller
 					$pathWithoutFile 	= str_replace($item->originalName, "", $item->path);
 					$newPathWithoutType	= $pathWithoutFile . $datetime . '-' . $item->slug;
 
-					$meta->renamePost($item->pathWithoutType, $newPathWithoutType);
+					$renameresults = $meta->renamePost($item->pathWithoutType, $newPathWithoutType);
 
 					$navigation->clearNavigation();
+
+					# WE HAVE TO REGENERATE ITEM AND NAVIGATION
+					$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']);
+					$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
 				}
 			}
 
@@ -334,14 +338,15 @@ class ControllerApiAuthorMeta extends Controller
 
 			$response->getBody()->write(json_encode([
 				'navigation'	=> $draftNavigation,
-				'item'			=> $item
+				'item'			=> $item,
+				'rename' 		=> $renameresults ?? false
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json');
 		}
 
 		$response->getBody()->write(json_encode([
-			'message' => $store,
+			'message' 	=> $store,
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json')->withStatus(500);

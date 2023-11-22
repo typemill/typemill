@@ -19,6 +19,7 @@ class ApiAuthentication
 	    # check if it is a session based authentication
 		if ($request->hasHeader('X-Session-Auth'))
 		{
+			# proceed, if a session based authentication has been done before in middleware
 			if($request->getAttribute('c_username') && $request->getAttribute('c_userrole'))
 			{
 				$response = $handler->handle($request);
@@ -30,7 +31,6 @@ class ApiAuthentication
 				# return error message
 			}
 		}
-
 
 		# api authentication with basic auth
 		# inspired by tuupola

@@ -178,6 +178,25 @@ class Meta
 		return false;
 	}
 
+	public function renamePost($oldPathWithoutType,$newPathWithoutType)
+	{
+		$filetypes = [
+			'txt' 	=> true, 
+			'md' 	=> true, 
+			'yaml' 	=> true
+		];
+
+		foreach($filetypes as $filetype => $result)
+		{
+			if(!$this->storage->renameFile('contentFolder', '', $oldPathWithoutType . '.' . $filetype, $newPathWithoutType . '.' . $filetype))
+			{
+				$filetypes[$filetype] = $this->storage->getError();
+			}
+		}
+
+		return $filetypes;
+	}
+
 	# just route it to storageWrapper because wrapper is initialized here and we dont want to initialize it in controllers
 	public function transformPostsToPages($folder)
 	{
