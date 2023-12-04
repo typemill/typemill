@@ -68,20 +68,24 @@ class ControllerApiSystemExtensions extends Controller
 			}
 		}
 
-		$objectdata = [];
+		# store updated settings here
+		$settings 			= new Settings();
+
 		if($params['type'] == 'plugins')
 		{
-			$objectdata['plugins'][$params['name']] = $this->settings[$params['type']][$params['name']];
-			$objectdata['plugins'][$params['name']]['active'] = $params['checked'];
+			$pluginsettings 			= $this->settings['plugins'][$params['name']] ?? $params['name'];
+			$pluginsettings['active'] 	= $params['checked'];
+			$updatedSettings 			= $settings->updateSettings($pluginsettings, 'plugins', $params['name']);
 		}
 		elseif($params['type'] == 'themes')
 		{
-			$objectdata['theme'] = $params['name'];
+			$themesettings 				= $this->settings['themes'][$params['name']] ?? $params['name'];
+			$updatedSettings 			= $settings->updateSettings($themesettings, 'themes', $params['name']);
+			if($updatedSettings)
+			{
+				$updatedSettings 		= $settings->updateSettings($params['name'], 'theme');
+			}
 		}
-
-		# store updated settings here
-		$settings 			= new Settings();
-		$updatedSettings 	= $settings->updateSettings($objectdata);
 
 		$response->getBody()->write(json_encode([
 			'message' => Translations::translate('settings have been saved')

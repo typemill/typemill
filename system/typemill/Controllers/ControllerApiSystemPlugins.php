@@ -42,11 +42,9 @@ class ControllerApiSystemPlugins extends Controller
 			$validatedOutput['active'] = true;
 		}
 
-		$plugindata['plugins'][$pluginname] = $validatedOutput;
-
 		# store updated settings here
 		$settings 			= new Settings();
-		$updatedSettings 	= $settings->updateSettings($plugindata);
+		$updatedSettings 	= $settings->updateSettings($validatedOutput, 'plugins', $pluginname);
 
 		$response->getBody()->write(json_encode([
 			'message' => Translations::translate('settings have been saved')

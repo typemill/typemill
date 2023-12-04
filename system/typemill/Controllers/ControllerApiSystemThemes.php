@@ -37,12 +37,10 @@ class ControllerApiSystemThemes extends Controller
 
 		# delete themecss
 		unset($validatedOutput['customcss']);
-				
-		$themedata['themes'][$themename] = $validatedOutput;
 
 		# store updated settings here
 		$settings 			= new Settings();
-		$updatedSettings 	= $settings->updateSettings($themedata);
+		$updatedSettings 	= $settings->updateSettings($validatedOutput, 'themes', $themename);
 
 		$response->getBody()->write(json_encode([
 			'message' => Translations::translate('settings have been saved')
