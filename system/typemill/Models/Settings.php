@@ -106,7 +106,7 @@ class Settings
 
 		return false;
 	}
-	
+
 	public function getObjectSettings($objectType, $objectName)
 	{
 		$objectSettings = $this->storage->getYaml($objectType, $objectName, $objectName . '.yaml');
@@ -118,7 +118,7 @@ class Settings
 
 		return false;
 	}
-
+	
 	public function updateSettings($newSettings, $key1 = false, $key2 = false)
 	{
 		$userSettings 	= $this->getUserSettings();
@@ -238,4 +238,5 @@ class Settings
 		}
 		return false;
 	}
+
 }

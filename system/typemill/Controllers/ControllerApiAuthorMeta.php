@@ -9,7 +9,7 @@ use Typemill\Models\Validation;
 use Typemill\Models\Navigation;
 use Typemill\Models\Meta;
 use Typemill\Static\Translations;
-use Typemill\Events\OnMetaLoaded;
+use Typemill\Events\OnMetaDefinitionsLoaded;
 
 class ControllerApiAuthorMeta extends Controller
 {
@@ -66,6 +66,9 @@ class ControllerApiAuthorMeta extends Controller
 			$metadefinitions = $meta->getMetaDefinitions($this->settings, $folder = false);
 		}
 
+		# update metadefinitions from plugins.
+		$metadefinitions = $this->c->get('dispatcher')->dispatch(new OnMetaDefinitionsLoaded($metadefinitions),'onMetaDefinitionsLoaded')->getData();
+
 		# cleanup metadata to the current metadefinitions (e.g. strip out deactivated plugins)
 		$metacleared = [];
 
@@ -91,9 +94,6 @@ class ControllerApiAuthorMeta extends Controller
 
 		# store the metascheme in cache for frontend
 #		$writeMeta->updateYaml('cache', 'metatabs.yaml', $metascheme);
-
-		$metacleared 			= $this->c->get('dispatcher')->dispatch(new OnMetaLoaded($metacleared),'onMetaLoaded')->getData();
-
 
 		$response->getBody()->write(json_encode([
 			'metadata' 			=> $metacleared, 

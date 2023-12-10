@@ -26,6 +26,7 @@
 	</head>
 	<body class="bg-stone-100 dark:bg-stone-900">
 
+		<div class="tailwind list-inside"></div>
 		{% include 'partials/symbols.twig' %}
 		
 		<header class="border-b-2 border-stone-200 dark:border-stone-600"> 
@@ -48,6 +49,7 @@
 			const data = {{ jsdata | json_encode() | raw  }};
 			
 		</script>
+		<script src="{{ base_url() }}/system/typemill/author/js/autosize.min.js?v={{ settings.version }}"></script>		
 		<script src="{{ base_url() }}/system/typemill/author/js/axios.min.js?v={{ settings.version }}"></script>
 		<script>
 			const tmaxios = axios.create();
