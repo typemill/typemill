@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../../',
         'aliases' => array(),
-        'reference' => '55fbbc70ea4c06d2d2657564f7821077589003e6',
+        'reference' => '63b776157541bf218934665a1718feadd991a2f9',
         'name' => 'typemill/typemill',
         'dev' => true,
     ),
@@ -374,7 +374,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../../',
             'aliases' => array(),
-            'reference' => '55fbbc70ea4c06d2d2657564f7821077589003e6',
+            'reference' => '63b776157541bf218934665a1718feadd991a2f9',
             'dev_requirement' => false,
         ),
         'vlucas/valitron' => array(
