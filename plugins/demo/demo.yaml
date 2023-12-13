@@ -1,0 +1,186 @@
+name: Demo Plugin
+version: 1.0.0
+description: Demonstrates the power of Typemill Plugins
+author: Sebastian Schürmanns
+homepage: http://typemill.net
+license: MIT
+dependencies: 
+  - register
+  - mail
+
+settings:
+  theme: 'edgeless'
+  message: 'You can enter a message here.'
+  website: 'http://typemill.net'
+  background: '#ffffff'
+
+forms:
+  fields:
+
+    text:
+      type: text
+      label: Text Input
+
+    message:
+      type: textarea
+      label: Message
+      placeholder: 'Message for cookie-popup'
+      required: true
+
+    code:
+      type: codearea
+      label: Code your stuff
+      spellcheck: false
+
+    theme:
+      type: select
+      label: Select
+      placeholder: 'Add name of theme'
+      required: true
+      options:
+        edgeless: Edgeless
+        block: Block
+        classic: Classic
+        mail: PHP Mail
+
+    userrole:
+      type: select
+      label: Which role should a new user get?
+      dataset: userroles
+      description: The standard userrole is "member". A member can only edit his account. Be careful if you select other roles.
+
+    number:
+      type: number
+      label: Number
+
+    date:
+      type: date
+      label: Date
+
+    email:
+      type: email
+      label: Email
+      description: Please help me here.
+
+    tel:
+      type: tel
+      label: Phone number
+      description: Please help me here.
+
+    pass:
+      type: password
+      label: Password
+      description: Please help me here.
+
+    website:
+      type: url
+      label: Add valid url
+      placeholder: 'Add valid URL'
+      help: Please help me here or make me cry. I don't think that this is a good Idea, but we will see. Otherwise we will get this done.
+      required: true
+
+    background:
+      type: color
+      label: Color
+      placeholder: 'Add hex color value like #ffffff'
+      required: true
+
+    singlecheckbox:
+      type: checkbox
+      label: Simple checkbox
+      checkboxlabel: Please check me
+
+    multiplecheckbox:
+      type: checkboxlist
+      label: Multiple Checkboxes
+      options:
+        first: First
+        second: Second
+        third: Third
+        fourth: Fourth
+
+    radio:
+      type: radio
+      label: Radio
+      options:
+        red: Red
+        green: Green
+        blue: Blue
+        yellow: Yellow
+
+    mediaimage:
+      type: image
+      label: Upload image
+      description: Please only upload some stuff you like.
+
+metatabs:
+  demo:
+    fields:
+      demoimage:
+        type: image
+        label: Image Field Demo
+        description: Maximum size for an image is 5 MB. Hero images are not supported by all themes.
+      demoimagealt:
+        type: text
+        label: Alt-Text for Hero-Image
+      democheckbox:
+        type: checkboxlist
+        label: Multiple Checkboxes
+        options:
+          first: First
+          second: Second
+          third: Third
+          fourth: Fourth
+      democustomfield:
+        type: customfields
+        label: try it out
+        data: array
+
+system:
+  fields:
+    title:
+      type: text
+      label: Title of your eBook
+    subtitle:
+      type: text
+      label: Subtitle of your eBook
+    author:
+      type: text
+      label: Author
+    edition:
+      type: text
+      label: Edition
+    flytitle:
+      type: checkbox
+      label: Fly title
+      checkboxlabel: Add a fly title after the cover. 
+
+public:
+  fields:
+
+    name:
+      type: text
+      label: name_label
+      required: true
+      class: 'tm-input'
+
+    email:
+      type: email
+      label: email_label
+      required: true
+      class: 'tm-input'
+
+    subject:
+      type: text
+      label: subject_label
+      required: true
+      class: 'tm-input'
+
+    message:
+      type: textarea
+      label: message_label
+      required: true
+      class: 'tm-textarea'
+
+    legalnotice:
+      type: paragraph

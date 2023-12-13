@@ -4,7 +4,7 @@ const app = Vue.createApp({
 							<p v-if="version.system !== undefined"><a href="https://typemill.net" class="block p-2 text-center bg-rose-500 text-white">Please update typemill to version {{ version.system }}</a></p>
 							<ul class="flex flex-wrap mt-4 mb-4">
 								<li v-for="tab in tabs">
-									<button class="px-2 py-2 border-b-2 border-stone-200 dark:border-stone-900 hover:border-stone-700 hover:dark:border-stone-200 transition duration-100" :class="(tab == currentTab) ? 'border-stone-700 dark:border-stone-200' : ''" @click.prevent="activateTab(tab)">{{ $filters.translate(tab) }}</button>
+									<button class="px-2 py-2 border-b-2 border-stone-200 dark:border-stone-900 hover:border-stone-700 hover:dark:border-stone-200 hover:bg-stone-200 hover:dark:bg-stone-900 transition duration-100" :class="(tab == currentTab) ? 'border-stone-700 bg-stone-200 dark:bg-stone-900 dark:border-stone-200' : ''" @click.prevent="activateTab(tab)">{{ $filters.translate(tab) }}</button>
 								</li>
 							</ul>
 							<div v-for="(fieldDefinition, fieldname) in formDefinitions">

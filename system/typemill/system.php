@@ -117,10 +117,10 @@ $settings['license'] = $license->getLicenseScope($urlinfo);
 /****************************
 * LOAD & UPDATE PLUGINS			*
 ****************************/
-
 $plugins 				= Plugins::loadPlugins();
 $routes 				= [];
 $middleware				= [];
+$pluginSettings 		= [];
 
 # if there are less plugins in the scan than in the settings, then a plugin has been removed
 if(isset($settings['plugins']) && (count($plugins) < count($settings['plugins'])) )
@@ -133,11 +133,15 @@ foreach($plugins as $plugin)
 	$pluginName			= $plugin['name'];
 	$className			= $plugin['className'];
 
-	# if plugin is not in the settings already
-	if(!isset($settings['plugins'][$pluginName]))
+	# store existing plugin-settings to update settings later
+	if(isset($settings['plugins'][$pluginName]))
+	{
+		$pluginSettings[$pluginName] = $settings['plugins'][$pluginName];
+	}
+	else
 	{
 		# it is a new plugin. Add it and set active to false
-		$settings['plugins'][$pluginName] = ['active' => false];
+		$pluginSettings[$pluginName] = ['active' => false];
 		
 		# and set flag to refresh the settings
 		$updateSettings = true;
@@ -149,7 +153,12 @@ foreach($plugins as $plugin)
 	{
 		if(!$settings['license'] OR !isset($settings['license'][$PluginLicence]))
 		{
-			$settings['plugins'][$pluginName]['active'] = false;
+			\Typemill\Static\Helper\addLogEntry('No License: ' . $pluginName);
+			if($pluginSettings[$pluginName]['active'])
+			{
+				$pluginSettings[$pluginName]['active'] = false;
+				$updateSettings = true;
+			}
 		}
 	}
 
@@ -167,9 +176,7 @@ foreach($plugins as $plugin)
 if(isset($updateSettings))
 {
 	# update stored settings file
-	$newPluginSettings = ['plugins' => $settings['plugins']];
-	$settingsModel->updateSettings($newPluginSettings);
-	# Settings::updateSettings($settings);
+	$settingsModel->updateSettings($pluginSettings, 'plugins');
 }
 
 # add final settings to the container

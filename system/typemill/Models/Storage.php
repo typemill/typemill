@@ -333,7 +333,7 @@ class Storage
 		}
 
 		$writefile = fwrite($openfile, $data);
-		if(!$writefile)
+		if($writefile === false)
 		{
 			$this->error = Translations::translate('Could not write to the file') . ' ' . $filepath;
 

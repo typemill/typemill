@@ -89,14 +89,14 @@ abstract class Plugin implements EventSubscriberInterface
 		return $data;
 	}
 
-	protected function storePluginData($filename, $pluginname = false)
+	protected function storePluginData($filename, $data, $method = NULL)
 	{
 		$pluginname 	= $this->getPluginName($pluginname);
 
 		$storageClass 	= $this->container->get('settings')['storage'];
 		$storage 		= new StorageWrapper($storageClass);
 		
-		$result 		= $storage->writeFile('dataFolder', $pluginname, $filename);
+		$result 		= $storage->writeFile('dataFolder', $pluginname, $filename, $data, $method = NULL);
 
 		if($result)
 		{

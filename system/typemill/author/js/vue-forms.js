@@ -13,7 +13,7 @@ app.component('component-text', {
 					:name="name"
 					:placeholder="placeholder"
 					:value="value"
-					@input="update($event, name)">
+					@input="update($event, name)"><slot></slot>
 			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
 			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
 			  </div>`,

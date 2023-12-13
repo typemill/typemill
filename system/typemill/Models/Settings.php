@@ -106,7 +106,7 @@ class Settings
 
 		return false;
 	}
-	
+
 	public function getObjectSettings($objectType, $objectName)
 	{
 		$objectSettings = $this->storage->getYaml($objectType, $objectName, $objectName . '.yaml');
@@ -118,33 +118,50 @@ class Settings
 
 		return false;
 	}
-
-	public function updateSettings(array $newSettings)
+	
+	public function updateSettings($newSettings, $key1 = false, $key2 = false)
 	{
 		$userSettings 	= $this->getUserSettings();
 
 		# only allow if usersettings already exists (setup has been done)
 		if($userSettings)
 		{
-			# merge usersettings with new settings
-			$settings 	= array_merge($userSettings, $newSettings);
-
-			# make sure that multidimensional arrays are merged correctly
-			# for example: only one plugin data will be passed with new settings, with array merge all others will be deleted.
-			foreach($newSettings as $key => $settingsItems)
+			# hard overwrite
+			if($key1 && $key2)
 			{
-				if(is_array($settingsItems) && isset($userSettings[$key]))
+				$userSettings[$key1][$key2] = $newSettings;
+				$settings = $userSettings;
+			}
+			# hard overwrite
+			elseif($key1)
+			{
+				$userSettings[$key1] = $newSettings;
+				$settings = $userSettings;
+			}
+			# only merge
+			else
+			{
+				# merge usersettings with new settings
+				$settings 	= array_merge($userSettings, $newSettings);
+
+				# make sure that multidimensional arrays are merged correctly
+				# for example: only one plugin data will be passed with new settings, with array merge all others will be deleted.
+				foreach($newSettings as $key => $settingsItems)
 				{
-					if($this->array_is_list($settingsItems))
+					if(is_array($settingsItems) && isset($userSettings[$key]))
 					{
-						# for numeric/list arrays instead of associative arrays we only use new values
-						$settings[$key] = $newSettings[$key];
-					}
-					else
-					{
-						$settings[$key] = array_merge($userSettings[$key], $newSettings[$key]);
+						if($this->array_is_list($settingsItems))
+						{
+							# for numeric/list arrays instead of associative arrays we only use new values
+							$settings[$key] = $newSettings[$key];
+						}
+						else
+						{
+							$settings[$key] = array_merge($userSettings[$key], $newSettings[$key]);
+						}
 					}
 				}
+
 			}
 
 			if($this->storage->updateYaml('settingsFolder', '', 'settings.yaml', $settings))
@@ -221,4 +238,5 @@ class Settings
 		}
 		return false;
 	}
+
 }
