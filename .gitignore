@@ -10,6 +10,7 @@ content/01-cyanine-theme/00-landingpage.yaml
 content/01-cyanine-theme/01-colors-and-fonts.yaml
 content/01-cyanine-theme/02-footer.yaml
 content/01-cyanine-theme/03-content-elements.yaml
+system/vendor
 cypress
 data/navigation
 data/css
