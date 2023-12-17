@@ -1,11 +1,11 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => '2.0.3.x-dev',
-        'version' => '2.0.3.9999999-dev',
+        'pretty_version' => '2.x-dev',
+        'version' => '2.9999999.9999999.9999999-dev',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../../',
         'aliases' => array(),
-        'reference' => '63b776157541bf218934665a1718feadd991a2f9',
+        'reference' => '8fb86495b65737eaa0e413eaf1e22cc2ffd2e022',
         'name' => 'typemill/typemill',
         'dev' => true,
     ),
@@ -369,12 +369,12 @@
             'dev_requirement' => false,
         ),
         'typemill/typemill' => array(
-            'pretty_version' => '2.0.3.x-dev',
-            'version' => '2.0.3.9999999-dev',
+            'pretty_version' => '2.x-dev',
+            'version' => '2.9999999.9999999.9999999-dev',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../../',
             'aliases' => array(),
-            'reference' => '63b776157541bf218934665a1718feadd991a2f9',
+            'reference' => '8fb86495b65737eaa0e413eaf1e22cc2ffd2e022',
             'dev_requirement' => false,
         ),
         'vlucas/valitron' => array(
