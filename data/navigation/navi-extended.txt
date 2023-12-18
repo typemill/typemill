@@ -10,17 +10,17 @@
     noindex: false
     path: /00-welcome/00-setup-your-website.md
     keyPath: '0.0'
-/welcome/manage-access:
-    navtitle: 'manage access'
-    hide: false
-    noindex: false
-    path: /00-welcome/01-manage-access.md
-    keyPath: '0.1'
 /welcome/write-content:
     navtitle: 'write content'
     hide: false
     noindex: false
-    path: /00-welcome/02-write-content.md
+    path: /00-welcome/01-write-content.md
+    keyPath: '0.1'
+/welcome/manage-access:
+    navtitle: 'manage access'
+    hide: false
+    noindex: false
+    path: /00-welcome/02-manage-access.md
     keyPath: '0.2'
 /welcome/get-help:
     navtitle: 'get help'

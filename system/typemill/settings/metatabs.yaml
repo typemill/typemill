@@ -78,20 +78,23 @@ meta:
           hidden: true
           css: hidden
           pattern: '[0-9][0-9]-[0-9][0-9]-[0-9][0-9]'
-#    fieldsetreference:
-#      type: fieldset
-#      legend: Reference
-#      fields:
-#        reference:
-#          type: text
-#          label: Reference to page
-#          maxlength: 60
-#        referencetype:
-#          type: radio
-#          label: Type of reference
-#          options: 
-#            copy: Copy (copy the content of the referenced page)
-#            redirect: Redirect (redirect the user to the referenced page)
+    fieldsetreference:
+      type: fieldset
+      legend: Reference
+      fields:
+        reference:
+          type: text
+          label: Reference to page
+          maxlength: 200
+        referencetype:
+          type: radio
+          label: Type of reference
+          options: 
+            disable: Disable
+            redirect301: PERMANENT REDIRECT (301) the user to the referenced internal page
+            redirect302: TEMPORARY REDIRECT (302) the user to the referenced internal page
+            copy: COPY the content of the referenced internal page
+            outlink: LINK to an external page
     fieldsetvisibility:
       type: fieldset
       legend: Visibility
