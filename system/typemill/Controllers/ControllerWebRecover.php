@@ -7,6 +7,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Routing\RouteContext;
 use Typemill\Models\User;
 use Typemill\Models\Validation;
+use Typemill\Models\SimpleMail;
 use Typemill\Static\Translations;
 use Typemill\Extensions\ParsedownExtension;
 
@@ -50,15 +51,9 @@ class ControllerWebRecover extends Controller
 			$link 	= '<a href="'. $url . '">' . $url . '</a>';
 
 			# define the headers
-			$headers 	= 'Content-Type: text/html; charset=utf-8' . "\r\n";
-			$headers 	.= 'Content-Transfer-Encoding: base64' . "\r\n";
-			if(isset($settings['recoverfrom']) && $settings['recoverfrom'] != '')
-			{
-				$headers 	.= 'From: ' . $settings['recoverfrom'];
-			}
+			$mail 		= new SimpleMail($settings);
 
-			$subjectline 	= (isset($settings['recoversubject']) && ($settings['recoversubject'] != '') )  ? $settings['recoversubject'] : 'Recover your password';
-			$subject 		= '=?UTF-8?B?' . base64_encode($subjectline) . '?=';
+			$subject 	= (isset($settings['recoversubject']) && ($settings['recoversubject'] != '') )  ? $settings['recoversubject'] : 'Recover your password';
 
 			$messagetext	= Translations::translate('Dear user');
 			$messagetext 	.= ",<br/><br/>";
@@ -72,16 +67,14 @@ class ControllerWebRecover extends Controller
 				$messagetext	= $parsedown->markup($contentArray);
 			}
 
-			$message 		= base64_encode($messagetext . "<br/><br/>" . $link);
+			$message 		= $messagetext . "<br/><br/>" . $link;
 
-			# $send = mail($requiredUser['email'], $subject, $message, $headers);
+			$send = $mail->send($requiredUser['email'], $subject, $message);
 
-			$send = false;
-
-			if($send == 'delete')
+			if(!$send)
 			{
 				$title 		= Translations::translate('Error sending email');
-				$message 	= Translations::translate('Dear ') . $requiredUser['username'] . ', ' . Translations::translate('we could not send the email with the password instructions to your address. Please contact the website owner and ask for help.');
+				$message 	= Translations::translate('Dear ') . $requiredUser['username'] . ', ' . Translations::translate('we could not send the email with the password instructions to your address. Reason: ') . $mail->error;
 			}
 			else
 			{

@@ -85,6 +85,7 @@ meta:
         reference:
           type: text
           label: Reference to page
+          placeholder: '/path/to/internal/page or https://exgernal-page.org'
           maxlength: 200
         referencetype:
           type: radio

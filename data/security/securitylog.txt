@@ -1,0 +1,10 @@
+127.0.0.1;2023-12-24 10:46:32;login: invalid data
+127.0.0.1;2023-12-24 10:47:01;login: invalid data
+127.0.0.1;2023-12-24 10:51:05;login: invalid data
+127.0.0.1;2023-12-24 10:57:31;login: authcode wrong or outdated.
+127.0.0.1;2023-12-24 10:59:47;login: authcode wrong or outdated.
+127.0.0.1;2023-12-24 10:59:51;login: wrong password
+127.0.0.1;2023-12-24 10:59:59;login: authcode wrong or outdated.
+127.0.0.1;2023-12-25 06:20:18;login: authcode wrong or outdated.
+127.0.0.1;2023-12-25 06:20:35;login: user not found
+127.0.0.1;2023-12-25 09:12:05;login: wrong password

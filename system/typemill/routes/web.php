@@ -18,6 +18,11 @@ $app->group('/tm', function (RouteCollectorProxy $group) use ($settings) {
 	$group->get('/login', ControllerWebAuth::class . ':show')->setName('auth.show');
 	$group->post('/login', ControllerWebAuth::class . ':login')->setName('auth.login');
 
+	if(isset($settings['authcode']) && $settings['authcode'])
+	{
+		$group->post('/authcode', ControllerWebAuth::class . ':loginWithAuthcode')->setName('auth.authcode');
+	}
+
 	if(isset($settings['recoverpw']) && $settings['recoverpw'])
 	{
 		$group->get('/recover', ControllerWebRecover::class . ':showRecoverForm')->setName('auth.recoverform');
@@ -50,6 +55,7 @@ $app->group('/tm', function (RouteCollectorProxy $group) use ($routeParser,$acl)
 
 $app->redirect('/tm', $routeParser->urlFor('auth.show'), 302);
 $app->redirect('/tm/', $routeParser->urlFor('auth.show'), 302);
+$app->redirect('/tm/authcode', $routeParser->urlFor('auth.show'), 302);
 
 # downloads
 $app->get('/media/files[/{params:.*}]', ControllerWebDownload::class . ':download')->setName('download.file');

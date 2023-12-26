@@ -4,19 +4,20 @@ fieldsetsystem:
   fields:
     title:
       type: text
-      label: Website title
+      label: 'Website title'
       maxlength: 60
       css: lg:w-half
     author:
       type: text
-      label: Website owner
+      label: 'Website owner'
       css: lg:w-half
       maxlength: 60
     copyright:
       type: select
-      label: Copyright
+      label: 'Copyright'
       css: lg:w-half
       maxlength: 60
+      description: 'Used for copyright and year in footer.'
       options:
         '©': '©'
         'CC-BY': 'CC-BY'
@@ -30,11 +31,13 @@ fieldsetsystem:
       label: Year
       css: lg:w-half
       maxlength: 4
+      description: 'Used for copyright and year in footer.'
     language:
       type: select
-      label: Language (author area)
+      label: 'Language (author area)'
       css: lg:w-half
       maxlength: 60
+      description: 'Used for translations in author area, themes, and plugins.'
       options:
         'en': 'English'
         'ru': 'Russian'
@@ -44,15 +47,16 @@ fieldsetsystem:
         'fr': 'French'
     langattr:
       type: text
-      label: Language attribute (website)
+      label: 'Language attribute (website)'
       css: lg:w-half
       maxlength: 5
-      description: Please use ISO 639-1 codes like "en"
+      description: 'Used for frontend language attribute. Please use ISO 639-1 codes like "en".'
     sitemap:
       type: text
-      label: Google sitemap (readonly)
+      label: 'Google sitemap (readonly)'
       css: lg:w-half
       disabled: true
+      description: 'Submit the url above in google search console to support indexing.'
 fieldsetmedia:
   type: fieldset
   legend: Media
@@ -63,48 +67,48 @@ fieldsetmedia:
     favicon:
       type: image
       label: Favicon
-      description: Only PNG format will work.
+      description: 'Only PNG format will work.'
     liveimagewidth:
       type: number
-      label: Standard width for live pictures
+      label: 'Standard width for live pictures'
       placeholder: 820
-      description: Default width of live images is 820px. Changes will apply to future uploads.
+      description: 'Default width of live images is 820px. Changes will apply to future uploads.'
       css: lg:w-half
     liveimageheight:
       type: number
-      label: Standard height for live pictures
-      description: If you add a value for the height, then the image will be cropped.
+      label: 'Standard height for live pictures'
+      description: 'If you add a value for the height, then the image will be cropped.'
       css: lg:w-half
     maximageuploads:
       type: number
-      label: Maximum size for image uploads in MB
-      description: The maximum image size might be limited by your server settings.
+      label: 'Maximum size for image uploads in MB'
+      description: 'The maximum image size might be limited by your server settings.'
     allowsvg:
       type: checkbox
       label: Allow svg
-      checkboxlabel: Allow the upload of svg images
+      checkboxlabel: 'Allow the upload of svg images'
     convertwebp:
       type: checkbox
-      label: Convert to webp
-      checkboxlabel: Try to convert uploaded images into the webp-format
+      label: 'Convert to webp'
+      checkboxlabel: 'Try to convert uploaded images into the webp-format for better performance.'
     maxfileuploads:
       type: number
-      label: Maximum size for file uploads in MB
-      description: The maximum file size might be limited by your server settings.
+      label: 'Maximum size for file uploads in MB'
+      description: 'The maximum file size might be limited by your server settings.'
 fieldsetwriting:
   type: fieldset
   legend: Writing
   fields:
     editor:
       type: radio
-      label: Standard editor mode
+      label: 'Standard editor mode'
       css: lg:w-half
       options:
         'visual': 'visual editor'
         'raw': 'raw editor'
     formats:
       type: checkboxlist
-      label: Format options for visual editor
+      label: 'Format options for visual editor'
       css: lg:w-half
       options:
         'markdown': 'markdown'
@@ -124,12 +128,12 @@ fieldsetwriting:
         'shortcode': 'shortcode'
     headlineanchors:
       type: checkbox
-      label: Headline anchors
-      checkboxlabel: Show anchors next to headline in frontend
+      label: 'Headline anchors'
+      checkboxlabel: 'Show anchors next to headline in frontend'
     urlschemes:
       type: text
-      label: Url schemes
-      description: Add more url schemes for external links e.g. like dict:// (comma separated list)
+      label: 'Url schemes'
+      description: 'Add more url schemes for external links e.g. like dict:// (comma separated list)'
       maxlength: 60
 fieldsetaccess:
   type: fieldset
@@ -137,57 +141,83 @@ fieldsetaccess:
   fields:
     access:
       type: checkbox
-      label: Website restriction
-      checkboxlabel: Show the website only to authenticated users and redirect all other users to the login page.
+      label: 'Website restriction'
+      checkboxlabel: 'Show the website only to authenticated users and redirect all other users to the login page.'
     pageaccess:
       type: checkbox
-      label: Page restriction
-      checkboxlabel: Activate individual restrictions for pages in the meta-tab of each page.
+      label: 'Page restriction'
+      checkboxlabel: 'Activate individual restrictions for pages in the meta-tab of each page.'
     hrdelimiter:
       type: checkbox
-      label: Content break
-      checkboxlabel: Cut restricted content after the first hr-element on a page (per default content will be cut after title).
+      label: 'Content break'
+      checkboxlabel: 'Cut restricted content after the first hr-element on a page (per default content will be cut after title).'
     restrictionnotice:
       type: textarea
-      label: Restriction notice (use markdown)
+      label: 'Restriction notice (use markdown)'
       maxlength: 2000
     wraprestrictionnotice:
       type: checkbox
-      label: Wrap restriction notice
-      checkboxlabel: Wrap the restriction notice above into a notice-4 element (which can be designed as special box)
+      label: 'Wrap restriction notice'
+      checkboxlabel: 'Wrap the restriction notice above into a notice-4 element (which can be designed as special box)'
+fieldsetmail:
+  type: fieldset
+  legend: Email
+  fields:
+    mailfrom:
+      type: text
+      label: 'Mail From (required)'
+      placeholder: sender@yourmail.org
+      maxlength: 60
+      description: 'Enter an email address that should send emails (sender).'
+    mailfromname:
+      type: text
+      label: 'Mail From Name (optional)'
+      placeholder: sender name
+      maxlength: 60
+      description: 'Optionally enter a name for the sender address. If not set, the from-address will be visible.'
+    replyto:
+      type: text
+      label: 'Reply To (optional)'
+      placeholder: noreply@yourmail.org
+      maxlength: 60
+      description: 'Optionally enter a "reply to" address for answers from the receiver. If not set, answers will go to the from-address.'
+fieldsetrecover:
+  type: fieldset
+  legend: Recover
+  fields:
+    recoverpw:
+      type: checkbox
+      label: 'Recover password'
+      checkboxlabel: 'Activate a password recovery in the login form.'
+    recoversubject:
+      type: text
+      label: 'Email subject'
+      placeholder: 'Recover your password'
+      maxlength: 60
+    recovermessage:
+      type: textarea
+      label: 'Text before recover link in email message'
+      maxlength: 2000
 fieldsetsecurity:
   type: fieldset
   legend: Security
   fields:
     securitylog:
       type: checkbox
-      label: Security log
-      checkboxlabel: Track spam and suspicious actions in a logfile
+      label: 'Security log'
+      checkboxlabel: 'Track spam and suspicious actions in a logfile'
+    authcode:
+      type: checkbox
+      label: 'Authentication code (recommended)'
+      checkboxlabel: 'Send a 5-digit authentication code by email to confirm login.'
+      description: 'The authentication code will be valid for 5 minutes. Be aware that device fingerprints will be stored in the user accounts. Make sure this complies with privacy legislation in your country.'
     authcaptcha:
       type: radio
-      label: Use captcha in authentication forms
+      label: 'Use captcha in authentication forms'
       options:
-        disabled: Disable    
-        standard: Always show
-        aftererror: Show after first wrong input
-    recoverpw:
-      type: checkbox
-      label: Recover password
-      checkboxlabel: Activate the password recovery.
-    recoverfrom:
-      type: text
-      label: Sender email
-      placeholder: your@email.org
-      maxlength: 60
-    recoversubject:
-      type: text
-      label: Email subject
-      placeholder: Recover your password
-      maxlength: 60
-    recovermessage:
-      type: textarea
-      label: Text before recover link in email message
-      maxlength: 2000
+        disabled: 'Disable'
+        standard: 'Always show'
+        aftererror: 'Show after first wrong input'
 fieldsetdeveloper:
   type: fieldset
   legend: Developer

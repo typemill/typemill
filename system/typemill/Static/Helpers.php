@@ -51,7 +51,6 @@ class Helpers{
 		return $ip;
 	}
 
-
 	public static function addLogEntry($action)
 	{
 		$line 		= self::getUserIP();

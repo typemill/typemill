@@ -224,18 +224,26 @@ class Settings
 		return $settingsDefinitions;
 	}
 
-	public function createSettings()
+	public function createSettings(array $defaultSettings = NULL)
 	{
-    	$language = Translations::whichLanguage();
+		$defaults = [
+			'language' => Translations::whichLanguage()
+		];
+
+		if($defaultSettings)
+		{
+			$defaults = array_merge($defaults, $defaultSettings);
+		}
     
     	$initialSettings = $this->storage->updateYaml('settingsFolder', '', 'settings.yaml', [
-			'language' => $language
+			$defaults
 		]);
 
 		if($initialSettings)
 		{
 			return true; 
 		}
+	
 		return false;
 	}
 
