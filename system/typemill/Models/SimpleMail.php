@@ -2,6 +2,8 @@
 
 namespace Typemill\Models;
 
+use Typemill\Static\Translations;
+
 class SimpleMail
 {
 	private $from = false;
@@ -28,11 +30,11 @@ class SimpleMail
 		}
 	}
 
-	public function sendEmail(string $to, string $subject, string $message)
+	public function send(string $to, string $subject, string $message)
 	{
 		if(!$this->from)
 		{
-			$this->error = 'You need to add a email address into the settings.';
+			$this->error = Translations::translate('Email address in system settings is missing.');
 
 			return false;
 		}

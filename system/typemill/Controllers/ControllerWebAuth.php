@@ -26,7 +26,9 @@ class ControllerWebAuth extends Controller
 		$validation		= new Validation();
 		$securitylog 	= $this->settings['securitylog'] ?? false;
 		$authcodeactive = $this->settings['authcode'] ?? false;
-		
+		$authtitle 		= Translations::translate('Auth code missing?');
+		$authtext 		= Translations::translate('If you did not receive an email with an authentication code, then the username or password you entered was wrong. Please try again.');
+
 		if($validation->signin($input) !== true)
 		{
 			if($securitylog)
@@ -72,6 +74,8 @@ class ControllerWebAuth extends Controller
 				# show authcode page
 			    return $this->c->get('view')->render($response, 'auth/authcode.twig', [
 					'username' 		=> $userdata['username'],
+					'authtitle' 	=> $authtitle,
+					'authtext' 		=> $authtext
 			    ]);
 			}
 
@@ -100,7 +104,7 @@ class ControllerWebAuth extends Controller
 			$mail 			= new SimpleMail($settings);
 
 			$subject 		= Translations::translate('Your authentication code for Typemill');
-			$message		= Translations::translate('Use the following authentication code to login into Typemill cms') . ': ' . $authcodevalue;
+			$message		= Translations::translate('Use the following authentication code to login into Typemill') . ': ' . $authcodevalue;
 
 			$send 			= $mail->send($userdata['email'], $subject, $message);
 
@@ -108,8 +112,8 @@ class ControllerWebAuth extends Controller
 
 			if(!$send)
 			{
-				$title 		= Translations::translate('Error sending email');
-				$message 	= Translations::translate('Dear ') . $userdata['username'] . ', ' . Translations::translate('we could not send the email with the authentication code to your address. Reason: ') . $mail->error;
+				$authtitle 		= Translations::translate('Error sending email');
+				$authtext 		= Translations::translate('We could not send the email with the authentication code to your address. Reason: ') . $mail->error;
 			}
 			else
 			{
@@ -120,7 +124,9 @@ class ControllerWebAuth extends Controller
 
 			# show authcode page
 		    return $this->c->get('view')->render($response, 'auth/authcode.twig', [
-				'username' => $userdata['username'],
+				'username' 		=> $userdata['username'],
+				'authtitle' 	=> $authtitle,
+				'authtext'  	=> $authtext
 		    ]);
 		}
 
@@ -139,8 +145,6 @@ class ControllerWebAuth extends Controller
 
 		$user->login();
 
-#		return $response->withHeader('Location', $this->routeParser->urlFor('settings.show'))->withStatus(302);
-
 		# if user is allowed to view content-area
 		$acl = $this->c->get('acl');
 		if($acl->hasRole($userdata['userrole']) && $acl->isAllowed($userdata['userrole'], 'content', 'view'))
@@ -154,7 +158,7 @@ class ControllerWebAuth extends Controller
 	}
 
 
-	# login user with valid authcode
+	# login a user with valid authcode
 	public function loginWithAuthcode(Request $request, Response $response)
 	{
         $input 			= $request->getParsedBody();
@@ -204,9 +208,9 @@ class ControllerWebAuth extends Controller
 		}
 
 		# add the device fingerprint if not set yet
-		$fingerprints = $userdata['fingerprints'] ?? [];
-		$fingerprint = $this->generateDeviceFingerprint();
-		if(!$this->findDeviceFingerprint($fingerprint, $fingerprints))
+		$fingerprints 	= $userdata['fingerprints'] ?? [];
+		$fingerprint 	= $this->generateDeviceFingerprint();
+		if(!$this->findDeviceFingerprint($fingerprint, $userdata))
 		{
 			$fingerprints[] = $fingerprint;
 			$user->setValue('fingerprints', $fingerprints);
@@ -231,14 +235,7 @@ class ControllerWebAuth extends Controller
 	}
 
 
-	/**
-	* log out a user
-	* 
-	* @param obj $request the slim request object
-	* @param obj $response the slim response object
-	* @return obje $response with redirect to route
-	*/
-	
+	# log out a user
 	public function logout(Request $request, Response $response)
 	{
 		\Typemill\Static\Session::stopSession();

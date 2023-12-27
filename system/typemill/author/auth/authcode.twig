@@ -11,7 +11,7 @@
 
 				<h1 class="text-4xl py-5">Authentication Code</h1>
 			
-				<p>Enter the auth code from the e-mail you got:</a>
+				<p>{{ translate('Enter the authentication code from your email:') }}</a>
 
 				<form method="POST" action="{{ url_for("auth.authcode") }}" autocomplete="off">
 				
@@ -24,7 +24,7 @@
 								pattern="[0-9]" 
 								maxlength="1" 
 								oninput="moveToNextField(this)"	
-								class="mr-2 form-control block w-full px-3 py-3 text-xl text-center font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-non"
+								class="mr-2 form-control block w-full px-3 py-3 text-xl text-center font-bold text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-non"
 							required>
 							<input 
 								type="text" 
@@ -32,7 +32,7 @@
 								pattern="[0-9]" 
 								maxlength="1" 
 								oninput="moveToNextField(this)"	
-								class="mr-2 form-control block w-full px-3 py-3 text-xl text-center font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-non"
+								class="mr-2 form-control block w-full px-3 py-3 text-xl text-center font-bold text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-non"
 							required>
 							<input 
 								type="text" 
@@ -40,7 +40,7 @@
 								pattern="[0-9]" 
 								maxlength="1" 
 								oninput="moveToNextField(this)"	
-								class="mr-2 form-control block w-full px-3 py-3 text-xl text-center font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-non"
+								class="mr-2 form-control block w-full px-3 py-3 text-xl text-center font-bold text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-non"
 							required>
 							<input 
 								type="text" 
@@ -48,7 +48,7 @@
 								pattern="[0-9]" 
 								maxlength="1" 
 								oninput="moveToNextField(this)"	
-								class="mr-2 form-control block w-full px-3 py-3 text-xl text-center font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-non"
+								class="mr-2 form-control block w-full px-3 py-3 text-xl text-center font-bold text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-non"
 							required>
 							<input 
 								type="text" 
@@ -56,7 +56,7 @@
 								pattern="[0-9]" 
 								maxlength="1" 
 								oninput="moveToNextField(this)"	
-								class="mr-2 form-control block w-full px-3 py-3 text-xl text-center font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-non"
+								class="form-control block w-full px-3 py-3 text-xl text-center font-bold text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-non"
 							required>
 						</div>
 
@@ -88,14 +88,15 @@
 					    }
 					  }						
 					</script>
-				</form>	
+				</form>
 			</div>
 		</div>
 		
 		<div class="lg:w-1/2 lg:bg-white lg:text-black p-5 bg-teal-600 text-white border-b border-white content-center flex justify-center items-center">
 			<div class="max-w-md content-center">
-				<h2 class="text-4xl py-5">{{ translate('Auth code missing?') }}</h2>
-				<p>{{ translate('If you did not receive an email with an authentication code, then the username or password you entered was wrong. Please try again.') }}</p>
+				<h2 class="text-4xl py-5">{{ authtitle }}</h2>
+				<p class="py-2">{{ authtext }}</p>
+				<a class="text-teal-600 py-2" href="{{ url_for('auth.show') }}">&#x2192; {{ translate('Back to login') }}</a>
 			</div>
 		</div>
 	
