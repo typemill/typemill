@@ -237,3 +237,7 @@ fieldsetdeveloper:
     trustedproxies:
       type: text
       label: Trusted IPs for proxies (comma separated)
+    headersoff:
+      type: checkbox
+      label: Disable Custom Headers
+      checkboxlabel: Disable all custom headers of Typemill and send your own headers instead.

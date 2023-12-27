@@ -28,6 +28,7 @@ use Typemill\Middleware\JsonBodyParser;
 use Typemill\Middleware\FlashMessages;
 use Typemill\Middleware\AssetMiddleware;
 use Typemill\Middleware\SecurityMiddleware;
+use Typemill\Middleware\CustomHeadersMiddleware;
 use Typemill\Extensions\TwigCsrfExtension;
 use Typemill\Extensions\TwigUrlExtension;
 use Typemill\Extensions\TwigUserExtension;
@@ -303,6 +304,8 @@ foreach($middleware as $pluginMiddleware)
 		$app->add(new $middlewareClass($middlewareParams));
 	}
 }
+
+$app->add(new CustomHeadersMiddleware($settings));
 
 $app->add(new AssetMiddleware($assets, $container->get('view')));
 
