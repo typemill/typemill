@@ -263,7 +263,7 @@ class Validation
 		$v = new Validator($params);
 		$v->rule('required', ['username', 'password'])->message("Required");
 		$v->rule('alphaNum', 'username')->message("Invalid characters");
-		$v->rule('lengthBetween', 'password', 5, 20)->message("Length between 5 - 20");
+		$v->rule('lengthBetween', 'password', 5, 40)->message("Length between 5 - 40");
 		$v->rule('lengthBetween', 'username', 3, 20)->message("Length between 3 - 20");
 		
 		if($v->validate())
