@@ -21,6 +21,7 @@ use Typemill\Events\OnPluginsLoaded;
 use Typemill\Events\OnSessionSegmentsLoaded;
 use Typemill\Events\OnRolesPermissionsLoaded;
 use Typemill\Events\OnResourcesLoaded;
+use Typemill\Middleware\RemoveCredentialsMiddleware;
 use Typemill\Middleware\SessionMiddleware;
 use Typemill\Middleware\OldInputMiddleware;
 use Typemill\Middleware\ValidationErrorsMiddleware;
@@ -74,6 +75,23 @@ if(isset($settings['displayErrorDetails']) && $settings['displayErrorDetails'])
 $uriFactory 						= new UriFactory();
 $uri 								= $uriFactory->createFromGlobals($_SERVER);
 $urlinfo 							= Helpers::urlInfo($uri);
+
+/* PROBLEM WITH URLINFO
+
+* it contains basic authentication like
+
+	["basepath"]=> "/typemill" 
+	["currentpath"]=> "/typemill/api/v1/mainnavi" 
+	["route"]=> "/api/v1/mainnavi" 
+	["scheme"]=>  "http" 
+	["authority"]=>  "trendschau:password@localhost" 
+	["protocol"]=> "http://trendschau:password@localhost" 
+	["baseurl"] => "http://trendschau:password@localhost/typemill" 
+	["currenturl"]=> "http://trendschau:password@localhost/typemill/api/v1/mainnavi" 
+
+* It probably contains wrong scheme when used with proxy
+
+*/
 
 $timer['settings'] = microtime(true);
 
@@ -305,7 +323,7 @@ foreach($middleware as $pluginMiddleware)
 	}
 }
 
-$app->add(new CustomHeadersMiddleware($settings));
+$app->add(new CustomHeadersMiddleware($settings, $urlinfo));
 
 $app->add(new AssetMiddleware($assets, $container->get('view')));
 
@@ -346,7 +364,9 @@ $errorMiddleware->setErrorHandler(HttpNotFoundException::class, function ($reque
 
 $app->add($errorMiddleware);
 
-$app->add(new SessionMiddleware($session_segments, $urlinfo['route'], $uri));
+$app->add(new SessionMiddleware($session_segments, $urlinfo['route']));
+
+$app->add(new RemoveCredentialsMiddleware());
 
 if(isset($settings['proxy']) && $settings['proxy'])
 {

@@ -101,7 +101,7 @@ class ControllerWebAuth extends Controller
 			# generate new authcode
 			$authcodevalue 	= rand(10000, 99999);
 
-			$mail 			= new SimpleMail($settings);
+			$mail 			= new SimpleMail($this->settings);
 
 			$subject 		= Translations::translate('Your authentication code for Typemill');
 			$message		= Translations::translate('Use the following authentication code to login into Typemill') . ': ' . $authcodevalue;
