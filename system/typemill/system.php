@@ -323,7 +323,7 @@ foreach($middleware as $pluginMiddleware)
 	}
 }
 
-$app->add(new CustomHeadersMiddleware($settings, $urlinfo));
+$app->add(new CustomHeadersMiddleware($settings));
 
 $app->add(new AssetMiddleware($assets, $container->get('view')));
 

@@ -3,6 +3,7 @@
 use Slim\Routing\RouteCollectorProxy;
 use Typemill\Middleware\ApiAuthentication;
 use Typemill\Middleware\ApiAuthorization;
+use Typemill\Middleware\CorsHeadersMiddleware;
 use Typemill\Controllers\ControllerApiGlobals;
 use Typemill\Controllers\ControllerApiMedia;
 use Typemill\Controllers\ControllerApiSystemSettings;
@@ -85,7 +86,7 @@ $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 	$group->get('/meta', ControllerApiAuthorMeta::class . ':getMeta')->setName('api.meta.get')->add(new ApiAuthorization($acl, 'mycontent', 'view'));
 	$group->post('/meta', ControllerApiAuthorMeta::class . ':updateMeta')->setName('api.metadata.update')->add(new ApiAuthorization($acl, 'mycontent', 'update'));
 
-})->add(new ApiAuthentication());
+})->add(new CorsHeadersMiddleware($settings, $urlinfo))->add(new ApiAuthentication());
 
 # api-routes from plugins
 if(isset($routes['api']) && !empty($routes['api']))
@@ -102,12 +103,12 @@ if(isset($routes['api']) && !empty($routes['api']))
 		if($resources && $privilege)
 		{
 			# protected api requires authentication and authorization
-			$app->{$method}($route, $class)->setName($name)->add(new ApiAuthorization($acl, $resource, $privilege))->add(new ApiAuthentication());
+			$app->{$method}($route, $class)->setName($name)->add(new ApiAuthorization($acl, $resource, $privilege))->add(new CorsHeadersMiddleware($settings, $urlinfo))->add(new ApiAuthentication());
 		}
 		else
 		{
 			# public api routes
-			$app->{$method}($route, $class)->setName($name);
+			$app->{$method}($route, $class)->setName($name)->add(new CorsHeadersMiddleware($settings, $urlinfo));
 		}
 	}
 }
