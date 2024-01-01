@@ -21,6 +21,7 @@ use Typemill\Events\OnPluginsLoaded;
 use Typemill\Events\OnSessionSegmentsLoaded;
 use Typemill\Events\OnRolesPermissionsLoaded;
 use Typemill\Events\OnResourcesLoaded;
+use Typemill\Events\OnCspLoaded;
 use Typemill\Middleware\RemoveCredentialsMiddleware;
 use Typemill\Middleware\SessionMiddleware;
 use Typemill\Middleware\OldInputMiddleware;
@@ -378,9 +379,25 @@ if(isset($settings['proxy']) && $settings['proxy'])
 $timer['middleware'] = microtime(true);
 
 
+/******************************
+* GET CSP FROM PLUGINS/THEMES *
+******************************/
+
+# get additional csp headers from plugins
+$cspFromPlugins = $dispatcher->dispatch(new OnCspLoaded([]), 'onCspLoaded')->getData();
+
+# get additional csp headers from theme 
+$cspFromTheme = [];
+$themeSettings = $settingsModel->getObjectSettings('themes', $settings['theme']);
+if(isset($themeSettings['csp']) && is_array($themeSettings['csp']) && !empty($themeSettings['csp']) )
+{
+	$cspFromTheme = $themeSettings['csp'];
+}
+
 /************************
 *   ADD ROUTES          *
 ************************/
+
 if(isset($settings['setup']) && $settings['setup'] == true)
 {
 	require __DIR__ . '/routes/setup.php';
@@ -392,6 +409,7 @@ else
 }
 
 $timer['routes'] = microtime(true);
+
 
 /************************
 *   RUN APP         		*

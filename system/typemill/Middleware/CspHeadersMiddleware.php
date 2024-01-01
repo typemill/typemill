@@ -11,28 +11,27 @@ class CspHeadersMiddleware implements MiddlewareInterface
 {
 	protected $settings;
 
-	protected $urlinfo;
-	
-	public function __construct($settings, $urlinfo)
+	protected $cspFromPlugins = false;
+
+	protected $cspFromTheme = false;
+
+	public function __construct($settings, $cspFromPlugins, $cspFromTheme)
 	{
 		$this->settings = $settings;
 
-		$this->urlinfo = $urlinfo;
+		$this->$cspFromPlugins = $cspFromPlugins;
+
+		$this->$cspFromTheme = $cspFromTheme;
 	}
 	
 	public function process(Request $request, RequestHandler $handler) :response
-	{
-		$scheme = $request->getUri()->getScheme();
-		
+	{		
 		# add the custom headers to the response after everything is processed
 		$response = $handler->handle($request);
 
-		###################
-		#   CSP HEADER   #
-		###################
+		$whitelist 	= ["'unsafe-inline'", "'unsafe-eval'", "'self'", "*.youtube-nocookie.com", "*.youtube.com"];
 
 		$cspdomains = isset($this->settings['cspdomains']) ? trim($this->settings['cspdomains']) : false;
-		$defaultsrc = "default-src 'unsafe-inline' 'unsafe-eval' 'self'";
 
 		if($cspdomains && $cspdomains != '')
 		{
@@ -42,23 +41,29 @@ class CspHeadersMiddleware implements MiddlewareInterface
 				$cspdomain = trim($cspdomain);
 				if($cspdomain != '')
 				{
-					$defaultsrc .= ' ' . $cspdomain;
+					$whitelist[] = $cspdomain;
 				}
 			}
 		}
 
-	    # dispatch to get from plugins
-		# get yaml from current theme
+	    # add csp from plugins
+		if($this->cspFromPlugins && is_array($this->cspFromPlugins) && !empty($this->cspFromPlugins))
+		{
+			$whitelist = array_merge($whitelist, $this->cspFromPlugins);
+		}
+
+		# add csp from current theme
+		if($this->cspFromTheme && is_array($this->cspFromTheme) && !empty($this->cspFromTheme))
+		{
+			$whitelist = array_merge($whitelist, $this->cspFromTheme);
+		}
+
+		$whitelist = array_unique($whitelist);
+		$whitelist = implode(' ', $whitelist);
 
 	    # Define the Content Security Policy header
-	    $cspHeader =  $defaultsrc . ";"; // Default source is restricted to 'self'
-#	    $cspHeader .= "frame-src 'self' https://www.youtube.com;"; // Allowing embedding YouTube videos
-# 		$cspHeader .= "img-src *";
-# 		$cspHeader .= "media-src *";
-# 		$cspHeader .= "script-src *";
-# 		$cspHeader .= "style-src *";
-# 		$cspHeader .= "object-src 'none'";
-
+	    $cspHeader =  "default-src " . $whitelist . ";";
+	    
 	    # Add the Content Security Policy header to the response
 	    $response = $response->withHeader('Content-Security-Policy', $cspHeader);
 

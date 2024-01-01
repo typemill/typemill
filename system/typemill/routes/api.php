@@ -92,7 +92,7 @@ $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 if(isset($routes['api']) && !empty($routes['api']))
 {
 	foreach($routes['api'] as $pluginRoute)
-	{	
+	{
 		$method 	= $pluginRoute['httpMethod'] ?? false;
 		$route		= $pluginRoute['route'] ?? false;
 		$class		= $pluginRoute['class'] ?? false;
