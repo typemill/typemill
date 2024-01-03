@@ -189,6 +189,7 @@ fieldsetrecover:
       type: checkbox
       label: 'Recover password'
       checkboxlabel: 'Activate a password recovery in the login form.'
+      description: "Be aware that some providers might reject emails send with this feature (php-mail)."
     recoversubject:
       type: text
       label: 'Email subject'
@@ -197,6 +198,7 @@ fieldsetrecover:
     recovermessage:
       type: textarea
       label: 'Text before recover link in email message'
+      descriptiion: 'The recover-link will be active for 24 hours.'
       maxlength: 2000
 fieldsetsecurity:
   type: fieldset
@@ -210,7 +212,7 @@ fieldsetsecurity:
       type: checkbox
       label: 'Authentication code (recommended)'
       checkboxlabel: 'Send a 5-digit authentication code by email to confirm login.'
-      description: 'The authentication code will be valid for 5 minutes. Be aware that device fingerprints will be stored in the user accounts. Make sure this complies with privacy legislation in your country.'
+      description: 'Please test this with your account first. If you do not get an email, make sure you have ftp-access to the server to disable the feature in the settings.yaml manually. The authentication code will be valid for 5 minutes. Be aware that device fingerprints will be stored in the user accounts. Make sure this complies with privacy legislation in your country.'
     authcaptcha:
       type: radio
       label: 'Use captcha in authentication forms'
