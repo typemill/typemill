@@ -220,29 +220,34 @@ fieldsetsecurity:
         aftererror: 'Show after first wrong input'
 fieldsetdeveloper:
   type: fieldset
-  legend: Developer
+  legend: "Developer"
   fields:
     displayErrorDetails:
       type: checkbox
-      label: Error reporting
-      checkboxlabel: Display application errors
+      label: "Error reporting"
+      checkboxlabel: "Display application errors"
     twigcache:
       type: checkbox
-      label: Twig cache
-      checkboxlabel: Activate the cache for twig templates
+      label: "Twig cache"
+      checkboxlabel: "Activate the cache for twig templates"
     proxy:
       type: checkbox
-      label: Proxy
-      checkboxlabel: Use x-forwarded-header.
+      label: "Proxy"
+      checkboxlabel: "Use x-forwarded-header"
     trustedproxies:
       type: text
-      label: Trusted IPs for proxies (comma separated)
+      label: "Trusted IPs for proxies (comma separated)"
     headersoff:
       type: checkbox
-      label: Disable Custom Headers
-      checkboxlabel: Disable all custom headers of Typemill and send your own headers instead.
+      label: "Disable Custom Headers"
+      checkboxlabel: "Disable all custom headers of Typemill and send your own headers instead."
     corsdomains:
       type: textarea
-      label: Allowed Domains for API-Access (CORS)
+      label: "Allowed Domains for API-Access (CORS)"
       placeholder: 'https://my-website-that-uses-the-api.org,https://another-website-using-the-api.org'
-      description: Add all domains separated with comma, that should have access to the API. Domains will be added to the cors-header.
+      description: "Add all domains separated with comma, that should have access to the Typemill API. Domains will be added to the cors-header."
+    cspdomains:
+      type: textarea
+      label: "Allowed Domains for Content on Typemill (CSP)"
+      placeholder: 'https://www.google.com,*google.com'
+      description: "Add all domains separated with comma, that you want to integrate on your Typemill website. Domains will be added to the csp-header. Usually done with plugins and themes, but add manually if something is blocked."

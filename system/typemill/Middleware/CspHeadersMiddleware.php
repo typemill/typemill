@@ -11,17 +11,17 @@ class CspHeadersMiddleware implements MiddlewareInterface
 {
 	protected $settings;
 
-	protected $cspFromPlugins = false;
+	protected $cspFromPlugins;
 
-	protected $cspFromTheme = false;
+	protected $cspFromTheme;
 
 	public function __construct($settings, $cspFromPlugins, $cspFromTheme)
 	{
 		$this->settings = $settings;
 
-		$this->$cspFromPlugins = $cspFromPlugins;
+		$this->cspFromPlugins = $cspFromPlugins;
 
-		$this->$cspFromTheme = $cspFromTheme;
+		$this->cspFromTheme = $cspFromTheme;
 	}
 	
 	public function process(Request $request, RequestHandler $handler) :response

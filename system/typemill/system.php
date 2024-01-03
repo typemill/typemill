@@ -52,7 +52,7 @@ ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
 
 /****************************
-* LOAD SETTINGS							*
+* LOAD SETTINGS				*
 ****************************/
 
 $settingsModel = new Settings();
@@ -76,23 +76,6 @@ if(isset($settings['displayErrorDetails']) && $settings['displayErrorDetails'])
 $uriFactory 						= new UriFactory();
 $uri 								= $uriFactory->createFromGlobals($_SERVER);
 $urlinfo 							= Helpers::urlInfo($uri);
-
-/* PROBLEM WITH URLINFO
-
-* it contains basic authentication like
-
-	["basepath"]=> "/typemill" 
-	["currentpath"]=> "/typemill/api/v1/mainnavi" 
-	["route"]=> "/api/v1/mainnavi" 
-	["scheme"]=>  "http" 
-	["authority"]=>  "trendschau:password@localhost" 
-	["protocol"]=> "http://trendschau:password@localhost" 
-	["baseurl"] => "http://trendschau:password@localhost/typemill" 
-	["currenturl"]=> "http://trendschau:password@localhost/typemill/api/v1/mainnavi" 
-
-* It probably contains wrong scheme when used with proxy
-
-*/
 
 $timer['settings'] = microtime(true);
 
