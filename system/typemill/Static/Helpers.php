@@ -9,6 +9,7 @@ class Helpers{
 	public static function urlInfo($uri)
 	{
 		$uri 				= $uri->withUserInfo('');
+		$uri 				= $uri->withPort(null);
 
 		$basepath 			= preg_replace('/(.*)\/.*/', '$1', $_SERVER['SCRIPT_NAME']);
 		$currentpath  		= $uri->getPath();
