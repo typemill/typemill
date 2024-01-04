@@ -29,7 +29,7 @@ class CspHeadersMiddleware implements MiddlewareInterface
 		# add the custom headers to the response after everything is processed
 		$response = $handler->handle($request);
 
-		$whitelist 	= ["'unsafe-inline'", "'unsafe-eval'", "'self'", "*.youtube-nocookie.com", "*.youtube.com"];
+		$whitelist 	= ["'unsafe-inline'", "'unsafe-eval'", "'self'", "data:", "*.youtube-nocookie.com", "*.youtube.com"];
 
 		$cspdomains = isset($this->settings['cspdomains']) ? trim($this->settings['cspdomains']) : false;
 
