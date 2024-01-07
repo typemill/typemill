@@ -253,3 +253,7 @@ fieldsetdeveloper:
       label: "Allowed Domains for Content on Typemill (CSP)"
       placeholder: 'https://www.google.com,*google.com'
       description: "Add all domains separated with comma, that you want to integrate on your Typemill website. Domains will be added to the csp-header. Usually done with plugins and themes, but add manually if something is blocked."
+    cspdisabled:
+      type: checkbox
+      label: "Disable CSP Headers"
+      checkboxlabel: "Disable all csp (content security policy) headers for this website."

@@ -29,6 +29,11 @@ class CspHeadersMiddleware implements MiddlewareInterface
 		# add the custom headers to the response after everything is processed
 		$response = $handler->handle($request);
 
+		if(isset($this->settings['cspdisabled']) && $this->settings['cspdisabled'])
+		{
+			return $response;
+		}
+
 		$whitelist 	= ["'unsafe-inline'", "'unsafe-eval'", "'self'", "data:", "*.youtube-nocookie.com", "*.youtube.com"];
 
 		$cspdomains = isset($this->settings['cspdomains']) ? trim($this->settings['cspdomains']) : false;
@@ -59,6 +64,13 @@ class CspHeadersMiddleware implements MiddlewareInterface
 		}
 
 		$whitelist = array_unique($whitelist);
+
+		# do not add csp header if disabled-flag is found
+		if(in_array("disable", $whitelist))
+		{
+			return $response;
+		}
+
 		$whitelist = implode(' ', $whitelist);
 
 	    # Define the Content Security Policy header
