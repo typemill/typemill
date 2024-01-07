@@ -1,6 +1,6 @@
 {% extends 'layouts/layoutAuth.twig' %}
 
-{% block title %}Login Authentication Code{% endblock %}
+{% block title %}Login Verification Code{% endblock %}
 
 {% block content %}
 
@@ -9,9 +9,9 @@
 		<div class="lg:w-1/2 bg-teal-600 text-white min-h-screen flex justify-center items-center">
 			<div class="max-w-md content-center">
 
-				<h1 class="text-4xl py-5">Authentication Code</h1>
+				<h1 class="text-4xl py-5">Login Verification Code</h1>
 			
-				<p>{{ translate('Enter the authentication code from your email:') }}</a>
+				<p>{{ translate('Enter the verification code from your email:') }}</a>
 
 				<form method="POST" action="{{ url_for("auth.authcode") }}" autocomplete="off">
 				

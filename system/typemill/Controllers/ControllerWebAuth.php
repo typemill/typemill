@@ -26,8 +26,8 @@ class ControllerWebAuth extends Controller
 		$validation		= new Validation();
 		$securitylog 	= $this->settings['securitylog'] ?? false;
 		$authcodeactive = $this->settings['authcode'] ?? false;
-		$authtitle 		= Translations::translate('Auth code missing?');
-		$authtext 		= Translations::translate('If you did not receive an email with an authentication code, then the username or password you entered was wrong. Please try again.');
+		$authtitle 		= Translations::translate('Verification code missing?');
+		$authtext 		= Translations::translate('If you did not receive an email with the verification code, then the username or password you entered was wrong. Please try again.');
 
 		if($validation->signin($input) !== true)
 		{
@@ -103,8 +103,8 @@ class ControllerWebAuth extends Controller
 
 			$mail 			= new SimpleMail($this->settings);
 
-			$subject 		= Translations::translate('Your authentication code for Typemill');
-			$message		= Translations::translate('Use the following authentication code to login into Typemill') . ': ' . $authcodevalue;
+			$subject 		= Translations::translate('Your verification code for Typemill');
+			$message		= Translations::translate('Use the following verification code to login into Typemill') . ': ' . $authcodevalue;
 
 			$send 			= $mail->send($userdata['email'], $subject, $message);
 
@@ -113,7 +113,7 @@ class ControllerWebAuth extends Controller
 			if(!$send)
 			{
 				$authtitle 		= Translations::translate('Error sending email');
-				$authtext 		= Translations::translate('We could not send the email with the authentication code to your address. Reason: ') . $mail->error;
+				$authtext 		= Translations::translate('We could not send the email with the verification code to your address. Reason: ') . $mail->error;
 			}
 			else
 			{
@@ -169,10 +169,10 @@ class ControllerWebAuth extends Controller
 		{
 			if($securitylog)
 			{
-				\Typemill\Static\Helpers::addLogEntry('login: invalid authcode format');
+				\Typemill\Static\Helpers::addLogEntry('login: invalid verification code format');
 			}
 
-			$this->c->get('flash')->addMessage('error', Translations::translate('Invalid authcode format, please try again.'));
+			$this->c->get('flash')->addMessage('error', Translations::translate('Invalid verification code format, please try again.'));
 
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
 		}
@@ -199,10 +199,10 @@ class ControllerWebAuth extends Controller
 		{
 			if($securitylog)
 			{
-				\Typemill\Static\Helpers::addLogEntry('login: authcode wrong or outdated.');
+				\Typemill\Static\Helpers::addLogEntry('login: verification code wrong or outdated.');
 			}
 
-			$this->c->get('flash')->addMessage('error', Translations::translate('The authcode was wrong or outdated, please start again.'));
+			$this->c->get('flash')->addMessage('error', Translations::translate('The verification was wrong or outdated, please start again.'));
 
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
 		}
