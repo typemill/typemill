@@ -812,7 +812,7 @@ class Validation
 				break;
 			case "text":
 				$v->rule('noHTML', $fieldName);
-				$v->rule('lengthMax', $fieldName, 500);
+				$v->rule('lengthMax', $fieldName, 1000);
 #				$v->rule('regex', $fieldName, '/^[\pL0-9_ \-\.\?\!\/\:]*$/u');
 				break;
 			case "textarea":
