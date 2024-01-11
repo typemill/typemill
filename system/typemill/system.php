@@ -1,3 +1,4 @@
+
 <?php
 
 use DI\Container;
@@ -16,6 +17,7 @@ use Typemill\Static\Plugins;
 use Typemill\Static\Translations;
 use Typemill\Static\Permissions;
 use Typemill\Static\Helpers;
+use Typemill\Static\Urlinfo;
 use Typemill\Events\OnSettingsLoaded;
 use Typemill\Events\OnPluginsLoaded;
 use Typemill\Events\OnSessionSegmentsLoaded;
@@ -43,6 +45,7 @@ use Typemill\Extensions\TwigCaptchaExtension;
 $timer = [];
 $timer['start'] = microtime(true);
 
+
 /****************************
 * HIDE ERRORS BY DEFAULT    *
 ****************************/
@@ -51,6 +54,7 @@ ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
 
+
 /****************************
 * LOAD SETTINGS				*
 ****************************/
@@ -58,6 +62,7 @@ error_reporting(E_ALL);
 $settingsModel = new Settings();
 
 $settings = $settingsModel->loadSettings();
+
 
 /****************************
 * HANDLE DISPLAY ERRORS 	  *
@@ -68,19 +73,9 @@ if(isset($settings['displayErrorDetails']) && $settings['displayErrorDetails'])
 #	ini_set('display_startup_errors', 1);	
 }
 
-/****************************
-* ADD PATH-INFOS FOR LATER 	*
-****************************/
-
-# ADD THEM TO THE SETTINGS AND YOU HAVE THEM EVERYWHERE??
-$uriFactory 						= new UriFactory();
-$uri 								= $uriFactory->createFromGlobals($_SERVER);
-$urlinfo 							= Helpers::urlInfo($uri);
-
-$timer['settings'] = microtime(true);
 
 /****************************
-* CREATE CONTAINER      		*
+* CREATE CONTAINER + APP   	*
 ****************************/
 
 # https://www.slimframework.com/docs/v4/start/upgrade.html#changes-to-container
@@ -96,11 +91,40 @@ $routeParser 			= $app->getRouteCollector()->getRouteParser();
 # add route parser to container to use named routes in controller
 $container->set('routeParser', $routeParser);
 
-# set urlinfo
-$container->set('urlinfo', $urlinfo);
+
+/*******************************
+ *      Basepath               *
+ ******************************/
 
 # in slim 4 you alsways have to set application basepath
-$app->setBasePath($urlinfo['basepath']);
+$basepath = preg_replace('/(.*)\/.*/', '$1', $_SERVER['SCRIPT_NAME']);
+$app->setBasePath($basepath);
+
+
+/****************
+*    URLINFO 	*
+****************/
+
+# WE DO NOT NEED IT HERE?
+# WE CAN ADD IT TO CONTAINER IN MIDDLEWARE AFTER PROXY DETECTION
+
+# WE NEED FOR
+# - LICENSE (base url)
+# - Each plugin to add container
+# - SESSION SEGMEŃTS (route)
+# - TRANSLATIONS (route)
+# - ASSETS (route)
+# - TWIG URL EXTENSION
+# - SESSION MIDDLEWARE
+
+$uriFactory 			= new UriFactory();
+$uri 					= $uriFactory->createFromGlobals($_SERVER);
+$urlinfo 				= Urlinfo::getUrlInfo($basepath, $uri, $settings);
+
+$timer['settings'] = microtime(true);
+
+# set urlinfo
+$container->set('urlinfo', $urlinfo);
 
 $timer['container'] = microtime(true);
 

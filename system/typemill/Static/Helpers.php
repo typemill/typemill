@@ -6,32 +6,6 @@ use Typemill\Models\StorageWrapper;
 
 class Helpers{
 
-	public static function urlInfo($uri)
-	{
-		$uri 				= $uri->withUserInfo('');
-		$uri 				= $uri->withPort(null);
-
-		$basepath 			= preg_replace('/(.*)\/.*/', '$1', $_SERVER['SCRIPT_NAME']);
-		$currentpath  		= $uri->getPath();
-		$route 				= str_replace($basepath, '', $currentpath);
-		$scheme 			= $uri->getScheme();
-		$authority 			= $uri->getAuthority();
-		$protocol 			= ($scheme ? $scheme . ':' : '') . ($authority ? '//' . $authority : '');
-		$baseurl 			= $protocol . $basepath;
-		$currenturl  		= $protocol . $currentpath;
-
-		return [
-			'basepath' 		=> $basepath,
-			'currentpath' 	=> $currentpath,
-			'route' 		=> $route,
-			'scheme' 		=> $scheme,
-			'authority' 	=> $authority,
-			'protocol' 		=> $protocol,
-			'baseurl' 		=> $baseurl,
-			'currenturl' 	=> $currenturl
-		];
-	}
-
 	public static function getUserIP()
 	{
 		$client  = @$_SERVER['HTTP_CLIENT_IP'];
