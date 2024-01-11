@@ -25,7 +25,7 @@ class ControllerWebAuth extends Controller
         $input 			= $request->getParsedBody();
 		$validation		= new Validation();
 		$securitylog 	= $this->settings['securitylog'] ?? false;
-		$authcodeactive = $this->settings['authcode'] ?? false;
+		$authcodeactive = $this->isAuthcodeActive($this->settings);
 		$authtitle 		= Translations::translate('Verification code missing?');
 		$authtext 		= Translations::translate('If you did not receive an email with the verification code, then the username or password you entered was wrong. Please try again.');
 
@@ -108,8 +108,6 @@ class ControllerWebAuth extends Controller
 
 			$send 			= $mail->send($userdata['email'], $subject, $message);
 
-			$send = true;
-
 			if(!$send)
 			{
 				$authtitle 		= Translations::translate('Error sending email');
@@ -157,6 +155,21 @@ class ControllerWebAuth extends Controller
 		return $response->withHeader('Location', $this->routeParser->urlFor('user.account'))->withStatus(302);
 	}
 
+
+	private function isAuthcodeActive($settings)
+	{
+		if(
+			isset($settings['authcode']) &&
+			$settings['authcode'] &&
+			isset($settings['mailfrom']) &&
+			filter_var($settings['mailfrom'], FILTER_VALIDATE_EMAIL)
+		)
+		{
+			return true;
+		}
+
+		return false;
+	}
 
 	# login a user with valid authcode
 	public function loginWithAuthcode(Request $request, Response $response)

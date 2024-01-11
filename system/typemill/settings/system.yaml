@@ -164,22 +164,22 @@ fieldsetmail:
   legend: Email
   fields:
     mailfrom:
-      type: text
+      type: email
       label: 'Mail From (required)'
       placeholder: sender@yourmail.org
-      maxlength: 60
-      description: 'Enter an email address that should send emails (sender).'
+      maxlength: 100
+      description: 'Enter an email address that sends the e-mails (sender). The e-mail-feature will be used for recovery and verification e-mails. Send a testmail to your user-account to verify that you receive the e-mails.'
     mailfromname:
       type: text
       label: 'Mail From Name (optional)'
       placeholder: sender name
-      maxlength: 60
+      maxlength: 100
       description: 'Optionally enter a name for the sender address. If not set, the from-address will be visible.'
     replyto:
       type: text
       label: 'Reply To (optional)'
       placeholder: noreply@yourmail.org
-      maxlength: 60
+      maxlength: 100
       description: 'Optionally enter a "reply to" address for answers from the receiver. If not set, answers will go to the from-address.'
 fieldsetrecover:
   type: fieldset
@@ -189,7 +189,7 @@ fieldsetrecover:
       type: checkbox
       label: 'Recover password'
       checkboxlabel: 'Activate a password recovery in the login form.'
-      description: "Be aware that some providers might reject emails send with this feature (php-mail)."
+      description: "From mail is required for this feature. Send a testmail before you use this feature."
     recoversubject:
       type: text
       label: 'Email subject'
@@ -204,15 +204,11 @@ fieldsetsecurity:
   type: fieldset
   legend: Security
   fields:
-    securitylog:
-      type: checkbox
-      label: 'Security log'
-      checkboxlabel: 'Track spam and suspicious actions in a logfile'
     authcode:
       type: checkbox
       label: 'Login Verification (recommended)'
       checkboxlabel: 'Verify your login with a 5-digit code send by email.'
-      description: 'Please test this with your account. If you do not get an email, make sure you have ftp-access to disable the feature in the settings.yaml manually. The verification code will be valid for 5 minutes. Be aware that device fingerprints will be stored in the user accounts. Make sure this complies with privacy legislation in your country.'
+      description: 'From mail is required for this feature. Send a testmail before you use this feature. Make sure you have ftp-access to disable the feature in settings.yaml on failure. The verification code will be valid for 5 minutes. Be aware that device fingerprints will be stored in the user accounts.'
     authcaptcha:
       type: radio
       label: 'Use captcha in authentication forms'
@@ -220,6 +216,10 @@ fieldsetsecurity:
         disabled: 'Disable'
         standard: 'Always show'
         aftererror: 'Show after first wrong input'
+    securitylog:
+      type: checkbox
+      label: 'Security log'
+      checkboxlabel: 'Track spam and suspicious actions in a logfile'
 fieldsetdeveloper:
   type: fieldset
   legend: "Developer"
@@ -242,18 +242,19 @@ fieldsetdeveloper:
     headersoff:
       type: checkbox
       label: "Disable Custom Headers"
-      checkboxlabel: "Disable all custom headers of Typemill and send your own headers instead."
-    corsdomains:
-      type: textarea
-      label: "Allowed Domains for API-Access (CORS)"
-      placeholder: 'https://my-website-that-uses-the-api.org,https://another-website-using-the-api.org'
-      description: "Add all domains separated with comma, that should have access to the Typemill API. Domains will be added to the cors-header."
-    cspdomains:
-      type: textarea
-      label: "Allowed Domains for Content on Typemill (CSP)"
-      placeholder: 'https://www.google.com,*google.com'
-      description: "Add all domains separated with comma, that you want to integrate on your Typemill website. Domains will be added to the csp-header. Usually done with plugins and themes, but add manually if something is blocked."
+      checkboxlabel: "Disable all custom headers of Typemill (except cors) and send your own headers instead."
     cspdisabled:
       type: checkbox
       label: "Disable CSP Headers"
-      checkboxlabel: "Disable all csp (content security policy) headers for this website."
+      checkboxlabel: "Disable all csp headers (content security policy) for this website."
+    cspdomains:
+      type: textarea
+      label: "Allowed Domains for Content on Typemill (CSP-Headers)"
+      placeholder: 'https://www.google.com,*google.com'
+      description: "List all domains, separated by commas, to allow content integration, such as iframes, on your Typemill website. Domains will be added to the csp-header. Usually done with plugins and themes, but add manually if something is blocked."
+    corsdomains:
+      type: textarea
+      label: "Allowed Domains for API-Access (CORS-Headers)"
+      placeholder: 'https://my-website-that-uses-the-api.org,https://another-website-using-the-api.org'
+      description: "List all domains, separated by comma, that should have access to the Typemill API. Domains will be added to the cors-header."
+ 

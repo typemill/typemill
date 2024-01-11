@@ -19,6 +19,7 @@ use Typemill\Controllers\ControllerApiAuthorArticle;
 use Typemill\Controllers\ControllerApiAuthorBlock;
 use Typemill\Controllers\ControllerApiAuthorMeta;
 use Typemill\Controllers\ControllerApiAuthorShortcode;
+use Typemill\Controllers\ControllerApiTestmail;
 
 $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 
@@ -35,6 +36,7 @@ $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 	$group->post('/plugin', ControllerApiSystemPlugins::class . ':updatePlugin')->setName('api.plugin.set')->add(new ApiAuthorization($acl, 'system', 'update')); # admin
 	$group->post('/extensions', ControllerApiSystemExtensions::class . ':activateExtension')->setName('api.extension.activate')->add(new ApiAuthorization($acl, 'system', 'update')); # admin
 	$group->post('/versioncheck', ControllerApiSystemVersions::class . ':checkVersions')->setName('api.versioncheck')->add(new ApiAuthorization($acl, 'system', 'update')); # admin
+	$group->post('/testmail', ControllerApiTestmail::class . ':send')->setName('api.testmail')->add(new ApiAuthorization($acl, 'system', 'update')); # admin
 	$group->get('/users/getbynames', ControllerApiSystemUsers::class . ':getUsersByNames')->setName('api.usersbynames')->add(new ApiAuthorization($acl, 'user', 'update')); # admin
 	$group->get('/users/getbyemail', ControllerApiSystemUsers::class . ':getUsersByEmail')->setName('api.usersbyemail')->add(new ApiAuthorization($acl, 'user', 'update')); # admin
 	$group->get('/users/getbyrole', ControllerApiSystemUsers::class . ':getUsersByRole')->setName('api.usersbyrole')->add(new ApiAuthorization($acl, 'user', 'update')); # admin

@@ -17,6 +17,13 @@ const app = Vue.createApp({
 										:userroles="userroles"
 										:value="formData[fieldname]" 
 										v-bind="subfieldDefinition">
+										<slot v-if="fieldname == 'mailfrom'">
+											<button 
+												class   		= "absolute px-2 py-3 ml-2 text-stone-50 bg-stone-700 hover:bg-stone-900 hover:text-white transition duration-100 cursor-pointer" 
+												style 			= "right:0px; width:200px;"
+												@click.prevent 	= "testmail()" 
+											>send testmail</button>
+										</slot>
 									</component>
 								</fieldset>
 							</div>
@@ -85,6 +92,32 @@ const app = Vue.createApp({
 			this.currentTab = tab;
 			this.reset();
 		},
+		testmail: function()
+		{
+			this.reset();
+			var self = this;
+
+			tmaxios.post('/api/v1/testmail',{
+				'url':	data.urlinfo.route,
+			})
+			.then(function (response)
+			{
+				self.messageClass = 'bg-teal-500';
+				self.message = response.data.message;
+			})
+			.catch(function (error)
+			{
+				if(error.response)
+				{
+					self.message = handleErrorMessage(error);
+					self.messageClass = 'bg-rose-500';
+					if(error.response.data.errors !== undefined)
+					{
+						self.errors = error.response.data.errors;
+					}
+				}
+			});
+		},
 		save: function()
 		{
 			this.reset();
@@ -109,7 +142,7 @@ const app = Vue.createApp({
 						self.errors = error.response.data.errors;
 					}
 				}
-			});			
+			});
 		},
 		reset: function()
 		{
