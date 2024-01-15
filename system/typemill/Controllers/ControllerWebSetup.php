@@ -95,7 +95,11 @@ class ControllerWebSetup extends Controller
 
 			# create initial settings file
 			$settingsModel = new Settings();
-			$settingsModel->createSettings();
+			$settingsModel->createSettings([
+				'author' 		=> $params['username'],
+				'mailfrom'		=> $params['email'],
+				'mailfromname'	=> $params['username']
+			]);
 
 			$urlinfo = $this->c->get('urlinfo');
 			$route = $urlinfo['baseurl'] . '/tm/system';

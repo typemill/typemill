@@ -63,6 +63,9 @@ class ApiAuthentication
 		}
 		*/
 
+
+########### WHY NOT USE BASIC AUTH PARAMS FROM URI ?
+
 		$params = [];
 
 		if (preg_match("/Basic\s+(.*)$/i", $request->getHeaderLine("Authorization"), $matches)) 

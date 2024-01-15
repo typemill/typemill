@@ -41,7 +41,7 @@ class Media
 		$this->tmpFolder		= $this->basepath . 'media' . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
 	}
 
-	public function clearTempFolder()
+	public function clearTempFolder($immediate = NULL)
 	{
 		$files 		= scandir($this->tmpFolder);
 		$now 		= time();
@@ -54,13 +54,15 @@ class Media
 				$filelink = $this->tmpFolder . $file;
 				if(file_exists($filelink))
 				{
-					$filetime = filemtime($filelink);
-					if($now - $filetime > 1800)
+					$filetime 	= filemtime($filelink);
+					$delete 	= $immediate ? $immediate : ($now - $filetime > 1800);
+					
+					if($delete)
 					{
 						if(!unlink($filelink))
 						{
 							$result = false;
-						}			
+						}
 					}
 				}
 			}

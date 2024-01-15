@@ -11,54 +11,52 @@ use Typemill\Models\User;
 
 class SessionMiddleware implements MiddlewareInterface
 {
-    protected $segments;
+	protected $segments;
 
-    protected $route;
+	protected $route;
+	
+	public function __construct($segments, $route)
+	{
+		$this->segments = $segments;
 
-    protected $uri;
-    
-    public function __construct($segments, $route, $uri)
-    {
-        $this->segments = $segments;
-
-        $this->route = $route;
-
-        $this->uri = $uri;
-    }
-    
+		$this->route = $route;
+	}
+	
 	public function process(Request $request, RequestHandler $handler) :response
-    {
-        $scheme = $request->getUri()->getScheme();
-        
-        # start session
-        Session::startSessionForSegments($this->segments, $this->route, $scheme);
+	{
+		$uri = $request->getUri();
 
-        $authenticated = ( 
-                (isset($_SESSION['username'])) && 
-                (isset($_SESSION['login'])) 
-            )
-            ? true : false;
+		$scheme = $request->getUri()->getScheme();
+		
+		# start session
+		Session::startSessionForSegments($this->segments, $this->route, $scheme);
 
-        if($authenticated)
-        {
-            # add userdata to the request for later use
-            $user = new User();
+		$authenticated = ( 
+				(isset($_SESSION['username'])) && 
+				(isset($_SESSION['login'])) 
+			)
+			? true : false;
 
-            if($user->setUser($_SESSION['username']))
-            {
-                $userdata = $user->getUserData();
+		if($authenticated)
+		{
+			# add userdata to the request for later use
+			$user = new User();
 
-                $request = $request->withAttribute('c_username', $userdata['username']);
-                $request = $request->withAttribute('c_userrole', $userdata['userrole']);
-                if(isset($userdata['darkmode']))
-                {
-                    $request = $request->withAttribute('c_darkmode', $userdata['darkmode']);
-                }
-            }
-        }
+			if($user->setUser($_SESSION['username']))
+			{
+				$userdata = $user->getUserData();
+
+				$request = $request->withAttribute('c_username', $userdata['username']);
+				$request = $request->withAttribute('c_userrole', $userdata['userrole']);
+				if(isset($userdata['darkmode']))
+				{
+					$request = $request->withAttribute('c_darkmode', $userdata['darkmode']);
+				}
+			}
+		}
 
 		$response = $handler->handle($request);
 	
 		return $response;
-    }
+	}
 }

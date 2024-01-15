@@ -16,11 +16,14 @@ use Typemill\Static\Plugins;
 use Typemill\Static\Translations;
 use Typemill\Static\Permissions;
 use Typemill\Static\Helpers;
+use Typemill\Static\Urlinfo;
 use Typemill\Events\OnSettingsLoaded;
 use Typemill\Events\OnPluginsLoaded;
 use Typemill\Events\OnSessionSegmentsLoaded;
 use Typemill\Events\OnRolesPermissionsLoaded;
 use Typemill\Events\OnResourcesLoaded;
+use Typemill\Events\OnCspLoaded;
+use Typemill\Middleware\RemoveCredentialsMiddleware;
 use Typemill\Middleware\SessionMiddleware;
 use Typemill\Middleware\OldInputMiddleware;
 use Typemill\Middleware\ValidationErrorsMiddleware;
@@ -28,6 +31,7 @@ use Typemill\Middleware\JsonBodyParser;
 use Typemill\Middleware\FlashMessages;
 use Typemill\Middleware\AssetMiddleware;
 use Typemill\Middleware\SecurityMiddleware;
+use Typemill\Middleware\CustomHeadersMiddleware;
 use Typemill\Extensions\TwigCsrfExtension;
 use Typemill\Extensions\TwigUrlExtension;
 use Typemill\Extensions\TwigUserExtension;
@@ -48,13 +52,15 @@ ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
 
+
 /****************************
-* LOAD SETTINGS							*
+* LOAD SETTINGS				*
 ****************************/
 
 $settingsModel = new Settings();
 
 $settings = $settingsModel->loadSettings();
+
 
 /****************************
 * HANDLE DISPLAY ERRORS 	  *
@@ -65,19 +71,9 @@ if(isset($settings['displayErrorDetails']) && $settings['displayErrorDetails'])
 #	ini_set('display_startup_errors', 1);	
 }
 
-/****************************
-* ADD PATH-INFOS FOR LATER 	*
-****************************/
-
-# ADD THEM TO THE SETTINGS AND YOU HAVE THEM EVERYWHERE??
-$uriFactory 						= new UriFactory();
-$uri 								= $uriFactory->createFromGlobals($_SERVER);
-$urlinfo 							= Helpers::urlInfo($uri);
-
-$timer['settings'] = microtime(true);
 
 /****************************
-* CREATE CONTAINER      		*
+* CREATE CONTAINER + APP   	*
 ****************************/
 
 # https://www.slimframework.com/docs/v4/start/upgrade.html#changes-to-container
@@ -93,11 +89,40 @@ $routeParser 			= $app->getRouteCollector()->getRouteParser();
 # add route parser to container to use named routes in controller
 $container->set('routeParser', $routeParser);
 
-# set urlinfo
-$container->set('urlinfo', $urlinfo);
+
+/*******************************
+ *      Basepath               *
+ ******************************/
 
 # in slim 4 you alsways have to set application basepath
-$app->setBasePath($urlinfo['basepath']);
+$basepath = preg_replace('/(.*)\/.*/', '$1', $_SERVER['SCRIPT_NAME']);
+$app->setBasePath($basepath);
+
+
+/****************
+*    URLINFO 	*
+****************/
+
+# WE DO NOT NEED IT HERE?
+# WE CAN ADD IT TO CONTAINER IN MIDDLEWARE AFTER PROXY DETECTION
+
+# WE NEED FOR
+# - LICENSE (base url)
+# - Each plugin to add container
+# - SESSION SEGMEŃTS (route)
+# - TRANSLATIONS (route)
+# - ASSETS (route)
+# - TWIG URL EXTENSION
+# - SESSION MIDDLEWARE
+
+$uriFactory 			= new UriFactory();
+$uri 					= $uriFactory->createFromGlobals($_SERVER);
+$urlinfo 				= Urlinfo::getUrlInfo($basepath, $uri, $settings);
+
+$timer['settings'] = microtime(true);
+
+# set urlinfo
+$container->set('urlinfo', $urlinfo);
 
 $timer['container'] = microtime(true);
 
@@ -304,6 +329,8 @@ foreach($middleware as $pluginMiddleware)
 	}
 }
 
+$app->add(new CustomHeadersMiddleware($settings));
+
 $app->add(new AssetMiddleware($assets, $container->get('view')));
 
 $app->add(new ValidationErrorsMiddleware($container->get('view')));
@@ -312,10 +339,10 @@ $app->add(new SecurityMiddleware($routeParser, $container->get('settings')));
 
 $app->add(new OldInputMiddleware($container->get('view')));
 
-$app->add(new FlashMessages($container));
-
 # Add Twig-View Middleware
 $app->add(TwigMiddleware::createFromContainer($app));
+
+$app->add(new FlashMessages($container));
 
 # add JsonBodyParser Middleware
 $app->add(new JsonBodyParser());
@@ -343,7 +370,9 @@ $errorMiddleware->setErrorHandler(HttpNotFoundException::class, function ($reque
 
 $app->add($errorMiddleware);
 
-$app->add(new SessionMiddleware($session_segments, $urlinfo['route'], $uri));
+$app->add(new SessionMiddleware($session_segments, $urlinfo['route']));
+
+$app->add(new RemoveCredentialsMiddleware());
 
 if(isset($settings['proxy']) && $settings['proxy'])
 {
@@ -355,9 +384,25 @@ if(isset($settings['proxy']) && $settings['proxy'])
 $timer['middleware'] = microtime(true);
 
 
+/******************************
+* GET CSP FROM PLUGINS/THEMES *
+******************************/
+
+# get additional csp headers from plugins
+$cspFromPlugins = $dispatcher->dispatch(new OnCspLoaded([]), 'onCspLoaded')->getData();
+
+# get additional csp headers from theme 
+$cspFromTheme = [];
+$themeSettings = $settingsModel->getObjectSettings('themes', $settings['theme']);
+if(isset($themeSettings['csp']) && is_array($themeSettings['csp']) && !empty($themeSettings['csp']) )
+{
+	$cspFromTheme = $themeSettings['csp'];
+}
+
 /************************
 *   ADD ROUTES          *
 ************************/
+
 if(isset($settings['setup']) && $settings['setup'] == true)
 {
 	require __DIR__ . '/routes/setup.php';
@@ -369,6 +414,7 @@ else
 }
 
 $timer['routes'] = microtime(true);
+
 
 /************************
 *   RUN APP         		*

@@ -43,9 +43,7 @@ class License
 		}
 		elseif($licenseStatus === true)
 		{
-			echo '<pre>';
-			print_r($licensedata);
-			die();
+			die('Static License licenceStatus is true');
 		}
 		else
 		{

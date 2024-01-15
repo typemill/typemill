@@ -134,6 +134,44 @@ class ControllerWebFrontend extends Controller
 		$metadata 			= $this->c->get('dispatcher')->dispatch(new OnMetaLoaded($metadata),'onMetaLoaded')->getData();
 
 
+		# REFERENCE FEATURE
+		if(isset($metadata['meta']['referencetype']) && $metadata['meta']['referencetype'] != 'disable')
+		{
+			$referenceurl = rtrim($urlinfo['baseurl'], '/') . '/' . trim($metadata['meta']['reference'], '/');
+
+			switch ($metadata['meta']['referencetype']) {
+				case 'redirect301':
+					return $response->withHeader('Location', $referenceurl)->withStatus(301);
+					break;
+				case 'redirect302':
+					return $response->withHeader('Location', $referenceurl)->withStatus(302);
+					break;
+				case 'outlink':
+					return $response->withHeader('Location', $metadata['meta']['reference'])->withStatus(301);
+					break;
+				case 'copy':
+				    $refpageinfo 		= $extendedNavigation[$metadata['meta']['reference']] ?? false;
+				    if(!$refpageinfo)
+				    {
+					    return $this->c->get('view')->render($response->withStatus(404), '404.twig', [
+							'title'			=> 'Referenced page not found',
+							'description'	=> 'We did not find the page that has been referenced. Please inform the website owner to fix it in meta reference.'
+					    ]);
+				    }
+
+					$refKeyPathArray 		= explode(".", $refpageinfo['keyPath']);
+					$refItem 				= $navigation->getItemWithKeyPath($draftNavigation, $refKeyPathArray);
+
+					# GET THE CONTENT FROM REFENCED PAGE
+					$liveMarkdown		= $content->getLiveMarkdown($refItem);
+					$liveMarkdown 		= $this->c->get('dispatcher')->dispatch(new OnMarkdownLoaded($liveMarkdown), 'onMarkdownLoaded')->getData();
+					$markdownArray 		= $content->markdownTextToArray($liveMarkdown);
+
+					break;
+			}
+		}
+
+
 		# CHECK ACCESS RESTRICTIONS
 		$restricted 		= $this->checkRestrictions($metadata['meta'], $username, $userrole);
 		if($restricted)

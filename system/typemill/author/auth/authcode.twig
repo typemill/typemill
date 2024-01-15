@@ -1,0 +1,104 @@
+{% extends 'layouts/layoutAuth.twig' %}
+
+{% block title %}Login Verification Code{% endblock %}
+
+{% block content %}
+
+	<div class="lg:flex-row flex flex-col-reverse justify-end">
+		
+		<div class="lg:w-1/2 bg-teal-600 text-white min-h-screen flex justify-center items-center">
+			<div class="max-w-md content-center">
+
+				<h1 class="text-4xl py-5">Login Verification Code</h1>
+			
+				<p>{{ translate('Enter the verification code from your email:') }}</a>
+
+				<form method="POST" action="{{ url_for("auth.authcode") }}" autocomplete="off">
+				
+					<fieldset>
+
+						<div class="flex justify-between my-2">
+							<input 
+								type="text" 
+								name="code-1" 
+								pattern="[0-9]" 
+								maxlength="1" 
+								oninput="moveToNextField(this)"	
+								class="mr-2 form-control block w-full px-3 py-3 text-xl text-center font-bold text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-non"
+							required>
+							<input 
+								type="text" 
+								name="code-2" 
+								pattern="[0-9]" 
+								maxlength="1" 
+								oninput="moveToNextField(this)"	
+								class="mr-2 form-control block w-full px-3 py-3 text-xl text-center font-bold text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-non"
+							required>
+							<input 
+								type="text" 
+								name="code-3" 
+								pattern="[0-9]" 
+								maxlength="1" 
+								oninput="moveToNextField(this)"	
+								class="mr-2 form-control block w-full px-3 py-3 text-xl text-center font-bold text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-non"
+							required>
+							<input 
+								type="text" 
+								name="code-4" 
+								pattern="[0-9]" 
+								maxlength="1" 
+								oninput="moveToNextField(this)"	
+								class="mr-2 form-control block w-full px-3 py-3 text-xl text-center font-bold text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-non"
+							required>
+							<input 
+								type="text" 
+								name="code-5" 
+								pattern="[0-9]" 
+								maxlength="1" 
+								oninput="moveToNextField(this)"	
+								class="form-control block w-full px-3 py-3 text-xl text-center font-bold text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-non"
+							required>
+						</div>
+
+						<input type="hidden" value="{{username}}" name="username">
+
+						<div class="personal-mail hidden">
+							<label>Personal Mail</label>
+							<input type="text" name="personal-honey-mail">
+						</div>
+
+						<input 
+							type="submit" 
+							value="{{ translate('Confirm') }}" 
+                      		class="block w-full mt-6 px-3 py-3 border-0 font-medium text-xs leading-tight uppercase border-2 border-stone-50 text-stone-50 pointer hover:bg-stone-50 hover:text-stone-800 cursor-pointer focus:outline-none focus:ring-0 transition duration-100 ease-in-out"
+						/>
+
+					</fieldset>
+					<script>
+					  function moveToNextField(currentField) {
+					    var inputValue = currentField.value;
+					    var inputLength = inputValue.length;
+					    if (inputLength === 1)
+					    {
+					      var nextField = currentField.nextElementSibling;
+					      if (nextField)
+					      {
+					        nextField.focus();
+					      }
+					    }
+					  }						
+					</script>
+				</form>
+			</div>
+		</div>
+		
+		<div class="lg:w-1/2 lg:bg-white lg:text-black p-5 bg-teal-600 text-white border-b border-white content-center flex justify-center items-center">
+			<div class="max-w-md content-center">
+				<h2 class="text-4xl py-5">{{ authtitle }}</h2>
+				<p class="py-2">{{ authtext }}</p>
+				<a class="text-teal-600 py-2" href="{{ url_for('auth.show') }}">&#x2192; {{ translate('Back to login') }}</a>
+			</div>
+		</div>
+	
+	</div>
+{% endblock %}

@@ -4,6 +4,7 @@ use Slim\Routing\RouteCollectorProxy;
 use Typemill\Middleware\WebRedirectIfAuthenticated;
 use Typemill\Middleware\WebRedirectIfUnauthenticated;
 use Typemill\Middleware\WebAuthorization;
+use Typemill\Middleware\CspHeadersMiddleware;
 use Typemill\Controllers\ControllerWebSetup;
 use Typemill\Controllers\ControllerWebAuth;
 use Typemill\Controllers\ControllerWebRecover;
@@ -18,6 +19,11 @@ $app->group('/tm', function (RouteCollectorProxy $group) use ($settings) {
 	$group->get('/login', ControllerWebAuth::class . ':show')->setName('auth.show');
 	$group->post('/login', ControllerWebAuth::class . ':login')->setName('auth.login');
 
+	if(isset($settings['authcode']) && $settings['authcode'])
+	{
+		$group->post('/authcode', ControllerWebAuth::class . ':loginWithAuthcode')->setName('auth.authcode');
+	}
+
 	if(isset($settings['recoverpw']) && $settings['recoverpw'])
 	{
 		$group->get('/recover', ControllerWebRecover::class . ':showRecoverForm')->setName('auth.recoverform');
@@ -26,7 +32,7 @@ $app->group('/tm', function (RouteCollectorProxy $group) use ($settings) {
 		$group->post('/reset', ControllerWebRecover::class . ':resetPassword')->setName('auth.reset');
 	}
 
-})->add(new WebRedirectIfAuthenticated($routeParser, $settings));
+})->add(new CspHeadersMiddleware($settings, $cspFromPlugins, $cspFromTheme))->add(new WebRedirectIfAuthenticated($routeParser, $settings));
 
 # AUTHOR AREA (requires authentication)
 $app->group('/tm', function (RouteCollectorProxy $group) use ($routeParser,$acl) {
@@ -46,10 +52,11 @@ $app->group('/tm', function (RouteCollectorProxy $group) use ($routeParser,$acl)
 	$group->get('/content/visual[/{route:.*}]', ControllerWebAuthor::class . ':showBlox')->setName('content.visual')->add(new WebAuthorization($routeParser, $acl, 'mycontent', 'view'));
 	$group->get('/content/raw[/{route:.*}]', ControllerWebAuthor::class . ':showRaw')->setName('content.raw')->add(new WebAuthorization($routeParser, $acl, 'mycontent', 'view'));
 
-})->add(new WebRedirectIfUnauthenticated($routeParser));
+})->add(new CspHeadersMiddleware($settings, $cspFromPlugins, $cspFromTheme))->add(new WebRedirectIfUnauthenticated($routeParser));
 
 $app->redirect('/tm', $routeParser->urlFor('auth.show'), 302);
 $app->redirect('/tm/', $routeParser->urlFor('auth.show'), 302);
+$app->redirect('/tm/authcode', $routeParser->urlFor('auth.show'), 302);
 
 # downloads
 $app->get('/media/files[/{params:.*}]', ControllerWebDownload::class . ':download')->setName('download.file');
@@ -68,11 +75,11 @@ if(isset($routes['web']) && !empty($routes['web']))
 
 		if($resources && $privilege)
 		{
-			$app->{$method}($route, $class)->setName($name)->add(new WebAuthorization($routeParser, $acl, $resource, $privilege))->add(new WebRedirectIfUnauthenticated($routeParser));
+			$app->{$method}($route, $class)->setName($name)->add(new CspHeadersMiddleware($settings, $cspFromPlugins, $cspFromTheme))->add(new WebAuthorization($routeParser, $acl, $resource, $privilege))->add(new WebRedirectIfUnauthenticated($routeParser));
 		}
 		else
 		{
-			$app->{$method}($route, $class)->setName($name);
+			$app->{$method}($route, $class)->setName($name)->add(new CspHeadersMiddleware($settings, $cspFromPlugins, $cspFromTheme));
 		}
 	}
 }
@@ -80,10 +87,10 @@ if(isset($routes['web']) && !empty($routes['web']))
 if(isset($settings['access']) && $settings['access'] != '')
 {
 	# if access for website is restricted
-	$app->get('/[{route:.*}]', ControllerWebFrontend::class . ':index')->setName('home')->add(new WebAuthorization($routeParser, $acl, 'account', 'view'));
+	$app->get('/[{route:.*}]', ControllerWebFrontend::class . ':index')->setName('home')->add(new CspHeadersMiddleware($settings, $cspFromPlugins, $cspFromTheme))->add(new WebAuthorization($routeParser, $acl, 'account', 'view'));
 }
 else
 {
 	# if access is not restricted
-	$app->get('/[{route:.*}]', ControllerWebFrontend::class . ':index')->setName('home');
+	$app->get('/[{route:.*}]', ControllerWebFrontend::class . ':index')->setName('home')->add(new CspHeadersMiddleware($settings, $cspFromPlugins, $cspFromTheme));
 }

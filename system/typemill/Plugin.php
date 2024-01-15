@@ -194,23 +194,6 @@ abstract class Plugin implements EventSubscriberInterface
 		$this->container->get('assets')->addJS($JS);
 	}
 
-/*
-	protected function addEditorJS($JS)
-	{
-		$this->container->get('assets')->addEditorJS($JS);
-	}
-
-	protected function addEditorInlineJS($JS)
-	{
-		$this->container->get('assets')->addEditorInlineJS($JS);
-	}
-
-	protected function addEditorCSS($CSS)
-	{
-		$this->container->get('assets')->addEditorCSS($CSS);
-	}
-*/
-
 	protected function addInlineJS($JS)
 	{
 		$this->container->get('assets')->addInlineJS($JS);

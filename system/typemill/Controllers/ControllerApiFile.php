@@ -221,17 +221,19 @@ class ControllerApiFile extends Controller
 		# if the previous check of the mtype with the base64 string failed, then do it now again with the temporary file
 		if(!$mtype)
 		{
-			$fullPath 	= $this->settings['rootPath'] . $filePath;
+			$filePath = str_replace('media/files', 'media/tmp', $fileinfo['url']);
+			$filePath = str_replace('/', DIRECTORY_SEPARATOR, $filePath);
+			$fullPath 	= $this->settings['rootPath'] . DIRECTORY_SEPARATOR . $filePath;
 			$finfo 		= finfo_open( FILEINFO_MIME_TYPE );
 			$mtype 		= @finfo_file( $finfo, $fullPath );
 			finfo_close($finfo);
 
 			if(!$mtype OR !$this->checkAllowedMimeTypes($mtype, $extension))
 			{
-				$media->clearTempFolder();
+				$media->clearTempFolder($immediate = true);
 
 				$response->getBody()->write(json_encode([
-					'message' => Translations::translate('The mime-type is missing, not allowed or does not fit to the file extension.')
+					'message' => Translations::translate('The mime-type is missing, not allowed or does not fit to the file extension.') . ' mtype: ' . $mtype . ', ext: ' . $extension
 				]));
 
 				return $response->withHeader('Content-Type', 'application/json')->withStatus(400);

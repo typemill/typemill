@@ -32,14 +32,13 @@ app.component('component-textarea', {
 				<textarea rows="8" class="w-full border border-stone-300 text-stone-900 bg-stone-200 px-2 py-3"
 					:id="id"
 					:class="errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'"
-					:class="css"
 					:readonly="readonly"
 					:required="required"  
 					:disabled="disabled"  
 					:name="name"
 					:placeholder="placeholder"
 					:value="value"
-					@input="update($event, name)"></textarea>
+					@input="update($event, name)"></textarea><slot></slot>
 			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
 			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
 			  </div>`,
@@ -81,8 +80,7 @@ app.component('component-codearea', {
 						:name="name"
 						:placeholder="placeholder"
 						:value="value"
-						@input="update($event, name)">
-					</textarea>
+						@input="update($event, name)"></textarea><slot></slot>
 					<pre aria-hidden="true" class="highlight hljs"><code data-el="highlight" v-html="highlighted"></code></pre>
 				</div>
 			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
@@ -141,7 +139,7 @@ app.component('component-select', {
 			    	@change="update($event,name)">
 			      	<option disabled value="">Please select</option>
 			      	<option v-for="option,optionkey in options" v-bind:value="optionkey">{{option}}</option>
-			    </select>
+			    </select><slot></slot>
 			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
 			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
 			  </div>`,
@@ -173,7 +171,7 @@ app.component('component-checkbox', {
 				    v-model="checked"
 				    @change="update(checked, name)">
 				    <span class="ml-2 text-sm">{{ $filters.translate(checkboxlabel) }}</span>
-			  	</label>
+			  	</label><slot></slot>
 			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
 			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
 			  </div>`,
@@ -209,7 +207,7 @@ app.component('component-checkboxlist', {
 				  	v-model="checkedoptions" 
 				  	@change="update(checkedoptions, name)">
 				  	<span class="ml-2 text-sm">{{ $filters.translate(option) }}</span>
-			  	</label>
+			  	</label><slot></slot>
 				<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
 				<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
 			  </div>`,
@@ -249,7 +247,7 @@ app.component('component-radio', {
 				  	v-model="picked" 
 				  	@change="update(picked, name)">
 				  	<span class="ml-2 text-sm">{{ $filters.translate(option) }}</span>
-			  	</label>  
+			  	</label><slot></slot>
 			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
 			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
 			  </div>`,
@@ -277,7 +275,7 @@ app.component('component-number', {
 					:name="name"
 					:placeholder="placeholder"
 					:value="value"
-					@input="update($event, name)">
+					@input="update($event, name)"><slot></slot>
 			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
 			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
 			  </div>`,
@@ -308,7 +306,7 @@ app.component('component-date', {
 						:name="name"
 						:placeholder="placeholder"
 						:value="value"
-						@input="update($event, name)">
+						@input="update($event, name)"><slot></slot>
 				</div>
 			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
 			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
@@ -342,7 +340,7 @@ app.component('component-email', {
 						:name="name"
 						:placeholder="placeholder"
 						:value="value"
-						@input="update($event, name)">
+						@input="update($event, name)"><slot></slot>
 				</div>
 			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
 			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
@@ -375,7 +373,7 @@ app.component('component-tel', {
 						:name="name"
 						:placeholder="placeholder"
 						:value="value"
-						@input="update($event, name)">
+						@input="update($event, name)"><slot></slot>
 				</div>
 			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
 			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
@@ -409,7 +407,7 @@ app.component('component-url', {
 						:name="name"
 						:placeholder="placeholder"
 						:value="value"
-						@input="update($event, name)">
+						@input="update($event, name)"><slot></slot>
 				</div>
 			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
 			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
@@ -442,7 +440,7 @@ app.component('component-color', {
 						:name="name"
 						:placeholder="placeholder"
 						:value="value"
-						@input="update($event, name)">
+						@input="update($event, name)"><slot></slot>
 				</div>
 			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
 			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>

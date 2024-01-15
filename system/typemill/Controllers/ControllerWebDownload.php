@@ -2,18 +2,20 @@
 
 namespace Typemill\Controllers;
 
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 use Typemill\Models\StorageWrapper;
 use Typemill\Static\Translations;
 
 class ControllerWebDownload extends Controller
 {
-	public function download($request, $response, $args)
+	public function download(Request $request, Response $response, $args)
 	{
 		$filename 		= isset($args['params']) ? $args['params'] : false;
 		if(!$filename)
 		{
-			$response->getBody()->write(Translations::translate('the requested file does not exist.'))->withStatus(404);
-			return $response;
+			$response->getBody()->write(Translations::translate('the requested file does not exist.'));
+			return $response->withStatus(404);
 		}
 
 		$storage 		= new StorageWrapper('\Typemill\Models\Storage');
@@ -26,8 +28,8 @@ class ControllerWebDownload extends Controller
 		$allowedFiletypes = [];
 		if(!$this->validate($filepath, $filename, $allowedFiletypes))
 		{
-			$response->getBody()->write(Translations::translate('the requested filetype does not exist.'))->withStatus(404);
-			return $response;
+			$response->getBody()->write(Translations::translate('the requested filetype does not exist.'));
+			return $response->withStatus(404);
 		}
 
 		if($restrictions && isset($restrictions[$filefolder . $filename]))

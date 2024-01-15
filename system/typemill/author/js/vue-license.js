@@ -43,35 +43,6 @@ const app = Vue.createApp({
 									</div>
 								</div>
 							</div>
-<!--
-							<div v-for="(fieldDefinition, fieldname) in formDefinitions">
-								<fieldset class="flex flex-wrap justify-between border-2 border-stone-200 p-4 my-8" v-if="fieldDefinition.type == 'fieldset'">
-									<legend class="text-lg font-medium">{{ fieldDefinition.legend }}</legend>
-									<component v-for="(subfieldDefinition, subfieldname) in fieldDefinition.fields"
-										:key="subfieldname"
-										:is="selectComponent(subfieldDefinition.type)"
-										:errors="errors"
-										:name="subfieldname"
-										:userroles="userroles"
-										:value="formData[subfieldname]" 
-										v-bind="subfieldDefinition">
-									</component>
-								</fieldset>
-								<component v-else
-									:key="fieldname"
-									:is="selectComponent(fieldDefinition.type)"
-									:errors="errors"
-									:name="fieldname"
-									:userroles="userroles"
-									:value="formData[fieldname]" 
-									v-bind="fieldDefinition">
-								</component>
-							</div>
-							<div class="my-5">
-								<div :class="messageClass" class="block w-full h-8 px-3 py-1 my-1 text-white transition duration-100">{{ message }}</div>
-								<input type="submit" @click.prevent="save()" value="save" class="w-full p-3 my-1 bg-stone-700 hover:bg-stone-900 text-white cursor-pointer transition duration-100">
-							</div>
--->
 						</form>
 					</Transition>`,
 	data() {
