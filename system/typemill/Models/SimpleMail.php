@@ -44,7 +44,7 @@ class SimpleMail
 		$headers 		= 'Content-Type: text/html; charset=utf-8' . "\r\n";
 		$headers 		.= 'Content-Transfer-Encoding: base64' . "\r\n";
 		$headers 		.= 'From: ' . $this->from . "\r\n";
-		if($this->$reply)
+		if($this->reply)
 		{
 			$headers 		.= 'Reply-To: base64' . $this->reply . "\r\n";
 		}

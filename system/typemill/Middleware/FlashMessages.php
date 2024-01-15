@@ -8,7 +8,7 @@ use Slim\Flash\Messages;
 
 class FlashMessages
 {
-	private $container;
+	public $container;
 
 	public function __construct($container)
 	{

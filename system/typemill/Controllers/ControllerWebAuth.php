@@ -36,7 +36,10 @@ class ControllerWebAuth extends Controller
 				\Typemill\Static\Helpers::addLogEntry('login: invalid data');
 			}
 
-			$this->c->get('flash')->addMessage('error', Translations::translate('Wrong password or username, please try again.'));
+			if($this->c->get('flash'))
+			{
+				$this->c->get('flash')->addMessage('error', Translations::translate('Wrong password or username, please try again.'));
+			}
 
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
 		}
@@ -50,7 +53,10 @@ class ControllerWebAuth extends Controller
 				\Typemill\Static\Helpers::addLogEntry('login: user not found');
 			}
 
-			$this->c->get('flash')->addMessage('error', Translations::translate('Wrong password or username, please try again.'));
+			if($this->c->get('flash'))
+			{
+				$this->c->get('flash')->addMessage('error', Translations::translate('Wrong password or username, please try again.'));
+			}
 
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
 		}
@@ -79,7 +85,10 @@ class ControllerWebAuth extends Controller
 			    ]);
 			}
 
-			$this->c->get('flash')->addMessage('error', Translations::translate('Wrong password or username, please try again.'));
+			if($this->c->get('flash'))
+			{
+				$this->c->get('flash')->addMessage('error', Translations::translate('Wrong password or username, please try again.'));
+			}
 
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
 		}
@@ -103,8 +112,11 @@ class ControllerWebAuth extends Controller
 
 			$mail 			= new SimpleMail($this->settings);
 
-			$subject 		= Translations::translate('Your verification code for Typemill');
-			$message		= Translations::translate('Use the following verification code to login into Typemill') . ': ' . $authcodevalue;
+			$subject 		= Translations::translate('Your Typemill verification code');
+			$message		= Translations::translate('Dear user') . ',<br><br>';
+			$message		.= Translations::translate('Someone tried to log in to your Typemill website and we want to make sure it is you. Enter the following verification code to finish your login. The code will be valid for 5 minutes.');
+			$message 		.= '<br><br>' . $authcodevalue . '<br><br>';
+			$message		.= Translations::translate('If you did not make this login attempt, please reset your password immediately.');
 
 			$send 			= $mail->send($userdata['email'], $subject, $message);
 
@@ -136,7 +148,10 @@ class ControllerWebAuth extends Controller
 				\Typemill\Static\Helpers::addLogEntry('login: user not confirmed yet.');
 			}
 
-			$this->c->get('flash')->addMessage('error', Translations::translate('Your registration is not confirmed yet. Please check your e-mails and use the confirmation link.'));
+			if($this->c->get('flash'))
+			{
+				$this->c->get('flash')->addMessage('error', Translations::translate('Your registration is not confirmed yet. Please check your e-mails and use the confirmation link.'));
+			}
 		
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
 		}
@@ -185,7 +200,10 @@ class ControllerWebAuth extends Controller
 				\Typemill\Static\Helpers::addLogEntry('login: invalid verification code format');
 			}
 
-			$this->c->get('flash')->addMessage('error', Translations::translate('Invalid verification code format, please try again.'));
+			if($this->c->get('flash'))
+			{
+				$this->c->get('flash')->addMessage('error', Translations::translate('Invalid verification code format, please try again.'));
+			}
 
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
 		}
@@ -199,7 +217,10 @@ class ControllerWebAuth extends Controller
 				\Typemill\Static\Helpers::addLogEntry('login: user not found');
 			}
 
-			$this->c->get('flash')->addMessage('error', Translations::translate('Wrong password or username, please try again.'));
+			if($this->c->get('flash'))
+			{
+				$this->c->get('flash')->addMessage('error', Translations::translate('Wrong password or username, please try again.'));
+			}
 
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
 		}
@@ -215,7 +236,10 @@ class ControllerWebAuth extends Controller
 				\Typemill\Static\Helpers::addLogEntry('login: verification code wrong or outdated.');
 			}
 
-			$this->c->get('flash')->addMessage('error', Translations::translate('The verification was wrong or outdated, please start again.'));
+			if($this->c->get('flash'))
+			{
+				$this->c->get('flash')->addMessage('error', Translations::translate('The verification was wrong or outdated, please start again.'));
+			}
 
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
 		}

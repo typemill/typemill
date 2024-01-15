@@ -1,4 +1,3 @@
-
 <?php
 
 use DI\Container;
@@ -44,7 +43,6 @@ use Typemill\Extensions\TwigCaptchaExtension;
 
 $timer = [];
 $timer['start'] = microtime(true);
-
 
 /****************************
 * HIDE ERRORS BY DEFAULT    *
@@ -341,10 +339,10 @@ $app->add(new SecurityMiddleware($routeParser, $container->get('settings')));
 
 $app->add(new OldInputMiddleware($container->get('view')));
 
-$app->add(new FlashMessages($container));
-
 # Add Twig-View Middleware
 $app->add(TwigMiddleware::createFromContainer($app));
+
+$app->add(new FlashMessages($container));
 
 # add JsonBodyParser Middleware
 $app->add(new JsonBodyParser());
