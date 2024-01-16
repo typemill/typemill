@@ -1,0 +1,26 @@
+meta:
+    navtitle: home
+    title: Typemill
+    description: 'The open-source flat-file cms for text-driven websites. Create handbooks, documentations, manuals, web-novels, traditional websites, and more.'
+    heroimage: media/live/screenshot-2023-08-03-at-15-23-44-setup-3.png
+    owner: trendschau
+    author: 'Sebastian Schürmanns'
+    allowedrole: ''
+    modified: '2021-09-28'
+    created: '2021-09-28'
+    time: 13-41-23
+    hide: false
+    noindex: false
+seo:
+    seoimage: null
+    seoimagealt: 'My alt text'
+    Checkbox:
+        - first
+        - fourth
+        - second
+    mycfiel: null
+demo:
+    demoimage: null
+    demoimagealt: null
+    democheckbox: {  }
+    democustomfield: null

@@ -1,0 +1,16 @@
+meta:
+    navtitle: 'get help'
+    title: 'get help'
+    description: 'If you found a bug or if you have a question, then please open a new issue on GitHub. Do you need professional help, an individual theme or a special plugin?'
+    heroimage: null
+    heroimagealt: null
+    owner: trendschau
+    author: Sebastian
+    allowedrole: null
+    alloweduser: null
+    manualdate: null
+    modified: '2023-05-13'
+    created: '2023-06-12'
+    time: 22-36-34
+    hide: false
+    noindex: false

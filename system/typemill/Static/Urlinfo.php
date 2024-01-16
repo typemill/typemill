@@ -9,8 +9,12 @@ class Urlinfo
 	# we need to get urlinfos to use in frontend and to inject into assets and container before middleware starts and request-object is available.
 	public static function getUrlInfo($basepath, $uri, $settings)
 	{
+		# remove basic auth credentials
 		$uri 			= $uri->withUserInfo('');
-		$uri 			= $uri->withPort(null);
+
+		# remove standard ports to fix csp error
+		# alternatively add ports to csp header
+		$uri 			= self::removeStandardPorts($uri);
 
 		$currentpath 	= $uri->getPath();
 		$route 			= str_replace($basepath, '', $currentpath);
@@ -36,8 +40,8 @@ class Urlinfo
 				# if proxy has basepath, then
 				if (isset($_SERVER['HTTP_X_FORWARDED_PREFIX']))
 				{
-				    # Use X-Forwarded-Prefix if available
-				    $basepath = rtrim($_SERVER['HTTP_X_FORWARDED_PREFIX'], '/') . '/';
+					# Use X-Forwarded-Prefix if available
+					$basepath = rtrim($_SERVER['HTTP_X_FORWARDED_PREFIX'], '/') . '/';
 				}
 			}
 		}
@@ -60,6 +64,17 @@ class Urlinfo
 			'currenturl' 	=> $currenturl,
 			'params' 		=> $params
 		];
+	}
+
+	private static function removeStandardPorts($uri)
+	{
+		$port = $uri->getPort();
+		if ($port == 80 || $port == 443)
+		{
+			$uri = $uri->withPort(null);
+		}
+
+		return $uri;
 	}
 
 	private static function updateUri($uri, $trustedProxies)

@@ -1,0 +1,27 @@
+0:
+    language: en
+    author: docker
+    mailfrom: trendschau@gmail.com
+    mailfromname: docker
+title: Docker
+author: Docker
+copyright: null
+language: en
+langattr: en
+editor: visual
+formats:
+    - markdown
+    - headline
+    - ulist
+    - olist
+    - table
+    - quote
+    - notice
+    - image
+    - video
+    - file
+    - toc
+    - hr
+    - definition
+    - code
+    - shortcode

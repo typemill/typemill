@@ -1,0 +1,30 @@
+meta:
+    navtitle: welcome
+    title: 'Great that you give Typemill a try!!'
+    description: bla
+    heroimage: null
+    heroimagealt: null
+    owner: Sebastian
+    author: Sebastian
+    allowedrole: null
+    alloweduser: null
+    manualdate: null
+    modified: '2023-05-11'
+    created: '2023-06-12'
+    time: 22-36-42
+    reference: null
+    referencetype: null
+    hide: false
+    noindex: false
+    contains: pages
+    glossary: null
+seo:
+    seoimage: null
+    seoimagealt: null
+    Checkbox: null
+    mycfiel: null
+demo:
+    demoimage: null
+    demoimagealt: null
+    democheckbox: null
+    democustomfield: {  }

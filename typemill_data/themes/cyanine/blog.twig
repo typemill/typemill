@@ -1,0 +1,112 @@
+<main class="{{ item.elementType }} w-100 pb5 bl br bb">
+
+	<div class="w-100 center grid-container">
+
+		<aside class="grid-header ph3 pv3">
+
+			<header>
+						
+				<div class="logo">
+					<p class="pa0 ma0">
+						<a class="link f1 fw9" href="{{ base_url }}" title="My Title">						
+							{% if logo %}
+								<img src="{{ base_url }}/{{ logo }}" class="logo-image"/>
+							{% else %}
+								{{ settings.title }}
+							{% endif %}
+						</a>
+					</p>
+				</div>
+					
+			</header>
+
+			{% if widgets %}
+				{% for index,widget in widgets %}
+					<div id="{{ index }}" class="mt4-l mt3">
+						{{ widget }}
+					</div>
+				{% endfor %}
+			{% endif %}
+
+		</aside>
+
+		<div class="grid-main ph3 ph4-l pv3 lh-copy f4 fw3">
+
+			{% if settings.themes.cyanine.blogintro %}
+				<article>
+					<header>
+					
+						<h1>{{ title }}</h1>
+		
+					</header>
+
+					{{ content }}
+
+				</article>
+			{% endif %}
+
+			{% set pagelist = getPageList(navigation, settings.themes.cyanine.blogfolder, base_url) %}
+			{% set pagesize = 10 %}
+			{% set pages = ( pagelist.folderContent|length / pagesize)|round(0, 'ceil') %}
+			{% set currentpage = currentpage ? currentpage : 1 %}
+			{% set currentposts = (currentpage - 1) * pagesize %}
+
+			{% if pagelist.contains == "posts" %}
+				<ul class="post list pa0">
+
+					{% for element in pagelist.folderContent|slice(currentposts, pagesize) %}
+
+						{% set post = getPageMeta(settings, element) %}
+						{% set date = element.order[0:4] ~ '-' ~ element.order[4:2] ~ '-' ~ element.order[6:2] %}
+
+						<li class="post-entry">
+							<header>
+								{% if settings.themes.cyanine.blogimage and post.meta.heroimage != '' %}
+									<figure>
+										<img src="{{ assets.image(post.meta.heroimage).resize(820,500).src() }}"{% if post.meta.heroimage != '' %} alt="{{ post.meta.heroimage }}"{% endif %} />
+									</figure>
+								{% endif %}
+								<a class="link f-link underline-hover" href="{{ element.urlAbs }}"><h2 class="mt4 mb2">{{ post.meta.title }}</h2></a>
+								<div class="mt3"><small><time datetime="{{date}}">{{ date | date("d.m.Y") }}</time> | {{ post.meta.author }}</small></div>
+							</header>
+							<p>{{ post.meta.description }}</p>
+						</li>
+
+					{% endfor %}
+
+					{% if pages > 1 %}
+						<hr class="mv4">
+						<p>Page: 
+							{% for i in 1 .. pages %}
+								{% if i == currentpage %}
+									{{i}}
+								{% else %}
+									<a class="page" href="{{ item.urlAbs }}/p/{{i}}">{{i}}</a>
+								{% endif %}
+							{% endfor %}
+						</p>
+					{% endif %}
+
+				</ul>
+			{% else %}
+				<p>The folder contains pages. To use the blog-feature on the startpage, please change the folder content to posts.</p>
+			{% endif %}
+		</div>
+
+		<aside class="grid-sidebar ph3 pv3">
+
+			<nav id="contentnav" class="contentnav{{ settings.themes.cyanine.collapseNav ? ' collapse' : '' }}" aria-label="Menu">
+
+				<!-- burger menu controlled by invisible checkbox -->
+	  			<input type="checkbox" id="burger" class="dn">
+	  			<label for="burger" class="burgerbutton">&#9776;</label>	
+
+				{% include 'partials/navigation.twig' %}
+
+			</nav>
+
+		</aside>
+
+	</div>
+
+</main>

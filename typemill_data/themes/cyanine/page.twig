@@ -1,0 +1,148 @@
+{% set published = metatabs.meta.manualdate ? metatabs.meta.manualdate : metatabs.meta.modified %}
+
+<main class="{{ item.elementType }} w-100 pb5 bl br bb">
+
+	<div class="w-100 center grid-container">
+
+		<aside class="grid-header ph3 pv3">
+
+			<header>
+						
+				<div class="logo">
+					<p class="pa0 ma0">
+						<a class="link f1 fw9" href="{{ base_url }}" title="My Title">						
+							{% if logo %}
+								<img src="{{ base_url }}/{{ logo }}" class="logo-image"/>
+							{% else %}
+								{{ settings.title }}
+							{% endif %}
+						</a>
+					</p>
+				</div>
+					
+			</header>
+
+			{% if widgets %}
+				<div class="widgetcontainer">
+				{% for index,widget in widgets %}
+					<div id="{{ index }}" class="mt4-l mt3">
+						{{ widget }}
+					</div>
+				{% endfor %}
+				</div>
+			{% endif %}
+
+		</aside>
+
+		<div class="grid-main ph3 ph4-l pv3 lh-copy f4-l f5 fw3">
+
+			<nav id="breadcrumb">
+				{% include 'partials/breadcrumb.twig' %}
+			</nav>
+
+			<article>
+				<header>
+				
+					<h1>{{ title }}</h1>
+	
+					{% if (settings.themes.cyanine.datePosition.top or settings.themes.cyanine.authorPosition.top or settings.themes.cyanine.gitPosition.top or settings.themes.cyanine.printPosition.top) %}	
+						<div class="f5 pv1 flex justify-between">
+							<div class="byline">
+								{% if settings.themes.cyanine.datePosition.top %}
+									<time pubdate datetime="{{ published }}" class="pr2">{{ settings.themes.cyanine.dateIntro }} {{ published|date(settings.themes.cyanine.dateFormat)  }}</time>
+								{% endif %}
+								{% if settings.themes.cyanine.authorPosition.top %}
+									<adress class="pr2">{{ settings.themes.cyanine.authorIntro }} {{ metatabs.meta.author|default(settings.author) }}</adress>
+								{% endif %}
+							</div>
+							<div class="funcicons">
+								{% if settings.themes.cyanine.gitPosition.top %}
+									<a class="link" title="edit on github" href="{{ settings.themes.cyanine.gitLink }}{{ item.path }}">{% if settings.themes.cyanine.editIcon %}<svg class="icon baseline icon-edit"><use xlink:href="#icon-edit"></use></svg>{% else %}{{ settings.themes.cyanine.editText }}{% endif %}</a>
+								{% endif %}
+								{% if settings.themes.cyanine.printPosition.top %}
+									<a class="link" title="open printer dialogue" href="#" onclick="if (window.print) {window.print();}">{% if settings.themes.cyanine.printIcon %}<svg class="icon baseline icon-printer"><use xlink:href="#icon-printer"></use></svg>{% else %}{{ settings.themes.cyanine.printText }}{% endif %}</a>
+								{% endif %}
+							</div>
+						</div>
+					{% endif %}
+				</header>
+
+				{{ content }}
+
+				{% if (settings.themes.cyanine.datePosition.bottom or settings.themes.cyanine.authorPosition.bottom or settings.themes.cyanine.gitPosition.bottom or settings.themes.cyanine.printPosition.bottom) %}	
+					<div class="f5 pv1 flex justify-between">
+						<div class="byline">
+							{% if settings.themes.cyanine.datePosition.bottom %}
+								<time pubdate datetime="{{ published }}" class="pr2">{{ settings.themes.cyanine.dateIntro }} {{ published|date(settings.themes.cyanine.dateFormat)  }}</time>
+							{% endif %}
+							{% if settings.themes.cyanine.authorPosition.bottom %}
+								<adress class="pr2">{{ settings.themes.cyanine.authorIntro }} {{ metatabs.meta.author|default(settings.author) }}</adress>
+							{% endif %}
+						</div>
+						<div class="funcicons">
+							{% if settings.themes.cyanine.gitPosition.bottom %}
+								<a class="link" title="edit on github" href="{{ settings.themes.cyanine.gitLink }}{{ item.path }}">{% if settings.themes.cyanine.editIcon %}<svg class="icon baseline icon-edit"><use xlink:href="#icon-edit"></use></svg>{% else %}{{ settings.themes.cyanine.editText }}{% endif %}</a>
+							{% endif %}
+							{% if settings.themes.cyanine.printPosition.bottom %}
+								<a class="link" title="open printer dialogue" href="#" onclick="if (window.print) {window.print();}">{% if settings.themes.cyanine.printIcon %}<svg class="icon baseline icon-printer"><use xlink:href="#icon-printer"></use></svg>{% else %}{{ settings.themes.cyanine.printText }}{% endif %}</a>
+							{% endif %}
+						</div>
+					</div>
+				{% endif %}
+
+			</article>
+
+			{% if item.elementType == 'file' %}
+
+				{% if item.prevItem or item.nextItem %}
+
+					<div id="bottompager" class="f5 pv5 flex-l flex-m justify-between {{ settings.themes.cyanine.fontnavi|default('tm-sans-serif') }}">
+						{% if item.prevItem %}
+							<a class="navigation link w-100 w-40-l w-40-m mv1 pv2 ph3 ba dim dib" href="{{ item.prevItem.urlRel }}">&lsaquo;&nbsp; {{ item.prevItem.name }}</a>
+						{% endif %}
+						{% if item.nextItem %}
+							<a class="navigation link w-100 w-40-l w-40-m mv1 pv2 ph3 dib ba dim tr" href="{{ item.nextItem.urlRel }}">{{ item.nextItem.name }} &nbsp;&rsaquo;</a>
+						{% endif %}
+					</div>
+
+				{% endif %}
+			
+			{% endif %}
+
+			{% if item.elementType == 'folder' and metatabs.meta.glossary %}
+
+				<nav class="f4-l f5">
+					{% include 'partials/navigationGlossary.twig'  with {'glossary': item.folderContent} %}
+				</nav>
+
+			{% elseif item.elementType == 'folder' and item.contains == 'pages' %}
+
+				<nav class="f4-l f5">
+					{% include 'partials/navigationFlat.twig'  with {'flatnavi': item.folderContent} %}
+				</nav>
+
+			{% elseif item.elementType == 'folder' and item.contains == 'posts' %}
+
+				{% include 'partials/posts.twig' %}
+
+			{% endif %}
+
+		</div>
+
+		<aside class="grid-sidebar ph3 pv3">
+
+			<nav id="contentnav" class="contentnav{{ settings.themes.cyanine.collapseNav ? ' collapse' : '' }}" aria-label="Menu">
+
+				<!-- burger menu controlled by invisible checkbox -->
+	  			<input type="checkbox" id="burger" class="dn">
+	  			<label for="burger" class="burgerbutton">&#9776;</label>	
+
+				{% include 'partials/navigation.twig' %}
+
+			</nav>
+
+		</aside>
+
+	</div>
+
+</main>
