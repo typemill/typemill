@@ -65,11 +65,17 @@
 		<script src="{{ base_url() }}/system/typemill/author/js/sortable.min.js?v={{ settings.version }}"></script>
 		<script src="{{ base_url() }}/system/typemill/author/js/vuedraggable.umd.min.js?v={{ settings.version }}"></script>
 		<script src="{{ base_url() }}/system/typemill/author/js/vue-contentnavi.js?v={{ settings.version }}"></script>
+		<script src="{{ base_url() }}/system/typemill/author/js/vue-kixote.js?v={{ settings.version }}"></script>
 		<script>
+
 			navigation.config.globalProperties.$filters = translatefilter;
 			navigation.mount('#contentNavigation');			
+
 			loginform.config.globalProperties.$filters = translatefilter;
 			loginform.mount("#loginform");
+
+			kixote.mount('#kixote');
+
 		</script>
 		{% block javascript %}{% endblock %}
 

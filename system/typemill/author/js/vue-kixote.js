@@ -1,77 +1,139 @@
-const promptlist = [
+const getKixoteError = function(error)
+{
+	console.info(error);
+
+	if(error.response.data.error != undefined)
+	{
+		if(Array.isArray(error.response.data.error))
+		{
+			return error.response.data.error;
+		}
+		if(typeof error.response.data.error === 'string')
+		{
+			return [error.response.data.error];
+		}
+	}
+
+	return ['something went wrong'];
+}
+
+
+// publish tree
+// unpublish tree
+// load page
+// save page
+// translate page
+// translate tree
+
+
+const kixoteCommands = [
 					{
 						name: 'help',
-						description: 'List all awailable prompts with a short description.',
+						description: 'List all available commands with a short description.',
 						method: function()
 								{
 									let result = ['<ul>'];
-									promptlist.forEach((prompt) =>
+									kixoteCommands.forEach((command) =>
 									{
-										let block = '<li><span class="text-teal-300">' + prompt.name + ':</span> ' + prompt.description + '</li>';
+										let block = '<li><span class="text-teal-300">' + command.name + ':</span> ' + command.description + '</li>';
 										result.push(block);
 									})
 									result.push('</ul>');
 
 									eventBus.$emit('answer', result);
 								},
-						answer: '<p>You can use the following prompts:</p>',
+						answer: '<p>You can use the following commands:</p>',
 					},
 					{
 						name: 'exit',
 						description: 'Exit Kixote and close the Kixote window.',
 					},
 					{
-						name: 'skip',
-						description: 'Skip the current task and start a new prompt.',
-						answer: ['We skipped the current task. Waiting for your next prompt.'],
-					},
-					{
-						name: 'refresh cache',
-						description: 'Refresh the cache and recreate the navigation.',
+						name: 'clear navigation',
+						description: 'Clear the cached navigation.',
 						method: function()
 								{
 									var self = this;
 
-									tmaxios.get('/api/v1/settings',{
+									tmaxios.delete('/api/v1/clearnavigation',{
 									})
 									.then(function (response)
 									{
-										eventBus.$emit('answer', ['cache has been refreshed']);
+										eventBus.$emit('answer', ['navigation has been cleared']);
 									})
 									.catch(function (error)
 									{
-										alert("no answer");
+										eventBus.$emit('answer', getKixoteError(error));
 									});
 								},
-						answer: ['Asking server...'],
+						answer: ['Asking server ...'],
+					},
+					{
+						name: 'clear cache',
+						description: 'Clear the cache-folder and delete cached files.',
+						method: function()
+								{
+									var self = this;
+
+									tmaxios.delete('/api/v1/cache',{
+									})
+									.then(function (response)
+									{
+										eventBus.$emit('answer', ['cache has been cleared']);
+									})
+									.catch(function (error)
+									{
+										eventBus.$emit('answer', getKixoteError(error));
+									});
+								},
+						answer: ['Asking server ...'],
 					},
 					{
 						name: 'show security log',
-						description: 'Not awailable.',
+						description: 'Show the security log that you can activate in the security tab of the system settings.',
 						method: function()
 								{
-									eventBus.$emit('nextPrompts', ['delete security log']);
-									eventBus.$emit('answer', ['security log shown']);
+									var self = this;
+
+									tmaxios.get('/api/v1/securitylog',{
+									})
+									.then(function (response)
+									{
+										eventBus.$emit('answer', response.data.lines);
+										eventBus.$emit('nextCommands', ['clear security log']);
+									})
+									.catch(function (error)
+									{
+										eventBus.$emit('answer', getKixoteError(error));
+									});
 								},
-						answer: ['Loading security log...'],
+						answer: ['Asking server ...'],
 					},
 					{
-						name: 'delete security log',
-						description: 'Not awailable.',
+						name: 'clear security log',
+						description: 'Clear the security log.',
 						method: function()
 								{
-									eventBus.$emit('answer', ['Security log deleted']);
+									var self = this;
+
+									tmaxios.delete('/api/v1/securitylog',{
+									})
+									.then(function (response)
+									{
+										eventBus.$emit('answer', ['Security log has been cleared.']);
+									})
+									.catch(function (error)
+									{
+										eventBus.$emit('answer', getKixoteError(error));
+									});
 								},
+						answer: ['Asking server ...'],
 					},
+/*
 					{
-						name: 'publish folder',
-						description: 'Publishes all unpublished and modified pages inside a folder.',
-						answer: ['Not available yet.'],
-					},
-					{
-						name: 'unpublish folder',
-						description: 'Unpublishes all pages inside a folder.',
-						answer: ['Not available yet.'],
+						name: 'skip',
+						description: 'Skip the current task and start a new command.',
+						answer: ['We skipped the current task. Waiting for your next command.'],
 					},
 					{
 						name: 'create content',
@@ -95,7 +157,7 @@ const promptlist = [
 						method: function(params)
 								{ 
 									eventBus.$emit('storable', ['Lorem ipsum in markdown.']);
-									eventBus.$emit('nextPrompts', ['transform', 'translate', 'save to page']);
+									eventBus.$emit('nextCommands', ['transform', 'translate', 'save to page']);
 									eventBus.$emit('answer', ['This is the answer from the server. The server can ask an AI service with the collected parameters and return any kind of answer in HTML and preferably in markdown, so that typemill can process the content again (e.g. store, translate, and more).']);
 								},
 						answer: ['Creating content...'],
@@ -110,22 +172,22 @@ const promptlist = [
 								},
 						answer: ['Save content...'],
 					},
-				];
+*/				];
 
 const kixote = Vue.createApp({
 	template: `<div class="m-1 ml-2">
 					<button @click="startKixote" class="p-1 bg-stone-700 text-white text-xs">+ Kixote</button>
-					<div v-if="showKixote" ref="kdisplay" class="fixed mx-auto inset-x-0 w-full max-w-4xl bottom-3 top-3 overflow-y-auto bg-stone-700 text-stone-50 py-10">
+					<div v-if="showKixote" ref="kdisplay" class="fixed z-50 mx-auto inset-x-0 w-full max-w-4xl bottom-3 top-3 overflow-y-auto bg-stone-700 text-stone-50 py-10">
 						<div class="px-8 pb-4">
 							<h1 class="mb-d3">Hello, I am <span class="text-teal-300">Kixote</span> from Typemill. How can I help?</h1>
 						</div>
 						<div>
 							<div v-for="message,index in messenger">
-								<div v-html="message.prompt" class="w-100 bg-stone-600 px-8 py-2"></div>
+								<div v-html="message.command" class="w-100 bg-stone-600 px-8 py-2"></div>
 								<div class="p-8">
 									<div v-for="block in message.answer" v-html="block"></div>
-									<div class="flex w-full justify-end" v-if="message.nextPrompts.length > 0">
-										<button v-for="nextPrompt in message.nextPrompts" @click="submitInlinePrompt(nextPrompt,index)" class="text-xs text-teal-500 hover:text-stone-700 hover:bg-teal-500 border border-teal-500 p-1 ml-1">{{ nextPrompt }}</button>
+									<div class="flex w-full justify-end" v-if="message.nextCommands.length > 0">
+										<button v-for="nextCommand in message.nextCommands" @click="submitInlineCommand(nextCommand,index)" class="text-xs text-teal-500 hover:text-stone-700 hover:bg-teal-500 border border-teal-500 p-1 ml-1">{{ nextCommand }}</button>
 									</div>
 								</div>
 							</div>
@@ -134,12 +196,12 @@ const kixote = Vue.createApp({
 							<div class="w-full bg-stone-600 px-8 py-2">
 								<p class="flex">
 									<span class="text-teal-300 mr-1">Ki></span> 
-									<input type="text" ref="kinput" @keyup.enter="submitPrompt" v-model.trim="prompt" class="flex-grow bg-stone-600 focus:outline-none border-0 caret-white" placeholder="..." />
+									<input type="text" ref="kinput" @keyup.enter="submitCommand" v-model.trim="command" class="flex-grow bg-stone-600 focus:outline-none border-0 caret-white" placeholder="..." />
 									<button class="text-teal-300" @click="stopKixote">exit</button>
 								</p>
 							</div>
 							<div class="px-8 pt-2">
-								<p class="text-xs text-stone-200">Enter "help" to see a list of prompts</p>
+								<p class="text-xs text-stone-200">Enter "help" to see a list of commands</p>
 							</div>
 						</div>
 					</div>
@@ -149,7 +211,7 @@ const kixote = Vue.createApp({
 			showKixote: false,
 			messenger: [],
 			messengerIndex: false,
-			prompt: '',
+			command: '',
 			params: false,
 		}
 	},
@@ -165,11 +227,11 @@ const kixote = Vue.createApp({
 			});
 		});
 
-		eventBus.$on('nextPrompts', nextprompts => {
+		eventBus.$on('nextCommands', nextcommands => {
 			let lastKey = this.messenger.length - 1;
-			nextprompts.forEach((nextprompt) =>
+			nextcommands.forEach((nextcommand) =>
 			{
-				this.messenger[lastKey].nextPrompts.push(nextprompt);
+				this.messenger[lastKey].nextCommands.push(nextcommand);
 			});
 		});
 
@@ -183,7 +245,7 @@ const kixote = Vue.createApp({
 		{
 			this.messenger = [];
 			this.params = false;
-			this.prompt = '';
+			this.command = '';
 		},
 		startKixote()
 		{
@@ -213,47 +275,47 @@ const kixote = Vue.createApp({
 				displayRef.scrollTop = displayRef.scrollHeight;
 			});
 		},
-		finishPrompt()
+		finishCommand()
 		{
-			this.prompt = '';
+			this.command = '';
 			this.focusOnInput();
 			this.scrollToBottom();
 		},
-		submitInlinePrompt(prompt, index)
+		submitInlineCommand(command, index)
 		{
-			this.prompt = prompt;
+			this.command = command;
 			this.messengerIndex = index;
 			// should we submit this.messenger[index].storable as params?
 			let storable = this.messenger[index].storable;
-			this.submitPrompt(false, storable);
+			this.submitCommand(false, storable);
 		},
-		submitPrompt(event, params = false)
+		submitCommand(event, params = false)
 		{
-			if(this.prompt.trim() == '')
+			if(this.command.trim() == '')
 			{
 				return;
 			}
 
-			let currentPrompt = '<span class="text-teal-300">Ki></span> ' + this.prompt;
+			let currentCommand = '<span class="text-teal-300">Ki></span> ' + this.command;
 			
-			let message = { 'prompt' : currentPrompt, 'answer' : [], 'storable' : false, 'nextPrompts' : [] }
+			let message = { 'command' : currentCommand, 'answer' : [], 'storable' : false, 'nextCommands' : [] }
 
-			if(this.prompt == 'exit')
+			if(this.command == 'exit')
 			{
 				this.stopKixote();
 
 				return;
 			}
 
-			if(this.prompt == 'skip')
+			if(this.command == 'skip')
 			{
-				message.answer.push('We skipped the current task. Start with a new prompt.');
+				message.answer.push('We skipped the current task. Start with a new command.');
 
 				this.messenger.push(message);
 
 				this.params = false;
 
-				this.finishPrompt();
+				this.finishCommand();
 
 				return;
 			}
@@ -268,32 +330,32 @@ const kixote = Vue.createApp({
 
 					this.messenger.push(message);
 
-					this.finishPrompt();
+					this.finishCommand();
 
 					return;
 				}
 
-				// if no further question submit inital prompt with params
+				// if no further question submit inital command with params
 				let params 	= this.params;
 				
 				this.params = false;
 				
-				this.prompt = params[0].value;
+				this.command = params[0].value;
 				
-				this.submitPrompt(false, params);
+				this.submitCommand(false, params);
 				
 				return;
 			}
 
-			let promptObject = this.getPromptObject(this.prompt);
+			let commandObject = this.getCommandObject(this.command);
 			
-			if(!promptObject)
+			if(!commandObject)
 			{
-				message.answer.push('Prompt not found. Type "help" to see a list of awailable prompts.');
+				message.answer.push('Command not found. Type "help" to see a list of available commands. With a KI plugin, you can also use prompts.');
 
 				this.messenger.push(message);
 
-				this.finishPrompt();
+				this.finishCommand();
 
 				return;
 			}
@@ -304,14 +366,14 @@ const kixote = Vue.createApp({
 
 				this.messenger.push(message);
 
-				promptObject.method(params);
+				commandObject.method(params);
 
-				this.finishPrompt();
+				this.finishCommand();
 
 				return;
 			}
 
-			let initialParams = this.getPromptParams(promptObject);
+			let initialParams = this.getCommandParams(commandObject);
 
 			if(initialParams)
 			{
@@ -325,7 +387,7 @@ const kixote = Vue.createApp({
 
 					this.messenger.push(message);
 
-					this.finishPrompt();
+					this.finishCommand();
 
 					return;
 				}
@@ -333,43 +395,43 @@ const kixote = Vue.createApp({
 				console.info("no questions found");
 			}
 
-			if(promptObject.answer)
+			if(commandObject.answer)
 			{
-				message.answer.push(promptObject.answer);
+				message.answer.push(commandObject.answer);
 			}
 
 			this.messenger.push(message);
 
-			promptObject.method();
+			commandObject.method();
 
-			this.finishPrompt();
+			this.finishCommand();
 		},
-		getPromptObject(prompt)
+		getCommandObject(command)
 		{
 			let result = false;
 	
-			promptlist.forEach((promptObject) =>
+			kixoteCommands.forEach((commandObject) =>
 			{
-				if(promptObject.name == prompt)
+				if(commandObject.name == command)
 				{
-					result = promptObject;
+					result = commandObject;
 				}
 			});
 
 			return result;
 		},
-		getPromptParams(promptObject)
+		getCommandParams(commandObject)
 		{
-			if(promptObject.params)
+			if(commandObject.params)
 			{
 				let params = [
 					{
-						name: 'submitWithPrompt',
-						value: promptObject.name
+						name: 'submitWithCommand',
+						value: commandObject.name
 					}
 				];
 
-				promptObject.params.forEach((param) => 
+				commandObject.params.forEach((param) => 
 				{
 					param.value = false;
 					params.push(param);
@@ -406,7 +468,7 @@ const kixote = Vue.createApp({
 
 					console.info("if valid, set value and set next to index +1");
 					// set param if valid
-					this.params[index].value = this.prompt;
+					this.params[index].value = this.command;
 
 					// go to the next param if exists
 					let next = index + 1;
