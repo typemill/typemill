@@ -71,7 +71,17 @@ class User
 
 	public function getFullName()
 	{
-		return trim($this->user['firstname'] . ' ' . $this->user['lastname']);
+
+		$firstname 	= $this->user['firstname'] ?? '';
+		$lastname 	= $this->user['lastname'] ?? '';
+		$fullname 	= trim($firstname . ' ' . $lastname);
+
+		if($fullname != '')
+		{
+			return $fullname;
+		}
+
+		return false;
 	}
 
 	public function getError()

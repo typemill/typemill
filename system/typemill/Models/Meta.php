@@ -78,7 +78,11 @@ class Meta
 		$user = new User();
 		if($user->setUser($username))
 		{
-			$author = $user->getFullName();
+			$fullname = $user->getFullName();
+			if($fullname)
+			{
+				$author = $fullname;
+			}
 		}
 
 		$meta = [];
@@ -127,7 +131,11 @@ class Meta
 				$user = new User();
 				if($user->setUser($currentuser))
 				{
-					$author = $user->getFullName();
+					$fullname 	= $user->getFullName();
+					if($fullname)
+					{
+						$author = $fullname;
+					}
 				}
 			}
 
