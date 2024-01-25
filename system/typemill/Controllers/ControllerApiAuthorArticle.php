@@ -332,7 +332,7 @@ class ControllerApiAuthorArticle extends Controller
 		# META is important e.g. for newsletter, so send it, too
 		$meta 				= new Meta();
 		$metadata  			= $meta->getMetaData($item);
-		$metadata 			= $meta->addMetaDefaults($metadata, $item, $this->settings['author']);
+		$metadata 			= $meta->addMetaDefaults($metadata, $item, $this->settings['author'], $request->getAttribute('c_username'));
 #		$metadata 			= $meta->addMetaTitleDescription($metadata, $item, $markdownArray);
 
 		# dispatch event, e.g. send newsletter and more
