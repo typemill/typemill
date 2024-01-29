@@ -142,6 +142,18 @@ abstract class Plugin implements EventSubscriberInterface
 		return $storage->getError();
 	}
 
+	protected function deletePluginData($filename, $pluginname = false)
+	{
+		$pluginname 	= $this->getPluginName($pluginname);
+
+		$storageClass 	= $this->container->get('settings')['storage'];
+		$storage 		= new StorageWrapper($storageClass);
+		
+		$data 			= $storage->deleteFile('dataFolder', $pluginname, $filename);
+
+		return $data;
+	}
+
 	private function getPluginName($pluginname = NULL)
 	{
 		if(!$pluginname)

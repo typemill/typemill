@@ -128,6 +128,8 @@ bloxeditor.component('new-block',{
 	},
 	mounted: function()
 	{
+		console.info('new-block: mounted');
+
 		eventBus.$on('closeComponents', this.closeComponent);
 
 		eventBus.$on('inlineFormat', content => {
@@ -151,6 +153,7 @@ bloxeditor.component('new-block',{
 			}
 			else
 			{
+/*				eventBus.$emit('closeComponents'); will also close component above, refactor logic */
 				eventBus.$emit('freezeblocks');
 
 				this.componentType = componenttype;
@@ -232,7 +235,7 @@ bloxeditor.component('content-block', {
 	props: ['element', 'index'],
 	template: `
 			<div :class="{'edit': edit}">
-				<div v-if="newblock" class="bg-stone-100 dark:bg-stone-600">
+				<div v-if="newblock" class="blox-editor bg-stone-100 dark:bg-stone-600">
 					<div class="w-full flex justify-between bg-stone-200 dark:bg-stone-600">
 						<p class="p-2 pl-4">Choose a content type</p>
 						<button class="p-2 border-l border-stone-700 hover:text-white hover:bg-rose-500 transition-1" @click="closeNewBlock">{{ $filters.translate('close') }}</button>
@@ -302,6 +305,7 @@ bloxeditor.component('content-block', {
 			}
 			else
 			{
+				eventBus.$emit('closeComponents');
 				eventBus.$emit('freeze');
 
 				this.newblock 		= true;
@@ -309,7 +313,7 @@ bloxeditor.component('content-block', {
 			}
 		},
 		closeNewBlock()
-		{
+		{	
 			eventBus.$emit('unlockcontent');
 			eventBus.$emit('unfreeze');
 			eventBus.$emit('publisherclear');

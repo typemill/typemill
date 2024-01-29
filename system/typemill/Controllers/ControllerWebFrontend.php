@@ -159,13 +159,22 @@ class ControllerWebFrontend extends Controller
 					    ]);
 				    }
 
-					$refKeyPathArray 		= explode(".", $refpageinfo['keyPath']);
-					$refItem 				= $navigation->getItemWithKeyPath($draftNavigation, $refKeyPathArray);
+					$refKeyPathArray 	= explode(".", $refpageinfo['keyPath']);
+					$refitem 			= $navigation->getItemWithKeyPath($draftNavigation, $refKeyPathArray);
 
 					# GET THE CONTENT FROM REFENCED PAGE
-					$liveMarkdown		= $content->getLiveMarkdown($refItem);
+					$liveMarkdown		= $content->getLiveMarkdown($refitem);
 					$liveMarkdown 		= $this->c->get('dispatcher')->dispatch(new OnMarkdownLoaded($liveMarkdown), 'onMarkdownLoaded')->getData();
 					$markdownArray 		= $content->markdownTextToArray($liveMarkdown);
+
+					# GET THE META FROM REFERENCED PAGE
+					$refmeta  			= $meta->getMetaData($refitem);
+					if($refmeta && isset($refmeta['meta']))
+					{
+						$metadata 		= $meta->getMetaData($refitem);
+						$metadata 		= $meta->addMetaDefaults($metadata, $refitem, $this->settings['author']);
+						$metadata 		= $meta->addMetaTitleDescription($metadata, $refItem, $markdownArray);					
+					}
 
 					break;
 			}

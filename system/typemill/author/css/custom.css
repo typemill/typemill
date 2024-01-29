@@ -547,7 +547,7 @@
   margin-left: 2px;
   margin-right: 2px;
 }
-.blox-editor input.urlinput{
+.inlineFormatBar input.urlinput{
   width: 75%;
   min-height: auto;
   background: #555;
@@ -555,7 +555,7 @@
   border: 0px;
   padding: 5px;
 }
-.blox-editor input.urlinput:focus{
+.inlineFormatBar input.urlinput:focus{
   outline: 0px;
   border: 0px;
 }
