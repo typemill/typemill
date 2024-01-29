@@ -545,7 +545,6 @@ class ParsedownExtension extends \ParsedownExtra
     # has a fix for visual editor mode and option for spanFootnotes
     public function buildFootnoteElement()
     {
-
         # we do not need a footnote element if we use w3c inline style with spans for footnotes
         if($this->spanFootnotes)
         {
@@ -564,7 +563,7 @@ class ParsedownExtension extends \ParsedownExtra
             ),
         );
 
-        uasort($this->DefinitionData['Footnote'], 'self::sortFootnotes');
+        uasort($this->DefinitionData['Footnote'], [$this, 'sortFootnotes']);
 
         foreach ($this->DefinitionData['Footnote'] as $definitionId => $DefinitionData)
         {

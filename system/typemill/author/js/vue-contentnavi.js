@@ -70,7 +70,7 @@ const navigation = Vue.createApp({
 		{
 			return tmaxios.defaults.baseURL + '/tm/content/' + data.settings.editor;
 		},
-		toggleFolder(name)
+		toggleFolderOLD(name)
 		{
 			var index = this.expanded.indexOf(name);
 			if (index > -1)
@@ -84,40 +84,53 @@ const navigation = Vue.createApp({
 			}
 			localStorage.setItem("expanded", this.expanded.toString());
 		},
+		toggleFolder(url)
+		{
+			var index = this.expanded.indexOf(url);
+			if (index > -1)
+			{
+				this.expanded.splice(index, 1);
+			}
+			else
+			{
+				this.expanded.push(url);
+			}
+			localStorage.setItem("expanded", this.expanded.toString());
+		},
 		expandNavigation()
 		{
-			this.expanded = this.getFolderNames(this.navigation, []);
+			this.expanded = this.getFolderUrls(this.navigation, []);
 			localStorage.setItem("expanded", this.expanded.toString());
 		},
 		collapseNavigation()
 		{
-			this.expanded = this.getActiveNames(this.navigation, []);
+			this.expanded = this.getActiveUrls(this.navigation, []);
 			localStorage.setItem("expanded", this.expanded.toString());
 		},
-		getActiveNames(navigation, expanded)
+		getActiveUrls(navigation, expanded)
 		{
 			for (const item of navigation)
 			{
 				if(item.activeParent || item.active)
 				{
-					expanded.push(item.name);
+					expanded.push(item.urlRelWoF);
 				}
 
 				if (item.elementType == 'folder')
 				{
-					this.getActiveNames(item.folderContent, expanded);
+					this.getActiveUrls(item.folderContent, expanded);
 				}
 			}
 			return expanded;
 		},
-		getFolderNames(navigation, result)
+		getFolderUrls(navigation, result)
 		{
 			for (const item of navigation)
 			{
 				if (item.elementType == 'folder')
 				{
-					result.push(item.name);
-					this.getFolderNames(item.folderContent, result);
+					result.push(item.urlRelWoF);
+					this.getFolderUrls(item.folderContent, result);
 				}
 			}
 			return result;
@@ -169,8 +182,8 @@ navigation.component('navilevel',{
 								<use xlink:href="#icon-eye-blocked"></use>
 							</svg> 
 						</div>
-						<div v-if="element.elementType == 'folder' && element.contains == 'pages'" class=" p-1 bg-transparent absolute right-0" @click="callToggle(element.name)">
-							<svg v-if="isExpanded(element.name)" class="icon icon-cheveron-up">
+						<div v-if="element.elementType == 'folder' && element.contains == 'pages'" class=" p-1 bg-transparent absolute right-0" @click="callToggle(element.urlRelWoF)">
+							<svg v-if="isExpanded(element.urlRelWoF)" class="icon icon-cheveron-up">
 								<use xlink:href="#icon-cheveron-up"></use>
 							</svg>
 							<svg v-else class="icon icon-cheveron-down">
@@ -178,7 +191,7 @@ navigation.component('navilevel',{
 							</svg>
 						</div>
 					</div>
-					<navilevel v-show="isExpanded(element.name)" v-if="element.elementType == 'folder' && element.contains == 'pages'" :list="element.folderContent" :navigation="element.folderContent" :parentId="element.keyPath" :expanded="expanded" />
+					<navilevel v-show="isExpanded(element.urlRelWoF)" v-if="element.elementType == 'folder' && element.contains == 'pages'" :list="element.folderContent" :navigation="element.folderContent" :parentId="element.keyPath" :expanded="expanded" />
 				</li>
 			</template>
 			<template #footer>
@@ -305,13 +318,13 @@ navigation.component('navilevel',{
 		{
 			return tmaxios.defaults.baseURL + '/tm/content/' + data.settings.editor + segment;
 		},
-		callToggle(name)
+		callToggle(url)
 		{
-			eventBus.$emit('toggleFolder', name);
+			eventBus.$emit('toggleFolder', url);
 		},
-		isExpanded(name)
+		isExpanded(url)
 		{
-			if(this.expanded.indexOf(name) > -1)
+			if(this.expanded.indexOf(url) > -1)
 			{
 				return true;
 			}

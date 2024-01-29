@@ -20,7 +20,7 @@ class Meta
 	public function getMetaData($item)
 	{
 		$metadata = $this->storage->getYaml('contentFolder', '', $item->pathWithoutType . '.yaml');
-	
+			
 		return $metadata;
 	}
 
@@ -78,7 +78,11 @@ class Meta
 		$user = new User();
 		if($user->setUser($username))
 		{
-			$author = $user->getFullName();
+			$fullname = $user->getFullName();
+			if($fullname)
+			{
+				$author = $fullname;
+			}
 		}
 
 		$meta = [];
@@ -112,10 +116,13 @@ class Meta
 			$meta['meta'] = []; 
 		}
 		
-		if(!isset($meta['meta']['owner']))
+		if(!isset($meta['meta']['owner']) OR !$meta['meta']['owner'])
 		{
-			$meta['meta']['owner'] = $currentuser;
-			$modified = true;
+			if($currentuser)
+			{
+				$meta['meta']['owner'] = $currentuser;
+				$modified = true;
+			}
 		}
 
 		if(!isset($meta['meta']['author']))
@@ -127,7 +134,11 @@ class Meta
 				$user = new User();
 				if($user->setUser($currentuser))
 				{
-					$author = $user->getFullName();
+					$fullname 	= $user->getFullName();
+					if($fullname)
+					{
+						$author = $fullname;
+					}
 				}
 			}
 
