@@ -96,141 +96,6 @@ const bloxeditor = Vue.createApp({
 
 bloxeditor.component('draggable', vuedraggable);
 
-bloxeditor.component('new-block',{
-	props: ['markdown', 'index'],
-	template: `
-		<div class="w-full mb-4">
-			<div v-if="!componentType" class="w-full flex p-4 dark:bg-stone-900">
-				<button v-for="button in formats" 
-					class="p-2 m-1 border border-stone-300 bg-stone-100 dark:border-stone-700 dark:bg-stone-700 hover:bg-stone-700 hover:dark:bg-stone-600 hover:text-stone-50 transition-1"  
-					@click.prevent="setComponentType( $event, button.component )" 
-					:title="button.title" 
-					v-html="button.label">
-				</button>
-			</div>
-			<div v-if="componentType" class="relative bg-stone-100 dark:bg-stone-900">
-				<component ref="activeComponent" :disabled="disabled" :markdown="newblockmarkdown" :index="index" @saveBlockEvent="saveNewBlock" @updateMarkdownEvent="updateMarkdownFunction" :is="componentType"></component>
-				<div class="edit-buttons absolute -bottom-3 right-4 z-2 text-xs">
-					<button class="cancel w-20 p-1 border-r border-stone-700 bg-stone-200 dark:bg-stone-600 hover:bg-rose-500 hover:dark:bg-rose-500 hover:text-white transition-1" :disabled="disabled" @click.prevent="closeComponent">{{ $filters.translate('cancel') }}</button>
-					<button class="save w-20 p-1 border-l border-stone-700 bg-stone-200 dark:bg-stone-600 hover:bg-teal-500 hover:dark:bg-teal-500 hover:text-white transition-1" :disabled="disabled" @click.prevent="beforeSaveNew()">{{ $filters.translate('save') }}</button>
-				</div>
-			</div>
-		</div>
-	`,
-	data: function () {
-		return {
-			formats: bloxFormats,
-			componentType: false,
-			disabled: false,
-			newblockmarkdown: '',
-			unsafedcontent: false,
-		}
-	},
-	mounted: function()
-	{
-		console.info('new-block: mounted');
-
-		eventBus.$on('closeComponents', this.closeComponent);
-
-		eventBus.$on('inlineFormat', content => {
-			this.newblockmarkdown = content;
-		});
-
-		eventBus.$on('lockcontent', content => {
-			this.unsafedcontent = true;
-		});
-
-		eventBus.$on('unlockcontent', content => {
-			this.unsafedcontent = false;
-		});
-	},
-	methods: {
-		setComponentType(event, componenttype)
-		{
-			if(this.unsafedcontent)
-			{
-				eventBus.$emit('publishermessage', 'Save or cancel your changes first.');
-			}
-			else
-			{
-/*				eventBus.$emit('closeComponents'); will also close component above, refactor logic */
-				eventBus.$emit('freezeblocks');
-
-				this.componentType = componenttype;
-			}
-		},
-		closeComponent()
-		{
-			this.componentType = false;
-			this.newblockmarkdown = '';
-			eventBus.$emit('unlockcontent');
-			eventBus.$emit('publisherclear');
-		},
-		updateMarkdownFunction(value)
-		{
-			eventBus.$emit('lockcontent');
-			this.newblockmarkdown = value;
-		},
-		beforeSaveNew()
-		{
-			eventBus.$emit('beforeSave');
-		},
-		saveNewBlock()
-		{
-			if(
-				this.newblockmarkdown == undefined || 
-				this.newblockmarkdown.replace(/(\r\n|\n|\r|\s)/gm,"") == ''
-			)
-			{
-				this.closeComponent();
-				return;
-			}
-
-			if(typeof this.$refs.activeComponent.saveBlock === "function")
-			{
-				this.$refs.activeComponent.saveBlock(this.updatedmarkdown);
-				return; 
-			}
-
-			var self = this;
-
-			eventBus.$emit('publisherclear');
-
-			tmaxios.post('/api/v1/block',{
-				'url':				data.urlinfo.route,
-				'block_id':			this.index,
-				'markdown': 		this.newblockmarkdown.trim(),
-			})
-			.then(function (response)
-			{
-				self.$root.$data.content = response.data.content;
-				self.closeComponent();
-				eventBus.$emit('closeComponents');
-				if(response.data.navigation)
-				{
-					eventBus.$emit('navigation', response.data.navigation);
-				}
-				if(response.data.item)
-				{
-					eventBus.$emit('item', response.data.item);					
-				}
-			})
-			.catch(function (error)
-			{
-				if(error.response)
-				{
-					let message = handleErrorMessage(error);
-					if(message)
-					{
-						eventBus.$emit('publishermessage', message);
-					}
-				}
-			});
-		},
-	}
-});
-
-
 bloxeditor.component('content-block', {
 	props: ['element', 'index'],
 	template: `
@@ -313,12 +178,12 @@ bloxeditor.component('content-block', {
 			}
 		},
 		closeNewBlock()
-		{	
+		{
 			eventBus.$emit('unlockcontent');
 			eventBus.$emit('unfreeze');
 			eventBus.$emit('publisherclear');
 
-			this.newblock 			= false;
+			this.newblock 			= false;			
 		},
 		closeEditor()
 		{
@@ -488,3 +353,140 @@ bloxeditor.component('content-block', {
 		},
 	},
 })
+
+bloxeditor.component('new-block',{
+	props: ['markdown', 'index'],
+	template: `
+		<div class="w-full mb-4">
+			<div v-if="!componentType" class="w-full flex p-4 dark:bg-stone-900">
+				<button v-for="button in formats" 
+					class="p-2 m-1 border border-stone-300 bg-stone-100 dark:border-stone-700 dark:bg-stone-700 hover:bg-stone-700 hover:dark:bg-stone-600 hover:text-stone-50 transition-1"  
+					@click.prevent="setComponentType( $event, button.component )" 
+					:title="button.title" 
+					v-html="button.label">
+				</button>
+			</div>
+			<div v-if="componentType" class="relative bg-stone-100 dark:bg-stone-900">
+				<component ref="activeComponent" :disabled="disabled" :markdown="newblockmarkdown" :index="index" @saveBlockEvent="saveNewBlock" @updateMarkdownEvent="updateMarkdownFunction" :is="componentType"></component>
+				<div class="edit-buttons absolute -bottom-3 right-4 z-2 text-xs">
+					<button class="cancel w-20 p-1 border-r border-stone-700 bg-stone-200 dark:bg-stone-600 hover:bg-rose-500 hover:dark:bg-rose-500 hover:text-white transition-1" :disabled="disabled" @click.prevent="closeComponent">{{ $filters.translate('cancel') }}</button>
+					<button class="save w-20 p-1 border-l border-stone-700 bg-stone-200 dark:bg-stone-600 hover:bg-teal-500 hover:dark:bg-teal-500 hover:text-white transition-1" :disabled="disabled" @click.prevent="beforeSaveNew()">{{ $filters.translate('save') }}</button>
+				</div>
+			</div>
+		</div>
+	`,
+	data: function () {
+		return {
+			formats: bloxFormats,
+			componentType: false,
+			disabled: false,
+			newblockmarkdown: '',
+			unsafedcontent: false,
+		}
+	},
+	mounted: function()
+	{
+		eventBus.$on('closeComponents', this.closeComponent);
+
+		eventBus.$on('inlineFormat', content => {
+			this.newblockmarkdown = content;
+		});
+
+		eventBus.$on('lockcontent', content => {
+			this.unsafedcontent = true;
+		});
+
+		eventBus.$on('unlockcontent', content => {
+			this.unsafedcontent = false;
+		});
+	},
+	methods: {
+		setComponentType(event, componenttype)
+		{			
+			if(this.unsafedcontent)
+			{
+				eventBus.$emit('publishermessage', 'Save or cancel your changes first.');
+			}
+			else
+			{
+				/* if it is a new block at the end of the page, close other open blocks first */
+				if(this.index == 999999)
+				{
+					eventBus.$emit('closeComponents');
+				}
+
+				eventBus.$emit('freezeblocks');
+
+				this.componentType = componenttype;
+			}
+		},
+		closeComponent()
+		{
+			this.componentType = false;
+			this.newblockmarkdown = '';
+			eventBus.$emit('unlockcontent');
+			eventBus.$emit('publisherclear');
+		},
+		updateMarkdownFunction(value)
+		{
+			eventBus.$emit('lockcontent');
+			this.newblockmarkdown = value;
+		},
+		beforeSaveNew()
+		{
+			eventBus.$emit('beforeSave');
+		},
+		saveNewBlock()
+		{
+			if(
+				this.newblockmarkdown == undefined || 
+				this.newblockmarkdown.replace(/(\r\n|\n|\r|\s)/gm,"") == ''
+			)
+			{
+				this.closeComponent();
+				return;
+			}
+
+			if(typeof this.$refs.activeComponent.saveBlock === "function")
+			{
+				this.$refs.activeComponent.saveBlock(this.updatedmarkdown);
+				return; 
+			}
+
+			var self = this;
+
+			eventBus.$emit('publisherclear');
+
+			tmaxios.post('/api/v1/block',{
+				'url':				data.urlinfo.route,
+				'block_id':			this.index,
+				'markdown': 		this.newblockmarkdown.trim(),
+			})
+			.then(function (response)
+			{
+				self.$root.$data.content = response.data.content;
+				self.closeComponent();
+				eventBus.$emit('closeComponents');
+				if(response.data.navigation)
+				{
+					eventBus.$emit('navigation', response.data.navigation);
+				}
+				if(response.data.item)
+				{
+					eventBus.$emit('item', response.data.item);					
+				}
+			})
+			.catch(function (error)
+			{
+				if(error.response)
+				{
+					let message = handleErrorMessage(error);
+					if(message)
+					{
+						eventBus.$emit('publishermessage', message);
+					}
+				}
+			});
+		},
+	}
+});
