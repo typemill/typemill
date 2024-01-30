@@ -235,9 +235,7 @@ class Settings
 			$defaults = array_merge($defaults, $defaultSettings);
 		}
     
-    	$initialSettings = $this->storage->updateYaml('settingsFolder', '', 'settings.yaml', [
-			$defaults
-		]);
+    	$initialSettings = $this->storage->updateYaml('settingsFolder', '', 'settings.yaml', $defaults);
 
 		if($initialSettings)
 		{

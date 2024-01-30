@@ -37,6 +37,8 @@ To run Typemill, you need the following:
 
 ## Installation
 
+Check installations with different setups on [typemill.net](https://typemill.net/getting-started/installation)
+
 ### Using ZIP File and FTP
 
 1. Download and unpack the latest version of Typemill as a zip file from [Typemill Website](https://typemill.net).
@@ -60,7 +62,7 @@ composer update
 
 ### Using Docker
 
-(Details to be provided soon)
+See description on [typemill.net](https://typemill.net/getting-started/installation/docker)
 
 ## Folder Permissions
 
