@@ -73,13 +73,13 @@ class ControllerApiSystemExtensions extends Controller
 
 		if($params['type'] == 'plugins')
 		{
-			$pluginsettings 			= $this->settings['plugins'][$params['name']] ?? $params['name'];
+			$pluginsettings 			= $this->settings['plugins'][$params['name']] ?? [];
 			$pluginsettings['active'] 	= $params['checked'];
 			$updatedSettings 			= $settings->updateSettings($pluginsettings, 'plugins', $params['name']);
 		}
 		elseif($params['type'] == 'themes')
 		{
-			$themesettings 				= $this->settings['themes'][$params['name']] ?? $params['name'];
+			$themesettings 				= $this->settings['themes'][$params['name']] ?? [];
 			$updatedSettings 			= $settings->updateSettings($themesettings, 'themes', $params['name']);
 			if($updatedSettings)
 			{
