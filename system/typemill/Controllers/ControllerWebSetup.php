@@ -87,12 +87,6 @@ class ControllerWebSetup extends Controller
 					
 		if($username)
 		{
-			usleep(30000);
-
-			$user->setUser($username);
-
-			$user->login();
-
 			# create initial settings file
 			$settingsModel = new Settings();
 			$settingsModel->createSettings([
@@ -101,9 +95,13 @@ class ControllerWebSetup extends Controller
 				'mailfromname'	=> $params['username']
 			]);
 
+			$user->setUser($username);
+
+			$user->login();
+
 			$urlinfo = $this->c->get('urlinfo');
 			$route = $urlinfo['baseurl'] . '/tm/system';
-
+			
 			usleep(30000);
 
 			$this->c->get('flash')->addMessage('error', Translations::translate('Account created. Please login with your username and password now.'));
