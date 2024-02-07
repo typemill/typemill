@@ -14,7 +14,7 @@ class License
 			'name' 	=> 'MAKER',
 			'scope'	=> ['MAKER' => true]
 		],
-		'33334' => [
+		'44700' => [
 			'name' 	=> 'BUSINESS',
 			'scope'	=> ['MAKER' => true, 'BUSINESS' => true]
 		]
@@ -55,7 +55,7 @@ class License
 		$domain 		= $this->checkLicenseDomain($licensedata['domain'], $urlinfo);
 		$date 			= $this->checkLicenseDate($licensedata['payed_until']);
 
-		$domain = true;
+#		$domain = true;
 
 		if($domain && $date)
 		{
@@ -203,7 +203,13 @@ class License
 		$signedLicense['license']['email'] = trim($params['email']);
 		$storage = new StorageWrapper('\Typemill\Models\Storage');
 
-		$storage->updateYaml('basepath', 'settings', 'license.yaml', $signedLicense['license']);
+		$result = $storage->updateYaml('settingsFolder', '', 'license.yaml', $signedLicense['license']);
+
+		if(!$result)
+		{
+			$this->message = $storage->getError();
+			return false;
+		}
 
 		return true;
 	}

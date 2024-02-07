@@ -4,15 +4,19 @@ const app = Vue.createApp({
 							<div>
 								<p v-if="!licenseData.datecheck" class="bg-rose-500 text-white p-2 text-center">Your license is out of date. Please check if the payments for your subscription were successfull.</p>
 								<p v-else-if="!licenseData.domaincheck" class="bg-rose-500 text-white p-2 text-center">Your license is only valid for the domain listed in your license data below.</p>
-								<p v-else>Congratulations! Your license is ok and you can enjoy all features.</p>
+								<p v-else>Congratulations! Your license is active and you can enjoy all features until you cancel your subscription. You can manage your subscription at <a class="text-teal-500" href="https://paddle.net/">paddle.net</a></p>
 							</div>
 							<div class="flex flex-wrap justify-between">
-								<div class="w-2/5 border-2 border-stone-200 my-8 text-center flex flex-col">
-									<div class="p-8 grow flex justify-center items-center">
-										<img class="mx-auto" :src="src" width="150" height="150">
-									</div>
-									<div class="p-8 bg-teal-500">
-										<p class="font-medium text-white">{{ licenseData.plan }}-LICENSE</p>
+								<div class="w-2/5 text-white bg-teal-500 border-2 border-stone-200 my-8 flex flex-col">
+									<div class="p-8">
+										<h2 class="text-2xl font-bold mb-3">BUSINESS License</h2>
+										<p class="py-2 text-lg"><strong>122 €</strong> + VAT per year. Perfect for companies.</p>
+										<ul class="py-2 pl-4 list-check">
+											<li class="pl-2">Use all MAKER and BUSINESS products.</li>
+											<li class="pl-2">For one domain.</li>
+											<li class="pl-2">For one year.</li>
+											<li class="pl-2">Until you cancel.</li>
+										</ul>
 									</div>
 								</div>
 								<div class="w-3/5 border-2 border-stone-200 p-8 my-8">
@@ -26,6 +30,8 @@ const app = Vue.createApp({
 									<p class="w-full border p-2 bg-stone-100">{{ licenseData.payed_until }}</p>
 								</div>
 							</div>
+							<p class="py-2 text-lg">The subscription extends automatically for 12 month every time until you cancel your subscription.</p>
+							<p class="py-2 text-lg">For testing, you can also use the domains 'localhost', '127.0.0.1', and the subdomain 'typemilltest.'.</p>
 						</div>
 						<form v-else class="inline-block w-full">
 							<div>
@@ -43,8 +49,6 @@ const app = Vue.createApp({
 									</div>
 								</div>
 							</div>
-
-
 
 							<div v-for="(fieldDefinition, fieldname) in formDefinitions">
 								<fieldset class="flex flex-wrap justify-between border-2 border-stone-200 p-4 my-8" v-if="fieldDefinition.type == 'fieldset'">
@@ -74,11 +78,19 @@ const app = Vue.createApp({
 								<input type="submit" @click.prevent="save()" value="save" class="w-full p-3 my-1 bg-stone-700 hover:bg-stone-900 text-white cursor-pointer transition duration-100">
 							</div>
 
-
-
-
 						</form>
 					</Transition>`,
+/*
+
+									<div class="p-8 grow flex justify-center items-center">
+										<img class="mx-auto" :src="src" width="150" height="150">
+									</div>
+									<div class="p-8 bg-teal-500">
+										<p class="font-medium text-white">{{ licenseData.plan }}-LICENSE</p>
+									</div>
+*/
+
+
 	data() {
 		return {
 			licenseData: data.licensedata,
@@ -87,7 +99,7 @@ const app = Vue.createApp({
 			message: '',
 			messageClass: '',
 			errors: {},
-			src: tmaxios.defaults.baseURL + "/system/author/img/favicon-144.png"
+			src: data.urlinfo.baseurl + "/system/typemill/author/img/typemill-icon.png"
 		}
 	},
 	mounted() {
