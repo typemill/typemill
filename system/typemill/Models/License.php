@@ -10,11 +10,11 @@ class License
 	public $message = '';
 
 	private $plans  = [
-		'44699' => [
+		'MAKER' => [
 			'name' 	=> 'MAKER',
 			'scope'	=> ['MAKER' => true]
 		],
-		'44700' => [
+		'BUSINESS' => [
 			'name' 	=> 'BUSINESS',
 			'scope'	=> ['MAKER' => true, 'BUSINESS' => true]
 		]
@@ -99,17 +99,30 @@ class License
 
 			return false;
 		}
+
 		$licenseStatus = $this->validateLicense($licensedata);
 
-		if($licenseStatus === true)
+		if($licenseStatus !== true)
 		{
-			unset($licensedata['signature']);
+			$this->message = Translations::translate('Validation failed') . ': ' . $licenseStatus;
 
-			# check here if payed until is in past
-			return $licensedata;
+			return false;
 		}
 
-		return false;
+		# check here if payed until is in past
+	    $nextBillDate 	= new \DateTime($licensedata['payed_until']);
+	    $currentDate 	= new \DateTime();
+
+	    if($nextBillDate < $currentDate) 
+	    {
+	    	$this->message = Translations::translate('The subscription period is not paid yet.');
+
+	    	return false;
+	    }
+
+		unset($licensedata['signature']);
+
+		return $licensedata;
 	}
 
 	private function validateLicense($data)
@@ -175,7 +188,7 @@ class License
 
 		$context = stream_context_create($options);
 
-		$response = file_get_contents('https://service.typemill.net/api/v2/activate', false, $context);
+		$response = file_get_contents('https://service.typemill.net/api/v1/activate', false, $context);
 
 		if(substr($http_response_header[0], -6) != "200 OK")
 		{
