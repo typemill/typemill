@@ -84,7 +84,7 @@ class ControllerWebRecover extends Controller
 				$user->updateUser();
 
 				$title 		= Translations::translate('Check your inbox');
-				$message 	= Translations::translate('Dear ') . $requiredUser['username'] . ', ' . Translations::translate('please check the inbox of your email account for more instructions. Do not forget to check your spam-folder if your inbox is empty.');
+				$message 	= Translations::translate('Dear ') . $requiredUser['username'] . ', ' . Translations::translate('please check the inbox of your email account for more instructions.') . ' ' . Translations::translate('Do not forget to check your spam-folder if your inbox is empty.');
 			}			
 		}
 		elseif(isset($settings['securitylog']) && $settings['securitylog'])

@@ -175,7 +175,7 @@ class ControllerApiAuthorBlock extends Controller
 		if(!isset($draftMarkdown[$params['index_old']]))
 		{
 			$response->getBody()->write(json_encode([
-				'message' => Translations::translate('Block-id not found'),
+				'message' => Translations::translate('Block-id not found.'),
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);

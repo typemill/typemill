@@ -30,7 +30,7 @@ class License
 
 		if(!isset($licensedata['license'],$licensedata['email'],$licensedata['domain'],$licensedata['plan'],$licensedata['payed_until'],$licensedata['signature']))
 		{
-			return ['result' => false, 'message' => Translations::translate('License data not complete')];
+			return ['result' => false, 'message' => Translations::translate('License data incomplete')];
 		}
 
 		$licenseStatus = self::validateLicense($licensedata);
@@ -39,7 +39,7 @@ class License
 
 		if($licenseStatus === false)
 		{
-			return ['result' => false, 'message' => Translations::translate('License data are invalid')];
+			return ['result' => false, 'message' => Translations::translate('License data invalid')];
 		}
 		elseif($licenseStatus === true)
 		{

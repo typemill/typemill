@@ -1,14 +1,13 @@
 fieldsetlicense:
   type: fieldset
   legend: Activate Your License
-  description: 'bla bla bla'
   fields:
     license:
       name: license
       label: 'Your license key' 
       type: 'text'
       required: true
-      description: 'Enter your license key. You got your license key via mail from Paddle.'
+      description: 'Enter your license key that you got after your purchase via email.'
     email:
       name: email
       label: 'Your email' 
@@ -20,4 +19,4 @@ fieldsetlicense:
       label: 'Domain for license' 
       type:  'text'
       required: true
-      description: 'Enter the full domain like https://wwww.mywebsite.de. Note about proxy?'
+      description: 'Enter the full domain like https://wwww.mywebsite.de.'

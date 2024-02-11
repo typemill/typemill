@@ -1,54 +1,58 @@
-# German (Deutsche)
+# German (Deutsch)
 # Author: Sebastian Schürmanns
-'-LICENSE_AND_YOUR_WEBSITE_MUST_RUN_UNDER_THE_DOMAIN_OF_YOUR_LICENSE.': '-Lizenz und die Webseite muss unter der Domain von der Lizenz laufen.'
-'ACCESS_&_RIGHTS': 'Zugang & Rechte'
+ACCESS: Zugriff
 ACCESS_FOR: 'Zugang für'
-ACCESS_TO_BASEPATH_IS_NOT_ALLOWED.: 'Ein Zugriff auf den Basis-Pfad ist nicht erlaubt.'
+ACCESS_RIGHTS: 'Zugang & Rechte'
+ACCESS_TO_BASEPATH_IS_NOT_ALLOWED: 'Ein Zugriff auf den Basis-Pfad ist nicht erlaubt.'
 ACCOUNT: Account
-ACTIVATE_API_ACCESS_FOR_THIS_USER._USE_USERNAME_AND_PASSWORD_FOR_API_CALLS: 'API-Zugriff für diesen Nutzer aktivierten. Verwende den Nutzernamen und das Passwort für den API-Zugriff.'
-ACTIVATE_INDIVIDUAL_RESTRICTIONS_FOR_PAGES_IN_THE_META-TAB_OF_EACH_PAGE.: 'Individuelle Einschränkungen für Seiten können im Meta-Tab jeder Seite aktiviert werden.'
+ACCOUNT_CREATED_PLEASE_LOGIN_WITH_YOUR_USERNAME_AND_PASSWORD_NOW: 'Account erstellt. Melde dich mit dem Usernamen und Passwort an.'
+ACTIVATE_API_ACCESS_FOR_THIS_USER_USE_USERNAME_AND_PASSWORD_FOR_API_CALLS: 'API-Zugriff für diesen Nutzer aktivierten. Verwende den Nutzernamen und das Passwort für den API-Zugriff.'
+ACTIVATE_A_PASSWORD_RECOVERY_IN_THE_LOGIN_FORM: 'Aktiviere die Passwort-Widerherstellung auf der Login-Seite.'
+ACTIVATE_INDIVIDUAL_RESTRICTIONS_FOR_PAGES_IN_THE_META_TAB_OF_EACH_PAGE: 'Individuelle Einschränkungen für Seiten können im Meta-Tab jeder Seite aktiviert werden.'
 ACTIVATE_THE_CACHE_FOR_TWIG_TEMPLATES: 'Cache für Twig-Templates aktivieren'
 ACTIVATE_THE_DARKMODE_FOR_ME: 'Dunkles Design für mich aktivieren'
-ACTIVATE_THE_PASSWORD_RECOVERY.: 'Passwort-Widerherstellung aktivieren.'
-ACTIVATION_FAILED_BECAUSE_YOU_NEED_A_VALID_: 'Für die Aktivierung fehlt eine gültige '
+ACTIVATE_YOUR_LICENSE: 'Aktiviere deine Lizenz.'
+ACTIVATION_FAILED_BECAUSE_YOU_NEED_A_VALID: 'Für die Aktivierung fehlt eine gültige '
 ACTIVE: Aktiv
 ACTUAL_PASSWORD: 'Aktuelles Passwort'
 ADD: hinzufügen
 ADD_DEFINITION: '+ Definition'
 ADD_ENTRY: 'Eintrag hinzufügen'
 ADD_LEFT_COLUMN: '+ Linke Spalte'
-'ADD_MORE_URL_SCHEMES_FOR_EXTERNAL_LINKS_E.G._LIKE_DICT://_(COMMA_SEPARATED_LIST)': 'Mehr URL-Schemata für externe Links definieren, z.B. DICT:// (Liste mit Kommas)'
+ADD_MORE_URL_SCHEMES_FOR_EXTERNAL_LINKS_E_G_LIKE_DICT_COMMA_SEPARATED_LIST: 'Mehr URL-Schemata für externe Links definieren, z.B. DICT:// (Liste mit Kommas)'
 ADD_NOINDEX_TAG_AND_EXCLUDE_FROM_SITEMAP: 'No-Index-Attribut hinzufügen und von Sitemap ausschließen'
-ADD_ONE_OR_MORE_USERNAMES_SEPARATED_WITH_COMMA.: 'Einen oder mehrere Nutzernamen separiert mit Komma'
+ADD_ONE_OR_MORE_USERNAMES_SEPARATED_WITH_COMMA: 'Einen oder mehrere Nutzernamen separiert mit Komma'
 ADD_RIGHT_COLUMN: '+ Rechte Spalte'
 ADD_ROW_ABOVE: '+ Reihe oberhalb'
 ADD_ROW_BELOW: '+ Reihe unterhalb'
+ALLOWED_DOMAINS_FOR_API_ACCESS_CORS_HEADERS: 'Erlaubte Domains für den API-Zugriff (CORS-Header)'
+ALLOWED_DOMAINS_FOR_CONTENT_ON_TYPEMILL_CSP_HEADERS: 'Erlaubte Domains für Inhalte auf Typemill (CSP-Headers)'
 ALLOW_SVG: 'SVG erlauben'
-ALLOW_THE_UPLOAD_OF_SVG_IMAGES: 'Hochladen von SVG-Bildern erlauben'
+ALLOW_THE_UPLOAD_OF_SVG_IMAGES: 'Upload von SVG-Bildern erlauben.'
 ALL_PAGES: 'Alle Seiten'
-ALT-TEXT: Alternativ-Text
 ALTERNATIVE_TEXT_FOR_THE_HERO_IMAGE: 'Alternativ-Text für das Hero-Image'
+ALT_TEXT: Alternativ-Text
 ALWAYS_SHOW: 'Immer anzeigen'
+AND_YOU_CANNOT: ' und du kannst nicht '
 AND_YOU_MIGHT_FIND_THE_FOLLOWING_TIPS_HELPFUL: 'Und die folgenden Hinweise sind vielleicht hilfreich'
-API_ACCESS: 'API-Zugang'
-ARTICLE_DATE: 'Artikel-Datum'
+API_ACCESS: API-Zugang
+ARTICLE_DATE: Artikel-Datum
 AUTHOR: Autor
-AUTHOR-DESCRIPTION_(MARKDOWN): 'Autoren-Beschreibung (Markdown)'
-BLOCK-ID_NOT_FOUND: 'Block-ID nicht gefunden'
-BLOCK-ID_NOT_FOUND.: 'Block-ID nicht gefunden.'
+AUTHOR_DESCRIPTION_MARKDOWN: 'Autoren-Beschreibung (Markdown)'
+BACK_TO_LOGIN: 'Zurück zum Login'
+BLOCK_ID_NOT_FOUND: 'Block-ID nicht gefunden.'
 BOLD: fett
-BOOKMARK: 'Lesezeichen'
 BULLET_LIST: Auflistung
 BUY_A_LICENSE: 'Kauf eine Lizenz'
 CANCEL: abbrechen
-CAN_BE_USED_FOR_AUTHOR_LINE_IN_FRONTEND.: 'Kann für die Autoren-Zeile im Frontend genutzt werden.'
+CAN_BE_USED_FOR_AUTHOR_LINE_IN_FRONTEND: 'Kann für die Autoren-Zeile im Frontend genutzt werden.'
 CAPTION: Bild-Unterschrift
-CC-BY: ''
-CC-BY-NC: ''
-CC-BY-NC-ND: ''
-CC-BY-NC-SA: ''
-CC-BY-ND: ''
-CC-BY-SA: ''
+CC_BY: ''
+CC_BY_NC: ''
+CC_BY_NC_ND: ''
+CC_BY_NC_SA: ''
+CC_BY_ND: ''
+CC_BY_SA: ''
 CENTER: Mitte
 CHANGE_SLUG: 'Slug ändern'
 CHECK: prüfen
@@ -59,14 +63,15 @@ CLEAR: Löschen
 CLOSE: Schließen
 CLOSE_LIBRARY: 'Medialib schließen'
 CODE: Code
-COG: Einstellungen
 COLLAPSE_ALL: 'Alle einklappen'
 CONFIGURE: Konfigurieren
-CONTENT_BREAK: 'Inhalts-Trennung'
+CONFIRM: Bestätige
+CONTENT_BREAK: Inhalts-Trennung
 CONVERT_TO_WEBP: 'Zu WEBP konvertrieren'
 COPYRIGHT: Copyright
+COPY_THE_CONTENT_OF_THE_REFERENCED_INTERNAL_PAGE: 'Kopiere den Inhalt der referenzierten internen Seite'
 COULD_NOT_CREATE_FOLDER: 'Ordner konnte nicht erstellt werden'
-'COULD_NOT_DECODE_IMAGE_OR_FILE,_PROBABLY_NOT_A_BASE64_ENCODING': 'Datei oder Bild konnte nicht dekodiert werden, Base64-Kodierung erforderlich'
+COULD_NOT_DECODE_IMAGE_OR_FILE_PROBABLY_NOT_A_BASE64_ENCODING: 'Datei oder Bild konnte nicht dekodiert werden, Base64-Kodierung erforderlich'
 COULD_NOT_DELETE_FILE: 'Datei konnte nicht gelöscht werden'
 COULD_NOT_DELETE_FOLDER: 'Ordner konnte nicht gelöscht werden'
 COULD_NOT_GET_THE_VIDEO_IMAGE: 'Video-Bild konnte nicht geladen werden'
@@ -76,27 +81,29 @@ COULD_NOT_STORE_THE_CUSTOM_SIZE_OF: 'Benutzerdefinierte Größe konnte nicht ges
 COULD_NOT_STORE_THE_IMAGE_IN_THE_TEMPORARY_FOLDER: 'Bild konnte nicht im temporären Ordner gespeichert werden'
 COULD_NOT_STORE_THE_RESIZED_VERSION: 'Die verkleinerte Version konnte nicht gespeichert werden'
 COULD_NOT_WRITE_TO_THE_FILE: 'Datei konnte nicht beschrieben werden'
-CREATED_AT_(READ_ONLY): 'Erstellt am (nur lesend)'
+CREATED_AT_READ_ONLY: 'Erstellt am (nur lesend)'
 CREATE_NEW_PASSWORD: 'Neues Passwort erstellen'
 CREATE_POST: 'Post erstellen'
 CREATE_USER: '+ Nutzer'
-CROSS: Kreuz
 CUSTOM_CSS: 'Benutzerdefiniertes CSS'
-CUT_RESTRICTED_CONTENT_AFTER_THE_FIRST_HR-ELEMENT_ON_A_PAGE_(PER_DEFAULT_CONTENT_WILL_BE_CUT_AFTER_TITLE).: 'Eingeschränkte Inhalte nach dem ersten Trennstrich abschneiden (andernfalls wird der Inhalt nach dem Titel abgeschnitten)'
+CUT_RESTRICTED_CONTENT_AFTER_THE_FIRST_HR_ELEMENT_ON_A_PAGE_PER_DEFAULT_CONTENT_WILL_BE_CUT_AFTER_TITLE: 'Eingeschränkte Inhalte nach dem ersten Trennstrich abschneiden (andernfalls wird der Inhalt nach dem Titel abgeschnitten)'
 DARKMODE: 'Dunkles Design'
-DEAR_: 'Lieber'
+DEAR: Lieber
 DEAR_USER: 'Lieber Nutzer'
-DEFAULT_WIDTH_OF_LIVE_IMAGES_IS_820PX._CHANGES_WILL_APPLY_TO_FUTURE_UPLOADS.: 'Standard-Breite für Live-Bilder ist 820px. Änderungen werden nur für neue Bilder angewendet.'
+DEFAULT_WIDTH_OF_LIVE_IMAGES_IS_820PX_CHANGES_WILL_APPLY_TO_FUTURE_UPLOADS: 'Standard-Breite für Live-Bilder ist 820px. Änderungen werden nur für neue Bilder angewendet.'
 DEFINITION: Definitions-Liste
 DEFINITION_LIST: Definitions-Liste
 DELETE: löschen
-DELETE_CLOSE: löschen
 DELETE_COLUMN: 'Spalte löschen'
 DELETE_PAGE: 'Seite löschen'
 DELETE_ROW: 'Reihe löschen'
 DELETE_USER: 'Nutzer löschen'
 DEVELOPER: Entwickler
-DISABLE: 'Deaktivieren'
+DISABLE: Deaktivieren
+DISABLE_ALL_CSP_HEADERS_CONTENT_SECURITY_POLICY_FOR_THIS_WEBSITE: 'Deaktiviere alle CSP-Header (Content Security Policy) für diese Webseite.'
+DISABLE_ALL_CUSTOM_HEADERS_OF_TYPEMILL_EXCEPT_CORS_AND_SEND_YOUR_OWN_HEADERS_INSTEAD: 'Deaktiviere alle eigenen Header von Typemill (außer CORS) um meine eigenen Header zu senden.'
+DISABLE_CSP_HEADERS: 'CSP-Header deaktivieren'
+DISABLE_CUSTOM_HEADERS: 'Custom Header deaktivieren'
 DISCARD: Verwerfen
 DISCARD_CHANGES: 'Änderungen verwerfen'
 DISPLAY_APPLICATION_ERRORS: 'Zeige Fehler-Reports der Applikation'
@@ -105,36 +112,42 @@ DOES_NOT_EXIST_OR_IS_NOT_WRITABLE: 'Existiert nicht oder ist nicht beschreibbar'
 DOMAIN_FOR_LICENSE: 'Domain für die LIzenz'
 DONATE: Spenden
 DONE: Erledigt
+DO_NOT_FORGET_TO_CHECK_YOUR_SPAM_FOLDER_IF_YOUR_INBOX_IS_EMPTY: 'Vergiss nicht den Spam-Folder zu prüfen, wenn der Posteingang leer ist.'
 DO_NOT_RESIZE: 'Nicht verkleinern'
 DO_YOU_REALLY_WANT_TO_DELETE_THIS_PAGE: 'Soll die Seite wirklich gelöscht werden?'
 DO_YOU_REALLY_WANT_TO_DELETE_THIS_USER: 'Soll der Nutzer wirklich gelöscht werden?'
 DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES_AND_SET_THE_CONTENT_BACK_TO_THE_LIVE_VERSION: 'Sollen die Änderungen wirklich verworfen und der Inhalt auf den Live-Zustand zurückgesetzt werden?'
 DRAFT: Entwurf
-'DUTCH,_FLEMISH': 'Dänsch, Flämisch'
-E-MAIL: E-Mail
+DUTCH_FLEMISH: 'Dänsch, Flämisch'
 EDIT: editieren
 EMAIL: E-Mail
+EMAIL_ADDRESS_IN_SYSTEM_SETTINGS_IS_MISSING: 'Die E-Mail-Adresse in den System-Einstellungen fehlt.'
 EMAIL_SUBJECT: 'Betreff der E-Mail'
 ENGLISH: Englisch
-'ENTER_THE_EMAIL_OF_YOUR_USER-ACCOUNT,_CLICK_THE_RECOVER-BUTTON_AND_CHECK_YOUR_MAILBOX_FOR_FURTHER_INSTRUCTIONS.': ''
+ENTER_AN_EMAIL_ADDRESS_THAT_SENDS_THE_E_MAILS_SENDER_THE_E_MAIL_FEATURE_WILL_BE_USED_FOR_RECOVERY_AND_VERIFICATION_E_MAILS_SEND_A_TESTMAIL_TO_YOUR_USER_ACCOUNT_TO_VERIFY_THAT_YOU_RECEIVE_THE_E_MAILS: 'Gib eine E-Mail-Adresse an, die die Mails versendet (Absender). Das E-Mail-Feature wird für die Password-Wiederherstellung und die Verifizierungs-Emails genutzt. Sende eine Test-Mail um zu prüfen, ob die Mail zugestellt wird.'
+ENTER_THE_EMAIL_OF_YOUR_USER_ACCOUNT_CLICK_THE_RECOVER_BUTTON_AND_CHECK_YOUR_MAILBOX_FOR_FURTHER_INSTRUCTIONS: 'Gib die E-Mail-Adresse deines Nutzer-Accounts ein, drück den Wiederherstellungs-Button und prüfe dein Postfach, um Anweisungen für die Passwort-Wiederherstellung zu bekommen.'
+ENTER_THE_FULL_DOMAIN_LIKE_HTTPS_WWWW_MYWEBSITE_DE: 'Gib die volle Domain wie https://meinewebseite.de ein.'
+ENTER_THE_VERIFICATION_CODE_FROM_YOUR_EMAIL: 'Gib den Verifizierungs-Code aus der E-Mail ein.'
+ENTER_YOUR_E_MAIL_ADDRESS_THAT_YOU_USED_FOR_YOUR_LICENSE_PURCHASE: 'Gib die E-Mail-Adresse ein, die du beim Erverb der Lizenz verwendet hast.'
+ENTER_YOUR_LICENSE_KEY_THAT_YOU_GOT_AFTER_YOUR_PURCHASE_VIA_EMAIL: 'Gib den Lizenz-Schlüssel ein, den du nach dem Kauf per E-Mail erhalten hast.'
 ERROR_REPORTING: Fehler-Reports
 ERROR_SENDING_EMAIL: 'Fehler beim Versenden der E-Mail'
 EXPAND_ALL: 'Alle ausklappen'
 EXTENSION_OR_FILENAME_ARE_MISSING: 'Datei-Endung oder Dateiname fehlen'
 EXTENSION_OR_NAME_FOR_IMAGE_IS_MISSING: 'Datei-Endung oder Name für Bild fehlen'
 EXTERNAL_LINK: 'externer Link'
-EYE_BLOCKED: 'Geschlossenes Auge'
+E_MAIL: E-Mail
 FAVICON: Favicon
 FILE: Datei
-FILENAME_IS_MISSING.: 'Dateiname fehlt'
-FILENAME_OR_USERROLE_IS_MISSING.: 'Dateiname oder Nutzerrolle fehlen'
-FILETYPE_IS_NOT_ALLOWED.: 'Dateityp ist nicht erlaubt'
-FILE_DELETED_SUCCESSFULLY.: 'Datei wurde erfolgreich gelöscht'
+FILENAME_IS_MISSING: 'Dateiname fehlt'
+FILENAME_OR_USERROLE_IS_MISSING: 'Dateiname oder Nutzerrolle fehlen'
+FILETYPE_IS_NOT_ALLOWED: 'Dateityp ist nicht erlaubt'
+FILE_DELETED_SUCCESSFULLY: 'Datei wurde erfolgreich gelöscht'
 FILE_HAS_BEEN_STORED: 'Datei wurde gespeichert'
-FILE_IS_BIGGER_THAN_20MB.: 'Datei ist größer als 20MB'
-FILE_IS_EMPTY.: 'Datei ist leer'
-FILE_IS_MISSING.: 'Datei fehlt'
-FILE_NOT_FOUND.: 'Datei nicht gefunden'
+FILE_IS_BIGGER_THAN_20MB: 'Datei ist größer als 20MB'
+FILE_IS_EMPTY: 'Datei ist leer'
+FILE_IS_MISSING: 'Datei fehlt'
+FILE_NOT_FOUND: 'Datei nicht gefunden'
 FILE_SAVED_SUCCESSFULLY: 'Datei erfolgreich gespeichert'
 FIRST_NAME: Vorname
 FOLDER: Ordner
@@ -142,120 +155,127 @@ FORGOT_PASSWORD: 'Passwort vergessen'
 FORGOT_YOUR_PASSWORD: 'Passwort vergessen'
 FORMAT_OPTIONS_FOR_VISUAL_EDITOR: 'Formatierungs-Optionen für den visuellen Editor'
 FRENCH: French
+FROM_MAIL_IS_REQUIRED_FOR_THIS_FEATURE_SEND_A_TESTMAIL_BEFORE_YOU_USE_THIS_FEATURE: 'Eine Absender-Adresse ist für das Feature erforderlich. Sende eine Test-Mail, bevor du das Feature nutzt.'
+FROM_MAIL_IS_REQUIRED_FOR_THIS_FEATURE_SEND_A_TESTMAIL_BEFORE_YOU_USE_THIS_FEATURE_MAKE_SURE_YOU_HAVE_FTP_ACCESS_TO_DISABLE_THE_FEATURE_IN_SETTINGS_YAML_ON_FAILURE_THE_VERIFICATION_CODE_WILL_BE_VALID_FOR_5_MINUTES_BE_AWARE_THAT_DEVICE_FINGERPRINTS_WILL_BE_STORED_IN_THE_USER_ACCOUNTS: 'Eine Absender-Adresse ist für das Feature erforderlich. Sende eine Test-Mail, bevor du das Feature nutzt. Stelle sicher, dass du FTP-Zugriff auf die Webseite hast um das Feature im Bedarfsfall zu deaktivieren. Der Verifizierungs-Code ist 5 Minuten lang gültig. Beachte, dass Device-Fingerprints im Nutzeraccount gespeichert werden.'
 GERMAN: Deutsch
 GET_INSPIRED_AND_ENJOY_YOUR_WRITING: 'Lass dich inspirieren und viel Freude beim Schreiben.'
-GOOGLE_SITEMAP_(READONLY): 'Google Sitemap (nur lesend)'
+GOOGLE_SITEMAP_READONLY: 'Google Sitemap (nur lesend)'
 GO_TO_LOGIN: 'Zur Login-Seite gehen'
-HAS_EDIT_RIGHTS_FOR_THIS_ARTICLE.: 'Hat Editier-Rechte für diesen Artikel'
+HAS_EDIT_RIGHTS_FOR_THIS_ARTICLE: 'Hat Editier-Rechte für diesen Artikel'
 HEADLINE: Überschrift
 HEADLINE_ANCHORS: Überschriften-Anker
 HERO_IMAGE: 'Hero Image'
-'HEY_WRITER,_AUTHOR,_EDITOR,_CONTENT-GURU,_OR_WEBSITE-MANAGER.': 'Hallo Author, Editor, Content-Guru oder Website-Manager.'
+HEY_WRITER_AUTHOR_EDITOR_CONTENT_GURU_OR_WEBSITE_MANAGER: 'Hallo Author, Editor, Content-Guru oder Website-Manager.'
 HIDE: Verbergen
 HIDE_PAGE_FROM_NAVIGATION: 'Seite in Navigation verbergen'
-HOME: Home
 HOMEPAGE: Homepage
 HORIZONTAL_LINE: 'Horizontale Linie'
 HR: 'Horizontale Linie'
-'IF_NOT_FILLED,_THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT.': 'Wenn nicht gefüllt, wird die Beschreibung aus dem Inhalt extrahiert.'
-'IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT,_THEN_THE_IMAGE_WILL_BE_CROPPED.': 'Wenn ein Wert für die Höhe angegeben ist, wird das Bild beschnitten.'
-'IF_YOU_UNPUBLISH_THE_PAGE,_THEN_WE_WILL_DELETE_THE_PUBLISHED_VERSION_AND_KEEP_THE_MODIFIED_VERSION': 'Wenn du die Seite depublizierst, bleibt der Entwurf enthalten und die Live-Version wird gelöscht.'
+IF_NOT_FILLED_THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT: 'Wenn nicht gefüllt, wird die Beschreibung aus dem Inhalt extrahiert.'
+IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT_THEN_THE_IMAGE_WILL_BE_CROPPED: 'Wenn ein Wert für die Höhe angegeben ist, wird das Bild beschnitten.'
+IF_YOU_DID_NOT_MAKE_THIS_LOGIN_ATTEMPT_PLEASE_RESET_YOUR_PASSWORD_IMMEDIATELY: 'Wenn dieser Anmeldeversuch nicht von dir stammt, dann ändere sofort dein Passwort.'
+IF_YOU_DID_NOT_RECEIVE_AN_EMAIL_WITH_THE_VERIFICATION_CODE_THEN_THE_USERNAME_OR_PASSWORD_YOU_ENTERED_WAS_WRONG_PLEASE_TRY_AGAIN: 'Wenn du keine E-Mail mit einem Verifizierungs-Code erhalten hast, dann war das Passwort oder der Username falsch. Bitte versuche es erneut.'
+IF_YOU_UNPUBLISH_THE_PAGE_THEN_WE_WILL_DELETE_THE_PUBLISHED_VERSION_AND_KEEP_THE_MODIFIED_VERSION: 'Wenn du die Seite depublizierst, bleibt der Entwurf enthalten und die Live-Version wird gelöscht.'
 IMAGE: Bild
-IMAGENAME_IS_MISSING.: 'Bild-Name fehlt'
-IMAGES_WITH_THIS_EXTENSION_ARE_NOT_ALLOWED.: 'Bilder mit dieser Endung sind nicht erlaubt.'
-IMAGE_DELETED_SUCCESSFULLY.: 'Bild wurde erfolgreich gelöscht.'
-IMAGE_OR_FILENAME_IS_MISSING.: 'Bild- oder Dateiname fehlen.'
-IMAGE_OR_NAME_IS_MISSING.: 'Bild oder Datei fehlen.'
+IMAGENAME_IS_MISSING: 'Bild-Name fehlt'
+IMAGES_WITH_THIS_EXTENSION_ARE_NOT_ALLOWED: 'Bilder mit dieser Endung sind nicht erlaubt.'
+IMAGE_DELETED_SUCCESSFULLY: 'Bild wurde erfolgreich gelöscht.'
+IMAGE_OR_FILENAME_IS_MISSING: 'Bild- oder Dateiname fehlen.'
+IMAGE_OR_NAME_IS_MISSING: 'Bild oder Datei fehlen.'
 IMAGE_SAVED_SUCCESSFULLY: 'Bild erfolgreich gespeichert'
 IMAGE_URL: 'Bild URL'
-IMAGE_URL_(READ_ONLY): 'Bild URL (nur lesend)'
+IMAGE_URL_READ_ONLY: 'Bild URL (nur lesend)'
 INFO: Info
+INVALID_VERIFICATION_CODE_FORMAT_PLEASE_TRY_AGAIN: 'Ungültiges Format des Verifizierungs-Codes. Bitte versuch es erneut.'
+INVISIBLE: Unsichtbar
 IS_NOT_A_DIRECTORY: 'ist kein Verzeichnis'
 IS_NOT_A_FOLDER: 'ist kein Ordner'
 ITALIAN: Italienisch
 ITALIC: kursiv
 IT_IS_NOT_ALLOWED_TO_WRITE_INTO: 'In den folgenden Ort konnte nicht geschrieben werden'
 LANGUAGE: Sprache
-LANGUAGE_(AUTHOR_AREA): 'Sprache (Autorenumgebung)'
-LANGUAGE_ATTRIBUTE_(WEBSITE): 'Sprach-Attribut (Webseite)'
-LAST_MODIFIED_LIVE_(READONLY): 'Zuletzt live geändert (nur lesend)'
+LANGUAGE_ATTRIBUTE_WEBSITE: 'Sprach-Attribut (Webseite)'
+LANGUAGE_AUTHOR_AREA: 'Sprache (Autorenumgebung)'
+LAST_MODIFIED_LIVE_READONLY: 'Zuletzt live geändert (nur lesend)'
 LAST_NAME: Zuname
 LEFT: Links
 LICENCE_HAS_BEEN_STORED: 'Lizenz wurde gespeichert'
 LICENSE: Lizenz
-LICENSE_DATA_ARE_INVALID: 'Lizenz-Daten sind ungültig'
+LICENSE_AND_YOUR_WEBSITE_MUST_RUN_UNDER_THE_DOMAIN_OF_YOUR_LICENSE: '-Lizenz und die Webseite muss unter der Domain von der Lizenz laufen.'
 LICENSE_DATA_INCOMPLETE: 'Lizenz-Daten sind unvollständig'
-LICENSE_DATA_MISSING.: 'Lizenz-Daten fehlen'
-LICENSE_DATA_NOT_COMPLETE: 'Lizenz-Daten sind unvollständig'
+LICENSE_DATA_INVALID: 'Lizenz-Daten sind ungültig'
+LICENSE_DATA_MISSING: 'Lizenz-Daten fehlen'
 LICENSE_REQUIRED: 'Lizenz erforderlich'
 LINK: Link
+LINK_TO_AN_EXTERNAL_PAGE: 'Link zu einer externen Seite'
 LINK_TO_YOUTUBE: 'Link zu YouTube'
+LIST_ALL_DOMAINS_SEPARATED_BY_COMMAS_TO_ALLOW_CONTENT_INTEGRATION_SUCH_AS_IFRAMES_ON_YOUR_TYPEMILL_WEBSITE_DOMAINS_WILL_BE_ADDED_TO_THE_CSP_HEADER_USUALLY_DONE_WITH_PLUGINS_AND_THEMES_BUT_ADD_MANUALLY_IF_SOMETHING_IS_BLOCKED: 'Trage eine komma-separierte Liste aller Domains ein, von denen Inhalte in Form von Iframes oder Bildern integriert werden sollen. Wird normalerweise über Plugins und Themes gemacht. Falls eine Domain geblockt wird, kann sie hier manuell eingetragen werden.'
+LIST_ALL_DOMAINS_SEPARATED_BY_COMMA_THAT_SHOULD_HAVE_ACCESS_TO_THE_TYPEMILL_API_DOMAINS_WILL_BE_ADDED_TO_THE_CORS_HEADER: 'Trage eine komma-separierte Liste aller Domains ein, die Zugriff auf die API haben sollen. Die Domains werden für den CORS-Header verwendet.'
 LOGIN: Anmelden
 LOGIN_TO_THE_AUTHOR_AREA_OR_GO_TO_THE: 'Logge dich in die Autorenumgebung ein oder gehe zur'
+LOGIN_VERIFICATION_RECOMMENDED: 'Login-Verifizierung (empfohlen)'
 LOGO: Logo
+MAIL_FROM_NAME_OPTIONAL: 'Absender-Name (optional)'
+MAIL_FROM_REQUIRED: 'Absender-Adresse (erforderlich)'
 MANUAL_DATE: 'Manuelles Datum'
 MARKDOWN: Markdown
-MARKDOWN_IS_MISSING.: 'Markdown fehlt'
-MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB._HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES.: 'Maximale Größe für ein Bild ist 5 MB. Hero-Bilder werden nicht von allen Themes unterstützt.'
+MARKDOWN_IS_MISSING: 'Markdown fehlt'
+MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB_HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES: 'Maximale Größe für ein Bild ist 5 MB. Hero-Bilder werden nicht von allen Themes unterstützt.'
 MAXIMUM_SIZE_FOR_FILE_UPLOADS_IN_MB: 'Maximale Größe für Dateien in MB'
 MAXIMUM_SIZE_FOR_IMAGE_UPLOADS_IN_MB: 'Maximale Größe für Bilder in MB'
-MAXIMUM_SIZE_OF_IMAGE_ALT-TEXT_IS_100_CHARACTERS: 'Maximal 100 Zeichen für Alternativ-Text'
+MAXIMUM_SIZE_OF_IMAGE_ALT_TEXT_IS_100_CHARACTERS: 'Maximal 100 Zeichen für Alternativ-Text'
 MAXIMUM_SIZE_OF_IMAGE_CAPTION_IS_140_CHARACTERS: 'Maximal 140 Zeichen für Bild-Unterschrift'
 MAXIMUM_SIZE_OF_IMAGE_CLASS_IS_100_CHARACTERS: 'Maximal 100 Zeichen für Bild-CSS-Klasse'
 MAXIMUM_SIZE_OF_IMAGE_ID_IS_100_CHARACTERS: 'Maximal 100 Zeichen für Bild-ID'
 MAXIMUM_SIZE_OF_IMAGE_LINK_IS_100_CHARACTERS: 'Maximal 100 Zeichen für Bild-Link'
 MAXIMUM_SIZE_OF_IMAGE_TITLE_IS_100_CHARACTERS: 'Maximal 100 Zeichen für Bild-Titel'
-MEDIA: 'Medien'
+MEDIA: Medien
 MEDIALIB: Medien-Bibliothek
 MENU: Menü
-META-CONTENT: 'Meta-Inhalte'
-META_DESCRIPTION: 'Meta-Beschreibung'
-META_TITLE: 'Meta-Titel'
-MINIMUM_USER-ROLE_TO_ACCESS_THIS_PAGE: 'Minimale Nutzerrolle für den Zugriff auf die Seite'
-MOVE_VERTICAL: 'vertikal verschieben'
+META_CONTENT: Meta-Inhalte
+META_DESCRIPTION: Meta-Beschreibung
+META_TITLE: Meta-Titel
+MINIMUM_USER_ROLE_TO_ACCESS_THIS_PAGE: 'Minimale Nutzerrolle für den Seiten-Zugriff'
 NAVIGATION_TITLE: Navigationstitel
 NEW_PASSWORD: 'Neues Passwort'
 NEW_USER: 'Neuer Nutzer'
-NEW_USER_CREATED.: 'Neuen Nutzer erstellt'
-NOINDEX: 'Noindex'
+NEW_USER_CREATED: 'Neuen Nutzer erstellt'
+NOINDEX: Noindex
 NOTICE: Hinweis
-NO_FILE_FOUND.: 'Keine Datei gefunden'
-NO_IMAGE_FOUND.: 'Kein Bild gefunden'
+NO_FILE_FOUND: 'Keine Datei gefunden'
+NO_IMAGE_FOUND: 'Kein Bild gefunden'
 NO_LICENSE_FOUND: 'Keine Lizenz gefunden'
-'NO_PROBLEM,_YOU_CAN_CREATE_A_NEW_ONE_HERE.': 'Kein Problem, erstelle hier ein neues.'
+NO_PROBLEM_YOU_CAN_CREATE_A_NEW_ONE_HERE: 'Kein Problem, erstelle hier ein neues.'
 NUMBERED_LIST: Aufzählung
 OLIST: olist
-ONE_OR_MORE_FILES_COULD_NOT_BE_TRANSFORMED.: 'Ein oder mehrere Dateien konnten nicht umgeschrieben werden.'
+ONE_OR_MORE_FILES_COULD_NOT_BE_TRANSFORMED: 'Ein oder mehrere Dateien konnten nicht umgeschrieben werden.'
 ONLY_IMAGES_ARE_ALLOWED: 'Nur Bilder sind erlaubt'
-ONLY_PNG_FORMAT_WILL_WORK.: 'Nur PNG-Formate funktionieren'
+ONLY_PNG_FORMAT_WILL_WORK: 'Nur PNG-Formate funktionieren'
 ONLY_THE_FOLLOWING_USERS_HAVE_ACCESS: 'Nur die folgenden Nutzer haben Zugriff'
-OWNER_(USERNAME): 'Besitzer (username)'
-'PAGES_(SORT_IN_NAVIGATION_WITH_DRAG_&_DROP)': 'Seiten (mit Drag&Drop in der Navigation verschieben)'
+OPEN: Öffnen
+OPTIONALLY_ENTER_A_NAME_FOR_THE_SENDER_ADDRESS_IF_NOT_SET_THE_FROM_ADDRESS_WILL_BE_VISIBLE: 'Gib optional einen Namen für die Absender-Adresse an. Wenn nicht gefüllt wird die Absender-Adresse angezeigt.'
+OPTIONALLY_ENTER_A_REPLY_TO_ADDRESS_FOR_ANSWERS_FROM_THE_RECEIVER_IF_NOT_SET_ANSWERS_WILL_GO_TO_THE_FROM_ADDRESS: 'Gib optional eine Antwort-Adresse für Antworten des Empfängers an. Wenn nicht befüllt, werden Antworten an die Absender-Adresse geschickt.'
+OWNER_USERNAME: 'Besitzer (username)'
+PAGES_SORT_IN_NAVIGATION_WITH_DRAG_DROP: 'Seiten (mit Drag&Drop in der Navigation verschieben)'
 PAGE_NOT_FOUND: 'Seite nicht gefunden'
-PAGE_RESTRICTION: 'Seiten-Einschränkungen'
-PAPERCLIP: Büroklammer
+PAGE_RESTRICTION: Seiten-Einschränkungen
 PARAGRAPH: Absatz
 PASSWORD: Passwort
-PATH_IS_MISSING.: 'Pfad fehlt'
+PATH_IS_MISSING: 'Pfad fehlt'
+PERMANENT_REDIRECT_301_THE_USER_TO_THE_REFERENCED_INTERNAL_PAGE: 'Permanente Umleitung (301) zur referenzierten Seite'
 PERMISSION_DENIED: 'Erlaubnis verweigert'
-PLEASE_CHECK_THE_INBOX_OF_YOUR_EMAIL_ACCOUNT_FOR_MORE_INSTRUCTIONS.: 'Prüfe deine Mails für weitere Informationen.'
-PLEASE_CHECK_THE_INBOX_OF_YOUR_EMAIL_ACCOUNT_FOR_MORE_INSTRUCTIONS._DO_NOT_FORGET_TO_CHECK_YOUR_SPAM-FOLDER_IF_YOUR_INBOX_IS_EMPTY.: 'Prüfe deine Mails für weitere Informationen. Kontrolliere ggf. auch den Spam-Ordner.'
+PLEASE_CHECK_IF_THERE_IS_A_READABLE_FILE_PUBLIC_KEY_PEM_IN_YOUR_SETTINGS_FOLDER: 'Prüfe, ob die Datei public_key.pem im Settings-Ordner vorhanden und lesbar ist.'
+PLEASE_CHECK_THE_INBOX_OF_YOUR_EMAIL_ACCOUNT_FOR_MORE_INSTRUCTIONS: 'Wir haben weitere Informationen an deine E-Mail-Adresse geschickt.'
 PLEASE_CONFIRM: 'Bitte bestätigen'
-PLEASE_CORRECT_ERRORS_IN_FORM.: 'Bitte korrigiere die Fehler im Formular.'
-PLEASE_CORRECT_THE_ERRORS_IN_FORM.: 'Bitte korrigiere die Fehler im Formular.'
-PLEASE_CORRECT_THE_ERRORS.: 'Bitte korrigiere die Fehler.'
-PLEASE_CORRECT_THE_ERRORS_IN_THE_FORM.: 'Bitte korrigiere die Fehler im Formular.'
-PLEASE_CORRECT_YOUR_INPUT.: 'Bitte korrigiere deine Eingaben.'
-PLEASE_ENTER_A_VALID_EMAIL.: 'Bitte trage eine gültige E-Mail-Adresse ein.'
-PLEASE_LOGIN_WITH_YOUR_NEW_PASSWORD.: 'Bitte logge dich mit dem neuen Passwort ein.'
+PLEASE_CORRECT_YOUR_INPUT: 'Bitte korrigiere deine Eingaben.'
+PLEASE_ENTER_A_VALID_EMAIL: 'Bitte trage eine gültige E-Mail-Adresse ein.'
+PLEASE_LOGIN_WITH_YOUR_NEW_PASSWORD: 'Bitte logge dich mit dem neuen Passwort ein.'
 PLEASE_SELECT: 'Bitte auswählen'
-'PLEASE_USE_ISO_639-1_CODES_LIKE_"EN"': 'Bitte nutze ISO 639-1 Codes wie "en"'
 PLEASE_USE_THE_FOLLOWING_LINK_TO_SET_A_NEW_PASSWORD: 'Bitte folge dem Link um ein neues Passwort zu vergeben'
 PLUGINS: Plugins
 PLUGIN_SETTINGS: Plugin-Einstellungen
-'POSTS_(SORTED_BY_PUBLISH_DATE,_FOR_NEWS_OR_BLOGS)': 'Posts (sortiert nach Publikations-Datum, für News oder Blogs)'
-POWER_OFF: 'Energie aus'
-PROFILE-IMAGE: 'Profil-Bild'
+POSTS_SORTED_BY_PUBLISH_DATE_FOR_NEWS_OR_BLOGS: 'Posts (sortiert nach Publikations-Datum, für News oder Blogs)'
+PROFILE_IMAGE: Profil-Bild
 PROXY: Proxy
 PUBLISH: Publizieren
 QUOTE: Zitat
@@ -263,64 +283,77 @@ QUOTES: Zitate
 RAW: raw
 RAW_EDITOR: Markdown-Editor
 RECOVER_PASSWORD: 'Passwort wiederherstellen'
+REFERENCE: Referenz
+REFERENCE_TO_PAGE: 'Referenz zur Seite'
 REPEAT_PASSWORD: 'Passwort wiederholen'
+REPLY_TO_OPTIONAL: 'Antwort-Adresse (optional)'
 REQUIRED: erforderlich
-RESTRICTIONS: 'Einschränkugen'
-RESTRICTION_NOTICE_(USE_MARKDOWN): 'Einschränkungs-Hinweis (Markdown verwendbar)'
+RESTRICTION_NOTICE_USE_MARKDOWN: 'Einschränkungs-Hinweis (Markdown verwendbar)'
 RIGHT: Recht
 ROLE: Rolle
 RUSSIAN: Russisch
 SAVE: speichern
 SEARCH: Suchen
-SECURITY: 'Sicherheit'
-SECURITY_LOG: 'Sicherheits-Logbuch'
+SECURITY: Sicherheit
+SECURITY_LOG: Sicherheits-Logbuch
 SELECT_FROM_MEDIALIB: 'Aus Medien-Bibliothek wählen'
-SELECT_THE_LOWEST_USERROLE._HIGHER_ROLES_WILL_HAVE_ACCESS_TOO.: 'Wähle die niedrigste Nutzerrolle. Höhere Rollen haben ebenfalls Zugriff.'
-SENDER_EMAIL: 'E-Mail Absender'
+SELECT_THE_LOWEST_USERROLE_HIGHER_ROLES_WILL_HAVE_ACCESS_TOO: 'Wähle die niedrigste Nutzerrolle. Höhere Rollen haben ebenfalls Zugriff.'
 SETTINGS_HAVE_BEEN_SAVED: 'Einstellungen wurden gespeichert'
 SETUP: Setup
 SHORTCODE: Shortcode
+SHORTCODES: Shortcodes
 SHORT_TITLE_FOR_POST: 'Kurztitel für Post'
 SHOW_AFTER_FIRST_WRONG_INPUT: 'Nach dem ersten Fehl-Versuch anzeigen'
 SHOW_ANCHORS_NEXT_TO_HEADLINE_IN_FRONTEND: 'Anker neben Überschriften im Frontend anzeigen'
-SHOW_THE_WEBSITE_ONLY_TO_AUTHENTICATED_USERS_AND_REDIRECT_ALL_OTHER_USERS_TO_THE_LOGIN_PAGE.: 'Gesamte Webseite nur authentifizierten Nutzern anzeigen und alle anderen zur Login-Seite umleiten.'
+SHOW_THE_WEBSITE_ONLY_TO_AUTHENTICATED_USERS_AND_REDIRECT_ALL_OTHER_USERS_TO_THE_LOGIN_PAGE: 'Gesamte Webseite nur authentifizierten Nutzern anzeigen und alle anderen zur Login-Seite umleiten.'
 SLUG: Slug
-'SOMETHING_WENT_WRONG,_THE_INPUT_IS_NOT_VALID.': 'Etwas ist schief gegangen, die Eingaben waren ungültig.'
-'SOMETHING_WENT_WRONG._PLEASE_REFRESH_THE_PAGE_AND_CHECK,_IF_ALL_FOLDERS_AND_FILES_ARE_WRITABLE.': 'Etwas ist schief gegangen, bitte lade die Seite neu und prüfe, ob die Ordner und Dateien beschreibbar sind.'
+SOMEONE_TRIED_TO_LOG_IN_TO_YOUR_TYPEMILL_WEBSITE_AND_WE_WANT_TO_MAKE_SURE_IT_IS_YOU_ENTER_THE_FOLLOWING_VERIFICATION_CODE_TO_FINISH_YOUR_LOGIN_THE_CODE_WILL_BE_VALID_FOR_5_MINUTES: 'Jemand hat versucht sich bei deiner Typemill-Webseite einzuloggen und wir möchten sicherstellen, dass du es warst. Gib den folgenden Verifizierungs-Code ein, um die Anmeldung abzuschließen. Der Code ist fünf Minuten lang gültig.'
+SOMETHING_WENT_WRONG_PLEASE_REFRESH_THE_PAGE_AND_CHECK_IF_ALL_FOLDERS_AND_FILES_ARE_WRITABLE: 'Etwas ist schief gegangen, bitte lade die Seite neu und prüfe, ob die Ordner und Dateien beschreibbar sind.'
+SOMETHING_WENT_WRONG_THE_INPUT_IS_NOT_VALID: 'Etwas ist schief gegangen, die Eingaben waren ungültig.'
 STANDARD_EDITOR_MODE: 'Standard Editor-Modus'
 STANDARD_HEIGHT_FOR_LIVE_PICTURES: 'Standard-Höhe für Live-Bilder'
 STANDARD_WIDTH_FOR_LIVE_PICTURES: 'Standard-Breite für Live-Bilder'
+SUBMIT_THE_URL_ABOVE_IN_GOOGLE_SEARCH_CONSOLE_TO_SUPPORT_INDEXING: 'Trag die URL oben in der Google Search Console zur Unterstützung der Indexierung ein.'
 SYSTEM: System
 SYSTEMCHECK: Systemprüfung
 SYSTEM_SETTINGS: System-Einstellungen
 TABLE: Tabelle
 TABLE_OF_CONTENTS: Inhaltsverzeichnis
 TAB_NOT_FOUND: 'Tab nicht gefunden'
+TEMPORARY_REDIRECT_302_THE_USER_TO_THE_REFERENCED_INTERNAL_PAGE: 'Temporäre Umleitung (302) zur referenzierten internen Seite'
+TESTMAIL_FROM_TYPEMILL: 'Test-Email von Typemill'
 TEXT_BEFORE_RECOVER_LINK_IN_EMAIL_MESSAGE: 'Text vor dem Link in der E-Mail-Nachricht'
 TEXT_FILE: Text-Datei
 THEMES: Themes
 THEME_SETTINGS: Theme-Einstellungen
-THERE_ARE_PUBLISHED_PAGES_WITHIN_THIS_FOLDER._THE_PAGES_ARE_NOT_VISIBLE_ON_YOUR_WEBSITE_ANYMORE.: 'Der Ordner enthält publizierte Seiten. Die Seiten sind im Frontend nicht mehr zugänglich.'
+THERE_ARE_PUBLISHED_PAGES_WITHIN_THIS_FOLDER_THE_PAGES_ARE_NOT_VISIBLE_ON_YOUR_WEBSITE_ANYMORE: 'Der Ordner enthält publizierte Seiten. Die Seiten sind im Frontend nicht mehr zugänglich.'
 THERE_IS_ALREADY_A_PAGE_WITH_THAT_SLUG: 'Es gibt bereits eine Seite mit diesem Slug'
-THERE_IS_ALREADY_A_PAGE_WITH_THIS_NAME._PLEASE_CHOOSE_ANOTHER_NAME.: 'Es gibt bereits eine Seite mit diesem Namen. Bitte wähle einen anderen Namen.'
+THERE_IS_ALREADY_A_PAGE_WITH_THIS_NAME_PLEASE_CHOOSE_ANOTHER_NAME: 'Es gibt bereits eine Seite mit diesem Namen. Bitte wähle einen anderen Namen.'
 THERE_WAS_AN_ERROR_CHECKING_THE_LICENSE_SIGNATURE: 'Fehler beim Prüfen der Lizenz-Signatur'
-THE_BEST_OPTION_IS_A_SEPARATE_PASSWORD_MANAGER_LIKE_KEEPASS_AND_OTHERS.: 'Die beste Lösung ist ein separater Passwort-Manager wie KeePass und andere.'
-'THE_CAPTCHA_IS_WRONG,_PLEASE_TRY_AGAIN': 'Falsches Captcha, bitte noch einmal versuchen'
-THE_FOLDER_CONTAINS_ANOTHER_FOLDER_SO_WE_CANNOT_TRANSFORM_IT._PLEASE_MAKE_SURE_THERE_ARE_ONLY_FILES_IN_THIS_FOLDER.: 'Der Ordner enthält einen Unterordner-Ordner. Stelle sicher, dass der Ordner nur Seiten enthält, sonst können die Inhalte nicht in Posts umgewandelt werden.'
-THE_FOLDER_CONTAINS_PUBLISHED_PAGES._PLEASE_UNPUBLISH_OR_DELETE_THEM_FIRST.: 'Der Ordner enthält publizierte Seiten. Bitte depubliziere oder Lösche die Seiten zuerst.'
+THE_BEST_OPTION_IS_A_SEPARATE_PASSWORD_MANAGER_LIKE_KEEPASS_AND_OTHERS: 'Die beste Lösung ist ein separater Passwort-Manager wie KeePass und andere.'
+THE_CAPTCHA_IS_WRONG_PLEASE_TRY_AGAIN: 'Falsches Captcha, bitte noch einmal versuchen'
+THE_FOLDER_CONTAINS_ANOTHER_FOLDER_SO_WE_CANNOT_TRANSFORM_IT_PLEASE_MAKE_SURE_THERE_ARE_ONLY_FILES_IN_THIS_FOLDER: 'Der Ordner enthält einen Unterordner-Ordner. Stelle sicher, dass der Ordner nur Seiten enthält, sonst können die Inhalte nicht in Posts umgewandelt werden.'
+THE_FOLDER_CONTAINS_PUBLISHED_PAGES_PLEASE_UNPUBLISH_OR_DELETE_THEM_FIRST: 'Der Ordner enthält publizierte Seiten. Bitte depubliziere oder Lösche die Seiten zuerst.'
 THE_FOLLOWING_REQUIREMENTS_FOR_THE_INSTALLATION_ARE_MISSING: 'Die folgenden Voraussetzungen für die Installation fehlen'
-THE_ID_OF_THE_CONTENT-BLOCK_IS_WRONG.: 'Die ID des Inhalts-Blocks ist falsch.'
-'THE_LICENSE_SERVER_RESPONDED_WITH:_': 'Der Lizenz-Server hat geantwortet mit: '
-THE_LINK_TO_RECOVER_THE_PASSWORD_WAS_TOO_OLD._PLEASE_CREATE_A_NEW_ONE.: 'Der Link zur Passwort-Vergabe ist abgelaufen. Bitte erstelle einen neuen Link.'
-THE_MAXIMUM_FILE_SIZE_MIGHT_BE_LIMITED_BY_YOUR_SERVER_SETTINGS.: 'Die maximale Datei-Größe könnte durch die Server-Einstellungen begrenzt sein.'
-THE_MAXIMUM_IMAGE_SIZE_MIGHT_BE_LIMITED_BY_YOUR_SERVER_SETTINGS.: 'Die maximale Bild-Größe könnte durch die Server-Einstellungen begrenzt sein.'
-'THE_MIME-TYPE_IS_MISSING,_NOT_ALLOWED_OR_DOES_NOT_FIT_TO_THE_FILE_EXTENSION.': 'Der Mime-Type fehlt, ist nicht erlaubt oder passt nicht zur Datei-Endung.'
-THE_PLUGIN_OR_THEMES_WAS_NOT_FOUND.: 'Das Plugin oder Theme wurde nicht gefunden.'
-THE_REQUESTED_FILETYPE_DOES_NOT_EXIST.: 'Der angeforderte Datei-Typ existiert nicht.'
-THE_REQUESTED_FILE_DOES_NOT_EXIST.: 'Die angeforderte Datei existiert nicht.'
-THE_VERSION_CHECK_FAILED_BECAUSE_OF_INVALID_PARAMETERS.: 'Die Versions-Prüfung ist wegen ungültiger Parameter fehlgeschlagen.'
+THE_FROM_MAIL_IS_MISSING_OR_IT_IS_NOT_A_VALID_E_MAIL_ADDRESS: 'Die Absender-Adresse fehlt oder es ist keine gültige E-Mail-Adresse.'
+THE_ID_OF_THE_CONTENT_BLOCK_IS_WRONG: 'Die ID des Inhalts-Blocks ist falsch.'
+THE_LICENSE_SERVER_RESPONDED_WITH: 'Der Lizenz-Server hat geantwortet mit: '
+THE_LINK_TO_RECOVER_THE_PASSWORD_WAS_TOO_OLD_PLEASE_CREATE_A_NEW_ONE: 'Der Link zur Passwort-Vergabe ist abgelaufen. Bitte erstelle einen neuen Link.'
+THE_MAXIMUM_FILE_SIZE_MIGHT_BE_LIMITED_BY_YOUR_SERVER_SETTINGS: 'Die maximale Datei-Größe könnte durch die Server-Einstellungen begrenzt sein.'
+THE_MAXIMUM_IMAGE_SIZE_MIGHT_BE_LIMITED_BY_YOUR_SERVER_SETTINGS: 'Die maximale Bild-Größe könnte durch die Server-Einstellungen begrenzt sein.'
+THE_MIME_TYPE_IS_MISSING_NOT_ALLOWED_OR_DOES_NOT_FIT_TO_THE_FILE_EXTENSION: 'Der Mime-Type fehlt, ist nicht erlaubt oder passt nicht zur Datei-Endung.'
+THE_PLUGIN_OR_THEMES_WAS_NOT_FOUND: 'Das Plugin oder Theme wurde nicht gefunden.'
+THE_RECOVER_LINK_WILL_BE_ACTIVE_FOR_24_HOURS: 'Der Wiederherstellungs-Link ist für 24 Stunden aktiv.'
+THE_REQUESTED_FILETYPE_DOES_NOT_EXIST: 'Der angeforderte Datei-Typ existiert nicht.'
+THE_REQUESTED_FILE_DOES_NOT_EXIST: 'Die angeforderte Datei existiert nicht.'
+THE_SUBSCRIPTION_PERIOD_IS_NOT_PAID_YET: 'Die Abo-Periode ist noch nicht bezahlt.'
+THE_TESTMAIL_HAS_BEEN_SEND_PLEASE_CHECK_YOUR_INBOX_AND_YOUR_SPAM_FOLDER_TO_VARIFY_THAT_YOU_RECEIVED_THE_MAIL: 'Die Test-Email wurde verschickt. Prüfe deinen Eingangs- und den Spamordner um sicherzustellen, dass die E-Mails zugestellt werden.'
+THE_VERIFICATION_WAS_WRONG_OR_OUTDATED_PLEASE_START_AGAIN: 'Die Verifizierung war falsch oder ist abgelaufen. Bitte starte eine neue Anmeldung.'
+THE_VERSION_CHECK_FAILED_BECAUSE_OF_INVALID_PARAMETERS: 'Die Versions-Prüfung ist wegen ungültiger Parameter fehlgeschlagen.'
+THIS: Dieses
 THIS_FIELD_IS_NOT_DEFINED: 'Dieses Feld ist nicht definiert.'
 THIS_FOLDER_CONTAINS: 'Dieser Ordner enthält: '
+THIS_IS_A_TESTMAIL_FROM_TYPEMILL_AND_IF_YOU_READ_THIS_E_MAIL_THEN_EVERYTHING_WORKS_FINE: 'Dies ist eine Test-Email von Typemill und wenn dich diese Zeilen erreichen, ist alles in Ordnung.'
 THIS_PAGE: 'Diese Seite'
 THIS_PAGE_HAS_BEEN_MODIFIED: 'Diese Seite wurde bearbeitet'
 TITLE: Titel
@@ -328,223 +361,97 @@ TOC: IHV
 TO_DOWNLOAD_THIS_FILE_YOU_NEED_TO_BE_AUTHENTICATED_WITH_THE_ROLE: 'Der Datei-Download ist nur mit der folgenden Rolle möglich: '
 TRACK_SPAM_AND_SUSPICIOUS_ACTIONS_IN_A_LOGFILE: 'Notiere Spam und verdächtige Aktionen in einem Logbuch'
 TRASH: Papierkorb
-TRUSTED_IPS_FOR_PROXIES_(COMMA_SEPARATED): 'Vertrauenswürdige IPs für Proxies (mit Komma separiert)'
-TRY_TO_CONVERT_UPLOADED_IMAGES_INTO_THE_WEBP-FORMAT: 'Versuche, hochgeladene Bilder in das WebP-Format umzuwandeln'
+TRUSTED_IPS_FOR_PROXIES_COMMA_SEPARATED: 'Vertrauenswürdige IPs für Proxies (mit Komma separiert)'
+TRY_TO_CONVERT_UPLOADED_IMAGES_INTO_THE_WEBP_FORMAT_FOR_BETTER_PERFORMANCE: 'Versuche, für eine bessere Performance die hochgelandenen Bilder in das WebP-Format zu konvertieren.'
 TWIG_CACHE: 'Twig Cache'
+TYPE_OF_REFERENCE: 'Art der Referenz'
 ULIST: ulist
 UNPUBLISH: Depublizieren
 UNPUBLISH_PAGE: 'Seite depublizieren'
 UPLOAD: hochladen
 UPLOAD_AN_IMAGE: 'Bild hochladen'
 UPLOAD_FILE: 'Datei hochladen'
-URL_SCHEMES: 'URL-Schemata'
-USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET.: 'Wird verwendet, wenn manuelles Datum fehlt'
+URL_SCHEMES: URL-Schemata
+USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET: 'Wird verwendet, wenn manuelles Datum fehlt'
+USED_FOR_COPYRIGHT_AND_YEAR_IN_FOOTER: 'Wird für das Copyright und das Jahr im Footer verwendet.'
+USED_FOR_FRONTEND_LANGUAGE_ATTRIBUTE_PLEASE_USE_ISO_639_1_CODES_LIKE_EN: 'Wird für das Sprach-Attribut im Frontend verwendet. Bitte nutze ISO 639-1 Codes wie "en"'
+USED_FOR_TRANSLATIONS_IN_AUTHOR_AREA_THEMES_AND_PLUGINS: 'Wird für die Übersetzung der Authorenoberfläche, der Plugins und der Themes verwendet.'
 USER: Nutzer
-USERDATA_ARE_REQUIRED.: 'Nutzerdaten erforderlich'
+USERDATA_ARE_REQUIRED: 'Nutzerdaten erforderlich'
 USERNAME: Nutzername
-USERNAME_(READ_ONLY): 'Nutzername (nur lesend)'
-USERNAME_IS_REQUIRED.: 'Nutzername ist erforderlich'
+USERNAME_IS_REQUIRED: 'Nutzername ist erforderlich'
+USERNAME_READ_ONLY: 'Nutzername (nur lesend)'
 USERROLE: Nutzerrolle
-USERROLE_IS_REQUIRED.: 'Nutzerrolle ist erforderlich'
-USERROLE_IS_UNKNOWN.: 'Nutzerrolle ist unbekannt'
+USERROLE_IS_REQUIRED: 'Nutzerrolle ist erforderlich'
+USERROLE_IS_UNKNOWN: 'Nutzerrolle ist unbekannt'
 USERS: Nutzer
-USER_DELETED.: 'Nutzer gelöscht'
-USER_HAS_BEEN_UPDATED.: 'Nutzer wurde aktualisiert'
+USER_DELETED: 'Nutzer gelöscht'
+USER_HAS_BEEN_UPDATED: 'Nutzer wurde aktualisiert'
 USER_NOT_FOUND: 'Nutzer nicht gefunden'
-USE_A_STRONG_AND_INDIVIDUAL_PASSWORD_FOR_EVERY_ACCOUNT.: 'Verwende ein starkes und individuelles Passwort für jeden Account'
+USE_A_STRONG_AND_INDIVIDUAL_PASSWORD_FOR_EVERY_ACCOUNT: 'Verwende ein starkes und individuelles Passwort für jeden Account'
 USE_CAPTCHA_IN_AUTHENTICATION_FORMS: 'Aktiviere Captcha-Prüfungen bei Authentifizierungen.'
-USE_X-FORWARDED-HEADER.: 'Nutze X-FORWARDED-HEADER'
+USE_X_FORWARDED_HEADER: 'Nutze X-Forwarded-Header'
+VALIDATION_FAILED: 'Validierung fehlgeschlagen'
+VERIFICATION_CODE_MISSING: 'Fehlt der Verifizierungs-Code?'
+VERIFY_YOUR_LOGIN_WITH_A_5_DIGIT_CODE_SEND_BY_EMAIL: 'Versende per E-Mail 5-stellige Codes zur Verifizierung von Anmeldungen.'
 VERSION: Version
 VIDEO: Video
-VISIBILITY: 'Sichtbarkeit'
+VISIBILITY: Sichtbarkeit
 VISUAL: visuell
 VISUAL_EDITOR: 'Visueller Editor'
+WEBSITE_OWNER: Webseiten-Besitzer
 WEBSITE_RESTRICTION: 'Website Beschränkungen'
 WEBSITE_TITLE: Webseiten-Titel
-WELCOME_BACK: 'Schön, dich wiederzusehen!'
+WELCOME_BACK: Willkommen!
 WELCOME_TO_TYPEMILL: 'Willkommen bei Typemill'
-'WE_CANNOT_CREATE_A_FOLDER,_ONLY_FILES.': 'Es können keine Ordner erstellt werden, nur Dateien.'
-'WE_COULD_NOT_CREATE_A_SANITIZED_VERSION_OF_THE_SVG,_IT_PROBABLY_HAS_INVALID_CONTENT.': 'Wir konnten die SVG-Datei nicht säubern, sie enthält vermutlich ungültige Inhalte.'
-'WE_COULD_NOT_CREATE_THE_FILE._PLEASE_REFRESH_THE_PAGE_AND_CHECK,_IF_ALL_FOLDERS_AND_FILES_ARE_WRITABLE.': 'Wir konnten keine Datei erstellen. Bitte lade die Seite neu und stelle sicher, dass die Ordner und Dateien beschreibbar sind.'
-'WE_COULD_NOT_CREATE_THE_FOLDER._PLEASE_REFRESH_THE_PAGE_AND_CHECK,_IF_ALL_FOLDERS_AND_FILES_ARE_WRITABLE.': 'Wir konnten keinen Ordner erstellen. Bitte lade die Seite neu und stelle sicher, dass die Ordner und Dateien beschreibbar sind.'
-WE_COULD_NOT_DELETE_A_CUSTOM_IMAGE_(GRAYSCALE_OR_RESIZED).: 'Wir konnten das benutzerdefinierte Bild nicht löschen (Graustufen oder benutzerdefinierte Größe)'
-WE_COULD_NOT_DELETE_THE_LIVE_IMAGE.: 'Wir konnten das Live-Bild nicht löschen'
+WE_CANNOT_CREATE_A_FOLDER_ONLY_FILES: 'Es können keine Ordner erstellt werden, nur Dateien.'
+WE_COULD_NOT_CREATE_A_SANITIZED_VERSION_OF_THE_SVG_IT_PROBABLY_HAS_INVALID_CONTENT: 'Wir konnten die SVG-Datei nicht säubern, sie enthält vermutlich ungültige Inhalte.'
+WE_COULD_NOT_CREATE_THE_FILE_PLEASE_REFRESH_THE_PAGE_AND_CHECK_IF_ALL_FOLDERS_AND_FILES_ARE_WRITABLE: 'Wir konnten keine Datei erstellen. Bitte lade die Seite neu und stelle sicher, dass die Ordner und Dateien beschreibbar sind.'
+WE_COULD_NOT_CREATE_THE_FOLDER_PLEASE_REFRESH_THE_PAGE_AND_CHECK_IF_ALL_FOLDERS_AND_FILES_ARE_WRITABLE: 'Wir konnten keinen Ordner erstellen. Bitte lade die Seite neu und stelle sicher, dass die Ordner und Dateien beschreibbar sind.'
+WE_COULD_NOT_CREATE_THE_USER_PLEASE_CHECK_IF_THE_SETTINGS_FOLDE_IS_WRITABLE: 'Wir konnten keinen Nutzer erstellen, bitte prüfe, ob der Settings-Ordner beschreibbar ist.'
+WE_COULD_NOT_DELETE_A_CUSTOM_IMAGE_GRAYSCALE_OR_RESIZED: 'Wir konnten das benutzerdefinierte Bild nicht löschen (Graustufen oder benutzerdefinierte Größe)'
+WE_COULD_NOT_DELETE_THE_LIVE_IMAGE: 'Wir konnten das Live-Bild nicht löschen'
 WE_COULD_NOT_DELETE_THE_ORIGINAL_IMAGE_IN: 'Wir konnten das Original-Bild nicht löschen in'
-WE_COULD_NOT_DELETE_THE_THUMB_IMAGE.: 'Wir konnten das Vorschaubild nicht löschen.'
+WE_COULD_NOT_DELETE_THE_THUMB_IMAGE: 'Wir konnten das Vorschaubild nicht löschen.'
 WE_COULD_NOT_DELETE_THE_USER: 'Wir konnten den Nutzer nicht löschen.'
 WE_COULD_NOT_FIND_A_FOLDERPATH_FOR: 'Wir konnten den Ordnerpfad nicht finden für'
 WE_COULD_NOT_FIND_THE_USER: 'Wir konnten den Nutzer nicht finden'
-WE_COULD_NOT_FIND_THIS_PAGE._PLEASE_REFRESH_AND_TRY_AGAIN.: 'Wir konnten die Seite nicht finden. Bitte versuche es noch einmal und lade die Seite neu.'
-'WE_COULD_NOT_LOAD_THE_SVG_FILE,_IT_IS_PROBABLY_CORRUPTED.': ''
-WE_COULD_NOT_SEND_THE_EMAIL_WITH_THE_PASSWORD_INSTRUCTIONS_TO_YOUR_ADDRESS._PLEASE_CONTACT_THE_WEBSITE_OWNER_AND_ASK_FOR_HELP.: 'Wir konnten die Mail mit den Instruktionen für die Passwort-Vergabe nicht an deine Adresse senden. Bitte kontaktiere den Administrator der Seite.'
-WE_COULD_NOT_STORE_FILE_TO_TEMPORARY_FOLDER.: 'Wir konnten die Datei nicht in dem temporären Ordner speichern.'
-'WE_COULD_NOT_STORE_THE_CONTENT:_': 'Wir konnten die Inhalte nicht speichern'
+WE_COULD_NOT_FIND_THIS_PAGE_PLEASE_REFRESH_AND_TRY_AGAIN: 'Wir konnten die Seite nicht finden. Bitte versuche es noch einmal und lade die Seite neu.'
+WE_COULD_NOT_LOAD_THE_SVG_FILE_IT_IS_PROBABLY_CORRUPTED: 'Wir konnten die SVG-Datei nicht laden, vermutlich ist sie nicht gültig.'
+WE_COULD_NOT_SEND_THE_EMAIL_WITH_THE_PASSWORD_INSTRUCTIONS_TO_YOUR_ADDRESS_REASON: 'Wir konnten die E-Mail mit den Password-Instruktionen nicht an deine Adresse senden. Grund: '
+WE_COULD_NOT_SEND_THE_EMAIL_WITH_THE_VERIFICATION_CODE_TO_YOUR_ADDRESS_REASON: 'Wir konnten den Verifieriungs-Code nicht an deine E-Mail-Adresse senden. Grund: '
+WE_COULD_NOT_SEND_THE_TESTMAIL_TO_YOUR_E_MAIL_ADDRESS_REASON: 'Wir konnten die Test-Mail nicht an deine Adresse senden. Grund: '
+WE_COULD_NOT_STORE_FILE_TO_TEMPORARY_FOLDER: 'Wir konnten die Datei nicht in dem temporären Ordner speichern.'
+WE_COULD_NOT_STORE_THE_CONTENT: 'Wir konnten die Inhalte nicht speichern'
 WE_COULD_NOT_STORE_THE_LIVE_IMAGE_TO_THE_LIVE_FOLDER: 'Wir konnten das Live-Bild nicht im LIve-Ordner speichern.'
 WE_COULD_NOT_STORE_THE_NEW_USER: 'Wir konnten den neuen Nutzer nicht speichern.'
 WE_COULD_NOT_STORE_THE_ORIGINAL_IMAGE: 'Wir konnten das Original-Bild nicht speichern.'
 WE_COULD_NOT_STORE_THE_THUMB_TO_THE_THUMB_FOLDER: 'Wir konnten das Vorschau-Bild nicht im Vorschau-Ordner speichern.'
 WE_DID_NOT_FIND_A_FILE_WITH_THAT_NAME: 'Wir haben keine Datei mit diesem Namen gefunden.'
-WE_DID_NOT_FIND_THE_FILE_IN_THE_TMP-FOLDER_OR_COULD_NOT_READ_IT: 'Wir konnten die Datei nicht im temporären Ordner finden oder lesen.'
-WE_DID_NOT_FIND_THE_IMAGE_IN_THE_TMP-FOLDER_OR_COULD_NOT_READ_IT: 'Wir konnten das Bild nicht im temporären Ordner finden oder lesen.'
+WE_DID_NOT_FIND_THE_A_USER_OR_USERMAIL: 'Wir haben den Nutzer oder die Nutzermail nicht gefunden.'
+WE_DID_NOT_FIND_THE_FILE_IN_THE_TMP_FOLDER_OR_COULD_NOT_READ_IT: 'Wir konnten die Datei nicht im temporären Ordner finden oder lesen.'
+WE_DID_NOT_FIND_THE_IMAGE_IN_THE_TMP_FOLDER_OR_COULD_NOT_READ_IT: 'Wir konnten das Bild nicht im temporären Ordner finden oder lesen.'
 WE_FOUND_THE_FILE_BUT_COULD_NOT_DELETE: 'Wir haben die Datei gefunden aber konnten sie nicht löschen.'
 WE_FOUND_THE_FOLDER_BUT_COULD_NOT_DELETE: 'Wir haben den Ordner gefunden aber konnten ihn nicht löschen.'
 WE_FOUND_THE_FOLDER_BUT_COULD_NOT_DELETE_IT: 'Wir haben den Ordner gefunden aber konnten ihn nicht löschen.'
-WIDTH/HEIGHT: Breite/Höhe
+WE_HOPE_YOU_LIKE_TYPEMILL_BECAUSE_WE_CODED_IT_JUST_FOR_YOU: 'Wir hoffen, dir gefällt Typemill, denn es ist ganz auf dich zugeschnitten'
+WIDTH_HEIGHT: Breite/Höhe
 WRAP_RESTRICTION_NOTICE: 'Formatierung für Beschränkungs-Hinweis'
-WRAP_THE_RESTRICTION_NOTICE_ABOVE_INTO_A_NOTICE-4_ELEMENT_(WHICH_CAN_BE_DESIGNED_AS_SPECIAL_BOX): 'Formatiere den Beschränkungshinweis von oben als Notiz der vierten Ebene (Darstellung abhängig vom Theme)'
+WRAP_THE_RESTRICTION_NOTICE_ABOVE_INTO_A_NOTICE_4_ELEMENT_WHICH_CAN_BE_DESIGNED_AS_SPECIAL_BOX: 'Formatiere den Beschränkungshinweis von oben als Notiz der vierten Ebene (Darstellung abhängig vom Theme)'
 WRITING: Schreiben
-'WRONG_PASSWORD_OR_USERNAME,_PLEASE_TRY_AGAIN.': 'Falsches Passwort oder Nutzername. Bitte versuche es erneut.'
+WRONG_PASSWORD_OR_USERNAME_PLEASE_TRY_AGAIN: 'Falsches Passwort oder Nutzername. Bitte versuche es erneut.'
 YEAR: Jahr
-YOUR_ARE_AN_: 'Du bist ein'
-YOUR_BROWSER_CAN_REMEMBER_ALL_OF_YOUR_PASSWORDS.: 'Dein Browser kann sich alle deine Passwörter merken.'
+YOUR_ARE_AN: 'Du bist ein'
+YOUR_BROWSER_CAN_REMEMBER_ALL_OF_YOUR_PASSWORDS: 'Dein Browser kann sich alle deine Passwörter merken.'
 YOUR_EMAIL: 'Deine E-Mail'
 YOUR_LICENSE_KEY: 'Dein Lizenz-Schlüssel'
-YOUR_REGISTRATION_IS_NOT_CONFIRMED_YET._PLEASE_CHECK_YOUR_E-MAILS_AND_USE_THE_CONFIRMATION_LINK.: 'Deine Registrierung ist noch nicht bestätigt. Bitte prüfe deine E-Mails und nutze den Bestätigungs-Link.'
-YOU_ARE_NOT_ALLOWED_TO_DELETE_ANOTHER_USER.: 'Du kannst keinen anderen Nutzer löschen.'
-YOU_ARE_NOT_ALLOWED_TO_UPDATE_ANOTHER_USER.: 'Du kannst keinen anderen Nutzer aktualisieren.'
-YOU_CAN_OVERWRITE_THE_THEME-CSS_WITH_YOUR_OWN_CSS_HERE.: 'Hier kannst du das Theme-CSS mit eigenen CSS-Regeln überschreiben.'
-'YOU_CAN_USE_THE_ASTERISK_(*)_WILDCARD_TO_SEARCH_FOR_NAME@*_OR_*@DOMAIN.COM': 'Du kannst den Stern (*) als Wildcard für die Suche nach Name@* oder *@domain.com nutzen.'
-YOU_DO_NOT_HAVE_ENOUGH_RIGHTS.: 'Du hast nicht genug Rechte.'
-YOU_TRIED_TO_OPEN_THE_PASSWORD_RESET_PAGE_BUT_THE_LINK_WAS_INVALID.: 'Du wolltest die Seite zum Zurücksetzen des Passworts öffnen aber der Link war ungültig.'
-YOU_TRIED_TO_SET_A_NEW_PASSWORD_BUT_USERNAME_OR_TOKEN_WAS_INVALID.: 'Du wolltest ein neues Passwort setzen aber der Nutzername oder der Token waren ungültig.'
-_AND_YOU_CANNOT_: ' und du kannst nicht '
-_THIS_: 'Dieses'
-'_WE_HOPE_YOU_LIKE_TYPEMILL,_BECAUSE_WE_CODED_IT_JUST_FOR_YOU.': 'Wir hoffen, dir gefällt Typemill, denn es ist ganz auf dich zugeschnitten'
+YOUR_REGISTRATION_IS_NOT_CONFIRMED_YET_PLEASE_CHECK_YOUR_E_MAILS_AND_USE_THE_CONFIRMATION_LINK: 'Deine Registrierung ist noch nicht bestätigt. Bitte prüfe deine E-Mails und nutze den Bestätigungs-Link.'
+YOUR_TYPEMILL_VERIFICATION_CODE: 'Dein Verifizierungs-Code für Typemill'
+YOU_ARE_NOT_ALLOWED_TO_DELETE_ANOTHER_USER: 'Du kannst keinen anderen Nutzer löschen.'
+YOU_ARE_NOT_ALLOWED_TO_UPDATE_ANOTHER_USER: 'Du kannst keinen anderen Nutzer aktualisieren.'
+YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE: 'Hier kannst du das Theme-CSS mit eigenen CSS-Regeln überschreiben.'
+YOU_CAN_USE_THE_ASTERISK_WILDCARD_TO_SEARCH_FOR_NAME@_OR_@DOMAIN_COM: 'Du kannst den Stern (*) als Wildcard für die Suche nach Name@* oder *@domain.com nutzen.'
+YOU_DO_NOT_HAVE_ENOUGH_RIGHTS: 'Du hast nicht genug Rechte.'
+YOU_TRIED_TO_OPEN_THE_PASSWORD_RESET_PAGE_BUT_THE_LINK_WAS_INVALID: 'Du wolltest die Seite zum Zurücksetzen des Passworts öffnen aber der Link war ungültig.'
+YOU_TRIED_TO_SET_A_NEW_PASSWORD_BUT_USERNAME_OR_TOKEN_WAS_INVALID: 'Du wolltest ein neues Passwort setzen aber der Nutzername oder der Token waren ungültig.'
 ©: ''
-'-LICENSE_FOR_THIS_AND_YOUR_WEBSITE_MUST_RUN_UNDER_THE_DOMAIN_OF_YOUR_LICENSE.': ''
-ADD_CONTENT_BLOCK: '+ Inhalts-Block'
-ADD_FILE: '+ Seite'
-ADD_FOLDER: '+ Ordner'
-ADD_FOLDER_TO_BASE_LEVEL: '+ Ordner in Basis-Ebene'
-ADD_ITEM: '+ Element'
-ADMINISTRATOR: administrator
-ALL: 'All visitors'
-ALL_USERS: 'Alle Nutzer'
-ALT_TEXT: Alt-Text
-AUTHOR_DESCRIPTION_(MARKDOWN): 'Autoren-Beschreibung (Markdown)'
-BACK_TO_STARTPAGE: 'Zurück zur Startseite'
-BOTTOM: Unten
-BROWSE: WÄHLEN
-BY: von
-CAN_BE_USED_FOR_AUTHOR_LINE_IN_FRONTEND_: 'Kann als Autorenzeile im Frontend benutzt werden.'
-CELL: Zelle
-CHOOSE_FILE: 'Datei wählen'
-CONTENT: Inhalt
-CREATED_AT_(READONLY): 'Erstellt am (nur lesend)'
-CREATE_NEW_USER: '+ Neuen Nutzer'
-DELETE_CONTENT_BLOCK: 'Inhaltsblock löschen'
-DESCRIPTION: Beschreibung
-DO_YOU_REALLY_WANT_TO_DELETE_THE_USER: 'Soll der Nutzer wirklich gelöscht werden?'
-DRAG_A_PICTURE_OR_CLICK_TO_SELECT: 'Bild hochladen'
-DUTCH__FLEMISH: 'Dänisch, Flämisch'
-EDITOR: editor
-EDIT_USER: 'Nutzer bearbeiten'
-E_G_: z.B.
-E_MAIL: E-Mail
-FILES: Dateien
-FORMAT: Format
-GENERAL_PRESENTATION: 'Generelle Darstellung'
-GOOGLE_SITEMAP: 'Google Sitemap'
-HAS_EDIT_RIGHTS_FOR_THIS_ARTICLE_: 'Hat Schreib-Rechte für diesen Artikel.'
-HEAD: Kopf
-IF_NOT_FILLED__THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT_: 'Wenn leer wird die Beschreibung vom Inhalt extrahiert.'
-IMAGES: Bilder
-LANGUAGE_ADMIN: 'Sprache (Admin-UI)'
-LANGUAGE_ATTR: 'Sprach-Attribut (website)'
-LICENCE: Lizenz
-LINK_TO_VIDEO: 'Link zum Video'
-LOGOUT: Abmelden
-MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB__HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES_: 'Die maximale Größe beträgt 5 MB. Hero-Images werden nicht von allen Themes unterstützt.'
-MEMBER: Member
-META: Meta
-MISSING_REQUIREMENTS: 'Fehlende Anforderungen'
-NONE: Keine
-NOT_EDITABLE: 'Nicht editierbar'
-NO_DESCRIPTION: 'Keine Beschreibung'
-NO_PREVIEW: 'Keine Vorschau'
-NO_SETTINGS: 'Keine Einstellungen'
-ONLINE: online
-ONLY_THE_FOLLOWING_SPECIAL_CHARACTERS_ARE_ALLOWED: 'Nur die folgenden Sonderzeichen sind erlaubt'
-PLEASE_CORRECT_THE_ERRORS_ABOVE: 'Bitte korrigiere die Fehler oben'
-PLUGIN_STORE: 'Plugin Store'
-PROFILE_IMAGE: Profil-Bild
-RAW_CONTENT_EDITOR: 'Raw Content Editor'
-RAW_MARKDOWN_EDITOR: 'Raw Markdown Editor'
-RAW_MODE: 'Raw Modus'
-RAW_USERDATA_(READONLY_FOR_ADMINS): 'Raw Nutzerdaten (nur lesend für Admins)'
-READONLY: 'Nur lesend'
-REGISTERED_USERS_ONLY: 'Nur registrierte Nutzer'
-REMEMBER_TO_BOOKMARK_THIS_PAGE: 'Bookmark nicht vergessen'
-SAVED_SUCCESSFULLY: 'Erfolgreich gespeichert'
-SAVE_ALL_SETTINGS: 'Alle Einstellungen speichern'
-SAVE_THEME: 'Theme speichern'
-SETTINGS: Einstellungen
-SETTINGS_ARE_STORED: 'Einstellungen sind gespeichert'
-SHOW_ANCHORS_NEXT_TO_HEADLINES: 'Anker neben Überschrift anzeigen'
-START: Start
-TAKEN_FROM_YOUR_USER_ACCOUNT_IF_SET_: 'Vom Nutzer-Account genommen falls vorhanden.'
-TERM: Bedingung
-THEME_STORE: 'Theme Store'
-THE_FORMAT_BUTTONS: 'Die Formatierungs-Buttons'
-TOP: Oben
-TYPEMILL_DESCRIPTION: 'The standard theme for Typemill. Responsive, minimal and without any dependencies. It uses the system fonts Calibri and Helvetica. No JavaScript is used.'
-UNKNOWN: Unbekannt
-UPDATE_USER: 'Nutzer aktualisieren'
-UPS__WRONG_PASSWORD_OR_USERNAME__PLEASE_TRY_AGAIN_: 'Ups, wrong password or username, please try again.'
-USED_AS_FALLBACK_WHEN_NO_MANUAL_DATE_IS_SET_: 'Wird alternativ zum manuellen Datum genutzt.'
-USE_2_TO_20_CHARACTERS: '2 bis 20 Anschläge erlaubt.'
-USE_2_TO_40_CHARACTERS: '2 to 40 Anschläge erlaubt.'
-USE_A_VALID_LANGUAGE_ATTRIBUTE: 'Gültiges Language Attribut erforderlich.'
-USE_A_VALID_YEAR: 'Gültiges Jahr erforderlich.'
-VIEW_SITE: 'Zur Webseite'
-VISUAL_CONTENT_EDITOR: 'Visueller Inhalts-Editor'
-VISUAL_MARKDOWN_EDITOR: 'Visueller Markdown Editor'
-VISUAL_MODE: 'visueller Modus'
-WAIT: warte
-WEB: Web
-WEBSITE_VISIBLE_FOR: 'Website sichtbar für'
-YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE_: 'Du kannst das CSS des Themes hier überschreiben.'
-ADD_NEW_FEATURES_TO_YOUR_WEBSITE_WITH_PLUGINS_AND_CONFIGURE_THEM_: 'Füge mit Plugins neue Funktionen hinzu.'
-BY_THE: 'von der'
-CHOOSE_A_THEME_FOR_YOUR_WEBSITE_AND_CONFIGURE_THE_THEME_DETAILS_: 'Richte ein Theme für deine Webseite ein.'
-CODED_WITH: 'Entwickelt mit'
-COMMUNITY: Community
-CONFIGURE_YOUR_WEBSITE: 'Zur Autorenoberfläche'
-DOCS: Dokumentation
-GET_HELP: 'Hilfe erhalten'
-GIVE_YOUR_NEW_WEBSITE_A_NAME__ADD_THE_AUTHOR_AND_CHOOSE_A_COPYRIGHT_: 'Konfiguriere das System.'
-HURRA: Hurra
-IF_YOU_HAVE_ANY_QUESTIONS__PLEASE_READ_THE: 'Wenn du Fragen hast, lies bitte die'
-NEXT_STEP: 'Nächster Schritt'
-OR_OPEN_A_NEW_ISSUE_ON: 'oder erstelle ein neues Issue auf'
-SETUP_WELCOME: 'Setup Willkommen'
-TRENDSCHAU_DIGITAL: 'Trendschau Digital'
-VISIT_THE_AUTHOR_PANEL_AND_SETUP_YOUR_NEW_WEBSITE__YOU_CAN_CONFIGURE_THE_SYSTEM__CHOOSE_THEMES_AND_ADD_PLUGINS_: 'Besuche die Autorenoberfläche und richte die Seite ein. Du kannst das System konfigurieren, Themes auswählen and Plugins hinzufügen.'
-YOUR_ACCOUNT_HAS_BEEN_CREATED_AND_YOU_ARE_LOGGED_IN_NOW_: 'Dein Account wurde erstellt und du bist jetzt angemeldet.'
-ACCESS_CONTROL: 'Access Control'
-ACTIVATE_INDIVIDUAL_RESTRICTIONS_FOR_PAGES_IN_THE_META_TAB_OF_EACH_PAGE_: 'Aktiviere die individuellen Seiten-Beschränkungen im Meta-Tab einer jeden Seite.'
-ADD_ONE_OR_MORE_USERNAMES_SEPARATED_WITH_COMMA_: 'Ein oder mehrere Nutzernamen mit Komma getrennt.'
-CUT_RESTRICTED_CONTENT_AFTER_THE_FIRST_HR_ELEMENT_ON_A_PAGE_(PER_DEFAULT_CONTENT_WILL_BE_CUT_AFTER_TITLE)_: 'Verberge den Inhalt nach dem ersten Trennstrich (andernfalls werden alle Inhalte nach dem Titel verborgen).'
-FOR_ACCESS_THE_USER_MUST_HAVE_THIS_MINIMUM_ROLE: 'Für einen Zugriff muss der Nutzer diese minimale Rolle haben'
-LIMIT_THE_ACCESS_FOR_THE_WHOLE_WEBSITE_OR_FOR_EACH_PAGE_INDIVIDUALLY__IF_YOU_ACTIVATE_THE_WEBSITE_RESTRICTION_OR_THE_PAGE_RESTRICTIONS__THEN_SESSIONS_WILL_BE_USED_IN_FRONTEND_: 'Begrenze den Zugriff auf die gesamte Webseite oder für jede Seite individuell. Wenn die Website-Beschränkungen oder die Seiten-Beschränkungen aktiviert werden, dann werden im Frontend Sessions genutzt.'
-PAGE_RESTRICTIONS___ACTIVATE: 'Seiten-Beschränkungen - Aktivieren'
-PAGE_RESTRICTIONS___CUT_RESTRICTED_CONTENT: 'Seiten-Beschränkungen - Verberge die Inhalte'
-PAGE_RESTRICTIONS___NOTICE: 'Seiten-Beschränkungen - Hinweis-Text'
-PAGE_RESTRICTIONS___WRAP_NOTICE_INTO_A_BOX: 'Seiten-Beschränkungen - Hinweis in Box-Design'
-SELECT_THE_LOWEST_USERROLE__HIGHER_ROLES_WILL_HAVE_ACCESS_TOO_: 'Wähle die niedrigste Nutzerrolle. Höhere Nutzerrollen haben ebenfalls Zugriff.'
-SHOW_THE_WEBSITE_ONLY_TO_AUTHENTICATED_USERS_AND_REDIRECT_ALL_OTHER_USERS_TO_THE_LOGIN_PAGE_: 'Zeige die Webseite nur authentifizierten Nutzern und leite alle anderen Nutzer zur Login-Seite um.'
-USE_MARKDOWN: 'Markdown erlaubt'
-WRAP_THE_RESTRICTION_NOTICE_ABOVE_INTO_A_NOTICE_4_ELEMENT_(WHICH_CAN_BE_DESIGNED_AS_SPECIAL_BOX): 'Gestalte den Hinweis als Notiz-Box (das Design hängt vom Theme ab)'
-ACTIVATE_CACHE_FOR_TWIG_TEMPLATES: 'Aktiviere den Cache für Twig-Templates'
-'ADD_MORE_URL_SCHEMES_FOR_EXTERNAL_LINKS_E_G__LIKE_DICT://_(COMMA_SEPARATED_LIST)': 'URL Schemes für externe Links hinzufügen, z.B. dict:// (mit Komma getrennte Liste)'
-CLEAR_CACHE: 'Cache reinigen'
-DELETE_ALL_CACHE_FILES: 'Alle Dateien im Cache löschen'
-DISABLE_HEADERS: 'Header deaktivieren'
-DISABLE_TYPEMILL_HEADERS_AND_SEND_YOUR_OWN: 'Typemill Header deaktivieren und eigene Header senden'
-IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT__THEN_THE_IMAGE_WILL_BE_CROPPED_: 'Wenn eine Angabe für die Höhe gemacht wird, wird das Bild ausgeschnitten'
-STANDARD_HEIGHT_FOR_IMAGES: 'Standard-Höhe für Bilder'
-STANDARD_WIDTH_FOR_IMAGES: 'Standard-Breite für Bilder'
-THE_FOLLOWING_OPTIONS_ARE_ONLY_FOR_DEVELOPERS: 'Die folgenden Einstellungen sind nur für Entwickler und erfahrene Administratoren. Ändere nur Einstellungen, die du wirklich verstehst. Beispielsweise dürfen niemals die Fehler-Berichte im Frontend dauerhaft aktiviert werden, sondern nur für kurze Fehler-Analysen.'
-THIS_APPLIES_ONLY_FOR_FUTURE_IMAGES_IN_THE_CONTENT_AREA_: 'Die Einstellung greift nur bei Bildern im Content-Bereich, die in der Zukunft hochgeladen werden.'
-TRUSTED_IPS_FOR_PROXY_(COMMA_SEPARATED): 'Vertrauenswürdige IPs für Proxy (mit Komma getrennte Liste)'
-USE_X_FORWARDED_HEADERS: 'Nutze die X-Forwarded Headers'
