@@ -180,7 +180,7 @@ foreach($plugins as $plugin)
 	{
 		if(!$settings['license'] OR !isset($settings['license'][$PluginLicence]))
 		{
-			\Typemill\Static\Helper\addLogEntry('No License: ' . $pluginName);
+#			\Typemill\Static\Helpers\addLogEntry('No License: ' . $pluginName);
 			if($pluginSettings[$pluginName]['active'])
 			{
 				$pluginSettings[$pluginName]['active'] = false;

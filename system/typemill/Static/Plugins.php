@@ -78,7 +78,7 @@ class Plugins
 	public static function getPremiumLicence($className)
 	{
 		$premiumlist = [
-			# '\Plugins\demo\demo' => 'BUSINESS'
+			'\Plugins\html\html' => 'MAKER'
 		];
 
 		if(isset($premiumList['className']))

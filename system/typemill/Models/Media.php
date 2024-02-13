@@ -24,7 +24,7 @@ class Media
 
 	protected $filedata 			= false;
 
-	protected $allowedExtensions 	= ['png' => true, 'jpg' => true, 'jpeg' => true, 'webp' => true];
+	protected $allowedExtensions 	= ['png' => true, 'jpg' => true, 'jpeg' => true, 'webp' => true, 'gif' => true];
 
 	protected $animated 			= false;
 
