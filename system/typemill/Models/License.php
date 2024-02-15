@@ -55,8 +55,6 @@ class License
 		$domain 		= $this->checkLicenseDomain($licensedata['domain'], $urlinfo);
 		$date 			= $this->checkLicenseDate($licensedata['payed_until']);
 
-#		$domain = true;
-
 		if($domain && $date)
 		{
 			return $this->plans[$licensedata['plan']]['scope'];
@@ -67,9 +65,18 @@ class License
 
 	public function refreshLicense()
 	{
-
+		# same as update
 	}
 
+	private function updateLicence()
+	{
+		# if license not valid anymore, check server for update
+	}
+
+	private function controlLicence()
+	{
+		# regularly check license on server each month.
+	}
 
 	public function getLicenseFields()
 	{
@@ -143,7 +150,7 @@ class License
 		$verified = openssl_verify($data, $binary_signature, $public_key_pem, OPENSSL_ALGO_SHA256);
 
 		if ($verified == 1)
-		{			
+		{
 		    return true;
 		} 
 		elseif ($verified == 0)
@@ -225,11 +232,6 @@ class License
 		}
 
 		return true;
-	}
-
-	private function updateLicence()
-	{
-		# todo
 	}
 
 	private function checkLicenseDomain(string $licensedomain, array $urlinfo)

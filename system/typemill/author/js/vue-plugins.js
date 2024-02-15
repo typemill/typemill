@@ -29,7 +29,7 @@ const app = Vue.createApp({
 										<span>{{ $filters.translate('Configure') }}</span>
 										<span :class="(current == pluginname) ? 'border-b-8 border-b-white' : 'border-t-8 border-t-white'" class="h-0 w-0 border-x-8 border-x-transparent"></span>
 									</button>
-									<a v-if="!checkLicense(license, plugin.license)" href="https://typemill.net/buy" target="_blank" class="flex-1 ml-3 p-3 py-4 text-center bg-teal-500 hover:bg-teal-600 text-white cursor-pointer transition duration-100">Buy a license</a>
+									<a v-if="!checkLicense(license, plugin.license)" href="https://typemill.net/license/buy" target="_blank" class="flex-1 ml-3 p-3 py-4 text-center bg-teal-500 hover:bg-teal-600 text-white cursor-pointer transition duration-100">{{ $filters.translate('Buy a license') }}</a>
 									<a v-else-if="plugin.paypal" :href="plugin.paypal" target="_blank" class="flex-1 ml-3 p-3 py-4 text-center bg-teal-500 hover:bg-teal-600 text-white cursor-pointer transition duration-100">Donate {{plugin.amount}},-</a>
 								</div>
 							</div>
@@ -61,7 +61,7 @@ const app = Vue.createApp({
 									<div :class="messageClass" class="block w-full h-8 px-3 py-1 my-1 text-white transition duration-100">{{ message }}</div>
 									<div class="w-full mt-6 flex justify-between">
 										<button type="submit" @click.prevent="save()" class="flex-1 p-3 bg-stone-700 dark:bg-stone-600 hover:bg-stone-900 hover:dark:bg-stone-900 text-white cursor-pointer transition duration-100">{{ $filters.translate('Save') }}</button>
-										<a v-if="!checkLicense(license, plugin.license)" href="https://typemill.net/buy" target="_blank" class="flex-1 ml-3 p-3 py-4 text-center bg-teal-500 hover:bg-teal-600 text-white cursor-pointer transition duration-100">{{ $filters.translate('Buy a license') }}</a>
+										<a v-if="!checkLicense(license, plugin.license)" href="https://typemill.net/license/buy" target="_blank" class="flex-1 ml-3 p-3 py-4 text-center bg-teal-500 hover:bg-teal-600 text-white cursor-pointer transition duration-100">{{ $filters.translate('Buy a license') }}</a>
 										<a v-else-if="plugin.paypal" :href="plugin.paypal" target="_blank" class="flex-1 ml-3 p-3 py-4 text-center bg-teal-500 hover:bg-teal-600 text-white cursor-pointer transition duration-100">{{ $filters.translate('Donate') }} {{plugin.amount}},-</a>
 									</div>
 								</div>
@@ -97,6 +97,9 @@ const app = Vue.createApp({
 			modalMessage: 'default',
 			versions: false,
 		}
+	},
+	components: {
+		'modal': modal
 	},
 	mounted() {
 		eventBus.$on('forminput', formdata => {

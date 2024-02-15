@@ -175,10 +175,10 @@ foreach($plugins as $plugin)
 	}
 
 	# licence check
-	$PluginLicence = Plugins::getPremiumLicence($className);
-	if($PluginLicence)
+	$PluginLicense = Plugins::getPremiumLicense($className);
+	if($PluginLicense)
 	{
-		if(!$settings['license'] OR !isset($settings['license'][$PluginLicence]))
+		if(!$settings['license'] OR !isset($settings['license'][$PluginLicense]))
 		{
 #			\Typemill\Static\Helpers\addLogEntry('No License: ' . $pluginName);
 			if($pluginSettings[$pluginName]['active'])

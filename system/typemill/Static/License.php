@@ -6,6 +6,7 @@ use Typemill\Static\Translations;
 
 class License
 {
+	/*
 	public static function getLicenseData()
 	{
 		# returns data for settings page
@@ -103,4 +104,5 @@ class License
 
 		return false;
 	}
+	*/
 }

@@ -75,7 +75,7 @@ class Plugins
 		return $middleware;
 	}
 
-	public static function getPremiumLicence($className)
+	public static function getPremiumLicense($className)
 	{
 		$premiumlist = [
 			'\Plugins\html\html' => 'MAKER'
@@ -86,14 +86,14 @@ class Plugins
 			return $premiumList['className'];
 		}
 
-		$licenceType = false;
+		$licenseType = false;
 
-		if(method_exists($className, 'setPremiumLicence'))
+		if(method_exists($className, 'setPremiumLicense'))
 		{
-			$licenceType = $className::setPremiumLicence();			
+			$licenseType = $className::setPremiumLicense();			
 		}
 		
-		return $licenceType;
+		return $licenseType;
 	}
 	
 	private static function checkRouteArray($routes,$route)

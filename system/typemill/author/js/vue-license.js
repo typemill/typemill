@@ -8,14 +8,22 @@ const app = Vue.createApp({
 							</div>
 							<div class="flex flex-wrap justify-between">
 								<div class="w-2/5 text-white bg-teal-500 border-2 border-stone-200 my-8 flex flex-col">
-									<div class="p-8">
-										<h2 class="text-2xl font-bold mb-3">BUSINESS License</h2>
-										<p class="py-2 text-lg"><strong>122 €</strong> + VAT per year. Perfect for companies.</p>
+									<div v-if="licenseData.plan == 'MAKER'" class="p-8">
+										<h2 class="text-2xl font-bold mb-3">MAKER License</h2>
+										<p class="py-2 text-lg"><strong>22 €</strong> + VAT/Year. Ideal for personal projects and side hustles.</p>
 										<ul class="py-2 pl-4 list-check">
-											<li class="pl-2">Use all MAKER and BUSINESS products.</li>
-											<li class="pl-2">For one domain.</li>
-											<li class="pl-2">For one year.</li>
-											<li class="pl-2">Until you cancel.</li>
+											<li class="pl-2">Access to all MAKER-level products.</li>
+											<li class="pl-2">Valid for one domain.</li>
+											<li class="pl-2">Annual subscription, cancel anytime.</li>
+										</ul>
+									</div>
+									<div v-if="licenseData.plan == 'BUSINESS'" class="p-8">
+										<h2 class="text-2xl font-bold mb-3">BUSINESS License</h2>
+										<p class="py-2 text-lg"><strong>122 €</strong> + VAT/Year. Designed for small to medium businesses.</p>
+										<ul class="py-2 pl-4 list-check">
+											<li class="pl-2">Includes all MAKER benefits plus BUSINESS-exclusive products.</li>
+											<li class="pl-2">Valid for one domain.</li>
+											<li class="pl-2">Annual subscription, cancel anytime.</li>
 										</ul>
 									</div>
 								</div>
@@ -37,7 +45,7 @@ const app = Vue.createApp({
 
 							<div>
 								<p>Activate your Typemill-License below and enjoy a flatrate-subscription for plugins, themes, and services.</p>
-								<p>You do not have a License yet? Read all about it <a href="https://typemill.net/license">here</a>.</p>
+								<p>You do not have a License yet? Read all about it on the <a class="text-teal-500" href="https://typemill.net/license">Typemill website</a>.</p>
 							</div>
 
 							<div v-for="(fieldDefinition, fieldname) in formDefinitions">
@@ -65,9 +73,8 @@ const app = Vue.createApp({
 							</div>
 							<div class="my-5">
 								<div :class="messageClass" class="block w-full h-8 px-3 py-1 my-1 text-white transition duration-100">{{ message }}</div>
-								<input type="submit" @click.prevent="save()" value="save" class="w-full p-3 my-1 bg-stone-700 hover:bg-stone-900 text-white cursor-pointer transition duration-100">
+								<input type="submit" :disabled="disabled" @click.prevent="save()" value="save" class="w-full p-3 my-1 bg-stone-700 hover:bg-stone-900 text-white cursor-pointer transition duration-100 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-900">
 							</div>
-
 						</form>
 					</Transition>`,
 	data() {
@@ -78,6 +85,7 @@ const app = Vue.createApp({
 			message: '',
 			messageClass: '',
 			errors: {},
+			disabled: false,
 			src: data.urlinfo.baseurl + "/system/typemill/author/img/typemill-icon.png"
 		}
 	},
@@ -94,6 +102,7 @@ const app = Vue.createApp({
 		save: function()
 		{
 			this.reset();
+			this.disabled = true;
 			var self = this;
 
 			tmaxios.post('/api/v1/license',{
@@ -101,6 +110,7 @@ const app = Vue.createApp({
 			})
 			.then(function (response)
 			{
+				self.disabled = false;
 				self.messageClass = 'bg-teal-500';
 				self.message = response.data.message;
 				self.licenseData = response.data.licensedata;
@@ -109,6 +119,7 @@ const app = Vue.createApp({
 			{
 				if(error.response)
 				{
+					self.disabled = false;
 					self.message = handleErrorMessage(error);
 					self.messageClass = 'bg-rose-500';
 					if(error.response.data.errors !== undefined)
@@ -122,7 +133,8 @@ const app = Vue.createApp({
 		{
 			this.errors 			= {};
 			this.message 			= '';
-			this.messageClass	= '';
+			this.messageClass		= '';
+			this.disabled 			= false;
 		}
 	},
 })
