@@ -57,11 +57,65 @@ class ControllerWebDownload extends Controller
 
 		$file = $filepath . $filename;
 
-		# for now we only allow one download
-		$this->sendDownload($file);
-		exit;
+	    # Dynamically determine MIME type based on the file extension
+	    $pathinfo   = pathinfo($file);
+	    $extension  = strtolower($pathinfo['extension']);
+
+	   	# You can extend this list based on the file types you expect to serve
+	   	# http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types
+	    $mime_types = [
+	        'zip' => 'application/zip',
+	        'pdf' => 'application/pdf',
+	        'jpeg' => 'image/jpeg',
+	        'jpg' => 'image/jpeg',
+	        'png' => 'image/png',
+	        'default' => 'application/octet-stream',
+	    ];
+
+	   	$mimetype = $mime_types[$extension] ?? $mime_types['default'];
+
+	    # Disable zlib.output_compression for this download
+	    if (ini_get('zlib.output_compression'))
+	    {
+	        ini_set('zlib.output_compression', 'Off');
+	    }
+
+	    try {
+
+	        # Read the file content
+	        $fileContent = file_get_contents($file);
+	        if ($fileContent === false) {
+	            throw new Exception('Failed to read file content.');
+	        }
+	        
+	        # Clear the response body and write the file content
+	        $body = new \Slim\Psr7\Stream(fopen('php://temp', 'r+'));
+	        $body->write($fileContent);
+	        $response = $response->withBody($body);
+
+	        # Set headers
+	        $response = $response->withBody($body)
+	                             ->withHeader('Content-Type', $mimetype)
+	                             ->withHeader('Content-Disposition', 'attachment; filename="' . basename($file) . '"')
+	                             ->withHeader('Content-Length', filesize($file))
+	                             ->withHeader('Pragma', 'public')
+	                             ->withHeader('Cache-Control', 'max-age=0, no-cache, no-store, must-revalidate')
+	                             ->withHeader('Content-Encoding', 'none')
+	                             ->withHeader('Accept-Ranges', 'bytes');
+
+	        return $response;
+
+	    } catch (Exception $e) {
+	        
+	        # Log the error
+	        error_log('Error sending file: ' . $e->getMessage());
+	        
+	        # Return an error response
+	        $response->getBody()->write("Error downloading file. Please try again later.");
+	        return $response->withStatus(500);
+	    }
 	}
-	
+
 	/**
 	 * Validate if the file exists and if
 	 * there is a permission (download dir) to download this file
@@ -105,50 +159,5 @@ class ControllerWebDownload extends Controller
 		}
 
 		return true;
-	}
-
-	/**
-	 * Download function.
-	 * Sets the HTTP header and supplies the given file
-	 * as a download to the browser.
-	 *
-	 * @param string $file path to file
-	 */
-	private function sendDownload($file) 
-	{
-		# Parse information
-		$pathinfo 	= pathinfo($file);
-		$extension 	= strtolower($pathinfo['extension']);
-		$mimetype 	= null;
-		
-		# Get mimetype for extension
-		# This list can be extended as you need it.
-		# A good start to find mimetypes is the apache mime.types list
-		# http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types
-		switch ($extension) {
-			case 'zip':     $mimetype = "application/zip"; break;
-			default:        $mimetype = "application/force-download";
-		}
-		
-		# Required for some browsers like Safari and IE
-		if (ini_get('zlib.output_compression'))
-		{
-			ini_set('zlib.output_compression', 'Off');
-		}
-
-		header('Pragma: public');
-		header('Content-Encoding: none');
-		header('Accept-Ranges: bytes');  # Allow support for download resume
-		header('Expires: 0');
-		header('Last-Modified: ' . gmdate('D, d M Y H:i:s', filemtime($file)) . ' GMT');
-		header_remove("Last-Modified");
-		header('Cache-Control: max-age=0, no-cache, no-store, must-revalidate');
-		header('Cache-Control: private', false); # required for some browsers
-		header('Content-Type: ' . $mimetype);
-		header('Content-Disposition: attachment; filename="'.basename($file).'";'); # Make the browser display the Save As dialog
-		header('Content-Transfer-Encoding: binary');
-		header('Content-Length: '.filesize($file));
-		ob_end_flush();
-		readfile($file); # This is necessary in order to get it to actually download the file, otherwise it will be 0Kb
 	}
 }
