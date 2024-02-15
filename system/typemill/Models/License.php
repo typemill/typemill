@@ -270,7 +270,7 @@ class License
 	}
 
 	# we have it in static license, too so use it from static and delete this duplicate.
-	private function getPublicKeyPem()
+	public function getPublicKeyPem()
 	{
 		$pkeyfile = getcwd() . DIRECTORY_SEPARATOR . 'settings' . DIRECTORY_SEPARATOR . "public_key.pem";
 
