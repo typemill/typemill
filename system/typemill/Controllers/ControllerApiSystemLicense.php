@@ -29,7 +29,7 @@ class ControllerApiSystemLicense extends Controller
 		if($validationresult !== true)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> Translations::translate('Please correct errors in form.'),
+				'message' 	=> Translations::translate('Please correct your input.'),
 				'errors' 	=> $validate->returnFirstValidationErrors($validationresult)
 			]));
 

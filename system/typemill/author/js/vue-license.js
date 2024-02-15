@@ -4,15 +4,27 @@ const app = Vue.createApp({
 							<div>
 								<p v-if="!licenseData.datecheck" class="bg-rose-500 text-white p-2 text-center">Your license is out of date. Please check if the payments for your subscription were successfull.</p>
 								<p v-else-if="!licenseData.domaincheck" class="bg-rose-500 text-white p-2 text-center">Your license is only valid for the domain listed in your license data below.</p>
-								<p v-else>Congratulations! Your license is ok and you can enjoy all features.</p>
+								<p v-else>Congratulations! Your license is active and you can enjoy all features until you cancel your subscription. You can manage your subscription at <a class="text-teal-500" href="https://paddle.net/">paddle.net</a></p>
 							</div>
 							<div class="flex flex-wrap justify-between">
-								<div class="w-2/5 border-2 border-stone-200 my-8 text-center flex flex-col">
-									<div class="p-8 grow flex justify-center items-center">
-										<img class="mx-auto" :src="src" width="150" height="150">
+								<div class="w-2/5 text-white bg-teal-500 border-2 border-stone-200 my-8 flex flex-col">
+									<div v-if="licenseData.plan == 'MAKER'" class="p-8">
+										<h2 class="text-2xl font-bold mb-3">MAKER License</h2>
+										<p class="py-2 text-lg"><strong>22 €</strong> + VAT/Year. Ideal for personal projects and side hustles.</p>
+										<ul class="py-2 pl-4 list-check">
+											<li class="pl-2">Access to all MAKER-level products.</li>
+											<li class="pl-2">Valid for one domain.</li>
+											<li class="pl-2">Annual subscription, cancel anytime.</li>
+										</ul>
 									</div>
-									<div class="p-8 bg-teal-500">
-										<p class="font-medium text-white">{{ licenseData.plan }}-LICENSE</p>
+									<div v-if="licenseData.plan == 'BUSINESS'" class="p-8">
+										<h2 class="text-2xl font-bold mb-3">BUSINESS License</h2>
+										<p class="py-2 text-lg"><strong>122 €</strong> + VAT/Year. Designed for small to medium businesses.</p>
+										<ul class="py-2 pl-4 list-check">
+											<li class="pl-2">Includes all MAKER benefits plus BUSINESS-exclusive products.</li>
+											<li class="pl-2">Valid for one domain.</li>
+											<li class="pl-2">Annual subscription, cancel anytime.</li>
+										</ul>
 									</div>
 								</div>
 								<div class="w-3/5 border-2 border-stone-200 p-8 my-8">
@@ -26,22 +38,42 @@ const app = Vue.createApp({
 									<p class="w-full border p-2 bg-stone-100">{{ licenseData.payed_until }}</p>
 								</div>
 							</div>
+							<p class="py-2 text-lg">The subscription extends automatically for 12 month every time until you cancel your subscription.</p>
+							<p class="py-2 text-lg">For testing, you can also use the domains 'localhost', '127.0.0.1', and the subdomain 'typemilltest.'.</p>
 						</div>
 						<form v-else class="inline-block w-full">
+
 							<div>
-								<p>Buy a typemill-license and enjoy our flatrate-model for plugins and -themes.</p><p>We offer two types of subscription-based licenses:</p>
-								<div class="flex flex-wrap justify-between">
-									<div class="w-half border-2 border-stone-200 p-4 my-8 text-center">
-										<h2 class="text-3 font-bold mb-4">Maker License</h2>
-										<p class="mb-4">Use all maker-prodcuts (plugins and themes) for one year. The subscription will automatically refresh after a year until you cancel it.</p>
-										<a class="p-2 block dark:bg-stone-600 hover:dark:bg-stone-900 dark:text-stone-200" href="https://typemill.net/buy">Buy on Typemill</a>
-									</div>
-									<div class="w-half border-2 border-stone-200 p-4 my-8 text-center">
-										<h2 class="text-3 font-bold mb-4">Business License</h2>
-										<p class="mb-4">Use all business- and maker-products (plugins, themes, services) for one year. The subscription will automatically refresh after a year until you cancel it.</p>
-										<a class="p-2 block dark:bg-stone-600 hover:dark:bg-stone-900 dark:text-stone-200" href="https://typemill.net/buy">Buy on Typemill</a>
-									</div>
-								</div>
+								<p>Activate your Typemill-License below and enjoy a flatrate-subscription for plugins, themes, and services.</p>
+								<p>You do not have a License yet? Read all about it on the <a class="text-teal-500" href="https://typemill.net/license">Typemill website</a>.</p>
+							</div>
+
+							<div v-for="(fieldDefinition, fieldname) in formDefinitions">
+								<fieldset class="flex flex-wrap justify-between border-2 border-stone-200 p-4 my-8" v-if="fieldDefinition.type == 'fieldset'">
+									<legend class="text-lg font-medium">{{ fieldDefinition.legend }}</legend>
+									<component v-for="(subfieldDefinition, subfieldname) in fieldDefinition.fields"
+					            	    :key="subfieldname"
+					                	:is="selectComponent(subfieldDefinition.type)"
+					                	:errors="errors"
+					                	:name="subfieldname"
+					                	:userroles="userroles"
+					                	:value="formData[subfieldname]" 
+					                	v-bind="subfieldDefinition">
+									</component>
+								</fieldset>
+								<component v-else
+				            	    :key="fieldname"
+				                	:is="selectComponent(fieldDefinition.type)"
+				                	:errors="errors"
+				                	:name="fieldname"
+				                	:userroles="userroles"
+				                	:value="formData[fieldname]" 
+				                	v-bind="fieldDefinition">
+								</component>
+							</div>
+							<div class="my-5">
+								<div :class="messageClass" class="block w-full h-8 px-3 py-1 my-1 text-white transition duration-100">{{ message }}</div>
+								<input type="submit" :disabled="disabled" @click.prevent="save()" value="save" class="w-full p-3 my-1 bg-stone-700 hover:bg-stone-900 text-white cursor-pointer transition duration-100 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-900">
 							</div>
 						</form>
 					</Transition>`,
@@ -53,7 +85,8 @@ const app = Vue.createApp({
 			message: '',
 			messageClass: '',
 			errors: {},
-			src: tmaxios.defaults.baseURL + "/system/author/img/favicon-144.png"
+			disabled: false,
+			src: data.urlinfo.baseurl + "/system/typemill/author/img/typemill-icon.png"
 		}
 	},
 	mounted() {
@@ -69,6 +102,7 @@ const app = Vue.createApp({
 		save: function()
 		{
 			this.reset();
+			this.disabled = true;
 			var self = this;
 
 			tmaxios.post('/api/v1/license',{
@@ -76,6 +110,7 @@ const app = Vue.createApp({
 			})
 			.then(function (response)
 			{
+				self.disabled = false;
 				self.messageClass = 'bg-teal-500';
 				self.message = response.data.message;
 				self.licenseData = response.data.licensedata;
@@ -84,6 +119,7 @@ const app = Vue.createApp({
 			{
 				if(error.response)
 				{
+					self.disabled = false;
 					self.message = handleErrorMessage(error);
 					self.messageClass = 'bg-rose-500';
 					if(error.response.data.errors !== undefined)
@@ -97,7 +133,8 @@ const app = Vue.createApp({
 		{
 			this.errors 			= {};
 			this.message 			= '';
-			this.messageClass	= '';
+			this.messageClass		= '';
+			this.disabled 			= false;
 		}
 	},
 })

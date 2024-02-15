@@ -88,6 +88,12 @@ $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 	$group->get('/meta', ControllerApiAuthorMeta::class . ':getMeta')->setName('api.meta.get')->add(new ApiAuthorization($acl, 'mycontent', 'view'));
 	$group->post('/meta', ControllerApiAuthorMeta::class . ':updateMeta')->setName('api.metadata.update')->add(new ApiAuthorization($acl, 'mycontent', 'update'));
 
+	# KIXOTE
+	$group->delete('/clearnavigation', ControllerApiGlobals::class . ':clearNavigation')->setName('api.navigation.clear')->add(new ApiAuthorization($acl, 'system', 'update'));
+	$group->get('/securitylog', ControllerApiGlobals::class . ':showSecurityLog')->setName('api.securitylog.show')->add(new ApiAuthorization($acl, 'system', 'update'));
+	$group->delete('/securitylog', ControllerApiGlobals::class . ':deleteSecurityLog')->setName('api.securitylog.delete')->add(new ApiAuthorization($acl, 'system', 'update'));
+	$group->delete('/cache', ControllerApiGlobals::class . ':deleteCache')->setName('api.cache.delete')->add(new ApiAuthorization($acl, 'system', 'update'));
+
 })->add(new CorsHeadersMiddleware($settings, $urlinfo))->add(new ApiAuthentication());
 
 # api-routes from plugins

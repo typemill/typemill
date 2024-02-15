@@ -48,7 +48,9 @@ $timer['start'] = microtime(true);
 * HIDE ERRORS BY DEFAULT    *
 ****************************/
 
-ini_set('display_errors', 0);
+$display_errors = 0;
+
+ini_set('display_errors', $display_errors);
 ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
 
@@ -67,8 +69,8 @@ $settings = $settingsModel->loadSettings();
 ****************************/
 if(isset($settings['displayErrorDetails']) && $settings['displayErrorDetails'])
 {
-	ini_set('display_errors', 1);
-#	ini_set('display_startup_errors', 1);	
+	$display_errors = 1;
+	ini_set('display_errors', $display_errors);
 }
 
 
@@ -173,12 +175,12 @@ foreach($plugins as $plugin)
 	}
 
 	# licence check
-	$PluginLicence = Plugins::getPremiumLicence($className);
-	if($PluginLicence)
+	$PluginLicense = Plugins::getPremiumLicense($className);
+	if($PluginLicense)
 	{
-		if(!$settings['license'] OR !isset($settings['license'][$PluginLicence]))
+		if(!$settings['license'] OR !isset($settings['license'][$PluginLicense]))
 		{
-			\Typemill\Static\Helper\addLogEntry('No License: ' . $pluginName);
+#			\Typemill\Static\Helpers\addLogEntry('No License: ' . $pluginName);
 			if($pluginSettings[$pluginName]['active'])
 			{
 				$pluginSettings[$pluginName]['active'] = false;
@@ -354,7 +356,7 @@ $app->addRoutingMiddleware();
 $errorMiddleware = new ErrorMiddleware(
 	$app->getCallableResolver(),
 	$app->getResponseFactory(),
-	true,
+	$display_errors,
 	false,
 	false
 );

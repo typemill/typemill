@@ -68,7 +68,7 @@ class ControllerWebSetup extends Controller
 		# validate user
 		if($validate->newSetupUser($params, $userroles) !== true)
 		{
-			$this->c->get('flash')->addMessage('error', Translations::translate('Please correct the errors in the form.'));
+			$this->c->get('flash')->addMessage('error', Translations::translate('Please correct your input.'));
 
 			return $response->withHeader('Location', $this->routeParser->urlFor('setup.show'))->withStatus(302);
 		}

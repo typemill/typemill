@@ -760,7 +760,44 @@ class ParsedownExtension extends \ParsedownExtra
     {
         if ($this->dispatcher && preg_match('/^\[:.*:\]/', $Line['text'], $matches))
         {
-            return $this->createShortcodeArray($matches,$block = true);
+            if(is_array($this->allowedShortcodes) && empty($this->allowedShortcodes))
+            {
+                return array('element' => array());
+            }
+
+            $shortcodeString     = substr($matches[0], 2, -2);
+            $shortcodeArray      = explode(' ', $shortcodeString, 2);
+            $shortcode           = [];
+
+            $shortcode['name']   = $shortcodeArray[0];
+            $shortcode['params'] = false;
+
+            if(is_array($this->allowedShortcodes) && !in_array($shortcode['name'], $this->allowedShortcodes))
+            {
+                return array('element' => array());
+            }
+
+            $params = $this->shortcodeParams($shortcodeArray);
+            if($params)
+            {
+                $shortcode['params'] = $params;
+            }
+
+            $html = $this->dispatcher->dispatch(new OnShortcodeFound($shortcode), 'onShortcodeFound')->getData();
+
+            # if no shortcode has been processed, add the original string
+            if(is_array($html) OR is_object($html))
+            {
+                $html = '<p class="shortcode-alert">No shortcode found.</p>';
+            }
+
+            return array(
+                'element' => array(
+                    'rawHtml' => $html,
+                    'allowRawHtmlInSafeMode' => true,
+                ),
+                'extent' => strlen($matches[0]),
+            );
         }
         else
         {
@@ -772,9 +809,46 @@ class ParsedownExtension extends \ParsedownExtra
     {
         $remainder = $Excerpt['text'];
 
-        if ($this->dispatcher && preg_match('/\[:.*:\]/', $remainder, $matches))
+        if ($this->dispatcher && preg_match('/\[:.*?:\]/', $remainder, $matches))
         {
-            return $this->createShortcodeArray($matches, $block = false);
+            if(is_array($this->allowedShortcodes) && empty($this->allowedShortcodes))
+            {
+                return array('element' => array());
+            }
+
+            $shortcodeString     = substr($matches[0], 2, -2);
+            $shortcodeArray      = explode(' ', $shortcodeString, 2);
+            $shortcode           = [];
+
+            $shortcode['name']   = $shortcodeArray[0];
+            $shortcode['params'] = false;
+
+            if(is_array($this->allowedShortcodes) && !in_array($shortcode['name'], $this->allowedShortcodes))
+            {
+                return array('element' => array());
+            }
+
+            $params = $this->shortcodeParams($shortcodeArray);
+            if($params)
+            {
+                $shortcode['params'] = $params;
+            }
+
+            $html = $this->dispatcher->dispatch(new OnShortcodeFound($shortcode), 'onShortcodeFound')->getData();
+
+            # if no shortcode has been processed, add the original string
+            if(is_array($html) OR is_object($html))
+            {
+                $html = '<span class="shortcode-alert">No shortcode found.</span>';
+            }
+
+            return array(
+                'element' => array(
+                    'rawHtml' => $html,
+                    'allowRawHtmlInSafeMode' => true,
+                ),
+                'extent' => strlen($matches[0]),
+            );
         }
         else
         {
@@ -789,29 +863,11 @@ class ParsedownExtension extends \ParsedownExtra
         $this->allowedShortcodes = $shortcodelist;
     }
 
-    protected function createShortcodeArray($matches, $block)
+    protected function shortcodeParams($shortcodeArray)
     {
-        if(is_array($this->allowedShortcodes) && empty($this->allowedShortcodes))
-        {
-            return array('element' => array());
-        }
-
-        $shortcodeString     = substr($matches[0], 2, -2);
-        $shortcodeArray      = explode(' ', $shortcodeString, 2);
-        $shortcode           = [];
-
-        $shortcode['name']   = $shortcodeArray[0];
-        $shortcode['params'] = false;
-
-        if(is_array($this->allowedShortcodes) && !in_array($shortcode['name'], $this->allowedShortcodes))
-        {
-            return array('element' => array());
-        }
-
-        # are there params?
         if(isset($shortcodeArray[1]))
         {
-            $shortcode['params'] = [];
+            $params = [];
 
             # see: https://www.thetopsites.net/article/58136180.shtml
             $pattern = '/(\\w+)\s*=\\s*("[^"]*"|\'[^\']*\'|[^"\'\\s>]*)/';
@@ -821,33 +877,14 @@ class ParsedownExtension extends \ParsedownExtra
             {
                 if(isset($attribute[1]) && isset($attribute[2]))
                 {
-                    $shortcode['params'][$attribute[1]] = trim($attribute[2], " \"");
+                    $params[$attribute[1]] = trim($attribute[2], " \"");
                 }
             }
+
+            return $params;
         }
 
-        $html = $this->dispatcher->dispatch(new OnShortcodeFound($shortcode), 'onShortcodeFound')->getData();
-
-        # if no shortcode has been processed, add the original string
-        if(is_array($html) OR is_object($html))
-        {
-            if($block)
-            {
-                $html = '<p class="shortcode-alert">No shortcode found.</p>';
-            }
-            else
-            {
-                $html = '<span class="shortcode-alert">No shortcode found.</span>';
-            }
-        }
-
-        return array(
-            'element' => array(
-                'rawHtml' => $html,
-                'allowRawHtmlInSafeMode' => true,
-            ),
-            'extent' => strlen($matches[0]),
-        );      
+        return false;        
     }
 
     protected function inlineLink($Excerpt)

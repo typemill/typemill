@@ -5,8 +5,8 @@ namespace Typemill\Controllers;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Typemill\Models\Validation;
+use Typemill\Models\License;
 use Typemill\Static\Translations;
-use Typemill\Static\License;
 
 class ControllerApiSystemVersions extends Controller
 {
@@ -52,7 +52,8 @@ class ControllerApiSystemVersions extends Controller
 			$url = 'https://themes.typemill.net/api/v1/getthemes?themes=' . urlencode($themeList);
 		}	    
 
-		$authstring = License::getPublicKeyPem();
+		$license = new License();
+		$authstring = $license->getPublicKeyPem();
 		if(!$authstring)
 		{
 			$response->getBody()->write(json_encode([

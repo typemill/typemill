@@ -186,7 +186,7 @@ class ControllerApiAuthorMeta extends Controller
 		{
 			$errors[$params['tab']] = $validate->errors;
 			$response->getBody()->write(json_encode([
-				'message' 	=> Translations::translate('Please correct the errors in the form.'),
+				'message' 	=> Translations::translate('Please correct your input.'),
 				'errors' 	=> $errors
 			]));
 
@@ -222,7 +222,7 @@ class ControllerApiAuthorMeta extends Controller
 		if(!empty($errors))
 		{ 
 			$response->getBody()->write(json_encode([
-				'message' => Translations::translate('Please correct the errors.'),
+				'message' => Translations::translate('Please correct your input.'),
 				'errors' => $errors
 			]));
 

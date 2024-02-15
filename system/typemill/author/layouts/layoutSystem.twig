@@ -59,6 +59,7 @@
 		<script src="{{ base_url() }}/system/typemill/author/js/vue-shared.js?v={{ settings.version }}"></script>
 		<script src="{{ base_url() }}/system/typemill/author/js/vue-systemnavi.js?v={{ settings.version }}"></script>
 		<script src="{{ base_url() }}/system/typemill/author/js/vue-medialib.js?v={{ settings.version }}"></script>
+		<script src="{{ base_url() }}/system/typemill/author/js/vue-kixote.js?v={{ settings.version }}"></script>
 		<script>
 
 			systemnavi.config.globalProperties.$filters = translatefilter;
@@ -67,7 +68,7 @@
 			loginform.config.globalProperties.$filters = translatefilter;
 			loginform.mount("#loginform");
 
-/*			kixote.mount('#kixote'); */
+			kixote.mount('#kixote');
 
 		</script>
 		{% block javascript %}{% endblock %}

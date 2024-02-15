@@ -1,15 +1,22 @@
-license:
-  name: license
-  label: 'Your license key' 
-  type: 'text'
-  required: true
-email:
-  name: email
-  label: 'Your email' 
-  type: 'text'
-  required: true
-domain: 
-  name: domain
-  label: 'Domain for license' 
-  type:  'text'
-  required: true
+fieldsetlicense:
+  type: fieldset
+  legend: Activate Your License
+  fields:
+    license:
+      name: license
+      label: 'Your license key' 
+      type: 'text'
+      required: true
+      description: 'Enter your license key that you got after your purchase via email.'
+    email:
+      name: email
+      label: 'Your email' 
+      type: 'text'
+      required: true
+      description: 'Enter your e-mail address that you used for your license-purchase.'
+    domain: 
+      name: domain
+      label: 'Domain for license' 
+      type:  'text'
+      required: true
+      description: 'Enter the full domain like https://wwww.mywebsite.de.'

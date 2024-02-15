@@ -573,3 +573,12 @@
 .pl-21{
   padding-left: 5rem;
 }
+
+
+/****************
+** Checkmark List **
+****************/
+
+ul.list-check {
+  list-style-type: '\2713';
+}

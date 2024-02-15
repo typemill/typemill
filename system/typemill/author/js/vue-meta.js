@@ -147,7 +147,7 @@ const app = Vue.createApp({
 				if(error.response)
 				{
 					self.messageClass 	= 'bg-rose-500';
-					self.message 		= 'please correct the errors above';
+					self.message 		= 'please correct your input.';
 
 					if(typeof error.response.data.message != "undefined")
 					{

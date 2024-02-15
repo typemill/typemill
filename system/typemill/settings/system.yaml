@@ -86,7 +86,7 @@ fieldsetmedia:
     allowsvg:
       type: checkbox
       label: Allow svg
-      checkboxlabel: 'Allow the upload of svg images'
+      checkboxlabel: 'Allow the upload of svg images.'
     convertwebp:
       type: checkbox
       label: 'Convert to webp'
@@ -137,7 +137,7 @@ fieldsetwriting:
       maxlength: 60
 fieldsetaccess:
   type: fieldset
-  legend: Restrictions
+  legend: Access
   fields:
     access:
       type: checkbox
@@ -183,7 +183,7 @@ fieldsetmail:
       description: 'Optionally enter a "reply to" address for answers from the receiver. If not set, answers will go to the from-address.'
 fieldsetrecover:
   type: fieldset
-  legend: Recover
+  legend: Password
   fields:
     recoverpw:
       type: checkbox
@@ -198,7 +198,7 @@ fieldsetrecover:
     recovermessage:
       type: textarea
       label: 'Text before recover link in email message'
-      descriptiion: 'The recover-link will be active for 24 hours.'
+      description: 'The recover-link will be active for 24 hours.'
       maxlength: 2000
 fieldsetsecurity:
   type: fieldset

@@ -10,11 +10,11 @@ class License
 	public $message = '';
 
 	private $plans  = [
-		'44699' => [
+		'MAKER' => [
 			'name' 	=> 'MAKER',
 			'scope'	=> ['MAKER' => true]
 		],
-		'33334' => [
+		'BUSINESS' => [
 			'name' 	=> 'BUSINESS',
 			'scope'	=> ['MAKER' => true, 'BUSINESS' => true]
 		]
@@ -55,8 +55,6 @@ class License
 		$domain 		= $this->checkLicenseDomain($licensedata['domain'], $urlinfo);
 		$date 			= $this->checkLicenseDate($licensedata['payed_until']);
 
-		$domain = true;
-
 		if($domain && $date)
 		{
 			return $this->plans[$licensedata['plan']]['scope'];
@@ -67,9 +65,18 @@ class License
 
 	public function refreshLicense()
 	{
-
+		# same as update
 	}
 
+	private function updateLicence()
+	{
+		# if license not valid anymore, check server for update
+	}
+
+	private function controlLicence()
+	{
+		# regularly check license on server each month.
+	}
 
 	public function getLicenseFields()
 	{
@@ -99,17 +106,30 @@ class License
 
 			return false;
 		}
+
 		$licenseStatus = $this->validateLicense($licensedata);
 
-		if($licenseStatus === true)
+		if($licenseStatus !== true)
 		{
-			unset($licensedata['signature']);
+			$this->message = Translations::translate('Validation failed') . ': ' . $licenseStatus;
 
-			# check here if payed until is in past
-			return $licensedata;
+			return false;
 		}
 
-		return false;
+		# check here if payed until is in past
+	    $nextBillDate 	= new \DateTime($licensedata['payed_until']);
+	    $currentDate 	= new \DateTime();
+
+	    if($nextBillDate < $currentDate) 
+	    {
+	    	$this->message = Translations::translate('The subscription period is not paid yet.');
+
+	    	return false;
+	    }
+
+		unset($licensedata['signature']);
+
+		return $licensedata;
 	}
 
 	private function validateLicense($data)
@@ -130,7 +150,7 @@ class License
 		$verified = openssl_verify($data, $binary_signature, $public_key_pem, OPENSSL_ALGO_SHA256);
 
 		if ($verified == 1)
-		{			
+		{
 		    return true;
 		} 
 		elseif ($verified == 0)
@@ -175,7 +195,7 @@ class License
 
 		$context = stream_context_create($options);
 
-		$response = file_get_contents('https://service.typemill.net/api/v2/activate', false, $context);
+		$response = file_get_contents('https://service.typemill.net/api/v1/activate', false, $context);
 
 		if(substr($http_response_header[0], -6) != "200 OK")
 		{
@@ -203,14 +223,15 @@ class License
 		$signedLicense['license']['email'] = trim($params['email']);
 		$storage = new StorageWrapper('\Typemill\Models\Storage');
 
-		$storage->updateYaml('basepath', 'settings', 'license.yaml', $signedLicense['license']);
+		$result = $storage->updateYaml('settingsFolder', '', 'license.yaml', $signedLicense['license']);
+
+		if(!$result)
+		{
+			$this->message = $storage->getError();
+			return false;
+		}
 
 		return true;
-	}
-
-	private function updateLicence()
-	{
-		# todo
 	}
 
 	private function checkLicenseDomain(string $licensedomain, array $urlinfo)
@@ -249,7 +270,7 @@ class License
 	}
 
 	# we have it in static license, too so use it from static and delete this duplicate.
-	private function getPublicKeyPem()
+	public function getPublicKeyPem()
 	{
 		$pkeyfile = getcwd() . DIRECTORY_SEPARATOR . 'settings' . DIRECTORY_SEPARATOR . "public_key.pem";
 

@@ -37,7 +37,7 @@ class ControllerApiSystemSettings extends Controller
 		if(!empty($validator->errors))
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> Translations::translate('Please correct errors in form.'),
+				'message' 	=> Translations::translate('Please correct your input.'),
 				'errors' 	=> $validator->errors
 			]));
 

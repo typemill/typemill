@@ -68,6 +68,7 @@
 		{{ assets.renderJS() }}
 
 		<script src="{{ base_url() }}/system/typemill/author/js/vue-forms.js?v={{ settings.version }}"></script>
+		<script src="{{ base_url() }}/system/typemill/author/js/vue-kixote.js?v={{ settings.version }}"></script>
 
 		<script>
 			app.config.globalProperties.$filters = translatefilter;
@@ -79,7 +80,7 @@
 			loginform.config.globalProperties.$filters = translatefilter;
 			loginform.mount("#loginform");
 
-/*			kixote.mount('#kixote'); */
+			kixote.mount('#kixote');
 
 		</script>
 	

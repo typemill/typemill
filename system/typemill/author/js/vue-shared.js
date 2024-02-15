@@ -35,11 +35,23 @@ const modal = {
 const translatefilter = {
 	translate(value)
 	{
-		if(typeof data.labels === 'undefined') return value;
-		if (!value) return '';
+		if(typeof data.labels === 'undefined')
+		{
+			return value;
+		}
+		if (!value)
+		{
+			return '';
+		}
 
-		translation_key 	= value.replace(/[ ]/g,"_").replace(/[.]/g, "_").replace(/[,]/g, "_").replace(/[-]/g, "_").replace(/[,]/g,"_").toUpperCase();
-		translation_value	= data.labels[translation_key];
+		/* corresponding rules in translationScanner and translationFiller */
+		let translation_key = value
+		    .replace(/[ \-+*#,.:;?!\"&()\\[\]\/]/g, "_")  // Adjusted regex
+		    .replace(/__+/g, "_")                         // Replace multiple underscores with a single underscore
+		    .replace(/^_+|_+$/g, "")                      // Trim underscores from the start and end of the string
+		    .toUpperCase();                               // Convert to uppercase
+
+		let translation_value = data.labels[translation_key];
 		if(!translation_value || translation_value.length === 0)
 		{
 			return value

@@ -119,7 +119,7 @@ class ControllerApiSystemUsers extends Controller
 		if($valresult !== true)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> Translations::translate('Please correct the errors in the form.'),
+				'message' 	=> Translations::translate('Please correct your input.'),
 				'errors' 	=> $validate->returnFirstValidationErrors($valresult)
 			]));
 
@@ -185,7 +185,7 @@ class ControllerApiSystemUsers extends Controller
 		if(!empty($validate->errors))
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> Translations::translate('Please correct tbe errors in form.'),
+				'message' 	=> Translations::translate('Please correct your input.'),
 				'errors' 	=> $validate->errors
 			]));
 
@@ -265,7 +265,7 @@ class ControllerApiSystemUsers extends Controller
 		if($valresult !== true)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> Translations::translate('Please correct the errors in the form.'),
+				'message' 	=> Translations::translate('Please correct your input.'),
 				'errors' 	=> $validate->returnFirstValidationErrors($valresult)
 			]));
 
@@ -281,7 +281,7 @@ class ControllerApiSystemUsers extends Controller
 		if(!empty($validate->errors))
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> Translations::translate('Please correct tbe errors in form.'),
+				'message' 	=> Translations::translate('Please correct your input.'),
 				'errors' 	=> $validate->errors
 			]));
 
