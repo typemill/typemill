@@ -49,7 +49,7 @@ class Extension
 		foreach($themes as $themename)
 		{
 			$themeinputs = [];
-			if(isset($themesInSettings[$themename]))
+			if(isset($themesInSettings[$themename]) && is_array($themesInSettings[$themename]))
 			{
 				$themeinputs = $themesInSettings[$themename];
 			}
