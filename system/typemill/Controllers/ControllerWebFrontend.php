@@ -103,7 +103,8 @@ class ControllerWebFrontend extends Controller
 		$liveNavigation = $navigation->removeHiddenPages($liveNavigation);
 
 		# SET PAGEs ACTIVE
-		$liveNavigation = $navigation->setActiveNaviItems($liveNavigation, $breadcrumb);
+#		$liveNavigation = $navigation->setActiveNaviItems($liveNavigation, $breadcrumb);
+		$liveNavigation = $navigation->setActiveNaviItemsWithKeyPath($liveNavigation, $item->keyPathArray);
 
 		# DISPATCH LIVE NAVIGATION
 		$liveNavigation = $this->c->get('dispatcher')->dispatch(new OnPagetreeLoaded($liveNavigation), 'onPagetreeLoaded')->getData();
@@ -111,7 +112,8 @@ class ControllerWebFrontend extends Controller
 		# For FOLDERS use item without drafts and hidden pages
 		if(!$home && $item->elementType == 'folder')
 		{
-			$item = $navigation->getItemWithUrl($liveNavigation, $item->urlRelWoF);
+			# $item = $navigation->getItemWithUrl($liveNavigation, $item->urlRelWoF);
+			$item = $navigation->getItemWithKeyPath($liveNavigation, $item->keyPathArray);
 		}
 
 		# ADD BACKWARD-/FORWARD PAGINATION
@@ -173,7 +175,7 @@ class ControllerWebFrontend extends Controller
 					{
 						$metadata 		= $meta->getMetaData($refitem);
 						$metadata 		= $meta->addMetaDefaults($metadata, $refitem, $this->settings['author']);
-						$metadata 		= $meta->addMetaTitleDescription($metadata, $refItem, $markdownArray);					
+						$metadata 		= $meta->addMetaTitleDescription($metadata, $refitem, $markdownArray);					
 					}
 
 					break;

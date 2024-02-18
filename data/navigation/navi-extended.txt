@@ -3,7 +3,7 @@
     hide: false
     noindex: false
     path: /00-welcome
-    keyPath: 0
+    keyPath: '0'
 /welcome/setup-your-website:
     navtitle: 'setup your website'
     hide: false
@@ -39,7 +39,7 @@
     hide: false
     noindex: false
     path: /01-cyanine-theme
-    keyPath: 1
+    keyPath: '1'
 /cyanine-theme/landingpage:
     navtitle: landingpage
     hide: false

@@ -2,13 +2,8 @@ meta:
     navtitle: 'manage access'
     title: 'Manage access'
     description: ' Restrict Access for the Website'
-    heroimage: null
-    heroimagealt: null
     owner: Sebastian
     author: Sebastian
-    allowedrole: null
-    alloweduser: null
-    manualdate: null
     modified: '2023-05-06'
     created: '2023-06-12'
     time: 22-36-36

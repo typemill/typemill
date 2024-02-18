@@ -206,6 +206,8 @@ class Navigation extends Folder
 	{
 		# todo: filter for userrole or username 
 
+		$basicLiveNavigation = $this->getBasicLiveNavigation($urlinfo, $language);
+
 		$this->liveNavigation = $this->storage->getFile('dataFolder', $this->naviFolder, $this->liveNaviName, 'unserialize');
 
 		if($this->liveNavigation)
@@ -246,7 +248,7 @@ class Navigation extends Folder
 		if(count($liveContentTree) > 0)
 		{
 			$liveNavigation = $this->getFolderContentDetails($liveContentTree, $language, $urlinfo['baseurl'], $urlinfo['basepath']);
-			
+
 			return $liveNavigation;
 		}
 
@@ -334,7 +336,7 @@ class Navigation extends Folder
 				$item->folderContent = $this->mergeNavigationWithExtended($item->folderContent, $extended);
 			}
 
-			$mergedNavigation[] = $item;
+			$mergedNavigation[$key] = $item;
 		}
 
 		return $mergedNavigation;
@@ -364,7 +366,7 @@ class Navigation extends Folder
 		return $item;
 	}
 
-	# only used for folders to get items from live-navigation without hidden and unpublished pages
+	# NOT IN USE ANYMORE BUT KEEP IT
 	public function getItemWithUrl($navigation, $url, $result = NULL)
 	{
 		foreach($navigation as $key => $item)
@@ -390,7 +392,7 @@ class Navigation extends Folder
 	}	
 	
 
-	# used with scan folder that generates own indexes for live version
+	# NOT IN USE ANYMORE BUT KEEP IT
 	public function setActiveNaviItems($navigation, $breadcrumb)
 	{
 		if($breadcrumb)
@@ -549,7 +551,6 @@ class Navigation extends Folder
 
 		return $liveNavigation;
 	}
-
 
 	public function getBreadcrumb($navigation, $searchArray, $i = NULL, $breadcrumb = NULL)
 	{
