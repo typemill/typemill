@@ -206,8 +206,6 @@ class Navigation extends Folder
 	{
 		# todo: filter for userrole or username 
 
-		$basicLiveNavigation = $this->getBasicLiveNavigation($urlinfo, $language);
-
 		$this->liveNavigation = $this->storage->getFile('dataFolder', $this->naviFolder, $this->liveNaviName, 'unserialize');
 
 		if($this->liveNavigation)
@@ -215,8 +213,9 @@ class Navigation extends Folder
 			return $this->liveNavigation;
 		}
 
-		# if there is no cached navi, create a basic new draft navi
-		$basicLiveNavigation = $this->getBasicLiveNavigation($urlinfo, $language);
+		$draftNavigation = $this->getDraftNavigation($urlinfo, $language);
+
+		$basicLiveNavigation = $this->generateLiveNavigationFromDraft($draftNavigation);
 
 		# get the extended navigation with additional infos from the meta-files like title or hidden pages
 		$extendedNavigation = $this->getExtendedNavigation($urlinfo, $language);
@@ -230,6 +229,33 @@ class Navigation extends Folder
 		return $liveNavigation;
 	}
 
+	public function generateLiveNavigationFromDraft($draftNavigation)
+	{
+		foreach($draftNavigation as $key => $item)
+		{
+			if($item->status == 'unpublished')
+			{
+				unset($draftNavigation[$key]);
+			}
+			else
+			{
+				if($item->status == 'modified')
+				{
+					$draftNavigation[$key]->fileType = 'md';
+					$draftNavigation[$key]->path = $draftNavigation[$key]->pathWithoutType . '.md';
+				}
+
+				if(isset($item->folderContent) && $item->folderContent)
+				{
+					$item->folderContent = $this->generateLiveNavigationFromDraft($item->folderContent);
+				}
+			}
+		}
+
+		return $draftNavigation;
+	}
+
+/*
 	public function getBasicLiveNavigation($urlinfo, $language)
 	{
 		if(!$this->basicLiveNavigation)
@@ -254,7 +280,8 @@ class Navigation extends Folder
 
 		return false;
 	}
-
+*/
+	
 	# get the extended navigation with additional infos from the meta-files like title or hidden pages
 	public function getExtendedNavigation($urlinfo, $language)
 	{

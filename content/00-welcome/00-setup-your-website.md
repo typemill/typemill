@@ -1,6 +1,6 @@
 # Setup Your Website
 
-Typemill provides detailed settings, and you have access to nearly all settings in the author panel. Learn the basics in this short video:
+Typemill provides detailed settings, and you have access to nearly all settings in the author panel. Learn the basics in this short video: mod
 
 ![youtube-video](media/live/youtube-7yvlwxjl9dc.jpeg "click to load video"){#7yvlwXJL9dc .youtube}
 
