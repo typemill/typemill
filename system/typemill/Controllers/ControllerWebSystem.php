@@ -125,23 +125,28 @@ class ControllerWebSystem extends Controller
 									$parser 	= $this->routeParser
 								);
 
-		$extension 			= new Extension();
-		$pluginDefinitions 	= $extension->getPluginDetails($this->settings['plugins']);
 
-		# add userroles and other datasets
-		foreach($pluginDefinitions as $name => $definitions)
+		$pluginSettings 	= $this->settings['plugins'] ?? false;
+		$pluginDefinitions 	= [];
+
+		if($pluginSettings)
 		{
-			if(isset($definitions['forms']['fields']))
+			$extension 			= new Extension();
+			$pluginDefinitions 	= $extension->getPluginDetails($pluginSettings);
+
+			# add userroles and other datasets
+			foreach($pluginDefinitions as $name => $definitions)
 			{
-				$pluginDefinitions[$name]['forms']['fields'] = $this->addDatasets($definitions['forms']['fields']);
+				if(isset($definitions['forms']['fields']))
+				{
+					$pluginDefinitions[$name]['forms']['fields'] = $this->addDatasets($definitions['forms']['fields']);
+				}
 			}
+
 		}
 
-#		$pluginSettings 	= $extension->getPluginSettings($this->settings['plugins']);
-		$pluginSettings 	= $this->settings['plugins'];
-
 		$license = [];
-		if(is_array($this->settings['license']))
+		if(isset($this->settings['license']) && is_array($this->settings['license']))
 		{
 			$license = array_keys($this->settings['license']);
 		}
