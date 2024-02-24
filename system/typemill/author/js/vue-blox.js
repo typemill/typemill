@@ -475,6 +475,12 @@ bloxeditor.component('new-block',{
 				{
 					eventBus.$emit('item', response.data.item);					
 				}
+
+				if(self.index == 999999)
+				{
+					self.setComponentType(false, 'markdown-component');
+				}
+
 			})
 			.catch(function (error)
 			{

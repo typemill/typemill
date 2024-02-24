@@ -1,7 +1,13 @@
 bloxeditor.component('title-component', {
 	props: ['markdown', 'disabled', 'index'],
 	template: `<div>
-				<input type="text" class="opacity-1 w-full bg-transparent px-6 py-3 outline-none text-4xl font-bold my-5" ref="markdown" :value="markdown" :disabled="disabled" @input="updatemarkdown($event.target.value)">
+				<input 
+					type 		= "text" 
+					class 		= "opacity-1 w-full bg-transparent px-6 py-3 outline-none text-4xl font-bold my-5" 
+					ref 		= "markdown" 
+					:value 		= "markdown" 
+					:disabled 	= "disabled" 
+					@input 		= "updatemarkdown($event.target.value)">
 			</div>`,
 	mounted: function(){
 		this.$refs.markdown.focus();
@@ -31,7 +37,13 @@ bloxeditor.component('markdown-component', {
 						</svg>
 					</div>
 					<inline-formats>
-						<textarea class="iformat opacity-1 w-full bg-transparent px-6 py-3 outline-none" ref="markdown" :value="markdown" :disabled="disabled" @input="updatemarkdown($event.target.value)"></textarea>
+						<textarea 
+							class 		= "iformat opacity-1 w-full bg-transparent px-6 py-3 outline-none" 
+							ref 		= "markdown" 
+							:value 		= "markdown" 
+							:disabled 	= "disabled" 
+							@input 		= "updatemarkdown($event.target.value)"
+						></textarea>
 			  		</inline-formats>
 			 	</div>`,
 	mounted: function(){
@@ -74,7 +86,14 @@ bloxeditor.component('headline-component', {
 					<button class="absolute w-6 top-0 bottom-0 left-0 border-r-2 border-stone-700 bg-stone-200 dark:bg-stone-600 hover:bg-teal-500 hover:dark:bg-teal-500 hover:text-stone-50 transition-1" @click.prevent="headlinedown">
 						<div class="absolute w-6 top-3 text-center">{{ level }}</div>
 					</button>
-					<input class="opacity-1 w-full bg-transparent pr-6 pl-10 py-3 outline-none" :class="hlevel" type="text" v-model="compmarkdown" ref="markdown" :disabled="disabled" @input="updatemarkdown">
+					<input 
+						class 		= "opacity-1 w-full bg-transparent pr-6 pl-10 py-3 outline-none" 
+						:class 		= "hlevel" 
+						type 		= "text" 
+						v-model 	= "compmarkdown" 
+						ref 		= "markdown" 
+						:disabled 	= "disabled" 
+						@input 		= "updatemarkdown">
 				</div>`,
 	data: function(){
 		return {
@@ -108,7 +127,7 @@ bloxeditor.component('headline-component', {
 		{
 			this.$emit('saveBlockEvent');
 		},
-		updatemarkdown: function(event)
+		updatemarkdown(event)
 		{
 			this.level = this.getHeadlineLevel(this.compmarkdown);
 			if(this.level > 6)
@@ -125,7 +144,7 @@ bloxeditor.component('headline-component', {
 
 			this.$emit('updateMarkdownEvent', this.compmarkdown);
 		},
-		headlinedown: function()
+		headlinedown()
 		{
 			this.level = this.getHeadlineLevel(this.compmarkdown);
 			if(this.level < 6)
@@ -143,7 +162,7 @@ bloxeditor.component('headline-component', {
 
 			this.$emit('updateMarkdownEvent', this.compmarkdown);
 		},
-		getHeadlineLevel: function(str)
+		getHeadlineLevel(str)
 		{
 			var count = 0;
 			for(var i = 0; i < str.length; i++){
@@ -164,7 +183,14 @@ bloxeditor.component('ulist-component', {
 						</svg>
 					</div>
 					<inline-formats>
-						<textarea class="iformat opacity-1 w-full bg-transparent px-6 py-3 outline-none" ref="markdown" v-model="compmarkdown" :disabled="disabled" @keyup.enter.prevent="newLine" @input="updatemarkdown"></textarea>
+						<textarea 
+							class  					= "iformat opacity-1 w-full bg-transparent px-6 py-3 outline-none" 
+							ref 					= "markdown" 
+							:value 					= "markdown" 
+							:disabled 				= "disabled" 
+							@keyup.enter.prevent 	= "newLine" 
+							@input 					= "updatemarkdown($event.target.value)"
+						></textarea>
 					</inline-formats>
 				</div>`,
 	data: function(){
@@ -205,6 +231,8 @@ bloxeditor.component('ulist-component', {
 			this.compmarkdown = md;
 		}
 
+		this.$emit('updateMarkdownEvent', this.compmarkdown);
+
 		this.$nextTick(function () {
 			autosize(document.querySelectorAll('textarea'));
 		});
@@ -215,13 +243,15 @@ bloxeditor.component('ulist-component', {
 		beforeSave()
 		{
 			this.$emit('saveBlockEvent');
-		},		
-		updatemarkdown: function(event)
-		{
-			this.$emit('updateMarkdownEvent', event.target.value);
 		},
-		newLine: function(event)
+		updatemarkdown(value)
 		{
+			this.$emit('updateMarkdownEvent', value);
+		},
+		newLine(event)
+		{
+			this.compmarkdown = this.markdown;
+
 			let listend = '* \n'; // '1. \n';
 			let liststyle = '* '; // '1. ';
 			
@@ -238,6 +268,8 @@ bloxeditor.component('ulist-component', {
 				let end 			= mdtextarea[0].selectionEnd;
 				
 				this.compmarkdown 	= this.compmarkdown.substr(0, end) + liststyle + this.compmarkdown.substr(end);
+
+				this.$emit('updateMarkdownEvent', this.compmarkdown);
 
 				mdtextarea[0].focus();
 				if(mdtextarea[0].setSelectionRange)
@@ -261,7 +293,14 @@ bloxeditor.component('olist-component', {
 						</svg>
 					</div>
 					<inline-formats>
-						<textarea class="iformat opacity-1 w-full bg-transparent px-6 py-3 outline-none" ref="markdown" v-model="compmarkdown" :disabled="disabled" @keyup.enter.prevent="newLine" @input="updatemarkdown"></textarea>
+						<textarea 
+							class 					="iformat opacity-1 w-full bg-transparent px-6 py-3 outline-none" 
+							ref 					="markdown" 
+							:value 					="markdown" 
+							:disabled 				="disabled" 
+							@keyup.enter.prevent 	="newLine" 
+							@input 					="updatemarkdown($event.target.value)"
+						></textarea>
 					</inline-formats>
 				</div>`,
 	data: function(){
@@ -280,6 +319,8 @@ bloxeditor.component('olist-component', {
 			this.compmarkdown = '1. ';
 		}
 
+		this.$emit('updateMarkdownEvent', this.compmarkdown);
+
 		this.$nextTick(function () {
 			autosize(document.querySelectorAll('textarea'));
 		});
@@ -291,12 +332,14 @@ bloxeditor.component('olist-component', {
 		{
 			this.$emit('saveBlockEvent');
 		},		
-		updatemarkdown: function(event)
+		updatemarkdown(value)
 		{
-			this.$emit('updateMarkdownEvent', event.target.value);
+			this.$emit('updateMarkdownEvent', value);
 		},
-		newLine: function(event)
+		newLine(event)
 		{
+			this.compmarkdown = this.markdown;
+
 			let listend = '1. \n';
 			let liststyle = '1. ';
 			
@@ -313,6 +356,8 @@ bloxeditor.component('olist-component', {
 				let end 			= mdtextarea[0].selectionEnd;
 				
 				this.compmarkdown 	= this.compmarkdown.substr(0, end) + liststyle + this.compmarkdown.substr(end);
+
+				this.$emit('updateMarkdownEvent', this.compmarkdown);
 
 				mdtextarea[0].focus();
 				if(mdtextarea[0].setSelectionRange)
@@ -338,7 +383,13 @@ bloxeditor.component('code-component', {
 				  <label class="pr-2 py-1" for="language">{{ $filters.translate('Language') }}: </label> 
 				  <input class="px-2 py-1 flex-grow focus:outline-none bg-stone-200 text-stone-900" name="language" type="text" v-model="language" :disabled="disabled" @input="createlanguage">
 				</div>
-				<textarea class="font-mono text-sm opacity-1 w-full bg-transparent px-6 py-3 outline-none" ref="markdown" v-model="codeblock" :disabled="disabled" @input="createmarkdown"></textarea>
+				<textarea 
+					class 		= "font-mono text-sm opacity-1 w-full bg-transparent px-6 py-3 outline-none" 
+					ref 		= "markdown" 
+					v-model 	= "codeblock" 
+					:disabled 	= "disabled" 
+					@input 		= "createmarkdown"
+				></textarea>
 			</div>`,
 	data: function(){
 		return {
@@ -387,18 +438,18 @@ bloxeditor.component('code-component', {
 		{
 			this.$emit('saveBlockEvent');
 		},		
-		createlanguage: function()
+		createlanguage()
 		{
 			var codeblock = this.prefix + this.language + '\n' + this.codeblock + '\n' + this.prefix;
 			this.updatemarkdown(codeblock);
 		},
-		createmarkdown: function(event)
+		createmarkdown(event)
 		{
 			this.codeblock = event.target.value;
 			var codeblock = this.prefix + this.language + '\n' + this.codeblock + '\n' + this.prefix;
 			this.updatemarkdown(codeblock);
 		},
-		updatemarkdown: function(codeblock)
+		updatemarkdown(codeblock)
 		{
 			this.$emit('updateMarkdownEvent', codeblock);
 		},
@@ -413,7 +464,13 @@ bloxeditor.component('hr-component', {
 							<use xlink:href="#icon-pilcrow"></use>
 						</svg>
 					</div>
-					<textarea class="opacity-1 w-full bg-transparent px-6 py-3 outline-none" ref="markdown" :value="markdown" :disabled="disabled" @input="updatemarkdown"></textarea>
+					<textarea 
+						class 		= "opacity-1 w-full bg-transparent px-6 py-3 outline-none" 
+						ref 		= "markdown" 
+						:value 		= "markdown" 
+						:disabled 	= "disabled" 
+						@input 		= "updatemarkdown"
+					></textarea>
 				</div>`,
 	mounted: function(){
 
@@ -430,7 +487,7 @@ bloxeditor.component('hr-component', {
 		{
 			this.$emit('saveBlockEvent');
 		},		
-		updatemarkdown: function(event)
+		updatemarkdown(event)
 		{
 			var emptyline = /^\s*$(?:\r\n?|\n)/gm;
 			
@@ -453,7 +510,13 @@ bloxeditor.component('toc-component', {
 							<use xlink:href="#icon-list-alt"></use>
 						</svg>
 					</div>
-					<textarea class="opacity-1 w-full bg-transparent px-6 py-3 outline-none" ref="markdown" :value="markdown" :disabled="disabled" @input="updatemarkdown"></textarea>
+					<textarea 
+						class 		= "opacity-1 w-full bg-transparent px-6 py-3 outline-none" 
+						ref 		= "markdown" 
+						:value 		= "markdown" 
+						:disabled 	= "disabled" 
+						@input 		= "updatemarkdown"
+					></textarea>
 				</div>`,
 	mounted: function(){
 
@@ -470,7 +533,7 @@ bloxeditor.component('toc-component', {
 		{
 			this.$emit('saveBlockEvent');
 		},		
-		updatemarkdown: function(event)
+		updatemarkdown(event)
 		{
 			var emptyline = /^\s*$(?:\r\n?|\n)/gm;
 			
@@ -485,6 +548,7 @@ bloxeditor.component('toc-component', {
 	},
 })
 
+
 bloxeditor.component('quote-component', {
 	props: ['markdown', 'disabled', 'index'],
 	template: `<div>
@@ -494,61 +558,79 @@ bloxeditor.component('quote-component', {
 						</svg>
 					</div>
 					<inline-formats>
-						<textarea class="iformat opacity-1 w-full bg-transparent px-6 py-3 outline-none" ref="markdown" v-model="quote" :disabled="disabled" @input="updatemarkdown($event.target.value)"></textarea>
+						<textarea 
+							class 					= "iformat opacity-1 w-full bg-transparent px-6 py-3 outline-none" 
+							ref 					="markdown" 
+							:value 					="markdown" 
+							:disabled 				="disabled" 
+							@keyup.enter.prevent 	="newLine" 
+							@input 					="updatemarkdown($event.target.value)"
+						></textarea>
 					</inline-formats>
 				</div>`,
 	data: function(){
 		return {
-			prefix: '> ',
-			quote: ''
+			compmarkdown: ''
 		}
 	},
 	mounted: function(){
 
 		eventBus.$on('beforeSave', this.beforeSave );
 
-		this.$refs.markdown.focus();
+		this.compmarkdown = this.markdown;
 
-		if(this.markdown)
+		if(this.compmarkdown == '')
 		{
-			var lines = this.markdown.match(/^.*([\n\r]+|$)/gm);
-			for (var i = 0; i < lines.length; i++) {
-			    lines[i] = lines[i].replace(/(^[\> ]+)/mg, '');
-			}
-
-			this.quote = lines.join('');
+			this.compmarkdown = '> ';
 		}
+
+		this.$emit('updateMarkdownEvent', this.compmarkdown);
+
 		this.$nextTick(function () {
 			autosize(document.querySelectorAll('textarea'));
 		});
+
+		this.$refs.markdown.focus();
 	},
 	methods: {
 		beforeSave()
 		{
 			this.$emit('saveBlockEvent');
 		},		
-		updatemarkdown: function(value)
+		updatemarkdown(value)
 		{
-			this.quote = value;
+			this.$emit('updateMarkdownEvent', value);
+		},
+		newLine(event)
+		{
+			this.compmarkdown = this.markdown;
 
-			let emptyline = /^\s*$(?:\r\n?|\n)/gm;
+			let listend = '> \n';
+			let liststyle = '> ';
 			
-			if(value.search(emptyline) > -1)
+			if(this.compmarkdown.endsWith(listend))
 			{
-
-				let cleanvalue 	= value.trim();
-				let lines 		= cleanvalue.match(/^.*([\n\r]|$)/gm);
-				let quote 		= this.prefix + lines.join(this.prefix);
-
-				this.$emit('updateMarkdownEvent', quote);
+				this.compmarkdown = this.compmarkdown.replace(listend, '');
+				this.$emit('updateMarkdownEvent', this.compmarkdown);
 				this.$emit('saveBlockEvent');
 			}
 			else
 			{
-				let lines = value.match(/^.*([\n\r]|$)/gm);
-				let quote = this.prefix + lines.join(this.prefix);
+				let mdtextarea 		= document.getElementsByTagName('textarea');
+				let start 			= mdtextarea[0].selectionStart;
+				let end 			= mdtextarea[0].selectionEnd;
+				
+				this.compmarkdown 	= this.compmarkdown.substr(0, end) + liststyle + this.compmarkdown.substr(end);
 
-				this.$emit('updateMarkdownEvent', quote);
+				this.$emit('updateMarkdownEvent', this.compmarkdown);
+
+				mdtextarea[0].focus();
+				if(mdtextarea[0].setSelectionRange)
+				{
+					setTimeout(function(){
+						mdtextarea[0].setSelectionRange(end+3, end+3);
+					}, 1);
+				}
 			}
 		}
 	}
@@ -565,7 +647,13 @@ bloxeditor.component('notice-component', {
 					<button class="absolute w-6 top-0 bottom-0 left-0 border-r-2 border-stone-700 bg-stone-200 dark:bg-stone-600 hover:bg-teal-500 hover:dark:bg-teal-500 hover:text-stone-50 transition-1" :class="noteclass" @click.prevent="noticedown">
 						<div class="absolute w-6 top-3 text-center">{{ prefix }}</div>
 					</button>
-					<textarea class="opacity-1 w-full bg-transparent pr-6 pl-10 py-3 outline-none notice" ref="markdown" v-model="notice" :disabled="disabled"  @input="updatemarkdown($event.target.value)"></textarea>
+					<textarea 
+						class 		= "opacity-1 w-full bg-transparent pr-6 pl-10 py-3 outline-none notice" 
+						ref 		= "markdown" 
+						v-model 	= "notice" 
+						:disabled 	= "disabled" 
+						@input 		= "updatemarkdown($event.target.value)"
+					></textarea>
 				</div>`,
 	data: function(){
 		return {
@@ -602,7 +690,7 @@ bloxeditor.component('notice-component', {
 		{
 			this.$emit('saveBlockEvent');
 		},		
-		noticedown: function()
+		noticedown()
 		{
 			this.prefix = this.getNoticePrefix(this.markdown);
 			
@@ -620,7 +708,7 @@ bloxeditor.component('notice-component', {
 			this.noteclass = 'note' + (this.prefix.length);
 			this.updatemarkdown(this.notice);
 		},
-		getNoticePrefix: function(str)
+		getNoticePrefix(str)
 		{
 			var prefix = '';
 			if(str === undefined)
@@ -634,7 +722,7 @@ bloxeditor.component('notice-component', {
 			}
 		  return prefix;
 		},
-		updatemarkdown: function(value)
+		updatemarkdown(value)
 		{
 			this.notice = value;			
 
@@ -657,6 +745,7 @@ bloxeditor.component('table-component', {
 				['2', 'cell', 'cell'],
 				['3', 'cell', 'cell'],
 			],
+			aligns: ['0', 'left', 'left'],
 			editable: 'editable',
 			noteditable: 'noteditable',
 			cellcontent: '',
@@ -677,35 +766,46 @@ bloxeditor.component('table-component', {
 						</colgroup>
 						<tbody>
 							<tr v-for="(row, rowindex) in table">
-								<td v-if="rowindex === 0" v-for="(value,colindex) in row" 
-									contenteditable="false" 
-									@click="switchcolumnbar($event, value)"  
-									@keydown.13.prevent="enter"
-									:class="colindex === 0 ? '' : 'hover:bg-stone-200 cursor-pointer transition-1'" 
-									class="border border-stone-300 text-center text-stone-500"
+								<td 
+									v-if 					= "rowindex === 0" 
+									v-for 					= "(value,colindex) in row" 
+									contenteditable 		= "false" 
+									@click 					= "switchcolumnbar($event, value)"  
+									@keydown.13.prevent 	= "enter"
+									:class 					= "colindex === 0 ? '' : 'hover:bg-stone-200 cursor-pointer transition-1'" 
+									class 					= "border border-stone-300 text-center text-stone-500"
 								>{{value}} 
 							  		<div v-if="columnbar === value" class="absolute z-20 w-32 text-left text-xs text-white bg-stone-700 transition-1">
+								 		<div class="flex justify-between">
+									 		<div class="p-2 hover:bg-teal-500 text-left w-32" @click="aligncolumn($event, value, 'left')">:---</div>
+									 		<div class="p-2 hover:bg-teal-500 text-center w-32" @click="aligncolumn($event, value, 'center')">:---:</div>
+									 		<div class="p-2 hover:bg-teal-500 text-right w-32" @click="aligncolumn($event, value, 'right')">---:</div>
+								 		</div>
 								 		<div class="p-2 hover:bg-teal-500" @click="addleftcolumn($event, value)">{{ $filters.translate('add left column') }}</div>
 							     		<div class="p-2 hover:bg-teal-500" @click="addrightcolumn($event, value)">{{ $filters.translate('add right column') }}</div>
 								 		<div class="p-2 hover:bg-teal-500" @click="deletecolumn($event, value)">{{ $filters.translate('delete column') }}</div>
 							  		</div>
 								</td>
-								<th v-if="rowindex === 1" v-for="(value,colindex) in row" 
-									:contenteditable="colindex !== 0 ? true : false" 
-									@click="switchrowbar($event, value)" 
-									@keydown.13.prevent="enter" 
-									@blur="updatedata($event,colindex,rowindex)" 
-									:class="colindex !== 0 ? 'text-center' : 'font-normal text-stone-500' "
-									class="p-2 border border-stone-300"
+								<th 
+									v-if 					= "rowindex === 1" 
+									v-for 					= "(value,colindex) in row" 
+									:contenteditable 		= "colindex !== 0 ? true : false" 
+									@click 					= "switchrowbar($event, value)" 
+									@keydown.13.prevent 	= "enter" 
+									@blur 					= "updatedata($event,colindex,rowindex)" 
+									:class 					= "colindex !== 0 ? 'text-center' : 'font-normal text-stone-500' "
+									class 					= "p-2 border border-stone-300"
 								>{{ value }}
 								</th>
-								<td v-if="rowindex > 1" v-for="(value,colindex) in row" 
-									:contenteditable="colindex !== 0 ? true : false" 
-									@click="switchrowbar($event, value)" 
-									@keydown.13.prevent="enter" 
-									@blur="updatedata($event,colindex,rowindex)" 
-									:class="colindex !== 0 ? '' : 'text-center text-stone-500 cursor-pointer hover:bg-stone-200'"
-									class="p-2 border border-stone-300"
+								<td 
+									v-if 					= "rowindex > 1" 
+									v-for 					= "(value,colindex) in row" 
+									:contenteditable 		= "colindex !== 0 ? true : false" 
+									@click 					= "switchrowbar($event, value)" 
+									@keydown.13.prevent 	= "enter" 
+									@blur 					= "updatedata($event,colindex,rowindex)" 
+									:class 					= "colindex !== 0 ? '' : 'text-center text-stone-500 cursor-pointer hover:bg-stone-200'"
+									class 					= "p-2 border border-stone-300"
 								>
 							 		<div v-if="colindex === 0 && rowbar === value" class="rowaction absolute z-20 left-12 w-32 text-left text-xs text-white bg-stone-700">
   										<div class="actionline p-2 hover:bg-teal-500" @click="addaboverow($event, value)">{{ $filters.translate('add row above') }}</div>
@@ -743,7 +843,29 @@ bloxeditor.component('table-component', {
 			
 			for(i = 0; i < length; i++)
 			{
-				if(i == 1){ continue }
+				if(i == 1)
+				{
+					this.aligns = [0];
+					var line = lines[i].trim();
+					var columns = line.split("|");
+					for(x = 0; x < columns.length; x++)
+					{
+						switch(columns[x].trim())
+						{
+							case "":
+							break;
+							case ":---:":
+								this.aligns[x] = "center";
+							break;
+							case "---:":
+								this.aligns[x] = "right";
+							break;
+							default: 
+								this.aligns[x] = "left";
+						}
+					}
+					continue; 
+				}
 				
 				var line = lines[i].trim();
 				var row = line.split("|").map(function(cell){
@@ -813,6 +935,11 @@ bloxeditor.component('table-component', {
 			}
 			this.markdowntable();
 		},
+		aligncolumn(event, index, align)
+		{
+			this.aligns.splice(index,1,align);
+			this.markdowntable();
+		},
 		addleftcolumn(event, index)
 		{
 			var tableLength = this.table.length;
@@ -841,7 +968,21 @@ bloxeditor.component('table-component', {
 			for(var i = 0; i < cols; i++)
 			{
 				if(i == 0){ continue; }
-				separator += '---|';
+
+				switch(this.aligns[i])
+				{
+					case "left":
+						separator += ':---|';
+					break
+					case "center":
+						separator += ':---:|';
+					break
+					case "right":
+						separator += '---:|';
+					break
+					default:
+						separator += '---|';						
+				}
 			}
 			
 			for(var i = 0; i < rows; i++)
@@ -1159,11 +1300,11 @@ bloxeditor.component('inline-formats', {
 		}
 	},
 	methods: {
-		onMousedown: function(event) {
+		onMousedown(event) {
 			this.startX = event.offsetX;
 			this.startY = event.offsetY;
 		},
-		onMouseup: function(event) {
+		onMouseup(event) {
 
 			/* if click is on format popup */
 			if(this.formatBar.contains(event.target) || this.stopNext)
@@ -1933,23 +2074,23 @@ bloxeditor.component('file-component', {
 			this.createmarkdown();
 			this.getrestriction(file.url);
 		},
-		openmedialib: function()
+		openmedialib()
 		{
 			this.showmedialib = true;
 		},
-		isChecked: function(classname)
+		isChecked(classname)
 		{
 			if(this.fileclass == classname)
 			{
 				return ' checked';
 			}
 		},
-		updatemarkdown: function(event, url)
+		updatemarkdown(event, url)
 		{
 			this.$emit('updateMarkdownEvent', event.target.value);
 			this.getrestriction(url);
 		},
-		createmarkdown: function()
+		createmarkdown()
 		{
 			var errors = false;
 			
@@ -1987,7 +2128,7 @@ bloxeditor.component('file-component', {
 				this.compmarkdown = filemarkdown;
 			}
 		},
-		getrestriction: function(url)
+		getrestriction(url)
 		{
 			var fileurl = this.fileurl;
 			if(url)
@@ -2017,7 +2158,7 @@ bloxeditor.component('file-component', {
 				}
 			});
 		},
-		updaterestriction: function()
+		updaterestriction()
 		{
 			tmaxios.post('/api/v1/filerestrictions',{
 				'url':			data.urlinfo.route,
@@ -2027,7 +2168,7 @@ bloxeditor.component('file-component', {
 			.then(function (response) {})
 			.catch(function (error){ alert("reponse error")});
 		},
-		onFileChange: function( e )
+		onFileChange( e )
 		{
 			if(e.target.files.length > 0)
 			{
@@ -2343,7 +2484,7 @@ bloxeditor.component('shortcode-component', {
 				}
 			}
 		},
-		createmarkdown: function(shortcodename,attribute = false)
+		createmarkdown(shortcodename,attribute = false)
 		{
 			var attributes = '';
 			if(attribute)
@@ -2361,13 +2502,13 @@ bloxeditor.component('shortcode-component', {
 
 			this.$emit('updateMarkdownEvent', this.compmarkdown);
 		},
-		selectsearch: function(item,attribute)
+		selectsearch(item,attribute)
 		{
 			/* check if still reactive */
 			this.shortcodedata[this.shortcodename][attribute].value = item;
 			this.createmarkdown(this.shortcodename,attribute);
 		},
-		updatemarkdown: function(event)
+		updatemarkdown(event)
 		{
 			this.$emit('updateMarkdownEvent', event.target.value);
 		},
