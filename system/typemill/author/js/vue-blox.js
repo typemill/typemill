@@ -121,7 +121,7 @@ bloxeditor.component('content-block', {
 							</svg>
 						</div>
 						<component ref="activeComponent" :disabled="disabled" :markdown="updatedmarkdown" :index="index" @saveBlockEvent="saveBlock" @updateMarkdownEvent="updateMarkdownFunction" :is="componentType"></component>
-						<div class="edit-buttons absolute -bottom-3 right-4 z-1 text-xs">
+						<div class="edit-buttons absolute -bottom-3 right-4 z-10 text-xs">
 							<button class="cancel w-20  p-1 border-r border-stone-700 bg-stone-200 dark:bg-stone-600 hover:bg-rose-500 hover:dark:bg-rose-500 hover:text-white transition-1" :disabled="disabled" @click.prevent="closeEditor">{{ $filters.translate('cancel') }}</button>
 							<button class="save w-20 p-1 border-l border-stone-700 bg-stone-200 dark:bg-stone-600 hover:bg-teal-500 hover:dark:bg-teal-500 hover:text-white transition-1" :disabled="disabled" @click.prevent="beforeSave()">{{ $filters.translate('save') }}</button>
 						</div>
