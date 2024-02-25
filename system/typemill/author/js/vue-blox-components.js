@@ -1215,7 +1215,7 @@ bloxeditor.component('inline-formats', {
 	template: `<div>
 				<div :style="styleObject" @mousedown.prevent="" v-show="showInlineFormat" id="formatBar" class="inlineFormatBar">
 					<div v-if="link" id="linkBar">
-				    	<input v-model="url" @keyup.13="formatLink" ref="urlinput" class="urlinput" type="text" placeholder="insert url">
+				    	<input v-model="url" @keyup.enter="formatLink" ref="urlinput" class="urlinput" type="text" placeholder="insert url">
 						<span class="inlineFormatItem inlineFormatLink" @mousedown.prevent="formatLink">
 							<svg class="icon icon-check">
 								<use xlink:href="#icon-check"></use>
@@ -1379,6 +1379,9 @@ bloxeditor.component('inline-formats', {
 			content = content.substring(0, this.startPos) + '**' + this.selectedText + '**' + content.substring(this.endPos, content.length);
 			eventBus.$emit('inlineFormat', content);
 		  	this.showInlineFormat = false;			
+			this.$nextTick(function () {
+				autosize(document.querySelectorAll('textarea'));
+			});
 		},
 		formatItalic()
 		{
@@ -1386,6 +1389,9 @@ bloxeditor.component('inline-formats', {
 			content = content.substring(0, this.startPos) + '_' + this.selectedText + '_' + content.substring(this.endPos, content.length);
 			eventBus.$emit('inlineFormat', content);
 		  	this.showInlineFormat = false;
+			this.$nextTick(function () {
+				autosize(document.querySelectorAll('textarea'));
+			});
 		},
 		formatCode()
 		{
@@ -1393,6 +1399,9 @@ bloxeditor.component('inline-formats', {
 			content = content.substring(0, this.startPos) + '`' + this.selectedText + '`' + content.substring(this.endPos, content.length);
 			eventBus.$emit('inlineFormat', content);
 		  	this.showInlineFormat = false;						
+			this.$nextTick(function () {
+				autosize(document.querySelectorAll('textarea'));
+			});
 		},
 		formatMath()
 		{
@@ -1400,6 +1409,9 @@ bloxeditor.component('inline-formats', {
 			content = content.substring(0, this.startPos) + '$' + this.selectedText + '$' + content.substring(this.endPos, content.length);
 			eventBus.$emit('inlineFormat', content);
 		  	this.showInlineFormat = false;			
+			this.$nextTick(function () {
+				autosize(document.querySelectorAll('textarea'));
+			});
 		},
 		formatLink()
 		{
@@ -1415,6 +1427,9 @@ bloxeditor.component('inline-formats', {
 			eventBus.$emit('inlineFormat', content);
 		  	this.showInlineFormat = false;
 		  	this.link = false;
+			this.$nextTick(function () {
+				autosize.update(document.querySelectorAll('textarea'));
+			});
 		},
 		openLink()
 		{
