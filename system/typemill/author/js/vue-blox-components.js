@@ -1380,7 +1380,7 @@ bloxeditor.component('inline-formats', {
 			eventBus.$emit('inlineFormat', content);
 		  	this.showInlineFormat = false;			
 			this.$nextTick(function () {
-				autosize(document.querySelectorAll('textarea'));
+				autosize.update(document.querySelectorAll('textarea'));
 			});
 		},
 		formatItalic()
@@ -1390,7 +1390,7 @@ bloxeditor.component('inline-formats', {
 			eventBus.$emit('inlineFormat', content);
 		  	this.showInlineFormat = false;
 			this.$nextTick(function () {
-				autosize(document.querySelectorAll('textarea'));
+				autosize.update(document.querySelectorAll('textarea'));
 			});
 		},
 		formatCode()
@@ -1400,7 +1400,7 @@ bloxeditor.component('inline-formats', {
 			eventBus.$emit('inlineFormat', content);
 		  	this.showInlineFormat = false;						
 			this.$nextTick(function () {
-				autosize(document.querySelectorAll('textarea'));
+				autosize.update(document.querySelectorAll('textarea'));
 			});
 		},
 		formatMath()
@@ -1410,7 +1410,7 @@ bloxeditor.component('inline-formats', {
 			eventBus.$emit('inlineFormat', content);
 		  	this.showInlineFormat = false;			
 			this.$nextTick(function () {
-				autosize(document.querySelectorAll('textarea'));
+				autosize.update(document.querySelectorAll('textarea'));
 			});
 		},
 		formatLink()
