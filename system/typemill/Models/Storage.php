@@ -486,6 +486,38 @@ class Storage
 		return false;
 	}
 
+	######################
+	## 	  Timeout 		##
+	######################
+
+    public function timeoutIsOver($name, $timespan)
+    {
+        $location 	= 'cacheFolder';
+        $folder 	= '';
+        $filename 	= 'timer.yaml';
+
+        // Get current timers from the YAML file, if it exists
+        $timers = $this->getYaml($location, $folder, $filename) ?: [];
+
+        $currentTime = time();
+        $timeThreshold = $currentTime - $timespan;
+
+        # Check if the name exists and if the timestamp is older than the current time minus the timespan
+ 		if (!isset($timers[$name]) || !is_numeric($timers[$name]) || $timers[$name] <= $timeThreshold)
+        {
+            # If the name doesn't exist or the timestamp is older, update the timer
+            $timers[$name] = $currentTime;
+
+            # Update the YAML file with the new or updated timer
+            $this->updateYaml($location, $folder, $filename, $timers);
+
+            return true;
+        }
+
+        # If the name exists and the timestamp is not older, return false
+        return false;
+    }
+
 
 	##################
 	## 	  IMAGES 	##

@@ -12,10 +12,10 @@ use Psr\Http\Message\ResponseInterface as Response;
 class demo extends Plugin
 {
 	# you can add a licence check here
-	public static function setPremiumLicence()
+	public static function setPremiumLicense()
 	{
-		return false;
-		# return 'MAKER';
+#		return false;
+		return 'MAKER';
 		# return 'BUSINESS';
 	}
 

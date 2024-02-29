@@ -55,8 +55,10 @@ class ControllerApiSystemExtensions extends Controller
 			if(isset($definitions['license']) && in_array($definitions['license'], ['MAKER', 'BUSINESS']))
 			{
 				$license 		= new License();
+
+				# checks if license is valid and returns scope
 				$licenseScope 	= $license->getLicenseScope($this->c->get('urlinfo'));
-				
+
 				if(!isset($licenseScope[$definitions['license']]))
 				{
 					$response->getBody()->write(json_encode([

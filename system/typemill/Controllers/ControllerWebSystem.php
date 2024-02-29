@@ -184,9 +184,12 @@ class ControllerWebSystem extends Controller
 									$parser 	= $this->routeParser
 								);
 
+		$message 		= false;
 		$license 		= new License();
 		$licensefields 	= $license->getLicenseFields();
-		$licensedata 	= $license->getLicenseData($this->c->get('urlinfo'));
+		$licensedata 	= $license->getLicenseFile();
+
+		# disable input fields if license data exist (readonly)
 		if($licensedata)
 		{
 			foreach($licensefields as $key => $licensefield)
@@ -195,14 +198,24 @@ class ControllerWebSystem extends Controller
 			}
 		}
 
+		# check license data 
+		$licensecheck 	= $license->checkLicense($licensedata, $this->c->get('urlinfo'));
+		if(!$licensecheck)
+		{
+			$message 	= $license->getMessage();
+		}
+
+		unset($licensedata['signature']);
+
 	    return $this->c->get('view')->render($response, 'system/license.twig', [
 			'settings' 			=> $this->settings,
 			'darkmode'			=> $request->getAttribute('c_darkmode'),
 			'mainnavi'			=> $mainNavigation,
 			'jsdata' 			=> [
-										'systemnavi'		=> $systemNavigation,
+										'systemnavi'	=> $systemNavigation,
 										'licensedata' 	=> $licensedata,
 										'licensefields'	=> $licensefields,
+										'message'		=> $message,
 										'labels'		=> $this->c->get('translations'),
 										'urlinfo'		=> $this->c->get('urlinfo')							]
 	    ]);

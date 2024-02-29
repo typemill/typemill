@@ -86,14 +86,12 @@ class Plugins
 			return $premiumList['className'];
 		}
 
-		$licenseType = false;
-
 		if(method_exists($className, 'setPremiumLicense'))
 		{
-			$licenseType = $className::setPremiumLicense();			
+			return $className::setPremiumLicense();			
 		}
 		
-		return $licenseType;
+		return false;
 	}
 	
 	private static function checkRouteArray($routes,$route)

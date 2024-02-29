@@ -3,7 +3,7 @@ version: 1.0.0
 description: Demonstrates the power of Typemill Plugins
 author: Sebastian Schürmanns
 homepage: http://typemill.net
-license: MIT
+license: MAKER
 dependencies: 
   - register
   - mail

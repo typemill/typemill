@@ -135,10 +135,12 @@ $timer['container'] = microtime(true);
 $dispatcher = new EventDispatcher();
 
 /****************************
-*    	Check Licence					*
+*    	Check Licence		*
 ****************************/
 
 $license = new License();
+
+# checks if license is valid and returns scope
 $settings['license'] = $license->getLicenseScope($urlinfo);
 
 /****************************

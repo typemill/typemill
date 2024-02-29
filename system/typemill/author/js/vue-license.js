@@ -1,9 +1,8 @@
 const app = Vue.createApp({
 	template: `<Transition name="initial" appear>
-						<div v-if="licenseData.license">
+						<div v-if="licenseData">
 							<div>
-								<p v-if="!licenseData.datecheck" class="bg-rose-500 text-white p-2 text-center">Your license is out of date. Please check if the payments for your subscription were successfull.</p>
-								<p v-else-if="!licenseData.domaincheck" class="bg-rose-500 text-white p-2 text-center">Your license is only valid for the domain listed in your license data below.</p>
+								<p v-if="licensemessage" class="bg-rose-500 text-white p-2 text-center">{{ licensemessage }}</p>
 								<p v-else>Congratulations! Your license is active and you can enjoy all features until you cancel your subscription. You can manage your subscription at <a class="text-teal-500" href="https://paddle.net/">paddle.net</a></p>
 							</div>
 							<div class="flex flex-wrap justify-between">
@@ -38,8 +37,7 @@ const app = Vue.createApp({
 									<p class="w-full border p-2 bg-stone-100">{{ licenseData.payed_until }}</p>
 								</div>
 							</div>
-							<p class="py-2 text-lg">The subscription extends automatically for 12 month every time until you cancel your subscription.</p>
-							<p class="py-2 text-lg">For testing, you can also use the domains 'localhost', '127.0.0.1', and the subdomain 'typemilltest.'.</p>
+							<p class="py-2 text-lg">The subscription extends automatically for 12 month every time until you cancel your subscription. For testing, you can also use the domains 'localhost', '127.0.0.1', and the subdomain 'typemilltest.'.</p>
 						</div>
 						<form v-else class="inline-block w-full">
 
@@ -81,6 +79,8 @@ const app = Vue.createApp({
 		return {
 			licenseData: data.licensedata,
 			formDefinitions: data.licensefields,
+			licensemessage: data.message,
+			licensefound: data.licensefound,
 			formData: {},
 			message: '',
 			messageClass: '',
