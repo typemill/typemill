@@ -69,7 +69,7 @@ class Urlinfo
 	private static function removeStandardPorts($uri)
 	{
 		$port = $uri->getPort();
-		if ($port == 80 || $port == 443)
+		if (!$port || $port == 80 || $port == 443)
 		{
 			$uri = $uri->withPort(null);
 		}

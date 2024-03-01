@@ -196,16 +196,16 @@ class ControllerWebSystem extends Controller
 			{
 				$licensefields[$key]['disabled'] = true;
 			}
-		}
 
-		# check license data 
-		$licensecheck 	= $license->checkLicense($licensedata, $this->c->get('urlinfo'));
-		if(!$licensecheck)
-		{
-			$message 	= $license->getMessage();
-		}
+			# check license data 
+			$licensecheck 	= $license->checkLicense($licensedata, $this->c->get('urlinfo'));
+			if(!$licensecheck)
+			{
+				$message 	= $license->getMessage();
+			}
 
-		unset($licensedata['signature']);
+			unset($licensedata['signature']);
+		}
 
 	    return $this->c->get('view')->render($response, 'system/license.twig', [
 			'settings' 			=> $this->settings,

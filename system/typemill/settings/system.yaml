@@ -239,6 +239,9 @@ fieldsetdeveloper:
     trustedproxies:
       type: text
       label: "Trusted IPs for proxies (comma separated)"
+    fqdn:
+      type: text
+      label: "If your proxy does not work, try to add the base-url of your proxy here like https://mywebsite.com."
     headersoff:
       type: checkbox
       label: "Disable Custom Headers"

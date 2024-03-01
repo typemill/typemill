@@ -119,6 +119,21 @@ $app->setBasePath($basepath);
 
 $uriFactory 			= new UriFactory();
 $uri 					= $uriFactory->createFromGlobals($_SERVER);
+
+if(
+	isset($settings['proxy']) && 
+	$settings['proxy'] && 
+	isset($_SERVER['HTTP_X_FORWARDED_HOST']) &&
+	isset($settings['fqdn']) &&
+	$settings['fqdn'] != ''
+)
+{
+	$fqdn = $uriFactory->createUri($settings['fqdn']);
+	$uri = $uri->withScheme($fqdn->getScheme())
+           		->withHost($fqdn->getHost())
+           		->withPort($fqdn->getPort());	
+}
+
 $urlinfo 				= Urlinfo::getUrlInfo($basepath, $uri, $settings);
 
 $timer['settings'] = microtime(true);
