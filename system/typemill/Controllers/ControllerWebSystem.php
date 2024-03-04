@@ -198,7 +198,7 @@ class ControllerWebSystem extends Controller
 			}
 
 			# check license data 
-			$licensecheck 	= $license->checkLicense($licensedata, $this->c->get('urlinfo'));
+			$licensecheck 	= $license->checkLicense($licensedata, $this->c->get('urlinfo'), $forceUpdateCheck = true);
 			if(!$licensecheck)
 			{
 				$message 	= $license->getMessage();

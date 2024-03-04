@@ -69,7 +69,7 @@ class License
 	}
 
 	# check the local licence file (like pem or pub)
-	public function checkLicense($licensedata, array $urlinfo)
+	public function checkLicense($licensedata, array $urlinfo, $forceUpdateCheck = NULL)
 	{
 		if(!isset(
 			$licensedata['license'],
@@ -111,7 +111,7 @@ class License
 	    if(!$subscriptionPaid) 
 	    {
 			$storage = new StorageWrapper('\Typemill\Models\Storage');
-	    	if(!$storage->timeoutIsOver('licenseupdate', 3600))
+	    	if(!$forceUpdateCheck && !$storage->timeoutIsOver('licenseupdate', 3600))
 	    	{
 				$this->message = Translations::translate('The subscription period has not been paid yet. We will check it every 60 minutes.') . $this->message;
 
@@ -121,7 +121,7 @@ class License
 	    	$update = $this->updateLicense($licensedata);
 	    	if(!$update)
 	    	{
-		    	$this->message = Translations::translate('We tried to check your subscription payment but it failed. Answer from server: ') . $this->message;
+		    	$this->message = Translations::translate('The subscription period has not been paid yet and we got an error. ') . $this->message;
 	
 	    		return false;
 	    	}
@@ -256,7 +256,7 @@ class License
 			{
 				$message 	= $signedLicense['code'];
 			}
-			$this->message 	= Translations::translate('the license server responded with: ') . $message;
+			$this->message 	= Translations::translate('Answer from license server: ') . $message;
 
 			return false;
 		}
@@ -290,7 +290,9 @@ class License
 			'license'		=> $data['license'], 
 			'email'			=> $this->hashMail($readableMail),
 			'domain'		=> $data['domain'],
-			'signature'		=> $data['signature']
+			'signature'		=> $data['signature'],
+			'plan'			=> $data['plan'],
+			'payed_until' 	=> $data['payed_until']
 		];
 
 		$postdata 			= http_build_query($licensedata);
@@ -325,7 +327,8 @@ class License
 				$message 	= $signedLicense['code'];
 			}
 
-			$this->message 	= Translations::translate('the license server responded with: ') . $message;
+			# problem: if admin is on license website, then the first check has already been done on start in system and it has set timer, so the admin will never see this message from server.
+			$this->message 	= Translations::translate('Answer from license server: ') . $message;
 
 			return false;
 		}
