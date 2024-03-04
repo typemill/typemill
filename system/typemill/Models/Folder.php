@@ -230,18 +230,26 @@ class Folder
 		{
 			$firstKey 		= array_key_first($folder); 
 			$file 			= $folder[$firstKey];
+			if(is_array($file))
+			{
+				# first item in folder is folder again, so return pages
+				return 'pages';
+			}
+
 			$nameParts 		= $this->getStringParts($file);
 			$order 			= count($nameParts) > 1 ? array_shift($nameParts) : NULL;
-			$order 			= substr($order, 0, 7);
+
+			if($order && strlen($order > 8))
+			{
+				$order 			= substr($order, 0, 7);
+				
+				if(\DateTime::createFromFormat('Ymd', $order) !== FALSE)
+				{
+					return "posts";
+				}
+			}
 			
-			if(\DateTime::createFromFormat('Ymd', $order) !== FALSE)
-			{
-				return "posts";
-			}
-			else
-			{
-				return "pages";
-			}
+			return "pages";
 		}
 	}
 			
