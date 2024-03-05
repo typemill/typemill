@@ -49,9 +49,12 @@ class ControllerApiSystemLicense extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
+		$licensedata = $license->getLicenseFile();
+		unset($licensedata['signature']);
+
 		$response->getBody()->write(json_encode([
 			'message' => Translations::translate('Licence has been stored'),
-			'licensedata' => $license->getLicenseData($this->c->get('urlinfo'))
+			'licensedata' => $licensedata
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
