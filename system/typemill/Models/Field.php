@@ -7,6 +7,8 @@ class Field
 	private $type;
 	
 	private $label;	
+
+	private $checkboxLabel;
 	
 	private $name; 
 	
@@ -70,11 +72,17 @@ class Field
 									'cols',
 									'min',
 									'max',
-									'class',
+									'css',
 									'pattern',
 									'steps'
 								);
+
+	private $helperName;
 	
+	private $help;
+	private $description;
+	private $fieldsize;
+
 	/* defines additional data, that are allowed for fields */
 	private $helpers			= array(
 									'help',
@@ -157,7 +165,7 @@ class Field
 	{
 		return $this->content;
 	}
-	
+
 	private function setOptions(array $options)
 	{
 		foreach($options as $key => $value)
@@ -285,5 +293,5 @@ class Field
 			return $this->$helperName;
 		}
 		return false;
-	}	
+	}
 }

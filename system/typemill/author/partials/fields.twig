@@ -1,4 +1,4 @@
-<div class="{{ class ? class : 'cardField' }}{{ errors[field.name] ? ' errorfield' : '' }}{{field.fieldsize ? ' ' ~ field.fieldsize : ''}}">
+<div class="{{ field.getAttributeValue('css') ? field.getAttributeValue('css') : 'tmField' }}{{ errors[field.name] ? ' errorfield' : '' }}{{field.fieldsize ? ' ' ~ field.fieldsize : ''}}">
 	
 	<label for="{{ itemName }}[{{ field.name }}]">{{ translate( field.getLabel() ) }}
 		{% if field.getAttribute('required') %}<strong><abbr title="{{ translate('required') }}">*</abbr></strong>{% endif %}

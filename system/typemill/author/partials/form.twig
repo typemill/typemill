@@ -5,13 +5,13 @@
 {% endif %}
 <form method="POST" action="{{ url_for(routename) }}" enctype="multipart/form-data">
 
-	<fieldset class="card{{ errors ? ' errors' : '' }}">
+	<fieldset class="tmFieldset{{ errors ? ' errors' : '' }}">
 
 		{% for field in fields %}
 				
 			{% if field.type == 'fieldset' %}
 
-				<fieldset class="subfield">
+				<fieldset class="tmSubfield">
 					<legend>{{ translate(field.legend) }}</legend>
 					{% for field in field.fields %}
 					
@@ -55,9 +55,8 @@
 		
 		<style>
 			.personal-mail{ display:none }
-			.error{ margin-top:4px; background:red; color:#FFF; padding: 2px; font-size:.9rem;}
-			.errorfield label{ color:red; }
-			.errorfield input{ outline: 1px solid red; }
+			.error{ margin-top:4px; background:rgb(244 63 94); color:#FFF; padding: 2px; font-size:.9rem;}
+			.errorfield input{ outline: 1px solid rgb(244 63 94); }
 		</style>
 	</fieldset>
 </form>
