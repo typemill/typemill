@@ -7,6 +7,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Typemill\Models\Validation;
 use Typemill\Models\User;
 use Typemill\Static\Translations;
+use Typemill\Static\Session;
 
 class ControllerApiSystemUsers extends Controller
 {
@@ -351,13 +352,13 @@ class ControllerApiSystemUsers extends Controller
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);						
 		}
-/*
+
 		# if user deleted his own account
 		if(isset($_SESSION['user']) && $_SESSION['user'] == $username)
 		{
-			session_destroy();		
+			Session::stopSession();
 		}
-*/
+
 		$response->getBody()->write(json_encode([
 			'message' 	=> Translations::translate('User deleted.'),
 		]));

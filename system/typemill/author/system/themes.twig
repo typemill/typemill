@@ -3,7 +3,12 @@
 
 {% block content %}
 	
-	<h1 class="text-3xl font-bold mb-4">{{ translate('Themes') }} </h1>
+	<div class="flex justify-between">	
+		<h1 class="text-3xl font-bold mb-4">{{ translate('Themes') }} </h1>
+		<div class="text-center">
+			<a href="https://themes.typemill.net" target="_blank" class="p-3 border border-teal-500 hover:bg-teal-500 hover:text-white transition duration-100">{{ translate('Visit the Theme Directory') }}</a>
+		</div>
+	</div>
 
 	<div id="themes" v-cloak></div>
 

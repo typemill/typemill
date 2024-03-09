@@ -26,7 +26,11 @@ app.component('tab-demo', {
 							</component>
 						</div>
 						<div class="my-5">
-							<div :class="messageClass" class="block w-full h-8 px-3 py-1 my-1 text-white transition duration-100">{{ $filters.translate(message) }}</div>
+							<div class="block w-full h-8 my-1">
+								<transition name="fade">
+									<div v-if="message" :class="messageClass" class="text-white px-3 py-1  transition duration-100">{{ $filters.translate(message) }}</div>
+								</transition>
+							</div>
 							<input type="submit" @click.prevent="saveInput()" :value="$filters.translate('save')" class="w-full p-3 my-1 bg-stone-700 dark:bg-stone-600 hover:bg-stone-900 hover:dark:bg-stone-900 text-white cursor-pointer transition duration-100">
 						</div>						
 			  		</form>

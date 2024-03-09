@@ -2,8 +2,13 @@
 {% block title %}{{ translate('Plugin Settings') }}{% endblock %}
 
 {% block content %}
-	
-	<h1 class="text-3xl font-bold mb-4">{{ translate('Plugins') }} </h1>
+
+	<div class="flex justify-between">	
+		<h1 class="text-3xl font-bold mb-4">{{ translate('Plugins') }}</h1>
+		<div class="text-center">
+			<a href="https://plugins.typemill.net" target="_blank" class="p-3 border border-teal-500 hover:bg-teal-500 hover:text-white transition duration-100">{{ translate('Visit the Plugin Directory') }}</a>
+		</div>
+	</div>
 
 	<div id="plugins" v-cloak></div>
 
