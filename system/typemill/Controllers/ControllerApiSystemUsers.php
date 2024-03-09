@@ -354,13 +354,14 @@ class ControllerApiSystemUsers extends Controller
 		}
 
 		# if user deleted his own account
-		if(isset($_SESSION['user']) && $_SESSION['user'] == $username)
+		if($username == $request->getAttribute('c_username'))
 		{
 			Session::stopSession();
 		}
 
 		$response->getBody()->write(json_encode([
 			'message' 	=> Translations::translate('User deleted.'),
+			'logout' 	=> true
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json');
