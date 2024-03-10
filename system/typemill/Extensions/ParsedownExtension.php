@@ -758,7 +758,7 @@ class ParsedownExtension extends \ParsedownExtra
 
     protected function blockShortcode($Line)
     {
-        if ($this->dispatcher && preg_match('/^\[:.*:\]/', $Line['text'], $matches))
+        if ($this->dispatcher && preg_match('/^\[:.*?:\]/', $Line['text'], $matches))
         {
             if(is_array($this->allowedShortcodes) && empty($this->allowedShortcodes))
             {
@@ -790,19 +790,29 @@ class ParsedownExtension extends \ParsedownExtra
             {
                 $html = '<p class="shortcode-alert">No shortcode found.</p>';
             }
+            
+            // Handle the inline content after the block shortcode.
+            $inlineContent = trim(substr($Line['text'], strlen($matches[0])));
+            $inlineElements = '';
+            if($inlineContent && $inlineContent != '')
+            {
+                # make sure inline-text with more shortcodes are properly parsed after an opening block-element 
+                $inlineElements = $this->line($inlineContent);
+            }
 
-            return array(
-                'element' => array(
-                    'rawHtml' => $html,
+            $Block = [
+                'element' => [
+                    'rawHtml' => $html . $inlineElements,
                     'allowRawHtmlInSafeMode' => true,
-                ),
+                ],
                 'extent' => strlen($matches[0]),
-            );
+                'complete' => true, // Close the block at the end of the line.
+            ];
+
+            return $Block;
         }
-        else
-        {
-            return;
-        }
+
+        return;
     }
 
     protected function inlineShortcode($Excerpt)
@@ -855,6 +865,7 @@ class ParsedownExtension extends \ParsedownExtra
             return;
         }
     }
+
 
     protected $allowedShortcodes = false;
 
