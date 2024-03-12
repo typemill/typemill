@@ -249,6 +249,8 @@ bloxeditor.component('content-block', {
 		},
 		deleteBlock()
 		{
+			eventBus.$emit('closeComponents');
+
 			this.load = true;
 
 			var self = this;
