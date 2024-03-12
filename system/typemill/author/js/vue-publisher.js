@@ -62,6 +62,7 @@ const publisher = Vue.createApp({
 							v-if="visual" 
 							:href="rawUrl" 
 							class="px-4 py-2 border border-stone-200 bg-stone-50 hover:bg-stone-700 hover:text-white transition ml-1" 
+							@click.prevent="checkUnsafedContent(rawUrl)" 
 							>
 							{{ $filters.translate('raw') }}
 						</a>
@@ -69,7 +70,7 @@ const publisher = Vue.createApp({
 							v-if="raw" 
 							:href="visualUrl"
 							class="px-4 py-2 border border-stone-200 bg-stone-50 hover:bg-stone-700 hover:text-white transition ml-1" 
-							@click="checkUnsafedContent(event)" 
+							@click.prevent="checkChanges(visualUrl)" 
 							>
 							{{ $filters.translate('visual') }}
 						</a>
@@ -130,6 +131,22 @@ const publisher = Vue.createApp({
 						</template>
 					</modal>
 				</transition>
+				<transition name="fade">
+					<modal v-if="showModal == 'unsaved'" @close="showModal = false">
+						<template #header>
+							<h3>{{ $filters.translate('Unsaved Changes') }}</h3>
+						</template>
+						<template #body>
+							<p>
+								{{ $filters.translate('This page has unsaved changes') }}. 
+								{{ $filters.translate('If you want to keep your changes, then click on cancel and save your changes before you switch to the visual editor.') }}.
+							</p>
+						</template>
+						<template #button>
+							<button @click="switchToVisual(visualUrl)" class="focus:outline-none px-4 p-3 mr-3 text-white bg-rose-500 hover:bg-rose-700 transition duration-100">{{ $filters.translate('switch to visual') }}</button>
+						</template>
+					</modal>
+				</transition>
 			</div>`,
 	data() {
 		return {
@@ -139,7 +156,8 @@ const publisher = Vue.createApp({
 			showModal: false,
 			message: false,
 			messageClass: '',
-			nochanges: true,
+			nochanges: true,  /* for raw editor */
+			unsafedcontent: false, /* for visual editor */
 		}
 	},
 	components: {
@@ -170,6 +188,13 @@ const publisher = Vue.createApp({
 
 		eventBus.$on('cleardraft', this.unmarkChanges);
 
+		eventBus.$on('lockcontent', content => {
+			this.unsafedcontent = true;
+		});
+
+		eventBus.$on('unlockcontent', content => {
+			this.unsafedcontent = false;
+		});
 	},
 	computed: {
 		isPublished()
@@ -391,5 +416,32 @@ const publisher = Vue.createApp({
 				}
 			});
 		},
+		checkUnsafedContent(url)
+		{
+			if(this.unsafedcontent)
+			{
+				this.message = 'please save your changes before you switch the editor.';
+				this.messageClass = "bg-rose-500";
+			}
+			else
+			{
+				window.location.href = url;
+			}
+		},
+		checkChanges(url)
+		{
+			if(!this.nochanges)
+			{
+				this.showModal = 'unsaved';
+			}
+			else
+			{
+				window.location.href = url;
+			}
+		},
+		switchToVisual(url)
+		{
+			window.location.href = url;			
+		}
 	},
 })
