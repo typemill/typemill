@@ -444,6 +444,15 @@ class ControllerApiAuthorArticle extends Controller
 	    $draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $langattr);
 	    if($params['folder_id'] == 'root')
 	    {
+   			if($params['item_name'] == 'tm')
+   			{
+				$response->getBody()->write(json_encode([
+					'message' 	=> Translations::translate('You cannot create an item with the slug /tm in the root folder because this is the system path.')
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(402);
+   			}
+
 			$folderContent		= $draftNavigation;
 		}
 		else
