@@ -72,7 +72,6 @@ class ControllerApiImage extends Controller
 	{
 		$url 			= $request->getQueryParams()['url'] ?? false;
 		$path 			= $request->getQueryParams()['path'] ?? false;
-		$pagemedia 		= [];
 		
 		$storage 		= new StorageWrapper('\Typemill\Models\Storage');
 
