@@ -1045,7 +1045,7 @@ bloxeditor.component('definition-component', {
 							  		  		<div class="flex mb-2" v-for="(description,ddindex) in element.descriptions">
 								  		  		<svg class="icon icon-dots-two-vertical mt-3"><use xlink:href="#icon-dots-two-vertical"></use></svg> 
 							  					<textarea class="flex-grow p-2 focus:outline-none bg-stone-200 text-stone-900" :placeholder="description" v-html="element.descriptions[ddindex]" :disabled="disabled" @input="updatedescription($event, index, ddindex)" @keydown.13.prevent="enter" @blur="updateMarkdown"></textarea>
-								  				<button title="delete description" class="text-white bg-stone-700 w-6 h-6 text-xs hover:bg-rose-500" @click.prevent="deleteItem($event,index,ddindex)">
+								  				<button title="{{ $filters.translate('delete description') }}" class="text-white bg-stone-700 w-6 h-6 text-xs hover:bg-rose-500" @click.prevent="deleteItem($event,index,ddindex)">
 								  					<svg class="icon icon-minus">
 								  						<use xlink:href="#icon-minus"></use>
 								  					</svg>
@@ -1056,7 +1056,7 @@ bloxeditor.component('definition-component', {
 								  					<use xlink:href="#icon-plus"></use>
 								  				</svg>
 								  			</button>
-								  			<span class="text-sm">Add description</span>
+								  			<span class="text-sm">{{ $filters.translate('Add description') }}</span>
 						  				</div>
 									</div>
     							</div>
@@ -1458,9 +1458,9 @@ bloxeditor.component('image-component', {
 				<div class="flex">
 					<div class="imageupload relative w-1/2 border-r border-dotted border-stone-700">
 						<input type="file" name="image" accept="image/*" class="opacity-0 w-full h-24 absolute cursor-pointer z-10" @change="onFileChange( $event )" />
-						<p class="text-center p-6"><svg class="icon icon-upload"><use xlink:href="#icon-upload"></use></svg> drag a picture or click to select</p>
+						<p class="text-center p-6"><svg class="icon icon-upload"><use xlink:href="#icon-upload"></use></svg> {{ $filters.translate('drag a picture or click to select') }}</p>
 					</div>
-					<button class="imageselect w-1/2 text-center p-6" @click.prevent="openmedialib()"><svg class="icon icon-image"><use xlink:href="#icon-image"></use></svg> select from medialib</button>
+					<button class="imageselect w-1/2 text-center p-6" @click.prevent="openmedialib()"><svg class="icon icon-image"><use xlink:href="#icon-image"></use></svg> {{ $filters.translate('select from medialib') }}</button>
 				</div>
 
 				<Transition name="initial" appear>
@@ -1768,8 +1768,7 @@ bloxeditor.component('image-component', {
 			if(imgattr != '')
 			{
 				imgmarkdown = imgmarkdown + '{' + imgattr.trim() + '}';
-			}
-			
+			}			
 			if(this.imglink != '')
 			{
 				if(this.imglink.length < 101)
@@ -1781,7 +1780,6 @@ bloxeditor.component('image-component', {
 					errors = this.$filters.translate('Maximum size of image link is 100 characters');
 				}
 			}
-
 			if(this.imgcaption != '')
 			{
 				if(this.imgcaption.length < 140)
@@ -1793,7 +1791,6 @@ bloxeditor.component('image-component', {
 					errors = this.$filters.translate('Maximum size of image caption is 140 characters');
 				}
 			}
-
 			if(errors)
 			{
 				eventBus.$emit('publishermessage', errors);
@@ -1883,7 +1880,7 @@ bloxeditor.component('image-component', {
 					eventBus.$emit('publishermessage', message);
 				}
 				else
-				{					
+				{
 					self = this;
 
 					self.load 					= true;
@@ -1897,7 +1894,7 @@ bloxeditor.component('image-component', {
 					reader.onload = function(e) {
 
 						self.imgpreview = e.target.result;
-							
+
 						self.createmarkdown();
 
 					    tmaxios.post('/api/v1/image',{
@@ -1912,6 +1909,12 @@ bloxeditor.component('image-component', {
 
 								self.imgmeta = true;
 								self.imgfile = response.data.name;
+
+								if(self.imgwidth > 820)
+								{
+									self.imgwidth = 820;
+									self.calculateheight();
+								}
 					    })
 					    .catch(function (error)
 					    {
@@ -2115,7 +2118,7 @@ bloxeditor.component('file-component', {
 			}
 			else
 			{
-				errors = 'Maximum size of file-text is 100 characters';
+				errors = this.$filters.translate('Maximum size of file-text is 100 characters');
 				filemarkdown = '[]';
 			}
 			if(this.fileurl != '')
@@ -2126,7 +2129,7 @@ bloxeditor.component('file-component', {
 				}
 				else
 				{
-					errors = 'Maximum size of file link is 100 characters';
+					errors = this.$filters.translate('Maximum size of file link is 100 characters');
 				}
 			}
 			if(this.fileextension != '')

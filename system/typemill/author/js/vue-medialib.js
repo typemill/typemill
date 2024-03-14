@@ -30,7 +30,7 @@ const medialib = {
 
 						<div v-if="showimages && totalPages > 1 && active == 'allImages'">
                             <h3 class="border-b-2 border-stone-700 pt-6 pb-3">Pagination</h3>						
-							<ul class="w-full flex flex-wrap py-3">
+							<ul class="w-full flex flex-wrap py-3 text-xs">
 								<li v-for="num in totalPages" :key="num" class="py-1">
 									<button 
 										@click="goToPage(num)" 
