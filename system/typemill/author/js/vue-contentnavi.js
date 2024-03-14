@@ -203,12 +203,12 @@ navigation.component('navilevel',{
 						</div>
 <!--						<div class="w-1/4 invisible group-hover:visible"> -->
 						<div class="flex">
-							<button title="add a file" @click="addItem('file', parentId)" class="text-stone-500 bg-transparent hover:text-stone-100 hover:bg-stone-700 p-1 border-0 border-stone-50 transition duration-100">
+							<button :title="$filters.translate('add a file')" @click="addItem('file', parentId)" class="text-stone-500 bg-transparent hover:text-stone-100 hover:bg-stone-700 p-1 border-0 border-stone-50 transition duration-100">
 								<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 28">
 									<path fill="currentColor" d="M22.937 5.938c0.578 0.578 1.062 1.734 1.062 2.562v18c0 0.828-0.672 1.5-1.5 1.5h-21c-0.828 0-1.5-0.672-1.5-1.5v-25c0-0.828 0.672-1.5 1.5-1.5h14c0.828 0 1.984 0.484 2.562 1.062zM16 2.125v5.875h5.875c-0.094-0.266-0.234-0.531-0.344-0.641l-4.891-4.891c-0.109-0.109-0.375-0.25-0.641-0.344zM22 26v-16h-6.5c-0.828 0-1.5-0.672-1.5-1.5v-6.5h-12v24h20zM6 12.5c0-0.281 0.219-0.5 0.5-0.5h11c0.281 0 0.5 0.219 0.5 0.5v1c0 0.281-0.219 0.5-0.5 0.5h-11c-0.281 0-0.5-0.219-0.5-0.5v-1zM17.5 16c0.281 0 0.5 0.219 0.5 0.5v1c0 0.281-0.219 0.5-0.5 0.5h-11c-0.281 0-0.5-0.219-0.5-0.5v-1c0-0.281 0.219-0.5 0.5-0.5h11zM17.5 20c0.281 0 0.5 0.219 0.5 0.5v1c0 0.281-0.219 0.5-0.5 0.5h-11c-0.281 0-0.5-0.219-0.5-0.5v-1c0-0.281 0.219-0.5 0.5-0.5h11z"></path>
 								</svg>
 							</button>
-							<button title="add a folder" @click="addItem('folder', parentId)" class="text-stone-500 bg-transparent hover:text-stone-100 hover:bg-stone-700 p-1 border-0 border-stone-50 transition duration-100">
+							<button :title="$filters.translate('add a folder')" @click="addItem('folder', parentId)" class="text-stone-500 bg-transparent hover:text-stone-100 hover:bg-stone-700 p-1 border-0 border-stone-50 transition duration-100">
 								<svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 28">
 									<path fill="currentColor" d="M24 20.5v-11c0-0.828-0.672-1.5-1.5-1.5h-11c-0.828 0-1.5-0.672-1.5-1.5v-1c0-0.828-0.672-1.5-1.5-1.5h-5c-0.828 0-1.5 0.672-1.5 1.5v15c0 0.828 0.672 1.5 1.5 1.5h19c0.828 0 1.5-0.672 1.5-1.5zM26 9.5v11c0 1.922-1.578 3.5-3.5 3.5h-19c-1.922 0-3.5-1.578-3.5-3.5v-15c0-1.922 1.578-3.5 3.5-3.5h5c1.922 0 3.5 1.578 3.5 3.5v0.5h10.5c1.922 0 3.5 1.578 3.5 3.5z"></path>
 								</svg>
@@ -408,7 +408,8 @@ navigation.component('navilevel',{
 
 			if(	this.format.test(this.newItem) ||  !this.newItem || this.newItem.length > 40)
 			{
-				eventBus.$emit('publishermessage', 'Special Characters are not allowed. Length between 1 and 40.');
+				let message = this.$filters.translate('Special Characters are not allowed. Length between 1 and 40.');
+				eventBus.$emit('publishermessage', message);
 				return;
 			}
 			

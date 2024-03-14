@@ -105,7 +105,7 @@ const publisher = Vue.createApp({
 						</template>
 						<template #body>
 							<p>
-								{{ $filters.translate('Do you really want to delete this page') }}? 
+								{{ $filters.translate('Do you really want to delete this page') }} 
 								{{ $filters.translate('Please confirm') }}.
 							</p>
 						</template>

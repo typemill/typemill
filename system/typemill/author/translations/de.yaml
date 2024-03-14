@@ -15,16 +15,19 @@ ACTIVATE_YOUR_LICENSE: 'Aktiviere deine Lizenz.'
 ACTIVATION_FAILED_BECAUSE_YOU_NEED_A_VALID: 'Für die Aktivierung fehlt eine gültige '
 ACTIVE: Aktiv
 ACTUAL_PASSWORD: 'Aktuelles Passwort'
-ADD: hinzufügen
-ADD_DEFINITION: '+ Definition'
+ADD: erstellen
+ADD_A_FILE: 'neue Seite'
+ADD_A_FOLDER: 'neuer Ordner'
+ADD_DEFINITION: 'neue Definition'
+ADD_DESCRIPTION: 'neue Beschreibung '
 ADD_ENTRY: 'Eintrag hinzufügen'
-ADD_LEFT_COLUMN: '+ Linke Spalte'
+ADD_LEFT_COLUMN: 'neue linke Spalte'
 ADD_MORE_URL_SCHEMES_FOR_EXTERNAL_LINKS_E_G_LIKE_DICT_COMMA_SEPARATED_LIST: 'Mehr URL-Schemata für externe Links definieren, z.B. DICT:// (Liste mit Kommas)'
 ADD_NOINDEX_TAG_AND_EXCLUDE_FROM_SITEMAP: 'No-Index-Attribut hinzufügen und von Sitemap ausschließen'
 ADD_ONE_OR_MORE_USERNAMES_SEPARATED_WITH_COMMA: 'Einen oder mehrere Nutzernamen separiert mit Komma'
-ADD_RIGHT_COLUMN: '+ Rechte Spalte'
-ADD_ROW_ABOVE: '+ Reihe oberhalb'
-ADD_ROW_BELOW: '+ Reihe unterhalb'
+ADD_RIGHT_COLUMN: 'neue rechte Spalte'
+ADD_ROW_ABOVE: 'neue Reihe ober'
+ADD_ROW_BELOW: 'neue Reihe unten'
 ALLOWED_DOMAINS_FOR_API_ACCESS_CORS_HEADERS: 'Erlaubte Domains für den API-Zugriff (CORS-Header)'
 ALLOWED_DOMAINS_FOR_CONTENT_ON_TYPEMILL_CSP_HEADERS: 'Erlaubte Domains für Inhalte auf Typemill (CSP-Headers)'
 ALLOW_SVG: 'SVG erlauben'
@@ -35,6 +38,7 @@ ALT_TEXT: Alternativ-Text
 ALWAYS_SHOW: 'Immer anzeigen'
 AND_YOU_CANNOT: ' und du kannst nicht '
 AND_YOU_MIGHT_FIND_THE_FOLLOWING_TIPS_HELPFUL: 'Und die folgenden Hinweise sind vielleicht hilfreich'
+ANSWER_FROM_LICENSE_SERVER: 'Antwort vom Lizenz-Server'
 API_ACCESS: API-Zugang
 ARTICLE_DATE: Artikel-Datum
 AUTHOR: Autor
@@ -95,6 +99,7 @@ DEFINITION: Definitions-Liste
 DEFINITION_LIST: Definitions-Liste
 DELETE: löschen
 DELETE_COLUMN: 'Spalte löschen'
+DELETE_DESCRIPTION: 'Beschreibung löschen'
 DELETE_PAGE: 'Seite löschen'
 DELETE_ROW: 'Reihe löschen'
 DELETE_USER: 'Nutzer löschen'
@@ -118,6 +123,7 @@ DO_YOU_REALLY_WANT_TO_DELETE_THIS_PAGE: 'Soll die Seite wirklich gelöscht werde
 DO_YOU_REALLY_WANT_TO_DELETE_THIS_USER: 'Soll der Nutzer wirklich gelöscht werden?'
 DO_YOU_WANT_TO_DISCARD_YOUR_CHANGES_AND_SET_THE_CONTENT_BACK_TO_THE_LIVE_VERSION: 'Sollen die Änderungen wirklich verworfen und der Inhalt auf den Live-Zustand zurückgesetzt werden?'
 DRAFT: Entwurf
+DRAG_A_PICTURE_OR_CLICK_TO_SELECT: 'Klicken oder Bild hierhinziehen'
 DUTCH_FLEMISH: 'Dänsch, Flämisch'
 EDIT: editieren
 EMAIL: E-Mail
@@ -172,10 +178,12 @@ HOMEPAGE: Homepage
 HORIZONTAL_LINE: 'Horizontale Linie'
 HR: 'Horizontale Linie'
 IF_NOT_FILLED_THE_DESCRIPTION_IS_EXTRACTED_FROM_CONTENT: 'Wenn nicht gefüllt, wird die Beschreibung aus dem Inhalt extrahiert.'
+IF_YOUR_PROXY_DOES_NOT_WORK_TRY_TO_ADD_THE_BASE_URL_OF_YOUR_PROXY_HERE_LIKE_HTTPS_MYWEBSITE_COM: 'Falls der Proxy nicht funktioniert, kann hier eine Basis-Url des Proxis wie https://meinproxy.de eingegeben werden.'
 IF_YOU_ADD_A_VALUE_FOR_THE_HEIGHT_THEN_THE_IMAGE_WILL_BE_CROPPED: 'Wenn ein Wert für die Höhe angegeben ist, wird das Bild beschnitten.'
 IF_YOU_DID_NOT_MAKE_THIS_LOGIN_ATTEMPT_PLEASE_RESET_YOUR_PASSWORD_IMMEDIATELY: 'Wenn dieser Anmeldeversuch nicht von dir stammt, dann ändere sofort dein Passwort.'
 IF_YOU_DID_NOT_RECEIVE_AN_EMAIL_WITH_THE_VERIFICATION_CODE_THEN_THE_USERNAME_OR_PASSWORD_YOU_ENTERED_WAS_WRONG_PLEASE_TRY_AGAIN: 'Wenn du keine E-Mail mit einem Verifizierungs-Code erhalten hast, dann war das Passwort oder der Username falsch. Bitte versuche es erneut.'
 IF_YOU_UNPUBLISH_THE_PAGE_THEN_WE_WILL_DELETE_THE_PUBLISHED_VERSION_AND_KEEP_THE_MODIFIED_VERSION: 'Wenn du die Seite depublizierst, bleibt der Entwurf enthalten und die Live-Version wird gelöscht.'
+IF_YOU_WANT_TO_KEEP_YOUR_CHANGES_THEN_CLICK_ON_CANCEL_AND_SAVE_YOUR_CHANGES_BEFORE_YOU_SWITCH_TO_THE_VISUAL_EDITOR: 'Wenn die Änderungen beibehalten werden sollen, dann abbrechen, speichern und wieder zum Visual Editor wechseln.'
 IMAGE: Bild
 IMAGENAME_IS_MISSING: 'Bild-Name fehlt'
 IMAGES_WITH_THIS_EXTENSION_ARE_NOT_ALLOWED: 'Bilder mit dieser Endung sind nicht erlaubt.'
@@ -202,10 +210,10 @@ LEFT: Links
 LICENCE_HAS_BEEN_STORED: 'Lizenz wurde gespeichert'
 LICENSE: Lizenz
 LICENSE_AND_YOUR_WEBSITE_MUST_RUN_UNDER_THE_DOMAIN_OF_YOUR_LICENSE: '-Lizenz und die Webseite muss unter der Domain von der Lizenz laufen.'
-LICENSE_DATA_INCOMPLETE: 'Lizenz-Daten sind unvollständig'
-LICENSE_DATA_INVALID: 'Lizenz-Daten sind ungültig'
+LICENSE_DATA_ARE_INCOMPLETE: 'Die Linzenz-Angaben sind unvollständig.'
 LICENSE_DATA_MISSING: 'Lizenz-Daten fehlen'
 LICENSE_REQUIRED: 'Lizenz erforderlich'
+LICENSE_VALIDATION_FAILED: 'Die Validierung der Lizenzdaten schlug fehl.'
 LINK: Link
 LINK_TO_AN_EXTERNAL_PAGE: 'Link zu einer externen Seite'
 LINK_TO_YOUTUBE: 'Link zu YouTube'
@@ -223,6 +231,8 @@ MARKDOWN_IS_MISSING: 'Markdown fehlt'
 MAXIMUM_SIZE_FOR_AN_IMAGE_IS_5_MB_HERO_IMAGES_ARE_NOT_SUPPORTED_BY_ALL_THEMES: 'Maximale Größe für ein Bild ist 5 MB. Hero-Bilder werden nicht von allen Themes unterstützt.'
 MAXIMUM_SIZE_FOR_FILE_UPLOADS_IN_MB: 'Maximale Größe für Dateien in MB'
 MAXIMUM_SIZE_FOR_IMAGE_UPLOADS_IN_MB: 'Maximale Größe für Bilder in MB'
+MAXIMUM_SIZE_OF_FILE_LINK_IS_100_CHARACTERS: ''
+MAXIMUM_SIZE_OF_FILE_TEXT_IS_100_CHARACTERS: ''
 MAXIMUM_SIZE_OF_IMAGE_ALT_TEXT_IS_100_CHARACTERS: 'Maximal 100 Zeichen für Alternativ-Text'
 MAXIMUM_SIZE_OF_IMAGE_CAPTION_IS_140_CHARACTERS: 'Maximal 140 Zeichen für Bild-Unterschrift'
 MAXIMUM_SIZE_OF_IMAGE_CLASS_IS_100_CHARACTERS: 'Maximal 100 Zeichen für Bild-CSS-Klasse'
@@ -244,10 +254,9 @@ NOINDEX: Noindex
 NOTICE: Hinweis
 NO_FILE_FOUND: 'Keine Datei gefunden'
 NO_IMAGE_FOUND: 'Kein Bild gefunden'
-NO_LICENSE_FOUND: 'Keine Lizenz gefunden'
 NO_PROBLEM_YOU_CAN_CREATE_A_NEW_ONE_HERE: 'Kein Problem, erstelle hier ein neues.'
 NUMBERED_LIST: Aufzählung
-OLIST: olist
+OLIST: Auflistung
 ONE_OR_MORE_FILES_COULD_NOT_BE_TRANSFORMED: 'Ein oder mehrere Dateien konnten nicht umgeschrieben werden.'
 ONLY_IMAGES_ARE_ALLOWED: 'Nur Bilder sind erlaubt'
 ONLY_PNG_FORMAT_WILL_WORK: 'Nur PNG-Formate funktionieren'
@@ -289,7 +298,7 @@ REPEAT_PASSWORD: 'Passwort wiederholen'
 REPLY_TO_OPTIONAL: 'Antwort-Adresse (optional)'
 REQUIRED: erforderlich
 RESTRICTION_NOTICE_USE_MARKDOWN: 'Einschränkungs-Hinweis (Markdown verwendbar)'
-RIGHT: Recht
+RIGHT: Rechts
 ROLE: Rolle
 RUSSIAN: Russisch
 SAVE: speichern
@@ -310,10 +319,12 @@ SLUG: Slug
 SOMEONE_TRIED_TO_LOG_IN_TO_YOUR_TYPEMILL_WEBSITE_AND_WE_WANT_TO_MAKE_SURE_IT_IS_YOU_ENTER_THE_FOLLOWING_VERIFICATION_CODE_TO_FINISH_YOUR_LOGIN_THE_CODE_WILL_BE_VALID_FOR_5_MINUTES: 'Jemand hat versucht sich bei deiner Typemill-Webseite einzuloggen und wir möchten sicherstellen, dass du es warst. Gib den folgenden Verifizierungs-Code ein, um die Anmeldung abzuschließen. Der Code ist fünf Minuten lang gültig.'
 SOMETHING_WENT_WRONG_PLEASE_REFRESH_THE_PAGE_AND_CHECK_IF_ALL_FOLDERS_AND_FILES_ARE_WRITABLE: 'Etwas ist schief gegangen, bitte lade die Seite neu und prüfe, ob die Ordner und Dateien beschreibbar sind.'
 SOMETHING_WENT_WRONG_THE_INPUT_IS_NOT_VALID: 'Etwas ist schief gegangen, die Eingaben waren ungültig.'
+SPECIAL_CHARACTERS_ARE_NOT_ALLOWED_LENGTH_BETWEEN_1_AND_40: 'Sonderzeichen sind nicht erlaubt, Länge zwischen 1 und 40 Zeichen.'
 STANDARD_EDITOR_MODE: 'Standard Editor-Modus'
 STANDARD_HEIGHT_FOR_LIVE_PICTURES: 'Standard-Höhe für Live-Bilder'
 STANDARD_WIDTH_FOR_LIVE_PICTURES: 'Standard-Breite für Live-Bilder'
 SUBMIT_THE_URL_ABOVE_IN_GOOGLE_SEARCH_CONSOLE_TO_SUPPORT_INDEXING: 'Trag die URL oben in der Google Search Console zur Unterstützung der Indexierung ein.'
+SWITCH_TO_VISUAL: 'Zum Visual Editor wechseln'
 SYSTEM: System
 SYSTEMCHECK: Systemprüfung
 SYSTEM_SETTINGS: System-Einstellungen
@@ -337,7 +348,7 @@ THE_FOLDER_CONTAINS_PUBLISHED_PAGES_PLEASE_UNPUBLISH_OR_DELETE_THEM_FIRST: 'Der 
 THE_FOLLOWING_REQUIREMENTS_FOR_THE_INSTALLATION_ARE_MISSING: 'Die folgenden Voraussetzungen für die Installation fehlen'
 THE_FROM_MAIL_IS_MISSING_OR_IT_IS_NOT_A_VALID_E_MAIL_ADDRESS: 'Die Absender-Adresse fehlt oder es ist keine gültige E-Mail-Adresse.'
 THE_ID_OF_THE_CONTENT_BLOCK_IS_WRONG: 'Die ID des Inhalts-Blocks ist falsch.'
-THE_LICENSE_SERVER_RESPONDED_WITH: 'Der Lizenz-Server hat geantwortet mit: '
+THE_LICENSE_DATA_ARE_INVALID: 'Die Lizenzdaten sind ungültig.'
 THE_LINK_TO_RECOVER_THE_PASSWORD_WAS_TOO_OLD_PLEASE_CREATE_A_NEW_ONE: 'Der Link zur Passwort-Vergabe ist abgelaufen. Bitte erstelle einen neuen Link.'
 THE_MAXIMUM_FILE_SIZE_MIGHT_BE_LIMITED_BY_YOUR_SERVER_SETTINGS: 'Die maximale Datei-Größe könnte durch die Server-Einstellungen begrenzt sein.'
 THE_MAXIMUM_IMAGE_SIZE_MIGHT_BE_LIMITED_BY_YOUR_SERVER_SETTINGS: 'Die maximale Bild-Größe könnte durch die Server-Einstellungen begrenzt sein.'
@@ -346,16 +357,19 @@ THE_PLUGIN_OR_THEMES_WAS_NOT_FOUND: 'Das Plugin oder Theme wurde nicht gefunden.
 THE_RECOVER_LINK_WILL_BE_ACTIVE_FOR_24_HOURS: 'Der Wiederherstellungs-Link ist für 24 Stunden aktiv.'
 THE_REQUESTED_FILETYPE_DOES_NOT_EXIST: 'Der angeforderte Datei-Typ existiert nicht.'
 THE_REQUESTED_FILE_DOES_NOT_EXIST: 'Die angeforderte Datei existiert nicht.'
-THE_SUBSCRIPTION_PERIOD_IS_NOT_PAID_YET: 'Die Abo-Periode ist noch nicht bezahlt.'
+THE_SUBSCRIPTION_PERIOD_HAS_NOT_BEEN_PAID_YET_AND_WE_GOT_AN_ERROR: 'Die Abo-Periode wurde noch nicht bezahlt und wir haben einen Fehler erhalten.'
+THE_SUBSCRIPTION_PERIOD_HAS_NOT_BEEN_PAID_YET_WE_WILL_CHECK_IT_EVERY_60_MINUTES: 'Die Abo-Periode wurde noch nicht bezahlt. Wir prüfen die Zahlung alle 60 Minuten.'
 THE_TESTMAIL_HAS_BEEN_SEND_PLEASE_CHECK_YOUR_INBOX_AND_YOUR_SPAM_FOLDER_TO_VARIFY_THAT_YOU_RECEIVED_THE_MAIL: 'Die Test-Email wurde verschickt. Prüfe deinen Eingangs- und den Spamordner um sicherzustellen, dass die E-Mails zugestellt werden.'
 THE_VERIFICATION_WAS_WRONG_OR_OUTDATED_PLEASE_START_AGAIN: 'Die Verifizierung war falsch oder ist abgelaufen. Bitte starte eine neue Anmeldung.'
 THE_VERSION_CHECK_FAILED_BECAUSE_OF_INVALID_PARAMETERS: 'Die Versions-Prüfung ist wegen ungültiger Parameter fehlgeschlagen.'
+THE_WEBSITE_IS_RUNNING_NOT_UNDER_THE_DOMAIN_OF_YOUR_LICENSE: 'Die Webseite läuft nicht unter der Domain, die in der Lizenz angegeben wurde.'
 THIS: Dieses
 THIS_FIELD_IS_NOT_DEFINED: 'Dieses Feld ist nicht definiert.'
 THIS_FOLDER_CONTAINS: 'Dieser Ordner enthält: '
 THIS_IS_A_TESTMAIL_FROM_TYPEMILL_AND_IF_YOU_READ_THIS_E_MAIL_THEN_EVERYTHING_WORKS_FINE: 'Dies ist eine Test-Email von Typemill und wenn dich diese Zeilen erreichen, ist alles in Ordnung.'
 THIS_PAGE: 'Diese Seite'
 THIS_PAGE_HAS_BEEN_MODIFIED: 'Diese Seite wurde bearbeitet'
+THIS_PAGE_HAS_UNSAVED_CHANGES: 'Die Seite enthält ungespeicherte Änderungen.'
 TITLE: Titel
 TOC: IHV
 TO_DOWNLOAD_THIS_FILE_YOU_NEED_TO_BE_AUTHENTICATED_WITH_THE_ROLE: 'Der Datei-Download ist nur mit der folgenden Rolle möglich: '
@@ -365,9 +379,10 @@ TRUSTED_IPS_FOR_PROXIES_COMMA_SEPARATED: 'Vertrauenswürdige IPs für Proxies (m
 TRY_TO_CONVERT_UPLOADED_IMAGES_INTO_THE_WEBP_FORMAT_FOR_BETTER_PERFORMANCE: 'Versuche, für eine bessere Performance die hochgelandenen Bilder in das WebP-Format zu konvertieren.'
 TWIG_CACHE: 'Twig Cache'
 TYPE_OF_REFERENCE: 'Art der Referenz'
-ULIST: ulist
-UNPUBLISH: Depublizieren
+ULIST: Auflistung
+UNPUBLISH: Depubl.
 UNPUBLISH_PAGE: 'Seite depublizieren'
+UNSAVED_CHANGES: 'Ungespeicherte Änderungen'
 UPLOAD: hochladen
 UPLOAD_AN_IMAGE: 'Bild hochladen'
 UPLOAD_FILE: 'Datei hochladen'
@@ -391,14 +406,15 @@ USER_NOT_FOUND: 'Nutzer nicht gefunden'
 USE_A_STRONG_AND_INDIVIDUAL_PASSWORD_FOR_EVERY_ACCOUNT: 'Verwende ein starkes und individuelles Passwort für jeden Account'
 USE_CAPTCHA_IN_AUTHENTICATION_FORMS: 'Aktiviere Captcha-Prüfungen bei Authentifizierungen.'
 USE_X_FORWARDED_HEADER: 'Nutze X-Forwarded-Header'
-VALIDATION_FAILED: 'Validierung fehlgeschlagen'
 VERIFICATION_CODE_MISSING: 'Fehlt der Verifizierungs-Code?'
 VERIFY_YOUR_LOGIN_WITH_A_5_DIGIT_CODE_SEND_BY_EMAIL: 'Versende per E-Mail 5-stellige Codes zur Verifizierung von Anmeldungen.'
 VERSION: Version
 VIDEO: Video
 VISIBILITY: Sichtbarkeit
+VISIT_THE_PLUGIN_DIRECTORY: 'Zum Plugin-Verzeichnis'
+VISIT_THE_THEME_DIRECTORY: 'Zum Theme-Verzeichnis'
 VISUAL: visuell
-VISUAL_EDITOR: 'Visueller Editor'
+VISUAL_EDITOR: 'Visual Editor'
 WEBSITE_OWNER: Webseiten-Besitzer
 WEBSITE_RESTRICTION: 'Website Beschränkungen'
 WEBSITE_TITLE: Webseiten-Titel
@@ -415,6 +431,7 @@ WE_COULD_NOT_DELETE_THE_ORIGINAL_IMAGE_IN: 'Wir konnten das Original-Bild nicht 
 WE_COULD_NOT_DELETE_THE_THUMB_IMAGE: 'Wir konnten das Vorschaubild nicht löschen.'
 WE_COULD_NOT_DELETE_THE_USER: 'Wir konnten den Nutzer nicht löschen.'
 WE_COULD_NOT_FIND_A_FOLDERPATH_FOR: 'Wir konnten den Ordnerpfad nicht finden für'
+WE_COULD_NOT_FIND_OR_READ_THE_PUBLIC_KEY_PEM_IN_THE_SETTINGS_FOLDER: 'Wir konnten die Datei public_key_pem im Settings-Folder nicht finden oder lesen.'
 WE_COULD_NOT_FIND_THE_USER: 'Wir konnten den Nutzer nicht finden'
 WE_COULD_NOT_FIND_THIS_PAGE_PLEASE_REFRESH_AND_TRY_AGAIN: 'Wir konnten die Seite nicht finden. Bitte versuche es noch einmal und lade die Seite neu.'
 WE_COULD_NOT_LOAD_THE_SVG_FILE_IT_IS_PROBABLY_CORRUPTED: 'Wir konnten die SVG-Datei nicht laden, vermutlich ist sie nicht gültig.'
@@ -449,9 +466,16 @@ YOUR_REGISTRATION_IS_NOT_CONFIRMED_YET_PLEASE_CHECK_YOUR_E_MAILS_AND_USE_THE_CON
 YOUR_TYPEMILL_VERIFICATION_CODE: 'Dein Verifizierungs-Code für Typemill'
 YOU_ARE_NOT_ALLOWED_TO_DELETE_ANOTHER_USER: 'Du kannst keinen anderen Nutzer löschen.'
 YOU_ARE_NOT_ALLOWED_TO_UPDATE_ANOTHER_USER: 'Du kannst keinen anderen Nutzer aktualisieren.'
+YOU_CANNOT_CREATE_AN_ITEM_WITH_THE_SLUG_TM_IN_THE_ROOT_FOLDER_BECAUSE_THIS_IS_THE_SYSTEM_PATH: ''
 YOU_CAN_OVERWRITE_THE_THEME_CSS_WITH_YOUR_OWN_CSS_HERE: 'Hier kannst du das Theme-CSS mit eigenen CSS-Regeln überschreiben.'
 YOU_CAN_USE_THE_ASTERISK_WILDCARD_TO_SEARCH_FOR_NAME@_OR_@DOMAIN_COM: 'Du kannst den Stern (*) als Wildcard für die Suche nach Name@* oder *@domain.com nutzen.'
 YOU_DO_NOT_HAVE_ENOUGH_RIGHTS: 'Du hast nicht genug Rechte.'
 YOU_TRIED_TO_OPEN_THE_PASSWORD_RESET_PAGE_BUT_THE_LINK_WAS_INVALID: 'Du wolltest die Seite zum Zurücksetzen des Passworts öffnen aber der Link war ungültig.'
 YOU_TRIED_TO_SET_A_NEW_PASSWORD_BUT_USERNAME_OR_TOKEN_WAS_INVALID: 'Du wolltest ein neues Passwort setzen aber der Nutzername oder der Token waren ungültig.'
 ©: ''
+LICENSE_DATA_INCOMPLETE: 'Lizenz-Daten sind unvollständig'
+LICENSE_DATA_INVALID: 'Lizenz-Daten sind ungültig'
+NO_LICENSE_FOUND: 'Keine Lizenz gefunden'
+THE_LICENSE_SERVER_RESPONDED_WITH: 'Der Lizenz-Server hat geantwortet mit: '
+THE_SUBSCRIPTION_PERIOD_IS_NOT_PAID_YET: 'Die Abo-Periode ist noch nicht bezahlt.'
+VALIDATION_FAILED: 'Validierung fehlgeschlagen'
