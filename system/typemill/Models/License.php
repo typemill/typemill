@@ -90,7 +90,7 @@ class License
 
 		if($licenseStatus !== true)
 		{
-			$this->message = Translations::translate('The license data are invalid.');
+			$this->message = Translations::translate('The license data are invalid. ') . $this->message;
 
 			return false;
 		}
@@ -167,51 +167,101 @@ class License
 
 	private function validateLicense($data)
 	{
-	    $licensedata = [
-			'email'				=> $this->hashMail($data['email']),
-			'domain'			=> $data['domain'],
-			'license'			=> $data['license'],
-			'plan' 				=> $data['plan'],
-			'payed_until' 		=> $data['payed_until']
-	    ];
-		
-		ksort($licensedata);
-
-		# test manipulate data
-#		$licensedata['plan'] 	= 'wrong';
-		
-		$licensedata 			= json_encode($licensedata);
-
-		# Check signature
-		$public_key_pem 		= $this->getPublicKeyPem();
-
-		if(!$public_key_pem)
+		# if openssl-extension is missing, check the license once a day remotely on license server
+		if(!extension_loaded('openssl'))
 		{
-			$this->message 		= Translations::translate('We could not find or read the public_key.pem in the settings-folder.');
+			$storage = new StorageWrapper('\Typemill\Models\Storage');
+	    	if($storage->timeoutIsOver('licensecheck', 86400))
+	    	{
+				$readableMail 		= trim($data['email']);
+
+				$licensedata = [ 
+					'license'		=> $data['license'], 
+					'email'			=> $this->hashMail($readableMail),
+					'domain'		=> $data['domain'],
+					'signature'		=> $data['signature'],
+					'plan'			=> $data['plan'],
+					'payed_until' 	=> $data['payed_until']
+				];
+
+				# make remote check on the license server
+				$url 				= 'https://service.typemill.net/api/v1/licensecheck';
+				$remoteCheck 		= $this->callLicenseServer($licensedata, $url);
+
+				if(isset($remoteCheck['status']) && $remoteCheck['status'])
+				{
+					$key = md5($data['domain']);
+					$storage->writeFile('cacheFolder', '', 'lstatus.txt', $key);
+
+					return true;
+				}
+
+				$key = md5($this->getMessage());
+				$storage->writeFile('cacheFolder', '', 'lstatus.txt', $key);
+
+				$this->message = Translations::translate('We will check it again in 24 hours.');
+				
+				return false;
+			}
+
+			$key = $storage->getFile('cacheFolder', '', 'lstatus.txt');
+			if($key == md5($data['domain']))
+			{
+				return true;
+			}
+			
+			$this->message = Translations::translate('We will check it again in 24 hours.');
 
 			return false;
 		}
-
-		$binary_signature 		= base64_decode($data['signature']);
-
-		$verified 				= openssl_verify($licensedata, $binary_signature, $public_key_pem, OPENSSL_ALGO_SHA256);
-
-		if ($verified == 1)
-		{
-		    return true;
-		} 
-		elseif ($verified == 0)
-		{
-			$this->message 		= Translations::translate('License validation failed');
-
-		    return false;
-		} 
 		else
 		{
-			$this->message 		= Translations::translate('There was an error checking the license signature');
+		    $licensedata = [
+				'email'				=> $this->hashMail($data['email']),
+				'domain'			=> $data['domain'],
+				'license'			=> $data['license'],
+				'plan' 				=> $data['plan'],
+				'payed_until' 		=> $data['payed_until']
+		    ];
+			
+			ksort($licensedata);
 
-			return false;
-		}
+			# test manipulate data
+	#		$licensedata['plan'] 	= 'wrong';
+
+			# Check signature
+			$public_key_pem 		= $this->getPublicKeyPem();
+
+			if(!$public_key_pem)
+			{
+				$this->message 		= Translations::translate('We could not find or read the public_key.pem in the settings-folder.');
+
+				return false;
+			}
+
+			$binary_signature 	= base64_decode($data['signature']);
+
+			$licensedata 		= json_encode($licensedata);
+
+			$verified 			= openssl_verify($licensedata, $binary_signature, $public_key_pem, OPENSSL_ALGO_SHA256);
+
+			if ($verified == 1)
+			{
+			    return true;
+			} 
+			elseif ($verified == 0)
+			{
+				$this->message 		= Translations::translate('License validation failed');
+
+			    return false;
+			} 
+			else
+			{
+				$this->message 		= Translations::translate('There was an error checking the license signature');
+
+				return false;
+			}
+		}		
 	}
 
 
