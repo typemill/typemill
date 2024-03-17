@@ -214,10 +214,26 @@ class License
 		}
 	}
 
+
+	# THE FOLLOWING METHODS INTERACT WITH LICENSE SERVER
+
+	public function testLicenseCall()
+	{
+		# make the call to the license server
+		$url 				= 'https://service.typemill.net/api/v1/testcall';
+		$testcall 			= $this->callLicenseServer(['test' => 'test'], $url);
+
+		if(!$testcall)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
 	public function activateLicense($params)
 	{
 		# prepare data for call to licence server
-
 		$readableMail 		= trim($params['email']);
 
 		$licensedata = [ 
@@ -226,44 +242,12 @@ class License
 			'domain'		=> $params['domain']
 		];
 
-		$postdata 			= http_build_query($licensedata);
+		# make the call to the license server
+		$url 				= 'https://service.typemill.net/api/v1/activate';
+		$signedLicense 		= $this->callLicenseServer($licensedata, $url);
 
-		$authstring 		= $this->getPublicKeyPem();
-		$authstring 		= hash('sha256', substr($authstring, 0, 50));
-
-		$options = array (
-    		'http' => array (
-        		'method' 		=> 'POST',
-   				'ignore_errors' => true,
-        		'header'		=> 	"Content-Type: application/x-www-form-urlencoded\r\n" .
-									"Accept: application/json\r\n" .
-									"Authorization: $authstring\r\n" .
-									"Connection: close\r\n",
-        		'content' 		=> $postdata
-			)
-    	);
-
-		$context 			= stream_context_create($options);
-
-		$response 			= file_get_contents('https://service.typemill.net/api/v1/activate', false, $context);
-
-		$signedLicense 		= json_decode($response,true);
-
-		if(substr($http_response_header[0], -6) != "200 OK")
+		if(!$signedLicense)
 		{
-			$message 		= $http_response_header[0];
-			if(isset($signedLicense['code'])  && ($signedLicense['code'] != ''))
-			{
-				$message 	= $signedLicense['code'];
-			}
-			$this->message 	= Translations::translate('Answer from license server: ') . $message;
-
-			return false;
-		}
-
-		if(isset($signedLicense['code']))
-		{
-			$this->message 	= $signedLicense['code'];
 			return false;
 		}
 
@@ -295,48 +279,12 @@ class License
 			'payed_until' 	=> $data['payed_until']
 		];
 
-		$postdata 			= http_build_query($licensedata);
+		# make the call to the license server
+		$url 				= 'https://service.typemill.net/api/v1/update';
+		$signedLicense 		= $this->callLicenseServer($licensedata, $url);
 
-		$authstring 		= $this->getPublicKeyPem();
-		$authstring 		= hash('sha256', substr($authstring, 0, 50));
-
-		$options = array (
-    		'http' => array (
-        		'method' 		=> 'POST',
-   				'ignore_errors' => true,
-        		'header'		=> 	"Content-Type: application/x-www-form-urlencoded\r\n" .
-									"Accept: application/json\r\n" .
-									"Authorization: $authstring\r\n" .
-									"Connection: close\r\n",
-        		'content' 		=> $postdata
-			)
-    	);
-
-		$context 			= stream_context_create($options);
-
-		$response 			= file_get_contents('https://service.typemill.net/api/v1/update', false, $context);
-
-		$signedLicense 		= json_decode($response,true);
-
-		if(substr($http_response_header[0], -6) != "200 OK")
+		if(!$signedLicense)
 		{
-			$message 		= $http_response_header[0];
-
-			if(isset($signedLicense['code'])  && ($signedLicense['code'] != ''))
-			{
-				$message 	= $signedLicense['code'];
-			}
-
-			# problem: if admin is on license website, then the first check has already been done on start in system and it has set timer, so the admin will never see this message from server.
-			$this->message 	= Translations::translate('Answer from license server: ') . $message;
-
-			return false;
-		}
-
-		if(isset($signedLicense['code']))
-		{
-			$this->message = $signedLicense['code'];
-
 			return false;
 		}
 
@@ -355,12 +303,97 @@ class License
 		return true;
 	}
 
+	private function callLicenseServer( $licensedata, $url )
+	{
+		$authstring 		= $this->getPublicKeyPem();
+
+		if(!$authstring)
+		{
+			$this->message 	= Translations::translate('Please check if there is a readable file public_key.pem in your settings folder.');
+
+			return false;
+		}
+
+		$authstring 		= hash('sha256', substr($authstring, 0, 50));
+
+		$postdata 			= http_build_query($licensedata);
+
+		if(in_array('curl', get_loaded_extensions()))
+		{
+			$curl = curl_init($url);
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($curl, CURLOPT_POST, true);
+			curl_setopt($curl, CURLOPT_POSTFIELDS, $postdata);
+			curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+			    "Content-Type: application/x-www-form-urlencoded",
+			    "Accept: application/json",
+			    "Authorization: $authstring",
+			    "Connection: close"
+			));
+
+			$response = curl_exec($curl);
+
+			if (curl_errno($curl))
+			{
+				$this->message 	= Translations::translate('We got a curl error: ') . curl_error($curl);
+
+				return false;
+			}
+
+			curl_close($curl);
+		}
+		else
+		{
+			$options = array (
+	    		'http' => array (
+	        		'method' 		=> 'POST',
+	   				'ignore_errors' => true,
+	        		'header'		=> 	"Content-Type: application/x-www-form-urlencoded\r\n" .
+										"Accept: application/json\r\n" .
+										"Authorization: $authstring\r\n" .
+										"Connection: close\r\n",
+	        		'content' 		=> $postdata
+				)
+	    	);
+
+			$context = stream_context_create($options);
+
+			$response = file_get_contents($url, false, $context);
+
+			if ($response === FALSE)
+			{
+			    if (!empty($http_response_header))
+			    {
+			        list($version, $status_code, $msg) = explode(' ', $http_response_header[0], 3);
+			        
+					$this->message 	= Translations::translate('We got an error from file_get_contents: ') . $status_code . ' ' . $msg;
+			    }
+			    else
+			    {
+					$this->message 	= Translations::translate('No HTTP response received or file_get_contents is blocked.');
+			    }
+
+				return false;
+			}
+		}
+
+		$responseJson = json_decode($response,true);
+
+		if(isset($responseJson['code']))
+		{
+			$this->message 	= $responseJson['code'];
+		
+			return false;
+		}
+
+		return $responseJson;
+	}
+
 	private function hashMail(string $mail)
 	{
 		return hash('sha256', trim($mail) . 'TYla5xa8JUur');
 	}
 
-	# we have it in static license, too so use it from static and delete this duplicate.
 	public function getPublicKeyPem()
 	{
 		$pkeyfile = getcwd() . DIRECTORY_SEPARATOR . 'settings' . DIRECTORY_SEPARATOR . "public_key.pem";

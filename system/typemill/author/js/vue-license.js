@@ -93,6 +93,32 @@ const app = Vue.createApp({
 		eventBus.$on('forminput', formdata => {
 			this.formData[formdata.name] = formdata.value;
 		});
+
+		/* test if the license server is reachable and all settings are ok */
+		this.disabled = true;
+		var self = this;
+
+		tmaxios.post('/api/v1/licensetestcall',{
+			'license': 'test'
+		})
+		.then(function (response)
+		{
+			self.disabled 		= false;
+		})
+		.catch(function (error)
+		{
+			if(error.response)
+			{
+				self.disabled 		= false;
+				self.message 		= handleErrorMessage(error);
+				self.messageClass 	= 'bg-rose-500';
+				self.licensemessage = error.response.data.message;
+				if(error.response.data.errors !== undefined)
+				{
+					self.errors = error.response.data.errors;
+				}
+			}
+		});
 	},
 	methods: {
 		selectComponent: function(type)

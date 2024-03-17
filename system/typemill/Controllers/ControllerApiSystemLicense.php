@@ -10,6 +10,28 @@ use Typemill\Static\Translations;
 
 class ControllerApiSystemLicense extends Controller
 {
+	public function testLicenseServerCall(Request $request, Response $response)
+	{
+		$license = new License();
+
+		$testresult = $license->testLicenseCall();
+
+		if(!$testresult)
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> $license->getMessage()
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+		}
+
+		$response->getBody()->write(json_encode([
+			'message' => Translations::translate('License server call was successful'),
+		]));
+
+		return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+	}
+
 	public function createLicense(Request $request, Response $response)
 	{
 		$params 			= $request->getParsedBody();
