@@ -17,7 +17,7 @@
     "require": {
         "php": "^8.0",
         "slim/slim": "4.*",
-        "slim/psr7": "^1.5",
+        "slim/psr7": "dev-master",
         "php-di/php-di": "^6.3",
         "php-di/slim-bridge": "^3.2",
         "slim/twig-view": "^3.3",
