@@ -677,7 +677,20 @@ class Validation
 		$v = new Validator($params);
 		$v->rule('required', ['password', 'newpassword']);
 		$v->rule('lengthBetween', 'newpassword', 5, 50);
-		$v->rule('equals', 'passwordrepeat', 'password');
+		
+		if($v->validate())
+		{
+			return true;
+		}
+
+		return $v->errors();
+	}
+
+	public function newPasswordAdmin(array $params)
+	{
+		$v = new Validator($params);
+		$v->rule('required', ['newpassword']);
+		$v->rule('lengthBetween', 'newpassword', 5, 50);
 		
 		if($v->validate())
 		{

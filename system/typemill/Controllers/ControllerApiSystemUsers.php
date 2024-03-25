@@ -107,10 +107,19 @@ class ControllerApiSystemUsers extends Controller
 
 	public function updateUser(Request $request, Response $response, $args)
 	{
-		$params 			= $request->getParsedBody();
-		$userdata 			= $params['userdata'] ?? false;
-		$username 			= $params['userdata']['username'] ?? false;
-		$isAdmin 			= $this->c->get('acl')->isAllowed($request->getAttribute('c_userrole'), 'user', 'write');
+		$params 		= $request->getParsedBody();
+		$userdata 		= $params['userdata'] ?? false;
+		$username 		= $params['userdata']['username'] ?? false;
+		$isAdmin 		= $this->c->get('acl')->isAllowed($request->getAttribute('c_userrole'), 'user', 'write');
+
+		if(!$userdata OR !$username)
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> Translations::translate('Userdata or username is missing.'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+		}
 
 		$validate		= new Validation();
 
@@ -128,11 +137,11 @@ class ControllerApiSystemUsers extends Controller
 		}
 
 		# if it is a non-admin-user
-		if(!$isAdmin)
+		if($isAdmin !== true)
 		{
 			# do not change userrole
 			unset($userdata['userrole']);
-				
+
 			# if a non-admin-user tries to update another account 
 			if(($username !== $request->getAttribute('c_username')))
 			{
@@ -144,50 +153,82 @@ class ControllerApiSystemUsers extends Controller
 			}
 		}
 
-		# cleanup password entry
-		if(isset($userdata['password']) AND $userdata['password'] == '')
-		{
-			unset($userdata['password']);
-		}
-		if(isset($userdata['newpassword']) AND $userdata['newpassword'] == '')
-		{
-			unset($userdata['newpassword']);
-		}
+		# make sure you set a user with password when you update, otherwise it will delete the password completely
+		$user 			= new User();
+		$user->setUserWithPassword($username);
 
-		# validate passwort changes if valid input
-		if(isset($userdata['password']) OR isset($userdata['newpassword']))
-		{
-			$validpass = $validate->newPassword($userdata);
+		# password validation
+		$pwerrors 		= [];
+		$oldpassword 	= ( isset($userdata['password']) AND ($userdata['password'] != '') ) ? $userdata['password'] : false;
+		$newpassword 	= ( isset($userdata['newpassword']) AND ($userdata['newpassword'] != '') ) ? $userdata['newpassword'] : false;
+		unset($userdata['password']);
+		unset($userdata['newpassword']);
 
-			if($validpass === true)
+		if($isAdmin === true)
+		{
+			# admins can change passwords without old password
+			if($newpassword)
 			{
-				# encrypt new password
-				$userdata['password'] = $user->generatePassword($userdata['newpassword']);
-			}
-			elseif(is_array($validpass))
-			{
-				foreach($validpass as $fieldname => $errors)
+				$validpass = $validate->newPasswordAdmin(['newpassword' => $newpassword]);
+
+				if($validpass === true)
 				{
-					$this->errors[$fieldname] = $errors[0];
+					# encrypt new password
+					$userdata['password'] = $user->generatePassword($newpassword);
+				}
+				elseif(is_array($validpass))
+				{
+					foreach($validpass as $fieldname => $errors)
+					{
+						$pwerrors[$fieldname] = $errors[0];
+					}
 				}
 			}
+		}
+		else
+		{
+			# non-admins can change password only with new and old password
+			if($oldpassword OR $newpassword)
+			{
+				$validpass = $validate->newPassword(['password' => $oldpassword, 'newpassword' => $newpassword]);
 
-			# in all cases unset newpassword
-			unset($userdata['newpassword']);
+				if(is_array($validpass))
+				{
+					foreach($validpass as $fieldname => $errors)
+					{
+						$pwerrors[$fieldname] = $errors[0];
+					}
+				}
+				elseif(!password_verify($oldpassword, $user->getValue('password')))
+				{
+					$pwerrors['password'] = 'Old password is wrong.';					
+				}
+				elseif($validpass === true)
+				{
+					# encrypt new password
+					$userdata['password'] = $user->generatePassword($newpassword);
+				}
+			}
 		}
 
-		# make sure you set a user with password when you update, otherwise it will delete the password completely
-		$user 				= new User();
-		$user->setUserWithPassword($username);
+		if(!empty($pwerrors))
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> Translations::translate('Please correct your input.'),
+				'errors' 	=> $pwerrors
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+		}
+
+		# we have to validate again because of additional dynamic fields
 		$formdefinitions 	= $user->getUserFields($this->c->get('acl'), $request->getAttribute('c_userrole'));
-
-
 		$validatedOutput 	= $validate->recursiveValidation($formdefinitions, $userdata);
 		if(!empty($validate->errors))
 		{
 			$response->getBody()->write(json_encode([
 				'message' 	=> Translations::translate('Please correct your input.'),
-				'errors' 	=> $validate->errors
+				'errors' 	=> $validateErrors
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);

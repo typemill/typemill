@@ -54,6 +54,15 @@ class User
 		return $this;
 	}
 
+	public function getValue($key)
+	{
+		if(isset($this->user[$key]))
+		{
+			return $this->user[$key];
+		}
+		return false;
+	}
+
 	public function setValue($key, $value)
 	{
 		$this->user[$key] = $value;
