@@ -115,11 +115,14 @@ const app = Vue.createApp({
 				self.showModal = false;
 				self.messageClass = 'bg-teal-500';
 				self.message = response.data.message;
-				if(response.data.logout !== undefined)
+				if(response.data.logout == true)
 				{
 					window.location.replace(data.urlinfo.baseurl + '/tm/logout');
 				}
-				window.location.replace(data.urlinfo.baseurl + '/tm/users');
+				else
+				{
+					window.location.replace(data.urlinfo.baseurl + '/tm/users');
+				}
 			})
 			.catch(function (error)
 			{

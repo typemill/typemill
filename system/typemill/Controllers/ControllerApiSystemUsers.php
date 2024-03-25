@@ -394,15 +394,17 @@ class ControllerApiSystemUsers extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);						
 		}
 
+		$logout = false;
 		# if user deleted his own account
 		if($username == $request->getAttribute('c_username'))
 		{
+			$logout = true;
 			Session::stopSession();
 		}
 
 		$response->getBody()->write(json_encode([
 			'message' 	=> Translations::translate('User deleted.'),
-			'logout' 	=> true
+			'logout' 	=> $logout
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json');
