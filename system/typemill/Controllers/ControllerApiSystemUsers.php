@@ -110,7 +110,7 @@ class ControllerApiSystemUsers extends Controller
 		$params 		= $request->getParsedBody();
 		$userdata 		= $params['userdata'] ?? false;
 		$username 		= $params['userdata']['username'] ?? false;
-		$isAdmin 		= $this->c->get('acl')->isAllowed($request->getAttribute('c_userrole'), 'user', 'write');
+		$isAdmin 		= $this->c->get('acl')->isAllowed($request->getAttribute('c_userrole'), 'user', 'update');
 
 		if(!$userdata OR !$username)
 		{

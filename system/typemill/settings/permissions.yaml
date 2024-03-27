@@ -3,7 +3,7 @@ member:
   inherits: NULL
   permissions: 
     account:
-      - 'view'
+      - 'read'
       - 'update'
       - 'delete'
 contributor:
@@ -11,7 +11,7 @@ contributor:
   inherits: member
   permissions: 
     mycontent:
-      - 'view'
+      - 'read'
       - 'create'
       - 'update'
       - 'delete'
@@ -20,8 +20,8 @@ author:
   inherits: contributor
   permissions: 
     content:
+      - 'read'
       - 'create'
-      - 'view'
 editor:
   name: editor
   inherits: author
@@ -34,3 +34,11 @@ editor:
       - 'delete'
       - 'publish'
       - 'unpublish'
+manager:
+  name: manager
+  inherits: editor
+  permissions: 
+    system:
+      - 'read'
+      - 'update'
+      - 'delete'

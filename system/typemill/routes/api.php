@@ -24,20 +24,20 @@ use Typemill\Controllers\ControllerApiTestmail;
 $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 
 	# GLOBALS
-	$group->get('/systemnavi', ControllerApiGlobals::class . ':getSystemnavi')->setName('api.systemnavi.get')->add(new ApiAuthorization($acl, 'account', 'view')); # member
-	$group->get('/mainnavi', ControllerApiGlobals::class . ':getMainnavi')->setName('api.mainnavi.get')->add(new ApiAuthorization($acl, 'account', 'view')); # member
+	$group->get('/systemnavi', ControllerApiGlobals::class . ':getSystemnavi')->setName('api.systemnavi.get')->add(new ApiAuthorization($acl, 'account', 'read')); # member
+	$group->get('/mainnavi', ControllerApiGlobals::class . ':getMainnavi')->setName('api.mainnavi.get')->add(new ApiAuthorization($acl, 'account', 'read')); # member
 
 	# SYSTEM
-	$group->get('/settings', ControllerApiSystemSettings::class . ':getSettings')->setName('api.settings.get')->add(new ApiAuthorization($acl, 'system', 'view')); # admin
-	$group->post('/settings', ControllerApiSystemSettings::class . ':updateSettings')->setName('api.settings.set')->add(new ApiAuthorization($acl, 'system', 'update')); # admin
-	$group->post('/license', ControllerApiSystemLicense::class . ':createLicense')->setName('api.license.create')->add(new ApiAuthorization($acl, 'system', 'update')); # admin
-	$group->post('/licensetestcall', ControllerApiSystemLicense::class . ':testLicenseServerCall')->setName('api.license.testcall')->add(new ApiAuthorization($acl, 'system', 'update')); # admin
-	$group->post('/themecss', ControllerApiSystemThemes::class . ':updateThemeCss')->setName('api.themecss.set')->add(new ApiAuthorization($acl, 'system', 'update')); # admin
-	$group->post('/theme', ControllerApiSystemThemes::class . ':updateTheme')->setName('api.theme.set')->add(new ApiAuthorization($acl, 'system', 'update')); # admin
-	$group->post('/plugin', ControllerApiSystemPlugins::class . ':updatePlugin')->setName('api.plugin.set')->add(new ApiAuthorization($acl, 'system', 'update')); # admin
-	$group->post('/extensions', ControllerApiSystemExtensions::class . ':activateExtension')->setName('api.extension.activate')->add(new ApiAuthorization($acl, 'system', 'update')); # admin
-	$group->post('/versioncheck', ControllerApiSystemVersions::class . ':checkVersions')->setName('api.versioncheck')->add(new ApiAuthorization($acl, 'system', 'update')); # admin
-	$group->post('/testmail', ControllerApiTestmail::class . ':send')->setName('api.testmail')->add(new ApiAuthorization($acl, 'system', 'update')); # admin
+	$group->get('/settings', ControllerApiSystemSettings::class . ':getSettings')->setName('api.settings.get')->add(new ApiAuthorization($acl, 'system', 'read')); # manager
+	$group->post('/settings', ControllerApiSystemSettings::class . ':updateSettings')->setName('api.settings.set')->add(new ApiAuthorization($acl, 'system', 'update')); # manager
+	$group->post('/license', ControllerApiSystemLicense::class . ':createLicense')->setName('api.license.create')->add(new ApiAuthorization($acl, 'user', 'update')); # admin
+	$group->post('/licensetestcall', ControllerApiSystemLicense::class . ':testLicenseServerCall')->setName('api.license.testcall')->add(new ApiAuthorization($acl, 'user', 'update')); # admin
+	$group->post('/themecss', ControllerApiSystemThemes::class . ':updateThemeCss')->setName('api.themecss.set')->add(new ApiAuthorization($acl, 'system', 'update')); # manager
+	$group->post('/theme', ControllerApiSystemThemes::class . ':updateTheme')->setName('api.theme.set')->add(new ApiAuthorization($acl, 'system', 'update')); # manager
+	$group->post('/plugin', ControllerApiSystemPlugins::class . ':updatePlugin')->setName('api.plugin.set')->add(new ApiAuthorization($acl, 'system', 'update')); # manager
+	$group->post('/extensions', ControllerApiSystemExtensions::class . ':activateExtension')->setName('api.extension.activate')->add(new ApiAuthorization($acl, 'system', 'update')); # manager
+	$group->post('/versioncheck', ControllerApiSystemVersions::class . ':checkVersions')->setName('api.versioncheck')->add(new ApiAuthorization($acl, 'system', 'update')); # manager
+	$group->post('/testmail', ControllerApiTestmail::class . ':send')->setName('api.testmail')->add(new ApiAuthorization($acl, 'user', 'update')); # admin
 	$group->get('/users/getbynames', ControllerApiSystemUsers::class . ':getUsersByNames')->setName('api.usersbynames')->add(new ApiAuthorization($acl, 'user', 'update')); # admin
 	$group->get('/users/getbyemail', ControllerApiSystemUsers::class . ':getUsersByEmail')->setName('api.usersbyemail')->add(new ApiAuthorization($acl, 'user', 'update')); # admin
 	$group->get('/users/getbyrole', ControllerApiSystemUsers::class . ':getUsersByRole')->setName('api.usersbyrole')->add(new ApiAuthorization($acl, 'user', 'update')); # admin
@@ -47,21 +47,21 @@ $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 	$group->delete('/user', ControllerApiSystemUsers::class . ':deleteUser')->setName('api.user.delete')->add(new ApiAuthorization($acl, 'account', 'delete')); # member
 
 	# IMAGES
-	$group->get('/pagemedia', ControllerApiImage::class . ':getPagemedia')->setName('api.image.pagemedia')->add(new ApiAuthorization($acl, 'mycontent', 'read'));
-	$group->get('/images', ControllerApiImage::class . ':getImages')->setName('api.image.images')->add(new ApiAuthorization($acl, 'mycontent', 'read'));
-	$group->post('/image', ControllerApiImage::class . ':saveImage')->setName('api.image.create')->add(new ApiAuthorization($acl, 'mycontent', 'create'));
-	$group->put('/image', ControllerApiImage::class . ':publishImage')->setName('api.image.publish')->add(new ApiAuthorization($acl, 'mycontent', 'create'));
-	$group->get('/image', ControllerApiImage::class . ':getImage')->setName('api.image.get')->add(new ApiAuthorization($acl, 'mycontent', 'read'));
-	$group->delete('/image', ControllerApiImage::class . ':deleteImage')->setName('api.image.delete')->add(new ApiAuthorization($acl, 'mycontent', 'delete'));
+	$group->get('/pagemedia', ControllerApiImage::class . ':getPagemedia')->setName('api.image.pagemedia')->add(new ApiAuthorization($acl, 'mycontent', 'read')); # author
+	$group->get('/images', ControllerApiImage::class . ':getImages')->setName('api.image.images')->add(new ApiAuthorization($acl, 'mycontent', 'read')); # author
+	$group->post('/image', ControllerApiImage::class . ':saveImage')->setName('api.image.create')->add(new ApiAuthorization($acl, 'mycontent', 'create')); # author
+	$group->put('/image', ControllerApiImage::class . ':publishImage')->setName('api.image.publish')->add(new ApiAuthorization($acl, 'mycontent', 'create')); # author
+	$group->get('/image', ControllerApiImage::class . ':getImage')->setName('api.image.get')->add(new ApiAuthorization($acl, 'mycontent', 'read')); # author
+	$group->delete('/image', ControllerApiImage::class . ':deleteImage')->setName('api.image.delete')->add(new ApiAuthorization($acl, 'mycontent', 'delete')); # editor
 	
 	# FILES
-	$group->get('/filerestrictions', ControllerApiFile::class . ':getFileRestrictions')->setName('api.file.getrestrictions')->add(new ApiAuthorization($acl, 'mycontent', 'create'));
-	$group->post('/filerestrictions', ControllerApiFile::class . ':updateFileRestrictions')->setName('api.file.updaterestrictions')->add(new ApiAuthorization($acl, 'mycontent', 'create'));
-	$group->post('/file', ControllerApiFile::class . ':uploadFile')->setName('api.file.upload')->add(new ApiAuthorization($acl, 'mycontent', 'create'));
-	$group->put('/file', ControllerApiFile::class . ':publishFile')->setName('api.file.publish')->add(new ApiAuthorization($acl, 'mycontent', 'update'));
-	$group->get('/files', ControllerApiFile::class . ':getFiles')->setName('api.files.get')->add(new ApiAuthorization($acl, 'mycontent', 'read'));
-	$group->get('/file', ControllerApiFile::class . ':getFile')->setName('api.file.get')->add(new ApiAuthorization($acl, 'mycontent', 'read'));
-	$group->delete('/file', ControllerApiFile::class . ':deleteFile')->setName('api.file.delete')->add(new ApiAuthorization($acl, 'mycontent', 'read'));
+	$group->get('/filerestrictions', ControllerApiFile::class . ':getFileRestrictions')->setName('api.file.getrestrictions')->add(new ApiAuthorization($acl, 'mycontent', 'create')); # author
+	$group->post('/filerestrictions', ControllerApiFile::class . ':updateFileRestrictions')->setName('api.file.updaterestrictions')->add(new ApiAuthorization($acl, 'mycontent', 'create')); # author
+	$group->post('/file', ControllerApiFile::class . ':uploadFile')->setName('api.file.upload')->add(new ApiAuthorization($acl, 'mycontent', 'create')); # author
+	$group->put('/file', ControllerApiFile::class . ':publishFile')->setName('api.file.publish')->add(new ApiAuthorization($acl, 'mycontent', 'update')); # author
+	$group->get('/files', ControllerApiFile::class . ':getFiles')->setName('api.files.get')->add(new ApiAuthorization($acl, 'mycontent', 'read')); # author
+	$group->get('/file', ControllerApiFile::class . ':getFile')->setName('api.file.get')->add(new ApiAuthorization($acl, 'mycontent', 'read')); # author
+	$group->delete('/file', ControllerApiFile::class . ':deleteFile')->setName('api.file.delete')->add(new ApiAuthorization($acl, 'mycontent', 'read')); # author
 
 	# ARTICLE
 	$group->post('/article/sort', ControllerApiAuthorArticle::class . ':sortArticle')->setName('api.article.sort')->add(new ApiAuthorization($acl, 'content', 'create')); # author
@@ -77,23 +77,23 @@ $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 
 	# BLOCKS
 	$group->post('/block', ControllerApiAuthorBlock::class . ':addBlock')->setName('api.block.add')->add(new ApiAuthorization($acl, 'mycontent', 'update'));
-	$group->put('/block/move', ControllerApiAuthorBlock::class . ':moveBlock')->setName('api.block.move')->add(new ApiAuthorization($acl, 'mycontent', 'view'));
+	$group->put('/block/move', ControllerApiAuthorBlock::class . ':moveBlock')->setName('api.block.move')->add(new ApiAuthorization($acl, 'mycontent', 'read'));
 	$group->put('/block', ControllerApiAuthorBlock::class . ':updateBlock')->setName('api.block.update')->add(new ApiAuthorization($acl, 'mycontent', 'update'));
 	$group->delete('/block', ControllerApiAuthorBlock::class . ':deleteBlock')->setName('api.block.delete')->add(new ApiAuthorization($acl, 'mycontent', 'update'));
-	$group->post('/video', ControllerApiImage::class . ':saveVideoImage')->setName('api.video.save')->add(new ApiAuthorization($acl, 'mycontent', 'view'));
+	$group->post('/video', ControllerApiImage::class . ':saveVideoImage')->setName('api.video.save')->add(new ApiAuthorization($acl, 'mycontent', 'read'));
 
 	# SHORTCODE
-	$group->get('/shortcodedata', ControllerApiAuthorShortcode::class . ':getShortcodeData')->setName('api.shortcodedata.get')->add(new ApiAuthorization($acl, 'mycontent', 'view'));
+	$group->get('/shortcodedata', ControllerApiAuthorShortcode::class . ':getShortcodeData')->setName('api.shortcodedata.get')->add(new ApiAuthorization($acl, 'mycontent', 'read'));
 
 	# META
-	$group->get('/meta', ControllerApiAuthorMeta::class . ':getMeta')->setName('api.meta.get')->add(new ApiAuthorization($acl, 'mycontent', 'view'));
+	$group->get('/meta', ControllerApiAuthorMeta::class . ':getMeta')->setName('api.meta.get')->add(new ApiAuthorization($acl, 'mycontent', 'read'));
 	$group->post('/meta', ControllerApiAuthorMeta::class . ':updateMeta')->setName('api.metadata.update')->add(new ApiAuthorization($acl, 'mycontent', 'update'));
 
 	# KIXOTE
-	$group->delete('/clearnavigation', ControllerApiGlobals::class . ':clearNavigation')->setName('api.navigation.clear')->add(new ApiAuthorization($acl, 'system', 'update'));
-	$group->get('/securitylog', ControllerApiGlobals::class . ':showSecurityLog')->setName('api.securitylog.show')->add(new ApiAuthorization($acl, 'system', 'update'));
-	$group->delete('/securitylog', ControllerApiGlobals::class . ':deleteSecurityLog')->setName('api.securitylog.delete')->add(new ApiAuthorization($acl, 'system', 'update'));
-	$group->delete('/cache', ControllerApiGlobals::class . ':deleteCache')->setName('api.cache.delete')->add(new ApiAuthorization($acl, 'system', 'update'));
+	$group->delete('/clearnavigation', ControllerApiGlobals::class . ':clearNavigation')->setName('api.navigation.clear')->add(new ApiAuthorization($acl, 'system', 'update')); # manager
+	$group->get('/securitylog', ControllerApiGlobals::class . ':showSecurityLog')->setName('api.securitylog.show')->add(new ApiAuthorization($acl, 'system', 'update')); # manager
+	$group->delete('/securitylog', ControllerApiGlobals::class . ':deleteSecurityLog')->setName('api.securitylog.delete')->add(new ApiAuthorization($acl, 'system', 'update')); # manager
+	$group->delete('/cache', ControllerApiGlobals::class . ':deleteCache')->setName('api.cache.delete')->add(new ApiAuthorization($acl, 'system', 'update')); # manager
 
 })->add(new CorsHeadersMiddleware($settings, $urlinfo))->add(new ApiAuthentication());
 

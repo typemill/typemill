@@ -39,18 +39,18 @@ $app->group('/tm', function (RouteCollectorProxy $group) use ($routeParser,$acl)
 
 	# Admin Area
 	$group->get('/logout', ControllerWebAuth::class . ':logout')->setName('auth.logout');
-	$group->get('/system', ControllerWebSystem::class . ':showSettings')->setName('settings.show')->add(new WebAuthorization($routeParser, $acl, 'system', 'show')); # admin;
-	$group->get('/license', ControllerWebSystem::class . ':showLicense')->setName('license.show')->add(new WebAuthorization($routeParser, $acl, 'system', 'show')); # admin;
-	$group->get('/themes', ControllerWebSystem::class . ':showThemes')->setName('themes.show')->add(new WebAuthorization($routeParser, $acl, 'system', 'show')); # admin;
-	$group->get('/plugins', ControllerWebSystem::class . ':showPlugins')->setName('plugins.show')->add(new WebAuthorization($routeParser, $acl, 'system', 'show')); # admin;
-	$group->get('/account', ControllerWebSystem::class . ':showAccount')->setName('user.account')->add(new WebAuthorization($routeParser, $acl, 'account', 'view')); # member;
-	$group->get('/users', ControllerWebSystem::class . ':showUsers')->setName('users.show')->add(new WebAuthorization($routeParser, $acl, 'user', 'show')); # admin;
+	$group->get('/system', ControllerWebSystem::class . ':showSettings')->setName('settings.show')->add(new WebAuthorization($routeParser, $acl, 'system', 'read')); # manager;
+	$group->get('/license', ControllerWebSystem::class . ':showLicense')->setName('license.show')->add(new WebAuthorization($routeParser, $acl, 'user', 'read')); # admin;
+	$group->get('/themes', ControllerWebSystem::class . ':showThemes')->setName('themes.show')->add(new WebAuthorization($routeParser, $acl, 'system', 'read')); # manager;
+	$group->get('/plugins', ControllerWebSystem::class . ':showPlugins')->setName('plugins.show')->add(new WebAuthorization($routeParser, $acl, 'system', 'read')); # manager;
+	$group->get('/account', ControllerWebSystem::class . ':showAccount')->setName('user.account')->add(new WebAuthorization($routeParser, $acl, 'account', 'read')); # member;
+	$group->get('/users', ControllerWebSystem::class . ':showUsers')->setName('users.show')->add(new WebAuthorization($routeParser, $acl, 'user', 'read')); # admin;
 	$group->get('/user/new', ControllerWebSystem::class . ':newUser')->setName('user.new')->add(new WebAuthorization($routeParser, $acl, 'user', 'create')); # admin;
-	$group->get('/user/{username}', ControllerWebSystem::class . ':showUser')->setName('user.show')->add(new WebAuthorization($routeParser, $acl, 'user', 'show')); # admin;
+	$group->get('/user/{username}', ControllerWebSystem::class . ':showUser')->setName('user.show')->add(new WebAuthorization($routeParser, $acl, 'user', 'read')); # admin;
 
 	# Author Area
-	$group->get('/content/visual[/{route:.*}]', ControllerWebAuthor::class . ':showBlox')->setName('content.visual')->add(new WebAuthorization($routeParser, $acl, 'mycontent', 'view'));
-	$group->get('/content/raw[/{route:.*}]', ControllerWebAuthor::class . ':showRaw')->setName('content.raw')->add(new WebAuthorization($routeParser, $acl, 'mycontent', 'view'));
+	$group->get('/content/visual[/{route:.*}]', ControllerWebAuthor::class . ':showBlox')->setName('content.visual')->add(new WebAuthorization($routeParser, $acl, 'mycontent', 'read'));
+	$group->get('/content/raw[/{route:.*}]', ControllerWebAuthor::class . ':showRaw')->setName('content.raw')->add(new WebAuthorization($routeParser, $acl, 'mycontent', 'read'));
 
 })->add(new CspHeadersMiddleware($settings, $cspFromPlugins, $cspFromTheme))->add(new WebRedirectIfUnauthenticated($routeParser));
 
@@ -87,7 +87,7 @@ if(isset($routes['web']) && !empty($routes['web']))
 if(isset($settings['access']) && $settings['access'] != '')
 {
 	# if access for website is restricted
-	$app->get('/[{route:.*}]', ControllerWebFrontend::class . ':index')->setName('home')->add(new CspHeadersMiddleware($settings, $cspFromPlugins, $cspFromTheme))->add(new WebAuthorization($routeParser, $acl, 'account', 'view'));
+	$app->get('/[{route:.*}]', ControllerWebFrontend::class . ':index')->setName('home')->add(new CspHeadersMiddleware($settings, $cspFromPlugins, $cspFromTheme))->add(new WebAuthorization($routeParser, $acl, 'account', 'read'));
 }
 else
 {

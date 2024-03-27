@@ -160,7 +160,7 @@ class ControllerWebAuth extends Controller
 
 		# if user is allowed to view content-area
 		$acl = $this->c->get('acl');
-		if($acl->hasRole($userdata['userrole']) && $acl->isAllowed($userdata['userrole'], 'content', 'view'))
+		if($acl->hasRole($userdata['userrole']) && $acl->isAllowed($userdata['userrole'], 'content', 'read'))
 		{
 			$editor = (isset($this->settings['editor']) && $this->settings['editor'] == 'visual') ? 'visual' : 'raw';
 
@@ -261,7 +261,7 @@ class ControllerWebAuth extends Controller
 
 		# if user is allowed to view content-area
 		$acl = $this->c->get('acl');
-		if($acl->hasRole($userdata['userrole']) && $acl->isAllowed($userdata['userrole'], 'content', 'view'))
+		if($acl->hasRole($userdata['userrole']) && $acl->isAllowed($userdata['userrole'], 'content', 'read'))
 		{
 			$editor = (isset($this->settings['editor']) && $this->settings['editor'] == 'visual') ? 'visual' : 'raw';
 

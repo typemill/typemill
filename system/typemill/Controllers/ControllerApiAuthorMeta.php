@@ -45,7 +45,7 @@ class ControllerApiAuthorMeta extends Controller
 		}
 
 		# if user is not allowed to perform this action (e.g. not admin)
-		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'view'))
+		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'read'))
 		{
 			# then check if user is the owner of this content
 			if(!$this->userIsAllowed($request->getAttribute('c_username'), $metadata))

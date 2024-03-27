@@ -202,7 +202,7 @@ class User
 		}
 
 		# Only admin ...
-		if($acl->isAllowed($inspectorrole, 'user', 'write'))
+		if($acl->isAllowed($inspectorrole, 'user', 'update'))
 		{
 			# can change userroles
 			$definedroles = $acl->getRoles();
