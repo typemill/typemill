@@ -1,17 +1,44 @@
 name: Cyanine Theme
-version: 2.0.1
+version: 2.1.0
 description: Cyanine is a modern and flexible multi-purpose theme and the standard theme for typemill. 
 author: Trendschau
 homepage: https://trendschau.net
 license: MIT
 
 settings:
-  landingpage: on
+  blogimage: true
+  landingpage: true
   introPosition: '1'
-  naviPosition: '2'
-  naviTitle: Get Started
-  fontheadline: sans-serif
-  fontnavi: sans-serif
+  introFullsize: true 
+  introTitle: 'Hello World'
+  introMarkdown: 'Thank you for visiting my website'
+  introButtonLink: '#'
+  introButtonLabel: 'Configure this button'
+  infoPosition: '2'
+  infoMarkdown: '## Info Segment'
+  teaserPosition: '3'
+  teaser1title: 'Typemill'
+  teaser1text: 'Visit the Typemill website'
+  teaser1link: 'https://typemill.net'
+  teaser1label: 'Visit Typemill'
+  teaser2title: 'Plugins'
+  teaser2text: 'Use some cool plugins.'
+  teaser2link: 'https://plugins.typemill.net'
+  teaser2label: 'Choose Plugins'
+  teaser3title: 'Themes'
+  teaser3text: 'Try out some beautiful themes.'
+  teaser3link: 'https://themes.typemill.net'
+  teaser3label: 'Choose Themes'
+  contrastPosition: '4'
+  contrastTitle: 'The Contrast Element'
+  contrastText: 'Configure the contrast element in the theme settings.'
+  contrastLink: 'https://typemill.net'
+  contrastLabel: 'Link to somewhere'
+  naviPosition: '5'
+  naviTitle: 'Table of Contents'
+  footer1: '### Footer 1'
+  footer2: '### Footer 2'
+  footer3: '### Footer 3'
 
 forms:
   fields:
@@ -26,27 +53,29 @@ forms:
           options:
             standard: Standard
             large: Large
-            full: Full Width        
-        blogimage:
-          type: checkbox
-          label: Post-Images
-          checkboxlabel: Generally show hero images in all lists of posts
+            full: Full Width
 
     bloghomepage:
       type: fieldset
-      legend: Posts on Homepage
+      legend: Post Configuration (Blog or News)
       fields:
+        blogimage:
+          type: checkbox
+          label: Hero Images
+          checkboxlabel: Show hero images in all lists of posts
         blog:
           type: checkbox
-          checkboxlabel: Activate a list of posts on the homepage
-        blogintro:
-          type: checkbox
-          label: Intro Content
-          checkboxlabel: Show the content of the homepage before the posts get listed
+          label: Homepage Posts
+          checkboxlabel: Show posts on the homepage
         blogfolder:
           type: text
-          label: Enter the folder path with the posts
+          label: Homepage Posts Folder
           placeholder: /blog
+          description: Add the relative pasts to the folder with posts that should appear on the homepage
+        blogintro:
+          type: checkbox
+          label: Homepage Intro Text
+          checkboxlabel: Show the text of the homepage before the list of posts
 
     landing:
       type: fieldset
@@ -64,17 +93,19 @@ forms:
           type: number
           label: Position of Intro Segment
           description: Use 0 to disable the section
-          css: 'lg:w-half'
+          css: 'lg:w-full'
+        introFullsize:
+          type: checkbox
+          label: Full Screen
+          checkboxlabel: Use full screen for the intro segment
         introTitle:
           type: text
           label: Title for your landingpage intro
           placeholder: Typemill
-          description: Leave empty to use the title of your base content page.
-          css: 'lg:w-half'
+          css: 'lg:w-full'
         introMarkdown:
           type: textarea
           label: Text for your landingpage intro (use markdown)
-          description: Leave empty to use the content of your base content page.
         introButtonLink:
           type: text
           label: Link for startbutton
@@ -85,18 +116,37 @@ forms:
           label: Label for startbutton
           placeholder: my label
           css: 'lg:w-half'
-        introFullsize:
-          type: checkbox
-          label: Full Screen
-          checkboxlabel: Use full screen for the intro segment
-        introImage:
-          type: checkbox
+        introBackground:
+          type: image
           label: Background Image
-          checkboxlabel: Use the hero-image from the homepage as background image
+          description: Use the original size if you want to improve the quality of the background image.
         introImageOpacity:
           type: text
-          label: Opacity for background image
+          label: Background Image Opacity
           placeholder: 0.8
+          description: 0 is fully transparent, 1 is without transparency
+        introImageBlendmode:
+          type: select
+          label: Blend mode for background image
+          options: 
+            lighten: 'lighten'
+            darken: 'darken'
+        introLogoTitle:
+          type: checkbox
+          label: Logo as title
+          checkboxlabel: Use the website logo from system settings instead of title
+        introTitleFallback:
+          type: checkbox
+          label: Title Fallback
+          checkboxlabel: Use the title of the homepage as fallback
+        introMarkdownFallback:
+          type: checkbox
+          label: Intro Text Fallback
+          checkboxlabel: Use the content of the homepage as fallback
+        introImage:
+          type: checkbox
+          label: Background Image Fallback
+          checkboxlabel: Use the hero-image of the homepage as background image
 
     landingpageInfo:
       type: fieldset
@@ -355,178 +405,177 @@ forms:
 
     fieldsetfooter:
       type: fieldset
-      legend: Footer columns
+      legend: 'Footer columns'
       fields:
         footercolumns:
           type: checkboxlist
-          label: Activate footer columns
+          label: 'Activate footer columns'
           options:
-            footer1: Column 1
-            footer2: Column 2
-            footer3: Column 3
+            footer1: 'Column 1'
+            footer2: 'Column 2'
+            footer3: 'Column 3'
         footer1:
           type: textarea
-          label: footer column 1 (use markdown)
+          label: 'footer column 1 (use markdown)'
         footer2:
           type: textarea
-          label: footer column 2 (use markdown)
+          label: 'footer column 2 (use markdown)'
         footer3:
           type: textarea
-          label: footer column 3 (use markdown)
-
+          label: 'footer column 3 (use markdown)'
 
     fieldsetcopyrightline:
       type: fieldset
-      legend: Copyright Line
+      legend: 'Copyright Line'
       fields:
         copyrightline:
           type: checkbox
-          checkboxlabel: Overwrite the copyright line
+          checkboxlabel: 'Overwrite the copyright line'
         copyrightlinetext:
           type: textarea
-          label: Overwrite Copyright Line (use markdown)
-          description: If overwrite the copyright line with the link to typemill, then please support Typemill e.g. with a link in the imprint, a blog-post, a social media mention or a recommendation.
+          label: 'Overwrite Copyright Line (use markdown)'
+          description: 'If overwrite the copyright line with the link to typemill, then please support Typemill e.g. with a link in the imprint, a blog-post, a social media mention or a recommendation.'
 
     fieldsetFonts:
       type: fieldset
-      legend: Font Families
+      legend: 'Font Families'
       fields:
         font:
           type: select
-          label: General font-family
-          description: All fonts are system fonts with fallbacks
+          label: 'General font-family'
+          description: 'All fonts are system fonts with fallbacks'
           options:
-            BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif: sans-serif
-            georgia,times,serif: serif
-            courier,sans-serif: courier (sans-serif)
-            helvetica,sans-serif: helvetica (sans-serif)
-            avenir,sans-serif: avenir (sans-serif)
-            athelas,serif: athelas (serif) 
-            georgia,serif: georgia (serif)
-            times,serif: times (serif)
-            bodoni,serif: bodoni (serif)
-            calisto,serif: calisto (serif)
-            garamond,serif: garamond (serif)
-            baskerville,serif: baskerville (serif)
+            'BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif': 'sans-serif'
+            'georgia,times,serif': 'serif'
+            'courier,sans-serif': 'courier (sans-serif)'
+            'helvetica,sans-serif': 'helvetica (sans-serif)'
+            'avenir,sans-serif': 'avenir (sans-serif)'
+            'athelas,serif': 'athelas (serif)'
+            'georgia,serif': 'georgia (serif)'
+            'times,serif': 'times (serif)'
+            'bodoni,serif': 'bodoni (serif)'
+            'calisto,serif': 'calisto (serif)'
+            'garamond,serif': 'garamond (serif)'
+            'baskerville,serif': 'baskerville (serif)'
         fontheadline:
           type: select
-          label: Font-family for headlines
-          description: All fonts are system fonts with fallbacks
+          label: 'Font-family for headlines'
+          description: 'All fonts are system fonts with fallbacks'
           options:
-            BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif: sans-serif
-            georgia,times,serif: serif
-            courier,sans-serif: courier (sans-serif)
-            helvetica,sans-serif: helvetica (sans-serif)
-            avenir,sans-serif: avenir (sans-serif)
-            athelas,serif: athelas (serif) 
-            georgia,serif: georgia (serif)
-            times,serif: times (serif)
-            bodoni,serif: bodoni (serif)
-            calisto,serif: calisto (serif)
-            garamond,serif: garamond (serif)
-            baskerville,serif: baskerville (serif)
+            'BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif': 'sans-serif'
+            'georgia,times,serif': 'serif'
+            'courier,sans-serif': 'courier (sans-serif)'
+            'helvetica,sans-serif': 'helvetica (sans-serif)'
+            'avenir,sans-serif': 'avenir (sans-serif)'
+            'athelas,serif': 'athelas (serif)'
+            'georgia,serif': 'georgia (serif)'
+            'times,serif': 'times (serif)'
+            'bodoni,serif': 'bodoni (serif)'
+            'calisto,serif': 'calisto (serif)'
+            'garamond,serif': 'garamond (serif)'
+            'baskerville,serif': 'baskerville (serif)'
         fontnavi:
           type: select
-          label: Font-family for navigations
-          description: All fonts are system fonts with fallbacks
+          label: 'Font-family for navigations'
+          description: 'All fonts are system fonts with fallbacks'
           options:
-            BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif: sans-serif
-            georgia,times,serif: serif
-            courier,sans-serif: courier (sans-serif)
-            helvetica,sans-serif: helvetica (sans-serif)
-            avenir,sans-serif: avenir (sans-serif)
-            athelas,serif: athelas (serif) 
-            georgia,serif: georgia (serif)
-            times,serif: times (serif)
-            bodoni,serif: bodoni (serif)
-            calisto,serif: calisto (serif)
-            garamond,serif: garamond (serif)
-            baskerville,serif: baskerville (serif)
+            'BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif': 'sans-serif'
+            'georgia,times,serif': 'serif'
+            'courier,sans-serif': 'courier (sans-serif)'
+            'helvetica,sans-serif': 'helvetica (sans-serif)'
+            'avenir,sans-serif': 'avenir (sans-serif)'
+            'athelas,serif': 'athelas (serif)'
+            'georgia,serif': 'georgia (serif)'
+            'times,serif': 'times (serif)'
+            'bodoni,serif': 'bodoni (serif)'
+            'calisto,serif': 'calisto (serif)'
+            'garamond,serif': 'garamond (serif)'
+            'baskerville,serif': 'baskerville (serif)'
             
     fieldsetColors:
       type: fieldset
-      legend: Colors
+      legend: 'Colors'
       fields:
         brandcolorprimary:
           type: text
-          label: Background color for body
+          label: 'Background color for body'
           placeholder: 'leightseagreen'
           css: 'lg:w-half'
         fontcolorprimary:
           type: text
-          label: Font color for body
+          label: 'Font color for body'
           placeholder: 'white'
           css: 'lg:w-half'
         newsbackground:
           type: text
-          label: Background color for news-box
+          label: 'Background color for news-box'
           placeholder: 'white'
           css: 'lg:w-half'
         newscolor:
           type: text
-          label: Font color for news-box
+          label: 'Font color for news-box'
           placeholder: '#333'
           css: 'lg:w-half'
         brandcolortertiary:
           type: text
-          label: Background color for buttons
+          label: 'Background color for buttons'
           placeholder: 'lightseagreen'
           css: 'lg:w-half'
         fontcolortertiary:
           type: text
-          label: Font color for buttons
+          label: 'Font color for buttons'
           placeholder: '#F7F7F7'
           css: 'lg:w-half'
         bordercolortertiary:
           type: text
-          label: Border color for buttons
+          label: 'Border color for buttons'
           placeholder: '#F7F7F7'
           css: 'lg:w-half'
         fontcolorlink:
           type: text
-          label: Font color for content links
+          label: 'Font color for content links'
           placeholder: '#007F7F'
           css: 'lg:w-half'
         brandcolorsecondary:
           type: text
-          label: Background color for content
+          label: 'Background color for content'
           placeholder: '#f7f7f7'
           css: 'lg:w-half'
         fontcolorsecondary:
           type: text
-          label: Font color for content
+          label: 'Font color for content'
           placeholder: '#333'
           css: 'lg:w-half'
         codebackground:
           type: text
-          label: Background color for code
+          label: 'Background color for code'
           placeholder: '#ddd'
           css: 'lg:w-half'
         codecolor:
           type: text
-          label: Font color for code
+          label: 'Font color for code'
           placeholder: '#333'
           css: 'lg:w-half'
         contentnavihoverbackground:
           type: text
-          label: Background color for hover of content navigation
+          label: 'Background color for hover of content navigation'
           placeholder: 'lightseagreen'
           css: 'lg:w-half'
         contentnavihovercolor:
           type: text
-          label: Font color for hover of content navigation
+          label: 'Font color for hover of content navigation'
           placeholder: 'white'
           css: 'lg:w-half'
         thinbordercolor:
           type: text
-          label: Thin border color
+          label: 'Thin border color'
           placeholder: 'lightgray'
-          description: Used for content navigation, table and horizontal line
+          description: 'Used for content navigation, table and horizontal line'
           css: 'lg:w-half'
         noticecolors:
           type: checkbox
-          label: Color for notices
-          checkboxlabel: Use grayscale color schema for notices
+          label: 'Color for notices'
+          checkboxlabel: 'Use grayscale color schema for notices'
           css: 'lg:w-half'
 
 metatabs:
@@ -536,5 +585,5 @@ metatabs:
         fields:
           glossary:
             type: checkbox
-            label: Glossary List (cyanine theme)
-            checkboxlabel: List pages or posts of this folder as glossary (only for folders)
+            label: 'Glossary List (cyanine theme)'
+            checkboxlabel: 'List pages or posts of this folder as glossary (only for folders)'

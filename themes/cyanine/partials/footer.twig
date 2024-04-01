@@ -1,31 +1,43 @@
 {% if settings.themes.cyanine.footercolumns is not empty %}
-
+ 
 	<footer class="w-100 bl br bb lh-copy">
-		<div class="center pv3 flex-l">
-			{% for column,key in settings.themes.cyanine.footercolumns %}
+		<div class="w-100 center grid-container">
+			<div class="grid-footer">
+				<div class="center pv3 flex-l">
+					{% for column,key in settings.themes.cyanine.footercolumns %}
 
-				{% if settings.themes.cyanine[key] %}
-					<div class="w-100 pv3 ph3 ph4-l">
-						{{ markdown(settings.themes.cyanine[key]) }}
-					</div>
-				{% endif %}
+						{% if settings.themes.cyanine[key] %}
+							<div class="w-100 pv3 ph3 ph4-l">
+								{{ markdown(settings.themes.cyanine[key]) }}
+							</div>
+						{% endif %}
 
-			{% endfor %}
+					{% endfor %}
+				</div>
+			</div>
 		</div>
 	</footer>
 
 {% endif %}
 
 <div class="w-100 center f6">
-	{% if settings.themes.cyanine.copyrightline %}
-		{{ markdown(settings.themes.cyanine.copyrightlinetext) }}
-	{% else %}
-		{% set nowYear = "now"|date("Y") %}
-		{% if settings.year is empty or settings.year == nowYear %}
-		    {% set copyrightYears = nowYear %}
-		{% else %}
-		    {% set copyrightYears = settings.year ~ ' - ' ~ nowYear %}
-		{% endif %}
-		<p class="f6">{{ settings.copyright }} {{ translate('by') }} {{ settings.author }}, {{ copyrightYears }}. {{ translate('All Rights Reserved') }}. {{ translate('Built with') }} <a class="link underline f-secondary" href="https://typemill.net">Typemill</a>.</p>
-	{% endif %}
+	<div class="w-100 center grid-container">
+		<div class="grid-footer">
+			<div class="ph3 ph4-l">
+
+				{% if settings.themes.cyanine.copyrightline %}
+					{{ markdown(settings.themes.cyanine.copyrightlinetext) }}
+				{% else %}
+					{% set nowYear = "now"|date("Y") %}
+					{% if settings.year is empty or settings.year == nowYear %}
+					    {% set copyrightYears = nowYear %}
+					{% else %}
+					    {% set copyrightYears = settings.year ~ ' - ' ~ nowYear %}
+					{% endif %}
+					<p class="f6">{{ settings.copyright }} {{ translate('by') }} {{ settings.author }}, {{ copyrightYears }}. {{ translate('All Rights Reserved') }}. {{ translate('Built with') }} <a class="link underline f-secondary" href="https://typemill.net">Typemill</a>.</p>
+				{% endif %}
+
+			</div>
+		</div>
+	</div>
 </div>

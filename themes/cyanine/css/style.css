@@ -374,6 +374,10 @@ button.play-video::after {
 	display: block;
 	width: 100%;
 }
+.grid-footer{
+  grid-column: 1 / -1;
+}
+
 .f-large{
 	font-size: 4rem;
 }
@@ -407,6 +411,9 @@ button.play-video::after {
 .indent-l-6{ padding-left:5rem; }
 .b--solid-hover:hover,.b--solid-hover:focus,.b--solid-hover:active{
 	border-style: solid;
+}
+.flex-grow{
+	flex-grow: 1;
 }
 
 /*************************

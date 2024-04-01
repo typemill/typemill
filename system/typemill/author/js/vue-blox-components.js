@@ -760,6 +760,8 @@ bloxeditor.component('table-component', {
 							<use xlink:href="#icon-table2"></use>
 						</svg>
 					</div>
+					{{ cellcontent }}
+					{{ table }}
 					<table ref="markdown" class="w-full ">
 						<colgroup>
 							<col v-for="col,index in table[0]" :width="index == 0 ? '40px' : ''">
@@ -770,8 +772,7 @@ bloxeditor.component('table-component', {
 									v-if 					= "rowindex === 0" 
 									v-for 					= "(value,colindex) in row" 
 									contenteditable 		= "false" 
-									@click 					= "switchcolumnbar($event, value)"  
-									@keydown.13.prevent 	= "enter"
+									@click.prevent 			= "switchcolumnbar($event, value)"  
 									:class 					= "colindex === 0 ? '' : 'hover:bg-stone-200 cursor-pointer transition-1'" 
 									class 					= "border border-stone-300 text-center text-stone-500"
 								>{{value}} 
@@ -790,9 +791,9 @@ bloxeditor.component('table-component', {
 									v-if 					= "rowindex === 1" 
 									v-for 					= "(value,colindex) in row" 
 									:contenteditable 		= "colindex !== 0 ? true : false" 
-									@click 					= "switchrowbar($event, value)" 
-									@keydown.13.prevent 	= "enter" 
-									@blur 					= "updatedata($event,colindex,rowindex)" 
+									@click.prevent 			= "switchrowbar($event, value)" 
+									@blur.prevent 			= "updatedata($event,colindex,rowindex)"
+									@paste.prevent  		= "updatedata($event,colindex,rowindex)"
 									:class 					= "colindex !== 0 ? 'text-center' : 'font-normal text-stone-500' "
 									class 					= "p-2 border border-stone-300"
 								>{{ value }}
@@ -801,9 +802,9 @@ bloxeditor.component('table-component', {
 									v-if 					= "rowindex > 1" 
 									v-for 					= "(value,colindex) in row" 
 									:contenteditable 		= "colindex !== 0 ? true : false" 
-									@click 					= "switchrowbar($event, value)" 
-									@keydown.13.prevent 	= "enter" 
-									@blur 					= "updatedata($event,colindex,rowindex)" 
+									@click.prevent 			= "switchrowbar($event, value)" 
+									@blur.prevent 			= "updatedata($event,colindex,rowindex)"
+									@paste.prevent  		= "updatedata($event,colindex,rowindex)"
 									:class 					= "colindex !== 0 ? '' : 'text-center text-stone-500 cursor-pointer hover:bg-stone-200'"
 									class 					= "p-2 border border-stone-300"
 								>
@@ -833,10 +834,15 @@ bloxeditor.component('table-component', {
 		beforeSave()
 		{
 			this.$emit('saveBlockEvent');
-		},		
+		},
+		checkPaste(event)
+		{
+			console.log(event);
+			return;
+		},
 		generateTable(markdown)
 		{
-			var table = [];
+			var newtable = [];
 			var lines = markdown.split("\n");
 			var length = lines.length
 			var c = 1;
@@ -864,11 +870,12 @@ bloxeditor.component('table-component', {
 								this.aligns[x] = "left";
 						}
 					}
-					continue; 
+					continue; 	
 				}
-				
+
 				var line = lines[i].trim();
-				var row = line.split("|").map(function(cell){
+				var row = line.split("|").map(function(cell)
+				{
 					return cell.trim();
 				});
 				if(row[0] == ''){ row.shift() }
@@ -878,13 +885,15 @@ bloxeditor.component('table-component', {
 					var rlength = row.length;
 					var row0 = [];
 					for(y = 0; y <= rlength; y++) { row0.push(y) }
-					table.push(row0);
+					newtable.push(row0);
 				}
 				row.splice(0,0,c);
 				c++;
-				table.push(row);
+				newtable.push(row);
 			}
-			this.table = table;
+			this.table = newtable;
+
+			this.$forceUpdate();
 		},
 		enter()
 		{
@@ -892,16 +901,23 @@ bloxeditor.component('table-component', {
 		},
 		updatedata(event,col,row)
 		{
-			this.table[row][col] = event.target.innerText;			
-			this.markdowntable();
+			const currentContent = this.table[row][col];
+			const newContent = event.target.innerText;
+		    if (newContent !== currentContent)
+		    {
+        		this.table[row][col] = newContent;
+	       		this.markdowntable();
+    		}
 		},
 		switchcolumnbar(event, value)
 		{
+			return;
 			this.rowbar = false;
 			(this.columnbar == value || value == 0) ? this.columnbar = false : this.columnbar = value;
 		},
 		switchrowbar(event, value)
 		{
+			return;
 			this.columnbar = false;
 			(this.rowbar == value || value == 0 || value == 1 )? this.rowbar = false : this.rowbar = value;
 		},

@@ -1,34 +1,48 @@
 {% if settings.themes.cyanine.introFullsize %}
-	<section class="landingpageintro vh-100 dt w-100 tc bt bl br bb">
 
-  		<div class="cover dtc v-mid bg-left bg-center-l" {% if settings.themes.cyanine.introImage %}style="background-image: url({{metatabs.meta.heroimage}});background-color:rgba(255,255,255,{{settings.themes.cyanine.introImageOpacity|default('0.8')}});background-blend-mode: lighten;" {% endif%} >
+	<section id="landingpageintro" class="landingpageintro vh-100 dt w-100 tc bt bl br bb">
+
+		{% if settings.themes.cyanine.introImage %}
+  			<div class="cover dtc v-mid bg-left bg-center-l" style="background-image: url({{metatabs.meta.heroimage}});background-color:rgba(255,255,255,{{settings.themes.cyanine.introImageOpacity|default('0.8')}});background-blend-mode: {{settings.themes.cyanine.introImageBlendmode|default('lighten')}};">
+		{% elseif settings.themes.cyanine.introBackground %}
+  			<div class="cover dtc v-mid bg-left bg-center-l" style="background-image: url({{settings.themes.cyanine.introBackground}});background-color:rgba(255,255,255,{{settings.themes.cyanine.introImageOpacity|default('0.8')}});background-blend-mode: {{settings.themes.cyanine.introImageBlendmode|default('lighten')}};">
+		{% else %}
+  			<div class="cover dtc v-mid bg-left bg-center-l">
+		{% endif %}
 
 			<div class="mw7 ph3 center">
 
 {% else %}
-	<section class="landingpageintro w-100 dib tc bt bl br bb">
 
-  		<div class="cover bg-left bg-center-l" {% if settings.themes.cyanine.introImage %}style="background-image: url({{metatabs.meta.heroimage}});background-color:rgba(255,255,255,{{settings.themes.cyanine.introImageOpacity|default('0.8')}});background-blend-mode: lighten;" {% endif%} >
+	<section id="landingpageintro" class="landingpageintro w-100 dib tc bt bl br bb">
+
+		{% if settings.themes.cyanine.introImage %}
+  			<div class="cover bg-left bg-center-l" style="background-image: url({{metatabs.meta.heroimage}});background-color:rgba(255,255,255,{{settings.themes.cyanine.introImageOpacity|default('0.8')}});background-blend-mode: {{settings.themes.cyanine.introImageBlendmode|default('lighten')}};">
+		{% elseif settings.themes.cyanine.introBackground %}
+  			<div class="cover bg-left bg-center-l" style="background-image: url({{settings.themes.cyanine.introBackground}});background-color:rgba(255,255,255,{{settings.themes.cyanine.introImageOpacity|default('0.8')}});background-blend-mode: {{settings.themes.cyanine.introImageBlendmode|default('lighten')}};">
+		{% else %}
+  			<div class="cover bg-left bg-center-l">
+		{% endif %}
 
 			<div class="mw7 pb7 pt6 ph3 center">
 
 {% endif %}
 				<div class="introbg pa4">
 					<header>
-						{% if logo %}
+						{% if settings.themes.cyanine.introLogoTitle %}
 							<img src="{{ base_url }}/{{ logo }}" class="logo-image"/>
+						{% elseif settings.themes.cyanine.introTitleFallback %}
+							<h1 class="f-large lh-title mv2">{{ title }}</h1>
 						{% elseif settings.themes.cyanine.introTitle %}
 							<h1 class="f-large lh-title mv2">{{ settings.themes.cyanine.introTitle }}</h1>
-						{% else %}
-							<h1 class="f-large lh-title mv2">{{ title }}</h1>
 						{% endif %}
 					</header>
 
 					<div class="f5 f4-ns fw3 lh-copy">
-						{% if settings.themes.cyanine.introMarkdown %}
-							{{ markdown(settings.themes.cyanine.introMarkdown) }}
-						{% else %}
+						{% if settings.themes.cyanine.introMarkdownFallback %}
 							{{ content }}
+						{% elseif settings.themes.cyanine.introMarkdown %}
+							{{ markdown(settings.themes.cyanine.introMarkdown) }}
 						{% endif %}
 					</div>
 

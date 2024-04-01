@@ -46,6 +46,15 @@
   opacity: 0;
 }
 
+ .editableinput {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    padding: 0;
+    resize: none;
+    min-height: 1rem; /* Set a minimum height */
+}
+
 /* CODEAREA */
 
 .codearea{

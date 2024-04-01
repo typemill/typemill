@@ -74,7 +74,7 @@ class Meta
 	# used if new articel/post is created
 	public function createInitialMeta(string $username, string $navtitle)
 	{
-		$author = '';
+		$author = $username;
 		$user = new User();
 		if($user->setUser($username))
 		{
