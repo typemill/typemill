@@ -35,6 +35,31 @@ const app = Vue.createApp({
 								</div>
 							</div>
 							<form class="w-full p-8" v-if="current == themename">
+								<div v-if="theme.readymades">
+									<fieldset class="flex flex-wrap justify-between block border-2 border-stone-200 p-4 my-8">
+										<legend class="text-lg font-medium">Readymades</legend>
+										<p class="w-full bg-stone-200 mb p-2">Readymades help you to setup your theme with prefilled settings. Load some readymades, check out the frontend and adjust the settings as needed. Find more informations about specific readymades on the <a class="text-teal-500" :href="themeurl(themename)">theme's website.</p>
+										<p class="w-full text-center mb-4 p-2 bg-rose-500 text-white">If you load and save a readymade, then your individual settins will be overwritten and are lost!</p>
+										<ul class="flex flex-wrap justify-between">
+											<li class="w-1/3 p-2 flex">
+												<div class="border-2 border-stone-200">
+													<button class="w-full center bg-stone-200 p-2 hover:bg-stone-300 transition duration-100" @click.prevent="loadReadymade('individual')">Load individual</button>
+													<div class="p-3">
+														<p>Load your stored individual settings.</p>
+													</div>
+												</div>
+											</li>
+											<li class="w-1/3 p-2 flex" v-for="(readysetup,readyname) in theme.readymades">
+												<div class="border-2 border-stone-200">
+													<button class="w-full center bg-stone-200 p-2 hover:bg-stone-300 transition duration-100" @click.prevent="loadReadymade(readyname)">Load {{ readysetup.name }}</button>
+													<div class="p-3">
+														<p>{{ readysetup.description }}</p>
+													</div>
+												</div>
+											</li>
+										</ul>
+									</fieldset>
+								</div>
 								<div v-for="(fieldDefinition, fieldname) in theme.forms.fields">
 									<fieldset class="flex flex-wrap justify-between border-2 border-stone-200 p-4 my-8" v-if="fieldDefinition.type == 'fieldset'">
 										<legend class="text-lg font-medium">{{ fieldDefinition.legend }}</legend>
@@ -89,6 +114,7 @@ const app = Vue.createApp({
 			current: '',
 			formDefinitions: data.definitions,
 			formData: data.settings,
+			readymades: data.readymades,
 			theme: data.theme,
 			license: data.license,
 			message: '',
@@ -140,6 +166,10 @@ const app = Vue.createApp({
 		});
 	},
 	methods: {
+		themeurl(name)
+		{
+			return 'https://themes.typemill.net/' + name;
+		},
 		deactivateThemes()
 		{
 			for (const theme in this.formData) {
@@ -211,6 +241,19 @@ const app = Vue.createApp({
 		selectComponent(type)
 		{
 			return 'component-'+type;
+		},
+		loadReadymade(name)
+		{
+			if(this.readymades[this.current] && this.readymades[this.current].individual === undefined)
+			{
+				this.readymades[this.current].individual = { 'settings' : this.formData[this.current] };			
+			}
+			
+			if(this.readymades[this.current][name] !== undefined)
+			{
+				this.formData[this.current] = this.readymades[this.current][name].settings;
+				eventBus.$emit('codeareaupdate');
+			}
 		},
 		save()
 		{

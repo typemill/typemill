@@ -88,17 +88,25 @@ app.component('component-codearea', {
 			  </div>`,
 	mounted: function()
 	{
-		this.resizeCodearea();
-		this.highlight(this.value);
+		this.initialize()
+
+		eventBus.$on('codeareaupdate', this.initialize );		
 	},
 	methods: {
-		update: function($event, name)
+		initialize()
+		{
+			this.$nextTick(() => {
+				this.highlight(this.value);
+				this.resizeCodearea();
+			});
+		},
+		update($event, name)
 		{
 			this.highlight($event.target.value);
 			this.resizeCodearea();
 			eventBus.$emit('forminput', {'name': name, 'value': $event.target.value});
 		},
-		resizeCodearea: function()
+		resizeCodearea()
 		{
 			let codeeditor = this.$refs["editor"];
 
@@ -110,7 +118,7 @@ app.component('component-codearea', {
 				}
 			});
 		},
-		highlight: function(code)
+		highlight(code)
 		{
 			if(code === undefined)
 			{

@@ -74,6 +74,7 @@ class ControllerWebSystem extends Controller
 		$extension 			= new Extension();
 		$themeDefinitions 	= $extension->getThemeDetails($this->settings['theme']);
 		$themeSettings 		= $extension->getThemeSettings($this->settings['themes']);
+		$readymades 		= [];
 
 		# add userroles and other datasets
 		foreach($themeDefinitions as $name => $definitions)
@@ -93,6 +94,11 @@ class ControllerWebSystem extends Controller
 					}
 				}
 			}
+
+			if(isset($definitions['readymades']))
+			{
+				$readymades[$name] = $definitions['readymades'];
+			}
 		}
 
 		$license = [];
@@ -106,9 +112,10 @@ class ControllerWebSystem extends Controller
 			'darkmode'			=> $request->getAttribute('c_darkmode'),
 			'mainnavi'			=> $mainNavigation,
 			'jsdata' 			=> [
-										'systemnavi'		=> $systemNavigation,
+										'systemnavi'	=> $systemNavigation,
 										'settings' 		=> $themeSettings,
 										'definitions'	=> $themeDefinitions,
+										'readymades' 	=> $readymades,
 										'theme'			=> $this->settings['theme'],
 										'license' 		=> $license,
 										'labels'		=> $this->c->get('translations'),
