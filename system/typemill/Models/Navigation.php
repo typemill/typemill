@@ -12,23 +12,9 @@ class Navigation extends Folder
 
 	private $naviFolder;
 
-	private $liveNaviName;
-
 	private $draftNaviName;
 
-	private $extendedNaviName;
-
-	private $extendedNavigation = false;
-
-	private $draftNavigation = false;
-
-	private $basicDraftNavigation = false;
-
-	private $liveNavigation = false;
-
-	private $basicLiveNavigation = false;
-
-	public $activeNavigation = false;
+	private $DS;
 
 	public function __construct()
 	{
@@ -36,42 +22,9 @@ class Navigation extends Folder
 
 		$this->naviFolder 			= 'navigation';
 
-		$this->liveNaviName 		= 'navi-live.txt';
+		$this->draftNaviName 		= 'draft-navi';
 
-		$this->draftNaviName 		= 'navi-draft.txt';
-
-		$this->extendedNaviName 	= 'navi-extended.txt';
-	}
-
-	# use array ['extended' => true, 'draft' => true, 'live' => true] to clear files
-	public function clearNavigation(array $deleteitems = NULL )
-	{
-		$result = false;
-
-		# clear cache 
-		$this->extendedNavigation 		= false;
-		$this->draftNavigation 			= false;
-		$this->basicDraftNavigation 	= false;
-		$this->liveNavigation 			= false;
-		$this->basicLiveNavigation 		= false;
-
-		$navifiles = [
-			'extended' 	=> $this->extendedNaviName,
-			'draft' 	=> $this->draftNaviName,
-			'live'		=> $this->liveNaviName
-		];
-
-		if($deleteitems)
-		{
-			$navifiles = array_intersect_key($navifiles, $deleteitems);
-		}
-
-		foreach($navifiles as $navifile)
-		{
-			$result = $this->storage->deleteFile('dataFolder', $this->naviFolder, $navifile);
-		}
-
-		return $result;
+		$this->DS 					= DIRECTORY_SEPARATOR;
 	}
 
 	public function getMainNavigation($userrole, $acl, $urlinfo, $editor)
@@ -148,85 +101,278 @@ class Navigation extends Folder
 		return $allowedsystemnavi;
 	}
 
-	# get the navigation with draft files for author environment
-	public function getDraftNavigation($urlinfo, $language, $userrole = null, $username = null)
+
+	# use array ['extended' => true, 'draft' => true, 'live' => true] to clear files
+	public function clearNavigation($deleteItems = NULL)
 	{
-		# todo: filter for userrole or username 
+		$result = false;
 
-		$this->draftNavigation = $this->storage->getFile('dataFolder', $this->naviFolder, $this->draftNaviName, 'unserialize');
+		$dataPath 			= $this->storage->getFolderPath('dataFolder');
+		$naviPath 			= $dataPath . DIRECTORY_SEPARATOR . $this->naviFolder;
+		$naviFiles 			= scandir($naviPath);
 
-		if($this->draftNavigation)
+		if($deleteItems)
 		{
-			return $this->draftNavigation;
+			# replace the placeholder '/' for a base-item with the cached base navigation
+			foreach ($deleteItems as &$value)
+			{
+			    if ($value === '/')
+			    {
+			        $value = $this->draftNaviName;
+			    }
+			    else
+			    {
+			    	$value .= '.txt';
+			    }
+			}
+
+			$naviFiles = array_intersect($naviFiles, $deleteItems);
 		}
 
-		# if there is no cached navi, create a basic new draft navi
-		$basicDraftNavigation = $this->getBasicDraftNavigation($urlinfo, $language);
+		foreach($naviFiles as $naviFile)
+		{
+			if (!in_array($naviFile, array(".","..")) && substr($naviFile, 0, 1) != '.')
+			{
+				$result = $this->storage->deleteFile('dataFolder', $this->naviFolder, $naviFile);
+			}
+		}
 
-		# get the extended navigation with additional infos from the meta-files like title or hidden pages
-		$extendedNavigation = $this->getExtendedNavigation($urlinfo, $language);
+		return $result;
+	}
 
-		# merge the basic draft navi with the extended infos from meta-files
-		$draftNavigation = $this->mergeNavigationWithExtended($basicDraftNavigation, $extendedNavigation);
 
-		# cache it
-		$this->storage->writeFile('dataFolder', $this->naviFolder, $this->draftNaviName, $draftNavigation, 'serialize');
+	public function getItemForUrl($url, $urlinfo, $langattr)
+	{
+		$url = $this->removeEditorFromUrl($url);
+
+		if($url == '/')
+		{
+			return $this->getHomepageItem($urlinfo['baseurl']);
+		}
+
+		$pageinfo = $this->getPageInfoForUrl($url, $urlinfo, $langattr);
+
+		if(!$pageinfo)
+		{
+			return false;
+		}
+
+		$foldername = $this->getFirstUrlSegment($pageinfo['path']);
+
+		$draftNavigation = $this->getDraftNavigation($urlinfo, $langattr, $foldername);
+		if(!$draftNavigation)
+		{
+			return false;
+		}
+
+		$keyPathArray = explode(".", $pageinfo['keyPath']);
+		$item = $this->getItemWithKeyPath($draftNavigation, $keyPathArray);
+
+		return $item;
+	}
+
+	public function getPageInfoForUrl($url, $urlinfo, $langattr)
+	{
+		# get the first level navigation
+		$firstLevelExtended = $this->getExtendedNavigation($urlinfo, $langattr, '/');
+
+		$firstUrlSegment = $this->getFirstUrlSegment($url);
+		$firstUrlSegment = '/' . $firstUrlSegment;
+
+		$pageinfo = $firstLevelExtended[$firstUrlSegment] ?? false;
+
+		# first level does not exist
+		if(!$pageinfo)
+		{
+			return false;
+		}
+
+		# url is first level
+		if($url == $firstUrlSegment)
+		{
+			return $pageinfo;
+		}
+
+		$foldername = trim($pageinfo['path'], $this->DS);
+
+		$extendedNavigation = $this->getExtendedNavigation($urlinfo, $langattr, $foldername);
+
+		$pageinfo = $extendedNavigation[$url] ?? false;
+		if(!$pageinfo)
+		{
+			return false;
+		}
+
+		return $pageinfo;
+	}
+
+	private function removeEditorFromUrl($url)
+	{
+		$url = trim($url, '/');
+
+		$url = str_replace('tm/content/visual', '', $url);
+		$url = str_replace('tm/content/raw', '', $url);
+
+		$url = trim($url, '/');
+
+		return '/' . $url;
+	}
+
+	public function getFirstUrlSegment($url)
+	{
+		$segments = explode('/', $url);
+
+		if(isset($segments[1]))
+		{
+			return $segments[1];
+		}
+
+		return '';
+	}
+
+	public function getNaviFileNameForPath($path)
+	{
+		$segments = explode($this->DS, $path);
+
+		# navi-file-name for a base-folder is draftNaviName where first level items are cached.
+		if(isset($segments[2]))
+		{
+			return $segments[1];
+		}
+
+		return $this->draftNaviName;
+	}
+
+
+
+	public function getLiveNavigation($urlinfo, $langattr)
+	{
+		$draftNavigation = $this->getFullDraftNavigation($urlinfo, $langattr);
+
+		$liveNavigation = $this->generateLiveNavigationFromDraft($draftNavigation);
+
+		$liveNavigation = $this->removeHiddenPages($liveNavigation);
+
+		return $liveNavigation;
+	}
+
+	# ASK FOR THE FULL DRAFT NAVIGATION AND MERGE ALL SEPARATED NAVIGATIONS
+	public function getFullDraftNavigation($urlinfo, $language, $userrole = null, $username = null)
+	{
+		# get first level
+		$draftNavigation = $this->getDraftNavigation($urlinfo, $language, '/');
+
+		foreach($draftNavigation as $key => $item)
+		{
+			if($item->elementType == 'folder')
+			{
+				$subfolder = $this->getDraftNavigation($urlinfo, $language, $item->originalName);
+
+				$draftNavigation[$key]->folderContent = $subfolder[$key]->folderContent;
+			}
+		}
 
 		return $draftNavigation;
 	}
 
-	public function getBasicDraftNavigation($urlinfo, $language)
+	# ASK FOR A STATIC DRAFT NAVIGATION AND CREATE ONE IF NOT THERE
+	public function getDraftNavigation($urlinfo, $language, $foldername)
 	{
-		if(!$this->basicDraftNavigation)
-		{
-			$this->basicDraftNavigation = $this->createBasicDraftNavigation($urlinfo, $language);
-		}
-		return $this->basicDraftNavigation;
-	}
+		$draftFileName 		= $this->getDraftFileName($foldername);
+		$extendedFileName 	= $this->getExtendedFileName($foldername);
 
-	# creates a fresh structure with published and non-published pages for the author
-	public function createBasicDraftNavigation($urlinfo, $language)
-	{
-		# scan the content of the folder
-		$draftContentTree = $this->scanFolder($this->storage->getFolderPath('contentFolder'), $draft = true);
+		$draftNavigation = $this->getDraftNavigationFile($draftFileName);
 
-		# if there is content, then get the content details
-		if(count($draftContentTree) > 0)
+		if($draftNavigation)
 		{
-			$draftNavigation = $this->getFolderContentDetails($draftContentTree, $language, $urlinfo['baseurl'], $urlinfo['basepath']);
-			
 			return $draftNavigation;
 		}
 
-		return false;
-	}
-
-	# get the navigation with draft files for author environment
-	public function getLiveNavigation($urlinfo, $language, $userrole = null, $username = null)
-	{
-		# todo: filter for userrole or username 
-
-		$this->liveNavigation = $this->storage->getFile('dataFolder', $this->naviFolder, $this->liveNaviName, 'unserialize');
-
-		if($this->liveNavigation)
+		$rawDraftNavigation = $this->generateRawDraftNavigation($urlinfo, $language, $foldername);
+		if(!$rawDraftNavigation)
 		{
-			return $this->liveNavigation;
+			return false;
 		}
 
-		$draftNavigation = $this->getDraftNavigation($urlinfo, $language);
+		$extendedNavigation = $this->getExtendedNavigationFile($extendedFileName);
+		if(!$extendedNavigation)
+		{
+			$extendedNavigation = $this->generateExtendedFromDraft($rawDraftNavigation);
 
-		$basicLiveNavigation = $this->generateLiveNavigationFromDraft($draftNavigation);
+			if(!$extendedNavigation)
+			{
+				return false;
+			}
+			
+			$this->storeStaticNavigation($extendedFileName, $extendedNavigation);
+		}
 
-		# get the extended navigation with additional infos from the meta-files like title or hidden pages
-		$extendedNavigation = $this->getExtendedNavigation($urlinfo, $language);
+		$draftNavigation = $this->mergeExtendedWithDraft($rawDraftNavigation, $extendedNavigation);
+		if(!$draftNavigation)
+		{
+			return false;
+		}
+		
+		$this->storeStaticNavigation($draftFileName, $draftNavigation);
 
-		# merge the basic draft navi with the extended infos from meta-files
-		$liveNavigation = $this->mergeNavigationWithExtended($basicLiveNavigation, $extendedNavigation);
+		return $draftNavigation;
+	}
 
-		# cache it
-		$this->storage->writeFile('dataFolder', $this->naviFolder, $this->liveNaviName, $liveNavigation, 'serialize');
+	public function getExtendedNavigation($urlinfo, $language, $foldername)
+	{
+		$draftFileName 		= $this->getDraftFileName($foldername);
+		$extendedFileName 	= $this->getExtendedFileName($foldername);
 
-		return $liveNavigation;
+		$extendedNavigation = $this->getExtendedNavigationFile($extendedFileName);
+		if($extendedNavigation)
+		{
+			return $extendedNavigation;
+		}
+
+		$draftNavigation 	= $this->getDraftNavigationFile($draftFileName);
+		if(!$draftNavigation)
+		{
+			# we have to create and store extended and draft in this case 
+
+			$rawDraftNavigation = $this->generateRawDraftNavigation($urlinfo, $language, $foldername);
+
+			if(!$rawDraftNavigation)
+			{
+				return false;
+			}
+		
+			$extendedNavigation = $this->generateExtendedFromDraft($rawDraftNavigation);
+
+			if(!$extendedNavigation)
+			{
+				return false;
+			}
+			
+			$this->storeStaticNavigation($extendedFileName, $extendedNavigation);
+
+			$draftNavigation = $this->mergeExtendedWithDraft($rawDraftNavigation, $extendedNavigation);
+			if(!$draftNavigation)
+			{
+				return false;
+			}
+			
+			$this->storeStaticNavigation($draftFileName, $draftNavigation);
+
+			return $extendedNavigation;
+		}
+
+		# we only have to create and store extended in this case
+
+		$extendedNavigation = $this->generateExtendedFromDraft($draftNavigation);
+
+		if(!$extendedNavigation)
+		{
+			return false;
+		}
+		
+		$this->storeStaticNavigation($extendedFileName, $extendedNavigation);
+
+		return $extendedNavigation;
 	}
 
 	public function generateLiveNavigationFromDraft($draftNavigation)
@@ -255,57 +401,69 @@ class Navigation extends Folder
 		return $draftNavigation;
 	}
 
-/*
-	public function getBasicLiveNavigation($urlinfo, $language)
+	private function storeStaticNavigation($filename, $data)
 	{
-		if(!$this->basicLiveNavigation)
+		if($filename == '.txt' OR $filename == '-extended.txt')
 		{
-			$this->basicLiveNavigation = $this->createBasicLiveNavigation($urlinfo, $language);
+			return false;
 		}
-		return $this->basicLiveNavigation;
-	}
 
-	public function createBasicLiveNavigation($urlinfo, $language)
-	{
-		# scan the content of the folder
-		$liveContentTree = $this->scanFolder($this->storage->getFolderPath('contentFolder'), $draft = false);
-
-		# if there is content, then get the content details
-		if(count($liveContentTree) > 0)
+		if($this->storage->writeFile('dataFolder', $this->naviFolder, $filename, $data, 'serialize'))
 		{
-			$liveNavigation = $this->getFolderContentDetails($liveContentTree, $language, $urlinfo['baseurl'], $urlinfo['basepath']);
-
-			return $liveNavigation;
+			return true;
 		}
 
 		return false;
 	}
-*/
-	
-	# get the extended navigation with additional infos from the meta-files like title or hidden pages
-	public function getExtendedNavigation($urlinfo, $language)
+
+	# gets the cached draft navigation of a folder or of the first level
+	private function getDraftNavigationFile($filename)
 	{
-		if(!$this->extendedNavigation)
+		$draftNavigation = $this->storage->getFile('dataFolder', $this->naviFolder, $filename, 'unserialize');
+
+		if($draftNavigation)
 		{
-			# read the extended navi file
-			$this->extendedNavigation = $this->storage->getYaml('dataFolder', $this->naviFolder, $this->extendedNaviName);
+			return $draftNavigation;
 		}
 
-		if(!$this->extendedNavigation)
-		{
-			$basicDraftNavigation = $this->getBasicDraftNavigation($urlinfo, $language);
+		return false;
+	}
 
-			$this->extendedNavigation = $this->createExtendedNavigation($basicDraftNavigation, $extended = NULL);
-		
-			# cache it
-			$this->storage->updateYaml('dataFolder', $this->naviFolder, $this->extendedNaviName, $this->extendedNavigation);
+	# generates a raw draft navigation 
+	private function generateRawDraftNavigation($urlinfo, $language, $foldername = false)
+	{
+		# convert basefolder '/' to true
+		$flat = ($foldername == '/') ? true : $foldername;
+
+		# scan the content of the folder
+		$draftContentTree = $this->scanFolder($this->storage->getFolderPath('contentFolder'), $flat);
+
+		# if there is content, then get the content details
+		if(count($draftContentTree) > 0)
+		{
+			$draftNavigation = $this->getFolderContentDetails($draftContentTree, $language, $urlinfo['baseurl'], $urlinfo['basepath']);
+			
+			return $draftNavigation;
 		}
 
-		return $this->extendedNavigation;
+		return false;
+	}
+
+	# get the extended Navigation file for a folder or base 
+	private function getExtendedNavigationFile($filename)
+	{
+		$extendedNavigation = $this->storage->getFile('dataFolder', $this->naviFolder, $filename, 'unserialize');
+
+		if($extendedNavigation)
+		{
+			return $extendedNavigation;
+		}
+
+		return false;
 	}
 
 	# reads all meta-files and creates an array with url => ['hide' => bool, 'navtitle' => 'bla']
-	public function createExtendedNavigation($navigation, $extended = NULL)
+	private function generateExtendedFromDraft($navigation, $extended = NULL)
 	{
 		if(!$extended)
 		{
@@ -337,36 +495,60 @@ class Navigation extends Folder
 
 			if ($item->elementType == 'folder')
 			{
-				$extended = $this->createExtendedNavigation($item->folderContent, $extended);
+				$extended = $this->generateExtendedFromDraft($item->folderContent, $extended);
 			}
 		}
 
 		return $extended;
 	}
 
-	# merge a basic navigation (live or draft) with extended information from meta
-	public function mergeNavigationWithExtended($navigation, $extended)
+	# takes a draft navigation and extended navigation and merges both
+	private function mergeExtendedWithDraft($draftNavigation, $extendedNavigation)
 	{
 		$mergedNavigation = [];
 
-		foreach($navigation as $key => $item)
+		foreach($draftNavigation as $key => $item)
 		{
-			if($extended && isset($extended[$item->urlRelWoF]))
+			if($extendedNavigation && isset($extendedNavigation[$item->urlRelWoF]))
 			{
-				$item->name 		= ($extended[$item->urlRelWoF]['navtitle'] != '') ? $extended[$item->urlRelWoF]['navtitle'] : $item->name;
-				$item->hide 		= ($extended[$item->urlRelWoF]['hide'] === true) ? true : false;
-				$item->noindex		= (isset($extended[$item->urlRelWoF]['noindex']) && $extended[$item->urlRelWoF]['noindex'] === true) ? true : false;
+				$item->name 		= ($extendedNavigation[$item->urlRelWoF]['navtitle'] != '') ? $extendedNavigation[$item->urlRelWoF]['navtitle'] : $item->name;
+				$item->hide 		= ($extendedNavigation[$item->urlRelWoF]['hide'] === true) ? true : false;
+				$item->noindex		= (isset($extendedNavigation[$item->urlRelWoF]['noindex']) && $extendedNavigation[$item->urlRelWoF]['noindex'] === true) ? true : false;
 			}
 
 			if($item->elementType == 'folder')
 			{
-				$item->folderContent = $this->mergeNavigationWithExtended($item->folderContent, $extended);
+				$item->folderContent = $this->mergeExtendedWithDraft($item->folderContent, $extendedNavigation);
 			}
 
 			$mergedNavigation[$key] = $item;
 		}
 
 		return $mergedNavigation;
+	}
+
+	protected function getDraftFileName($foldername)
+	{
+		$draftFileName = $foldername;
+
+		if($draftFileName == '/')
+		{
+			$draftFileName = $this->draftNaviName;
+		}
+
+		return $draftFileName . '.txt';
+	}
+
+	protected function getExtendedFileName($foldername)
+	{
+		$draftFileName = $foldername;
+
+		if($draftFileName == '/')
+		{
+			$draftFileName = $this->draftNaviName;
+		}
+
+		return $draftFileName . '-extended.txt';
 	}
 
 	public function getItemWithKeyPath($navigation, array $searchArray, $baseUrl = null)
@@ -391,64 +573,6 @@ class Navigation extends Folder
 		}
 
 		return $item;
-	}
-
-	# NOT IN USE ANYMORE BUT KEEP IT
-	public function getItemWithUrl($navigation, $url, $result = NULL)
-	{
-		foreach($navigation as $key => $item)
-		{
-			# set item active, needed to move item in navigation
-			if($item->urlRelWoF === $url)
-			{
-				$result = $item;
-				break;
-			}
-			elseif($item->elementType === "folder")
-			{
-				$result = self::getItemWithUrl($item->folderContent, $url, $result);
-
-				if($result)
-				{
-					break;
-				}
-			}
-		}
-
-		return $result;
-	}	
-	
-
-	# NOT IN USE ANYMORE BUT KEEP IT
-	public function setActiveNaviItems($navigation, $breadcrumb)
-	{
-		if($breadcrumb)
-		{
-			foreach($breadcrumb as $crumbkey => $page)
-			{
-				foreach($navigation as $itemkey => $item)
-				{
-					if($page->urlRelWoF == $item->urlRelWoF)
-					{
-						unset($breadcrumb[$crumbkey]);
-
-						if(empty($breadcrumb))
-						{
-							$navigation[$itemkey]->active = true;
-						}
-						elseif(isset($navigation[$itemkey]->folderContent))
-						{
-							$navigation[$itemkey]->activeParent = true;
-							$navigation[$itemkey]->folderContent = $this->setActiveNaviItems($navigation[$itemkey]->folderContent, $breadcrumb);
-						}
-
-						break;
-					}
-				}
-			}
-		}
-
-		return $navigation;
 	}
 
 	# used with scan folder that keeps index from draft version
@@ -681,8 +805,73 @@ class Navigation extends Folder
 		return $flat;
 	}
 
+	# NOT IN USE ANYMORE BUT KEEP IT
+	public function getItemWithUrl($navigation, $url, $result = NULL)
+	{
+		die('getItemWithURL in navigation model not in use.');
+
+		foreach($navigation as $key => $item)
+		{
+			# set item active, needed to move item in navigation
+			if($item->urlRelWoF === $url)
+			{
+				$result = $item;
+				break;
+			}
+			elseif($item->elementType === "folder")
+			{
+				$result = self::getItemWithUrl($item->folderContent, $url, $result);
+
+				if($result)
+				{
+					break;
+				}
+			}
+		}
+
+		return $result;
+	}	
+	
+
+	# NOT IN USE ANYMORE BUT KEEP IT
+	public function setActiveNaviItems($navigation, $breadcrumb)
+	{
+		die('setActiveNaviItems in navigation model not in use.');
+
+		if($breadcrumb)
+		{
+			foreach($breadcrumb as $crumbkey => $page)
+			{
+				foreach($navigation as $itemkey => $item)
+				{
+					if($page->urlRelWoF == $item->urlRelWoF)
+					{
+						unset($breadcrumb[$crumbkey]);
+
+						if(empty($breadcrumb))
+						{
+							$navigation[$itemkey]->active = true;
+						}
+						elseif(isset($navigation[$itemkey]->folderContent))
+						{
+							$navigation[$itemkey]->activeParent = true;
+							$navigation[$itemkey]->folderContent = $this->setActiveNaviItems($navigation[$itemkey]->folderContent, $breadcrumb);
+						}
+
+						break;
+					}
+				}
+			}
+		}
+
+		return $navigation;
+	}
+
+	# NOT IN USE ANYMORE
 	public function getLastItemOfFolder($folder)
 	{
+		die('getLastItemOfFolder in navimodel not in use.');
+
 		$lastItem = end($folder->folderContent);
 		if(is_object($lastItem) && $lastItem->elementType == 'folder' && !empty($lastItem->folderContent))
 		{

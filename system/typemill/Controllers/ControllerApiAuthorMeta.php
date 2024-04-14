@@ -17,9 +17,10 @@ class ControllerApiAuthorMeta extends Controller
 	{
 		$url 				= $request->getQueryParams()['url'] ?? false;
 
-		$navigation 		= new Navigation();
 		$urlinfo 			= $this->c->get('urlinfo');
-		$item 				= $this->getItem($navigation, $url, $urlinfo);
+		$langattr 			= $this->settings['langattr'];
+		$navigation 		= new Navigation();
+		$item 				= $navigation->getItemForUrl($url, $urlinfo, $langattr);
 		if(!$item)
 		{
 			$response->getBody()->write(json_encode([
@@ -125,9 +126,10 @@ class ControllerApiAuthorMeta extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
-		$navigation 		= new Navigation();
 		$urlinfo 			= $this->c->get('urlinfo');
-		$item 				= $this->getItem($navigation, $params['url'], $urlinfo);
+		$langattr 			= $this->settings['langattr'];
+		$navigation 		= new Navigation();
+		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
 			$response->getBody()->write(json_encode([
@@ -193,47 +195,11 @@ class ControllerApiAuthorMeta extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
-/*
-		$errors 		= [];
-
-		# take the user input data and iterate over all fields and values
-		foreach($params['data'] as $fieldname => $fieldvalue)
-		{
-			# get the corresponding field definition from original plugin settings
-			$fielddefinition = $tabdefinitions[$fieldname] ?? false;
-
-			if(!$fielddefinition)
-			{
-				$errors[$tab][$fieldname] = Translations::translate('This field is not defined');
-			}
-			else
-			{
-				# validate user input for this field
-				$result = $validate->field($fieldname, $fieldvalue, $fielddefinition);
-
-				if($result !== true)
-				{
-					$errors[$params['tab']][$fieldname] = $result[$fieldname][0];
-				}
-			}
-		}
-
-		# return validation errors
-		if(!empty($errors))
-		{ 
-			$response->getBody()->write(json_encode([
-				'message' => Translations::translate('Please correct your input.'),
-				'errors' => $errors
-			]));
-
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
-		}
-*/
-
-		# extended
-		$navigation = new Navigation();
-
-		$extended = $navigation->getExtendedNavigation($urlinfo, $this->settings['langattr']);
+		$navigation 		= new Navigation();
+		$naviFileName 		= $navigation->getNaviFileNameForPath($item->path);
+		$extended 			= $navigation->getExtendedNavigation($urlinfo, $this->settings['langattr'], $naviFileName);
+		$draftNavigation 	= false;
+		$updateDraftNavi 	= false;
 
 		if($params['tab'] == 'meta')
 		{
@@ -262,11 +228,13 @@ class ControllerApiAuthorMeta extends Controller
 
 					$renameresults = $meta->renamePost($item->pathWithoutType, $newPathWithoutType);
 
-					$navigation->clearNavigation();
+					# make sure the whole navigation with base-navigation and folder-navigation is updated. Bad for performance but rare case
+				    $navigation->clearNavigation();
 
-					# WE HAVE TO REGENERATE ITEM AND NAVIGATION
-					$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']);
-					$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
+					# RECREATE ITEM AND NAVIGATION, because we rename filename first and later update the meta-content
+					$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
+					$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
+					$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);				
 				}
 			}
 
@@ -300,7 +268,17 @@ class ControllerApiAuthorMeta extends Controller
 					return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 				}
 
-				$navigation->clearNavigation();
+				# this will only update the basic draft navigation but we also have to update the folder navigation
+			    # $navigation->clearNavigation([$naviFileName, $naviFileName. "-extened"]);
+				# other solution: 
+				# $fakeFolderpath = $item->getPath;
+				# $fakeFolderpath .= '/getMyParent';
+				# $naviFolderName = $navigation->getNaviFileNameForPath($fakeFolderPath);
+			    # $navigation->clearNavigation([$naviFolderName, $naviFolderName. "-extened"]);
+
+			    # clear the whole navigation to make sure that folder navigation is recreated correctly
+			    $navigation->clearNavigation();
+			    $updateDraftNavi = true;
 			}
 
 			# normalize the meta-input
@@ -315,7 +293,8 @@ class ControllerApiAuthorMeta extends Controller
 				&& isset($extended[$item->urlRelWoF])
 			)
 			{
-				$navigation->clearNavigation();
+				$navigation->clearNavigation([$naviFileName, $naviFileName . '-extended']);
+				$updateDraftNavi = true;
 			}
 			elseif(
 				# check if navtitle or hide-value has been changed
@@ -326,10 +305,11 @@ class ControllerApiAuthorMeta extends Controller
 				($this->hasChanged($params['data'], $metadata['meta'], 'noindex'))
 			)
 			{
-				$navigation->clearNavigation();
+				$navigation->clearNavigation([$naviFileName, $naviFileName . '-extended']);
+				$updateDraftNavi = true;
 			}
 		}
-		
+
 		# add the new/edited metadata
 		$metadata[$params['tab']] = $validated['data'];
 
@@ -338,9 +318,12 @@ class ControllerApiAuthorMeta extends Controller
 
 		if($store === true)
 		{
-			$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']);
-			$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
-			$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
+			if($updateDraftNavi)
+			{
+				$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
+				$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
+				$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);				
+			}
 
 			$response->getBody()->write(json_encode([
 				'navigation'	=> $draftNavigation,

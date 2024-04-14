@@ -66,6 +66,8 @@ const bloxeditor = Vue.createApp({
 		},
 		onEnd(evt)
 		{
+			self = this;
+			
 			tmaxios.put('/api/v1/block/move',{
 				'url':				data.urlinfo.route,
 				'index_old': 		evt.oldIndex,
@@ -74,12 +76,24 @@ const bloxeditor = Vue.createApp({
 			.then(function (response)
 			{
 				self.content = response.data.content;
+				if(response.data.navigation)
+				{
+					eventBus.$emit('navigation', response.data.navigation);
+				}
+				if(response.data.item)
+				{
+					eventBus.$emit('item', response.data.item);					
+				}
 			})
 			.catch(function (error)
 			{
 				if(error.response)
 				{
-					eventBus.$emit('publishermessage', error.response.data.message);
+					let message = handleErrorMessage(error);
+					if(message)
+					{
+						eventBus.$emit('publishermessage', message);
+					}
 				}
 			});
 		},

@@ -29,6 +29,9 @@ Headlines are simply done with hash chars like this:
 
 
 
+
+
+
 ### Third Level Headline
 
 A third headline is more decent and lower prioritized than a second level headline.
@@ -57,6 +60,9 @@ A paragraph is a simple text-block separated with a new line above and below.
 
 
 
+
+
+
 A paragraph is a simple text-block separated with a new line above and below.
 
 ## Soft Linebreak
@@ -66,6 +72,9 @@ For a soft linebreak (eg. for dialoges in literature), add two spaces at the end
 She said: "Hello"  
 He said: "again"
 ````
+
+
+
 
 
 
@@ -91,6 +100,9 @@ For bold text use two **asterix** or two __underscores__.
 
 
 
+
+
+
 For italic text use one *asterix* or one _underscore_.
 
 For bold text use two **asterix** or two __underscores__.
@@ -108,6 +120,9 @@ For an ordered list use whatever number you want and add a dot:
 1. like
 1. this
 ````
+
+
+
 
 
 
@@ -143,6 +158,9 @@ Easily created for example with three dashes like this:
 
 
 
+
+
+
 Easily created for example with three dashes like this:
 
 ---
@@ -156,6 +174,9 @@ You can even add [ids or classes](http://typemill.net){#myid .myclass}.
 Or you can use a shortcut like http://typemill.net.
 You can even use a download-link like []()
 ````
+
+
+
 
 
 
@@ -194,6 +215,9 @@ The same rules as with links, but with a !
 
 
 
+
+
+
 The same rules as with links, but with a !
 
 ![](media/tmp/kai-dahms-v0nbnxlwjzk-3unsp-1.webp)
@@ -216,6 +240,9 @@ You can link an image with a nested syntax like this:
 
 
 
+
+
+
 You can link an image with a nested syntax like this:
 
 [![alt-text](media/files/markdown.png){.imgClass}](https://typemill.net)
@@ -231,6 +258,9 @@ You can controll the image position with the classes .left, .right and .middle l
 ![alt-text](media/markdown.png){.center}
 *With caption that spans over several lines*
 ````
+
+
+
 
 
 
@@ -265,6 +295,9 @@ There are always some women and men with wise words
 
 
 
+
+
+
 There always some women and men with wise words
 
 > But I usually don't read them, to be honest.
@@ -278,6 +311,9 @@ Add the footnote text at the bottom of the page like this:
 [^1]: Thank you for scrolling.
 [^2]: This is the end of the page.
 ````
+
+
+
 
 
 
@@ -304,6 +340,9 @@ Footnotes won't work with the visual editor right now, so please use the raw mod
 
 
 
+
+
+
 You won't see the abbreviation directly, but if you write HTML or W3C somewhere, then you can see the tooltip with the explanation.
 
 *[HTML]: Hyper Text Markup Language
@@ -319,6 +358,9 @@ Apple
 Orange
 :   The fruit of an evergreen tree of the genus Citrus.
 ````
+
+
+
 
 
 
@@ -363,6 +405,9 @@ You can create different notices if you add a '!', '!!', '!!!', '!!!!' before a 
 
 
 
+
+
+
 | Name | Usage | 
 |---|---|
 | My Name | For Me | 
@@ -373,6 +418,9 @@ You can create different notices if you add a '!', '!!', '!!!', '!!!!' before a 
 ````
 Let us create some `<?php inlineCode(); ?>` like this
 ````
+
+
+
 
 
 
@@ -398,6 +446,9 @@ Use four apostroph like this:
 
 
 
+
+
+
 ## Math
 
 Please activate the math-plugin to use mathematical expressions with LaTeX syntax. You can choose between MathJax or the newer KaTeX library. MathJax is included from a CDN, KaTeX is included in the plugin. So if you don't want to fetch code from a CDN, use KaTeX instead. The markdown syntax in TYPEMILL is the same for both libraries.
@@ -407,6 +458,9 @@ Write inline math with \(...\) or $...$ syntax.
 inline $x = \int_{0^1}^1(-b \pm \sqrt{b^2-4ac})/(2a)$ math
 inline \(x = \int_{0^1}^1(-b \pm \sqrt{b^2-4ac})/(2a)\) math
 ````
+
+
+
 
 
 
@@ -427,6 +481,9 @@ $$
 x = \int_{0^1}^1(-b \pm \sqrt{b^2-4ac})/(2a)
 \]
 ````
+
+
+
 
 
 

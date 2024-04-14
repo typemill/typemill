@@ -30,9 +30,10 @@ class ControllerApiAuthorBlock extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
-		$navigation 		= new Navigation();
 		$urlinfo 			= $this->c->get('urlinfo');
-		$item 				= $this->getItem($navigation, $params['url'], $urlinfo);
+		$langattr 			= $this->settings['langattr'];
+		$navigation 		= new Navigation();
+		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
 			$response->getBody()->write(json_encode([
@@ -100,12 +101,13 @@ class ControllerApiAuthorBlock extends Controller
 		# if it was published before, then we need to refresh the navigation
 		if($item->status == 'published')
 		{
-			$navigation->clearNavigation();
+			$naviFileName 		= $navigation->getNaviFileNameForPath($item->path);
+		    $navigation->clearNavigation([$naviFileName]);
 
-			$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']);
+			$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
 			$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
 			$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
-
+			
 			$response->getBody()->write(json_encode([
 				'content'		=> $draftMarkdownHtml,
 				'navigation'	=> $draftNavigation,
@@ -140,9 +142,10 @@ class ControllerApiAuthorBlock extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
-		$navigation 		= new Navigation();
 		$urlinfo 			= $this->c->get('urlinfo');
-		$item 				= $this->getItem($navigation, $params['url'], $urlinfo);
+		$langattr 			= $this->settings['langattr'];
+		$navigation 		= new Navigation();
+		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
 			$response->getBody()->write(json_encode([
@@ -199,9 +202,10 @@ class ControllerApiAuthorBlock extends Controller
 		# if it was published before, then we need to refresh the navigation
 		if($item->status == 'published')
 		{
-			$navigation->clearNavigation();
+			$naviFileName 		= $navigation->getNaviFileNameForPath($item->path);
+		    $navigation->clearNavigation([$naviFileName]);
 
-			$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']);
+			$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
 			$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
 			$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
 
@@ -239,9 +243,10 @@ class ControllerApiAuthorBlock extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
-		$navigation 		= new Navigation();
 		$urlinfo 			= $this->c->get('urlinfo');
-		$item 				= $this->getItem($navigation, $params['url'], $urlinfo);
+		$langattr 			= $this->settings['langattr'];
+		$navigation 		= new Navigation();
+		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
 			$response->getBody()->write(json_encode([
@@ -311,9 +316,10 @@ class ControllerApiAuthorBlock extends Controller
 		# if it was published before, then we need to refresh the navigation
 		if($item->status == 'published')
 		{
-			$navigation->clearNavigation();
+			$naviFileName 		= $navigation->getNaviFileNameForPath($item->path);
+		    $navigation->clearNavigation([$naviFileName]);
 
-			$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']);
+			$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
 			$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
 			$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
 
@@ -351,9 +357,10 @@ class ControllerApiAuthorBlock extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
-		$navigation 		= new Navigation();
 		$urlinfo 			= $this->c->get('urlinfo');
-		$item 				= $this->getItem($navigation, $params['url'], $urlinfo);
+		$langattr 			= $this->settings['langattr'];
+		$navigation 		= new Navigation();
+		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
 			$response->getBody()->write(json_encode([
@@ -414,9 +421,10 @@ class ControllerApiAuthorBlock extends Controller
 		# if it was published before, then we need to refresh the navigation
 		if($item->status == 'published')
 		{
-			$navigation->clearNavigation();
+			$naviFileName 		= $navigation->getNaviFileNameForPath($item->path);
+		    $navigation->clearNavigation([$naviFileName]);
 
-			$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']);
+			$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
 			$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
 			$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
 

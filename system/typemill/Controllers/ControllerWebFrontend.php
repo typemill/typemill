@@ -31,7 +31,7 @@ class ControllerWebFrontend extends Controller
 
 		# GET THE NAVIGATION
 	    $navigation 		= new Navigation();
-		$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $langattr);
+		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $langattr);
 	    $home 				= false;
 
 		# GET THE PAGINATION
@@ -52,9 +52,8 @@ class ControllerWebFrontend extends Controller
 		}
 		else
 		{
-		    $extendedNavigation	= $navigation->getExtendedNavigation($urlinfo, $langattr);
 
-		    $pageinfo 			= $extendedNavigation[$url] ?? false;
+			$pageinfo 			= $navigation->getPageInfoForUrl($url, $urlinfo, $langattr);
 
 		    if(!$pageinfo)
 		    {
@@ -96,14 +95,12 @@ class ControllerWebFrontend extends Controller
 			}
 		}
 
-		# GET THE LIVE NAVIGATION (keyPathArray does not match here!!!)
-		$liveNavigation = $navigation->getLiveNavigation($urlinfo, $langattr);	
+		$liveNavigation = $navigation->generateLiveNavigationFromDraft($draftNavigation);
 
 		# STRIP OUT HIDDEN PAGES
 		$liveNavigation = $navigation->removeHiddenPages($liveNavigation);
 
 		# SET PAGEs ACTIVE
-#		$liveNavigation = $navigation->setActiveNaviItems($liveNavigation, $breadcrumb);
 		$liveNavigation = $navigation->setActiveNaviItemsWithKeyPath($liveNavigation, $item->keyPathArray);
 
 		# DISPATCH LIVE NAVIGATION
