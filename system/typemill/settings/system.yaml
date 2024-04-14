@@ -57,6 +57,11 @@ fieldsetsystem:
       css: lg:w-half
       disabled: true
       description: 'Submit the url above in google search console to support indexing.'
+    disableSitemap:
+      type: checkbox
+      css: lg:w-half
+      label: 'Disable Sitemap Generation'
+      checkboxlabel: 'Disable Sitemap generation to improve the performance for publish action.'
 fieldsetmedia:
   type: fieldset
   legend: Media

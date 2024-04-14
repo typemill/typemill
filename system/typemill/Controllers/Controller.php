@@ -28,18 +28,6 @@ abstract class Controller
 		$this->c->get('dispatcher')->dispatch(new OnTwigLoaded(false), 'onTwigLoaded');		
 	}
 
-/*
-	public function getCsrfData($request)
-	{
-        $nameKey = $this->csrf->getTokenNameKey();
-        $valueKey = $this->csrf->getTokenValueKey();    
-        
-        return [
-            $nameKey => $request->getAttribute($nameKey),
-            $valueKey => $request->getAttribute($valueKey)
-        ];
-	}	
-*/
 	protected function settingActive($setting)
 	{
 		if(isset($this->settings[$setting]) && $this->settings[$setting])
@@ -65,16 +53,23 @@ abstract class Controller
 
 	protected function getItem($navigation, $url, $urlinfo)
 	{
+		die('getItem in controller');
+
 		$url 				= $this->removeEditorFromUrl($url);
-		$langattr 			= $this->settings['langattr'];
 
 		if($url == '/')
 		{
-			$keyPathArray 		= [''];
+			return $navigation->getHomepageItem($urlinfo['baseurl']);
 		}
 
 		else
 		{
+			$langattr 			= $this->settings['langattr'];
+
+			# get the first level navigation
+		    $firstLevel = $navigation->getExtendedNavigation($urlinfo, $langattr, '/');
+
+
 			$extendedNavigation	= $navigation->getExtendedNavigation($urlinfo, $langattr);
 
 			$pageinfo 			= $extendedNavigation[$url] ?? false;
@@ -88,15 +83,46 @@ abstract class Controller
 
 		}
 
-		$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $langattr);
+		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $langattr);
 		
 		$item				= $navigation->getItemWithKeyPath($draftNavigation, $keyPathArray, $urlinfo['basepath']);
 
 		return $item;
-	}		
+	}
+
+/*
+	protected function getFolderForItem($item)
+	{
+		if(count($item->keyPathArray) > 1)
+		{
+			$segments = explode('/', $item->path);
+
+			return $segments[1];
+		}
+
+		# it is a base-item
+		return '/';
+	}
+*/
+
+	protected function getFolderForItem($item)
+	{
+		die('moved getFolderForItem from controller to navigation');
+		$segments = explode('/', $item->path);
+
+		# we always return base (parent) folder, so for base folder /myfolder the parent is '/'. Makes sure that base-level navigation in navigation cache is deleted
+		if(isset($segments[2]))
+		{
+			return $segments[1];
+		}
+
+		return 'navi-draft';
+	}
 
 	protected function removeEditorFromUrl($url)
 	{
+		die('moved removeEditorFromUrl from controller to navigation');
+
 		$url = trim($url, '/');
 
 		$url = str_replace('tm/content/visual', '', $url);
@@ -106,6 +132,8 @@ abstract class Controller
 
 		return '/' . $url;
 	}
+
+
 
 	protected function addDatasets(array $formDefinitions)
 	{		

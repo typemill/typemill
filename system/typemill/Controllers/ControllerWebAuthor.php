@@ -24,7 +24,7 @@ class ControllerWebAuthor extends Controller
 		$langattr 			= $this->settings['langattr'];
 
 	    $navigation 		= new Navigation();
-		$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $langattr);
+		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $langattr);
 	    $home 				= $navigation->getHomepageItem($urlinfo['baseurl']);
 
 		if($url == '/')
@@ -34,9 +34,7 @@ class ControllerWebAuthor extends Controller
 		}
 		else
 		{
-		    $extendedNavigation	= $navigation->getExtendedNavigation($urlinfo, $langattr);
-
-		    $pageinfo 			= $extendedNavigation[$url] ?? false;
+			$pageinfo = $navigation->getPageInfoForUrl($url, $urlinfo, $langattr);
 		    if(!$pageinfo)
 		    {
 			    return $this->c->get('view')->render($response->withStatus(404), '404.twig', [
@@ -46,9 +44,6 @@ class ControllerWebAuthor extends Controller
 		    }
 
 			$keyPathArray 		= explode(".", $pageinfo['keyPath']);
-
-		    # extend : $request->getAttribute('c_userrole')
-#		    $draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $langattr);
 
 			$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $keyPathArray);
 			$draftNavigation 	= $this->c->get('dispatcher')->dispatch(new OnPagetreeLoaded($draftNavigation), 'onPagetreeLoaded')->getData();
@@ -95,7 +90,7 @@ class ControllerWebAuthor extends Controller
 		$langattr 			= $this->settings['langattr'];
 
 	    $navigation 		= new Navigation();
-		$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $langattr);
+		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $langattr);
 	    $home 				= $navigation->getHomepageItem($urlinfo['baseurl']);
 
 		if($url == '/')
@@ -105,9 +100,7 @@ class ControllerWebAuthor extends Controller
 		}
 		else
 		{
-		    $extendedNavigation	= $navigation->getExtendedNavigation($urlinfo, $langattr);
-
-		    $pageinfo 			= $extendedNavigation[$url] ?? false;
+			$pageinfo = $navigation->getPageInfoForUrl($url, $urlinfo, $langattr);
 		    if(!$pageinfo)
 		    {
 			    return $this->c->get('view')->render($response->withStatus(404), '404.twig', [
@@ -119,7 +112,6 @@ class ControllerWebAuthor extends Controller
 			$keyPathArray 		= explode(".", $pageinfo['keyPath']);
 
 		    # extend : $request->getAttribute('c_userrole')
-		    $draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $langattr);
 			$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $keyPathArray);
 			$draftNavigation 	= $this->c->get('dispatcher')->dispatch(new OnPagetreeLoaded($draftNavigation), 'onPagetreeLoaded')->getData();
 

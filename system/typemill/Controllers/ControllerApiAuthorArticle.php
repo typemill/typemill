@@ -37,9 +37,10 @@ class ControllerApiAuthorArticle extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
-		$navigation 		= new Navigation();
 		$urlinfo 			= $this->c->get('urlinfo');
-		$item 				= $this->getItem($navigation, $params['url'], $urlinfo);
+		$langattr 			= $this->settings['langattr'];
+		$navigation 		= new Navigation();
+		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
 			$response->getBody()->write(json_encode([
@@ -78,14 +79,18 @@ class ControllerApiAuthorArticle extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
 
-		# refresh navigation and item
-	    $navigation->clearNavigation();
-		$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']);
+		$naviFileName 		= $navigation->getNaviFileNameForPath($item->path);
+	    $navigation->clearNavigation([$naviFileName]);
+
+		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
 		$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
 		$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
 
-		$sitemap 			= new Sitemap();
-		$sitemap->updateSitemap($draftNavigation, $urlinfo);
+		if(!isset($this->settings['disableSitemap']) OR !$this->settings['disableSitemap'])
+		{
+			$sitemap 		= new Sitemap();
+			$sitemap->updateSitemap($draftNavigation, $urlinfo);
+		}
 
 		# META is important e.g. for newsletter, so send it, too
 		$meta 				= new Meta();
@@ -130,9 +135,10 @@ class ControllerApiAuthorArticle extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
-		$navigation 		= new Navigation();
 		$urlinfo 			= $this->c->get('urlinfo');
-		$item 				= $this->getItem($navigation, $params['url'], $urlinfo);
+		$langattr 			= $this->settings['langattr'];
+		$navigation 		= new Navigation();
+		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
 			$response->getBody()->write(json_encode([
@@ -163,14 +169,18 @@ class ControllerApiAuthorArticle extends Controller
 		$draftMarkdown  	= $content->getDraftMarkdown($item);
 		$content->unpublishMarkdown($item, $draftMarkdown);
 
-		# refresh navigation and item
-	    $navigation->clearNavigation();
-		$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']);
+		$naviFileName 		= $navigation->getNaviFileNameForPath($item->path);
+	    $navigation->clearNavigation([$naviFileName]);
+
+		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
 		$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
 		$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
-		
-		$sitemap 			= new Sitemap();
-		$sitemap->updateSitemap($draftNavigation, $urlinfo);
+
+		if(!isset($this->settings['disableSitemap']) OR !$this->settings['disableSitemap'])
+		{
+			$sitemap 		= new Sitemap();
+			$sitemap->updateSitemap($draftNavigation, $urlinfo);
+		}
 
 		# check if it is a folder and if the folder has published pages.
 		$message = false;
@@ -213,9 +223,10 @@ class ControllerApiAuthorArticle extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
-		$navigation 		= new Navigation();
 		$urlinfo 			= $this->c->get('urlinfo');
-		$item 				= $this->getItem($navigation, $params['url'], $urlinfo);
+		$langattr 			= $this->settings['langattr'];
+		$navigation 		= new Navigation();
+		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
 			$response->getBody()->write(json_encode([
@@ -247,12 +258,13 @@ class ControllerApiAuthorArticle extends Controller
 		$markdownArray 		= $content->markdownTextToArray($markdown);
 		$content->saveDraftMarkdown($item, $markdownArray);
 
-		# refresh navigation and item
-	    $navigation->clearNavigation();
-		$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']);
+		$naviFileName 		= $navigation->getNaviFileNameForPath($item->path);
+	    $navigation->clearNavigation([$naviFileName]);
+
+		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
 		$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
 		$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
-		
+
 		# refresh content
 		$draftMarkdown  	= $content->getDraftMarkdown($item);
 		$draftMarkdownHtml	= $content->addDraftHtml($draftMarkdown);
@@ -282,9 +294,10 @@ class ControllerApiAuthorArticle extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
-		$navigation 		= new Navigation();
 		$urlinfo 			= $this->c->get('urlinfo');
-		$item 				= $this->getItem($navigation, $params['url'], $urlinfo);
+		$langattr 			= $this->settings['langattr'];
+		$navigation 		= new Navigation();
+		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
 			$response->getBody()->write(json_encode([
@@ -316,14 +329,18 @@ class ControllerApiAuthorArticle extends Controller
 		$markdownArray 		= $content->markdownTextToArray($markdown);
 		$content->publishMarkdown($item, $markdownArray);
 
-		# refresh navigation and item
-	    $navigation->clearNavigation();
-		$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']);
+		$naviFileName 		= $navigation->getNaviFileNameForPath($item->path);
+	    $navigation->clearNavigation([$naviFileName]);
+
+		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
 		$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
 		$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
 
-		$sitemap 			= new Sitemap();
-		$sitemap->updateSitemap($draftNavigation, $urlinfo);
+		if(!isset($this->settings['disableSitemap']) OR !$this->settings['disableSitemap'])
+		{
+			$sitemap 		= new Sitemap();
+			$sitemap->updateSitemap($draftNavigation, $urlinfo);
+		}
 		
 		# refresh content
 		$draftMarkdown  	= $content->getDraftMarkdown($item);
@@ -368,9 +385,10 @@ class ControllerApiAuthorArticle extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
-		$navigation 		= new Navigation();
 		$urlinfo 			= $this->c->get('urlinfo');
-		$item 				= $this->getItem($navigation, $params['url'], $urlinfo);
+		$langattr 			= $this->settings['langattr'];
+		$navigation 		= new Navigation();
+		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
 			$response->getBody()->write(json_encode([
@@ -400,9 +418,10 @@ class ControllerApiAuthorArticle extends Controller
 		$content 			= new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
 		$content->deleteDraft($item);
 
-		# refresh navigation and item
-	    $navigation->clearNavigation();
-		$draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']);
+		$naviFileName 		= $navigation->getNaviFileNameForPath($item->path);
+	    $navigation->clearNavigation([$naviFileName]);
+
+		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
 		$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
 		$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
 		
@@ -441,7 +460,7 @@ class ControllerApiAuthorArticle extends Controller
 
 		# get navigation
 	    $navigation 		= new Navigation();
-	    $draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $langattr);
+	    $draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $langattr);
 	    if($params['folder_id'] == 'root')
 	    {
    			if($params['item_name'] == 'tm')
@@ -557,10 +576,15 @@ class ControllerApiAuthorArticle extends Controller
 #			$url = $urlinfo['baseurl'] . '/tm/content/' . $this->settings['editor'] . $folder->urlRelWoF . '/' . $slug;
 		}
 
-		$navigation->clearNavigation();
+
+		$itempath 			= $folderPath . DIRECTORY_SEPARATOR . $namePath;
+		$naviFileName 		= $navigation->getNaviFileNameForPath($itempath);
+
+	    $navigation->clearNavigation([$naviFileName, $naviFileName . '-extended']);
+		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
 
 		$response->getBody()->write(json_encode([
-			'navigation'	=> $navigation->getDraftNavigation($urlinfo, $langattr),
+			'navigation'	=> $draftNavigation,
 			'message'		=> '',
 			'url' 			=> false
 		]));
@@ -590,7 +614,7 @@ class ControllerApiAuthorArticle extends Controller
 
 		# get navigation
 	    $navigation 		= new Navigation();
-	    $draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $langattr);
+	    $draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $langattr);
 	    if($params['folder_id'] == 'root')
 	    {
 			$folderContent		= $draftNavigation;
@@ -669,9 +693,13 @@ class ControllerApiAuthorArticle extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(402);
 		}
 
-		$navigation->clearNavigation();
-	    $draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $langattr);
-		$item				= $navigation->getItemWithKeyPath($draftNavigation, $folderKeyPath);
+		$itempath 			= $folderPath . DIRECTORY_SEPARATOR . $namePath;
+		$naviFileName 		= $navigation->getNaviFileNameForPath($itempath);
+
+	    $navigation->clearNavigation([$naviFileName, $naviFileName . '-extended']);
+		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
+		$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
+		$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
 
 		$response->getBody()->write(json_encode([
 			'navigation'	=> $draftNavigation,
@@ -697,9 +725,10 @@ class ControllerApiAuthorArticle extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
-		$navigation 		= new Navigation();
 		$urlinfo 			= $this->c->get('urlinfo');
-		$item 				= $this->getItem($navigation, $params['url'], $urlinfo);
+		$langattr 			= $this->settings['langattr'];
+		$navigation 		= new Navigation();
+		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
 			$response->getBody()->write(json_encode([
@@ -730,11 +759,11 @@ class ControllerApiAuthorArticle extends Controller
 		if($parentUrl == '/')
 		{
 			$parentItem = new \stdClass;
-			$parentItem->folderContent = $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']);
+			$parentItem->folderContent = $navigation->getDraftNavigation($urlinfo, $this->settings['langattr'], '/');
 		}
 		else
 		{
-			$parentItem = $this->getItem($navigation, $parentUrl, $urlinfo);
+			$parentItem = $navigation->getItemForUrl($parentUrl, $urlinfo, $langattr);
 		}
 
 		foreach($parentItem->folderContent as $sibling)
@@ -750,11 +779,19 @@ class ControllerApiAuthorArticle extends Controller
 		}
 
 		$navigation->renameItem($item, $params['slug']);
-		$navigation->clearNavigation();
-		$draftNavigation = $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']);
 
-		$sitemap = new Sitemap();
-		$sitemap->updateSitemap($draftNavigation, $urlinfo);
+		$naviFileName 		= $navigation->getNaviFileNameForPath($item->path);
+	    $navigation->clearNavigation([$naviFileName, $naviFileName . '-extended']);
+
+		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
+		$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
+		$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
+
+		if(!isset($this->settings['disableSitemap']) OR !$this->settings['disableSitemap'])
+		{
+			$sitemap 		= new Sitemap();
+			$sitemap->updateSitemap($draftNavigation, $urlinfo);
+		}
 
 		# create the new url for redirects
 		$newUrlRel =  str_replace($item->slug, $params['slug'], $item->urlRelWoF);
@@ -791,18 +828,15 @@ class ControllerApiAuthorArticle extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
-		# set variables
-		$urlinfo 			= $this->c->get('urlinfo');
-		$langattr 			= $this->settings['langattr'] ?? 'en';
-
 		$itemKeyPath 		= explode('.', $params['item_id']);
 		$parentKeyFrom		= explode('.', $params['parent_id_from']);
 		$parentKeyTo		= explode('.', $params['parent_id_to']);
 
 		# get navigation
-	    $navigation 		= new Navigation();
-	    $draftNavigation 	= $navigation->getDraftNavigation($urlinfo, $langattr);
-		$item 				= $navigation->getItemWithKeyPath($draftNavigation, $itemKeyPath);
+		$urlinfo 			= $this->c->get('urlinfo');
+		$langattr 			= $this->settings['langattr'];
+		$navigation 		= new Navigation();
+		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
 			$response->getBody()->write(json_encode([
@@ -826,8 +860,9 @@ class ControllerApiAuthorArticle extends Controller
 
 				return $response->withHeader('Content-Type', 'application/json')->withStatus(403);				
 			}
-		}	    
+		}
 
+/*
 	    $extendedNavigation	= $navigation->getExtendedNavigation($urlinfo, $langattr);
 	    $pageinfo 			= $extendedNavigation[$params['url']] ?? false;
 	    if(!$pageinfo)
@@ -838,6 +873,9 @@ class ControllerApiAuthorArticle extends Controller
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 	    }
+*/
+	    $draftNavigation = $navigation->getFullDraftNavigation($urlinfo, $langattr);
+	    $clearFullNavi = true;
 
 		# if an item is moved to the first level
 		if($params['parent_id_to'] == '')
@@ -859,6 +897,10 @@ class ControllerApiAuthorArticle extends Controller
 		# if the item has been moved within the same folder
 		if($params['parent_id_from'] == $params['parent_id_to'])
 		{
+			# we do not have to generate the full navigation, only this part
+			$clearFullNavi = false;
+			$naviFileName = $navigation->getNaviFileNameForPath($item->path);
+
 			# get key of item
 			$itemKey = end($itemKeyPath);
 			reset($itemKeyPath);
@@ -902,11 +944,22 @@ class ControllerApiAuthorArticle extends Controller
 		}
 
 		# refresh navigation and item
-	    $navigation->clearNavigation();
-	    $draftNavigation = $navigation->getDraftNavigation($urlinfo, $langattr);
+		if($clearFullNavi)
+		{
+		    $navigation->clearNavigation();
+		}
+		else
+		{
+		    $navigation->clearNavigation([$naviFileName, $naviFileName . '-extended']);
+		}
+	    $draftNavigation = $navigation->getFullDraftNavigation($urlinfo, $langattr);
 
-		$sitemap = new Sitemap();
-		$sitemap->updateSitemap($draftNavigation, $urlinfo);
+	    # update the sitemap
+		if(!isset($this->settings['disableSitemap']) OR !$this->settings['disableSitemap'])
+		{
+			$sitemap 		= new Sitemap();
+			$sitemap->updateSitemap($draftNavigation, $urlinfo);
+		}
 
 		$this->c->get('dispatcher')->dispatch(new OnPageSorted($params), 'onPageSorted');
 
@@ -935,9 +988,10 @@ class ControllerApiAuthorArticle extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
-		$navigation 		= new Navigation();
 		$urlinfo 			= $this->c->get('urlinfo');
-		$item 				= $this->getItem($navigation, $params['url'], $urlinfo);
+		$langattr 			= $this->settings['langattr'];
+		$navigation 		= new Navigation();
+		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
 			$response->getBody()->write(json_encode([
@@ -992,12 +1046,16 @@ class ControllerApiAuthorArticle extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
 
-		# refresh navigation
-	    $navigation->clearNavigation();
-	    $draftNavigation = $navigation->getDraftNavigation($urlinfo, $this->settings['langattr']);
+		$naviFileName 		= $navigation->getNaviFileNameForPath($item->path);
+	    $navigation->clearNavigation([$naviFileName, $naviFileName . '-extended']);
 
-		$sitemap = new Sitemap();
-		$sitemap->updateSitemap($draftNavigation, $urlinfo);
+		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
+
+		if(!isset($this->settings['disableSitemap']) OR !$this->settings['disableSitemap'])
+		{
+			$sitemap 		= new Sitemap();
+			$sitemap->updateSitemap($draftNavigation, $urlinfo);
+		}
 
 		# check if it is a subfile or subfolder and set the redirect-url to the parent item
 		$url = $urlinfo['baseurl'] . '/tm/content/' . $this->settings['editor'];

@@ -6,40 +6,13 @@ use \URLify;
 
 class Folder
 {
-
-	/*
-	* scans content of a folder (without recursion)
-	* vars: folder path as string
-	* returns: one-dimensional array with names of folders and files
-	*/
-	public function scanFolderFlat($folderPath)
-	{
-		$folderItems 	= scandir($folderPath);
-		$folderContent 	= array();
-
-		foreach ($folderItems as $key => $item)
-		{
-			if (!in_array($item, array(".","..")))
-			{
-				$nameParts 					= $this->getStringParts($item);
-				$fileType 					= array_pop($nameParts);
-				
-				if($fileType == 'md' OR $fileType == 'txt' )
-				{
-					$folderContent[] 			= $item;						
-				}
-			}
-		}
-		return $folderContent;
-	}
-	
-
 	/*
 	* scans content of a folder recursively
-	* vars: folder path as string
+	* $folderPath as string
+	* $flat true scans no subfolder or string scans only subfolder with that string
 	* returns: multi-dimensional array with names of folders and files
 	*/
-	public function scanFolder($folderPath)
+	public function scanFolder($folderPath, $flat = NULL)
 	{
 		$folderItems 	= scandir($folderPath);
 		$folderContent 	= array();
@@ -50,11 +23,32 @@ class Folder
 			{
 				if (is_dir($folderPath . DIRECTORY_SEPARATOR . $item))
 				{
+					if($flat)
+					{
+						if($flat === $item)
+						{
+							$folderContent[$item] = $this->scanFolder($folderPath . DIRECTORY_SEPARATOR . $item);
+						}
+						else
+						{
+							# We need to include the index.txt or index.md for the folder
+							$index = 'index.';
+							if( file_exists($folderPath . DIRECTORY_SEPARATOR . $item . DIRECTORY_SEPARATOR . 'index.txt') )
+							{
+								$index .= 'txt';
+							}
+							if( file_exists($folderPath . DIRECTORY_SEPARATOR . $item . DIRECTORY_SEPARATOR . 'index.md') )
+							{
+								$index 	.= 'md';
+							}
 
-					$subFolder 		 	= $item;
-					$folderPublished 	= file_exists($folderPath . DIRECTORY_SEPARATOR . $item . DIRECTORY_SEPARATOR . 'index.md');
-
-					$folderContent[$subFolder] 	= $this->scanFolder($folderPath . DIRECTORY_SEPARATOR . $subFolder);
+							$folderContent[$item] = [$index];
+						}
+					}
+					else
+					{
+						$folderContent[$item] = $this->scanFolder($folderPath . DIRECTORY_SEPARATOR . $item);
+					}
 				}
 				else
 				{
@@ -105,6 +99,7 @@ class Folder
 				$nameParts = $this->getStringParts($key);
 				
 				$fileType = '';
+				$status = 'undefined';
 				if(in_array('index.md', $name))
 				{
 					$fileType 		= 'md';
@@ -150,7 +145,12 @@ class Folder
 					rsort($name);
 				}
 
-				$item->folderContent = $this->getFolderContentDetails($name, $language, $baseUrl, $item->urlRel, $item->urlRelWoF, $item->path, $item->keyPath, $item->chapter);
+				$item->folderContent = [];
+
+				if(!empty($name))
+				{
+					$item->folderContent = $this->getFolderContentDetails($name, $language, $baseUrl, $item->urlRel, $item->urlRelWoF, $item->path, $item->keyPath, $item->chapter);
+				}
 			}
 			elseif($name)
 			{
@@ -209,7 +209,7 @@ class Folder
 	public function getFolderContentType($folder, $yamlpath)
 	{
 		# check if folder is empty or has only index.yaml-file. This is a rare case so make it quick and dirty
-		if(count($folder) == 1)
+		if(count($folder) <= 1)
 		{
 			# check if in folder yaml file contains "posts", then return posts
 			$folderyamlpath = getcwd() . DIRECTORY_SEPARATOR . 'content' . DIRECTORY_SEPARATOR . $yamlpath;
