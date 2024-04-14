@@ -1,0 +1,9 @@
+meta:
+    navtitle: 'content elements'
+    owner: Sebastian
+    created: '2023-06-12'
+    time: 22-36-50
+    modified: '2021-11-24'
+    title: 'Cyanine provides a lot of other settings for your content area. For example:'
+    description: "\nAdd an edit-button for github, gitlab or other plattforms.\nShow the author.\nShow the publish date.\nShow the chapter numbers in the navigation.\n"
+    author: Sebastian
