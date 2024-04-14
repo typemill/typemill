@@ -35,7 +35,7 @@ const app = Vue.createApp({
 								</div>
 							</div>
 							<form class="w-full p-8" v-if="current == themename">
-								<div v-if="theme.readymades">
+<!--							<div v-if="theme.readymadesNext">
 									<fieldset class="flex flex-wrap justify-between block border-2 border-stone-200 p-4 my-8">
 										<legend class="text-lg font-medium">Readymades</legend>
 										<p class="w-full bg-stone-200 mb p-2">Readymades help you to setup your theme with prefilled settings. Load some readymades, check out the frontend and adjust the settings as needed. Find more informations about specific readymades on the <a class="text-teal-500" :href="themeurl(themename)">theme's website.</p>
@@ -59,7 +59,7 @@ const app = Vue.createApp({
 											</li>
 										</ul>
 									</fieldset>
-								</div>
+								</div> -->
 								<div v-for="(fieldDefinition, fieldname) in theme.forms.fields">
 									<fieldset class="flex flex-wrap justify-between border-2 border-stone-200 p-4 my-8" v-if="fieldDefinition.type == 'fieldset'">
 										<legend class="text-lg font-medium">{{ fieldDefinition.legend }}</legend>
@@ -126,6 +126,9 @@ const app = Vue.createApp({
 			modalMessage: 'default',			
 		}
 	},
+	components: {
+		'modal': modal
+	},	
 	mounted() {
 		eventBus.$on('forminput', formdata => {
 			this.formData[this.current][formdata.name] = formdata.value;
