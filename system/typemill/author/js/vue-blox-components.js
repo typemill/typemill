@@ -760,8 +760,6 @@ bloxeditor.component('table-component', {
 							<use xlink:href="#icon-table2"></use>
 						</svg>
 					</div>
-					{{ cellcontent }}
-					{{ table }}
 					<table ref="markdown" class="w-full ">
 						<colgroup>
 							<col v-for="col,index in table[0]" :width="index == 0 ? '40px' : ''">
@@ -793,7 +791,7 @@ bloxeditor.component('table-component', {
 									:contenteditable 		= "colindex !== 0 ? true : false" 
 									@click.prevent 			= "switchrowbar($event, value)" 
 									@blur.prevent 			= "updatedata($event,colindex,rowindex)"
-									@paste.prevent  		= "updatedata($event,colindex,rowindex)"
+ 									@paste.prevent  		= "updatedata($event,colindex,rowindex)"
 									:class 					= "colindex !== 0 ? 'text-center' : 'font-normal text-stone-500' "
 									class 					= "p-2 border border-stone-300"
 								>{{ value }}
@@ -804,7 +802,7 @@ bloxeditor.component('table-component', {
 									:contenteditable 		= "colindex !== 0 ? true : false" 
 									@click.prevent 			= "switchrowbar($event, value)" 
 									@blur.prevent 			= "updatedata($event,colindex,rowindex)"
-									@paste.prevent  		= "updatedata($event,colindex,rowindex)"
+ 									@paste.prevent  		= "updatedata($event,colindex,rowindex)"
 									:class 					= "colindex !== 0 ? '' : 'text-center text-stone-500 cursor-pointer hover:bg-stone-200'"
 									class 					= "p-2 border border-stone-300"
 								>
@@ -834,11 +832,6 @@ bloxeditor.component('table-component', {
 		beforeSave()
 		{
 			this.$emit('saveBlockEvent');
-		},
-		checkPaste(event)
-		{
-			console.log(event);
-			return;
 		},
 		generateTable(markdown)
 		{
@@ -911,13 +904,11 @@ bloxeditor.component('table-component', {
 		},
 		switchcolumnbar(event, value)
 		{
-			return;
 			this.rowbar = false;
 			(this.columnbar == value || value == 0) ? this.columnbar = false : this.columnbar = value;
 		},
 		switchrowbar(event, value)
 		{
-			return;
 			this.columnbar = false;
 			(this.rowbar == value || value == 0 || value == 1 )? this.rowbar = false : this.rowbar = value;
 		},
