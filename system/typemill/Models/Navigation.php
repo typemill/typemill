@@ -157,7 +157,7 @@ class Navigation extends Folder
 			return false;
 		}
 
-		$foldername = $this->getFirstUrlSegment($pageinfo['path']);
+		$foldername = $this->getNaviFileNameForPath($pageinfo['path']);
 
 		$draftNavigation = $this->getDraftNavigation($urlinfo, $langattr, $foldername);
 		if(!$draftNavigation)
