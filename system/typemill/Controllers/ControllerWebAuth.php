@@ -158,32 +158,9 @@ class ControllerWebAuth extends Controller
 
 		$user->login();
 
-		# if user is allowed to view content-area
-		$acl = $this->c->get('acl');
-		if($acl->hasRole($userdata['userrole']) && $acl->isAllowed($userdata['userrole'], 'content', 'read'))
-		{
-			$editor = (isset($this->settings['editor']) && $this->settings['editor'] == 'visual') ? 'visual' : 'raw';
+		$redirect = $this->getRedirectDestination($userdata['userrole']);
 
-			return $response->withHeader('Location', $this->routeParser->urlFor('content.' . $editor))->withStatus(302);
-		}
-
-		return $response->withHeader('Location', $this->routeParser->urlFor('user.account'))->withStatus(302);
-	}
-
-
-	private function isAuthcodeActive($settings)
-	{
-		if(
-			isset($settings['authcode']) &&
-			$settings['authcode'] &&
-			isset($settings['mailfrom']) &&
-			filter_var($settings['mailfrom'], FILTER_VALIDATE_EMAIL)
-		)
-		{
-			return true;
-		}
-
-		return false;
+		return $response->withHeader('Location', $this->routeParser->urlFor($redirect))->withStatus(302);
 	}
 
 	# login a user with valid authcode
@@ -259,18 +236,69 @@ class ControllerWebAuth extends Controller
 
 		$user->login();
 
-		# if user is allowed to view content-area
-		$acl = $this->c->get('acl');
-		if($acl->hasRole($userdata['userrole']) && $acl->isAllowed($userdata['userrole'], 'content', 'read'))
-		{
-			$editor = (isset($this->settings['editor']) && $this->settings['editor'] == 'visual') ? 'visual' : 'raw';
+		$redirect = $this->getRedirectDestination($userdata['userrole']);
 
-			return $response->withHeader('Location', $this->routeParser->urlFor('content.' . $editor))->withStatus(302);
-		}
-
-		return $response->withHeader('Location', $this->routeParser->urlFor('user.account'))->withStatus(302);
+		return $response->withHeader('Location', $this->routeParser->urlFor($redirect))->withStatus(302);
 	}
 
+	private function getRedirectDestination(string $userrole)
+	{
+		# decide where to redirect after login, configurable in settings -> system.yaml
+		$redirect 	= 'home';
+		$acl 		= $this->c->get('acl');
+		if($acl->hasRole($userrole))
+		{
+			if($acl->isAllowed($userrole, 'system', 'read'))
+			{
+				# defaults to content editor
+				$redirect = 'content';
+				if(isset($this->settings['redirectadminrights']) && $this->settings['redirectadminrights'])
+				{
+					$redirect = $this->settings['redirectadminrights'];
+				}
+			}
+			elseif($acl->isAllowed($userrole, 'content', 'read'))
+			{
+				# defaults to content editor
+				$redirect = 'content';
+				if(isset($this->settings['redirectcontentrights']) && $this->settings['redirectcontentrights'])
+				{
+					$redirect = $this->settings['redirectcontentrights'];
+				}
+			}
+			elseif($acl->isAllowed($userrole, 'account', 'read'))
+			{
+				$redirect = 'user.account';
+				if(isset($this->settings['redirectaccountrights']) && $this->settings['redirectaccountrights'])
+				{
+					$redirect = $this->settings['redirectaccountrights'];
+				}
+			}
+
+			if($redirect == 'content')
+			{
+				$editor = (isset($this->settings['editor']) && $this->settings['editor'] == 'visual') ? 'visual' : 'raw';
+				$redirect = 'content.' . $editor;
+			}
+		}
+
+		return $redirect;
+	}
+
+	private function isAuthcodeActive($settings)
+	{
+		if(
+			isset($settings['authcode']) &&
+			$settings['authcode'] &&
+			isset($settings['mailfrom']) &&
+			filter_var($settings['mailfrom'], FILTER_VALIDATE_EMAIL)
+		)
+		{
+			return true;
+		}
+
+		return false;
+	}
 
 	# log out a user
 	public function logout(Request $request, Response $response)

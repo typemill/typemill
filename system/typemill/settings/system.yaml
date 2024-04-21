@@ -164,6 +164,30 @@ fieldsetaccess:
       type: checkbox
       label: 'Wrap restriction notice'
       checkboxlabel: 'Wrap the restriction notice above into a notice-4 element (which can be designed as special box)'
+    redirectadminrights:
+      type: select
+      label: 'After login redirect users with admin rights to'
+      css: lg:w-half      
+      options:
+        settings.show: 'system page'
+        content: 'editor page'
+        user.account: 'account page'
+        home: 'home page (frontend)'
+    redirectcontentrights:
+      type: select
+      label: 'After login redirect users with edit rights to'
+      css: lg:w-half
+      options:
+        content: 'editor page'
+        user.account: 'account page'
+        home: 'home page (frontend)'
+    redirectaccountrights:
+      type: select
+      label: 'After login redirect users without edit rights to'
+      css: lg:w-half
+      options:
+        user.account: 'account page'
+        home: 'home page (frontend)'
 fieldsetmail:
   type: fieldset
   legend: Email
