@@ -221,8 +221,15 @@ class ControllerApiSystemUsers extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
+		# check if loginlink is activated
+		$loginlink 			= false;
+		if($userdata['userrole'] == 'member' && isset($this->settings['loginlink']) && $this->settings['loginlink'])
+		{
+			$loginlink 		= true;
+		}
+
 		# we have to validate again because of additional dynamic fields
-		$formdefinitions 	= $user->getUserFields($this->c->get('acl'), $request->getAttribute('c_userrole'));
+		$formdefinitions 	= $user->getUserFields($this->c->get('acl'), $request->getAttribute('c_userrole'), NULL, $loginlink);
 		$validatedOutput 	= $validate->recursiveValidation($formdefinitions, $userdata);
 		if(!empty($validate->errors))
 		{

@@ -241,6 +241,136 @@ class ControllerWebAuth extends Controller
 		return $response->withHeader('Location', $this->routeParser->urlFor($redirect))->withStatus(302);
 	}
 
+	public function loginlink(Request $request, Response $response, $args)
+	{
+		if(!isset($this->settings['loginlink']) OR !$this->settings['loginlink'])
+		{
+			if($securitylog)
+			{
+				\Typemill\Static\Helpers::addLogEntry('loginlink: not activated');
+			}
+
+			return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
+		}
+
+		# optionally check trusted ips
+		$trustedLogin	= ( isset($this->settings['trustedloginreferrer']) && !empty($this->settings['trustedloginreferrer']) ) ? explode(",", $this->settings['trustedloginreferrer']) : [];
+		$ipAddress 		= $_SERVER['REMOTE_ADDR'] ?? null;
+		if (
+			!empty($trustedLogin)
+			&& !in_array($ipAddress, $trustedLogin)
+		)
+		{            
+			if($securitylog)
+			{
+				\Typemill\Static\Helpers::addLogEntry('loginlink: remote address is not a trusted ip');
+			}
+
+			return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
+		}
+
+        $input 			= $request->getQueryParams();
+		$validation		= new Validation();
+		$securitylog 	= $this->settings['securitylog'] ?? false;
+
+		if($validation->signin($input) !== true)
+		{
+			if($securitylog)
+			{
+				\Typemill\Static\Helpers::addLogEntry('loginlink: invalid data');
+			}
+
+			if($this->c->get('flash'))
+			{
+				$this->c->get('flash')->addMessage('error', Translations::translate('Wrong password or username, please try again.'));
+			}
+
+			return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
+		}
+		
+		$user = new User();
+
+		if(!$user->setUserWithPassword($input['username']))
+		{
+			if($securitylog)
+			{
+				\Typemill\Static\Helpers::addLogEntry('loginlink: user not found');
+			}
+
+			if($this->c->get('flash'))
+			{
+				$this->c->get('flash')->addMessage('error', Translations::translate('Wrong password or username, please try again.'));
+			}
+
+			return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
+		}
+
+		$userdata 		= $user->getUserData();
+
+		if($userdata['userrole'] != 'member')
+		{
+			if($securitylog)
+			{
+				\Typemill\Static\Helpers::addLogEntry('loginlink: user has not a member role. Only members can use loginlinks.');
+			}
+
+			if($this->c->get('flash'))
+			{
+				$this->c->get('flash')->addMessage('error', Translations::translate('User is not a member.'));
+			}
+
+			return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);			
+		}
+
+		if(!isset($userdata['linkaccess']) OR ($userdata['linkaccess'] !== true))
+		{
+			if($securitylog)
+			{
+				\Typemill\Static\Helpers::addLogEntry('loginlink: loginlink for user ' . $userdata['username'] . ' is not activated.');
+			}
+
+			return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);			
+		}
+
+		if($userdata && !password_verify($input['password'], $userdata['password']))
+		{
+			if($securitylog)
+			{
+				\Typemill\Static\Helpers::addLogEntry('login: wrong password');
+			}
+
+			if($this->c->get('flash'))
+			{
+				$this->c->get('flash')->addMessage('error', Translations::translate('Wrong password or username, please try again.'));
+			}
+
+			return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
+		}
+
+		# check if user has confirmed the account 
+		if(isset($userdata['optintoken']) && $userdata['optintoken'])
+		{
+			if($securitylog)
+			{
+				\Typemill\Static\Helpers::addLogEntry('login: user not confirmed yet.');
+			}
+
+			if($this->c->get('flash'))
+			{
+				$this->c->get('flash')->addMessage('error', Translations::translate('Your registration is not confirmed yet. Please check your e-mails and use the confirmation link.'));
+			}
+		
+			return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
+		}
+
+		$user->login();
+
+		$redirect = $this->getRedirectDestination($userdata['userrole']);
+
+		return $response->withHeader('Location', $this->routeParser->urlFor($redirect))->withStatus(302);
+	}
+
+
 	private function getRedirectDestination(string $userrole)
 	{
 		# decide where to redirect after login, configurable in settings -> system.yaml

@@ -169,7 +169,7 @@ class User
 		return false;
 	}
 
-	public function getUserFields($acl, $userrole, $inspectorrole = NULL)
+	public function getUserFields($acl, $userrole, $inspectorrole = NULL, $loginlink = NULL)
 	{
 		$storage 		= new StorageWrapper('\Typemill\Models\Storage');
 		$userfields 	= $storage->getYaml('systemSettings', '', 'user.yaml');
@@ -217,7 +217,12 @@ class User
 			$userfields['userrole'] = ['label' => Translations::translate('Role'), 'type' => 'select', 'options' => $options];
 
 			# can activate api access
-			$userfields['apiaccess'] = ['label' => Translations::translate('API access'), 'checkboxlabel' => Translations::translate('Activate API access for this user. Use username and password for api calls'), 'type' => 'checkbox'];
+			$userfields['apiaccess'] = ['label' => Translations::translate('API access'), 'checkboxlabel' => Translations::translate('Activate API access for this user. Use username and password for api calls. Whitelist calling domains in the developer settings.'), 'type' => 'checkbox'];
+
+			if($loginlink)
+			{
+				$userfields['linkaccess'] = ['label' => Translations::translate('Link access'), 'checkboxlabel' => Translations::translate('Activate link access for this user (only for member role). Use username and password for the link. Optionally whitelist IPs in the developer settings.'), 'type' => 'checkbox'];
+			}
 		}
 
 		return $userfields;

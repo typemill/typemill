@@ -361,7 +361,12 @@ class ControllerWebSystem extends Controller
 
 		$userdata			= $user->getUserData();
 		$inspector 			= $request->getAttribute('c_userrole');
-		$userfields 		= $user->getUserFields($this->c->get('acl'), $userdata['userrole'], $inspector);
+		$loginlink 			= false;
+		if($userdata['userrole'] == 'member' && isset($this->settings['loginlink']) && $this->settings['loginlink'])
+		{
+			$loginlink 		= true;
+		}
+		$userfields 		= $user->getUserFields($this->c->get('acl'), $userdata['userrole'], $inspector, $loginlink);
 
 	    return $this->c->get('view')->render($response, 'system/user.twig', [
 			'settings' 			=> $this->settings,

@@ -21,6 +21,11 @@ userrole:
   label: 'Role'
   type: 'text'
   readonly: true
+darkmode: 
+  name: darkmode
+  label: 'Darkmode'
+  checkboxlabel: 'Activate the darkmode for me'
+  type: 'checkbox'  
 password:
   name: password
   label: 'Actual Password' 
@@ -32,8 +37,3 @@ newpassword:
   type: 'password'
   autocomplete: 'new-password'
   generator: true
-darkmode: 
-  name: darkmode
-  label: 'Darkmode'
-  checkboxlabel: 'Activate the darkmode for me'
-  type: 'checkbox'

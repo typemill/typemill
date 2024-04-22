@@ -19,6 +19,11 @@ $app->group('/tm', function (RouteCollectorProxy $group) use ($settings) {
 	$group->get('/login', ControllerWebAuth::class . ':show')->setName('auth.show');
 	$group->post('/login', ControllerWebAuth::class . ':login')->setName('auth.login');
 
+	if(isset($settings['loginlink']) && $settings['loginlink'])
+	{
+		$group->get('/loginlink', ControllerWebAuth::class . ':loginlink')->setName('auth.link');
+	}
+
 	if(isset($settings['authcode']) && $settings['authcode'])
 	{
 		$group->post('/authcode', ControllerWebAuth::class . ':loginWithAuthcode')->setName('auth.authcode');
