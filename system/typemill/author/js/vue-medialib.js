@@ -33,7 +33,7 @@ const medialib = {
 							<ul class="w-full flex flex-wrap py-3 text-xs">
 								<li v-for="num in totalPages" :key="num" class="py-1">
 									<button 
-										@click="goToPage(num)" 
+										@click.prevent="goToPage(num)" 
 										class="bg-white py-2 px-1 mr-1 w-7 hover:bg-stone-900 hover:text-white transition duration-100"
 										:class="{'bg-stone-900 text-white': num === currentPage}"
 									>{{ num }}</button>
