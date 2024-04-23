@@ -92,7 +92,7 @@ if(isset($routes['web']) && !empty($routes['web']))
 if(isset($settings['access']) && $settings['access'] != '')
 {
 	# if access for website is restricted
-	$app->get('/[{route:.*}]', ControllerWebFrontend::class . ':index')->setName('home')->add(new CspHeadersMiddleware($settings, $cspFromPlugins, $cspFromTheme))->add(new WebAuthorization($routeParser, $acl, 'account', 'read'));
+	$app->get('/[{route:.*}]', ControllerWebFrontend::class . ':index')->setName('home')->add(new CspHeadersMiddleware($settings, $cspFromPlugins, $cspFromTheme))->add(new WebRedirectIfUnauthenticated($routeParser));
 }
 else
 {
