@@ -362,7 +362,7 @@ class ControllerWebSystem extends Controller
 		$userdata			= $user->getUserData();
 		$inspector 			= $request->getAttribute('c_userrole');
 		$loginlink 			= false;
-		if($userdata['userrole'] == 'member' && isset($this->settings['loginlink']) && $this->settings['loginlink'])
+		if($userdata['userrole'] == 'guest' && isset($this->settings['loginlink']) && $this->settings['loginlink'])
 		{
 			$loginlink 		= true;
 		}

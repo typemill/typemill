@@ -28,14 +28,12 @@ class WebAuthorization implements MiddlewareInterface
 	}
 
 	public function process(Request $request, RequestHandler $handler) :Response
-	{
-		$test = $this->acl->isAllowed($request->getAttribute('c_userrole'), $this->resource, $this->action);
-		
+	{		
 		if(!$this->acl->isAllowed($request->getAttribute('c_userrole'), $this->resource, $this->action))
 		{
 			$response = new Response();
 
-			return $response->withHeader('Location', $this->router->urlFor('user.account'))->withStatus(302);
+			return $response->withHeader('Location', $this->router->urlFor('home'))->withStatus(302);
 		}
 
 		$response = $handler->handle($request);

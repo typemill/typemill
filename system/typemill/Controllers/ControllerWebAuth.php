@@ -307,7 +307,7 @@ class ControllerWebAuth extends Controller
 
 		$userdata 		= $user->getUserData();
 
-		if($userdata['userrole'] != 'member')
+		if($userdata['userrole'] != 'guest')
 		{
 			if($securitylog)
 			{

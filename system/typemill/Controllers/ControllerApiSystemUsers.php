@@ -223,7 +223,7 @@ class ControllerApiSystemUsers extends Controller
 
 		# check if loginlink is activated
 		$loginlink 			= false;
-		if($userdata['userrole'] == 'member' && isset($this->settings['loginlink']) && $this->settings['loginlink'])
+		if($userdata['userrole'] == 'guest' && isset($this->settings['loginlink']) && $this->settings['loginlink'])
 		{
 			$loginlink 		= true;
 		}

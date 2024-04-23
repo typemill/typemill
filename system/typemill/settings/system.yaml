@@ -292,8 +292,8 @@ fieldsetdeveloper:
     loginlink:
       type: checkbox
       label: "Login with link"
-      checkboxlabel: "Allow selected users to login with a login link."
-      description: "If activated, you can allow login-links with a checkbox in the user profile. This is only available for member-roles since members have very limited rights. Login with a link can be helpful if you link from your software to a non-public documentation. Be aware of the low protection that this kind of logins have. If you integrate such links in a SaaS-software, then you should restrict access to your ips."
+      checkboxlabel: "Allow selected guest-users to login with a login link."
+      description: "If activated, you can allow login-links with a checkbox in the user profile. This is only available for guest-roles since guests do not have any rights. Login with a link can be helpful if you link from your software to a non-public documentation. Be aware of the low protection that this kind of logins has. If you integrate such links in a SaaS-software, then you should restrict access with login-links to your ips."
     trustedloginreferrer:
       type: text
       label: "Trusted IPs for the login-link-referrer (comma separated)"

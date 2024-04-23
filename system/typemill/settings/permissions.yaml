@@ -1,3 +1,9 @@
+guest: 
+  name: guest
+  inherits: NULL
+  permissions: 
+    account:
+      - 'none'
 member:
   name: member
   inherits: NULL
