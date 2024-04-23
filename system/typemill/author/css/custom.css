@@ -423,11 +423,13 @@
 }
 
 
-.blox-preview ul.TOC,
-.blox-preview .TOC ul{
+.blox-preview ul.TOC{
   list-style: none;
   padding-left: 0px;
   margin-left: 0px;
+}
+.blox-preview .TOC ul{
+  list-style: none;
 }
 .blox-preview .TOC li:before{
   content: "\2192";

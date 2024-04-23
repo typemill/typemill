@@ -425,46 +425,52 @@ class ParsedownExtension extends \ParsedownExtra
     }
 
 
-    # build the markup for table of contents
+    # build the markup for table of contents, thanks gtp for fixing!
     public function buildTOC($headlines)
     {
         $markup = '<ul class="TOC">';
         
         # we have to reindex the array
-
         $headlines = array_values($headlines);
+
+        # Initialize previous level to the highest possible level
+        $prevLevel = 1; 
+
+        # Stack to keep track of open <ul> tags
+        $stack = array();
 
         foreach($headlines as $key => $headline)
         {
             $thisLevel = $headline['level'];
-            $prevLevel = $key > 0 ? $headlines[$key-1]['level'] : 1;
-            $nextLevel = isset($headlines[$key+1]) ? $headlines[$key+1]['level'] : 0;
 
-            if($thisLevel > $prevLevel)
+            # Close any open <li> tags if the current level is lower than the previous level
+            while ($thisLevel < $prevLevel)
+            {
+                $markup .= '</li>';
+                $markup .= array_pop($stack); // Close the corresponding <ul> tag
+                $prevLevel--;
+            }
+
+            # Open a new <ul> tag if the current level is higher than the previous level
+            if ($thisLevel > $prevLevel)
             {
                 $markup .= '<ul>';
+                $stack[] = '</ul>'; // Add the closing </ul> tag to the stack
             }
 
             $markup .= '<li class="' . $headline['name'] . '"><a href="#' . $headline['attribute'] . '">' . $headline['text'] . '</a>';
 
-            if($thisLevel == $nextLevel )
-            {
-                $markup .= '</li>';
-            }
-            elseif($thisLevel > $nextLevel)
-            {
-                while($thisLevel > $nextLevel)
-                {
-                    $markup .= '</li></ul>';
-                    $thisLevel--;
-                }
-
-                if($thisLevel > 0)
-                {
-                    $markup .= '</li>';
-                }
-            }
+            $prevLevel = $thisLevel;
         }
+
+        # Close any remaining open <li> tags and <ul> tags
+        while (!empty($stack)) {
+            $markup .= '</li>';
+            $markup .= array_pop($stack);
+        }
+
+        # Close the top-level <ul> tag
+        $markup .= '</ul>';
         
         return $markup;
     }
