@@ -893,13 +893,16 @@ class ControllerApiAuthorArticle extends Controller
 			# get the content of the target folder
 			$folderContent		= $newFolder->folderContent;
 		}
-		
+
 		# if the item has been moved within the same folder
 		if($params['parent_id_from'] == $params['parent_id_to'])
 		{
-			# we do not have to generate the full navigation, only this part
-			$clearFullNavi = false;
-			$naviFileName = $navigation->getNaviFileNameForPath($item->path);
+			if($params['parent_id_to'] != '')
+			{
+				# we do not have to generate the full navigation, only this part
+				$clearFullNavi = false;
+				$naviFileName = $navigation->getNaviFileNameForPath($item->path);
+			}
 
 			# get key of item
 			$itemKey = end($itemKeyPath);
@@ -1046,8 +1049,16 @@ class ControllerApiAuthorArticle extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
 
-		$naviFileName 		= $navigation->getNaviFileNameForPath($item->path);
-	    $navigation->clearNavigation([$naviFileName, $naviFileName . '-extended']);
+		if(count($item->keyPathArray) == 1)
+		{
+			# if item on base level is deleted, clear the whole navigation
+		    $navigation->clearNavigation();
+		}
+		else
+		{
+			$naviFileName 		= $navigation->getNaviFileNameForPath($item->path);
+		    $navigation->clearNavigation([$naviFileName, $naviFileName . '-extended']);
+		}
 
 		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
 
