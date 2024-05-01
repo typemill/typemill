@@ -673,8 +673,6 @@ class Storage
 		return $imagelist;
 	}
 
-
-
 	# get details from existing image for media library
 	public function getImageDetails($name)
 	{		
@@ -795,6 +793,27 @@ class Storage
 	##################
 	## 	  FILES 	##
 	##################
+ 	
+ 	public function checkFileExists($filepath)
+	{
+		$pathinfo = pathinfo($filepath);
+		if(!$pathinfo)
+		{
+			$this->error = Translations::translate('Could not read pathinfo');
+
+			return false;
+		}
+
+		$filename 	= $pathinfo['filename'] . '.' . $pathinfo['extension'];
+		$newpath 	= false;
+
+		if($this->checkFile('fileFolder', '', $filename))
+		{
+			$newpath = 'media/files/' . $filename;
+		}
+
+		return $newpath;
+	}
 
 	public function publishFile($name)
 	{

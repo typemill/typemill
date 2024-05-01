@@ -804,6 +804,10 @@ class Validation
 				$v->rule('lengthMax', $fieldName, 1000);
 				$v->rule('image_types', $fieldName);
 				break;
+			case "file":
+				$v->rule('noHTML', $fieldName);
+				$v->rule('lengthMax', $fieldName, 1000);
+				break;
 			case "number":
 				$v->rule('integer', $fieldName);
 				break;
@@ -908,6 +912,31 @@ class Validation
 							if($newImagePath)
 							{
 								$fieldvalue = $newImagePath;
+							}
+							else
+							{
+								$fieldvalue = '';
+							}
+						}
+					}
+
+					if($fielddefinitions['type'] == 'file')
+					{
+						# then check if file is there already: check for name and maybe correct image extension (if quality has been changed)
+						$storage = new StorageWrapper('\Typemill\Models\Storage');
+						$existingFilePath = $storage->checkFileExists($fieldvalue);
+						
+						if($existingFilePath)
+						{
+							$fieldvalue = $existingFilePath;
+						}
+						else
+						{
+							# there is no published file with that name, so check if there is an unpublished image in tmp folder and publish it
+							$newFilePath = $storage->publishFile($fieldvalue);
+							if($newFilePath)
+							{
+								$fieldvalue = $newFilePath;
 							}
 							else
 							{

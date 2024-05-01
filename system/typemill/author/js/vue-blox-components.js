@@ -2418,7 +2418,6 @@ bloxeditor.component('video-component', {
 	},
 })
 
-
 bloxeditor.component('shortcode-component', {
 	props: ['markdown', 'disabled', 'index'],
 	data: function(){
@@ -2437,14 +2436,43 @@ bloxeditor.component('shortcode-component', {
 					<div v-if="shortcodedata" class="p-8 bg-stone-100 dark:bg-stone-900" ref="markdown">
 						<div class="flex mt-2 mb-2">
 							<label class="w-1/5 py-2" for="shortcodename">{{ $filters.translate('Shortcode') }}: </label> 
-							<select class="w-4/5 p-2 bg-stone-200 text-stone-900" title="shortcodename" v-model="shortcodename" @change="createmarkdown(shortcodename)"><option v-for="shortcode,name in shortcodedata" :value="name">{{ name }}</option></select>
+							<select 
+								class 		= "w-4/5 p-2 bg-stone-200 text-stone-900" 
+								title 		= "shortcodename" 
+								v-model 	= "shortcodename" 
+								@change 	= "createmarkdown(shortcodename)"
+								>
+									<option 
+										v-for 	= "shortcodeparams,name in shortcodedata" 
+										:value 	= "name"
+										> {{ name }}
+									</option>
+							</select>
 						</div>
-						<div class="flex mt-2 mb-2" v-for="key,attribute in shortcodedata[shortcodename]">
-							<label class="w-1/5 py-2" for="key">{{ attribute }}: </label> 
-							<input class="w-4/5 p-2 bg-stone-200 text-stone-900" type="search" list="shortcodedata[shortcodename][attribute]" v-model="shortcodedata[shortcodename][attribute].value" @input="createmarkdown(shortcodename,attribute)">
-							<datalist id="shortcodedata[shortcodename][attribute]">
-								<option v-for="item in shortcodedata[shortcodename][attribute].content" @click="selectsearch(item,attribute)" :value="item"></option>
-							</datalist>
+						<div class="flex mt-2 mb-2" v-for="attribute,key in shortcodedata[shortcodename]">
+							<label class="w-1/5 py-2" for="key">{{key}}</label> 
+							<div v-if="shortcodedata[shortcodename][key].content">
+								<input 
+									class 		= "w-4/5 p-2 bg-stone-200 text-stone-900" 
+									type 		= "search" list="shortcodedata[shortcodename][key]" 
+									v-model 	= "shortcodedata[shortcodename][key].value" 
+									@input 		= "createmarkdown(shortcodename,key)"
+								>
+								<datalist id="shortcodedata[shortcodename][key]">
+									<option 
+										v-for 	= "item in shortcodedata[shortcodename][key].content" 
+										@click 	= "selectsearch(item,key)" 
+										:value 	= "item"
+										>
+									</option>
+								</datalist>
+							</div>
+							<input v-else
+								class 		= "w-4/5 p-2 bg-stone-200 text-stone-900" 
+								type 		= "text"
+								v-model 	= "shortcodedata[shortcodename][key]" 
+								@input 		= "createmarkdown(shortcodename,key)"
+							>
 						</div>
 					</div>
 					<textarea v-else class="opacity-1 w-full bg-transparent px-6 py-3 outline-none" ref="markdown" placeholder="No shortcodes are registered" disabled></textarea>
@@ -2501,25 +2529,22 @@ bloxeditor.component('shortcode-component', {
 				{
 					for(var i=0;i<matchlength;i++)
 					{
-						var attribute 			= matches[i][1];
+						var attribute 		= matches[i][1];
 						var attributeValue 	= matches[i][2].replaceAll('"','');
 
-						this.shortcodedata[this.shortcodename][attribute].value = attributeValue;
+						this.shortcodedata[this.shortcodename][attribute] = attributeValue;
 					}
 				}
 			}
 		},
-		createmarkdown(shortcodename,attribute = false)
+		createmarkdown(shortcodename)
 		{
 			var attributes = '';
-			if(attribute)
+			for (var attribute in this.shortcodedata[shortcodename])
 			{
-				for (var attribute in this.shortcodedata[shortcodename])
+				if(this.shortcodedata[shortcodename].hasOwnProperty(attribute))
 				{
-					if(this.shortcodedata[shortcodename].hasOwnProperty(attribute))
-					{
-					    attributes += ' ' + attribute + '="' +  this.shortcodedata[shortcodename][attribute].value + '"';
-					}
+				    attributes += ' ' + attribute + '="' +  this.shortcodedata[shortcodename][attribute] + '"';
 				}
 			}
 

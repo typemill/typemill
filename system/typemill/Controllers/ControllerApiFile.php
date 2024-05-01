@@ -134,10 +134,15 @@ class ControllerApiFile extends Controller
 			$restrictions[$filename] = $role;
 		}
 
-		$storage->updateYaml('fileFolder', '', 'filerestrictions.yaml', $restrictions);
+		$result = $storage->updateYaml('fileFolder', '', 'filerestrictions.yaml', $restrictions);
+		if(!$result)
+		{
+			$result = $storage->getError();
+		}
 
 		$response->getBody()->write(json_encode([
-			'restrictions'	=> $restrictions
+			'restrictions'	=> $restrictions,
+			'storage' => $result
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json');

@@ -820,7 +820,7 @@ app.component('component-image', {
 	},
 	methods: {
 		addFromMedialibFunction(value)
-		{
+		{		
 		//	this.imgfile 		= value;
 			this.imagepreview 	= data.urlinfo.baseurl + '/' + value;
 			this.showmedialib 	= false;
@@ -928,145 +928,193 @@ app.component('component-image', {
 })
 
 app.component('component-file', {
-	props: ['id', 'description', 'maxlength', 'hidden', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'errors'],
-	template: `<div class="large">
-				<label>{{ $filters.translate(label) }}</label>
-				<div v-if="load" class="loadwrapper"><span class="load"></span></div>
-				<div class="ba b--moon-gray">
-					<div class="medium">
-						<label>{{ $filters.translate('File URL (read only)' }}</label>
-						<div class="flex">
-							<button @click.prevent="deleteFile()" class="w-10 bn hover-bg-tm-red hover-white">x</button>
-							<input class="w-90" type="text"
-									:id="id"
-									:maxlength="maxlength"
-									;readonly="readonly"
-									:hidden="hidden"
-									:required="required"
-									:disabled="disabled"
-									:name="name"
-									:placeholder="placeholder"
-									:value="value"
-									@input="update($event, name)">
-						</div>
-						<div class="flex">
-							<div class="relative dib w-100 br b--white bg-tm-green dim"> 
-								<input type="file" accept="*" name="file" @change="onFileChange( $event )" class="absolute o-0 w-100 top-0 z-1 pointer h2" /> 
-								<p class="relative w-100 bn br1 white pa1 h2 ma0 tc"><svg class="icon icon-upload baseline"><use xlink:href="#icon-upload"></use></svg>  {{ $filters.translate('upload') }}</p>
-							</div> 
-							<div class="dib w-100 bl b--white"> 
-								<button @click.prevent="showmedialib = true" class="w-100 pointer bn bg-tm-green white pa0 h2 ma0 tc dim"><svg class="icon icon-paperclip baseline"><use xlink:href="#icon-paperclip"></use></svg> {{ $filters.translate('medialib') }}</button> 
-							</div> 
-						</div>
-					</div>
-					<div class="medium">
-						<input title="fileid" type="hidden" placeholder="id" v-model="fileid" @input="createmarkdown" max="140" />
-						<label for="filerestriction">{{ $filters.translate('Access for') }}: </label>
-						<select name="filerestriction" v-model="selectedrole" @change="updaterestriction">
-					  		<option disabled value="">{{ $filters.translate('Please select') }}</option>
-							<option v-for="role in userroles">{{ role }}</option>
-						</select>
-					</div>
-				</div>
-
-				<Transition name="initial" appear>
-					<div v-if="showmedialib" class="fixed top-0 left-0 right-0 bottom-0 bg-stone-100 z-50">
-						<button class="w-full bg-stone-200 hover:bg-rose-500 hover:text-white p-2 transition duration-100" @click.prevent="showmedialib = false">{{ $filters.translate('close library') }}</button>
-						<medialib parentcomponent="images" @addFromMedialibEvent="addFromMedialibFunction"></medialib>
-					</div>
-				</Transition> 
-
-			  </div>`,
+	props: ['id', 'description', 'maxlength', 'hidden', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'css', 'errors'],
+	components: {
+		medialib: medialib
+	},
 	data: function(){
 		return {
 			maxsize: 20, // megabyte
 			showmedialib: false,
-			fileid: '',
-			load: false,
+//			fileid: '',
+//			load: false,
+			error: false,
 			userroles: ['all'],
 			selectedrole: '',
 		}
 	},
+	template: `<div :class="css ? css : ''" class="w-full mt-5 mb-5">
+
+				<label :for="name" class="block mb-1 font-medium">{{ $filters.translate(label) }}</label>
+
+				<div class="border w-full p-3">
+
+					<div class="flex flex-wrap justify-between block">
+
+						<div class="lg:w-half w-full mt-5 mb-5">
+
+							<label class="block mb-1 font-medium">{{ $filters.translate('File path (read only)') }}</label>
+							<div class="flex">
+								<button 
+									@click.prevent 	= "deleteFile()" 
+									class 			= "w-1/6 bg-stone-200 dark:bg-stone-600 hover:bg-rose-500 hover:dark:bg-rose-500 hover:text-white">x</button>
+								<input 
+									type 			= "text" 
+									class 			= "h-12 w-5/6 border px-1 py-1 text-stone-900" 
+									:class 			= "errors[name] ? ' border-red-500 bg-red-100' : ' border-stone-300 bg-stone-200'" 
+									:id 			= "id"
+									:maxlength 		= "maxlength"
+									readonly 		= "readonly"
+									:hidden 		= "hidden"
+									:required 		= "required"
+									:disabled 		= "disabled"
+									:name 			= "name"
+									:placeholder 	= "placeholder"
+									:value 			= "value"
+									@input 			= "update($event, name)">								
+							</div>
+						</div>
+
+						<div class="lg:w-half w-full mt-5 mb-5">
+							<label class="block mb-1 font-medium">{{ $filters.translate('Access') }}</label>
+							<select 
+									class 			= "form-select block w-full border border-stone-300 text-stone-900 bg-stone-200 px-2 py-3 h-12 transition ease-in-out border-stone-300 bg-stone-200" 
+									name 			= "filerestriction" 
+									v-model 		= "selectedrole" 
+									@change 		= "updaterestriction"
+								>
+								<option disabled value="">{{ $filters.translate('Please select') }}</option>
+								<option v-for="role in userroles">{{ role }}</option>
+							</select>
+						</div>
+
+					</div>
+
+					<div class="w-full ph3 lh-copy f6 relative flex justify-between">
+
+						<div class="relative lg:w-half w-full bg-stone-600 hover:bg-stone-900">
+							<p class="relative w-full text-white text-center px-2 py-3">
+								<svg class="icon icon-upload mr-1">
+									<use xlink:href="#icon-upload"></use>
+								</svg> 
+								{{ $filters.translate('upload a file') }}
+							</p>
+							<input 
+								class 			= "absolute w-full top-0 opacity-0 bg-stone-900 cursor-pointer px-2 py-3" 
+								type 			= "file"  
+								name 			= "file" 
+								accept 			= "*" 
+								@change 		= "onFileChange( $event )" 
+							/>
+						</div>
+						<div class="w-full lg:w-half">
+							<button 
+								class 			= "w-full bg-stone-600 hover:bg-stone-900 text-white px-2 py-3 text-center cursor-pointer transition duration-100" 
+								@click.prevent 	= "showmedialib = true"
+								>
+								<svg class="icon icon-image mr-1">
+									<use xlink:href="#icon-image"></use>
+								</svg> 
+								{{ $filters.translate('select from medialib') }}
+							</button>
+						</div>
+					</div>
+				</div>
+				<p v-if="error" class="text-xs text-red-500">{{ error }}</p>
+				<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
+
+				<Transition name="initial" appear>
+					<div v-if="showmedialib" class="fixed top-0 left-0 right-0 bottom-0 bg-stone-100 z-50">
+						<button class="w-full bg-stone-200 hover:bg-rose-500 hover:text-white p-2 transition duration-100" @click.prevent="showmedialib = false">{{ $filters.translate('close library') }}</button>
+						<medialib parentcomponent="files" @addFromMedialibEvent="addFromMedialibFunction"></medialib>
+					</div>
+				</Transition> 
+			  </div>`,
+
 	mounted: function(){
 		this.getrestriction();
 	},
 	methods: {
-		addFromMedialibFunction(value)
+		addFromMedialibFunction(file)
 		{
-			this.imgfile 		= value;
-			this.imgpreview 	= data.urlinfo.baseurl + '/' + value;
+			this.error 			= false;
 			this.showmedialib 	= false;
-			this.saveimage 		= false;
 
-			this.createmarkdown();
+			this.update(file.url);
+			this.getrestriction(file.url);
 		},
-		update: function(value)
+		update: function(filepath)
 		{
-			FormBus.$emit('forminput', {'name': this.name, 'value': value});
-		},
-		updatemarkdown: function(markdown, url)
-		{
-			/* is called from child component medialib if file has been selected */
-			this.update(url);
-			this.getrestriction(url);
-		},
-		createmarkdown: function(url)
-		{
-			/* is called from child component medialib */
-			this.update(url);
+			eventBus.$emit('forminput', {'name': this.name, 'value': filepath});
 		},
 		deleteFile: function()
 		{
+			this.error = false;
+
 			this.update('');
 			this.selectedrole = 'all';
 		},
-		getrestriction: function(url)
+		getrestriction(newfilepath)
 		{
-			var filename = this.value;
-			if(url)
+			this.error = false;
+
+			var filepath = this.value;
+			if(newfilepath)
 			{
-				filename = url;
+				filepath = newfilepath;
 			}
 
 			var myself = this;
 
-		    myaxios.get('/api/v1/filerestrictions',{
-		      params: {
-						'url':			document.getElementById("path").value,
-						'filename': 	filename,
-		      }
+			tmaxios.get('/api/v1/filerestrictions',{
+				params: {
+					'url':			data.urlinfo.route,
+					'filename': 	filepath,
+		    	}
 			})
-		    .then(function (response) {
-		    	myself.userroles 		= ['all'];
-	    		myself.userroles 		= myself.userroles.concat(response.data.userroles);
-	    		myself.selectedrole		= response.data.restriction;
-		    })
-		    .catch(function (error)
-		    {
-		      if(error.response)
-		      {
-		      }
-		    });
-		},
-		updaterestriction: function()
-		{
-		    myaxios.post('/api/v1/filerestrictions',{
-						'url':			document.getElementById("path").value,
-						'filename': 	this.value,
-						'role': 		this.selectedrole,
+			.then(function (response) {
+				myself.userroles 		= ['all'];
+				myself.userroles 		= myself.userroles.concat(response.data.userroles);
+				myself.selectedrole		= response.data.restriction;
 			})
-		    .then(function (response) {
-		    	
-		    })
-		    .catch(function (error)
-		    {
-		      if(error.response)
-		      {
-		      }
-		    });
+			.catch(function (error)
+			{
+				if(error.response.data.message)
+				{
+					myself.error = myself.$filters.translate(error.response.data.message);
+					myself.error
+//					eventBus.$emit('publishermessage', message);
+				}
+			});
 		},
-		onFileChange: function( e )
+		updaterestriction()
 		{
+			this.error = false;
+
+			var filepath = this.value;
+			if(!filepath)
+			{
+				this.error = 'File is missing for a restriction.';
+			}
+
+			var resself = this;
+
+			tmaxios.post('/api/v1/filerestrictions',{
+				'url':			data.urlinfo.route,
+				'filename': 	filepath,
+				'role': 		this.selectedrole,
+			})
+			.then(function (response) {
+
+			})
+			.catch(function (error){ 
+				resself.error = 'some error update file restrictions';
+			});
+		},
+		onFileChange( e )
+		{
+			this.error = false;
+
 			if(e.target.files.length > 0)
 			{
 				let uploadedFile = e.target.files[0];
@@ -1074,34 +1122,37 @@ app.component('component-file', {
 				
 				if (size > this.maxsize)
 				{
-					publishController.errors.message = "The maximal size of a file is " + this.maxsize + " MB";
+					let message = "The maximal size of a file is " + this.maxsize + " MB";
+
+					// show error in component
+					eventBus.$emit('publishermessage', message);
 				}
 				else
 				{
-					sharedself = this;
-					
-					sharedself.load = true;
+					self.load = true;
+
+					self = this;
 
 					let reader = new FileReader();
 					reader.readAsDataURL(uploadedFile);
-					reader.onload = function(e) {				
-					    myaxios.post('/api/v1/file',{
-							'url':				document.getElementById("path").value,
+					reader.onload = function(e) 
+					{
+						tmaxios.post('/api/v1/file',{
 							'file':				e.target.result,
-							'name': 			uploadedFile.name, 
-							'publish':  		true,
+							'name': 			uploadedFile.name
 						})
 					    .then(function (response) {
-							sharedself.load = false;
-							sharedself.selectedrole = 'all';
-							sharedself.update(response.data.info.url);
+					    	self.filetitle = response.data.fileinfo.title;
+					    	self.selectedrole = 'all';
+							self.update(response.data.filepath);
 					    })
 					    .catch(function (error)
 					    {
-							sharedself.load = false;
 					    	if(error.response)
 					    	{
-					        	publishController.errors.message = error.response.data.errors;
+					    		self.error = 'error update file';
+					    		console.info(error.response);
+	/*				        	publishController.errors.message = error.response.data.errors; */
 					      	}
 					    });
 					}
