@@ -78,9 +78,11 @@ class Plugins
 	public static function getPremiumLicense($className)
 	{
 		$premiumlist = [
-			'\Plugins\html\html' 		=> 'MAKER',
-			'\Plugins\html\register' 	=> 'MAKER',
-			'\Plugins\html\seo' 		=> 'MAKER'
+			'\Plugins\html\html' 			=> 'MAKER',
+			'\Plugins\html\register' 		=> 'MAKER',
+			'\Plugins\html\seo' 			=> 'MAKER',
+			'\Plugins\html\embed' 			=> 'MAKER',
+			'\Plugins\html\ebookproducts' 	=> 'MAKER',
 		];
 
 		if(isset($premiumList['className']))
