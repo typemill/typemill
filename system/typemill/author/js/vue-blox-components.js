@@ -2451,18 +2451,23 @@ bloxeditor.component('shortcode-component', {
 						</div>
 						<div class="flex mt-2 mb-2" v-for="attribute,key in shortcodedata[shortcodename]">
 							<label class="w-1/5 py-2" for="key">{{key}}</label> 
-							<div v-if="shortcodedata[shortcodename][key].content">
+							<div class="w-4/5 relative" v-if="shortcodedata[shortcodename][key].content">
 								<input 
-									class 		= "w-4/5 p-2 bg-stone-200 text-stone-900" 
-									type 		= "search" list="shortcodedata[shortcodename][key]" 
+									class 		= "w-full p-2 bg-stone-200 text-stone-900" 
+									type 		= "search" 
+									list 		= "shortcodedata[shortcodename][key]" 
 									v-model 	= "shortcodedata[shortcodename][key].value" 
 									@input 		= "createmarkdown(shortcodename,key)"
 								>
+								<div class="absolute px-2 py-2 ml-2 text-stone-700 right-0 top-0">
+									<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 20l-4-4m4 4l-4-4M10 14a4 4 0 100-8 4 4 0 000 8z"/>
+									</svg>
+								</div>
 								<datalist id="shortcodedata[shortcodename][key]">
 									<option 
-										v-for 	= "item in shortcodedata[shortcodename][key].content" 
-										@click 	= "selectsearch(item,key)" 
-										:value 	= "item"
+										v-for 			= "item in shortcodedata[shortcodename][key].content" 
+										:value 			= "item"
 										>
 									</option>
 								</datalist>
@@ -2540,23 +2545,36 @@ bloxeditor.component('shortcode-component', {
 		createmarkdown(shortcodename)
 		{
 			var attributes = '';
-			for (var attribute in this.shortcodedata[shortcodename])
+			for (var key in this.shortcodedata[shortcodename])
 			{
-				if(this.shortcodedata[shortcodename].hasOwnProperty(attribute))
+				if(this.shortcodedata[shortcodename].hasOwnProperty(key))
 				{
-				    attributes += ' ' + attribute + '="' +  this.shortcodedata[shortcodename][attribute] + '"';
-				}
+					let value = false;
+
+			        if (typeof this.shortcodedata[shortcodename][key] == 'string')
+			        {
+			            value = this.shortcodedata[shortcodename][key];
+			        } 
+			        else if (Array.isArray(this.shortcodedata[shortcodename][key].content))
+			        {
+			            let item = this.shortcodedata[shortcodename][key];
+			            if (item.content.includes(item.value)) 
+			            { 
+			            	// Check if value exists in content array
+			                value = item.value;
+			            }
+			        }
+
+			        if (value) 
+			        {
+			            attributes += ' ' + key + '="' +  value + '"';
+			        }
+			    }
 			}
 
 			this.compmarkdown = '[:' + shortcodename + attributes + ' :]';
 
 			this.$emit('updateMarkdownEvent', this.compmarkdown);
-		},
-		selectsearch(item,attribute)
-		{
-			/* check if still reactive */
-			this.shortcodedata[this.shortcodename][attribute].value = item;
-			this.createmarkdown(this.shortcodename,attribute);
 		},
 		updatemarkdown(event)
 		{
