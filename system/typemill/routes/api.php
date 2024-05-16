@@ -34,6 +34,8 @@ $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 	$group->post('/licensetestcall', ControllerApiSystemLicense::class . ':testLicenseServerCall')->setName('api.license.testcall')->add(new ApiAuthorization($acl, 'user', 'update')); # admin
 	$group->post('/themecss', ControllerApiSystemThemes::class . ':updateThemeCss')->setName('api.themecss.set')->add(new ApiAuthorization($acl, 'system', 'update')); # manager
 	$group->post('/theme', ControllerApiSystemThemes::class . ':updateTheme')->setName('api.theme.set')->add(new ApiAuthorization($acl, 'system', 'update')); # manager
+	$group->post('/treadymade', ControllerApiSystemThemes::class . ':updateReadymade')->setName('api.treadymade.set')->add(new ApiAuthorization($acl, 'system', 'update')); # manager
+	$group->delete('/treadymade', ControllerApiSystemThemes::class . ':deleteReadymade')->setName('api.treadymade.delete')->add(new ApiAuthorization($acl, 'system', 'update')); # manager
 	$group->post('/plugin', ControllerApiSystemPlugins::class . ':updatePlugin')->setName('api.plugin.set')->add(new ApiAuthorization($acl, 'system', 'update')); # manager
 	$group->post('/extensions', ControllerApiSystemExtensions::class . ':activateExtension')->setName('api.extension.activate')->add(new ApiAuthorization($acl, 'system', 'update')); # manager
 	$group->post('/versioncheck', ControllerApiSystemVersions::class . ':checkVersions')->setName('api.versioncheck')->add(new ApiAuthorization($acl, 'system', 'update')); # manager

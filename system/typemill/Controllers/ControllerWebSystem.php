@@ -74,7 +74,6 @@ class ControllerWebSystem extends Controller
 		$extension 			= new Extension();
 		$themeDefinitions 	= $extension->getThemeDetails($this->settings['theme']);
 		$themeSettings 		= $extension->getThemeSettings($this->settings['themes']);
-		$readymades 		= [];
 
 		# add userroles and other datasets
 		foreach($themeDefinitions as $name => $definitions)
@@ -95,10 +94,10 @@ class ControllerWebSystem extends Controller
 				}
 			}
 
-			if(isset($definitions['readymades']))
-			{
-				$readymades[$name] = $definitions['readymades'];
-			}
+			# get stored indvidual readymades
+			$builtinReadymades 		= $definitions['readymades'] ?? [];
+			$individualReadymades 	= $extension->getThemeReadymades($name);
+			$themeDefinitions[$name]['readymades'] = $builtinReadymades + $individualReadymades;
 		}
 
 		$license = [];
@@ -115,7 +114,6 @@ class ControllerWebSystem extends Controller
 										'systemnavi'	=> $systemNavigation,
 										'settings' 		=> $themeSettings,
 										'definitions'	=> $themeDefinitions,
-										'readymades' 	=> $readymades,
 										'theme'			=> $this->settings['theme'],
 										'license' 		=> $license,
 										'labels'		=> $this->c->get('translations'),

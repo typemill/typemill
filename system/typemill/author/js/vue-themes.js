@@ -2,7 +2,7 @@ const app = Vue.createApp({
 	template: `<Transition name="initial" appear>
 				<div class="w-full">
 					<ul>
-						<li v-for="(theme,themename) in formDefinitions" class="w-full my-8 bg-stone-100 dark:bg-stone-700 border border-stone-200">
+						<li v-for="(theme,themename) in formDefinitions" :key="themename" class="w-full my-8 bg-stone-100 dark:bg-stone-700 border border-stone-200">
 							<p v-if="versions[themename] !== undefined"><a href="https://themes.typemill.net" class="block p-2 text-center bg-rose-500 text-white">Please update to version {{ versions[themename].version }}</a></p>
 							<div class="flex justify-between w-full px-8 py-3 border-b border-white" :class="getActiveClass(themename)">
 								<p class="py-2">License: {{ theme.license }}</p>
@@ -35,31 +35,56 @@ const app = Vue.createApp({
 								</div>
 							</div>
 							<form class="w-full p-8" v-if="current == themename">
-<!--							<div v-if="theme.readymadesNext">
-									<fieldset class="flex flex-wrap justify-between block border-2 border-stone-200 p-4 my-8">
+								<div v-if="theme.readymades">
+									<fieldset class="block border-2 border-stone-200 p-4 my-8">
 										<legend class="text-lg font-medium">Readymades</legend>
-										<p class="w-full bg-stone-200 mb p-2">Readymades help you to setup your theme with prefilled settings. Load some readymades, check out the frontend and adjust the settings as needed. Find more informations about specific readymades on the <a class="text-teal-500" :href="themeurl(themename)">theme's website.</p>
-										<p class="w-full text-center mb-4 p-2 bg-rose-500 text-white">If you load and save a readymade, then your individual settins will be overwritten and are lost!</p>
-										<ul class="flex flex-wrap justify-between">
-											<li class="w-1/3 p-2 flex">
-												<div class="border-2 border-stone-200">
-													<button class="w-full center bg-stone-200 p-2 hover:bg-stone-300 transition duration-100" @click.prevent="loadReadymade('individual')">Load individual</button>
-													<div class="p-3">
-														<p>Load your stored individual settings.</p>
+										<p class="w-full mb p-2">Readymades are predefined settings. Store your own readymades or load readymades to quickly setup your theme.</p>
+										<ul>
+											<transition-group name="fade" tag="ul" class="flex flex-wrap">
+												<li class="w-1/3 p-2" v-for="(readysetup,readyname) in theme.readymades" :key="readyname" class="fade-item">
+													<div class="border-2 border-stone-200 hover:shadow-lg transition duration-100 ease-in-out">
+														<div class="w-full font-medium p-2 text-center bg-stone-200">{{ readysetup.name }}</div>
+														<div class="p-3 h-40">
+															<p>{{ readysetup.description }}</p>
+														</div>
+														<div v-if="readysetup.delete" class="mt-auto w-full flex">
+															<button v-if="readysetup.delete" class="w-1/2 p-2 text-center bg-rose-500 text-stone-50 hover:bg-rose-600"
+																@click.prevent="deleteReadymade(readyname)"
+																>delete</button>
+															<button class="w-1/2 p-2 bg-stone-700 text-white text-center hover:bg-stone-900"
+																@click.prevent="loadReadymade(readyname)"
+																>load</button>
+														</div>
+														<div v-else class="mt-auto w-full">
+															<button class="p-2 w-full bg-stone-700 text-white text-center hover:bg-stone-900"
+																@click.prevent="loadReadymade(readyname)"
+																>load</button>
+														</div>
 													</div>
-												</div>
-											</li>
-											<li class="w-1/3 p-2 flex" v-for="(readysetup,readyname) in theme.readymades">
-												<div class="border-2 border-stone-200">
-													<button class="w-full center bg-stone-200 p-2 hover:bg-stone-300 transition duration-100" @click.prevent="loadReadymade(readyname)">Load {{ readysetup.name }}</button>
-													<div class="p-3">
-														<p>{{ readysetup.description }}</p>
+												</li>
+												<li class="w-1/3 p-2" :key="'addnewreadymade'">
+													<div class="flex flex-col border-2 border-stone-200 hover:shadow-lg transition duration-100 ease-in-out">
+														<input 
+															type 		= "text" 
+															v-model 	= "readymadeTitle" 
+															@input 		= "checkTitle()"
+															placeholder = "Add a title" 
+															class 		= "w-full font-medium p-2 text-center bg-stone-200">
+														<textarea 
+															v-model 	= "readymadeDescription" 
+															class 		= "p-3 h-40" 
+															@input 		= "checkDescription()"
+															placeholder = "Add a description and store the current settings as a new readymade."></textarea>
+														<button class="p-2 w-full bg-stone-700 text-white text-center hover:bg-stone-900"
+															@click.prevent="storeReadymade()"
+															>store as readymade</button>
 													</div>
-												</div>
-											</li>
+												</li>
+											</transition-group>
 										</ul>
+										<div v-if="readymadeError" class="w-100 p-2 m-2 text-stone-50 text-center bg-rose-500">{{ readymadeError }}</div>
 									</fieldset>
-								</div> -->
+								</div>
 								<div v-for="(fieldDefinition, fieldname) in theme.forms.fields">
 									<fieldset class="flex flex-wrap justify-between border-2 border-stone-200 p-4 my-8" v-if="fieldDefinition.type == 'fieldset'">
 										<legend class="text-lg font-medium">{{ fieldDefinition.legend }}</legend>
@@ -111,19 +136,21 @@ const app = Vue.createApp({
 			</Transition>`,
 	data() {
 		return {
-			current: '',
-			formDefinitions: data.definitions,
-			formData: data.settings,
-			readymades: data.readymades,
-			theme: data.theme,
-			license: data.license,
-			message: '',
-			messageClass: '',
-			errors: {},
-			versions: false,
-			userroles: false,
-			showModal: false,
-			modalMessage: 'default',			
+			current: 				'',
+			formDefinitions: 		data.definitions,
+			formData: 				data.settings,
+			readymadeTitle: 		'',
+			readymadeDescription: 	'',
+			readymadeError:  		false,
+			theme: 					data.theme,
+			license: 				data.license,
+			message: 				'',
+			messageClass: 			'',
+			errors: 				{},
+			versions: 				false,
+			userroles: 				false,
+			showModal: 				false,
+			modalMessage: 			'default',			
 		}
 	},
 	components: {
@@ -247,6 +274,8 @@ const app = Vue.createApp({
 		},
 		loadReadymade(name)
 		{
+			this.readymadeError = false;
+
 			if(this.readymades[this.current] && this.readymades[this.current].individual === undefined)
 			{
 				this.readymades[this.current].individual = { 'settings' : this.formData[this.current] };			
@@ -257,6 +286,88 @@ const app = Vue.createApp({
 				this.formData[this.current] = this.readymades[this.current][name].settings;
 				eventBus.$emit('codeareaupdate');
 			}
+		},
+		checkTitle()
+		{
+			if(this.readymadeTitle.length > 20)
+			{
+				this.readymadeTitle = this.readymadeTitle.substring(0, 20);
+			}
+			if(this.readymadeTitle.match(/^[a-zA-Z0-9\- ]*$/))
+			{
+				this.readymadeError = false;
+			}
+			else
+			{
+				this.readymadeError = "Only characters [a-zA-Z0-9- ] are allowed."
+			}
+		},
+		checkDescription()
+		{
+			if(this.readymadeDescription.length > 100)
+			{
+				this.readymadeDescription = this.readymadeDescription.substring(0, 100);
+			}
+		},
+		storeReadymade()
+		{
+			this.readymadeError = false;
+
+			var rself = this;
+
+			tmaxios.post('/api/v1/treadymade',{
+				'theme': this.current,
+				'settings': this.formData[this.current],
+				'readymadetitle': this.readymadeTitle,
+				'readymadedesc': this.readymadeDescription
+			})
+			.then(function (response)
+			{
+				if(response.data.readymade !== undefined)
+				{
+					rself.formDefinitions[rself.current].readymades = Object.assign(rself.formDefinitions[rself.current].readymades, response.data.readymade);
+
+					rself.readymadeTitle = '';
+					rself.readymadeDescription = '';
+				}
+			})
+			.catch(function (error)
+			{
+				if(error.response)
+				{
+					if(error.response.data.message !== undefined)
+					{
+						rself.readymadeError = error.response.data.message;
+					}
+				}
+			});
+		},
+		deleteReadymade(name)
+		{
+			this.readymadeError = false;
+
+			var rself = this;
+
+			tmaxios.delete('/api/v1/treadymade',{
+				data: {
+					'theme': this.current,
+					'readymadeslug': name
+				}
+			})
+			.then(function (response)
+			{
+				delete rself.formDefinitions[rself.current].readymades[name];
+			})
+			.catch(function (error)
+			{
+				if(error.response)
+				{
+					if(error.response.data.message !== undefined)
+					{
+						rself.readymadeError = error.response.data.message;
+					}
+				}
+			});
 		},
 		save()
 		{
@@ -316,9 +427,10 @@ const app = Vue.createApp({
 		},
 		reset()
 		{
+			this.readymadeError 	= false;
 			this.errors 			= {};
 			this.message 			= '';
-			this.messageClass	= '';
+			this.messageClass		= '';
 		}
 	},
 })

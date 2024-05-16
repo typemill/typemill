@@ -99,6 +99,50 @@ class Extension
 		return $themeSettings;
 	}
 
+	public function getThemeReadymades($themeName)
+	{
+		$folder = 'readymades' . DIRECTORY_SEPARATOR . $themeName;
+		$readymadeFolder = $this->storage->getFolderPath('dataFolder', $folder);
+
+		$readymadeFiles = scandir($readymadeFolder);
+
+		$readymades = [];
+		foreach($readymadeFiles as $readymadeFile)
+		{
+			if (!in_array($readymadeFile, array(".","..")) && substr($readymadeFile, 0, 1) != '.')
+			{
+				$readymadeData = $this->storage->getYaml('dataFolder', $folder, $readymadeFile);
+				if($readymadeData && !empty($readymadeData))
+				{
+					$readymades = $readymades + $readymadeData;
+				}
+			}
+		}
+
+		return $readymades;
+	}
+
+	public function storeThemeReadymade($themeName, $readymadeName, $data)
+	{
+		$folder = 'readymades' . DIRECTORY_SEPARATOR . $themeName;
+
+		$result = $this->storage->updateYaml('dataFolder', $folder, $readymadeName . '.yaml', $data);
+	}
+
+	public function deleteThemeReadymade($themeName, $readymadeName)
+	{		
+		$folder = 'readymades' . DIRECTORY_SEPARATOR . $themeName;
+
+		$result = $this->storage->deleteFile('dataFolder', $folder, $readymadeName . '.yaml');
+
+		if(!$result)
+		{
+			return $this->storage->getError();
+		}
+		
+		return true;
+	}
+
 	public function getPluginDetails($userSettings = NULL)
 	{
 		$plugins = $this->getPlugins();

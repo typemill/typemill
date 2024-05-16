@@ -1,6 +1,6 @@
 name: Cyanine Theme
-version: 2.1.0
-description: Cyanine is a modern and flexible multi-purpose theme and the standard theme for typemill. 
+version: 2.2.0
+description: 'Cyanine is a modern and flexible multi-purpose theme and the standard theme for Typemill.'
 author: Trendschau
 homepage: https://trendschau.net
 license: MIT
@@ -213,43 +213,66 @@ forms:
 
     bloghomepage:
       type: fieldset
-      legend: Post Configuration (Blog or News)
+      legend: 'Post Configuration (Blog or News)'
       fields:
         blogimage:
           type: checkbox
-          label: Hero Images
-          checkboxlabel: Show hero images in all lists of posts
+          label: 'Hero Images'
+          checkboxlabel: 'Show hero images in all lists of posts'
         blog:
           type: checkbox
-          label: Homepage Posts
-          checkboxlabel: Show posts on the homepage
+          label: 'Posts on Homepage'
+          checkboxlabel: 'Show posts on the homepage'
         blogfolder:
           type: text
-          label: Homepage Posts Folder
-          placeholder: /blog
-          description: Add the relative pasts to the folder with posts that should appear on the homepage
+          label: 'Folder for Posts on Homepage'
+          placeholder: '/blog'
+          description: 'Add the relative pasts to the folder with posts that should appear on the homepage'
         blogintro:
           type: checkbox
-          label: Homepage Intro Text
-          checkboxlabel: Show the text of the homepage before the list of posts
+          label: 'Homepage Intro Text'
+          checkboxlabel: 'Show the text of the homepage and list posts below'
 
     landing:
       type: fieldset
-      legend: Landingpage
+      legend: 'Landingpage'
       fields:
         landingpage:
           type: checkbox
-          checkboxlabel: Activate a landing page with segments on the homepage
+          checkboxlabel: 'Activate a landing page with different segments on the homepage. Configure the segments in the fieldsets below.'
+        introPosition:
+          type: number
+          label: 'Position of Intro Segment'
+          description: 'A intro segment with a title, a slogan, a call to action, and a background-image. Use 0 to disable this section.'
+          css: 'lg:w-full'
+        infoPosition:
+          type: number
+          label: 'Position of Info Segment'
+          description: 'A content segment with pure makrdown. Use 0 to disable the section.'
+          css: 'lg:w-full'
+        teaserPosition:
+          type: number
+          label: 'Position of Teaser Segment'
+          description: 'Use up to three horizontal teasers with call to action buttons. Use 0 to disable the section.'
+          css: 'lg:w-full'
+        contrastPosition:
+          type: number
+          label: 'Position of Contrast Segment'
+          description: 'A content segment wiht pure markdown and inverted colors for contrast. Use 0 to disable the section.'
+        naviPosition:
+          type: number
+          label: 'Position of Navigation Segment'
+          description: 'A segment with the navigation/table of contents. Use 0 to disable the section.'
+        newsPosition:
+          type: number
+          label: 'Position of News Segment'
+          description: 'A segment with three content-teasers for latest news or posts from a folder. Use 0 to disable the section.'
+          css: 'lg:w-full'
 
     landingpageIntro:
       type: fieldset
-      legend: Landingpage Intro Segment
+      legend: 'Landingpage Intro Segment'
       fields:
-        introPosition:
-          type: number
-          label: Position of Intro Segment
-          description: Use 0 to disable the section
-          css: 'lg:w-full'
         introFullsize:
           type: checkbox
           label: Full Screen
@@ -280,7 +303,7 @@ forms:
           type: text
           label: Background Image Opacity
           placeholder: 0.8
-          description: 0 is fully transparent, 1 is without transparency
+          description: 0 is without transparency, 1 is fully transparent and invisible
         introImageBlendmode:
           type: select
           label: Blend mode for background image
@@ -308,10 +331,6 @@ forms:
       type: fieldset
       legend: Landingpage Info Segment
       fields:
-        infoPosition:
-          type: number
-          label: Position of Info Segment
-          description: Use 0 to disable the section          
         infoMarkdown:
           type: textarea
           label: Use Markdown
@@ -320,10 +339,6 @@ forms:
       type: fieldset
       legend: Landingpage Teaser Segment
       fields:
-        teaserPosition:
-          type: number
-          label: Position of Teaser Segment
-          description: Use 0 to disable the section
         teaser1title:
           type: text
           label: Teaser 1 Title
@@ -377,10 +392,6 @@ forms:
       type: fieldset
       legend: Landingpage Contrast Segment
       fields:
-        contrastPosition:
-          type: number
-          label: Position of Contrast Segment
-          description: Use 0 to disable the section          
         contrastTitle:
           type: text
           label: Title
@@ -400,10 +411,6 @@ forms:
       type: fieldset
       legend: Landingpage Navigation Segment
       fields:
-        naviPosition:
-          type: number
-          label: Position of Navi Segment
-          description: Use 0 to disable the section          
         naviTitle:
           type: text
           label: Title for navigation
@@ -415,27 +422,22 @@ forms:
       type: fieldset
       legend: Landingpage News Segment      
       fields:
-        newsPosition:
-          type: number
-          label: Position of News Segment
-          description: Use 0 to disable the section          
-          css: 'lg:w-half'
         newsHeadline:
           type: text
           label: Headline for news-segment
           placeholder: News
-          css: 'lg:w-half'
+          css: 'lg:w-full'
         newsFolder:
           type: text
           label: List entries from folder
           placeholder: /blog
           description: Add a path to a folder from which you want to list entries
-          css: 'lg:w-half'
+          css: 'lg:w-full'
         newsLabel:
           type: text
           label: Label for read more link
           placeholder: All News
-          css: 'lg:w-half'
+          css: 'lg:w-full'
 
     fieldsetAuthor:
       type: fieldset
