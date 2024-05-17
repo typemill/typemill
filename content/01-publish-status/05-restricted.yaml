@@ -1,0 +1,12 @@
+meta:
+    navtitle: restricted
+    owner: typemill
+    author: ''
+    allowedrole: member
+    created: '2024-03-19'
+    time: 18-56-07
+    hide: false
+    noindex: false
+    modified: '2024-03-19'
+    title: 'Restricted Page'
+    description: 'This is a restricted page. Restricted pages are published pages that require an authentication to see the content. You can cut the content with a hr-line,'

@@ -1,0 +1,13 @@
+meta:
+    navtitle: 'redirect 301'
+    owner: typemill
+    author: ''
+    created: '2024-03-19'
+    time: 19-00-58
+    reference: /publish-status/published
+    referencetype: redirect301
+    hide: false
+    noindex: false
+    modified: '2024-03-19'
+    title: 'Redirect 301'
+    description: 'This page redirects to another page with a 301 permanent redirect. You can choose this option in the meta-tab, section "References".'

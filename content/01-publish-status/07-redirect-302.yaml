@@ -1,0 +1,13 @@
+meta:
+    navtitle: 'redirect 302'
+    owner: typemill
+    author: ''
+    created: '2024-03-19'
+    time: 19-02-36
+    reference: /publish-status/published
+    referencetype: redirect302
+    hide: false
+    noindex: false
+    modified: '2024-03-19'
+    title: 'Redirect 302'
+    description: 'This page redirects to the published page with a 302 temporary redirect. You can choose this option in the meta-tab, section "References".'

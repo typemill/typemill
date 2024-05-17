@@ -1,0 +1,12 @@
+meta:
+    navtitle: 'page status'
+    title: 'Publish Status'
+    description: 'In Typemill you can save drafts, publish pages, unpublish pages, and delete pages with a sticky publish panel at the bottom of each page. For published pages,'
+    owner: typemill
+    author: ''
+    modified: '2024-03-19'
+    created: '2024-03-19'
+    time: 18-40-10
+    contains: pages
+    hide: false
+    noindex: false

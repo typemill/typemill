@@ -101,20 +101,23 @@ class Extension
 
 	public function getThemeReadymades($themeName)
 	{
-		$folder = 'readymades' . DIRECTORY_SEPARATOR . $themeName;
-		$readymadeFolder = $this->storage->getFolderPath('dataFolder', $folder);
+		$readymades 		= [];
+		$folder 			= 'readymades' . DIRECTORY_SEPARATOR . $themeName;
+		$readymadeFolder 	= $this->storage->getFolderPath('dataFolder', $folder);
 
-		$readymadeFiles = scandir($readymadeFolder);
-
-		$readymades = [];
-		foreach($readymadeFiles as $readymadeFile)
+		if(is_dir($readymadeFolder))
 		{
-			if (!in_array($readymadeFile, array(".","..")) && substr($readymadeFile, 0, 1) != '.')
+			$readymadeFiles = scandir($readymadeFolder);
+
+			foreach($readymadeFiles as $readymadeFile)
 			{
-				$readymadeData = $this->storage->getYaml('dataFolder', $folder, $readymadeFile);
-				if($readymadeData && !empty($readymadeData))
+				if (!in_array($readymadeFile, array(".","..")) && substr($readymadeFile, 0, 1) != '.')
 				{
-					$readymades = $readymades + $readymadeData;
+					$readymadeData = $this->storage->getYaml('dataFolder', $folder, $readymadeFile);
+					if($readymadeData && !empty($readymadeData))
+					{
+						$readymades = $readymades + $readymadeData;
+					}
 				}
 			}
 		}
@@ -139,7 +142,7 @@ class Extension
 		{
 			return $this->storage->getError();
 		}
-		
+
 		return true;
 	}
 
