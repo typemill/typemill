@@ -41,9 +41,9 @@ const app = Vue.createApp({
 										<p class="w-full mb p-2">Readymades are predefined settings. Store your own readymades or load readymades to quickly setup your theme.</p>
 										<ul>
 											<transition-group name="fade" tag="ul" class="flex flex-wrap">
-												<li class="w-1/3 p-2" v-for="(readysetup,readyname) in theme.readymades" :key="readyname" class="fade-item">
+												<li class="w-1/3 p-2 fade-item" v-for="(readysetup,readyname) in theme.readymades" :key="readyname">
 													<div class="border-2 border-stone-200 hover:shadow-lg transition duration-100 ease-in-out">
-														<div class="w-full font-medium p-2 text-center bg-stone-200">{{ readysetup.name }}</div>
+														<div class="w-full font-medium p-2 text-center bg-stone-200"  :class="{ 'bg-teal-500 text-stone-50': readyname === readymadeCurrent }">{{ readysetup.name }}</div>
 														<div class="p-3 h-40">
 															<p>{{ readysetup.description }}</p>
 														</div>
@@ -142,6 +142,7 @@ const app = Vue.createApp({
 			readymadeTitle: 		'',
 			readymadeDescription: 	'',
 			readymadeError:  		false,
+			readymadeCurrent: 		false,
 			theme: 					data.theme,
 			license: 				data.license,
 			message: 				'',
@@ -276,14 +277,11 @@ const app = Vue.createApp({
 		{
 			this.readymadeError = false;
 
-			if(this.readymades[this.current] && this.readymades[this.current].individual === undefined)
+			if(this.formDefinitions[this.current].readymades[name] !== undefined)
 			{
-				this.readymades[this.current].individual = { 'settings' : this.formData[this.current] };			
-			}
-			
-			if(this.readymades[this.current][name] !== undefined)
-			{
-				this.formData[this.current] = this.readymades[this.current][name].settings;
+				this.readymadeCurrent = name;
+
+				this.formData[this.current] = this.formDefinitions[this.current].readymades[name].settings;
 				eventBus.$emit('codeareaupdate');
 			}
 		},

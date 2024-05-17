@@ -698,12 +698,9 @@ class ControllerApiAuthorArticle extends Controller
 
 	    $navigation->clearNavigation([$naviFileName, $naviFileName . '-extended']);
 		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
-		$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
-		$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
 
 		$response->getBody()->write(json_encode([
-			'navigation'	=> $draftNavigation,
-			'item'			=> $item,
+			'navigation'	=> $draftNavigation
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json');
