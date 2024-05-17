@@ -70,20 +70,6 @@ const navigation = Vue.createApp({
 		{
 			return tmaxios.defaults.baseURL + '/tm/content/' + data.settings.editor;
 		},
-		toggleFolderOLD(name)
-		{
-			var index = this.expanded.indexOf(name);
-			if (index > -1)
-			{
-				this.expanded.splice(index, 1);
-				// this.expandNavigation = false;
-			}
-			else
-			{
-				this.expanded.push(name);
-			}
-			localStorage.setItem("expanded", this.expanded.toString());
-		},
 		toggleFolder(url)
 		{
 			var index = this.expanded.indexOf(url);
@@ -191,7 +177,7 @@ navigation.component('navilevel',{
 							</svg>
 						</div>
 					</div>
-					<navilevel v-show="isExpanded(element.urlRelWoF)" v-if="element.elementType == 'folder' && element.contains == 'pages'" :list="element.folderContent" :navigation="element.folderContent" :parentId="element.keyPath" :expanded="expanded" />
+					<navilevel v-show="isActiveFolder(element)" v-if="element.elementType == 'folder' && element.contains == 'pages'" :list="element.folderContent" :navigation="element.folderContent" :parentId="element.keyPath" :expanded="expanded" />
 				</li>
 			</template>
 			<template #footer>
@@ -325,6 +311,14 @@ navigation.component('navilevel',{
 		isExpanded(url)
 		{
 			if(this.expanded.indexOf(url) > -1)
+			{
+				return true;
+			}
+			return false;
+		},
+		isActiveFolder(element)
+		{
+			if(element.active || element.activeParent || (this.expanded.indexOf(element.urlRelWoF) > -1) )
 			{
 				return true;
 			}
