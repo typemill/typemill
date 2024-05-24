@@ -12,6 +12,10 @@
 	
 		{% include 'blog.twig' %}
 		
+	{% elseif metatabs.meta.template == "landingpage" %}
+		
+		{% include 'landingpage.twig' %}
+
 	{% else %}
 		
 		{% include 'page.twig' %}

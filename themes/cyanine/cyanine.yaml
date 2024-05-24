@@ -888,6 +888,12 @@ forms:
 metatabs:
   meta:
     fields:
+      template:
+        type: select
+        label: Select a template
+        options:
+          standard: 'Standard'
+          landingpage: 'Landingpage'      
       fieldsetfolder:
         fields:
           glossary:

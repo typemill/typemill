@@ -1,9 +1,12 @@
 meta:
-    owner: trendschau
-    author: 'Sebastian Schürmanns'
-    created: '2024-04-25'
-    time: 17-24-48
     navtitle: 'create your first page'
-    modified: '2024-04-27'
     title: 'Create Your First Page'
     description: "To create a new page in Typemill, follow these simple steps: \nUse the interactive navigation located on the left side of the screen. \nEnter a page title for"
+    owner: trendschau
+    author: 'Sebastian Schürmanns'
+    modified: '2024-04-27'
+    created: '2024-04-25'
+    time: 17-24-48
+    template: landingpage
+    hide: false
+    noindex: false

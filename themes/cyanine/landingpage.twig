@@ -1,0 +1,73 @@
+<main class="w-100 dib bt bl br bb">
+
+	<header class="mw8 center pt4 flex justify-between">
+
+		<div class="logo">
+			<p class="pv2 ma0">
+				<a class="link f3 fw4" href="{{ base_url }}" title="My Title">
+					{% if logo %}
+						<img src="{{ base_url }}/{{ logo }}" class="logo-image"/>
+					{% else %}
+						{{ settings.title }}
+					{% endif %}
+				</a>
+			</p>
+		</div>
+
+		<nav id="breadcrumb" class="f6 pv3">
+
+				<div class="mw6">
+					<a class="link f-link underline-hover" href="{{ base_url }}">{{ settings.title }}</a>
+
+					{% for crumb in breadcrumb %}
+						&nbsp; &#x203A; &nbsp;  
+						{% if loop.last %}
+							{{ crumb.name }}
+						{% else %}
+							<a class="link f-link underline-hover" href="{{ crumb.urlRel }}">{{ crumb.name }}</a>
+						{% endif %}
+					{% endfor %}
+				</div>
+		</nav>
+			
+	</header>
+
+	<div class="mw8 pb3 pt6 ph3 center">
+
+		<header>
+			<h1 class="f-large lh-title mv2">{{ title }}</h1>
+		</header>
+
+		<div class="f5 f4-ns fw3 lh-copy">
+			{{ content }}
+		</div>
+
+	</div>
+
+	<div class="mw8 pb7 ph3 center">
+
+		{% set pagelist = getPageList(navigation, item.thisChapter.urlRelWoF, base_url) %}
+
+		<ul class="post mv3-l list pa0 f4-l f5 flex flex-wrap justify-between">
+			
+			{% for element in pagelist.folderContent %}
+
+				{% set page = getPageMeta(settings, element) %}
+
+				<li class="w-30">
+					<header>
+						<a class="link near-black underline-hover" href="{{ element.urlAbs }}">
+							<h3 class="f4 f3-l mt4 mb2">{{ page.meta.title }}</h3></a>
+						</a>
+					</header>
+					<p>{{ page.meta.description }}</p>
+					<p><a class="link f-link underline-hover fw3" href="{{ element.urlAbs }}">Lesen</a></p>
+				</li>
+
+			{% endfor %}
+		
+		</ul>
+
+	</div>
+
+</main>
