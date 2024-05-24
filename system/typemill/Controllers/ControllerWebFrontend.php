@@ -149,7 +149,7 @@ class ControllerWebFrontend extends Controller
 					return $response->withHeader('Location', $metadata['meta']['reference'])->withStatus(301);
 					break;
 				case 'copy':
-				    $refpageinfo 		= $extendedNavigation[$metadata['meta']['reference']] ?? false;
+					$refpageinfo 		= $navigation->getPageInfoForUrl($metadata['meta']['reference'], $urlinfo, $langattr);
 				    if(!$refpageinfo)
 				    {
 					    return $this->c->get('view')->render($response->withStatus(404), '404.twig', [
