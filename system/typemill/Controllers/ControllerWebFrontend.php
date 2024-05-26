@@ -43,7 +43,7 @@ class ControllerWebFrontend extends Controller
 		$fullUrl  			= $urlinfo['baseurl'] . $url;
 
 
-	    # FIND THE PAGE/ITEM IN NAVIGATION
+		# FIND THE PAGE/ITEM IN NAVIGATION
 		if($url == '/')
 		{
 			$item 				= $navigation->getHomepageItem($urlinfo['baseurl']);
@@ -52,8 +52,7 @@ class ControllerWebFrontend extends Controller
 		}
 		else
 		{
-
-			$pageinfo 			= $navigation->getPageInfoForUrl($url, $urlinfo, $langattr);
+			$pageinfo 			= $navigation->getPageInfoForUrl($url, $urlinfo, $langattr);			
 
 		    if(!$pageinfo)
 		    {

@@ -173,11 +173,14 @@ class Navigation extends Folder
 
 	public function getPageInfoForUrl($url, $urlinfo, $langattr)
 	{
+		# fix for pages like /system/
+		$url = '/' . trim($url, '/');
+
 		# get the first level navigation
 		$firstLevelExtended = $this->getExtendedNavigation($urlinfo, $langattr, '/');
 
-		$firstUrlSegment = $this->getFirstUrlSegment($url);
-		$firstUrlSegment = '/' . $firstUrlSegment;
+		$firstUrlSegment 	= $this->getFirstUrlSegment($url);
+		$firstUrlSegment 	= '/' . $firstUrlSegment;
 
 		$pageinfo = $firstLevelExtended[$firstUrlSegment] ?? false;
 
