@@ -17,7 +17,11 @@ class Urlinfo
 		$uri 			= self::removeStandardPorts($uri);
 
 		$currentpath 	= $uri->getPath();
-		$route 			= str_replace($basepath, '', $currentpath);
+		$route 			= $currentpath;
+		if(strpos($currentpath, $basepath) === 0)
+		{
+			$route 		= substr_replace($currentpath, '', 0, strlen($basepath));
+		}
 
 		$query 			= $uri->getQuery();
 		parse_str($query, $params);

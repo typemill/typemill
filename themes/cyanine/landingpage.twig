@@ -1,8 +1,8 @@
 <main class="w-100 dib bt bl br bb">
 
-	<header class="mw8 center pt4 flex justify-between">
+	<header class="mw8 center tc pt4 flex-l justify-between">
 
-		<div class="logo">
+		<div class="logo tl-l">
 			<p class="pv2 ma0">
 				<a class="link f3 fw4" href="{{ base_url }}" title="My Title">
 					{% if logo %}
@@ -14,7 +14,7 @@
 			</p>
 		</div>
 
-		<nav id="breadcrumb" class="f6 pv3">
+		<nav id="breadcrumb" class="f6 pv3 tr-l">
 
 				<div class="mw6">
 					<a class="link f-link underline-hover" href="{{ base_url }}">{{ settings.title }}</a>
@@ -44,24 +44,24 @@
 
 	</div>
 
-	<div class="mw8 pb7 ph3 center">
+	<div class="mw8 pb7 ph3 center f5 f4-ns fw3 lh-copy">
 
 		{% set pagelist = getPageList(navigation, item.thisChapter.urlRelWoF, base_url) %}
 
-		<ul class="post mv3-l list pa0 f4-l f5 flex flex-wrap justify-between">
+		<ul class="post mv3-l list pa0 f4-l f5 flex-l flex-wrap justify-between">
 			
 			{% for element in pagelist.folderContent %}
 
 				{% set page = getPageMeta(settings, element) %}
 
-				<li class="w-30">
+				<li class="w-30-l">
 					<header>
 						<a class="link near-black underline-hover" href="{{ element.urlAbs }}">
 							<h3 class="f4 f3-l mt4 mb2">{{ page.meta.title }}</h3></a>
 						</a>
 					</header>
 					<p>{{ page.meta.description }}</p>
-					<p><a class="link f-link underline-hover fw3" href="{{ element.urlAbs }}">Lesen</a></p>
+					<p><a class="link f-link underline-hover fw3" href="{{ element.urlAbs }}">Read more</a></p>
 				</li>
 
 			{% endfor %}
