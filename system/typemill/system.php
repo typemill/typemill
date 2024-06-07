@@ -73,7 +73,6 @@ if(isset($settings['displayErrorDetails']) && $settings['displayErrorDetails'])
 	ini_set('display_errors', $display_errors);
 }
 
-
 /****************************
 * CREATE CONTAINER + APP   	*
 ****************************/
@@ -299,7 +298,7 @@ $container->set('assets', function() use ($assets){ return $assets; });
 * TWIG TO CONTAINER					*
 ****************************/
 
-$container->set('view', function() use ($settings, $urlinfo, $translations) {
+$container->set('view', function() use ($settings, $urlinfo, $translations, $dispatcher) {
 
 	$twig = Twig::create(
 		[
@@ -325,7 +324,7 @@ $container->set('view', function() use ($settings, $urlinfo, $translations) {
 	$twig->addExtension(new TwigUserExtension());
 	$twig->addExtension(new TwigUrlExtension($urlinfo));
 	$twig->addExtension(new TwigLanguageExtension( $translations ));
-	$twig->addExtension(new TwigMarkdownExtension());
+	$twig->addExtension(new TwigMarkdownExtension($urlinfo['baseurl'], $settings, $dispatcher));
 	$twig->addExtension(new TwigMetaExtension());
 	$twig->addExtension(new TwigPagelistExtension());
 	$twig->addExtension(new TwigCaptchaExtension());

@@ -177,8 +177,6 @@
 				{% endif %}
 
 			</style>
-
-			{{ assets.renderCSS() }}
 			
 		{% endblock %}
 	</head>
@@ -245,6 +243,8 @@
 					}
 				</script>
 			{% endif %}
+
+			{{ assets.renderCSS() }}
 
 			{{ assets.renderJS() }}
 		
