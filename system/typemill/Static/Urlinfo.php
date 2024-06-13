@@ -27,26 +27,17 @@ class Urlinfo
 		parse_str($query, $params);
 
 		# proxy detection
-		if(isset($settings['proxy']) && $settings['proxy'] && isset($_SERVER['HTTP_X_FORWARDED_HOST']))
+		if(isset($settings['proxy']) && $settings['proxy'])
 		{
 			$trustedProxies	= ( isset($settings['trustedproxies']) && !empty($settings['trustedproxies']) ) ? explode(",", $settings['trustedproxies']) : [];
 
-			$proxyuri 		= self::updateUri($uri, $trustedProxies);
-
-			if($proxyuri)
+			if(self::checkIp($trustedProxies))
 			{
-				# use uri from proxy
-				$uri 		= $proxyuri;
+				$uri 		= self::updateHost($uri);
 
-				# standard basepath is empty
-				$basepath 	= "";
-
-				# if proxy has basepath, then
-				if (isset($_SERVER['HTTP_X_FORWARDED_PREFIX']))
-				{
-					# Use X-Forwarded-Prefix if available
-					$basepath = rtrim($_SERVER['HTTP_X_FORWARDED_PREFIX'], '/') . '/';
-				}
+				$uri 		= self::updateHost($uri);
+			
+				$basepath 	= self::updateBasepath($basepath);
 			}
 		}
 
@@ -81,29 +72,8 @@ class Urlinfo
 		return $uri;
 	}
 
-	private static function updateUri($uri, $trustedProxies)
+	private static function updateProto($uri)
 	{
-		# optionally check trusted proxies
-		$ipAddress = $_SERVER['REMOTE_ADDR'] ?? null;
-		if (
-			$ipAddress 
-			&& !empty($trustedProxies)
-			&& !in_array($ipAddress, $trustedProxies)
-		)
-		{            
-			return false;
-		}
-
-		# get scheme from proxy
-		$scheme = $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? null;
-		if (
-			$scheme
-			&& in_array($scheme, ['http', 'https'])
-		)
-		{
-			$uri = $uri->withScheme($scheme);
-		}
-
 		# get host from proxy
 		$host 	= $_SERVER['HTTP_X_FORWARDED_HOST'] ?? null;
 		if (
@@ -121,5 +91,50 @@ class Urlinfo
 		}
 
 		return $uri;
+	}
+
+	private static function updateHost($uri)
+	{
+		# get scheme from proxy
+		$scheme = $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? null;
+		if (
+			$scheme
+			&& in_array($scheme, ['http', 'https'])
+		)
+		{
+			$uri = $uri->withScheme($scheme);
+		}
+
+		return $uri;
+	}
+
+	private static function updateBasepath($basepath)
+	{
+#		$basepath = "";
+
+		# if proxy has basepath, then
+		if (isset($_SERVER['HTTP_X_FORWARDED_PREFIX']))
+		{
+			# Use X-Forwarded-Prefix if available
+			$basepath = rtrim($_SERVER['HTTP_X_FORWARDED_PREFIX'], '/') . '/';
+		}
+
+		return $basepath;				
+	}
+
+	private static function checkIp($trustedProxies)
+	{
+		# optionally check trusted proxies
+		$ipAddress = $_SERVER['REMOTE_ADDR'] ?? null;
+		if (
+			$ipAddress 
+			&& !empty($trustedProxies)
+			&& !in_array($ipAddress, $trustedProxies)
+		)
+		{            
+			return false;
+		}
+
+		return true;
 	}
 }
