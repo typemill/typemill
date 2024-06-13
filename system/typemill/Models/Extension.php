@@ -87,11 +87,17 @@ class Extension
 		$themeSettings 		= $this->storage->getYaml('themesFolder', $themeName, $themeName . '.yaml');
 
 		# add standard-textarea for custom css
-		$themeSettings['forms']['fields']['customcss'] = [
-			'type' 			=> 'codearea', 
-			'label' 		=> Translations::translate('Custom CSS'), 
-			'class' 		=> 'codearea', 
-			'description' 	=> Translations::translate('You can overwrite the theme-css with your own css here.')
+		$themeSettings['forms']['fields']['fieldsetcss'] = [
+			'type' 			=> 'fieldset', 
+			'legend' 		=> Translations::translate('Custom CSS'), 
+			'fields'		=> [
+				'customcss' => [
+					'type' 			=> 'codearea', 
+					'label' 		=> Translations::translate('Add your individual CSS'), 
+					'class' 		=> 'codearea', 
+					'description' 	=> Translations::translate('You can overwrite the theme-css with your own css here.')
+				]
+			]
 		];
 
 		$themeSettings['preview'] = '/themes/' . $themeName . '/' . $themeName . '.png';

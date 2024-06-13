@@ -86,17 +86,21 @@ const app = Vue.createApp({
 									</fieldset>
 								</div>
 								<div v-for="(fieldDefinition, fieldname) in theme.forms.fields">
-									<fieldset class="flex flex-wrap justify-between border-2 border-stone-200 p-4 my-8" v-if="fieldDefinition.type == 'fieldset'">
-										<legend class="text-lg font-medium">{{ fieldDefinition.legend }}</legend>
-										<component v-for="(subfieldDefinition, subfieldname) in fieldDefinition.fields"
-											:key="subfieldname"
-											:is="selectComponent(subfieldDefinition.type)"
-											:errors="errors"
-											:name="subfieldname"
-											:userroles="userroles"
-											:value="formData[themename][subfieldname]" 
-											v-bind="subfieldDefinition">
-										</component>
+									<fieldset class="flex flex-wrap justify-between border-2 border-stone-200 p-4 my-8" v-if="fieldDefinition.type == 'fieldset'" :class="{ 'open': isOpen(fieldname) }">
+										<legend @click="toggleAccordion(fieldname)" class="float-left w-full py-2 text-lg font-medium cursor-pointer">{{ fieldDefinition.legend }} <span class="mt-2 float-right h-0 w-0 border-x-8 border-x-transparent" :class="isOpen(fieldname) ? 'border-b-8 border-b-black' : 'border-t-8 border-t-black'"></span></legend>
+										<transition name="accordion">
+									        <div v-if="isOpen(fieldname)" class="w-full accordion-content">
+												<component v-for="(subfieldDefinition, subfieldname) in fieldDefinition.fields"
+													:key="subfieldname"
+													:is="selectComponent(subfieldDefinition.type)"
+													:errors="errors"
+													:name="subfieldname"
+													:userroles="userroles"
+													:value="formData[themename][subfieldname]" 
+													v-bind="subfieldDefinition">
+												</component>
+											</div>
+										</transition>
 									</fieldset>
 									<component v-else
 										:key="fieldname"
@@ -119,19 +123,6 @@ const app = Vue.createApp({
 							</form>
 						</li>
 					</ul>
-					<div class="my-5 text-center">
-						<modal v-if="showModal" @close="showModal = false">
-							<template #header>
-								<h3>{{ $filters.translate('License required') }}</h3>
-							</template>
-							<template #body>
-								<p>{{ $filters.translate(modalMessage) }}</p>
-							</template>
-							<template #button>
-								<a :href="getLinkToLicense()" class="focus:outline-none px-4 p-3 mr-3 text-white bg-teal-500 hover:bg-teal-700 transition duration-100">{{ $filters.translate('Check your license') }}</a>
-							</template>
-						</modal>
-					</div>					
 				</div>
 			</Transition>`,
 	data() {
@@ -151,7 +142,8 @@ const app = Vue.createApp({
 			versions: 				false,
 			userroles: 				false,
 			showModal: 				false,
-			modalMessage: 			'default',			
+			modalMessage: 			'default',
+			accordionState: 		{},						
 		}
 	},
 	components: {
@@ -429,6 +421,12 @@ const app = Vue.createApp({
 			this.errors 			= {};
 			this.message 			= '';
 			this.messageClass		= '';
-		}
+		},
+		toggleAccordion: function(fieldname){
+		    this.accordionState[fieldname] = !this.accordionState[fieldname];
+		},
+		isOpen: function(fieldname){
+			return !!this.accordionState[fieldname];
+		}		
 	},
 })

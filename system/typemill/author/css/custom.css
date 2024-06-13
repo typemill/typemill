@@ -57,8 +57,21 @@
   opacity: 0;
 }
 
+.accordion-enter-active, .accordion-leave-active {
+  transition: max-height 0.5s ease, padding 0.5s ease;
+  overflow: hidden;
+}
 
- .editableinput {
+.accordion-enter, .accordion-leave-to {
+  max-height: 0;
+  padding: 0;
+}
+
+.accordion-content {
+  overflow: hidden;
+}
+
+.editableinput {
     border: none;
     outline: none;
     background-color: transparent;

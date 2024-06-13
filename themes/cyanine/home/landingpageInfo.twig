@@ -1,9 +1,35 @@
-	<section id="landingpageinfo" class="landingpageinfo w-100 dib tc bl br bb">
+	<section id="landingpageinfo" class="landingpageinfo w-100 pv6 dib tc bl br bb">
 		
-		<div class="f5 f4-ns mw7 pv6 ph3 fw3 lh-copy center">
+		<div class="f5 f4-ns mw7 ph3 fw3 lh-copy center">
 			
 			{{ markdown(settings.themes.cyanine.infoMarkdown) }}
 
 		</div>
 	
+		{% if settings.themes.cyanine.infoFolder %}
+
+			<div class="mw8 pv2 center">
+
+				{% set pagelist = getPageList(navigation, settings.themes.cyanine.infoFolder, base_url) %}
+
+				<ul class="flex-l flex-wrap justify-between pa0">
+
+					{% for element in pagelist.folderContent %}
+
+						{% set page = getPageMeta(settings, element) %}
+
+						<li class="ba b--light-gray pa2 pa3-ns db list tl w-100 w-30-l mh0 mv2 mh2-l flex flex-column flex-grow">
+							<h3>{{ page.meta.shorttitle }}</h3>
+							<p class="f5 lh-copy flex-grow">{{ page.meta.description }}</p>
+							<a class="db link w-100 mv2 pa3 bg-near-black dim tc" href="{{ element.urlAbs }}">{{ page.meta.shorttitle }}</a>
+						</li>
+
+					{% endfor %}
+
+				</ul>
+
+			</div>
+
+		{% endif %}
+
 	</section>

@@ -483,6 +483,12 @@ forms:
         infoMarkdown:
           type: textarea
           label: Use Markdown
+        infoFolder:
+          type: text
+          label: List entries from folder
+          placeholder: /folder
+          description: Add a path to a folder from which you want to list entries
+          css: 'lg:w-full'
 
     landingpageTeaser:
       type: fieldset
@@ -894,6 +900,9 @@ metatabs:
         options:
           standard: 'Standard'
           landingpage: 'Landingpage'      
+      shorttitle:
+        type: text
+        label: Enter a shorttitle for the landingpageInfo section
       fieldsetfolder:
         fields:
           glossary:
