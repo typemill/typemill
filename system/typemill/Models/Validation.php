@@ -263,8 +263,8 @@ class Validation
 		$v = new Validator($params);
 		$v->rule('required', ['username', 'password'])->message("Required");
 		$v->rule('alphaNum', 'username')->message("Invalid characters");
-		$v->rule('lengthBetween', 'password', 5, 40)->message("Length between 5 - 40");
-		$v->rule('lengthBetween', 'username', 3, 20)->message("Length between 3 - 20");
+		$v->rule('lengthBetween', 'password', 5, 256)->message("Length between 5 - 256");
+		$v->rule('lengthBetween', 'username', 3, 40)->message("Length between 3 - 40");
 		
 		if($v->validate())
 		{
@@ -313,8 +313,8 @@ class Validation
 		$v = new Validator($params);
 		$v->rule('required', ['username', 'email', 'password'])->message("required");
 		$v->rule('alphaNum', 'username')->message("invalid characters");
-		$v->rule('lengthBetween', 'password', 5, 40)->message("Length between 5 - 40");
-		$v->rule('lengthBetween', 'username', 3, 20)->message("Length between 3 - 20"); 
+		$v->rule('lengthBetween', 'password', 5, 256)->message("Length between 5 - 256");
+		$v->rule('lengthBetween', 'username', 3, 40)->message("Length between 3 - 40"); 
 		$v->rule('userAvailable', 'username')->message("User already exists");
 		$v->rule('noHTML', 'firstname')->message(" contains HTML");
 		$v->rule('lengthBetween', 'firstname', 2, 40);
@@ -350,8 +350,8 @@ class Validation
 		$v = new Validator($params);
 		$v->rule('required', ['username', 'email', 'password'])->message("required");
 		$v->rule('alphaNum', 'username')->message("invalid characters");
-		$v->rule('lengthBetween', 'password', 5, 40)->message("Length between 5 - 40");
-		$v->rule('lengthBetween', 'username', 3, 20)->message("Length between 3 - 20"); 
+		$v->rule('lengthBetween', 'password', 5, 256)->message("Length between 5 - 256");
+		$v->rule('lengthBetween', 'username', 3, 40)->message("Length between 3 - 40"); 
 		$v->rule('userAvailable', 'username')->message("User already exists");
 		$v->rule('noHTML', 'firstname')->message(" contains HTML");
 		$v->rule('lengthBetween', 'firstname', 2, 40);
@@ -375,7 +375,7 @@ class Validation
 		$v = new Validator($params);
 		$v->rule('required', ['username', 'email', 'userrole'])->message("required");
 		$v->rule('alphaNum', 'username')->message("invalid");
-		$v->rule('lengthBetween', 'username', 3, 20)->message("Length between 3 - 20"); 
+		$v->rule('lengthBetween', 'username', 3, 40)->message("Length between 3 - 40"); 
 		$v->rule('userExists', 'username')->message("user does not exist");
 		$v->rule('noHTML', 'firstname')->message(" contains HTML");
 		$v->rule('lengthBetween', 'firstname', 2, 40);
@@ -398,7 +398,7 @@ class Validation
 		$v = new Validator($params);
 		$v->rule('required', ['username'])->message("required");
 		$v->rule('alphaNum', 'username')->message("invalid");
-		$v->rule('lengthBetween', 'username', 3, 20)->message("Length between 3 - 20");
+		$v->rule('lengthBetween', 'username', 3, 40)->message("Length between 3 - 40");
 
 		if($v->validate()) 
 		{
@@ -661,7 +661,7 @@ class Validation
 	{
 		$v = new Validator($params);
 		$v->rule('required', ['password', 'passwordrepeat']);
-		$v->rule('lengthBetween', 'password', 5, 50);
+		$v->rule('lengthBetween', 'password', 5, 256);
 		$v->rule('equals', 'passwordrepeat', 'password');
 		
 		if($v->validate())
@@ -676,7 +676,7 @@ class Validation
 	{
 		$v = new Validator($params);
 		$v->rule('required', ['password', 'newpassword']);
-		$v->rule('lengthBetween', 'newpassword', 5, 50);
+		$v->rule('lengthBetween', 'newpassword', 5, 256);
 		
 		if($v->validate())
 		{
@@ -690,7 +690,7 @@ class Validation
 	{
 		$v = new Validator($params);
 		$v->rule('required', ['newpassword']);
-		$v->rule('lengthBetween', 'newpassword', 5, 50);
+		$v->rule('lengthBetween', 'newpassword', 5, 256);
 		
 		if($v->validate())
 		{
