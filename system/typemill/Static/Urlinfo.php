@@ -35,8 +35,10 @@ class Urlinfo
 			{
 				$uri 		= self::updateHost($uri);
 
-				$uri 		= self::updateHost($uri);
-			
+				$uri 		= self::updateProto($uri);
+
+				$uri  		= self::updatePort($uri);
+
 				$basepath 	= self::updateBasepath($basepath);
 			}
 		}
@@ -110,7 +112,7 @@ class Urlinfo
 
 	private static function updateBasepath($basepath)
 	{
-#		$basepath = "";
+		$basepath = "";
 
 		# if proxy has basepath, then
 		if (isset($_SERVER['HTTP_X_FORWARDED_PREFIX']))
@@ -121,6 +123,23 @@ class Urlinfo
 
 		return $basepath;				
 	}
+
+    protected static function updatePort($uri)
+    {
+		$port = $_SERVER['HTTP_X_FORWARDED_PORT'] ?? null;
+
+        if ($port)
+        {
+            $port = trim(current(explode(',', $port)));
+
+            if (preg_match('/^\d+\z/', $port))
+            {
+                return $uri->withPort((int) $port);
+            }
+        }
+        
+        return $uri;
+    }
 
 	private static function checkIp($trustedProxies)
 	{
