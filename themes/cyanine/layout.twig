@@ -213,6 +213,8 @@
 
 		{% block javascripts %}
 
+			{{ assets.renderCSS() }}
+
 			<script src="{{ base_url }}/system/typemill/author/js/typemillutils.js?20220108"></script>
 			<script>typemillUtilities.start();</script>
 			
@@ -243,8 +245,6 @@
 					}
 				</script>
 			{% endif %}
-
-			{{ assets.renderCSS() }}
 
 			{{ assets.renderJS() }}
 		
