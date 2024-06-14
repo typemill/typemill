@@ -48,20 +48,16 @@
 
 		{% set pagelist = getPageList(navigation, item.thisChapter.urlRelWoF, base_url) %}
 
-		<ul class="post mv3-l list pa0 f4-l f5 flex-l flex-wrap justify-between">
+		<ul class="post mv3-l list pa0 flex-l flex-wrap justify-between">
 			
 			{% for element in pagelist.folderContent %}
 
 				{% set page = getPageMeta(settings, element) %}
 
-				<li class="w-30-l">
-					<header>
-						<a class="link near-black underline-hover" href="{{ element.urlAbs }}">
-							<h3 class="f4 f3-l mt4 mb2">{{ page.meta.title }}</h3></a>
-						</a>
-					</header>
-					<p>{{ page.meta.description }}</p>
-					<p><a class="link f-link underline-hover fw3" href="{{ element.urlAbs }}">Read more</a></p>
+				<li class="ba b--light-gray pa2 pa3-ns db list tl w-100 w-30-l mh0 mv2 mh2-l flex flex-column flex-grow">
+					<h3>{{ page.meta.shorttitle }}</h3>
+					<p class="f5 lh-copy flex-grow">{{ page.meta.description }}</p>
+					<a class="db link white w-100 mv2 pa2 bg-near-black dim tc" href="{{ element.urlAbs }}">{{ page.meta.shorttitle }}</a>
 				</li>
 
 			{% endfor %}

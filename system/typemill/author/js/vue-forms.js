@@ -103,22 +103,25 @@ app.component('component-codearea', {
 		update($event, name)
 		{
 			this.highlight($event.target.value);
-			this.resizeCodearea();
 			eventBus.$emit('forminput', {'name': name, 'value': $event.target.value});
+
+			this.$nextTick(() => {
+				this.resizeCodearea();
+			});
 		},
-		resizeCodearea()
-		{
-			let codeeditor = this.$refs["editor"];
+		resizeCodearea() {
+			let codeeditor = this.$refs.editor;
+			const scrollPosition = codeeditor.scrollTop; // Store the current scroll position
 
 			window.requestAnimationFrame(() => {
-				codeeditor.style.height = '200px';
-				if (codeeditor.scrollHeight > 200)
+				if (codeeditor.scrollHeight > codeeditor.clientHeight)
 				{
 					codeeditor.style.height = `${codeeditor.scrollHeight + 2}px`;
 				}
+				codeeditor.scrollTop = scrollPosition; // Restore the scroll position
 			});
 		},
-		highlight(code)
+    	highlight(code)
 		{
 			if(code === undefined)
 			{
