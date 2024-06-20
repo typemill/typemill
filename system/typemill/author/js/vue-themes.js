@@ -89,7 +89,7 @@ const app = Vue.createApp({
 									<fieldset class="flex flex-wrap justify-between border-2 border-stone-200 p-4 my-8" v-if="fieldDefinition.type == 'fieldset'" :class="{ 'open': isOpen(fieldname) }">
 										<legend @click="toggleAccordion(fieldname)" class="float-left w-full py-2 text-lg font-medium cursor-pointer">{{ fieldDefinition.legend }} <span class="mt-2 float-right h-0 w-0 border-x-8 border-x-transparent" :class="isOpen(fieldname) ? 'border-b-8 border-b-black' : 'border-t-8 border-t-black'"></span></legend>
 										<transition name="accordion">
-									        <div v-if="isOpen(fieldname)" class="w-full accordion-content">
+									        <div v-if="isOpen(fieldname)" class="w-full accordion-content flex flex-wrap justify-between">
 												<component v-for="(subfieldDefinition, subfieldname) in fieldDefinition.fields"
 													:key="subfieldname"
 													:is="selectComponent(subfieldDefinition.type)"
