@@ -109,7 +109,7 @@ app.component('component-codearea', {
 				this.resizeCodearea();
 			});
 		},
-		resizeCodeareaWork() {
+		resizeCodearea() {
 			let codeeditor = this.$refs.editor;
 			const scrollPosition = codeeditor.scrollTop; // Store the current scroll position
 
