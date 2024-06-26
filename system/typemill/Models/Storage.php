@@ -665,10 +665,13 @@ class Storage
 		{
 			$imagelist[] = [
 				'name' 		=> $name,
+				'timestamp'	=> filemtime($this->thumbsFolder . $name),
 				'src_thumb'	=> 'media/thumbs/' . $name,
 				'src_live'	=> 'media/live/' . $name,
 			];
 		}
+		
+		$imagelist = Helpers::array_sort($imagelist, 'timestamp', SORT_DESC);
 
 		return $imagelist;
 	}
