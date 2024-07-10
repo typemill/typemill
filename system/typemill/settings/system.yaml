@@ -73,6 +73,7 @@ fieldsetmedia:
       type: image
       label: Favicon
       description: 'Only PNG format will work.'
+      keepformat: true
     liveimagewidth:
       type: number
       label: 'Standard width for live pictures'

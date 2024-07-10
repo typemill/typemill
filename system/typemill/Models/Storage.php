@@ -741,7 +741,7 @@ class Storage
 
 		if(!$storedImage)
 		{
-			$this->errors[] = Translations::translate('Could not store the custom size of') . ' ' . $imageName;
+			$this->error = Translations::translate('Could not store the custom size of') . ' ' . $imageName;
 
 			return false;
 		}

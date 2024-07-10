@@ -741,7 +741,7 @@ app.component('component-customfields', {
 
 
 app.component('component-image', {
-	props: ['id', 'description', 'maxlength', 'hidden', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'css', 'errors'],
+	props: ['id', 'description', 'maxlength', 'hidden', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'css', 'errors', 'keepformat'],
 	components: {
 		medialib: medialib
 	},	
@@ -900,6 +900,7 @@ app.component('component-image', {
 				{
 					sharedself = this;
 					
+					let keepformat = this.keepformat ? true : false;
 					let reader = new FileReader();
 					reader.readAsDataURL(imageFile);
 					reader.onload = function(e) 
@@ -910,6 +911,7 @@ app.component('component-image', {
 							'image':			e.target.result,
 							'name': 			imageFile.name,
 							'publish':  		true,
+							'keepformat': 		keepformat
 						})
 					    .then(function (response) {
 							sharedself.update(response.data.name);

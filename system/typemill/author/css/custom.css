@@ -52,10 +52,19 @@
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.5s ease-in-out;
 }
-
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
+
+/* enter or fade items in list with transition group */
+.list-enter-active, .list-leave-active {
+  transition: all 0.2s;
+}
+.list-enter, .list-leave-to {
+  opacity: 0;
+}
+
+
 
 .accordion-enter-active, .accordion-leave-active {
   transition: max-height 0.5s ease, padding 0.5s ease;
