@@ -13,6 +13,7 @@ class ControllerApiSystemVersions extends Controller
 	public function checkVersions(Request $request, Response $response)
 	{
 		$params 			= $request->getParsedBody();
+		$error 				= false;
 
 		# validate input
 		$validate 			= new Validation();
@@ -64,21 +65,67 @@ class ControllerApiSystemVersions extends Controller
 		}
 		$authstring = hash('sha256', substr($authstring, 0, 50));
 
-		$opts = array(
-		  'http' => array(
-		    'method'		=>"GET",
-			'ignore_errors' => true,
-		    'timeout' 		=> 5,
-    		'header'		=>
-								"Accept: application/json\r\n" .
-								"Authorization: $authstring\r\n" .
-								"Connection: close\r\n",
-		  )
-		);
+	    if (function_exists('curl_version'))
+	    {
+	        $curl = curl_init();
 
-		$context 			= stream_context_create($opts);
-		$versions 			= file_get_contents($url, false, $context);
-		$versions 			= json_decode($versions, true);
+	        curl_setopt($curl, CURLOPT_URL, $url);
+	        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+	        curl_setopt($curl, CURLOPT_TIMEOUT, 5);
+	        curl_setopt($curl, CURLOPT_HTTPHEADER, [
+	            "Accept: application/json",
+	            "Authorization: $authstring",
+	            "Connection: close"
+	        ]);
+
+	        $curl_response = curl_exec($curl);
+
+	        if (curl_errno($curl))
+	        {
+	            $error = curl_error($curl);
+	        }
+	        else
+	        {
+		        $versions = json_decode($curl_response, true);
+	        }
+
+	        curl_close($curl);
+		}
+		else
+		{
+			$opts = array(
+			  'http' => array(
+			    'method'		=>"GET",
+				'ignore_errors' => true,
+			    'timeout' 		=> 5,
+	    		'header'		=>
+									"Accept: application/json\r\n" .
+									"Authorization: $authstring\r\n" .
+									"Connection: close\r\n",
+			  )
+			);
+
+			$context 			= stream_context_create($opts);
+			$versions 			= file_get_contents($url, false, $context);
+	        if ($versions === false)
+	        {
+	            $error 			= "file_get_contents error: failed to fetch data from $url";
+	        }
+	        else
+	        {
+				$versions 		= json_decode($versions, true);
+	        }
+		}
+
+		if($error)
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> $error
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);			
+		}
+
 		$updateVersions 	= [];
 
 		if($type == 'system')
