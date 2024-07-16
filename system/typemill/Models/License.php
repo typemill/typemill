@@ -353,6 +353,66 @@ class License
 		return true;
 	}
 
+	# get the local token to make calls to premium services
+	public function getToken($refresh = false)
+	{
+		$storage 			= new StorageWrapper('\Typemill\Models\Storage');
+
+		# if not force a token refresh, use the stored token if not valid
+		if(!$refresh)
+		{			
+			$tokenfile 		= $storage->getFile('settingsFolder', '', 'token.txt');
+
+			if($tokenfile)
+			{
+				# check if still valid 
+				$filepath 	= $storage->getFolderPath('settingsFolder') . 'token.txt';
+				$filetime 	= filemtime($filepath);
+				$oneHourAgo = time() - 3600;
+
+				if ($filetime > $oneHourAgo)
+				{
+					return $tokenfile;
+				}
+			}
+		}
+
+		# if we try to get a fresh token, make sure old token is deleted
+		$storage->deleteFile('settingsFolder', '', 'token.txt');
+
+		$licensefile 		= $this->getLicenseFile();
+		if(!$licensefile)
+		{
+			$this->message 	= Translations::translate('Please check if there is a readable file license.yaml in your settings folder.');
+
+			return false;
+		}
+
+		$readableMail 		= trim($licensefile['email']);
+
+		$licensedata = [ 
+			'license'		=> $licensefile['license'], 
+			'email'			=> $this->hashMail($readableMail),
+			'domain'		=> $licensefile['domain'],
+			'signature'		=> $licensefile['signature'],
+			'plan'			=> $licensefile['plan'],
+			'payed_until' 	=> $licensefile['payed_until']
+		];
+
+		$url 				= 'https://service.typemill.net/api/v1/gettoken';
+
+		$tokenresponse 		= $this->callLicenseServer($licensedata, $url);
+
+		if($tokenresponse && isset($tokenresponse['token']) && $tokenresponse['token'])
+		{
+			$storage->writeFile('settingsFolder', '', 'token.txt', $tokenresponse['token']);
+
+			return $tokenresponse['token'];
+		}
+
+		return false;
+	}
+
 	private function callLicenseServer( $licensedata, $url )
 	{
 		$authstring 		= $this->getPublicKeyPem();
@@ -439,7 +499,7 @@ class License
 		return $responseJson;
 	}
 
-	private function hashMail(string $mail)
+	public function hashMail(string $mail)
 	{
 		return hash('sha256', trim($mail) . 'TYla5xa8JUur');
 	}

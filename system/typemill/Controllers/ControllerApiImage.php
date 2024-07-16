@@ -191,9 +191,6 @@ class ControllerApiImage extends Controller
 		# for all other image types, check if they should be transformed to webp
 		if(!isset($params['keepformat']) && $this->settingActive('convertwebp'))
 		{
-			echo '<pre>';
-			var_dump($params);
-			die('set wp');
 			$media->setExtension('webp');
 		}
 
