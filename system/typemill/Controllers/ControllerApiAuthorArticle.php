@@ -14,6 +14,7 @@ use Typemill\Models\Sitemap;
 use Typemill\Static\Slug;
 use Typemill\Static\Translations;
 use Typemill\Events\OnPagePublished;
+use Typemill\Events\OnPageUpdated;
 use Typemill\Events\OnPageUnpublished;
 use Typemill\Events\OnPageDeleted;
 use Typemill\Events\OnPageSorted;
@@ -257,6 +258,8 @@ class ControllerApiAuthorArticle extends Controller
 		$markdown 			= $params['title'] . PHP_EOL . PHP_EOL . $params['body'];
 		$markdownArray 		= $content->markdownTextToArray($markdown);
 		$content->saveDraftMarkdown($item, $markdownArray);
+
+		$this->c->get('dispatcher')->dispatch(new OnPageUpdated($markdown), 'onPageUpdated');
 
 		$naviFileName 		= $navigation->getNaviFileNameForPath($item->path);
 	    $navigation->clearNavigation([$naviFileName]);

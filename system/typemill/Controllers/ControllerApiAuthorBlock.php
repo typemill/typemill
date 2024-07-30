@@ -10,6 +10,7 @@ use Typemill\Models\Validation;
 use Typemill\Models\Content;
 use Typemill\Models\Meta;
 use Typemill\Static\Translations;
+use Typemill\Events\OnPageUpdated;
 
 class ControllerApiAuthorBlock extends Controller
 {
@@ -95,6 +96,9 @@ class ControllerApiAuthorBlock extends Controller
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
+
+		$markdown = $content->markdownArrayToText($draftMarkdown);
+		$this->c->get('dispatcher')->dispatch(new OnPageUpdated($markdown), 'onPageUpdated');
 
 		$draftMarkdownHtml	= $content->addDraftHtml($draftMarkdown);
 
@@ -196,6 +200,9 @@ class ControllerApiAuthorBlock extends Controller
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
+
+		$markdown = $content->markdownArrayToText($draftMarkdown);
+		$this->c->get('dispatcher')->dispatch(new OnPageUpdated($markdown), 'onPageUpdated');
 
 		$draftMarkdownHtml	= $content->addDraftHtml($draftMarkdown);
 
@@ -311,6 +318,9 @@ class ControllerApiAuthorBlock extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
 
+		$markdown = $content->markdownArrayToText($draftMarkdown);
+		$this->c->get('dispatcher')->dispatch(new OnPageUpdated($markdown), 'onPageUpdated');
+
 		$draftMarkdownHtml	= $content->addDraftHtml($draftMarkdown);
 
 		# if it was published before, then we need to refresh the navigation
@@ -415,6 +425,9 @@ class ControllerApiAuthorBlock extends Controller
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
+
+		$markdown = $content->markdownArrayToText($draftMarkdown);
+		$this->c->get('dispatcher')->dispatch(new OnPageUpdated($markdown), 'onPageUpdated');
 
 		$draftMarkdownHtml	= $content->addDraftHtml($draftMarkdown);
 
