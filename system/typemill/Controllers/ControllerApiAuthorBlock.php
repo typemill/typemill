@@ -62,6 +62,7 @@ class ControllerApiAuthorBlock extends Controller
 
 		$content 			= new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
 		$draftMarkdown  	= $content->getDraftMarkdown($item);
+		$oldMarkdown 		= $draftMarkdown;
 
 		# if it is a new content-block
 		if($params['block_id'] > 9999)
@@ -97,10 +98,15 @@ class ControllerApiAuthorBlock extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
 
-		$markdown = $content->markdownArrayToText($draftMarkdown);
-		$this->c->get('dispatcher')->dispatch(new OnPageUpdated($markdown), 'onPageUpdated');
-
 		$draftMarkdownHtml	= $content->addDraftHtml($draftMarkdown);
+
+		$onPageUpdated = [
+			'oldMarkdown'		=> $content->markdownArrayToText($oldMarkdown),
+			'newMarkdown'		=> $content->markdownArrayToText($draftMarkdown),
+			'username'			=> $request->getAttribute('c_username'),
+			'item'				=> $item,
+		];
+		$this->c->get('dispatcher')->dispatch(new OnPageUpdated($onPageUpdated), 'onPageUpdated');
 
 		# if it was published before, then we need to refresh the navigation
 		if($item->status == 'published')
@@ -178,6 +184,7 @@ class ControllerApiAuthorBlock extends Controller
 		$content 			= new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
 
 		$draftMarkdown  	= $content->getDraftMarkdown($item);
+		$oldMarkdown 		= $draftMarkdown;
 
 		if(!isset($draftMarkdown[$params['index_old']]))
 		{
@@ -201,10 +208,15 @@ class ControllerApiAuthorBlock extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
 
-		$markdown = $content->markdownArrayToText($draftMarkdown);
-		$this->c->get('dispatcher')->dispatch(new OnPageUpdated($markdown), 'onPageUpdated');
-
 		$draftMarkdownHtml	= $content->addDraftHtml($draftMarkdown);
+
+		$onPageUpdated = [
+			'oldMarkdown'		=> $content->markdownArrayToText($oldMarkdown),
+			'newMarkdown'		=> $content->markdownArrayToText($draftMarkdown),
+			'username'			=> $request->getAttribute('c_username'),
+			'item'				=> $item,
+		];
+		$this->c->get('dispatcher')->dispatch(new OnPageUpdated($onPageUpdated), 'onPageUpdated');
 
 		# if it was published before, then we need to refresh the navigation
 		if($item->status == 'published')
@@ -282,6 +294,7 @@ class ControllerApiAuthorBlock extends Controller
 		$content 			= new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
 
 		$draftMarkdown  	= $content->getDraftMarkdown($item);
+		$oldMarkdown 		= $draftMarkdown;
 
 		if(!isset($draftMarkdown[$params['block_id']]))
 		{
@@ -318,10 +331,15 @@ class ControllerApiAuthorBlock extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
 
-		$markdown = $content->markdownArrayToText($draftMarkdown);
-		$this->c->get('dispatcher')->dispatch(new OnPageUpdated($markdown), 'onPageUpdated');
-
 		$draftMarkdownHtml	= $content->addDraftHtml($draftMarkdown);
+
+		$onPageUpdated = [
+			'oldMarkdown'		=> $content->markdownArrayToText($oldMarkdown),
+			'newMarkdown'		=> $content->markdownArrayToText($draftMarkdown),
+			'username'			=> $request->getAttribute('c_username'),
+			'item'				=> $item,
+		];
+		$this->c->get('dispatcher')->dispatch(new OnPageUpdated($onPageUpdated), 'onPageUpdated');
 
 		# if it was published before, then we need to refresh the navigation
 		if($item->status == 'published')
@@ -399,6 +417,7 @@ class ControllerApiAuthorBlock extends Controller
 		$content 			= new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
 
 		$draftMarkdown  	= $content->getDraftMarkdown($item);
+		$oldMarkdown 		= $draftMarkdown;
 
 		# check if id exists
 		if(!isset($draftMarkdown[$params['block_id']]))
@@ -426,10 +445,15 @@ class ControllerApiAuthorBlock extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
 
-		$markdown = $content->markdownArrayToText($draftMarkdown);
-		$this->c->get('dispatcher')->dispatch(new OnPageUpdated($markdown), 'onPageUpdated');
-
 		$draftMarkdownHtml	= $content->addDraftHtml($draftMarkdown);
+
+		$onPageUpdated = [
+			'oldMarkdown'		=> $content->markdownArrayToText($oldMarkdown),
+			'newMarkdown'		=> $content->markdownArrayToText($draftMarkdown),
+			'username'			=> $request->getAttribute('c_username'),
+			'item'				=> $item,
+		];
+		$this->c->get('dispatcher')->dispatch(new OnPageUpdated($onPageUpdated), 'onPageUpdated');
 
 		# if it was published before, then we need to refresh the navigation
 		if($item->status == 'published')

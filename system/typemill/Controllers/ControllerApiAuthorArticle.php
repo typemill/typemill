@@ -255,15 +255,13 @@ class ControllerApiAuthorArticle extends Controller
 
 	    # save draft content
 		$content 			= new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
+		$oldMarkdown  		= $content->getDraftMarkdown($item);
 		$markdown 			= $params['title'] . PHP_EOL . PHP_EOL . $params['body'];
 		$markdownArray 		= $content->markdownTextToArray($markdown);
 		$content->saveDraftMarkdown($item, $markdownArray);
 
-		$this->c->get('dispatcher')->dispatch(new OnPageUpdated($markdown), 'onPageUpdated');
-
 		$naviFileName 		= $navigation->getNaviFileNameForPath($item->path);
 	    $navigation->clearNavigation([$naviFileName]);
-
 		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
 		$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
 		$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
@@ -271,6 +269,14 @@ class ControllerApiAuthorArticle extends Controller
 		# refresh content
 		$draftMarkdown  	= $content->getDraftMarkdown($item);
 		$draftMarkdownHtml	= $content->addDraftHtml($draftMarkdown);
+
+		$onPageUpdated = [
+			'oldMarkdown'		=> $content->markdownArrayToText($oldMarkdown),
+			'newMarkdown'		=> $content->markdownArrayToText($draftMarkdown),
+			'username'			=> $request->getAttribute('c_username'),
+			'item'				=> $item,
+		];
+		$this->c->get('dispatcher')->dispatch(new OnPageUpdated($onPageUpdated), 'onPageUpdated');
 
 		$response->getBody()->write(json_encode([
 			'item'			=> $item,
