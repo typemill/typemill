@@ -133,8 +133,6 @@ abstract class Controller
 		return '/' . $url;
 	}
 
-
-
 	protected function addDatasets(array $formDefinitions)
 	{		
 		foreach($formDefinitions as $fieldname => $field)
@@ -151,7 +149,14 @@ abstract class Controller
 				
 				if(isset($field['options']) && is_array($field['options']))
 				{
-					$options = array_merge($options, $field['options']);
+				 	if ($this->has_sequential_numeric_keys($field['options']))
+				 	{
+				        $options = array_merge($options, $field['options']);
+				    }
+				    else
+				    {
+				        $options = $options + $field['options'];
+				    }					
 				}
 
 				if(isset($field['dataset']) && ($field['dataset'] == 'userroles' ))
@@ -167,6 +172,13 @@ abstract class Controller
 		}
 
 		return $formDefinitions;
+	}
+
+	# Function to check if an array has sequential numeric keys starting from 0
+	protected function has_sequential_numeric_keys($array)
+	{
+	    $keys = array_keys($array);
+	    return $keys === range(0, count($keys) - 1);
 	}
 
 	protected function userroleIsAllowed($userrole, $resource, $action)
