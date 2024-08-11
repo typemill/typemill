@@ -19,6 +19,8 @@ use Typemill\Events\OnPageUnpublished;
 use Typemill\Events\OnPageDeleted;
 use Typemill\Events\OnPageSorted;
 use Typemill\Events\OnPageRenamed;
+use Typemill\Events\OnPageCreated;
+use Typemill\Events\OnPageDiscard;
 
 class ControllerApiAuthorArticle extends Controller
 {
@@ -101,9 +103,10 @@ class ControllerApiAuthorArticle extends Controller
 
 		# dispatch event, e.g. send newsletter and more
 		$data = [
-			'markdown' 	=> $draftMarkdown, 
+			'markdown' 	=> $content->markdownArrayToText($draftMarkdown), 
 			'item' 		=> $item,
-			'metadata'	=> $metadata
+			'metadata'	=> $metadata,
+			'username'	=> $request->getAttribute('c_username')
 		];
 
 		$message = $this->c->get('dispatcher')->dispatch(new OnPagePublished($data), 'onPagePublished')->getData();
@@ -196,8 +199,14 @@ class ControllerApiAuthorArticle extends Controller
 			}
 		}
 
+		$data = [
+			'markdown' 	=> $content->markdownArrayToText($draftMarkdown), 
+			'item' 		=> $item,
+			'username'	=> $request->getAttribute('c_username')
+		];
+
 		# dispatch event
-		$this->c->get('dispatcher')->dispatch(new OnPageUnpublished($item), 'onPageUnpublished');
+		$this->c->get('dispatcher')->dispatch(new OnPageUnpublished($data), 'onPageUnpublished');
 
 		$response->getBody()->write(json_encode([
 			'message'		=> $message,
@@ -270,13 +279,14 @@ class ControllerApiAuthorArticle extends Controller
 		$draftMarkdown  	= $content->getDraftMarkdown($item);
 		$draftMarkdownHtml	= $content->addDraftHtml($draftMarkdown);
 
-		$onPageUpdated = [
+		$data = [
 			'oldMarkdown'		=> $content->markdownArrayToText($oldMarkdown),
 			'newMarkdown'		=> $content->markdownArrayToText($draftMarkdown),
 			'username'			=> $request->getAttribute('c_username'),
 			'item'				=> $item,
 		];
-		$this->c->get('dispatcher')->dispatch(new OnPageUpdated($onPageUpdated), 'onPageUpdated');
+
+		$this->c->get('dispatcher')->dispatch(new OnPageUpdated($data), 'onPageUpdated');
 
 		$response->getBody()->write(json_encode([
 			'item'			=> $item,
@@ -363,9 +373,10 @@ class ControllerApiAuthorArticle extends Controller
 
 		# dispatch event, e.g. send newsletter and more
 		$data = [
-			'markdown' 	=> $draftMarkdown, 
+			'markdown' 	=> $content->markdownArrayToText($draftMarkdown), 
 			'item' 		=> $item,
-			'meta'		=> $metadata
+			'metadata'	=> $metadata,
+			'username'	=> $request->getAttribute('c_username')
 		];
 		$this->c->get('dispatcher')->dispatch(new OnPagePublished($data), 'onPagePublished');
 
@@ -437,6 +448,16 @@ class ControllerApiAuthorArticle extends Controller
 		# refresh content
 		$draftMarkdown  	= $content->getDraftMarkdown($item);
 		$draftMarkdownHtml	= $content->addDraftHtml($draftMarkdown);
+
+		# dispatch event, e.g. send newsletter and more
+		$data = [
+			'oldMarkdown'		=> false,
+			'newMarkdown'		=> $content->markdownArrayToText($draftMarkdown),
+			'username'			=> $request->getAttribute('c_username'),
+			'item'				=> $item,
+		];		
+
+		$this->c->get('dispatcher')->dispatch(new OnPageDiscard($data), 'onPageDiscard');
 
 		$response->getBody()->write(json_encode([
 			'item'			=> $item,
@@ -544,6 +565,7 @@ class ControllerApiAuthorArticle extends Controller
 		$namePath 	= $index > 9 ? $index . '-' . $slug : '0' . $index . '-' . $slug;
 		
 		# create default content
+		$markdown 	= '# ' . $params['item_name'] . '/n/n' . 'Content';
 		$content 	= json_encode(['# ' . $params['item_name'], 'Content']);
 		
 		# for initial metadata
@@ -585,12 +607,20 @@ class ControllerApiAuthorArticle extends Controller
 #			$url = $urlinfo['baseurl'] . '/tm/content/' . $this->settings['editor'] . $folder->urlRelWoF . '/' . $slug;
 		}
 
-
 		$itempath 			= $folderPath . DIRECTORY_SEPARATOR . $namePath;
 		$naviFileName 		= $navigation->getNaviFileNameForPath($itempath);
 
 	    $navigation->clearNavigation([$naviFileName, $naviFileName . '-extended']);
 		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
+
+		$data = [
+			'markdown' 	=> $markdown, 
+			'metadata'	=> $metadata,
+			'itempath' 	=> $itempath,
+			'username'	=> $request->getAttribute('c_username')
+		];
+
+		$this->c->get('dispatcher')->dispatch(new OnPageCreated($data), 'onPageCreated');
 
 		$response->getBody()->write(json_encode([
 			'navigation'	=> $draftNavigation,
@@ -673,10 +703,11 @@ class ControllerApiAuthorArticle extends Controller
 		$namePath 		= date("YmdHi") . '-' . $slug;
 		
 		# create default content
-		$content = json_encode(['# ' . $params['item_name'], 'Content']);
+		$markdown 		= '# ' . $params['item_name'] . '/n/n' . 'Content';
+		$content 		= json_encode(['# ' . $params['item_name'], 'Content']);
 
 		# for initial metadata
-		$meta 		= new Meta();
+		$meta 			= new Meta();
 		
 		if($params['type'] == 'file')
 		{
@@ -715,6 +746,15 @@ class ControllerApiAuthorArticle extends Controller
 		{
 			$item 			= $navigation->getItemWithKeyPath($draftNavigation, $folder->keyPathArray);
 		}
+
+		$data = [
+			'markdown' 	=> $markdown, 
+			'metadata'	=> $metadata,
+			'itempath' 	=> $itempath,
+			'username'	=> $request->getAttribute('c_username')
+		];
+
+		$this->c->get('dispatcher')->dispatch(new OnPageCreated($data), 'onPageCreated');
 
 		$response->getBody()->write(json_encode([
 			'navigation'	=> $draftNavigation,
@@ -800,7 +840,7 @@ class ControllerApiAuthorArticle extends Controller
 
 		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
 		$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
-		$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
+		$newitem 			= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
 
 		if(!isset($this->settings['disableSitemap']) OR !$this->settings['disableSitemap'])
 		{
@@ -809,12 +849,12 @@ class ControllerApiAuthorArticle extends Controller
 		}
 
 		# create the new url for redirects
-		$newUrlRel =  str_replace($item->slug, $params['slug'], $item->urlRelWoF);
+		$newUrlRel =  str_replace($newitem->slug, $params['slug'], $newitem->urlRelWoF);
 		$url = $urlinfo['baseurl'] . '/tm/content/' . $this->settings['editor'] . $newUrlRel;
 
 		$data = [
-			'item' => $item,
-			'newUrl' => $newUrlRel
+			'item' 		=> $item,
+			'newUrl' 	=> $newUrlRel
 		];
 		$this->c->get('dispatcher')->dispatch(new OnPageRenamed($data), 'onPageRenamed');
 
@@ -849,6 +889,7 @@ class ControllerApiAuthorArticle extends Controller
 
 		# get navigation
 		$urlinfo 			= $this->c->get('urlinfo');
+		$url 				= false; # to pitch new url for redirect in frontend
 		$langattr 			= $this->settings['langattr'];
 		$navigation 		= new Navigation();
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
@@ -928,10 +969,14 @@ class ControllerApiAuthorArticle extends Controller
 		}
 		else
 		{
+			# we always need to know the new url to get and dispatch the new item later
+			$newurl = $urlinfo['baseurl'] . '/tm/content/' . $this->settings['editor'] . $newFolder->urlRelWoF . '/' . $item->slug;
+
 			# an active file has been moved to another folder, so send new url with response
 			if($params['active'] == 'active')
 			{
-				$url = $urlinfo['baseurl'] . '/tm/content/' . $this->settings['editor'] . $newFolder->urlRelWoF . '/' . $item->slug;
+				# we only want to send the new url to redirect in frontend if user is on page.
+				$url = $newurl;
 			}
 		}
 
@@ -970,7 +1015,7 @@ class ControllerApiAuthorArticle extends Controller
 		{
 		    $navigation->clearNavigation([$naviFileName, $naviFileName . '-extended']);
 		}
-	    $draftNavigation = $navigation->getFullDraftNavigation($urlinfo, $langattr);
+	    $draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $langattr);
 
 	    # update the sitemap
 		if(!isset($this->settings['disableSitemap']) OR !$this->settings['disableSitemap'])
@@ -979,12 +1024,21 @@ class ControllerApiAuthorArticle extends Controller
 			$sitemap->updateSitemap($draftNavigation, $urlinfo);
 		}
 
-		$this->c->get('dispatcher')->dispatch(new OnPageSorted($params), 'onPageSorted');
+	    # get the new item to dispatch it
+	    $newurl 			= isset($newurl) ? $newurl : $params['url'];
+	    $newItem 			= $navigation->getItemForUrl($newurl, $urlinfo, $langattr);
+
+		$data = [
+			'olditem' 	=> $item,
+			'newitem' 	=> $newitem
+		];
+
+		$this->c->get('dispatcher')->dispatch(new OnPageSorted($data), 'onPageSorted');
 
 		$response->getBody()->write(json_encode([
 			'navigation'	=> $draftNavigation,
 			'message'		=> '',
-			'url' 			=> false
+			'url' 			=> $url
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json');	    
