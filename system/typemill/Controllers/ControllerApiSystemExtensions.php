@@ -55,17 +55,21 @@ class ControllerApiSystemExtensions extends Controller
 			if(isset($definitions['license']) && in_array($definitions['license'], ['MAKER', 'BUSINESS']))
 			{
 				$license 		= new License();
+				$urlinfo 		= $this->c->get('urlinfo');
 
-				# checks if license is valid and returns scope
-				$licenseScope 	= $license->getLicenseScope($this->c->get('urlinfo'));
-
-				if(!isset($licenseScope[$definitions['license']]))
+				if(!$license->checkIfTest($urlinfo))
 				{
-					$response->getBody()->write(json_encode([
-						'message' => Translations::translate('Activation failed because you need a valid ') . $definitions['license'] . Translations::translate('-license and your website must run under the domain of your license.'),
-					]));
+					# checks if license is valid and returns scope
+					$licenseScope 	= $license->getLicenseScope($urlinfo);
 
-					return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+					if(!isset($licenseScope[$definitions['license']]))
+					{
+						$response->getBody()->write(json_encode([
+							'message' => Translations::translate('Activation failed because you need a valid ') . $definitions['license'] . Translations::translate('-license and your website must run under the domain of your license.'),
+						]));
+
+						return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+					}
 				}
 			}
 		}

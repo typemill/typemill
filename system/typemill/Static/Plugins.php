@@ -83,7 +83,9 @@ class Plugins
 			'\Plugins\html\seo' 			=> 'MAKER',
 			'\Plugins\html\embed' 			=> 'MAKER',
 			'\Plugins\html\ebookproducts' 	=> 'MAKER',
+			'\Plugins\html\bettersearch' 	=> 'MAKER',
 			'\Plugins\html\templates' 		=> 'BUSINESS',
+			'\Plugins\html\revisions' 		=> 'BUSINESS',
 		];
 
 		if(isset($premiumList['className']))
