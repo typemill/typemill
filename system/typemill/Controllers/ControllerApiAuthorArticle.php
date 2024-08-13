@@ -889,7 +889,8 @@ class ControllerApiAuthorArticle extends Controller
 
 		# get navigation
 		$urlinfo 			= $this->c->get('urlinfo');
-		$url 				= false; # to pitch new url for redirect in frontend
+		$dispatchurl 		= false; # without editor
+		$redirecturl 		= false; # with editor
 		$langattr 			= $this->settings['langattr'];
 		$navigation 		= new Navigation();
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
@@ -970,13 +971,13 @@ class ControllerApiAuthorArticle extends Controller
 		else
 		{
 			# we always need to know the new url to get and dispatch the new item later
-			$newurl = $urlinfo['baseurl'] . '/tm/content/' . $this->settings['editor'] . $newFolder->urlRelWoF . '/' . $item->slug;
+			$dispatchurl = $newFolder->urlRelWoF . '/' . $item->slug;
 
 			# an active file has been moved to another folder, so send new url with response
 			if($params['active'] == 'active')
 			{
 				# we only want to send the new url to redirect in frontend if user is on page.
-				$url = $newurl;
+				$redirecturl = $urlinfo['baseurl'] . '/tm/content/' . $this->settings['editor'] . $newFolder->urlRelWoF . '/' . $item->slug;
 			}
 		}
 
@@ -1025,8 +1026,8 @@ class ControllerApiAuthorArticle extends Controller
 		}
 
 	    # get the new item to dispatch it
-	    $newurl 			= isset($newurl) ? $newurl : $params['url'];
-	    $newItem 			= $navigation->getItemForUrl($newurl, $urlinfo, $langattr);
+	    $newurl 			= $dispatchurl ? $dispatchurl : $params['url'];
+	    $newitem 			= $navigation->getItemForUrl($newurl, $urlinfo, $langattr);
 
 		$data = [
 			'olditem' 	=> $item,
@@ -1038,7 +1039,7 @@ class ControllerApiAuthorArticle extends Controller
 		$response->getBody()->write(json_encode([
 			'navigation'	=> $draftNavigation,
 			'message'		=> '',
-			'url' 			=> $url
+			'url' 			=> $redirecturl
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json');	    

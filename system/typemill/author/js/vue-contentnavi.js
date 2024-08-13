@@ -365,7 +365,7 @@ navigation.component('navilevel',{
 				'parent_id_to': 	evt.to.parentNode.id,
 				'index_old': 		evt.oldIndex,
 				'index_new': 		evt.newIndex,
-				'active':			evt.item.dataset.active,
+				'active':			evt.item.dataset.active === 'true' ? 'active' : '',
 				'url':  			evt.item.dataset.url,
 			})
 			.then(function (response)
