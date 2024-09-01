@@ -9,6 +9,7 @@ use Typemill\Models\Extension;
 use Typemill\Models\User;
 use Typemill\Models\License;
 use Typemill\Models\Settings;
+use Typemill\Events\OnUserfieldsLoaded;
 
 class ControllerWebSystem extends Controller
 {	
@@ -270,6 +271,11 @@ class ControllerWebSystem extends Controller
 
 		$userdata			= $user->getUserData();
 		$userfields 		= $user->getUserFields($this->c->get('acl'), $userdata['userrole']);
+		$customfields		= $this->c->get('dispatcher')->dispatch(new OnUserfieldsLoaded($userfields), 'onUserfieldsLoaded')->getData();
+		if($customfields)
+		{
+			$userfields = $customfields;
+		}
 
 	    return $this->c->get('view')->render($response, 'system/account.twig', [
 			'settings' 			=> $this->settings,
@@ -365,6 +371,11 @@ class ControllerWebSystem extends Controller
 			$loginlink 		= true;
 		}
 		$userfields 		= $user->getUserFields($this->c->get('acl'), $userdata['userrole'], $inspector, $loginlink);
+		$customfields		= $this->c->get('dispatcher')->dispatch(new OnUserfieldsLoaded($userfields), 'onUserfieldsLoaded')->getData();		
+		if($customfields)
+		{
+			$userfields = $customfields;
+		}
 
 	    return $this->c->get('view')->render($response, 'system/user.twig', [
 			'settings' 			=> $this->settings,

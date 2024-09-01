@@ -8,6 +8,7 @@ use Typemill\Models\Validation;
 use Typemill\Models\User;
 use Typemill\Static\Translations;
 use Typemill\Static\Session;
+use Typemill\Events\OnUserfieldsLoaded;
 
 class ControllerApiSystemUsers extends Controller
 {
@@ -223,13 +224,18 @@ class ControllerApiSystemUsers extends Controller
 
 		# check if loginlink is activated
 		$loginlink 			= false;
-		if($userdata['userrole'] == 'guest' && isset($this->settings['loginlink']) && $this->settings['loginlink'])
+		if(isset($userdata['userrole']) && $userdata['userrole'] == 'guest' && isset($this->settings['loginlink']) && $this->settings['loginlink'])
 		{
 			$loginlink 		= true;
 		}
 
 		# we have to validate again because of additional dynamic fields
 		$formdefinitions 	= $user->getUserFields($this->c->get('acl'), $request->getAttribute('c_userrole'), NULL, $loginlink);
+		$customfields		= $this->c->get('dispatcher')->dispatch(new OnUserfieldsLoaded($formdefinitions), 'onUserfieldsLoaded')->getData();		
+		if($customfields)
+		{
+			$formdefinitions = $customfields;
+		}
 		$validatedOutput 	= $validate->recursiveValidation($formdefinitions, $userdata);
 		if(!empty($validate->errors))
 		{
@@ -275,8 +281,13 @@ class ControllerApiSystemUsers extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
-		$user 		= new User();
-		$userform 	= $user->getUserFields($this->c->get('acl'), $userrole,$inspectorrole = $request->getAttribute('c_userrole'));
+		$user 			= new User();
+		$userform 		= $user->getUserFields($this->c->get('acl'), $userrole,$inspectorrole = $request->getAttribute('c_userrole'));
+		$customfields	= $this->c->get('dispatcher')->dispatch(new OnUserfieldsLoaded($userfields), 'onUserfieldsLoaded')->getData();		
+		if($customfields)
+		{
+			$userform = $customfields;
+		}
 
 		# fix the standard form
 		$userform['password']['label'] = 'Password';
@@ -325,6 +336,11 @@ class ControllerApiSystemUsers extends Controller
 		# additional validation for extra fields and image handling
 		$user 				= new User();
 		$formdefinitions 	= $user->getUserFields($this->c->get('acl'), $userdata['userrole'],$inspectorrole = $request->getAttribute('c_userrole'));
+		$customfields		= $this->c->get('dispatcher')->dispatch(new OnUserfieldsLoaded($formdefinitions), 'onUserfieldsLoaded')->getData();		
+		if($customfields)
+		{
+			$formdefinitions = $customfields;
+		}
 		unset($formdefinitions['username']['readonly']);
 		$validatedOutput = $validate->recursiveValidation($formdefinitions, $userdata);
 		if(!empty($validate->errors))
