@@ -4,6 +4,7 @@ namespace Typemill\Models;
 
 use Typemill\Models\StorageWrapper;
 use Typemill\Static\Translations;
+use Typemill\Events\OnUserfieldsLoaded;
 
 class User
 {
@@ -169,7 +170,7 @@ class User
 		return false;
 	}
 
-	public function getUserFields($acl, $userrole, $inspectorrole = NULL, $loginlink = NULL)
+	public function getUserFields($acl, $dispatcher, $userrole, $inspectorrole = NULL, $loginlink = NULL)
 	{
 		$storage 		= new StorageWrapper('\Typemill\Models\Storage');
 		$userfields 	= $storage->getYaml('systemSettings', '', 'user.yaml');
@@ -189,7 +190,11 @@ class User
 		}
 
 		# dispatch fields;
-		#$fields = $this->c->dispatcher->dispatch('onUserfieldsLoaded', new OnUserfieldsLoaded($fields))->getData();
+		$customfields = $dispatcher->dispatch(new OnUserfieldsLoaded(['userrole' => $userrole, 'inspectorrole' => $inspectorrole, 'userfields' => $userfields]), 'onUserfieldsLoaded')->getData();
+		if($customfields && isset($customfields['userfields']) && is_array($customfields['userfields']))
+		{
+			$userfields = $customfields['userfields'];
+		}
 
 		# only roles who can edit content need profile image and description
 		if($acl->isAllowed($userrole, 'mycontent', 'create'))
