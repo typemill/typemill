@@ -186,19 +186,19 @@ abstract class Plugin implements EventSubscriberInterface
 	
 	protected function addTwigGlobal($name, $class)
 	{
-		$this->container->view->getEnvironment()->addGlobal($name, $class);
+		$this->container->get('view')->getEnvironment()->addGlobal($name, $class);
 	}
 	
 	protected function addTwigFilter($name, $filter)
 	{
 		$filter = new \Twig_SimpleFilter($name, $filter);
-		$this->container->view->getEnvironment()->addFilter($filter);
+		$this->container->get('view')->getEnvironment()->addFilter($filter);
 	}
 	
 	protected function addTwigFunction($name, $function)
 	{
 		$function = new \Twig_SimpleFunction($name, $function);
-		$this->container->view->getEnvironment()->addFunction($function);
+		$this->container->get('view')->getEnvironment()->addFunction($function);
 	}
 
 	protected function addJS($JS)

@@ -236,7 +236,7 @@ class ControllerApiSystemUsers extends Controller
 		{
 			$response->getBody()->write(json_encode([
 				'message' 	=> Translations::translate('Please correct your input.'),
-				'errors' 	=> $validateErrors
+				'errors' 	=> $validate->errors
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
