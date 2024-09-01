@@ -54,10 +54,14 @@
 
 				{% set page = getPageMeta(settings, element) %}
 
-				<li class="ba b--light-gray pa2 pa3-ns db list tl w-100 w-30-l mh0 mv2 mh2-l flex flex-column flex-grow">
-					<h3>{{ page.meta.shorttitle }}</h3>
-					<p class="f5 lh-copy flex-grow">{{ page.meta.description }}</p>
-					<a class="db link white w-100 mv2 pa2 bg-near-black dim tc" href="{{ element.urlAbs }}">{{ page.meta.shorttitle }}</a>
+				<li class="db list tl pa0 w-100 w-30-l mh0 mv2 mh2-l shadow-2-hover flex flex-column flex-grow-0 flex-basis bg-white">
+					<div class="pa2 ph3-ns pb3-ns flex-grow">
+						<h3>{{ page.meta.shorttitle }}</h3>
+						<p class="f5 lh-copy">{{ page.meta.description }}</p>
+					</div>
+					<div class="pa2 ph3-ns pb3-ns">
+						<a href="{{ element.urlAbs }}" class="button link w-100 db dim pa3 ba w-100 white tc">{{ page.meta.shorttitle }}</a>	
+					<div>
 				</li>
 
 			{% endfor %}
