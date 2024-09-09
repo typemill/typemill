@@ -57,7 +57,9 @@ class ControllerApiSystemExtensions extends Controller
 				$license 		= new License();
 				$urlinfo 		= $this->c->get('urlinfo');
 
-				if(!$license->checkIfTest($urlinfo))
+				$test = $license->checkIfTest($urlinfo);
+
+				if($license->checkIfTest($urlinfo) !== true)
 				{
 					# checks if license is valid and returns scope
 					$licenseScope 	= $license->getLicenseScope($urlinfo);

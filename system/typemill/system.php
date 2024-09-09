@@ -23,6 +23,7 @@ use Typemill\Events\OnSessionSegmentsLoaded;
 use Typemill\Events\OnRolesPermissionsLoaded;
 use Typemill\Events\OnResourcesLoaded;
 use Typemill\Events\OnCspLoaded;
+use Typemill\Events\OnTwigGlobalsLoaded;
 use Typemill\Middleware\RemoveCredentialsMiddleware;
 use Typemill\Middleware\SessionMiddleware;
 use Typemill\Middleware\OldInputMiddleware;
@@ -53,7 +54,6 @@ $display_errors = 0;
 ini_set('display_errors', $display_errors);
 ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
-
 
 /****************************
 * LOAD SETTINGS				*
@@ -279,6 +279,14 @@ else
 
 $timer['session segments'] = microtime(true);
 
+# initialize globals
+$TwigGlobals = ['errors' => NULL, 'flash' => NULL, 'assets' => NULL];
+$TwigGlobals = $dispatcher->dispatch(new OnTwigGlobalsLoaded($TwigGlobals), 'onTwigGlobalsLoaded')->getData();
+
+# echo '<pre>';
+# print_r($TwigGlobals);
+# die();
+
 /****************************
 * OTHER CONTAINER ITEMS			*
 ****************************/
@@ -298,7 +306,7 @@ $container->set('assets', function() use ($assets){ return $assets; });
 * TWIG TO CONTAINER					*
 ****************************/
 
-$container->set('view', function() use ($settings, $urlinfo, $translations, $dispatcher) {
+$container->set('view', function() use ($settings, $TwigGlobals, $urlinfo, $translations, $dispatcher) {
 
 	$twig = Twig::create(
 		[
@@ -314,10 +322,12 @@ $container->set('view', function() use ($settings, $urlinfo, $translations, $dis
 			'autoescape' => false
 		]
 	);
-	
-	$twig->getEnvironment()->addGlobal('errors', NULL);
-	$twig->getEnvironment()->addGlobal('flash', NULL);
-	$twig->getEnvironment()->addGlobal('assets', NULL);
+
+	foreach($TwigGlobals as $name => $feature)
+	{
+#		echo $name . ';';
+		$twig->getEnvironment()->addGlobal($name, $feature);
+	}
 
 	# add extensions
 	$twig->addExtension(new DebugExtension());

@@ -52,7 +52,7 @@ const bloxeditor = Vue.createApp({
 		},
 		hideEditor()
 		{
-			this.showblox =false;
+			this.showblox = false;
 		},
 		checkMove(event)
 		{

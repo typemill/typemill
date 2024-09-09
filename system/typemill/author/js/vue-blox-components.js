@@ -19,6 +19,7 @@ bloxeditor.component('title-component', {
 	methods: {
 		beforeSave()
 		{
+			/* You can do something here before save. Check image and file component */
 			this.$emit('saveBlockEvent');
 		},
 		updatemarkdown(content)

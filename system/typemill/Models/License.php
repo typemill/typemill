@@ -170,8 +170,8 @@ class License
 		$thishost 			= parse_url($urlinfo['baseurl'], PHP_URL_HOST);
 		$thishost 			= str_replace("www.", "", $thishost);
 		$test 				= substr($thishost, 0, 9);
-		
-		if($test == 'localhost' OR $test = '127.0.0.1')
+
+		if($test == 'localhost' OR $test == '127.0.0.1')
 		{
 			return true;
 		}
