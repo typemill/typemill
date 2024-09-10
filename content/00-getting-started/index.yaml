@@ -7,7 +7,7 @@ meta:
     modified: '2024-05-17'
     created: '2024-04-25'
     time: 13-16-58
-    hide: false
+    hide: true
     noindex: false
     contains: pages
     template: ''

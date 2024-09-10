@@ -106,10 +106,18 @@ class ControllerWebFrontend extends Controller
 		$liveNavigation = $this->c->get('dispatcher')->dispatch(new OnPagetreeLoaded($liveNavigation), 'onPagetreeLoaded')->getData();
 
 		# For FOLDERS use item without drafts and hidden pages
-		if(!$home && $item->elementType == 'folder' && !$item->hide)
+		if(!$home && $item->elementType == 'folder')
 		{
-			# $item = $navigation->getItemWithUrl($liveNavigation, $item->urlRelWoF);
-			$item = $navigation->getItemWithKeyPath($liveNavigation, $item->keyPathArray);
+			# if folder itself is not hidden
+			if($item->hide && count($item->folderContent) > 0)
+			{
+				$item->folderContent = $navigation->generateLiveNavigationFromDraft($item->folderContent);
+			}
+			else
+			{
+				# $item = $navigation->getItemWithUrl($liveNavigation, $item->urlRelWoF);
+				$item = $navigation->getItemWithKeyPath($liveNavigation, $item->keyPathArray);
+			}
 		}
 
 		# ADD BACKWARD-/FORWARD PAGINATION 
