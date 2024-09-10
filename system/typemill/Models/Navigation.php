@@ -744,7 +744,12 @@ class Navigation extends Folder
 	}
 
 	public function getPagingForItem($navigation, $item)
-	{		
+	{
+		if(!$item)
+		{
+			return $item;
+		}
+		
 		# if page is home
 		if(trim($item->pathWithoutType, DIRECTORY_SEPARATOR) == 'index')
 		{
