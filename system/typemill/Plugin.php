@@ -211,6 +211,16 @@ abstract class Plugin implements EventSubscriberInterface
 		$this->container->get('assets')->addInlineJS($JS);
 	}
 
+	protected function addBloxConfigJS($JS)
+	{
+		$this->container->get('assets')->addBloxConfigJS($JS);
+	}
+
+	protected function addBloxConfigInlineJS($JS)
+	{
+		$this->container->get('assets')->addBloxConfigInlineJS($JS);
+	}
+
 	protected function addSvgSymbol($symbol)
 	{
 		$this->container->get('assets')->addSvgSymbol($symbol);

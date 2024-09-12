@@ -45,11 +45,11 @@ const app = Vue.createApp({
 		{
 			if(this.currentTab == 'Content')
 			{
-				eventBus.$emit("showEditor");
+				eventBus.$emit("showEditor", true);
 			}
 			else
 			{
-				eventBus.$emit("hideEditor");
+				eventBus.$emit("showEditor", false);
 				return 'tab-' + this.currentTab.toLowerCase()
 			}
 		}

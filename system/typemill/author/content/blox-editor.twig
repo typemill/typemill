@@ -38,6 +38,9 @@
 {% block javascript %}
 
 	<script src="{{ base_url() }}/system/typemill/author/js/vue-blox-config.js?v={{ settings.version }}"></script>
+
+	{{ assets.renderBloxConfigJS()|raw }}
+
 	<script src="{{ base_url() }}/system/typemill/author/js/vue-blox.js?v={{ settings.version }}"></script>
 	<script src="{{ base_url() }}/system/typemill/author/js/vue-blox-components.js?v={{ settings.version }}"></script>
 	<script src="{{ base_url() }}/system/typemill/author/js/vue-meta.js?v={{ settings.version }}"></script>

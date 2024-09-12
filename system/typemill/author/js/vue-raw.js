@@ -48,25 +48,25 @@ const raweditor = Vue.createApp({
 
 		eventBus.$on('savedraft', this.saveDraft);
 		eventBus.$on('publishdraft', this.publishDraft);
-		eventBus.$on('showEditor', this.showEditor );
-		eventBus.$on('hideEditor', this.hideEditor );
+		eventBus.$on('showEditor', (value) => {
+			this.showEditor(value);
+		});
 		eventBus.$on('content', content => {
 			this.initializeContent(content);
 		});
 
 	},
 	methods: {
-		showEditor()
+		showEditor(value)
 		{
-			this.showraw = true;
-			this.$nextTick(() => {
-				this.resizeCodearea();
-			})			
+			this.showraw = value;
+			if(value)
+			{
+				this.$nextTick(() => {
+					this.resizeCodearea();
+				})
+			}
 		},
-		hideEditor()
-		{
-			this.showraw = false;
-		},		
 		initializeContent(contentArray)
 		{ 
 			let markdown = '';

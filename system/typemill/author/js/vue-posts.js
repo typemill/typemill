@@ -44,8 +44,10 @@ const posts = Vue.createApp({
 		}
 	},
 	mounted() {
-		eventBus.$on('showEditor', this.showPostlist );
-		eventBus.$on('hideEditor', this.hidePostlist );
+		/* fix this */
+		eventBus.$on('showEditor', (value) => {
+			this.active = value;
+		});		
 		eventBus.$on('item', item => {
 			this.item = item;
 		});		
@@ -66,14 +68,6 @@ const posts = Vue.createApp({
 		}
 	},
 	methods: {
-		showPostlist()
-		{
-			this.active = true;
-		},
-		hidePostlist()
-		{
-			this.active = false;
-		},
 		createPost(evt)
 		{
 			eventBus.$emit('publisherclear');

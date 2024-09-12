@@ -1,5 +1,5 @@
 const bloxeditor = Vue.createApp({
-	template: `<div v-if="showblox" class="px-12 py-8 bg-stone-50 dark:bg-stone-700 dark:text-stone-200 shadow-md mb-16">
+	template: `<div v-if="editorVisible" class="px-12 py-8 bg-stone-50 dark:bg-stone-700 dark:text-stone-200 shadow-md mb-16">
 					<draggable 
 						v-model="content" 
 						@start="onStart"
@@ -18,8 +18,8 @@ const bloxeditor = Vue.createApp({
 	data() {
 		return {
 			content: data.content,
-			freeze: false,
-			showblox: true,
+			editorVisible: true,
+			dragDisabled: false,
 		}
 	},
 	computed: 
@@ -28,7 +28,7 @@ const bloxeditor = Vue.createApp({
 		{
 			return {
 				animation: 150,
-				disabled: this.freeze,
+				disabled: this.dragDisabled,
 				ghostClass: "ghost",
 			};
 		},
@@ -37,23 +37,17 @@ const bloxeditor = Vue.createApp({
 
 		document.getElementById("initial-content").remove();
 
-		eventBus.$on('freeze', this.freezeOn );
-		eventBus.$on('unfreeze', this.freezeOff );
-		eventBus.$on('showEditor', this.showEditor );
-		eventBus.$on('hideEditor', this.hideEditor );
-		eventBus.$on('content', content => {
+		eventBus.$on('content', (content) => {
 			this.content = content;
+		});
+		eventBus.$on('showEditor', (value) => {
+			this.editorVisible = value;
+		});
+		eventBus.$on('disableDrag', (value) => {
+			this.dragDisabled = value;
 		});
 	},
 	methods: {
-		showEditor()
-		{
-			this.showblox = true;
-		},
-		hideEditor()
-		{
-			this.showblox = false;
-		},
 		checkMove(event)
 		{
 			if(event.draggedContext.index == 0 || event.draggedContext.futureIndex == 0)
@@ -84,6 +78,9 @@ const bloxeditor = Vue.createApp({
 				{
 					eventBus.$emit('item', response.data.item);					
 				}
+				this.$nextTick(function () {
+					eventBus.$emit('renderblox');
+				});				
 			})
 			.catch(function (error)
 			{
@@ -97,14 +94,6 @@ const bloxeditor = Vue.createApp({
 				}
 			});
 		},
-		freezeOn()
-		{
-			this.freeze = true;
-		},
-		freezeOff()
-		{
-			this.freeze = false;
-		}, 
 	},
 })
 
@@ -117,16 +106,32 @@ bloxeditor.component('content-block', {
 				<div v-if="newblock" class="blox-editor bg-stone-100 dark:bg-stone-600">
 					<div class="w-full flex justify-between bg-stone-200 dark:bg-stone-600">
 						<p class="p-2 pl-4">Choose a content type</p>
-						<button class="p-2 border-l border-stone-700 hover:text-white hover:bg-rose-500 transition-1" @click="closeNewBlock">{{ $filters.translate('close') }}</button>
+						<button 
+							class 				= "p-2 border-l border-stone-700 hover:text-white hover:bg-rose-500 transition-1" 
+							@click 				= "closeNewBlock"
+							>{{ $filters.translate('close') }}</button>
 					</div>
 					<new-block :index="index"></new-block>
 				</div>
 				<div class="relative blox-wrapper mb-1">
 					<div v-if="index != 0" class="sideaction hidden absolute -top-3 left-1/2 -translate-x-1/2 z-1 text-xs">
-						<button class="delete w-16 p-1 border-r border-stone-700 bg-stone-200 dark:bg-stone-600 hover:bg-rose-500 hover:dark:bg-rose-500 hover:text-white transition-1" @mousedown.prevent="disableSort()" @click.prevent="deleteBlock">{{ $filters.translate('delete') }}</button>
-						<button class="add w-16 p-1 border-l border-stone-700 bg-stone-200 dark:bg-stone-600 hover:bg-teal-500 hover:dark:bg-teal-500 hover:text-white transition-1" :disabled="disabled" @mousedown.prevent="disableSort()" @click.prevent="openNewBlock">{{ $filters.translate('add') }}</button> 
+						<button 
+							class 				= "delete w-16 p-1 border-r border-stone-700 bg-stone-200 dark:bg-stone-600 hover:bg-rose-500 hover:dark:bg-rose-500 hover:text-white transition-1" 
+							@mousedown.prevent 	= "disableSort()" 
+							@click.prevent 		= "deleteBlock"
+							>{{ $filters.translate('delete') }}</button>
+						<button 
+							class 				= "add w-16 p-1 border-l border-stone-700 bg-stone-200 dark:bg-stone-600 hover:bg-teal-500 hover:dark:bg-teal-500 hover:text-white transition-1" 
+							:disabled 			= "disabled" 
+							@mousedown.prevent 	= "disableSort()" 
+							@click.prevent 		= "openNewBlock"
+							>{{ $filters.translate('add') }}</button> 
 					</div>
-					<div v-if="!edit" class="blox-preview px-6 py-3 hover:bg-stone-100 hover:dark:bg-stone-900 overflow-hidden transition-1" @click="showEditor" v-html="getHtml(element.html)"></div>
+					<div 
+						v-if 	= "!edit" 
+						class 	= "blox-preview px-6 py-3 hover:bg-stone-100 hover:dark:bg-stone-900 overflow-hidden transition-1" 
+						@click 	= "showEditor" 
+						v-html 	= "getHtml(element.html)"></div>
 					<div v-else class="blox-editor bg-stone-100 dark:bg-stone-900">
 						<div v-if="load" class="absolute right-0 top-0 left-0 bottom-0 bg-stone-100 opacity-75">
 							<svg class="animate-spin h-5 w-5 text-stone-900 absolute top-0 right-0 bottom-0 left-0 m-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -134,10 +139,26 @@ bloxeditor.component('content-block', {
 								<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
 							</svg>
 						</div>
-						<component ref="activeComponent" :disabled="disabled" :markdown="updatedmarkdown" :index="index" @saveBlockEvent="saveBlock" @updateMarkdownEvent="updateMarkdownFunction" :is="componentType"></component>
+						<component 
+							ref 					= "activeComponent" 
+							:disabled 				= "disabled" 
+							:markdown 				= "updatedmarkdown" 
+							:index 					= "index" 
+							@saveBlockEvent 		= "saveBlock" 
+							@updateMarkdownEvent 	= "updateMarkdownFunction" 
+							:is 					= "componentType"
+							></component>
 						<div class="edit-buttons absolute -bottom-3 right-4 z-10 text-xs">
-							<button class="cancel w-20  p-1 border-r border-stone-700 bg-stone-200 dark:bg-stone-600 hover:bg-rose-500 hover:dark:bg-rose-500 hover:text-white transition-1" :disabled="disabled" @click.prevent="closeEditor">{{ $filters.translate('cancel') }}</button>
-							<button class="save w-20 p-1 border-l border-stone-700 bg-stone-200 dark:bg-stone-600 hover:bg-teal-500 hover:dark:bg-teal-500 hover:text-white transition-1" :disabled="disabled" @click.prevent="beforeSave()">{{ $filters.translate('save') }}</button>
+							<button 
+								class 				= "cancel w-20 p-1 border-r border-stone-700 bg-stone-200 dark:bg-stone-600 hover:bg-rose-500 hover:dark:bg-rose-500 hover:text-white transition-1" 
+								:disabled 			= "disabled" 
+								@click.prevent 		= "closeEditor"
+								>{{ $filters.translate('cancel') }}</button>
+							<button 
+								class 				= "save w-20 p-1 border-l border-stone-700 bg-stone-200 dark:bg-stone-600 hover:bg-teal-500 hover:dark:bg-teal-500 hover:text-white transition-1" 
+								:disabled 			= "disabled" 
+								@click.prevent 		= "beforeSave()"
+								>{{ $filters.translate('save') }}</button>
 						</div>
 					</div>
 				</div>
@@ -145,16 +166,16 @@ bloxeditor.component('content-block', {
 				`,
 	data: function () {
 		return {
-			edit: false,
-			disabled: false,
-			componentType: false,
-			updatedmarkdown: false,
-			preview: false,
-			edit: false,
-			newblock: false,
-			formats: bloxFormats,
-			load: false,
-			unsafedcontent: false,
+			edit: 				false,
+			disabled: 			false,
+			newblock: 			false,
+			load:  				false,
+
+			componentType: 		false,
+			updatedmarkdown: 	false,
+			formats: 			bloxFormats,
+			hasUnsafedContent: 	false,
+			countUpdates: 		0
 		}
 	},
 	mounted: function()
@@ -163,74 +184,83 @@ bloxeditor.component('content-block', {
 
 		eventBus.$on('closeComponents', this.closeEditor);
 
-		eventBus.$on('inlineFormat', content => {
+		eventBus.$on('inlineFormat', (content) => {
 			this.updatedmarkdown = content;
 		});
 
-		eventBus.$on('lockcontent', content => {
-			this.unsafedcontent = true;
-		});
-
-		eventBus.$on('unlockcontent', content => {
-			this.unsafedcontent = false;
+		eventBus.$on('unsafedContent', (value) => {
+			this.hasUnsafedContent = value;
 		});
 	},
 	methods: {
 		openNewBlock()
 		{
-			if(this.unsafedcontent)
+			if(this.hasUnsafedContent)
 			{
 				eventBus.$emit('publishermessage', 'Save or cancel your changes first.');
 			}
 			else
 			{
-				eventBus.$emit('closeComponents');
-				eventBus.$emit('freeze');
+				this.newblock 	= true;
+				this.edit 		= false;
 
-				this.newblock 		= true;
-				this.edit 			= false;
+				eventBus.$emit('closeComponents');
+				eventBus.$emit('disableDrag', true);
 			}
 		},
 		closeNewBlock()
 		{
-			eventBus.$emit('unlockcontent');
-			eventBus.$emit('unfreeze');
-			eventBus.$emit('publisherclear');
-
-			this.newblock 			= false;			
-		},
-		closeEditor()
-		{
-			eventBus.$emit('unlockcontent');			
-			eventBus.$emit('closeEditor');
-			eventBus.$emit('unfreeze');
-			eventBus.$emit('publisherclear');
-
-			this.edit 				= false;
+			this.newblock 			= false;
 			this.newblock 			= false;
 			this.componentType 		= false;
 			this.updatedmarkdown 	= false;
+
+			eventBus.$emit('publisherclear');
+			eventBus.$emit('unsafedContent', false);
+			eventBus.$emit('disableDrag', false);
+
+			this.$nextTick(function () {
+				eventBus.$emit('renderblox');
+			});
+		},
+		closeEditor()
+		{
+			if(this.edit)
+			{
+				this.edit 				= false;
+				this.newblock 			= false;
+				this.componentType 		= false;
+				this.updatedmarkdown 	= false;
+
+				eventBus.$emit('publisherclear');
+				eventBus.$emit('unsafedContent', false);
+				eventBus.$emit('disableDrag', false);
+
+				this.$nextTick(function () {
+					eventBus.$emit('renderblox');
+				});
+			}
 		},
 		showEditor()
 		{
-			if(this.unsafedcontent)
+			if(this.hasUnsafedContent)
 			{
 				eventBus.$emit('publishermessage', 'Save or cancel your changes first.');
 			}
 			else
 			{
 				eventBus.$emit('closeComponents');
-				eventBus.$emit('freeze');
+				eventBus.$emit('disableDrag', true);
 
-				this.edit = true;
-
-				this.componentType = this.determineBlockType();
-
-				this.updatedmarkdown = this.element.markdown;
+				this.edit 				= true;
+				this.componentType 		= this.determineBlockType();
+				this.updatedmarkdown 	= this.element.markdown;
 			}
 		},
 		determineBlockType()
 		{
+			this.countUpdates = 0;
+			
 			if(this.index == 0)
 			{
 				return 'title-component';
@@ -254,20 +284,25 @@ bloxeditor.component('content-block', {
 		},
 		updateMarkdownFunction(value)
 		{
-			eventBus.$emit('lockcontent');
 			this.updatedmarkdown = value;
+
+			if(this.countUpdates > 0)
+			{
+				eventBus.$emit('unsafedContent', true);
+			}
+
+			this.countUpdates++;
 		},
 		disableSort()
 		{
-			console.info("we have to disable sort function");
+			eventBus.$emit('disableDrag', true);
 		},
 		deleteBlock()
 		{
 			eventBus.$emit('closeComponents');
 
-			this.load = true;
-
-			var self = this;
+			this.load 	= true;
+			var self 	= this;
 
 			eventBus.$emit('publisherclear');
 
@@ -279,7 +314,7 @@ bloxeditor.component('content-block', {
 			})
 			.then(function (response)
 			{
-				eventBus.$emit('unlockcontent');
+				eventBus.$emit('unsafedContent', false);
 				self.load = false;
 				self.$root.$data.content = response.data.content;
 				if(response.data.navigation)
@@ -329,9 +364,9 @@ bloxeditor.component('content-block', {
 				return;
 			}
 
-			var self = this;
-			
-			this.load = true;
+			var self 	= this;
+			this.load 	= true;
+
 			eventBus.$emit('publisherclear');
 
 			tmaxios.put('/api/v1/block',{
@@ -341,7 +376,7 @@ bloxeditor.component('content-block', {
 			})
 			.then(function (response)
 			{
-				eventBus.$emit('unlockcontent');
+				eventBus.$emit('unsafedContent', false);
 				self.load = false;
 				self.$root.$data.content = response.data.content;
 				if(response.data.navigation)
@@ -397,7 +432,7 @@ bloxeditor.component('new-block',{
 			componentType: false,
 			disabled: false,
 			newblockmarkdown: '',
-			unsafedcontent: false,
+			hasUnsafedContent: false,
 		}
 	},
 	mounted: function()
@@ -408,18 +443,14 @@ bloxeditor.component('new-block',{
 			this.newblockmarkdown = content;
 		});
 
-		eventBus.$on('lockcontent', content => {
-			this.unsafedcontent = true;
-		});
-
-		eventBus.$on('unlockcontent', content => {
-			this.unsafedcontent = false;
+		eventBus.$on('unsafedContent', (value) => {
+			this.hasUnsafedContent = value;
 		});
 	},
 	methods: {
 		setComponentType(event, componenttype)
 		{			
-			if(this.unsafedcontent)
+			if(this.hasUnsafedContent)
 			{
 				eventBus.$emit('publishermessage', 'Save or cancel your changes first.');
 			}
@@ -431,21 +462,28 @@ bloxeditor.component('new-block',{
 					eventBus.$emit('closeComponents');
 				}
 
-				eventBus.$emit('freezeblocks');
+				eventBus.$emit('disableDrag', true);
 
 				this.componentType = componenttype;
 			}
 		},
 		closeComponent()
 		{
-			this.componentType = false;
-			this.newblockmarkdown = '';
-			eventBus.$emit('unlockcontent');
+			this.componentType 		= false;
+			this.newblockmarkdown 	= '';
+
 			eventBus.$emit('publisherclear');
+			eventBus.$emit('unsafedContent', false);
+			eventBus.$emit('disableDrag', false);
+
+			this.$nextTick(function () {
+				eventBus.$emit('renderblox', 0);
+			});			
+
 		},
 		updateMarkdownFunction(value)
 		{
-			eventBus.$emit('lockcontent');
+			eventBus.$emit('unsafedContent', true);
 			this.newblockmarkdown = value;
 		},
 		beforeSaveNew()
@@ -480,9 +518,11 @@ bloxeditor.component('new-block',{
 			})
 			.then(function (response)
 			{
+				eventBus.$emit('unsafedContent', false);
 				self.$root.$data.content = response.data.content;
 				self.closeComponent();
 				eventBus.$emit('closeComponents');
+
 				if(response.data.navigation)
 				{
 					eventBus.$emit('navigation', response.data.navigation);

@@ -11,19 +11,23 @@ class Assets
 {
 	public $baseUrl;
 
-	public $JS;
-
 	public $CSS;
-
-	public $inlineJS;
 
 	public $inlineCSS;
 
-	public $editorJS;
+	public $JS;
 
-	public $editorCSS;
+	public $inlineJS;
 
-	public $editorInlineJS;
+	public $bloxConfigJS;
+
+	public $bloxConfigInlineJS;
+
+	public $editorJS; # deprecated
+
+	public $editorCSS; # deprecated
+
+	public $editorInlineJS; # deprecated
 
 	public $svgSymbols;
 
@@ -35,18 +39,20 @@ class Assets
 
 	public function __construct($baseUrl)
 	{
-		$this->baseUrl			= $baseUrl;
-		$this->JS 				= array();
-		$this->CSS 				= array();
-		$this->inlineJS			= array();
-		$this->inlineCSS		= array();
-		$this->editorJS 		= array();
-		$this->editorCSS 		= array();
-		$this->editorInlineJS 	= array();
-		$this->svgSymbols		= array();
-		$this->meta 			= array();
-		$this->imageUrl 		= false;
-		$this->imageFolder 		= 'originalFolder';
+		$this->baseUrl				= $baseUrl;
+		$this->CSS 					= array();
+		$this->inlineCSS			= array();
+		$this->JS 					= array();
+		$this->inlineJS				= array();
+		$this->bloxConfigJS 		= array();
+		$this->bloxConfigInlineJS 	= array();
+		$this->editorJS 			= array(); # deprecated
+		$this->editorCSS 			= array(); # deprecated
+		$this->editorInlineJS 		= array(); # deprecated
+		$this->svgSymbols			= array();
+		$this->meta 				= array();
+		$this->imageUrl 			= false;
+		$this->imageFolder 			= 'originalFolder';
 	}
 
 	public function setUri($uri)
@@ -89,6 +95,21 @@ class Assets
 		$this->inlineJS[] = '<script>' . $JS . '</script>';
 	}
 
+	public function addBloxConfigJS($JS)
+	{
+		$JSfile = $this->getFileUrl($JS);
+		
+		if($JSfile)
+		{
+			$this->bloxConfigJS[] = '<script src="' . $JSfile . '"></script>';
+		}
+	}
+
+	public function addBloxConfigInlineJS($JS)
+	{
+		$this->bloxConfigInlineJS[] = '<script>' . $JS . '</script>';
+	}
+
 	public function activateVue()
 	{
 		$vueUrl = '<script src="' . $this->baseUrl . '/system/typemill/author/js/vue.js"></script>';
@@ -125,42 +146,6 @@ class Assets
 		$this->svgSymbols[] = $symbol;
 	}
 
-	# add JS to enhance the blox-editor in author area
-	public function addEditorJS($JS)
-	{
-		$JSfile = $this->getFileUrl($JS);
-		
-		if($JSfile)
-		{
-			$this->editorJS[] = '<script src="' . $JSfile . '"></script>';
-		}
-	}
-
-	public function addEditorInlineJS($JS)
-	{
-		$this->editorInlineJS[] = '<script>' . $JS . '</script>';
-	}
-
-	public function addEditorCSS($CSS)
-	{
-		$CSSfile = $this->getFileUrl($CSS);
-		
-		if($CSSfile)
-		{
-			$this->editorCSS[] = '<link rel="stylesheet" href="' . $CSSfile . '" />';
-		}
-	}
-
-	public function renderEditorJS()
-	{
-		return implode("\n", $this->editorJS) . implode("\n", $this->editorInlineJS);
-	}
-
-	public function renderEditorCSS()
-	{
-		return implode("\n", $this->editorCSS);
-	}
-
 	public function renderCSS()
 	{
 		return implode("\n", $this->CSS) . implode("\n", $this->inlineCSS);
@@ -169,6 +154,11 @@ class Assets
 	public function renderJS()
 	{
 		return implode("\n", $this->JS) . implode("\n", $this->inlineJS);
+	}
+
+	public function renderBloxConfigJS()
+	{
+		return implode("\n", $this->bloxConfigJS) . implode("\n", $this->bloxConfigInlineJS);
 	}
 
 	public function renderSvg()
@@ -253,5 +243,49 @@ class Assets
 		$this->imageUrl = false;
 
 		return $absImageUrl;
+	}
+
+	/******************
+	 *   DEPRECATED   *
+	 * ****************/
+
+	# deprecated, not in use
+	public function addEditorJS($JS)
+	{
+		$JSfile = $this->getFileUrl($JS);
+		
+		if($JSfile)
+		{
+			$this->editorJS[] = '<script src="' . $JSfile . '"></script>';
+		}
+	}
+
+	# deprecated, not in use
+	public function addEditorInlineJS($JS)
+	{
+		$this->editorInlineJS[] = '<script>' . $JS . '</script>';
+	}
+
+	# deprecated, not in use
+	public function addEditorCSS($CSS)
+	{
+		$CSSfile = $this->getFileUrl($CSS);
+		
+		if($CSSfile)
+		{
+			$this->editorCSS[] = '<link rel="stylesheet" href="' . $CSSfile . '" />';
+		}
+	}
+
+	# deprecated, not in use
+	public function renderEditorJS()
+	{
+		return implode("\n", $this->editorJS) . implode("\n", $this->editorInlineJS);
+	}
+
+	# deprecated, not in use
+	public function renderEditorCSS()
+	{
+		return implode("\n", $this->editorCSS);
 	}
 }
