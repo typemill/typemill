@@ -50,8 +50,15 @@ bloxeditor.component('markdown-component', {
 	mounted: function(){
 		this.$refs.markdown.focus();
 
-		autosize(document.querySelectorAll('textarea'));
-
+    this.$nextTick(function () {
+        autosize(this.$refs.markdown);  // Using $refs directly
+    }.bind(this));
+    
+    /*
+		this.$nextTick(function () {
+			autosize(document.querySelectorAll('textarea'));
+		});
+*/
 		eventBus.$on('beforeSave', this.beforeSave );
 	},
 	methods: {

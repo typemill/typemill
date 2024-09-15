@@ -184,6 +184,8 @@ bloxeditor.component('content-block', {
 
 		eventBus.$on('closeComponents', this.closeEditor);
 
+		eventBus.$on('closeNewBlock', this.closeNewBlock);
+
 		eventBus.$on('inlineFormat', (content) => {
 			this.updatedmarkdown = content;
 		});
@@ -210,7 +212,6 @@ bloxeditor.component('content-block', {
 		},
 		closeNewBlock()
 		{
-			this.newblock 			= false;
 			this.newblock 			= false;
 			this.componentType 		= false;
 			this.updatedmarkdown 	= false;
@@ -377,7 +378,11 @@ bloxeditor.component('content-block', {
 			.then(function (response)
 			{
 				eventBus.$emit('unsafedContent', false);
-				self.load = false;
+				self.load 		= false;
+				self.newblock 	= false;
+				eventBus.$emit('closeComponents');
+
+
 				self.$root.$data.content = response.data.content;
 				if(response.data.navigation)
 				{
@@ -522,6 +527,7 @@ bloxeditor.component('new-block',{
 				self.$root.$data.content = response.data.content;
 				self.closeComponent();
 				eventBus.$emit('closeComponents');
+				eventBus.$emit('closeNewBlock');
 
 				if(response.data.navigation)
 				{
