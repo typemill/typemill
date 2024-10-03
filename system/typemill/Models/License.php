@@ -165,6 +165,46 @@ class License
 		return false;
 	}
 
+	# NOT IN USE: Compare only domain without subdomains or subfolders
+	private function checkLicenseBaseDomain(string $licensedomain, array $urlinfo)
+	{
+		$licensehost 		= parse_url($licensedomain, PHP_URL_HOST);
+		$licensehost 		= preg_replace('/^www\./', '', $licensehost);
+		$licensehost 		= $this->extractBaseDomain($licensehost);
+
+		$thishost 			= parse_url($urlinfo['baseurl'], PHP_URL_HOST);
+		$thishost 			= preg_replace('/^www\./', '', $thishost);
+		$thishost 			= $this->extractBaseDomain($thishost);
+
+		$whitelist 			= ['localhost', '127.0.0.1', 'typemilltest.', $licensehost];
+
+		foreach($whitelist as $domain)
+		{
+ 			if ($thishost === $domain)
+ 			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	# NOT IN USE: Function to extract the base domain (ignoring subdomains)
+	private function extractBaseDomain($host)
+	{
+	    $parts = explode('.', $host);
+	    $numParts = count($parts);
+	    
+	    # Check if we have at least 2 parts for a valid base domain
+	    if ($numParts >= 2)
+	    {
+	        return $parts[$numParts - 2] . '.' . $parts[$numParts - 1];
+	    }
+
+	    # Return original host if it's not a valid domain
+	    return $host; 
+	}
+
 	public function checkIfTest(array $urlinfo)
 	{
 		$thishost 			= parse_url($urlinfo['baseurl'], PHP_URL_HOST);
