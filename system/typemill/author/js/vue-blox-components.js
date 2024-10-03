@@ -799,7 +799,6 @@ bloxeditor.component('table-component', {
 									:contenteditable 		= "colindex !== 0 ? true : false" 
 									@click.prevent 			= "switchrowbar($event, value)" 
 									@blur.prevent 			= "updatedata($event,colindex,rowindex)"
- 									@paste.prevent  		= "updatedata($event,colindex,rowindex)"
 									:class 					= "colindex !== 0 ? 'text-center' : 'font-normal text-stone-500' "
 									class 					= "p-2 border border-stone-300"
 								>{{ value }}
@@ -810,14 +809,13 @@ bloxeditor.component('table-component', {
 									:contenteditable 		= "colindex !== 0 ? true : false" 
 									@click.prevent 			= "switchrowbar($event, value)" 
 									@blur.prevent 			= "updatedata($event,colindex,rowindex)"
- 									@paste.prevent  		= "updatedata($event,colindex,rowindex)"
 									:class 					= "colindex !== 0 ? '' : 'text-center text-stone-500 cursor-pointer hover:bg-stone-200'"
 									class 					= "p-2 border border-stone-300"
 								>
-							 		<div v-if="colindex === 0 && rowbar === value" class="rowaction absolute z-20 left-12 w-32 text-left text-xs text-white bg-stone-700">
-  										<div class="actionline p-2 hover:bg-teal-500" @click="addaboverow($event, value)">{{ $filters.translate('add row above') }}</div>
-										<div class="actionline p-2 hover:bg-teal-500" @click="addbelowrow($event, value)">{{ $filters.translate('add row below') }}</div>
-										<div class="actionline p-2 hover:bg-teal-500" @click="deleterow($event, value)">{{ $filters.translate('delete row') }}</div>
+							 		<div v-show="colindex === 0 && rowbar === value" class="rowaction absolute z-20 left-12 w-32 text-left text-xs text-white bg-stone-700">
+  										<div class="actionline p-2 hover:bg-teal-500" @click.prevent="addaboverow($event, value)">{{ $filters.translate('add row above') }}</div>
+										<div class="actionline p-2 hover:bg-teal-500" @click.prevent="addbelowrow($event, value)">{{ $filters.translate('add row below') }}</div>
+										<div class="actionline p-2 hover:bg-teal-500" @click.prevent="deleterow($event, value)">{{ $filters.translate('delete row') }}</div>
 									</div>
 									{{ value }}
 								</td>
@@ -902,13 +900,19 @@ bloxeditor.component('table-component', {
 		},
 		updatedata(event,col,row)
 		{
-			const currentContent = this.table[row][col];
-			const newContent = event.target.innerText;
+		    const currentContent = this.table[row][col].trim().replace(/\u00A0/g, ' ').normalize();
+		    
+		    const newContent = event.target.innerText.trim().replace(/\u00A0/g, ' ').normalize();
+
 		    if (newContent !== currentContent)
 		    {
         		this.table[row][col] = newContent;
 	       		this.markdowntable();
     		}
+		},
+		updatedataPaste(event,col,row)
+		{
+			return;
 		},
 		switchcolumnbar(event, value)
 		{
@@ -918,7 +922,7 @@ bloxeditor.component('table-component', {
 		switchrowbar(event, value)
 		{
 			this.columnbar = false;
-			(this.rowbar == value || value == 0 || value == 1 )? this.rowbar = false : this.rowbar = value;
+			(this.rowbar == value || value == 0 || value == 1 ) ? this.rowbar = false : this.rowbar = value;
 		},
 		addaboverow(event, index)
 		{
