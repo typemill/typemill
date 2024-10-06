@@ -29,7 +29,7 @@ class Fields
 			{
 				# if it is a fieldset, then create a subset for the containing field and read them with a recursive function
 				$subSettings 			= $objectSettings;
-				$subSettings['forms']	= $fieldConfigurations;
+				$subSettings[$formType]	= $fieldConfigurations;
 				
 				$fieldset 				= array();
 				$fieldset['type'] 		= 'fieldset';
