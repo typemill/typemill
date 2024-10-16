@@ -132,6 +132,7 @@ fieldsetwriting:
         'definition': 'definition list'
         'code': 'code'
         'shortcode': 'shortcode'
+        'youtube': 'YouTube (deprecated)'
     headlineanchors:
       type: checkbox
       label: 'Headline anchors'

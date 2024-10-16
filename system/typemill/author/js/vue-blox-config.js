@@ -49,21 +49,12 @@ const determiner = {
 		}
 		return false;
 	},
-	/*
-	video: function(block,lines,firstChar,secondChar,thirdChar){
-		if( (firstChar == '!' && secondChar == '[' && lines[0].indexOf('.youtube') != -1) || (firstChar == '[' && secondChar == '!' && lines[0].indexOf('.youtube') != -1) )
-		{
-			return "video-component";
-		}
-		return false;
-	},
-	*/
 	image: function(block,lines,firstChar,secondChar,thirdChar){
 		if( (firstChar == '!' && secondChar == '[' ) || (firstChar == '[' && secondChar == '!' && thirdChar == '[') )
 		{
 			if(block.indexOf("-video") != -1)
 			{
-				return "video-component";
+				return "youtube-component";
 			}
 			return "image-component";
 		}
@@ -73,6 +64,13 @@ const determiner = {
 		if( (firstChar == '[' && lines[0].indexOf('{.tm-download') != -1) )
 		{
 			return "file-component";
+		}
+		return false;
+	},
+	video: function(block,lines,firstChar,secondChar,thirdChar){
+		if (lines[0].startsWith('[:video'))
+		{
+		    return "video-component";
 		}
 		return false;
 	},
@@ -115,22 +113,23 @@ const bloxFormats = {
 			quote: { label: '<svg class="icon icon-quotes-left"><use xlink:href="#icon-quotes-left"></use></svg>', title: 'Quote', component: 'quote-component' },
 			notice: { label: '<svg class="icon icon-exclamation-circle"><use xlink:href="#icon-exclamation-circle"></use></svg>', title: 'Notice', component: 'notice-component' },
 			image: { label: '<svg class="icon icon-image"><use xlink:href="#icon-image"></use></svg>', title: 'Image', component: 'image-component' },
-			video: { label: '<svg class="icon icon-play"><use xlink:href="#icon-play"></use></svg>', title: 'Video', component: 'video-component' },
+			video: { label: '<svg class="icon icon-film"><use xlink:href="#icon-film"></use></svg>', title: 'Video', component: 'video-component' },
 			file: { label: '<svg class="icon icon-paperclip"><use xlink:href="#icon-paperclip"></use></svg>', title: 'File', component: 'file-component' },
 			toc: { label: '<svg class="icon icon-list-alt"><use xlink:href="#icon-list-alt"></use></svg>', title: 'Table of Contents', component: 'toc-component' },
 			hr: { label: '<svg class="icon icon-pagebreak"><use xlink:href="#icon-pagebreak"></use></svg>', title: 'Horizontal Line', component: 'hr-component' },
 			definition: { label: '<svg class="icon icon-dots-two-vertical"><use xlink:href="#icon-dots-two-vertical"></use></svg>', title: 'Definition List', component: 'definition-component' },
 			code: { label: '<svg class="icon icon-embed"><use xlink:href="#icon-embed"></use></svg>', title: 'Code', component: 'code-component' },
 			shortcode: { label: '<svg class="icon icon-square-brackets"><use xlink:href="#icon-square-brackets"></use></svg>', title: 'Shortcode', component: 'shortcode-component' },
+			youtube: { label: '<svg class="icon icon-play"><use xlink:href="#icon-play"></use></svg>', title: 'YouTube', component: 'youtube-component' },
 };
 
 const formatConfig = data.settings.formats;
-const activeFormats = [];
+const activeFormats = {};
 
-for(var i = 0; i < formatConfig.length; i++)
+for (const format in bloxFormats)
 {
-	if(bloxFormats[formatConfig[i]] !== undefined)
-	{
-		activeFormats.push(bloxFormats[formatConfig[i]]);
-	}
+  if (formatConfig.includes(format))
+  {
+    activeFormats[format] = bloxFormats[format];
+  }
 }

@@ -33,6 +33,7 @@ use Typemill\Middleware\FlashMessages;
 use Typemill\Middleware\AssetMiddleware;
 use Typemill\Middleware\SecurityMiddleware;
 use Typemill\Middleware\CustomHeadersMiddleware;
+use Typemill\Extensions\MediaExtension;
 use Typemill\Extensions\TwigCsrfExtension;
 use Typemill\Extensions\TwigUrlExtension;
 use Typemill\Extensions\TwigUserExtension;
@@ -221,6 +222,9 @@ if(isset($updateSettings))
 	# update stored settings file
 	$settingsModel->updateSettings($pluginSettings, 'plugins');
 }
+
+# add media extension to integrate video/audio with shortcodes
+$dispatcher->addSubscriber(new MediaExtension($settings['rootPath'], $urlinfo['baseurl']));
 
 # add final settings to the container
 $container->set('settings', function() use ($settings){ return $settings; });

@@ -173,7 +173,7 @@ bloxeditor.component('content-block', {
 
 			componentType: 		false,
 			updatedmarkdown: 	false,
-			formats: 			bloxFormats,
+			formats: 			activeFormats,
 			hasUnsafedContent: 	false,
 			countUpdates: 		0
 		}
@@ -269,7 +269,6 @@ bloxeditor.component('content-block', {
 
 			let markdown 	= this.element.markdown;
 			let lines 		= markdown.split("\n");
-			let blockType 	= 'markdown-component';
 
 			for (var method in determiner) 
 			{
@@ -277,11 +276,11 @@ bloxeditor.component('content-block', {
 
 				if(specialBlock)
 				{
-					blockType = specialBlock;
+					return specialBlock;
 				}
 			}
 
-			return blockType;
+			return 'markdown-component';
 		},
 		updateMarkdownFunction(value)
 		{
@@ -433,7 +432,7 @@ bloxeditor.component('new-block',{
 	`,
 	data: function () {
 		return {
-			formats: bloxFormats,
+			formats: activeFormats,
 			componentType: false,
 			disabled: false,
 			newblockmarkdown: '',

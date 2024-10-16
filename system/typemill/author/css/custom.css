@@ -409,7 +409,7 @@
 .blox-preview .notice3:before{ content: "!!!"; }
 .blox-preview .notice4:before{ content: "!!!!"; }
 
-.blox-preview img, img.uploadPreview{
+.blox-preview video, .blox-preview audio, .blox-preview img, img.uploadPreview{
   display: block;
   margin: auto;
   max-width: 100%;

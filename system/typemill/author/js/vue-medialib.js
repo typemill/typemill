@@ -252,12 +252,12 @@ const medialib = {
 		if(this.parentcomponent == 'files')
 		{
 			this.showFiles();
-			this.active = 'pageFiles';
+/*			this.active = 'pageFiles'; */
 		}
 		if(this.parentcomponent == 'images')
 		{
 			this.showImages();
-			this.active = 'pageImages';
+/*			this.active = 'pageImages'; */
 		}
 	},
 	computed: {
