@@ -144,7 +144,8 @@ class License
 	    return false;
 	}
 
-	private function checkLicenseDomain(string $licensedomain, array $urlinfo)
+	# NOT IN USE ANYMORE: Check licese domain deeply with subdomains
+	private function checkLicenseDomainDeep(string $licensedomain, array $urlinfo)
 	{
 		$licensehost 		= parse_url($licensedomain, PHP_URL_HOST);
 		$licensehost 		= str_replace("www.", "", $licensehost);
@@ -165,8 +166,8 @@ class License
 		return false;
 	}
 
-	# NOT IN USE: Compare only domain without subdomains or subfolders
-	private function checkLicenseBaseDomain(string $licensedomain, array $urlinfo)
+	# Compare only domain without subdomains or subfolders
+	private function checkLicenseDomain(string $licensedomain, array $urlinfo)
 	{
 		$licensehost 		= parse_url($licensedomain, PHP_URL_HOST);
 		$licensehost 		= preg_replace('/^www\./', '', $licensehost);
@@ -189,7 +190,7 @@ class License
 		return false;
 	}
 
-	# NOT IN USE: Function to extract the base domain (ignoring subdomains)
+	# Function to extract the base domain (ignoring subdomains)
 	private function extractBaseDomain($host)
 	{
 	    $parts = explode('.', $host);
