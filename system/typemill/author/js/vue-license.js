@@ -3,7 +3,7 @@ const app = Vue.createApp({
 						<div v-if="licenseData">
 							<div>
 								<p v-if="licensemessage" class="bg-rose-500 text-white p-2 text-center">{{ licensemessage }}</p>
-								<p v-else>Congratulations! Your license is active and you can enjoy all features until you cancel your subscription. You can manage your subscription at <a class="text-teal-500" href="https://paddle.net/">paddle.net</a></p>
+								<p v-else>Congratulations! Your license is active and you can enjoy all features until you cancel your subscription. To manage your subscription, visit the <a class="text-teal-500" href="https://customer-portal.paddle.com/cpl_01hp3wph3gzps14ae3qcfypnyp">Paddle Customer Portal</a>. Simply enter the email associated with your license to receive a temporary login link.</p>
 							</div>
 							<div class="flex flex-wrap justify-between">
 								<div class="w-2/5 text-white bg-teal-500 border-2 border-stone-200 my-8 flex flex-col">
