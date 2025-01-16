@@ -223,7 +223,8 @@ navigation.component('navilevel',{
 			load: '?',
 			freeze: false,
 			newItem: '',
-			format: /[@#*()=\[\]{};:"\\|,.<>\/]/,			
+/*			format: /[@#*()=\[\]{};:"\\|,.<>\/]/, */
+	        format: /(^\.)|(\.$)|[\/\\?%*:|"<>]/,
 		}
 	},
 	computed: 
@@ -400,9 +401,13 @@ navigation.component('navilevel',{
 		{
 			eventBus.$emit('publisherclear');
 
-			if(	this.format.test(this.newItem) ||  !this.newItem || this.newItem.length > 40)
+			if(	
+				this.format.test(this.newItem) ||  
+				!this.newItem || 
+				this.newItem.length > 60
+			)
 			{
-				let message = this.$filters.translate('Special Characters are not allowed. Length between 1 and 40.');
+				let message = this.$filters.translate('Special characters or invalid patterns are not allowed. Length between 1 and 60.');
 				eventBus.$emit('publishermessage', message);
 				return;
 			}

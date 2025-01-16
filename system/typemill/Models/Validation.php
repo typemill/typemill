@@ -127,13 +127,15 @@ class Validation
 		
 		Validator::addRule('navigation', function($field, $value, array $params, array $fields)
 		{
-			$format = '/[@#^*()=\[\]{};:"\\|,.<>\/]/';
-			if ( preg_match($format, $value))
+#			$format = '/[@#^*()=\[\]{};:"\\|,.<>\/]/';
+			$format = '/^(?![ .])[^\0\/\\?%*:|"<>]+(?<![ .])$|^(?![ .])[^\0\/\\?%*:|"<>]+[!?]$/';
+
+			if ( preg_match($format, $value) === 1)
 			{
-				return false;
+				return true;
 			}
-			return true;
-		}, 'contains special characters');
+			return false;
+		}, 'contains invalid characters or patterns');
 
 		Validator::addRule('noSpecialChars', function($field, $value, array $params, array $fields)
 		{
