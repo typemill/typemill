@@ -176,7 +176,7 @@ const kixoteCommands = [
 
 const kixote = Vue.createApp({
 	template: `<div class="m-1 ml-2">
-					<button @click="startKixote" class="p-1 bg-stone-700 text-white text-xs">+ Kixote</button>
+					<button @click="startKixote" class="p-1 bg-stone-700 text-white text-xs">Kixote</button>
 					<div v-if="showKixote" ref="kdisplay" class="fixed z-50 mx-auto inset-x-0 w-full max-w-4xl bottom-3 top-3 overflow-y-auto bg-stone-700 text-stone-50 py-10">
 						<div class="px-8 pb-4">
 							<h1 class="mb-d3">Hello, I am <span class="text-teal-300">Kixote</span> from Typemill. How can I help?</h1>

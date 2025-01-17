@@ -1,18 +1,24 @@
 const navigation = Vue.createApp({
 	template: `
-			<div class="mr-3 dark:text-stone-200">
-				<div class="flex w-100 mb-8">
+			<div class="lg:mr-3 dark:text-stone-200">
+				<div class="flex w-100 mb-8 hidden lg:block">
 					<button class="w-1/2 hover:bg-stone-700  hover:border-stone-700 hover:text-stone-50 border-b-2 border-stone-200 dark:border-stone-600 px-2 py-2 transition duration-100" @click.prevent="collapseNavigation()">{{ $filters.translate('collapse all') }}</button>
 					<button class="w-1/2 hover:bg-stone-700 hover:border-stone-700 hover:text-stone-50 border-b-2 border-stone-200 dark:border-stone-600 px-2 py-2 transition duration-100" @click.prevent="expandNavigation()">{{ $filters.translate('expand all') }}</button>
 				</div>
-				<div class="flex w-full my-px border-y border-stone-200 dark:border-stone-900 font-bold">
-					<div class="border-l-4" :class="getStatusClass(home.status)"></div>
-					<a :href="getUrl(home.urlRelWoF)" class="flex-grow p-1 pl-3 border-stone-50 hover:bg-teal-500 hover:text-stone-50 dark:hover:bg-stone-200 hover:dark:text-stone-900" :class="home.active ? 'text-stone-50 bg-teal-500 dark:bg-stone-200 dark:text-stone-900' : 'dark:bg-stone-700'">
-						{{ $filters.translate(home.name) }}
-					</a>
+				<button @click="togglemenue" class="lg:hidden w-full flex-1 flex items-center justify-center space-x-4 p-2 mb-2 bg-stone-700 hover:bg-stone-900 text-white cursor-pointer transition duration-100">
+					<span>{{ $filters.translate('Menu') }}</span>
+					<span :class="menuvisible ? 'border-b-8 border-b-white' : 'border-t-8 border-t-white'" class="h-0 w-0 border-x-8 border-x-transparent"></span>
+				</button>
+				<div class="lg:block" :class="menuvisible ? '' : 'hidden'">
+					<div class="flex w-full my-px border-y border-stone-200 dark:border-stone-900 font-bold">
+						<div class="border-l-4" :class="getStatusClass(home.status)"></div>
+						<a :href="getUrl(home.urlRelWoF)" class="flex-grow p-1 pl-3 border-stone-50 hover:bg-teal-500 hover:text-stone-50 dark:hover:bg-stone-200 hover:dark:text-stone-900" :class="home.active ? 'text-stone-50 bg-teal-500 dark:bg-stone-200 dark:text-stone-900' : 'dark:bg-stone-700'">
+							{{ $filters.translate(home.name) }}
+						</a>
+					</div>
+					<div class="pl-2 pl-3 pl-4 pl-6 pl-8 pl-9 pl-10 pl-12 pl-15 pl-18 pl-21 pl-24 text-stone-50"></div>
+					<navilevel :navigation="navigation" :expanded="expanded" />
 				</div>
-				<div class="pl-2 pl-3 pl-4 pl-6 pl-8 pl-9 pl-10 pl-12 pl-15 pl-18 pl-21 pl-24 text-stone-50"></div>
-				<navilevel :navigation="navigation" :expanded="expanded" />
 			</div>`,
 	data: function () {
 		return {
@@ -21,6 +27,7 @@ const navigation = Vue.createApp({
 			backup: false,
 			isExpended: false,
 			expanded: [],
+			menuvisible: false,
 		}
 	},
 	mounted: function(){
@@ -55,6 +62,17 @@ const navigation = Vue.createApp({
 		});
 	},
 	methods: {
+		togglemenue()
+		{
+			if(this.menuvisible)
+			{
+				this.menuvisible = false;
+			}
+			else
+			{
+				this.menuvisible = true;
+			}
+		},
 		getStatusClass(status)
 		{
 			if(status == 'published')

@@ -12,7 +12,7 @@
 
 		<div class="px-12 py-8 bg-stone-50 dark:bg-stone-700 dark:text-stone-200">
 			{% for block in content %}
-					<div class="blox-preview px-6 py-3 mb-1">{{ block.html|raw }}</div>
+				<div class="blox-preview px-6 py-3 mb-1">{{ block.html|raw }}</div>
 			{% endfor %}
 		</div>
 
@@ -30,7 +30,7 @@
 	
 	<div id="posts"></div>
 
-	<div id="publisher" class="fixed bottom-0 w-54rem bg-stone-100 border-t border-stone-200 shadow-md z-10" v-cloak></div>
+	<div id="publisher" class="fixed bottom-0 w-full lg:w-54rem bg-stone-100 border-t border-stone-200 shadow-md z-10" v-cloak></div>
 
 {% endblock %}
 

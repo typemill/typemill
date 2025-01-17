@@ -1,6 +1,5 @@
 const systemnavi = Vue.createApp({
-	template: `
-					<ul class="lg:mr-2">
+	template: `<ul class="lg:mr-2">
 						<button @click="toggle" class="lg:hidden w-full flex-1 flex items-center justify-center space-x-4 p-2 mb-2 bg-stone-700 hover:bg-stone-900 text-white cursor-pointer transition duration-100">
 							<span>{{ $filters.translate('Menu') }}</span>
 							<span :class="expanded ? 'border-b-8 border-b-white' : 'border-t-8 border-t-white'" class="h-0 w-0 border-x-8 border-x-transparent"></span>
@@ -12,8 +11,7 @@ const systemnavi = Vue.createApp({
 								</a>
 							</li>
 						</div>
-					</ul>
-				`,
+					</ul>`,
 	data() {
 		return {
 			systemnavi: data.systemnavi,

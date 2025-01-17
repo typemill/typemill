@@ -1,6 +1,6 @@
 const raweditor = Vue.createApp({
 	template: `
-				<fieldset v-if="showraw" class="px-12 py-8 bg-stone-50 dark:bg-stone-700 dark:text-stone-200 shadow-md mb-16">
+				<fieldset v-if="showraw" class="lg:px-12 py-8 bg-stone-50 dark:bg-stone-700 dark:text-stone-200 shadow-md mb-16">
 					<div class="w-full px-6 py-3" :class="{'error' : errors.title}">
 						<label class="block mb-1 font-medium" for="title">{{ $filters.translate('Title') }}*</label>
 						<input 

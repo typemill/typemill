@@ -36,7 +36,7 @@ const app = Vue.createApp({
 			formErrorsReset: {},
 			message: false,
 			messageClass: false,
-			css: "px-16 py-16 bg-stone-50 shadow-md mb-16",
+			css: "lg:px-16 px-8 lg:py-16 py-8 bg-stone-50 shadow-md mb-16",
 			saved: false,
 		}
 	},

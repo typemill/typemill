@@ -1,5 +1,5 @@
 const bloxeditor = Vue.createApp({
-	template: `<div v-if="editorVisible" class="px-12 py-8 bg-stone-50 dark:bg-stone-700 dark:text-stone-200 shadow-md mb-16">
+	template: `<div v-if="editorVisible" class="px-2 lg:px-12 py-8 bg-stone-50 dark:bg-stone-700 dark:text-stone-200 shadow-md mb-16">
 					<draggable 
 						v-model="content" 
 						@start="onStart"
@@ -413,7 +413,7 @@ bloxeditor.component('new-block',{
 	props: ['markdown', 'index'],
 	template: `
 		<div class="w-full mb-4">
-			<div v-if="!componentType" class="w-full flex p-4 dark:bg-stone-900">
+			<div v-if="!componentType" class="w-full flex flex-wrap p-4 dark:bg-stone-900">
 				<button v-for="button in formats" 
 					class="p-2 m-1 border border-stone-300 bg-stone-100 dark:border-stone-700 dark:bg-stone-700 hover:bg-stone-700 hover:dark:bg-stone-600 hover:text-stone-50 transition-1"  
 					@click.prevent="setComponentType( $event, button.component )" 

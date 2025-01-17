@@ -55,9 +55,10 @@ class SimpleMail
 		
 		$send = mail($to, $subject, $message, $headers);
 
-		if($send !== true)
+		if ($send !== true)
 		{
-			$this->error = error_get_last()['message'];
+			$lastError = error_get_last();
+			$this->error = $lastError ? $lastError['message'] : 'Unknown error occurred while sending mail.';
 		}
 
 		return $send;

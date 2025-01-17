@@ -19,8 +19,7 @@ const app = Vue.createApp({
 										v-bind="subfieldDefinition">
 										<slot v-if="fieldname == 'mailfrom'">
 											<button 
-												class   		= "absolute px-2 py-3 ml-2 text-stone-50 bg-stone-700 hover:bg-stone-900 hover:text-white transition duration-100 cursor-pointer" 
-												style 			= "right:0px; width:200px;"
+												class   		= "lg:absolute lg:right-0 lg:w-48 lg:ml-2 lg:mt-0 w-full px-2 py-3 mt-2 text-stone-50 bg-stone-700 hover:bg-stone-900 hover:text-white transition duration-100 cursor-pointer" 
 												@click.prevent 	= "testmail()" 
 											>send testmail</button>
 										</slot>

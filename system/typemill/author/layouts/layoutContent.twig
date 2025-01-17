@@ -34,11 +34,11 @@
 
 		{% include 'partials/flash.twig' %}
 
-		<div class="max-w-6xl m-auto mt-7 flex justify-between items-start" id="main" data-url="{{ base_url() }}">
-			<aside class="w-1/4">
+		<div class="max-w-6xl m-auto mt-7 lg:flex justify-between items-start" id="main" data-url="{{ base_url() }}">
+			<aside class="lg:w-1/4 w-full">
 				<div id="contentNavigation" v-cloak></div>
 			</aside>
-			<article class="relative w-3/4">
+			<article class="relative lg:w-3/4 w-full">
 				{% block content %}{% endblock %}
 			</article>
 		</div>

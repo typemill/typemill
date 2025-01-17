@@ -16,7 +16,7 @@ const app = Vue.createApp({
 							</div>
 							<div class="w-full p-8">
 								<div class="lg:flex pb-4">
-									<div class="lg:w-1/2 w-full">
+									<div class="lg:w-1/2 w-full lg:pr-3 lg:pb-0 pb-3">
 										<h2 class="text-xl font-bold mb-3">{{theme.name}}</h2>
 										<div class="text-xs my-3">author: <a :href="theme.homepage" class="hover:underline text-teal-500">{{theme.author}}</a> | version: {{theme.version}}</div>
 										<p>{{theme.description}}</p>
@@ -37,52 +37,60 @@ const app = Vue.createApp({
 							<form class="w-full p-8" v-if="current == themename">
 								<div v-if="theme.readymades">
 									<fieldset class="block border-2 border-stone-200 p-4 my-8">
-										<legend class="text-lg font-medium">Readymades</legend>
-										<p class="w-full mb p-2">Readymades are predefined settings. Store your own readymades or load readymades to quickly setup your theme.</p>
-										<ul>
-											<transition-group name="fade" tag="ul" class="flex flex-wrap">
-												<li class="w-1/3 p-2 fade-item" v-for="(readysetup,readyname) in theme.readymades" :key="readyname">
-													<div class="border-2 border-stone-200 hover:shadow-lg transition duration-100 ease-in-out">
-														<div class="w-full font-medium p-2 text-center bg-stone-200"  :class="{ 'bg-teal-500 text-stone-50': readyname === readymadeCurrent }">{{ readysetup.name }}</div>
-														<div class="p-3 h-40">
-															<p>{{ readysetup.description }}</p>
-														</div>
-														<div v-if="readysetup.delete" class="mt-auto w-full flex">
-															<button v-if="readysetup.delete" class="w-1/2 p-2 text-center bg-rose-500 text-stone-50 hover:bg-rose-600"
-																@click.prevent="deleteReadymade(readyname)"
-																>delete</button>
-															<button class="w-1/2 p-2 bg-stone-700 text-white text-center hover:bg-stone-900"
-																@click.prevent="loadReadymade(readyname)"
-																>load</button>
-														</div>
-														<div v-else class="mt-auto w-full">
-															<button class="p-2 w-full bg-stone-700 text-white text-center hover:bg-stone-900"
-																@click.prevent="loadReadymade(readyname)"
-																>load</button>
-														</div>
-													</div>
-												</li>
-												<li class="w-1/3 p-2" :key="'addnewreadymade'">
-													<div class="flex flex-col border-2 border-stone-200 hover:shadow-lg transition duration-100 ease-in-out">
-														<input 
-															type 		= "text" 
-															v-model 	= "readymadeTitle" 
-															@input 		= "checkTitle()"
-															placeholder = "Add a title" 
-															class 		= "w-full font-medium p-2 text-center bg-stone-200">
-														<textarea 
-															v-model 	= "readymadeDescription" 
-															class 		= "p-3 h-40" 
-															@input 		= "checkDescription()"
-															placeholder = "Add a description and store the current settings as a new readymade."></textarea>
-														<button class="p-2 w-full bg-stone-700 text-white text-center hover:bg-stone-900"
-															@click.prevent="storeReadymade()"
-															>store as readymade</button>
-													</div>
-												</li>
-											</transition-group>
-										</ul>
-										<div v-if="readymadeError" class="w-100 p-2 m-2 text-stone-50 text-center bg-rose-500">{{ readymadeError }}</div>
+										<div @click="toggleAccordion('readymades')" class="flex justify-between w-full py-2 text-lg font-medium cursor-pointer">
+											<h3>Readymades</h3> 
+											<span class="mt-2 h-0 w-0 border-x-8 border-x-transparent" :class="isOpen(fieldname) ? 'border-b-8 border-b-black' : 'border-t-8 border-t-black'"></span>
+										</div>
+										<transition name="accordion">
+									        <div v-if="isOpen('readymades')" class="w-full accordion-content flex flex-wrap justify-between">
+
+												<p class="w-full mb p-2">Readymades are predefined settings. Store your own readymades or load readymades to quickly setup your theme.</p>
+												<ul>
+													<transition-group name="fade" tag="ul" class="lg:flex flex-wrap">
+														<li class="w-full lg:w-1/3 p-2 fade-item" v-for="(readysetup,readyname) in theme.readymades" :key="readyname">
+															<div class="border-2 border-stone-200 hover:shadow-lg transition duration-100 ease-in-out">
+																<div class="w-full font-medium p-2 text-center bg-stone-200"  :class="{ 'bg-teal-500 text-stone-50': readyname === readymadeCurrent }">{{ readysetup.name }}</div>
+																<div class="p-3 h-40">
+																	<p>{{ readysetup.description }}</p>
+																</div>
+																<div v-if="readysetup.delete" class="mt-auto w-full flex">
+																	<button v-if="readysetup.delete" class="w-1/2 p-2 text-center bg-rose-500 text-stone-50 hover:bg-rose-600"
+																		@click.prevent="deleteReadymade(readyname)"
+																		>delete</button>
+																	<button class="w-1/2 p-2 bg-stone-700 text-white text-center hover:bg-stone-900"
+																		@click.prevent="loadReadymade(readyname)"
+																		>load</button>
+																</div>
+																<div v-else class="mt-auto w-full">
+																	<button class="p-2 w-full bg-stone-700 text-white text-center hover:bg-stone-900"
+																		@click.prevent="loadReadymade(readyname)"
+																		>load</button>
+																</div>
+															</div>
+														</li>
+														<li class="w-full lg:w-1/3 p-2" :key="'addnewreadymade'">
+															<div class="flex flex-col border-2 border-stone-200 hover:shadow-lg transition duration-100 ease-in-out">
+																<input 
+																	type 		= "text" 
+																	v-model 	= "readymadeTitle" 
+																	@input 		= "checkTitle()"
+																	placeholder = "Add a title" 
+																	class 		= "w-full font-medium p-2 text-center bg-stone-200">
+																<textarea 
+																	v-model 	= "readymadeDescription" 
+																	class 		= "p-3 h-40" 
+																	@input 		= "checkDescription()"
+																	placeholder = "Add a description and store the current settings as a new readymade."></textarea>
+																<button class="p-2 w-full bg-stone-700 text-white text-center hover:bg-stone-900"
+																	@click.prevent="storeReadymade()"
+																	>store as readymade</button>
+															</div>
+														</li>
+													</transition-group>
+												</ul>
+												<div v-if="readymadeError" class="w-100 p-2 m-2 text-stone-50 text-center bg-rose-500">{{ readymadeError }}</div>
+											</div>
+										</transition>
 									</fieldset>
 								</div>
 								<div v-for="(fieldDefinition, fieldname) in theme.forms.fields">
