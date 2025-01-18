@@ -23,7 +23,8 @@ const publisher = Vue.createApp({
 							class="cursor-pointer ml-1 lg:w-24 lg:px-4 px-2 py-2 border dark:border-0 border-stone-200 text-white disabled:bg-stone-200 disabled:text-stone-900 disabled:dark:bg-stone-600 disabled:dark:text-stone-200 disabled:cursor-not-allowed transition" 
 							:class="publishClass"
 							>
-							{{ $filters.translate('publish') }}
+							<span class="block lg:hidden">{{ $filters.translate('pub') }}</span>
+							<span class="hidden lg:block">{{ $filters.translate('publish') }}</span>
 						</button>
 						<button 
 							v-if="visual"
@@ -32,14 +33,16 @@ const publisher = Vue.createApp({
 							class="cursor-pointer ml-1 lg:w-24 lg:px-4 px-2 py-2 border dark:border-0 border-stone-200 text-white disabled:bg-stone-200 disabled:text-stone-900 disabled:dark:bg-stone-600 disabled:dark:text-stone-200 disabled:cursor-not-allowed transition" 
 							:class="publishClass"
 							>
-							{{ $filters.translate('publish') }}
+							<span class="block lg:hidden">{{ $filters.translate('pub') }}</span>
+							<span class="hidden lg:block">{{ $filters.translate('publish') }}</span>
 						</button>
 						<button 
 							@click.prevent="showModal = 'discard'" 
 							:disabled="!isModified"
 							class="cursor-pointer ml-1 lg:w-24 lg:px-4 px-2 py-2 border dark:border-0 border-stone-200 text-white bg-yellow-500 hover:bg-yellow-600 disabled:bg-stone-200 disabled:text-stone-900 disabled:dark:bg-stone-600 disabled:dark:text-stone-200 disabled:cursor-not-allowed transition" 
 							>
-							{{ $filters.translate('discard') }}
+							<span class="block lg:hidden">{{ $filters.translate('disc') }}</span>
+							<span class="hidden lg:block">{{ $filters.translate('discard') }}</span>
 						</button>
 						<button 
 							v-if="item.originalName != 'home'"
@@ -47,14 +50,16 @@ const publisher = Vue.createApp({
 							:disabled="isUnpublished"
 							class="cursor-pointer ml-1 lg:w-24 lg:px-4 px-2 py-2 border dark:border-0 border-stone-200 text-white bg-teal-500 hover:bg-teal-600 disabled:bg-stone-200 disabled:text-stone-900 disabled:dark:bg-stone-600 disabled:dark:text-stone-200 disabled:cursor-not-allowed transition" 
 							>
-							{{ $filters.translate('unpublish') }}
+							<span class="block lg:hidden">{{ $filters.translate('unpub') }}</span>
+							<span class="hidden lg:block">{{ $filters.translate('unpublish') }}</span>
 						</button>
 						<button 
 							v-if="item.originalName != 'home'"
 							@click.prevent="showModal = 'delete'"
 							class="cursor-pointer ml-1 lg:w-24 lg:px-4 px-2 py-2 border dark:border-0 border-stone-200 bg-stone-50 hover:bg-rose-500 hover:text-white transition" 
 							>
-							{{ $filters.translate('delete') }}
+							<span class="block lg:hidden">{{ $filters.translate('del') }}</span>
+							<span class="hidden lg:block">{{ $filters.translate('delete') }}</span>
 						</button>
 					</div>
 					<div class="flex">
@@ -72,7 +77,8 @@ const publisher = Vue.createApp({
 							class="px-4 py-2 border border-stone-200 bg-stone-50 hover:bg-stone-700 hover:text-white transition ml-1" 
 							@click.prevent="checkChanges(visualUrl)" 
 							>
-							{{ $filters.translate('visual') }}
+							<span class="block lg:hidden">{{ $filters.translate('vis') }}</span>
+							<span class="hidden lg:block">{{ $filters.translate('visual') }}</span>
 						</a>
 						<a 
 							:href="item.urlAbs"
