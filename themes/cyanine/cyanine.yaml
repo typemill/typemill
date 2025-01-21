@@ -894,18 +894,26 @@ forms:
 metatabs:
   meta:
     fields:
-      template:
-        type: select
-        label: Select a template
-        options:
-          standard: 'Standard'
-          landingpage: 'Landingpage'      
-      shorttitle:
-        type: text
-        label: Enter a shorttitle for the landingpageInfo section
       fieldsetfolder:
         fields:
           glossary:
             type: checkbox
             label: 'Glossary List (cyanine theme)'
             checkboxlabel: 'List pages or posts of this folder as glossary (only for folders)'
+      fieldsetTemplates:
+        type: fieldset
+        legend: 'Templates'
+        fields:
+          template:
+            type: select
+            label: Select a template
+            options:
+              standard: 'Standard'
+              landingpage: 'Landingpage'      
+          pagelisting:
+            type: checkbox
+            label: List Pages
+            checkboxlabel: List other pages of the folder below content
+          shorttitle:
+            type: text
+            label: Enter a shorttitle for the landingpageInfo section

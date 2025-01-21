@@ -44,30 +44,35 @@
 
 	</div>
 
-	<div class="mw8 pb7 ph3 center f5 f4-ns fw3 lh-copy">
+	{{ meta.meta }}
+	{% if metatabs.meta.pagelisting %}
 
-		{% set pagelist = getPageList(navigation, item.thisChapter.urlRelWoF, base_url) %}
+		<div class="mw8 pb7 ph3 center f5 f4-ns fw3 lh-copy">
 
-		<ul class="post mv3-l list pa0 flex-l flex-wrap justify-between">
+			{% set pagelist = getPageList(navigation, item.thisChapter.urlRelWoF, base_url) %}
+
+			<ul class="post mv3-l list pa0 flex-l flex-wrap justify-between">
+				
+				{% for element in pagelist.folderContent %}
+
+					{% set page = getPageMeta(settings, element) %}
+
+					<li class="db list tl pa0 w-100 w-30-l mh0 mv2 mh2-l shadow-2-hover flex flex-column flex-grow-0 flex-basis bg-white">
+						<div class="pa2 ph3-ns pb3-ns flex-grow">
+							<h3>{{ page.meta.shorttitle }}</h3>
+							<p class="f5 lh-copy">{{ page.meta.description }}</p>
+						</div>
+						<div class="pa2 ph3-ns pb3-ns">
+							<a href="{{ element.urlAbs }}" class="button link w-100 db dim pa3 ba w-100 white tc">{{ page.meta.shorttitle }}</a>	
+						<div>
+					</li>
+
+				{% endfor %}
 			
-			{% for element in pagelist.folderContent %}
+			</ul>
 
-				{% set page = getPageMeta(settings, element) %}
+		</div>
 
-				<li class="db list tl pa0 w-100 w-30-l mh0 mv2 mh2-l shadow-2-hover flex flex-column flex-grow-0 flex-basis bg-white">
-					<div class="pa2 ph3-ns pb3-ns flex-grow">
-						<h3>{{ page.meta.shorttitle }}</h3>
-						<p class="f5 lh-copy">{{ page.meta.description }}</p>
-					</div>
-					<div class="pa2 ph3-ns pb3-ns">
-						<a href="{{ element.urlAbs }}" class="button link w-100 db dim pa3 ba w-100 white tc">{{ page.meta.shorttitle }}</a>	
-					<div>
-				</li>
-
-			{% endfor %}
-		
-		</ul>
-
-	</div>
+	{% endif %}
 
 </main>
