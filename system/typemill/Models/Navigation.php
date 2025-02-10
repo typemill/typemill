@@ -140,6 +140,19 @@ class Navigation extends Folder
 		return $result;
 	}
 
+	public function getItemsForSlug($slug, $urlinfo, $langattr)
+	{
+		$draftNavigation = $this->getFullDraftNavigation($urlinfo, $langattr);
+		
+		if(!$draftNavigation)
+		{
+			return false;
+		}
+
+		$items = $this->findItemsWithSlug($draftNavigation, $slug);
+
+		return $items;
+	}
 
 	public function getItemForUrl($url, $urlinfo, $langattr)
 	{
@@ -812,6 +825,26 @@ class Navigation extends Folder
 
 		return $flat;
 	}
+
+	# only used by public api
+	public function findItemsWithSlug($navigation, $slug, $result = NULL)
+	{
+		foreach($navigation as $key => $item)
+		{
+			# set item active, needed to move item in navigation
+			if($item->slug === $slug)
+			{
+				$result[] = $item;
+			}
+			elseif($item->elementType === "folder")
+			{
+				$result = self::findItemsWithSlug($item->folderContent, $slug, $result);
+			}
+		}
+
+		return $result;
+	}	
+
 
 	# NOT IN USE ANYMORE BUT KEEP IT
 	public function getItemWithUrl($navigation, $url, $result = NULL)

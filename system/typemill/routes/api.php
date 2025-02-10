@@ -23,10 +23,6 @@ use Typemill\Controllers\ControllerApiTestmail;
 
 $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 
-	# GLOBALS
-	$group->get('/systemnavi', ControllerApiGlobals::class . ':getSystemnavi')->setName('api.systemnavi.get')->add(new ApiAuthorization($acl, 'account', 'read')); # member
-	$group->get('/mainnavi', ControllerApiGlobals::class . ':getMainnavi')->setName('api.mainnavi.get')->add(new ApiAuthorization($acl, 'account', 'read')); # member
-
 	# SYSTEM
 	$group->get('/settings', ControllerApiSystemSettings::class . ':getSettings')->setName('api.settings.get')->add(new ApiAuthorization($acl, 'system', 'read')); # manager
 	$group->post('/settings', ControllerApiSystemSettings::class . ':updateSettings')->setName('api.settings.set')->add(new ApiAuthorization($acl, 'system', 'update')); # manager
@@ -92,10 +88,19 @@ $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 	$group->post('/meta', ControllerApiAuthorMeta::class . ':updateMeta')->setName('api.metadata.update')->add(new ApiAuthorization($acl, 'mycontent', 'update'));
 
 	# KIXOTE
-	$group->delete('/clearnavigation', ControllerApiGlobals::class . ':clearNavigation')->setName('api.navigation.clear')->add(new ApiAuthorization($acl, 'system', 'update')); # manager
 	$group->get('/securitylog', ControllerApiGlobals::class . ':showSecurityLog')->setName('api.securitylog.show')->add(new ApiAuthorization($acl, 'system', 'update')); # manager
 	$group->delete('/securitylog', ControllerApiGlobals::class . ':deleteSecurityLog')->setName('api.securitylog.delete')->add(new ApiAuthorization($acl, 'system', 'update')); # manager
 	$group->delete('/cache', ControllerApiGlobals::class . ':deleteCache')->setName('api.cache.delete')->add(new ApiAuthorization($acl, 'system', 'update')); # manager
+	$group->delete('/clearnavigation', ControllerApiGlobals::class . ':clearNavigation')->setName('api.navigation.clear')->add(new ApiAuthorization($acl, 'system', 'update')); # manager
+
+	# API USED ONLY EXTERNALLY
+	$group->get('/systemnavi', ControllerApiGlobals::class . ':getSystemnavi')->setName('api.systemnavi.get')->add(new ApiAuthorization($acl, 'account', 'read')); # member
+	$group->get('/mainnavi', ControllerApiGlobals::class . ':getMainnavi')->setName('api.mainnavi.get')->add(new ApiAuthorization($acl, 'account', 'read')); # member
+	$group->get('/navigation', ControllerApiGlobals::class . ':getNavigation')->setName('api.navigation.get')->add(new ApiAuthorization($acl, 'content', 'read')); # author
+	$group->get('/article/items', ControllerApiGlobals::class . ':getItemsForSlug')->setName('api.articleitems.get')->add(new ApiAuthorization($acl, 'content', 'read')); # author
+	$group->get('/article/item', ControllerApiGlobals::class . ':getItemForUrl')->setName('api.articleitem.get')->add(new ApiAuthorization($acl, 'content', 'read')); # author
+	$group->get('/article/content', ControllerApiGlobals::class . ':getArticleContent')->setName('api.articlecontent.get')->add(new ApiAuthorization($acl, 'content', 'read')); # author
+	$group->get('/article/meta', ControllerApiGlobals::class . ':getArticleMeta')->setName('api.articlemeta.get')->add(new ApiAuthorization($acl, 'content', 'read')); # author
 
 })->add(new CorsHeadersMiddleware($settings, $urlinfo))->add(new ApiAuthentication());
 

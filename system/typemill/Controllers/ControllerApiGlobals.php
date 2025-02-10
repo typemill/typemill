@@ -5,7 +5,11 @@ namespace Typemill\Controllers;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Typemill\Models\Navigation;
+use Typemill\Models\Validation;
+use Typemill\Models\Content;
+use Typemill\Models\Meta;
 use Typemill\Models\Sitemap;
+use Typemill\Static\Translations;
 use Typemill\Models\StorageWrapper;
 
 class ControllerApiGlobals extends Controller
@@ -46,6 +50,39 @@ class ControllerApiGlobals extends Controller
 		return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
 	}
 
+	public function getNavigation(Request $request, Response $response, $args)
+	{
+		$params 			= $request->getQueryParams();
+
+		$urlinfo 			= $this->c->get('urlinfo');
+		$langattr 			= $this->settings['langattr'];
+		$navigation 		= new Navigation();
+
+		if(isset($params['draft']) && $params['draft'] == true)
+		{
+			$contentnavi   	= $navigation->getFullDraftNavigation($urlinfo, $langattr);
+		}
+		else
+		{
+			$contentnavi 	= $navigation->getLiveNavigation($urlinfo, $langattr);	
+		}
+
+		if(!$contentnavi)
+		{
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('navigation not found'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+		}
+
+		$response->getBody()->write(json_encode([
+			'navigation'		=> $contentnavi
+		]));
+
+		return $response->withHeader('Content-Type', 'application/json');
+	}
+
 	public function clearNavigation(Request $request, Response $response)
 	{
 		$navigation = new Navigation();
@@ -57,6 +94,215 @@ class ControllerApiGlobals extends Controller
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json')->withStatus(200);;
+	}
+
+	public function getItemForUrl(Request $request, Response $response, $args)
+	{
+		$params 			= $request->getQueryParams();
+		$validate			= new Validation();
+		$validInput 		= $validate->articleUrl($params);
+		if($validInput !== true)
+		{
+			$errors 		= $validate->returnFirstValidationErrors($validInput);
+			$response->getBody()->write(json_encode([
+				'message' 	=> reset($errors),
+				'errors' 	=> $errors
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+		}
+
+		$urlinfo 			= $this->c->get('urlinfo');
+		$langattr 			= $this->settings['langattr'];
+		$navigation 		= new Navigation();
+		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
+
+		if(!$item)
+		{
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('page not found'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+		}
+
+		$response->getBody()->write(json_encode([
+			'item'		=> $item
+		]));
+
+		return $response->withHeader('Content-Type', 'application/json');
+	}
+
+	public function getItemsForSlug(Request $request, Response $response, $args)
+	{
+		$params 			= $request->getQueryParams();
+		$validate			= new Validation();
+		$validInput 		= $validate->articleSlug($params);
+		if($validInput !== true)
+		{
+			$errors 		= $validate->returnFirstValidationErrors($validInput);
+			$response->getBody()->write(json_encode([
+				'message' 	=> reset($errors),
+				'errors' 	=> $errors
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+		}
+
+		$urlinfo 			= $this->c->get('urlinfo');
+		$langattr 			= $this->settings['langattr'];
+		$navigation 		= new Navigation();
+		$items 				= $navigation->getItemsForSlug($params['slug'], $urlinfo, $langattr);
+
+		if(!$items)
+		{
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('page not found'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+		}
+
+		$response->getBody()->write(json_encode([
+			'items'		=> $items
+		]));
+
+		return $response->withHeader('Content-Type', 'application/json');
+	}
+
+	public function getArticleContent(Request $request, Response $response, $args)
+	{
+		$params 			= $request->getQueryParams();
+		$validate			= new Validation();
+		$validInput 		= $validate->articleUrl($params);
+		if($validInput !== true)
+		{
+			$errors 		= $validate->returnFirstValidationErrors($validInput);
+			$response->getBody()->write(json_encode([
+				'message' 	=> reset($errors),
+				'errors' 	=> $errors
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+		}
+
+		$urlinfo 			= $this->c->get('urlinfo');
+		$langattr 			= $this->settings['langattr'];
+		$navigation 		= new Navigation();
+		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
+		if(!$item)
+		{
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('page not found'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+		}
+
+		# if user is not allowed to perform this action (e.g. not admin)
+		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'read'))
+		{
+			# then check if user is the owner of this content
+			$meta = new Meta();
+			$metadata = $meta->getMetaData($item);
+			if(!$this->userIsAllowed($request->getAttribute('c_username'), $metadata))
+			{
+				$response->getBody()->write(json_encode([
+					'message' 	=> Translations::translate('You do not have enough rights.'),
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(403);				
+			}
+		}
+
+		# GET THE CONTENT
+		$content 			= new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
+		$markdown 			= $content->getLiveMarkdown($item);
+
+		if(isset($params['draft']) && $params['draft'] == true)
+		{
+			# if draft is explicitly requested
+			$markdown 		= $content->getDraftMarkdown($item);
+		}
+
+		if(!$markdown)
+		{
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('page not found'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+		}
+
+		if(!is_array($markdown))
+		{
+			$markdown 		= $content->markdownTextToArray($markdown);
+		}
+		$markdownHtml		= $content->addDraftHtml($markdown);
+
+		$response->getBody()->write(json_encode([
+			'content'		=> $markdownHtml
+		]));
+
+		return $response->withHeader('Content-Type', 'application/json');
+	}	
+
+	public function getArticleMeta(Request $request, Response $response, $args)
+	{
+		$params 			= $request->getQueryParams();
+		$validate			= new Validation();
+		$validInput 		= $validate->articleUrl($params);
+		if($validInput !== true)
+		{
+			$errors 		= $validate->returnFirstValidationErrors($validInput);
+			$response->getBody()->write(json_encode([
+				'message' 	=> reset($errors),
+				'errors' 	=> $errors
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+		}
+
+		$urlinfo 			= $this->c->get('urlinfo');
+		$langattr 			= $this->settings['langattr'];
+		$navigation 		= new Navigation();
+		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
+		if(!$item)
+		{
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('page not found'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+		}
+
+		# if user is not allowed to perform this action (e.g. not admin)
+		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'read'))
+		{
+			# then check if user is the owner of this content
+			$meta = new Meta();
+			$metadata = $meta->getMetaData($item);
+			if(!$this->userIsAllowed($request->getAttribute('c_username'), $metadata))
+			{
+				$response->getBody()->write(json_encode([
+					'message' 	=> Translations::translate('You do not have enough rights.'),
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(403);				
+			}
+		}
+
+		# GET THE META
+		$meta 				= new Meta();
+		$metadata  			= $meta->getMetaData($item);
+		$metadata 			= $meta->addMetaDefaults($metadata, $item, $this->settings['author']);
+#		$metadata 			= $meta->addMetaTitleDescription($metadata, $item, $markdown);
+
+		$response->getBody()->write(json_encode([
+			'meta'			=> $metadata
+		]));
+
+		return $response->withHeader('Content-Type', 'application/json');
 	}
 
 	public function showSecurityLog(Request $request, Response $response)
@@ -153,7 +399,6 @@ class ControllerApiGlobals extends Controller
 
 		return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
 	}
-
 
 	public function getTranslations(Request $request, Response $response)
 	{		

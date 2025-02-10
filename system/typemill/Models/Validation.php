@@ -522,6 +522,36 @@ class Validation
 		return $v->errors();
 	}	
 
+	public function articleUrl(array $params)
+	{
+		$v = new Validator($params);
+		
+		$v->rule('required', 'url');
+		$v->rule('regex', 'url', '/^\/?[a-z0-9\-\/]+(?:\?[a-z0-9\-=&]*)?$/i');
+		
+		if($v->validate())
+		{
+			return true;
+		}
+
+		return $v->errors();
+	}
+
+	public function articleSlug(array $params)
+	{
+		$v = new Validator($params);
+		
+		$v->rule('required', 'slug');
+		$v->rule('regex', 'slug', '/^[a-z0-9-]+$/i');
+
+		if($v->validate())
+		{
+			return true;
+		}
+
+		return $v->errors();
+	}
+
 	public function blockInput(array $params)
 	{
 		$v = new Validator($params);
