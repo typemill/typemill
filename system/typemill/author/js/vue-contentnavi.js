@@ -254,6 +254,8 @@ navigation.component('navilevel',{
 				group: "file",
 				disabled: this.freeze,
 				ghostClass: "ghost",
+				delay: 150,
+				delayOnTouchOnly: true
 			};
 		},
 		

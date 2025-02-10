@@ -30,6 +30,8 @@ const bloxeditor = Vue.createApp({
 				animation: 150,
 				disabled: this.dragDisabled,
 				ghostClass: "ghost",
+				delay: 150,
+				delayOnTouchOnly: true
 			};
 		},
 	},
