@@ -102,7 +102,7 @@ $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 	$group->get('/article/content', ControllerApiGlobals::class . ':getArticleContent')->setName('api.articlecontent.get')->add(new ApiAuthorization($acl, 'content', 'read')); # author
 	$group->get('/article/meta', ControllerApiGlobals::class . ':getArticleMeta')->setName('api.articlemeta.get')->add(new ApiAuthorization($acl, 'content', 'read')); # author
 
-})->add(new CorsHeadersMiddleware($settings, $urlinfo))->add(new ApiAuthentication());
+})->add(new ApiAuthentication($settings));
 
 # api-routes from plugins
 if(isset($routes['api']) && !empty($routes['api']))
@@ -119,12 +119,12 @@ if(isset($routes['api']) && !empty($routes['api']))
 		if($resources && $privilege)
 		{
 			# protected api requires authentication and authorization
-			$app->{$method}($route, $class)->setName($name)->add(new ApiAuthorization($acl, $resource, $privilege))->add(new CorsHeadersMiddleware($settings, $urlinfo))->add(new ApiAuthentication());
+			$app->{$method}($route, $class)->setName($name)->add(new ApiAuthorization($acl, $resource, $privilege))->add(new ApiAuthentication($settings));
 		}
 		else
 		{
 			# public api routes
-			$app->{$method}($route, $class)->setName($name)->add(new CorsHeadersMiddleware($settings, $urlinfo));
+			$app->{$method}($route, $class)->setName($name);
 		}
 	}
 }

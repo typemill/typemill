@@ -11,6 +11,13 @@ use Typemill\Static\Session;
 
 class ApiAuthentication
 {	
+	protected $settings;
+	
+	public function __construct($settings)
+	{		
+		$this->settings 	= $settings;		
+	}
+
 	public function __invoke(Request $request, RequestHandler $handler)
 	{
 	    $routeContext 	= RouteContext::fromRequest($request);
@@ -26,17 +33,44 @@ class ApiAuthentication
 
 				return $response;
 			}
-			else
-			{
-				# return error message
-			}
 		}
 
-		# api authentication with basic auth
-		# inspired by tuupola
+		# api authentication with basic auth, inspired by tuupola
+		$ipAddress 		= $_SERVER['REMOTE_ADDR'] ?? null;
 		$host 			= $request->getUri()->getHost();
 		$scheme 		= $request->getUri()->getScheme();
 		$server_params 	= $request->getServerParams();
+
+		$apiaccess 		= true;
+		if(isset($this->settings['trustedipsforapi']) && $this->settings['trustedipsforapi'] !== '')
+		{
+			$trustedIPs = array_map('trim', explode(',', $this->settings['trustedipsforapi']));
+
+			if(!in_array($ipAddress, $trustedIPs))
+			{
+				$apiaccess = false;
+			}			
+		}
+		if(isset($this->settings['trustedhostsforapi']) && $this->settings['trustedhostsforapi'] !== '')
+		{
+			$trustedHosts = array_map('trim', explode(',', $this->settings['trustedhostsforapi']));
+
+			if(!in_array($host, $trustedHosts))
+			{
+				$apiaccess = false;
+			}		
+		}
+
+		if(!$apiaccess)
+		{
+			$response = new Response();
+			
+			$response->getBody()->write(json_encode([
+				'message' => 'Not trusted.'
+			]));
+
+			return $response->withHeader('WWW-Authenticate', 'Basic realm=')->withStatus(401);
+		}
 
 		/*
     	# HTTP allowed only if secure is false or server is in relaxed array.
@@ -62,9 +96,6 @@ class ApiAuthentication
 			}
 		}
 		*/
-
-
-########### WHY NOT USE BASIC AUTH PARAMS FROM URI ?
 
 		$params = [];
 

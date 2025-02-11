@@ -21,7 +21,8 @@ class CorsHeadersMiddleware implements MiddlewareInterface
 	}
 	
 	public function process(Request $request, RequestHandler $handler) :response
-	{		
+	{
+		# not in use right now, see here: https://chatgpt.com/c/67aba713-a7b0-8005-993e-a43ec4add72a
 		# add the custom headers to the response after everything is processed
 		$response = $handler->handle($request);
 

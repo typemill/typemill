@@ -287,11 +287,19 @@ fieldsetdeveloper:
       label: "Allowed Domains for Content on Typemill (CSP-Headers)"
       placeholder: 'https://www.google.com,*google.com'
       description: "List all domains, separated by commas, to allow content integration, such as iframes, on your Typemill website. Domains will be added to the csp-header. Usually done with plugins and themes, but add manually if something is blocked."
-    corsdomains:
-      type: textarea
-      label: "Allowed Domains for API-Access (CORS-Headers)"
-      placeholder: 'https://my-website-that-uses-the-api.org,https://another-website-using-the-api.org'
-      description: "List all domains, separated by comma, that should have access to the Typemill API. Domains will be added to the cors-header."
+#    corsdomains:
+#      type: textarea
+#      label: "Allowed Domains for API-Access (CORS-Headers)"
+#      placeholder: 'https://my-website-that-uses-the-api.org,https://another-website-using-the-api.org'
+#      description: "List all domains, separated by comma, that should have access to the Typemill API. Domains will be added to the cors-header."
+    trustedipsforapi:
+      type: text
+      label: "Trusted IPs for api calls (comma separated)"
+      placeholder: "192.168.1.1, 203.0.113.0"
+    trustedhostsforapi:
+      type: text
+      label: "Trusted Hosts for api calls (comma separated)"
+      placeholder: "mydomain.org,sub.mydomain.org"
     loginlink:
       type: checkbox
       label: "Login with link"
