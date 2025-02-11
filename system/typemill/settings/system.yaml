@@ -294,12 +294,14 @@ fieldsetdeveloper:
 #      description: "List all domains, separated by comma, that should have access to the Typemill API. Domains will be added to the cors-header."
     trustedipsforapi:
       type: text
-      label: "Trusted IPs for api calls (comma separated)"
+      label: "Trusted IPs for api access (comma separated)"
       placeholder: "192.168.1.1, 203.0.113.0"
+      description: "Restrict api access to IPs for more security and if IPs are static."
     trustedhostsforapi:
       type: text
-      label: "Trusted Hosts for api calls (comma separated)"
+      label: "Trusted Hosts for api access (comma separated)"
       placeholder: "mydomain.org,sub.mydomain.org"
+      description: "Restrict api access to hosts for more security and if IPs are dynamic or unknown."
     loginlink:
       type: checkbox
       label: "Login with link"
