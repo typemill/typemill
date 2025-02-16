@@ -195,7 +195,13 @@ navigation.component('navilevel',{
 							</svg>
 						</div>
 					</div>
-					<navilevel v-show="isActiveFolder(element)" v-if="element.elementType == 'folder' && element.contains == 'pages'" :list="element.folderContent" :navigation="element.folderContent" :parentId="element.keyPath" :expanded="expanded" />
+					<navilevel 
+						v-if 		= "element.elementType == 'folder' && element.contains == 'pages'" 
+						v-show 		= "isActiveFolder(element)" 
+						:list 		= "element.folderContent" 
+						:navigation = "element.folderContent" 
+						:parentId 	= "element.keyPath" 
+						:expanded 	= "expanded" />
 				</li>
 			</template>
 			<template #footer>
@@ -339,11 +345,19 @@ navigation.component('navilevel',{
 		},
 		isActiveFolder(element)
 		{
+			if(this.expanded.indexOf(element.urlRelWoF) > -1 )
+			{
+				return true;
+			}
+			return false;
+
+/* if you want active folders always expanded
 			if(element.active || element.activeParent || (this.expanded.indexOf(element.urlRelWoF) > -1) )
 			{
 				return true;
 			}
 			return false;
+*/
 		},
 		onStart(evt)
 		{
