@@ -42,6 +42,16 @@ class ControllerWebFrontend extends Controller
 		}
 		$fullUrl  			= $urlinfo['baseurl'] . $url;
 
+		$pagedata = [
+			'home'			=> $home,
+			'title' 		=> 'Page not found',
+			'description' 	=> 'Sorry, but we did not find the page you where looking for.',
+			'settings' 		=> $this->settings,
+			'base_url' 		=> $urlinfo['baseurl'], 
+			'logo'			=> false,
+			'favicon'		=> false,
+		];
+
 
 		# FIND THE PAGE/ITEM IN NAVIGATION
 		if($url == '/')
@@ -56,10 +66,7 @@ class ControllerWebFrontend extends Controller
 
 		    if(!$pageinfo)
 		    {
-			    return $this->c->get('view')->render($response->withStatus(404), '404.twig', [
-					'title'			=> 'Page not found',
-					'description'	=> 'We did not find the page you where looking for.'
-			    ]);
+			    return $this->c->get('view')->render($response->withStatus(404), '404.twig', $pagedata);
 		    }
 
 			$keyPathArray 		= explode(".", $pageinfo['keyPath']);
@@ -68,10 +75,7 @@ class ControllerWebFrontend extends Controller
 
 			if(!$item)
 			{
-				return $this->c->get('view')->render($response->withStatus(404), '404.twig', [
-					'title'			=> 'Page not found',
-					'description'	=> 'We did not find the page you where looking for.'
-				]);
+			    return $this->c->get('view')->render($response->withStatus(404), '404.twig', $pagedata);
 			}
 		}
 
@@ -86,10 +90,7 @@ class ControllerWebFrontend extends Controller
 			{
 				if($page->status == 'unpublished')
 				{
-					return $this->c->get('view')->render($response->withStatus(404), '404.twig', [
-						'title'			=> 'Page not found',
-						'description'	=> 'We did not find the page you where looking for.'
-					]);
+				    return $this->c->get('view')->render($response->withStatus(404), '404.twig', $pagedata);
 				}
 			}
 		}
@@ -159,10 +160,7 @@ class ControllerWebFrontend extends Controller
 					$refpageinfo 		= $navigation->getPageInfoForUrl($metadata['meta']['reference'], $urlinfo, $langattr);
 				    if(!$refpageinfo)
 				    {
-					    return $this->c->get('view')->render($response->withStatus(404), '404.twig', [
-							'title'			=> 'Referenced page not found',
-							'description'	=> 'We did not find the page that has been referenced. Please inform the website owner to fix it in meta reference.'
-					    ]);
+					    return $this->c->get('view')->render($response->withStatus(404), '404.twig', $pagedata);
 				    }
 
 					$refKeyPathArray 	= explode(".", $refpageinfo['keyPath']);

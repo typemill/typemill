@@ -4,21 +4,32 @@
 
 {% block content %}
 
-<section class="w-100 dib tc bt bl br bb">
+<section class="landingpageinfo vh-100 dt w-100 tc bt bl br bb">
 
-	<div class="mw7 pb7 ph3 center">
-		<header class="mt6">
-			<h1 class="f-large f-headline-ns lh-title mv2 pt5-ns">Not Found</h1>
-		</header>
+	<div class="cover dtc v-mid bg-left bg-center-l">
 
-		<div class="f5 f4-ns fw3 lh-copy">
-			<p>Sorry, but we did not find the page that you are looking for.</p>
+		<div class="mw7 ph3 center">
+
+			<div class="introbg pa4">
+
+				<header>
+					<h1 class="f-large f-headline-ns lh-title mv2 pt5-ns">{{title}}</h1>
+				</header>
+
+				<div class="f5 f4-ns fw3 lh-copy">
+
+					<p>{{description}}</p>
+
+					<a class="button link dim ph4 pv3 mt3 dib" href="{{ base_url }}">Return to the homepage</a>
+
+				</div>
+
+			</div>
+
 		</div>
 
-		<a class="button link dim ph4 pv3 mt3 dib" href="{{ base_url }}">Home</a>
-
-	</div>
+	</div>		
 
 </section>
-	
+
 {% endblock %}

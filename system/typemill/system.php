@@ -392,11 +392,11 @@ $errorMiddleware = new ErrorMiddleware(
 );
 
 # Set the Not Found Handler
-$errorMiddleware->setErrorHandler(HttpNotFoundException::class, function ($request, $exception) use ($container) {
-	
-	$response = new NewResponse();
+$errorMiddleware->setErrorHandler(HttpNotFoundException::class, function ($request, $exception) use ($container) {	
 
-	return $container->get('view')->render($response->withStatus(404), '404.twig');
+	$response = new NewResponse();
+ 
+	return $container->get('view')->render($response->withStatus(404), '404.twig', $pagedata);
 
 });
 
