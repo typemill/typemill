@@ -86,6 +86,7 @@ meta:
           type: text
           label: Reference to page
           placeholder: '/path/to/internal/page or https://exgernal-page.org'
+          description: 'Use full relative path like "/somefolder/somefile" for internal pages or absolute url for external pages.'
           maxlength: 200
         referencetype:
           type: radio
