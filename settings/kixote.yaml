@@ -1,0 +1,51 @@
+promptlist:
+    research:
+        name: research
+        content: 'Make a research based on the provided topic or content.'
+        active: true
+        system: true
+    outline:
+        name: outline
+        content: 'Create an outline based on the provided topic or content.'
+        active: true
+        system: true
+    write:
+        name: write
+        content: 'Write an article based on the provided content.'
+        active: true
+        system: true
+    spellcheck:
+        name: spellcheck
+        content: 'Please review the text for grammar, spelling, and correct word usage. Correct any errors and ensure that the appropriate words are used, while maintaining the original tone, style, and phrasing.'
+        active: true
+        system: true
+    style:
+        name: style
+        content: 'Please review the text to improve its wording and style. Ensure the text is readable, clear, concise, and flows smoothly. You may rephrase sentences as needed, but maintain the original tonality and individual language usage to avoid a generic tone.'
+        active: true
+        system: true
+    mermaid:
+        name: mermaid
+        content: 'Return pure mermaid syntax for a [pie, x, y] diagram.'
+        active: true
+        system: true
+    tone:
+        name: 'apply tone'
+        content: 'Apply the tone to the article.'
+        active: true
+        system: true
+    test:
+        name: test
+        content: asfasdfda
+        active: true
+        system: false
+    testing:
+        name: testing
+        content: asdfasdf
+        active: true
+        system: false
+    fertret:
+        name: fertret
+        content: adasdf
+        active: true
+        system: false
