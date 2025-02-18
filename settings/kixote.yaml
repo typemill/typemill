@@ -34,18 +34,3 @@ promptlist:
         content: 'Apply the tone to the article.'
         active: true
         system: true
-    test:
-        name: test
-        content: asfasdfda
-        active: true
-        system: false
-    testing:
-        name: testing
-        content: asdfasdf
-        active: true
-        system: false
-    fertret:
-        name: fertret
-        content: adasdf
-        active: true
-        system: false

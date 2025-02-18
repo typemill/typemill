@@ -171,6 +171,9 @@ class ControllerApiAuthorMeta extends Controller
 			$metadefinitions = $meta->getMetaDefinitions($this->settings, $folder = false);
 		}
 
+		# update metadefinitions from plugins.
+		$metadefinitions = $this->c->get('dispatcher')->dispatch(new OnMetaDefinitionsLoaded($metadefinitions),'onMetaDefinitionsLoaded')->getData();
+
 		$tabdefinitions = $metadefinitions[$params['tab']] ?? false;
 		if(!$tabdefinitions)
 		{
