@@ -18,6 +18,7 @@ data/css
 node_modules
 plugins/search
 settings/settings.yaml
+settings/secrets.yaml
 settings/license.yaml
 settings/users
 zips

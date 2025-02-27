@@ -22,6 +22,7 @@ class OldInputMiddleware
 			if(isset($_SESSION['old']))
 			{
 				$this->view->getEnvironment()->addGlobal('old', $_SESSION['old']);
+				unset($_SESSION['old']);
 			}
 			if(!empty($request->getParsedBody()))
 			{

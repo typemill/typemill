@@ -310,7 +310,7 @@ $container->set('assets', function() use ($assets){ return $assets; });
 * TWIG TO CONTAINER					*
 ****************************/
 
-$container->set('view', function() use ($settings, $TwigGlobals, $urlinfo, $translations, $dispatcher) {
+$container->set('view', function() use ($settings, $TwigGlobals, $urlinfo, $translations, $dispatcher, $acl) {
 
 	$twig = Twig::create(
 		[
@@ -335,7 +335,7 @@ $container->set('view', function() use ($settings, $TwigGlobals, $urlinfo, $tran
 
 	# add extensions
 	$twig->addExtension(new DebugExtension());
-	$twig->addExtension(new TwigUserExtension());
+	$twig->addExtension(new TwigUserExtension($acl));
 	$twig->addExtension(new TwigUrlExtension($urlinfo));
 	$twig->addExtension(new TwigLanguageExtension( $translations ));
 	$twig->addExtension(new TwigMarkdownExtension($urlinfo['baseurl'], $settings, $dispatcher));
