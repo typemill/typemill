@@ -1,0 +1,78 @@
+<main class="landingpagetemplate w-100 dib bt bl br bb f4-l f5">
+
+	<header class="mw8 center tc pt4 flex-l justify-between">
+
+		<div class="logo tl-l">
+			<p class="pv2 ma0">
+				<a class="link f5 fw4" href="{{ base_url }}" title="My Title">
+					{% if logo %}
+						<img src="{{ base_url }}/{{ logo }}" class="logo-image"/>
+					{% else %}
+						{{ settings.title }}
+					{% endif %}
+				</a>
+			</p>
+		</div>
+
+		<nav id="breadcrumb" class="f6 pv3 tr-l">
+
+				<div class="mw6">
+					<a class="link f-link underline-hover" href="{{ base_url }}">{{ settings.title }}</a>
+
+					{% for crumb in breadcrumb %}
+						&nbsp; &#x203A; &nbsp;  
+						{% if loop.last %}
+							{{ crumb.name }}
+						{% else %}
+							<a class="link f-link underline-hover" href="{{ crumb.urlRel }}">{{ crumb.name }}</a>
+						{% endif %}
+					{% endfor %}
+				</div>
+		</nav>
+			
+	</header>
+
+	<div class="mw8 pb3 pt3 pt6-l ph3 center">
+
+		<header>
+			<h1 class="f2 f-large-l lh-title-l mv2">{{ title }}</h1>
+		</header>
+
+		<div class="f5 f4-ns fw3 lh-copy">
+			{{ content }}
+		</div>
+
+	</div>
+
+	{{ meta.meta }}
+	{% if metatabs.meta.pagelisting %}
+
+		<div class="mw8 pb7 ph3 center f5 f4-ns fw3 lh-copy">
+
+			{% set pagelist = getPageList(navigation, item.thisChapter.urlRelWoF, base_url) %}
+
+			<ul class="post mv3-l list pa0 flex-l flex-wrap justify-between">
+				
+				{% for element in pagelist.folderContent %}
+
+					{% set page = getPageMeta(settings, element) %}
+
+					<li class="db list tl pa0 w-100 w-30-l mh0 mv2 mh2-l shadow-2-hover flex flex-column flex-grow-0 flex-basis bg-white">
+						<div class="pa2 ph3-ns pb3-ns flex-grow">
+							<h3>{{ page.meta.shorttitle }}</h3>
+							<p class="f5 lh-copy">{{ page.meta.description }}</p>
+						</div>
+						<div class="pa2 ph3-ns pb3-ns">
+							<a href="{{ element.urlAbs }}" class="button link w-100 db dim pa3 ba w-100 white tc">{{ page.meta.shorttitle }}</a>	
+						<div>
+					</li>
+
+				{% endfor %}
+			
+			</ul>
+
+		</div>
+
+	{% endif %}
+
+</main>

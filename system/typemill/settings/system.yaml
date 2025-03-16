@@ -1,0 +1,343 @@
+fieldsetsystem:
+  type: fieldset
+  legend: System
+  fields:
+    title:
+      type: text
+      label: 'Website title'
+      maxlength: 60
+      css: lg:w-half
+    author:
+      type: text
+      label: 'Website owner'
+      css: lg:w-half
+      maxlength: 60
+    copyright:
+      type: select
+      label: 'Copyright'
+      css: lg:w-half
+      maxlength: 60
+      description: 'Used for copyright and year in footer.'
+      options:
+        '©': '©'
+        'CC-BY': 'CC-BY'
+        'CC-BY-NC': 'CC-BY-NC'
+        'CC-BY-NC-ND': 'CC-BY-NC-ND'
+        'CC-BY-NC-SA': 'CC-BY-NC-SA'
+        'CC-BY-ND': 'CC-BY-ND'
+        'CC-BY-SA': 'CC-BY-SA'
+    year:
+      type: text
+      label: Year
+      css: lg:w-half
+      maxlength: 4
+      description: 'Used for copyright and year in footer.'
+    language:
+      type: select
+      label: 'Language (author area)'
+      css: lg:w-half
+      maxlength: 60
+      description: 'Used for translations in author area, themes, and plugins.'
+      options:
+        'en': 'English'
+        'ru': 'Russian'
+        'nl': 'Dutch, Flemish'
+        'de': 'German'
+        'it': 'Italian'
+        'fr': 'French'
+    langattr:
+      type: text
+      label: 'Language attribute (website)'
+      css: lg:w-half
+      maxlength: 5
+      description: 'Used for frontend language attribute. Please use ISO 639-1 codes like "en".'
+    sitemap:
+      type: text
+      label: 'Google sitemap (readonly)'
+      css: lg:w-half
+      disabled: true
+      description: 'Submit the url above in google search console to support indexing.'
+    disableSitemap:
+      type: checkbox
+      css: lg:w-half
+      label: 'Disable Sitemap Generation'
+      checkboxlabel: 'Disable Sitemap generation to improve the performance for publish action.'
+fieldsetmedia:
+  type: fieldset
+  legend: Media
+  fields:
+    logo:
+      type: image
+      label: Logo
+    favicon:
+      type: image
+      label: Favicon
+      description: 'Only PNG format will work.'
+      keepformat: true
+    liveimagewidth:
+      type: number
+      label: 'Standard width for live pictures'
+      placeholder: 820
+      description: 'Default width of live images is 820px. Changes will apply to future uploads.'
+      css: lg:w-half
+    liveimageheight:
+      type: number
+      label: 'Standard height for live pictures'
+      description: 'If you add a value for the height, then the image will be cropped.'
+      css: lg:w-half
+    maximageuploads:
+      type: number
+      label: 'Maximum size for image uploads in MB'
+      description: 'The maximum image size might be limited by your server settings.'
+    allowsvg:
+      type: checkbox
+      label: Allow svg
+      checkboxlabel: 'Allow the upload of svg images.'
+    convertwebp:
+      type: checkbox
+      label: 'Convert to webp'
+      checkboxlabel: 'Try to convert uploaded images into the webp-format for better performance.'
+    maxfileuploads:
+      type: number
+      label: 'Maximum size for file uploads in MB'
+      description: 'The maximum file size might be limited by your server settings.'
+fieldsetwriting:
+  type: fieldset
+  legend: Writing
+  fields:
+    editor:
+      type: radio
+      label: 'Standard editor mode'
+      css: lg:w-half
+      options:
+        'visual': 'visual editor'
+        'raw': 'raw editor'
+    formats:
+      type: checkboxlist
+      label: 'Format options for visual editor'
+      css: lg:w-half
+      options:
+        'markdown': 'markdown'
+        'headline': 'headline'
+        'ulist': 'numbered list'
+        'olist': 'bullet list'
+        'table': 'table'
+        'quote': 'quote'
+        'notice': 'notice'
+        'image': 'image'
+        'video': 'video'
+        'audio': 'audio'
+        'file': 'file'
+        'toc': 'table of contents'
+        'hr': 'horizontal line'
+        'definition': 'definition list'
+        'code': 'code'
+        'shortcode': 'shortcode'
+        'youtube': 'YouTube (deprecated)'
+    headlineanchors:
+      type: checkbox
+      label: 'Headline anchors'
+      checkboxlabel: 'Show anchors next to headline in frontend'
+    urlschemes:
+      type: text
+      label: 'Url schemes'
+      description: 'Add more url schemes for external links e.g. like dict:// (comma separated list)'
+      maxlength: 60
+fieldsetaccess:
+  type: fieldset
+  legend: Access
+  fields:
+    access:
+      type: checkbox
+      label: 'Website restriction'
+      checkboxlabel: 'Show the website only to authenticated users and redirect all other users to the login page.'
+    pageaccess:
+      type: checkbox
+      label: 'Page restriction'
+      checkboxlabel: 'Activate individual restrictions for pages in the meta-tab of each page.'
+    hrdelimiter:
+      type: checkbox
+      label: 'Content break'
+      checkboxlabel: 'Cut restricted content after the first hr-element on a page (per default content will be cut after title).'
+    restrictionnotice:
+      type: textarea
+      label: 'Restriction notice (use markdown)'
+      maxlength: 2000
+    wraprestrictionnotice:
+      type: checkbox
+      label: 'Wrap restriction notice'
+      checkboxlabel: 'Wrap the restriction notice above into a notice-4 element (which can be designed as special box)'
+    redirectadminrights:
+      type: select
+      label: 'After login redirect users with admin rights to'
+      css: lg:w-half      
+      options:
+        settings.show: 'system page'
+        content: 'editor page'
+        user.account: 'account page'
+        home: 'home page (frontend)'
+    redirectcontentrights:
+      type: select
+      label: 'After login redirect users with edit rights to'
+      css: lg:w-half
+      options:
+        content: 'editor page'
+        user.account: 'account page'
+        home: 'home page (frontend)'
+    redirectaccountrights:
+      type: select
+      label: 'After login redirect users without edit rights to'
+      css: lg:w-half
+      options:
+        user.account: 'account page'
+        home: 'home page (frontend)'
+fieldsetmail:
+  type: fieldset
+  legend: Email
+  fields:
+    mailfrom:
+      type: email
+      label: 'Mail From (required)'
+      placeholder: sender@yourmail.org
+      maxlength: 100
+      description: 'Enter an email address that sends the e-mails (sender). The e-mail-feature will be used for recovery and verification e-mails. Send a testmail to your user-account to verify that you receive the e-mails.'
+    mailfromname:
+      type: text
+      label: 'Mail From Name (optional)'
+      placeholder: sender name
+      maxlength: 100
+      description: 'Optionally enter a name for the sender address. If not set, the from-address will be visible.'
+    replyto:
+      type: text
+      label: 'Reply To (optional)'
+      placeholder: noreply@yourmail.org
+      maxlength: 100
+      description: 'Optionally enter a "reply to" address for answers from the receiver. If not set, answers will go to the from-address.'
+fieldsetrecover:
+  type: fieldset
+  legend: Password
+  fields:
+    recoverpw:
+      type: checkbox
+      label: 'Recover password'
+      checkboxlabel: 'Activate a password recovery in the login form.'
+      description: "From mail is required for this feature. Send a testmail before you use this feature."
+    recoversubject:
+      type: text
+      label: 'Email subject'
+      placeholder: 'Recover your password'
+      maxlength: 60
+    recovermessage:
+      type: textarea
+      label: 'Text before recover link in email message'
+      description: 'The recover-link will be active for 24 hours.'
+      maxlength: 2000
+fieldsetsecurity:
+  type: fieldset
+  legend: Security
+  fields:
+    authcode:
+      type: checkbox
+      label: 'Login Verification (recommended)'
+      checkboxlabel: 'Verify your login with a 5-digit code send by email.'
+      description: 'From mail is required for this feature. Send a testmail before you use this feature. Make sure you have ftp-access to disable the feature in settings.yaml on failure. The verification code will be valid for 5 minutes. Be aware that device fingerprints will be stored in the user accounts.'
+    authcaptcha:
+      type: radio
+      label: 'Use captcha in authentication forms'
+      options:
+        disabled: 'Disable'
+        standard: 'Always show'
+        aftererror: 'Show after first wrong input'
+    securitylog:
+      type: checkbox
+      label: 'Security log'
+      checkboxlabel: 'Track spam and suspicious actions in a logfile'
+fieldsetdeveloper:
+  type: fieldset
+  legend: "Developer"
+  fields:
+    displayErrorDetails:
+      type: checkbox
+      label: "Error reporting"
+      checkboxlabel: "Display application errors"
+    twigcache:
+      type: checkbox
+      label: "Twig cache"
+      checkboxlabel: "Activate the cache for twig templates"
+    proxy:
+      type: checkbox
+      label: "Proxy"
+      checkboxlabel: "Use x-forwarded-header"
+    trustedproxies:
+      type: text
+      label: "Trusted IPs for proxies (comma separated)"
+    fqdn:
+      type: text
+      label: "If your proxy does not work, try to add the base-url of your proxy here like https://mywebsite.com."
+    headersoff:
+      type: checkbox
+      label: "Disable Custom Headers"
+      checkboxlabel: "Disable all custom headers of Typemill (except cors) and send your own headers instead."
+    cspdisabled:
+      type: checkbox
+      label: "Disable CSP Headers"
+      checkboxlabel: "Disable all csp headers (content security policy) for this website."
+    cspdomains:
+      type: textarea
+      label: "Allowed Domains for Content on Typemill (CSP-Headers)"
+      placeholder: 'https://www.google.com,*google.com'
+      description: "List all domains, separated by commas, to allow content integration, such as iframes, on your Typemill website. Domains will be added to the csp-header. Usually done with plugins and themes, but add manually if something is blocked."
+#    corsdomains:
+#      type: textarea
+#      label: "Allowed Domains for API-Access (CORS-Headers)"
+#      placeholder: 'https://my-website-that-uses-the-api.org,https://another-website-using-the-api.org'
+#      description: "List all domains, separated by comma, that should have access to the Typemill API. Domains will be added to the cors-header."
+    trustedipsforapi:
+      type: text
+      label: "Trusted IPs for api access (comma separated)"
+      placeholder: "192.168.1.1, 203.0.113.0"
+      description: "Restrict api access to IPs for more security and if IPs are static."
+    trustedhostsforapi:
+      type: text
+      label: "Trusted Hosts for api access (comma separated)"
+      placeholder: "mydomain.org,sub.mydomain.org"
+      description: "Restrict api access to hosts for more security and if IPs are dynamic or unknown."
+    loginlink:
+      type: checkbox
+      label: "Login with link"
+      checkboxlabel: "Allow selected guest-users to login with a login link."
+      description: "If activated, you can allow login-links with a checkbox in the user profile. This is only available for guest-roles since guests do not have any rights. Login with a link can be helpful if you link from your software to a non-public documentation. Be aware of the low protection that this kind of logins has. If you integrate such links in a SaaS-software, then you should restrict access with login-links to your ips."
+    trustedloginreferrer:
+      type: text
+      label: "Trusted IPs for the login-link-referrer (comma separated)"
+fieldsetai:
+  type: fieldset
+  legend: AI
+  fields:
+    aiprivacy: 
+      type: paragraph
+      label: "Privacy Notice"
+      description: "You can use the following AI features in the Kixote interface. If you enable any AI integrations, user inputs will be sent to external services for processing. Please review the details for each service and ensure compliance with your local data privacy regulations. Each user will be asked for confirmation before using a model in the Kixote AI interface."
+    aiservice:
+      type: radio
+      label: 'Choose an AI service'
+      options:
+        none: 'None'
+#        kixote: 'Kixote (not available yet)'
+        chatgpt: 'ChatGPT'
+    chatgptModel:
+      type: select
+      label: 'ChatGPT model'
+      description: "Select the AI model you want to use. Pricing may vary over time, so please check the latest details on [OpenAI's pricing page](https://platform.openai.com/docs/pricing)"
+      options: 
+        gpt-4o-mini: 'gpt-4o-mini ($0.6 / 1M output tokens)'
+        gpt-3.5-turbo-0125: 'gpt-3.5-turbo-0125 ($1.50 / 1M output tokens)'
+        gpt-4o: 'gpt-4o ($10.00 / 1M output tokens)'
+        o1-mini: 'o1-mini ($12.00 / 1M output tokens)'
+        o1: 'o1 ($60.00 / 1M output tokens)'
+    chatgptKey:
+      type: password
+      autocomplete: new-password 
+      generator: false
+      label: 'ChatGPT Api Key'
+      description: "Enter your ChatGPT API key here. You can generate a new key on [OpenAI's platform](https://platform.openai.com/docs/pricing). For security reasons, your API key is secret and will not be visible again after you leave this page."

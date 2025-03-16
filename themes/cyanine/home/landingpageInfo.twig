@@ -1,0 +1,40 @@
+	<section id="landingpageinfo" class="landingpageinfo w-100 pv6 dib tc bl br bb">
+		
+		<div class="f5 f4-ns mw7 ph3 fw3 lh-copy center">
+			
+			{{ markdown(settings.themes.cyanine.infoMarkdown) }}
+
+		</div>
+	
+		{% if settings.themes.cyanine.infoFolder %}
+
+			<div class="mw8 pv2 center">
+
+				{% set pagelist = getPageList(navigation, settings.themes.cyanine.infoFolder, base_url) %}
+
+
+				<ul class="flex-l flex-wrap-l justify-between pa0 ma3 mh0-l">
+
+					{% for element in pagelist.folderContent %}
+
+						{% set page = getPageMeta(settings, element) %}
+
+						<li class="db list tl pa0 w-100 w-30-l mh0 mh2-l mt2 mb5 mb4-l shadow-2-hover flex flex-column flex-grow-0 flex-basis bg-white">
+							<div class="pt2 pb0 ph3 flex-grow">
+								<h3>{{ page.meta.shorttitle }}</h3>
+								<p class="f5 lh-copy">{{ page.meta.description }}</p>
+							</div>
+							<div class="pt2 pb3 ph3">
+								<a href="{{ element.urlAbs }}" class="button link w-100 db dim pa3 ba w-100 white tc">{{ page.meta.shorttitle }}</a>	
+							<div>
+						</li>
+
+					{% endfor %}
+
+				</ul>
+
+			</div>
+
+		{% endif %}
+
+	</section>

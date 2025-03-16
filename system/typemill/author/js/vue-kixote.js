@@ -1,0 +1,1531 @@
+const getKixoteError = function(error)
+{
+	if(error.response.data.error != undefined)
+	{
+		if(Array.isArray(error.response.data.error))
+		{
+			return error.response.data.error;
+		}
+		if(typeof error.response.data.error === 'string')
+		{
+			return [error.response.data.error];
+		}
+	}
+
+	return ['something went wrong'];
+}
+
+/*
++ If you change page and open kixote, then the old version without changes is loaded
++ store kixoteSettings
+*/
+
+const kixote = Vue.createApp({
+	template: `<div class="m-1 ml-2">
+					<button @click="startKixote" class="p-1 bg-stone-700 text-white text-xs">Kixote</button>
+					<div 
+						v-if 	= "showKixote" 
+						class   = "fixed w-full h-100 inset-0 z-50 overflow-hidden flex justify-center items-center bg-stone-50 bg-opacity-90"
+					>
+						<div
+							ref 	= "kdisplay"  
+							class 	= "fixed overflow-y-auto z-50 mx-auto inset-x-0 w-full max-w-4xl bottom-3 top-3 bg-stone-700 text-stone-50"
+						>
+							<div class="relative">
+
+								<div class="mt-20">
+									<keep-alive>
+										<component 
+											:is 			= "currentTabComponent" 
+											:command 		= "command"
+											:content 		= "content"
+											:item 			= "item"
+											:useragreement 	= "useragreement"
+											:aiservice  	= "aiservice"
+											:tokenstats 	= "tokenstats"
+											:labels 		= "labels"
+											:settings 		= "settings"
+											:settingsSaved 	= "settingsSaved"
+											v-model:kixoteSettings = "kixoteSettings" 
+											:urlinfo 		= "urlinfo"
+											>
+										</component>
+									</keep-alive>
+								</div>
+
+								<div class="fixed top-3 bg-stone-700 max-w-4xl px-8 py-4 bg w-full">
+									<div class="flex flex-wrap justify-between">
+										<div class="flex">
+											<div 
+												v-for 	= "tab in tabs" 
+												:key 	= "tab" 
+												class 	= "text-xs p-2 mr-2 w-20 border border-gray-500 rounded text-center cursor-pointer transition-all hover:bg-stone-900 hover:border-teal-500"
+												:class 	= "{ 'bg-stone-900 border-teal-500': currentTab === tab }"
+												@click	= "currentTab = tab"
+											>
+												<svg
+													v-if 	= "icons[tab]"
+													:xmlns 	= "'http://www.w3.org/2000/svg'"
+													class 	= "w-6 h-6 mx-auto mb-1"
+													viewBox = "0 0 32 32"
+													fill 	= "currentColor"
+												>
+													<path :d="icons[tab]" />
+												</svg>
+												<span>{{ tab }}</span>
+											</div>
+										</div>
+										<div 
+											class 	= "p-2 mr-2 w-20 border border-gray-500 rounded text-center cursor-pointer transition-all hover:bg-stone-900 hover:border-teal-500"
+											:class 	= "{ 'bg-stone-900 border-teal-500': currentTab === 'token' }"
+											>
+											<div v-if="tokenstats.url">
+												<a class="block" :href="tokenstats.url" target="_blank">
+										  			<svg class="icon icon-external-link">
+										  				<use xlink:href="#icon-external-link"></use>
+										  			</svg>
+												</a>
+												<span class="text-xs">Usage</span>
+											</div>
+											<div 
+												v-else
+												@click="currentTab = 'token'"
+												>
+												<span class="block">0</span>
+												<span class="text-xs">Token</span>
+											</div>
+										</div>
+
+									</div>
+									<button class="absolute top-0 right-0 p-2 m-1 text-teal-300 hover:bg-stone-600" @click="stopKixote">x</button>
+								</div>
+
+							</div>
+
+						</div>
+
+						<div id="loading-overlay" v-if="loading" class="fixed inset-0 flex flex-col items-center justify-center bg-black bg-opacity-80 z-50">
+						    <div class="iconwrapper">
+								<div class="loader"></div>
+						        <svg 
+									class 	= "magicicon"
+						          	xmlns 	= "http://www.w3.org/2000/svg" 
+						          	viewBox = "0 0 32 32"
+									fill 	= "inherit"
+						        >
+						          <symbol id="icon-magic-wand" viewBox="0 0 32 32">
+						            <path d="M8 6l-4-4h-2v2l4 4zM10 0h2v4h-2zM18 10h4v2h-4zM20 4v-2h-2l-4 4 2 2zM0 10h4v2h-4zM10 18h2v4h-2zM2 18v2h2l4-4-2-2zM31.563 27.563l-19.879-19.879c-0.583-0.583-1.538-0.583-2.121 0l-1.879 1.879c-0.583 0.583-0.583 1.538 0 2.121l19.879 19.879c0.583 0.583 1.538 0.583 2.121 0l1.879-1.879c0.583-0.583 0.583-1.538 0-2.121zM15 17l-6-6 2-2 6 6-2 2z"></path>
+						          </symbol>
+						          <use href="#icon-magic-wand" />
+						        </svg>
+						    </div>
+						    <p class="mt-4 text-stone-200 text-lg font-semibold">Generating, please be patient ...</p>
+						</div>
+					</div>
+			  	</div>`,
+	data() {
+		return {
+			showKixote: false,
+			currentTab: "Admin",
+            tabs: [ 
+            		"Admin", 
+            		"Generate", 
+/*            		"Automate", 
+            		"Translate", 
+            		"SEO", 
+            		"RAG" */
+            ],
+			icons: {
+				Admin: 		"M11.366 22.564l1.291-1.807-1.414-1.414-1.807 1.291c-0.335-0.187-0.694-0.337-1.071-0.444l-0.365-2.19h-2l-0.365 2.19c-0.377 0.107-0.736 0.256-1.071 0.444l-1.807-1.291-1.414 1.414 1.291 1.807c-0.187 0.335-0.337 0.694-0.443 1.071l-2.19 0.365v2l2.19 0.365c0.107 0.377 0.256 0.736 0.444 1.071l-1.291 1.807 1.414 1.414 1.807-1.291c0.335 0.187 0.694 0.337 1.071 0.444l0.365 2.19h2l0.365-2.19c0.377-0.107 0.736-0.256 1.071-0.444l1.807 1.291 1.414-1.414-1.291-1.807c0.187-0.335 0.337-0.694 0.444-1.071l2.19-0.365v-2l-2.19-0.365c-0.107-0.377-0.256-0.736-0.444-1.071zM7 27c-1.105 0-2-0.895-2-2s0.895-2 2-2 2 0.895 2 2-0.895 2-2 2zM32 12v-2l-2.106-0.383c-0.039-0.251-0.088-0.499-0.148-0.743l1.799-1.159-0.765-1.848-2.092 0.452c-0.132-0.216-0.273-0.426-0.422-0.629l1.219-1.761-1.414-1.414-1.761 1.219c-0.203-0.149-0.413-0.29-0.629-0.422l0.452-2.092-1.848-0.765-1.159 1.799c-0.244-0.059-0.492-0.109-0.743-0.148l-0.383-2.106h-2l-0.383 2.106c-0.251 0.039-0.499 0.088-0.743 0.148l-1.159-1.799-1.848 0.765 0.452 2.092c-0.216 0.132-0.426 0.273-0.629 0.422l-1.761-1.219-1.414 1.414 1.219 1.761c-0.149 0.203-0.29 0.413-0.422 0.629l-2.092-0.452-0.765 1.848 1.799 1.159c-0.059 0.244-0.109 0.492-0.148 0.743l-2.106 0.383v2l2.106 0.383c0.039 0.251 0.088 0.499 0.148 0.743l-1.799 1.159 0.765 1.848 2.092-0.452c0.132 0.216 0.273 0.426 0.422 0.629l-1.219 1.761 1.414 1.414 1.761-1.219c0.203 0.149 0.413 0.29 0.629 0.422l-0.452 2.092 1.848 0.765 1.159-1.799c0.244 0.059 0.492 0.109 0.743 0.148l0.383 2.106h2l0.383-2.106c0.251-0.039 0.499-0.088 0.743-0.148l1.159 1.799 1.848-0.765-0.452-2.092c0.216-0.132 0.426-0.273 0.629-0.422l1.761 1.219 1.414-1.414-1.219-1.761c0.149-0.203 0.29-0.413 0.422-0.629l2.092 0.452 0.765-1.848-1.799-1.159c0.059-0.244 0.109-0.492 0.148-0.743l2.106-0.383zM21 15.35c-2.402 0-4.35-1.948-4.35-4.35s1.948-4.35 4.35-4.35 4.35 1.948 4.35 4.35c0 2.402-1.948 4.35-4.35 4.35z",
+				Generate: 	"M8 6l-4-4h-2v2l4 4zM10 0h2v4h-2zM18 10h4v2h-4zM20 4v-2h-2l-4 4 2 2zM0 10h4v2h-4zM10 18h2v4h-2zM2 18v2h2l4-4-2-2zM31.563 27.563l-19.879-19.879c-0.583-0.583-1.538-0.583-2.121 0l-1.879 1.879c-0.583 0.583-0.583 1.538 0 2.121l19.879 19.879c0.583 0.583 1.538 0.583 2.121 0l1.879-1.879c0.583-0.583 0.583-1.538 0-2.121zM15 17l-6-6 2-2 6 6-2 2z",
+				Automate: 	"M0.001 16.051l-0.001 0c0 0 0 0.003 0.001 0.007 0.003 0.121 0.017 0.24 0.041 0.355 0.006 0.055 0.013 0.114 0.021 0.18 0.007 0.059 0.014 0.122 0.022 0.19 0.012 0.080 0.024 0.165 0.037 0.256 0.027 0.18 0.056 0.379 0.091 0.592 0.042 0.201 0.088 0.419 0.136 0.652 0.022 0.116 0.055 0.235 0.087 0.356s0.065 0.247 0.099 0.375c0.018 0.064 0.032 0.129 0.053 0.194s0.041 0.131 0.062 0.197 0.085 0.268 0.129 0.406c0.011 0.035 0.022 0.069 0.033 0.104 0.013 0.034 0.025 0.069 0.038 0.104 0.026 0.069 0.052 0.139 0.078 0.21 0.053 0.14 0.107 0.284 0.162 0.429 0.061 0.143 0.124 0.288 0.188 0.435 0.032 0.073 0.064 0.147 0.096 0.222s0.071 0.147 0.107 0.221c0.073 0.147 0.146 0.297 0.221 0.448 0.077 0.15 0.163 0.297 0.245 0.448 0.042 0.075 0.084 0.15 0.126 0.226s0.091 0.148 0.136 0.223c0.092 0.148 0.185 0.298 0.279 0.448 0.395 0.59 0.834 1.174 1.319 1.727 0.491 0.549 1.023 1.070 1.584 1.55 0.568 0.473 1.165 0.903 1.773 1.285 0.613 0.376 1.239 0.697 1.856 0.973 0.156 0.064 0.311 0.127 0.465 0.19 0.077 0.030 0.152 0.064 0.229 0.091s0.154 0.054 0.23 0.081 0.302 0.108 0.453 0.156c0.151 0.045 0.3 0.089 0.447 0.133 0.074 0.021 0.146 0.045 0.219 0.063s0.146 0.036 0.218 0.053c0.144 0.035 0.286 0.069 0.425 0.103 0.141 0.027 0.279 0.054 0.415 0.080 0.068 0.013 0.135 0.026 0.201 0.038 0.033 0.006 0.066 0.012 0.099 0.019 0.033 0.005 0.066 0.009 0.099 0.014 0.131 0.018 0.259 0.036 0.384 0.053 0.062 0.009 0.124 0.017 0.185 0.026s0.122 0.012 0.182 0.018c0.119 0.011 0.236 0.021 0.349 0.031s0.222 0.021 0.329 0.023c0.007 0 0.014 0 0.021 0.001 0.019 1.088 0.906 1.964 1.999 1.964 0.017 0 0.034-0.001 0.051-0.001v0.001c0 0 0.003-0 0.007-0.001 0.121-0.003 0.24-0.017 0.355-0.041 0.055-0.006 0.114-0.013 0.18-0.021 0.059-0.007 0.122-0.014 0.19-0.022 0.080-0.012 0.165-0.024 0.256-0.037 0.18-0.027 0.379-0.056 0.592-0.091 0.201-0.042 0.419-0.088 0.652-0.136 0.116-0.022 0.235-0.056 0.356-0.087s0.247-0.065 0.375-0.099c0.064-0.018 0.129-0.032 0.194-0.053s0.13-0.041 0.197-0.062 0.268-0.085 0.406-0.129c0.035-0.011 0.069-0.022 0.104-0.033 0.034-0.013 0.069-0.025 0.104-0.038 0.069-0.026 0.139-0.052 0.21-0.078 0.14-0.053 0.284-0.107 0.429-0.162 0.143-0.061 0.288-0.124 0.436-0.188 0.073-0.032 0.147-0.064 0.222-0.096s0.147-0.071 0.221-0.107c0.147-0.073 0.297-0.146 0.448-0.221 0.15-0.077 0.297-0.163 0.448-0.245 0.075-0.042 0.15-0.084 0.226-0.126s0.148-0.091 0.223-0.136c0.148-0.092 0.298-0.185 0.448-0.279 0.59-0.395 1.174-0.834 1.727-1.319 0.549-0.491 1.070-1.023 1.55-1.584 0.473-0.568 0.903-1.165 1.285-1.773 0.376-0.613 0.697-1.239 0.973-1.855 0.064-0.156 0.127-0.311 0.19-0.465 0.030-0.077 0.064-0.152 0.091-0.229s0.054-0.154 0.081-0.23 0.108-0.302 0.156-0.453c0.045-0.151 0.089-0.3 0.133-0.447 0.021-0.074 0.045-0.146 0.063-0.219s0.036-0.146 0.053-0.218c0.035-0.144 0.069-0.286 0.103-0.425 0.027-0.141 0.054-0.279 0.080-0.415 0.013-0.068 0.026-0.135 0.038-0.201 0.006-0.033 0.012-0.066 0.019-0.099 0.005-0.033 0.009-0.066 0.014-0.099 0.018-0.131 0.036-0.259 0.053-0.384 0.009-0.062 0.017-0.124 0.026-0.185s0.012-0.122 0.018-0.182c0.011-0.119 0.021-0.236 0.031-0.349s0.021-0.222 0.023-0.329c0.001-0.017 0.001-0.033 0.002-0.049 1.101-0.005 1.992-0.898 1.992-2 0-0.017-0.001-0.034-0.001-0.051h0.001c0 0-0-0.003-0.001-0.007-0.003-0.121-0.017-0.24-0.041-0.355-0.006-0.055-0.013-0.114-0.021-0.181-0.007-0.059-0.014-0.122-0.022-0.19-0.012-0.080-0.024-0.165-0.037-0.255-0.027-0.18-0.056-0.379-0.091-0.592-0.042-0.201-0.088-0.419-0.136-0.652-0.022-0.116-0.055-0.235-0.087-0.357s-0.065-0.247-0.099-0.375c-0.018-0.064-0.032-0.129-0.053-0.194s-0.041-0.13-0.062-0.197-0.085-0.268-0.129-0.406c-0.011-0.034-0.022-0.069-0.033-0.104-0.013-0.034-0.025-0.069-0.038-0.104-0.026-0.069-0.052-0.139-0.078-0.21-0.053-0.141-0.107-0.284-0.162-0.429-0.061-0.143-0.124-0.288-0.188-0.435-0.032-0.073-0.064-0.147-0.096-0.222s-0.071-0.147-0.107-0.221c-0.073-0.147-0.146-0.297-0.221-0.448-0.077-0.15-0.163-0.297-0.245-0.448-0.042-0.075-0.084-0.15-0.126-0.226s-0.091-0.148-0.136-0.223c-0.092-0.148-0.185-0.298-0.279-0.448-0.395-0.59-0.834-1.174-1.319-1.727-0.491-0.549-1.023-1.070-1.584-1.55-0.568-0.473-1.165-0.903-1.773-1.285-0.613-0.376-1.239-0.697-1.855-0.973-0.156-0.064-0.311-0.127-0.465-0.19-0.077-0.030-0.152-0.063-0.229-0.091s-0.154-0.054-0.23-0.081-0.302-0.108-0.453-0.156c-0.151-0.045-0.3-0.089-0.447-0.133-0.074-0.021-0.146-0.045-0.219-0.063s-0.146-0.036-0.218-0.053c-0.144-0.035-0.286-0.069-0.425-0.103-0.141-0.027-0.279-0.054-0.415-0.080-0.068-0.013-0.135-0.026-0.201-0.038-0.033-0.006-0.066-0.012-0.099-0.019-0.033-0.005-0.066-0.009-0.099-0.014-0.131-0.018-0.259-0.036-0.384-0.053-0.062-0.009-0.124-0.017-0.185-0.026s-0.122-0.012-0.182-0.018c-0.119-0.010-0.236-0.021-0.349-0.031s-0.222-0.021-0.329-0.023c-0.027-0.001-0.052-0.002-0.078-0.003-0.020-1.087-0.907-1.962-1.999-1.962-0.017 0-0.034 0.001-0.051 0.001l-0-0.001c0 0-0.003 0-0.007 0.001-0.121 0.003-0.24 0.017-0.355 0.041-0.055 0.006-0.114 0.013-0.181 0.021-0.059 0.007-0.122 0.014-0.19 0.022-0.080 0.012-0.165 0.024-0.255 0.037-0.18 0.027-0.379 0.056-0.592 0.091-0.201 0.042-0.419 0.088-0.652 0.136-0.116 0.022-0.235 0.056-0.356 0.087s-0.247 0.065-0.375 0.099c-0.064 0.018-0.129 0.032-0.194 0.053s-0.13 0.041-0.197 0.062-0.268 0.085-0.406 0.129c-0.034 0.011-0.069 0.022-0.104 0.033-0.034 0.013-0.069 0.025-0.104 0.038-0.069 0.026-0.139 0.052-0.21 0.078-0.14 0.053-0.284 0.107-0.429 0.162-0.143 0.061-0.288 0.124-0.435 0.188-0.073 0.032-0.147 0.064-0.222 0.096s-0.147 0.071-0.221 0.107c-0.147 0.073-0.297 0.146-0.448 0.221-0.15 0.077-0.297 0.163-0.448 0.245-0.075 0.042-0.15 0.084-0.226 0.126s-0.148 0.091-0.223 0.136c-0.148 0.092-0.298 0.185-0.448 0.279-0.59 0.395-1.174 0.834-1.727 1.319-0.549 0.491-1.070 1.023-1.55 1.584-0.473 0.568-0.903 1.165-1.285 1.773-0.376 0.613-0.697 1.239-0.973 1.855-0.064 0.156-0.127 0.311-0.19 0.465-0.030 0.077-0.063 0.152-0.091 0.229s-0.054 0.154-0.081 0.23-0.108 0.302-0.156 0.453c-0.045 0.151-0.089 0.3-0.132 0.447-0.021 0.074-0.045 0.146-0.063 0.219s-0.036 0.146-0.053 0.218c-0.035 0.144-0.069 0.286-0.103 0.425-0.027 0.141-0.054 0.279-0.080 0.415-0.013 0.068-0.026 0.135-0.038 0.201-0.006 0.033-0.012 0.066-0.019 0.099-0.005 0.033-0.009 0.066-0.014 0.099-0.018 0.131-0.036 0.259-0.053 0.384-0.009 0.062-0.017 0.124-0.026 0.185s-0.012 0.122-0.018 0.182c-0.010 0.119-0.021 0.236-0.031 0.349s-0.021 0.222-0.023 0.329c-0.001 0.017-0.001 0.034-0.002 0.051-1.074 0.035-1.934 0.916-1.934 1.998 0 0.017 0.001 0.034 0.001 0.051zM2.297 14.022c0.001-0.006 0.003-0.012 0.004-0.018 0.020-0.101 0.051-0.204 0.080-0.311s0.059-0.215 0.090-0.327c0.016-0.056 0.029-0.113 0.048-0.169s0.038-0.113 0.057-0.171 0.077-0.233 0.117-0.353c0.010-0.030 0.020-0.060 0.030-0.090 0.012-0.030 0.023-0.060 0.035-0.090 0.023-0.060 0.047-0.121 0.071-0.182 0.047-0.122 0.096-0.246 0.145-0.373 0.055-0.124 0.111-0.25 0.168-0.377 0.028-0.064 0.057-0.128 0.086-0.192s0.064-0.127 0.095-0.191c0.065-0.128 0.13-0.257 0.197-0.388 0.069-0.129 0.145-0.257 0.219-0.387 0.037-0.065 0.074-0.13 0.112-0.195s0.081-0.128 0.121-0.193c0.082-0.128 0.164-0.257 0.247-0.388 0.351-0.509 0.739-1.012 1.167-1.489 0.434-0.472 0.901-0.919 1.394-1.33 0.499-0.404 1.021-0.77 1.552-1.094 0.535-0.319 1.081-0.589 1.617-0.821 0.136-0.053 0.271-0.106 0.404-0.158 0.067-0.025 0.132-0.053 0.199-0.076s0.134-0.045 0.2-0.067 0.262-0.090 0.392-0.129c0.131-0.037 0.26-0.073 0.387-0.109 0.064-0.017 0.126-0.037 0.189-0.052s0.126-0.029 0.189-0.043c0.124-0.028 0.247-0.056 0.367-0.084 0.121-0.021 0.241-0.043 0.358-0.063 0.058-0.010 0.116-0.021 0.173-0.031 0.029-0.005 0.057-0.010 0.085-0.015 0.029-0.003 0.057-0.007 0.085-0.010 0.113-0.014 0.223-0.028 0.331-0.041 0.054-0.007 0.107-0.013 0.159-0.020s0.105-0.008 0.157-0.013c0.103-0.007 0.203-0.015 0.3-0.022s0.191-0.016 0.283-0.016c0.183-0.004 0.354-0.008 0.512-0.012 0.146 0.005 0.28 0.010 0.401 0.014 0.060 0.002 0.116 0.003 0.17 0.005 0.066 0.004 0.128 0.008 0.186 0.012 0.067 0.004 0.127 0.008 0.182 0.012 0.102 0.016 0.206 0.024 0.312 0.024 0.015 0 0.029-0.001 0.044-0.001 0.004 0 0.007 0 0.007 0v-0.001c0.973-0.024 1.773-0.743 1.924-1.68 0.017 0.004 0.033 0.007 0.050 0.011 0.101 0.020 0.204 0.051 0.311 0.080s0.215 0.059 0.327 0.090c0.056 0.016 0.113 0.029 0.169 0.048s0.113 0.038 0.171 0.057 0.233 0.077 0.353 0.117c0.030 0.010 0.060 0.020 0.090 0.030 0.030 0.012 0.060 0.023 0.090 0.035 0.060 0.023 0.121 0.047 0.182 0.071 0.122 0.047 0.246 0.096 0.373 0.145 0.124 0.055 0.25 0.111 0.378 0.168 0.064 0.028 0.128 0.057 0.192 0.086s0.127 0.064 0.191 0.095c0.128 0.065 0.257 0.13 0.388 0.197 0.13 0.069 0.257 0.145 0.387 0.219 0.065 0.037 0.13 0.074 0.195 0.112s0.128 0.081 0.193 0.121c0.128 0.082 0.257 0.164 0.388 0.247 0.509 0.351 1.012 0.739 1.489 1.167 0.472 0.434 0.919 0.901 1.33 1.394 0.404 0.499 0.77 1.021 1.094 1.552 0.319 0.535 0.589 1.081 0.821 1.617 0.053 0.136 0.106 0.271 0.158 0.404 0.025 0.067 0.053 0.132 0.076 0.199s0.045 0.134 0.067 0.2 0.090 0.262 0.129 0.392c0.037 0.131 0.073 0.26 0.109 0.387 0.017 0.064 0.037 0.126 0.052 0.189s0.029 0.126 0.043 0.189c0.028 0.124 0.056 0.247 0.084 0.367 0.021 0.121 0.043 0.241 0.063 0.358 0.010 0.058 0.020 0.116 0.031 0.173 0.005 0.029 0.010 0.057 0.015 0.085 0.003 0.029 0.007 0.057 0.010 0.085 0.014 0.113 0.028 0.223 0.041 0.331 0.007 0.054 0.014 0.107 0.020 0.159s0.008 0.105 0.013 0.157c0.007 0.103 0.015 0.203 0.022 0.3s0.016 0.191 0.016 0.283c0.004 0.183 0.008 0.354 0.012 0.512-0.005 0.146-0.010 0.28-0.014 0.401-0.002 0.060-0.003 0.116-0.005 0.17-0.004 0.066-0.008 0.128-0.012 0.186-0.004 0.067-0.008 0.127-0.012 0.182-0.016 0.102-0.024 0.206-0.024 0.312 0 0.015 0.001 0.029 0.001 0.044-0 0.004-0 0.007-0 0.007h0.001c0.024 0.961 0.726 1.754 1.646 1.918-0.002 0.009-0.004 0.018-0.006 0.028-0.020 0.102-0.051 0.204-0.080 0.311s-0.059 0.215-0.090 0.327c-0.016 0.056-0.029 0.113-0.048 0.169s-0.038 0.113-0.057 0.171-0.077 0.233-0.117 0.353c-0.010 0.030-0.020 0.060-0.030 0.090-0.012 0.030-0.023 0.060-0.035 0.090-0.023 0.060-0.047 0.121-0.071 0.182-0.047 0.122-0.096 0.246-0.145 0.373-0.055 0.124-0.111 0.25-0.169 0.378-0.028 0.064-0.057 0.128-0.086 0.192s-0.064 0.127-0.095 0.191c-0.065 0.128-0.13 0.257-0.197 0.388-0.069 0.129-0.145 0.257-0.219 0.387-0.037 0.065-0.074 0.13-0.112 0.195s-0.081 0.128-0.121 0.193c-0.082 0.128-0.164 0.257-0.247 0.388-0.351 0.509-0.738 1.012-1.167 1.489-0.434 0.472-0.901 0.919-1.394 1.33-0.499 0.404-1.021 0.77-1.552 1.094-0.535 0.319-1.081 0.589-1.617 0.821-0.136 0.053-0.271 0.106-0.404 0.158-0.067 0.025-0.132 0.053-0.199 0.076s-0.134 0.045-0.2 0.067-0.262 0.090-0.392 0.129c-0.131 0.037-0.26 0.073-0.387 0.109-0.064 0.017-0.126 0.037-0.189 0.052s-0.126 0.029-0.189 0.043c-0.124 0.028-0.247 0.056-0.367 0.084-0.122 0.021-0.241 0.043-0.358 0.063-0.058 0.010-0.116 0.021-0.173 0.031-0.029 0.005-0.057 0.010-0.085 0.015-0.029 0.003-0.057 0.007-0.085 0.010-0.113 0.014-0.223 0.028-0.331 0.041-0.054 0.007-0.107 0.014-0.159 0.020s-0.105 0.008-0.157 0.013c-0.103 0.007-0.203 0.015-0.3 0.022s-0.191 0.016-0.283 0.016c-0.183 0.004-0.354 0.008-0.512 0.012-0.146-0.005-0.28-0.010-0.401-0.014-0.060-0.002-0.116-0.003-0.17-0.005-0.066-0.004-0.128-0.008-0.186-0.012-0.067-0.004-0.127-0.008-0.182-0.012-0.102-0.016-0.206-0.024-0.312-0.024-0.015 0-0.029 0.001-0.044 0.001-0.004-0-0.007-0-0.007-0v0.001c-0.969 0.024-1.766 0.737-1.921 1.668-0.1-0.020-0.201-0.050-0.306-0.079-0.106-0.029-0.215-0.059-0.327-0.090-0.056-0.016-0.113-0.029-0.169-0.048s-0.113-0.038-0.171-0.057-0.233-0.077-0.353-0.117c-0.030-0.010-0.060-0.020-0.090-0.030-0.030-0.012-0.060-0.023-0.090-0.035-0.060-0.023-0.121-0.047-0.182-0.071-0.122-0.048-0.246-0.096-0.373-0.145-0.124-0.055-0.25-0.111-0.377-0.168-0.064-0.028-0.128-0.057-0.192-0.086s-0.127-0.064-0.191-0.095c-0.128-0.065-0.257-0.13-0.388-0.197-0.13-0.069-0.257-0.145-0.387-0.219-0.065-0.037-0.13-0.074-0.195-0.112s-0.128-0.081-0.193-0.121c-0.128-0.082-0.257-0.164-0.388-0.247-0.509-0.351-1.012-0.738-1.489-1.166-0.472-0.434-0.919-0.901-1.33-1.394-0.404-0.499-0.77-1.021-1.094-1.552-0.319-0.535-0.589-1.081-0.821-1.617-0.053-0.136-0.106-0.271-0.158-0.404-0.025-0.067-0.053-0.132-0.076-0.199s-0.045-0.134-0.067-0.2-0.090-0.262-0.129-0.392c-0.037-0.131-0.073-0.26-0.109-0.387-0.017-0.064-0.037-0.126-0.052-0.189s-0.029-0.126-0.043-0.189c-0.028-0.124-0.056-0.247-0.084-0.367-0.021-0.121-0.043-0.241-0.063-0.358-0.010-0.058-0.021-0.116-0.031-0.173-0.005-0.029-0.010-0.057-0.015-0.085-0.003-0.029-0.007-0.057-0.010-0.085-0.014-0.113-0.028-0.223-0.041-0.331-0.007-0.054-0.013-0.107-0.020-0.159s-0.008-0.105-0.013-0.157c-0.007-0.103-0.015-0.203-0.022-0.3s-0.016-0.191-0.016-0.283c-0.004-0.183-0.008-0.354-0.012-0.512 0.005-0.146 0.010-0.28 0.014-0.401 0.002-0.060 0.003-0.116 0.005-0.17 0.004-0.066 0.008-0.128 0.012-0.186 0.004-0.067 0.008-0.127 0.012-0.182 0.015-0.102 0.024-0.206 0.024-0.312 0-0.015-0.001-0.029-0.001-0.044 0-0.004 0.001-0.007 0.001-0.007h-0.001c-0.024-0.981-0.754-1.786-1.701-1.927z",
+				Translate: 	"M16 0c-8.837 0-16 7.163-16 16s7.163 16 16 16 16-7.163 16-16-7.163-16-16-16zM16 30c-1.967 0-3.84-0.407-5.538-1.139l7.286-8.197c0.163-0.183 0.253-0.419 0.253-0.664v-3c0-0.552-0.448-1-1-1-3.531 0-7.256-3.671-7.293-3.707-0.188-0.188-0.442-0.293-0.707-0.293h-4c-0.552 0-1 0.448-1 1v6c0 0.379 0.214 0.725 0.553 0.894l3.447 1.724v5.871c-3.627-2.53-6-6.732-6-11.489 0-2.147 0.484-4.181 1.348-6h3.652c0.265 0 0.52-0.105 0.707-0.293l4-4c0.188-0.188 0.293-0.442 0.293-0.707v-2.419c1.268-0.377 2.61-0.581 4-0.581 2.2 0 4.281 0.508 6.134 1.412-0.13 0.109-0.256 0.224-0.376 0.345-1.133 1.133-1.757 2.64-1.757 4.243s0.624 3.109 1.757 4.243c1.139 1.139 2.663 1.758 4.239 1.758 0.099 0 0.198-0.002 0.297-0.007 0.432 1.619 1.211 5.833-0.263 11.635-0.014 0.055-0.022 0.109-0.026 0.163-2.541 2.596-6.084 4.208-10.004 4.208z",
+				SEO: 		"M16 2c8.837 0 16 7.163 16 16 0 6.025-3.331 11.271-8.25 14h-15.499c-4.92-2.729-8.25-7.975-8.25-14 0-8.837 7.163-16 16-16zM25.060 27.060c2.42-2.42 3.753-5.637 3.753-9.060h-2.813v-2h2.657c-0.219-1.406-0.668-2.755-1.33-4h-3.327v-2h2.009c-0.295-0.368-0.611-0.722-0.949-1.060-1.444-1.444-3.173-2.501-5.060-3.119v2.178h-2v-2.658c-0.656-0.102-1.324-0.155-2-0.155s-1.344 0.053-2 0.155v2.658h-2v-2.178c-1.887 0.617-3.615 1.674-5.060 3.119-0.338 0.338-0.654 0.692-0.949 1.060h2.009v2h-3.327c-0.662 1.245-1.111 2.594-1.33 4h2.657v2h-2.813c0 3.422 1.333 6.64 3.753 9.060 0.335 0.335 0.685 0.648 1.049 0.94h6.011l1.143-16h1.714l1.143 16h6.011c0.364-0.292 0.714-0.606 1.049-0.94z",
+				RAG: 		"M32 10l-16-8-16 8 16 8 16-8zM16 4.655l10.689 5.345-10.689 5.345-10.689-5.345 10.689-5.345zM28.795 14.398l3.205 1.602-16 8-16-8 3.205-1.602 12.795 6.398zM28.795 20.398l3.205 1.602-16 8-16-8 3.205-1.602 12.795 6.398z",
+			},
+			aiservice: false,
+			tokenstats: 0,
+			useragreement: false,
+			loading: false,
+			item: data.item,
+			content: data.content,
+			urlinfo: data.urlinfo,
+			labels: data.labels,
+			settings: data.settings,
+			kixoteSettings: {},
+			settingsSaved: false,
+			command: '',
+		}
+	},
+	mounted() {
+
+		eventBus.$on('kiExit', this.stopKixote);
+
+		eventBus.$on('kiScrollBottom', this.scrollToBottom);
+
+		eventBus.$on('switchLoading', this.switchLoading);
+
+		eventBus.$on('updateKixoteSettings', this.updateKixoteSettings);
+
+		eventBus.$on('storeKixoteSettings', this.storeKixoteSettings);
+
+		eventBus.$on('agreetoservice', this.switchAgreement);
+	},
+	watch: {
+	    showKixote(newValue) {
+	      if (newValue) {
+	        this.loadKixoteSettings();
+	        this.loadContent();
+	        this.loadTokenStats();
+	      }
+	    }
+	},	
+	computed: {
+		currentTabComponent: function ()
+		{
+			return 'tab-' + this.currentTab.toLowerCase()
+		}
+	},	
+	methods: {
+		loadKixoteSettings()
+		{
+			self = this;
+
+			tmaxios.get('/api/v1/kixotesettings',{
+				params: {
+					'url':  data.urlinfo.route
+				}
+			})
+			.then(function (response)
+			{
+		        if (response.data.settings)
+		        {
+		        	self.kixoteSettings = response.data.settings;
+		        } 
+			})
+			.catch(function (error)
+			{
+				if(error.response)
+				{
+				}
+			});
+		},
+		loadContent()
+		{
+			self = this;
+
+			tmaxios.get('/api/v1/article/content',{
+				params: {
+					'url':  data.urlinfo.route,
+					'draft': true
+				}
+			})
+			.then(function (response)
+			{
+		        if (response.data.content)
+		        {
+		        	self.content = response.data.content;
+		        } 
+			})
+			.catch(function (error)
+			{
+				if(error.response)
+				{
+				}
+			});
+		},
+		loadTokenStats()
+		{
+			self = this;
+
+			tmaxios.get('/api/v1/tokenstats',{
+				params: {
+					'url':  data.urlinfo.route,
+				}
+			})
+			.then(function (response)
+			{
+		        if (response.data)
+		        {
+		        	self.aiservice 		= response.data.aiservice;
+		        	self.tokenstats 	= response.data.tokenstats;
+		        	self.useragreement 	= response.data.useragreement;
+		        } 
+			})
+			.catch(function (error)
+			{
+				if(error.response)
+				{
+					console.info(response);
+				}
+			});
+		},
+		startKixote()
+		{
+			this.showKixote = true;
+		},
+		stopKixote()
+		{
+			this.showKixote = false;
+			this.currentTab = 'Admin';
+			this.content = '';
+		},
+		switchLoading()
+		{
+			this.loading = !this.loading;
+		},
+		switchAgreement()
+		{
+			this.useragreement = true;
+		},
+        selectTab(tab)
+        {
+        	alert("Select Tab")
+        },
+		scrollToBottom()
+		{
+			this.$nextTick(() => {
+				const displayRef = this.$refs.kdisplay;
+				displayRef.scrollTop = displayRef.scrollHeight;
+			});
+		},
+	    updateKixoteSettings(newSettings)
+	    {
+	    	this.settingsSaved = false;
+	        this.kixoteSettings = { ...this.kixoteSettings, ...newSettings }; // ✅ Merge settings
+	    },
+	    storeKixoteSettings()
+	    {
+			self = this;
+			
+			tmaxios.put('/api/v1/kixotesettings',{
+				'url':				data.urlinfo.route,
+				'kixotesettings': 	this.kixoteSettings
+			})
+			.then(function (response)
+			{
+				self.settingsSaved = true;
+				self.kixoteSettings = response.data.kixotesettings;
+			})
+			.catch(function (error)
+			{
+				if(error.response)
+				{
+					self.kixoteSettings = error.response.data.kixotesettings;
+				}
+			});	    	
+	    }
+	},
+})
+
+kixote.component('tab-generate', {
+	props: ['content', 'item', 'labels', 'urlinfo', 'settings', 'kixoteSettings', 'settingsSaved', 'aiservice', 'useragreement', 'tokenstats'],
+	data: function () {
+	    return {
+	        tabs: [
+	            { value: 'article', name: 'Article' },
+	            { value: 'prompts', name: 'Prompts' },
+/*	            { value: 'tone', name: 'Tone' }, */
+	        ],
+	        currentTab: 'article',
+	        originalmd: '',
+	        activeversion: 0,
+	        versions: [],
+	        prompt: '',
+		    showFocusButton: false,
+		    buttonPosition: { top: 0, left: 0 },
+		    selection: { start: 0, end: 0, text: '' },
+	        editPrompt: '',
+		    addNewPrompt: false,
+	      	newPrompt: {
+	        	title: '',
+	        	content: '',
+	        	active: true,
+	        	system: false
+	      	},
+	      	titleError: false,
+	      	bodyError: false,
+	      	currentFilter: 'all',
+			article: '',
+			index: '',
+      	};
+	},
+	template: `<section class="dark:bg-stone-700 dark:text-stone-200">
+
+					<div v-if="!aiservice" class="p-8 mt-4 w-full">
+					    <div class="bg-stone-700 p-8 border border-stone-500 rounded-lg shadow-md">
+					        <h2 class="text-xl font-bold text-white mb-4">Your AI Assistant for Typemill</h2>
+					        <p class="text-stone-300 mb-4">
+					            To get started with AI-powered assistance, go to <strong class="text-white">System Settings</strong>, open the <strong class="text-white">AI</strong> tab, and follow these steps:
+					        </p>
+					        <ol class="list-decimal list-inside text-stone-300 space-y-2">
+					            <li>Select an AI service.</li>
+					            <li>Choose a model.</li>
+					            <li>Enter your API key.</li>
+					        </ol>
+					        <p class="text-stone-300 mt-4">Once set up, you can start using AI assistance right away!</p>
+					    </div>
+					</div>
+
+					<div v-else-if="content">
+
+						<div v-if="!useragreement" class="p-8 mt-4 inline-block w-full">
+							<div class="bg-stone-700 p-8 border border-stone-500">
+								
+								<div class="w-full mt-5 mb-5">
+									<div class="block mb-1 font-medium">Activate {{aiservice}}</div>
+									<label class="flex items-start mb-2 mt-2">
+										<input 
+											type  = "checkbox" 
+											class = "w-6 h-6 border-stone-300 bg-stone-200" 
+											value = "chatgpt"
+											@change = "agreeTo(aiservice)"
+											>
+											<span class="ml-2 text-sm">
+											    Activate {{aiservice}} to start using AI assistance. By enabling this service, you agree to the terms and conditions of {{aiservice}}. 
+											    Your prompts and article content will be sent to {{aiservice}} to generate responses. 
+											    You can disable {{aiservice}} at any time in your user profile.
+											</span>
+									</label>
+								</div>
+
+							</div>
+						</div>
+
+						<div v-else>
+
+					        <ul class="flex p-8 pb-0">
+					            <li 
+					                v-for 	= "action in tabs" 
+					                :key 	= "action.value" 
+					                @click 	= "setCurrentTab(action.value)"
+									class 	= "border-b-2 border-stone-700 p-2 cursor-pointer hover:bg-stone-900 hover:border-teal-500"
+									:class 	= "{'bg-stone-900 border-teal-500': currentTab === action.value}"
+					            	>
+					                {{ action.name }}
+					            </li>
+					        </ul>
+
+					        <div v-if="currentTab === 'article'">
+
+								<!-- EDITOR -->
+								<div class="relative bg-stone-900 p-8">
+						            <textarea 
+						            	class		= "editor bg-stone-900 no-outline text-white caret-white focus:outline-none"
+										id 			= "kieditor"
+										ref 		= "kieditor" 
+										v-model 	= "versions[activeversion]"
+		      							@mouseup 	= "detectSelection($event)"
+	      								@keyup 		= "detectSelection($event)"
+						            	>
+						            	{{ article }}
+						            </textarea>
+
+								    <!-- FOCUS BUTTON -->
+								    <button 
+								    	v-if 	= "showFocusButton" 
+								      	@click 	= "wrapInFocus" 
+								      	class 	= "absolute bg-teal-700 hover:bg-teal-500 border border-stone-500 text-white px-2 py-1 transition duration-100"
+								      	:style 	= "{ top: buttonPosition.top + 'px', left: buttonPosition.left + 'px' }"
+								    	>
+								      	Focus
+								    </button>
+
+								    <!-- PAGING / BUTTONS -->
+									<div class="flex justify-between bg-stone-900 p-2">
+										<ul class="list flex">
+											<li v-for="version,index in versions">
+												<button 
+													class = "p-1 mr-1 bg-stone-700 border border-stone-700 hover:border-teal-500"
+													:class = "{'border-teal-500': index === activeversion}"
+													@click.prevent = "switchVersion(index)"
+													>
+													{{ index }}
+												</button>
+											</li>
+										</ul>
+										<div class="flex">
+											<button 
+												class = "p-1 border border-stone-700 hover:border-teal-500"
+												@click.prevent = "storeArticle()"
+												>
+												store
+											</button>
+										</div>
+									</div>
+								</div>
+
+								<!-- PROMPT INPUT -->
+								<div class="w-full bg-stone-600 px-8 py-2">
+									<div class="flex items-start">
+										<span class="text-teal-300 mr-1">Ki></span>
+										<textarea 
+											v-model.trim 	= "prompt" 
+											ref 			= "prompteditor"	
+											class 			= "flex-grow bg-stone-600 focus:outline-none border-0 caret-white" 
+											placeholder 	= "Prompt..."
+				            				@keydown.enter 	= "handleKeydown"
+			            					@input 			= "resizePromptEditor"
+											></textarea>
+								        <button 
+								        	class 	= "text-teal-300 px-2" 
+								        	@click 	= "submitPrompt"
+								        	>submit
+								        </button>
+								        <span class="px-1 text-stone-700">|</span> 
+								        <button 
+								        	class 	= "text-teal-300 px-2" 
+								        	@click 	= "exit"
+								        	>exit
+								        </button>
+									</div>
+								</div>
+
+								<!-- PROMPT COLLECTION -->
+								<div class="px-8 py-4">
+									<ul class="list flex">
+									  <li 
+									    v-for="(promptitem, name) in promptlistactive" 
+									    :key="index" 
+									    class="mr-3 hover:text-teal-300 cursor-pointer"
+									  >
+									    <button 
+									      class="button" 
+									      @click.prevent="usePrompt(name)"
+									    >
+									      {{ promptitem.title }}
+									    </button>
+									  </li>
+									</ul>
+								</div>
+
+					        </div>
+
+					        <div v-else-if="currentTab === 'prompts'">
+								<div class="w-full bg-stone-900 px-8 py-8">
+									<div class="flex justify-between py-2 px-2">
+										<button @click.prevent="addNewPrompt = !addNewPrompt">
+											<span v-if="addNewPrompt">-</span>
+											<span v-else>+</span> add
+										</button>
+										<div class="flex space-x-2">
+										  <span class="px-1">Filter:</span>
+										  <button
+										    @click.prevent="currentFilter = 'system'"
+										    :class="{'text-teal-500': currentFilter === 'system', 'text-white': currentFilter !== 'system'}"
+										    class="px-1 transition-colors"
+										  >
+										    system prompts
+										  </button>
+										  <button
+										    @click.prevent="currentFilter = 'user'"
+										    :class="{'text-teal-500': currentFilter === 'user', 'text-white': currentFilter !== 'user'}"
+										    class="px-1 transition-colors"
+										  >
+										    my prompts
+										  </button>
+										</div>
+
+									</div>
+									<transition name="fade">
+										<div v-if="addNewPrompt" class="py-2 px-2">
+											<fieldset class="border border-stone-700 p-4">
+												<div class="flex w-full justify-between">
+													<input 
+													  	type 		= "text" 
+													  	class 		= "w-50 p-2 my-1 font-mono bg-stone-600 text-white caret-white focus:outline-none"
+														@input 		= "validateTitle(newPrompt.title)"
+														@focus 		= "editPrompt = newPrompt.title"
+														placeholder = "Enter a title"
+													  	v-model 	= "newPrompt.title"
+													/>
+												</div>
+												<span v-if="titleError" class="text-red-500 text-sm">{{ titleError }}</span>
+												<textarea 
+													class 		= "w-full p-2 my-1 font-mono bg-stone-600 no-outline text-white caret-white focus:outline-none"
+													@input 		= "validateBody(newPrompt.content)"
+													@focus 		= "editPrompt = newPrompt.name"
+													placeholder = "Enter a prompt"
+													v-model 	= "newPrompt.content"
+													>
+												</textarea>
+												<span v-if="bodyError" class="text-red-500 text-sm">{{ bodyError }}</span>
+												<button v-if="!titleError && !bodyError"
+													@click.prevent="saveNewPrompt"
+													class="px-1 text-teal-300 hover:text-teal-500 transition-colors"													
+													>save
+												</button>
+											</fieldset>
+										</div>
+									</transition>
+									<div 
+										v-for = "(prompttemplate, name) in filteredPrompts"
+										:key="name"
+										class = "py-2 px-2"
+										>
+										<fieldset class="border border-stone-700 p-4">
+											<div class="flex w-full justify-between">
+												<input 
+												  	type 		= "text" 
+												  	class 		= "w-50 p-2 my-1 font-mono bg-stone-600 text-white caret-white focus:outline-none"
+												  	:readonly 	= "prompttemplate.system"
+												  	v-model 	= "prompttemplate.title"
+													@focus 		= "editPrompt = name"
+			                                      	@input 		= "updatePrompt(kixoteSettings, name)"
+												/>
+												<div class="flex space-x-2 items-center">
+													<div v-if="prompttemplate.system == false">
+														<button 
+															@click.prevent="deletePrompt(name)" 
+														    class="px-1 text-rose-300 hover:text-rose-500 transition-colors"
+															>delete
+														</button>
+														<span 
+															v-if="editPrompt === name && settingsSaved" 
+															class="text-teal-300">
+															✔ saved
+														</span>
+														<button 
+															v-else
+															@click.prevent="savePrompts"
+														    class="px-1 text-teal-300 hover:text-teal-500 transition-colors"
+															>update
+														</button>
+													</div>
+													<div class="flex items-center space-x-2">
+													  <label class="text-sm text-white">Active</label>
+													  <input 
+													    type 	= "checkbox" 
+													    class 	= "w-5 h-5 border border-stone-300 bg-stone-600 text-white cursor-pointer" 
+													    v-model = "prompttemplate.active"
+		                                                @change = "updateSettings(kixoteSettings)"
+													  >
+													</div>
+												</div>
+											</div>
+											<span v-if="prompttemplate.errors?.title" class="text-red-500 text-sm">{{ prompttemplate.errors.title }}</span>
+											<textarea 
+												class 		= "w-full p-2 my-1 font-mono bg-stone-600 no-outline text-white caret-white focus:outline-none"
+												v-model 	= "prompttemplate.content"
+												:readonly 	= "prompttemplate.system"
+		                                        @focus 		= "editPrompt = name"
+		                                        @input 		= "updatePrompt(kixoteSettings, name)"
+												>
+											</textarea>
+											<span v-if="prompttemplate.errors?.body" class="text-red-500 text-sm">{{ prompttemplate.errors.body }}</span>
+										</fieldset>
+									</div>
+								</div>
+					        </div>
+
+					        <div v-else-if="currentTab === 'tone'">
+					            <p>Mimic your tone tab content here.</p>
+					        </div>
+
+						</div>
+					</div>
+	
+					<div v-else class="p-8 mt-4 inline-block w-full">
+						<p class="text-center bg-stone-700 p-8 border border-stone-500">Content Generation only works on content pages. You are currently in the settings area.</p>
+					</div>
+
+				</section>`,
+	mounted: function()
+	{	
+		this.initAutosize();
+
+		if(this.versions.length == 0)
+		{
+			this.initializeContent()
+		}
+	},
+	computed: {
+	    promptlistactive()
+	    {
+	        return Object.values(this.kixoteSettings?.promptlist || {}).filter(prompt => prompt.active);
+	    },
+		promptlistsystem()
+		{
+	    	return Object.fromEntries(
+	      		Object.entries(this.kixoteSettings?.promptlist || {}).filter(([key, prompt]) => prompt.system)
+	    	);
+	  	},
+	  	promptlistuser()
+	  	{
+	    	return Object.fromEntries(
+	      		Object.entries(this.kixoteSettings?.promptlist || {}).filter(([key, prompt]) => !prompt.system)
+	    	);
+	  	},
+	    filteredPrompts()
+	    {
+	    	if(this.currentFilter === 'system')
+	    	{
+	        	return this.promptlistsystem;
+	      	} 
+	      	else if (this.currentFilter === 'user')
+	      	{
+	        	return this.promptlistuser;
+	      	}
+	      	else 
+	      	{
+	        	return this.kixoteSettings.promptlist;
+	      	}
+	    }
+
+    },
+	methods: {
+	    initAutosize()
+	    {
+	        let kieditor = this.$refs["kieditor"];
+	        let prompteditor = this.$refs["prompteditor"];
+
+	        if (kieditor)
+	        {
+	            autosize(kieditor);
+	        }
+	        if (prompteditor)
+	        {
+	            autosize(prompteditor);
+	        }
+	    },		
+		agreeTo(aiservice)
+		{
+			var self = this;
+
+			tmaxios.post('/api/v1/agreetoaiservice',{
+				'aiservice': aiservice
+			})
+			.then(function (response)
+			{
+				eventBus.$emit('agreetoservice');
+				self.$nextTick(() => {
+		        	self.resizeAiEditor();
+				});
+			})
+		},
+	    setCurrentTab(tabValue)
+	    {
+	        this.currentTab = tabValue;
+
+	        if(tabValue == 'article')
+	        {
+	        	this.resizeAiEditor();
+	        }
+	    },
+		initializeContent()
+		{ 
+			let markdown = '';
+
+			for(block in this.content)
+			{
+				markdown += this.content[block].markdown + '\n\n';
+			}
+			this.originalmd = markdown;
+			this.versions.push(markdown);
+			this.resizeAiEditor();
+		},
+	    resizeAiEditor()
+	    {
+	        this.$nextTick(() => {
+	            let kieditor = this.$refs["kieditor"];
+	            if (kieditor)
+	            {
+	                autosize.update(kieditor);
+	            }
+	        });
+	    },
+	    resizePromptEditor()
+	    {
+	        this.$nextTick(() => {
+	            let prompteditor = this.$refs["prompteditor"];
+	            if (prompteditor) 
+	            {
+	                autosize.update(prompteditor);
+	            }
+	        });
+	    },
+        usePrompt(index)
+        {
+        	this.prompt = this.promptlistactive[index].content;
+		    this.resizePromptEditor();
+        },
+        switchVersion(index)
+        {
+        	this.activeversion = index;
+		    this.resizeAiEditor();
+        },
+		submitPrompt()
+		{
+			var self = this;
+			eventBus.$emit('switchLoading');
+
+			tmaxios.post('/api/v1/chatgpt',{
+				'prompt': this.prompt,
+				'article': this.versions[this.activeversion]
+			})
+			.then(function (response)
+			{
+				eventBus.$emit('switchLoading');
+		        if (response.data.message === 'Success')
+		        {
+		            let answer = response.data.data.choices[0].message.content;
+					answer = answer.replace(/<\/?focus>/g, '');
+		            self.versions.push(answer);
+		            self.activeversion = self.versions.length-1;
+		            self.prompt = '';
+		            self.resizePromptEditor();
+		            self.resizeAiEditor();
+		        } 
+			})
+			.catch(function (error)
+			{
+				eventBus.$emit('switchLoading');
+				if(error.response)
+				{
+					self.disabled 		= false;
+					self.message 		= handleErrorMessage(error);
+					self.messageClass 	= 'bg-rose-500';
+					self.licensemessage = error.response.data.message;
+					if(error.response.data.errors !== undefined)
+					{
+						self.errors = error.response.data.errors;
+					}
+				}
+			});
+		},
+        handleKeydown(event)
+        {
+            if (event.key === 'Enter' && !event.shiftKey)
+            {
+                event.preventDefault();
+                this.submitPrompt();
+            } 
+            else if (event.key === 'Enter' && event.shiftKey)
+            {
+                // Allow line break
+                const textarea = event.target;
+                const start = textarea.selectionStart;
+                const end = textarea.selectionEnd;
+                textarea.value = textarea.value.slice(0, start) + '\n' + textarea.value.slice(end);
+                textarea.selectionStart = textarea.selectionEnd = start + 1;
+				
+				let prompteditor = this.$refs["prompteditor"];				
+				autosize.update(prompteditor);
+
+                event.preventDefault();
+            }
+        },
+	    detectSelection(event)
+	    {
+			const textarea = this.$refs.kieditor;
+	    	const start = textarea.selectionStart;
+	    	const end = textarea.selectionEnd;
+	    	const text = textarea.value.substring(start, end);
+
+	    	if (text.length > 0)
+	    	{
+	    		this.selection = { start, end, text };
+	        	this.showFocusButton = true;
+	        	this.buttonPosition = {
+	        		top: event.offsetY-20,
+	        		left: event.offsetX,
+	        	};
+	      	} 
+	      	else 
+	      	{
+	        	this.showFocusButton = false;
+	      	}
+	    },
+	    wrapInFocus()
+	    {
+	    	const textarea = this.$refs.kieditor;
+	      	const { start, end, text } = this.selection;
+
+	      	if (!text) return;
+
+	      	const newText = 
+	        	textarea.value.substring(0, start) +
+	        	`<focus>${text}</focus>` +
+	        	textarea.value.substring(end);
+
+	      	this.versions[this.activeversion] = newText;
+	      	this.showFocusButton = false;
+	    },
+	    storeArticle(append = false)
+	    {
+			var self = this;
+
+			var content = this.versions[this.activeversion];
+			var title = 'Title missing';
+
+			var regex = /^#(?!#)([^#\n]+)/m;
+		    var match = content.match(regex);
+		    if (match)
+		    {
+		      var title = '# ' + match[1];
+		      var content = content.replace(regex, '');
+		    }
+
+			tmaxios.put('/api/v1/draft',{
+				'url':	data.urlinfo.route,
+				'item_id': this.item.keyPath,
+				'title': title.trim(),
+				'body': content.trim()
+			})
+			.then(function (response)
+			{
+				location.reload();
+			})
+			.catch(function (error)
+			{
+				if(error.response)
+				{
+					let message = handleErrorMessage(error);
+					if(message)
+					{
+						eventBus.$emit('publishermessage', message);
+					}
+				}
+			});
+	    },
+	    slugify(text)
+	    {
+		    return text
+		        .toLowerCase()                    // Convert to lowercase
+		        .replace(/[^a-z0-9]/g, '-')        // Replace non-alphanumeric characters with '-'
+		        .replace(/-+/g, '-')               // Remove multiple dashes
+		        .trim();                           // Trim leading/trailing dashes
+		},
+		updateSettings(newSettings)
+		{
+			eventBus.$emit('updateKixoteSettings', newSettings); // Emit event
+        },
+	    validateTitle(title)
+	    {
+	      	const titleRegex = /^[a-zA-Z0-9 ]{0,20}$/;
+	      	if (!titleRegex.test(title))
+	      	{
+	      		this.titleError = "Title can only contain letters, numbers, and spaces (max 20 chars).";
+	      	}
+	      	else
+	      	{
+	      		this.titleError = false;
+	      	}
+	    },
+	    validateBody(body)
+	    {
+			const bodyRegex = /<\/?[^>]+(>|$)/g;
+	      	if (bodyRegex.test(body))
+	      	{
+	        	this.bodyError = "HTML and script tags are not allowed.";
+	      	} 
+	      	else 
+	      	{
+	        	this.bodyError = false;
+	      	}
+	    },		
+		savePrompts()
+		{
+			if (!this.titleError && !this.bodyError)
+			{
+	            eventBus.$emit('storeKixoteSettings');
+			}			
+		},
+		updatePrompt(kixoteSettings, promptname)
+		{
+			if(kixoteSettings.promptlist[promptname] != undefined)
+			{
+				kixoteSettings.promptlist[promptname].errors = {};
+
+				this.validateTitle(kixoteSettings.promptlist[promptname].title);
+				kixoteSettings.promptlist[promptname].errors.title = this.titleError;
+
+				this.validateBody(kixoteSettings.promptlist[promptname].content);
+				kixoteSettings.promptlist[promptname].errors.body = this.bodyError;
+
+				this.updateSettings(kixoteSettings);
+			}
+		},
+		deletePrompt(name)
+		{
+	      	var promptlist = this.kixoteSettings.promptlist;
+
+    		delete promptlist[name];
+
+    		this.updateSettings(promptlist);
+
+    		eventBus.$emit('storeKixoteSettings');
+
+		},
+	    saveNewPrompt()
+	    {
+			if (this.titleError || this.bodyError)
+			{
+				return false;
+			}
+
+	      	var promptlist = this.kixoteSettings.promptlist;
+	      	var promptkey = this.slugify(this.newPrompt.title);
+	      	promptlist[promptkey] = {
+	        	title: this.newPrompt.title,
+	        	content: this.newPrompt.content,
+	        	active: this.newPrompt.active,
+	       	 	system: this.newPrompt.system
+	      	};
+
+	      	this.newPrompt = {
+	        	title: '',
+	        	content: '',
+	        	active: true,
+	        	system: false
+	      	};
+
+	      	this.addNewPrompt = false;
+	      	this.updateSettings(promptlist);
+            eventBus.$emit('storeKixoteSettings');
+	    },
+	    exit()
+	    {
+			eventBus.$emit('kiExit');
+	    },        
+	}
+})
+
+// publish tree
+// unpublish tree
+// load page
+// save page
+// translate page
+// translate tree
+
+
+const kixoteCommands = [
+					{
+						name: 'help',
+						description: 'List all available commands with a short description.',
+						method: function()
+								{
+									let result = ['<ul>'];
+									kixoteCommands.forEach((command) =>
+									{
+										let block = '<li><span class="text-teal-300">' + command.name + ':</span> ' + command.description + '</li>';
+										result.push(block);
+									})
+									result.push('</ul>');
+
+									eventBus.$emit('answer', result);
+								},
+						answer: '<p>You can use the following commands:</p>',
+					},
+					{
+						name: 'exit',
+						description: 'Exit Kixote and close the Kixote window.',
+					},
+					{
+						name: 'clear navigation',
+						description: 'Clear the cached navigation.',
+						method: function()
+								{
+									var self = this;
+
+									tmaxios.delete('/api/v1/clearnavigation',{
+									})
+									.then(function (response)
+									{
+										eventBus.$emit('answer', ['navigation has been cleared']);
+									})
+									.catch(function (error)
+									{
+										eventBus.$emit('answer', getKixoteError(error));
+									});
+								},
+						answer: ['Asking server ...'],
+					},
+					{
+						name: 'clear cache',
+						description: 'Clear the cache-folder and delete cached files.',
+						method: function()
+								{
+									var self = this;
+
+									tmaxios.delete('/api/v1/cache',{
+									})
+									.then(function (response)
+									{
+										eventBus.$emit('answer', ['cache has been cleared']);
+									})
+									.catch(function (error)
+									{
+										eventBus.$emit('answer', getKixoteError(error));
+									});
+								},
+						answer: ['Asking server ...'],
+					},
+					{
+						name: 'show security log',
+						description: 'Show the security log that you can activate in the security tab of the system settings.',
+						method: function()
+								{
+									var self = this;
+
+									tmaxios.get('/api/v1/securitylog',{
+									})
+									.then(function (response)
+									{
+										eventBus.$emit('answer', response.data.lines);
+										eventBus.$emit('nextCommands', ['clear security log']);
+									})
+									.catch(function (error)
+									{
+										eventBus.$emit('answer', getKixoteError(error));
+									});
+								},
+						answer: ['Asking server ...'],
+					},
+					{
+						name: 'clear security log',
+						description: 'Clear the security log.',
+						method: function()
+								{
+									var self = this;
+
+									tmaxios.delete('/api/v1/securitylog',{
+									})
+									.then(function (response)
+									{
+										eventBus.$emit('answer', ['Security log has been cleared.']);
+									})
+									.catch(function (error)
+									{
+										eventBus.$emit('answer', getKixoteError(error));
+									});
+								},
+						answer: ['Asking server ...'],
+					},
+/*
+					{
+						name: 'skip',
+						description: 'Skip the current task and start a new command.',
+						answer: ['We skipped the current task. Waiting for your next command.'],
+					},
+					{
+						name: 'create content',
+						description: 'Create content with artificial intelligence.',						
+						params: [
+									{
+										name: 'topic',
+										value: false,
+										question: 'Please describe a topic in few words:',
+										required: true,
+										regex: false,
+									},
+									{
+										name: 'length',
+										value: false,
+										question: 'How many words should the text have?',
+										required: true,
+										regex: false,
+									},
+								],
+						method: function(params)
+								{ 
+									eventBus.$emit('storable', ['Lorem ipsum in markdown.']);
+									eventBus.$emit('nextCommands', ['transform', 'translate', 'save to page']);
+									eventBus.$emit('answer', ['This is the answer from the server. The server can ask an AI service with the collected parameters and return any kind of answer in HTML and preferably in markdown, so that typemill can process the content again (e.g. store, translate, and more).']);
+								},
+						answer: ['Creating content...'],
+					},
+					{
+						name: 'save to page',
+						description: 'Save markdown to current page.',
+						method: function(params)
+								{
+									console.info(params[0]);
+									eventBus.$emit('answer', ['saved content to page']);
+								},
+						answer: ['Save content...'],
+					},
+*/
+				];
+
+
+
+kixote.component('tab-admin', {
+	props: [],
+	data: function () {
+		return {
+			messenger: [],
+			messengerIndex: false,
+			command: '',
+			params: false,
+		}
+	},
+	template: `<section class="dark:bg-stone-700 dark:text-stone-200">
+					<div class="p-8 pb-4">
+						<h1 class="mb-d3">Hello, I am <span class="text-teal-300">Kixote</span> from Typemill. How can I help?</h1>
+					</div>
+					<div>
+						<div v-for="message,index in messenger">
+							<div v-html="message.command" class="w-100 bg-stone-600 px-8 py-2"></div>
+							<div class="p-8">
+								<div v-for="block in message.answer" v-html="block"></div>
+								<div class="flex w-full justify-end" v-if="message.nextCommands.length > 0">
+									<button v-for="nextCommand in message.nextCommands" @click="submitInlineCommand(nextCommand,index)" class="text-xs text-teal-500 hover:text-stone-700 hover:bg-teal-500 border border-teal-500 p-1 ml-1">{{ nextCommand }}</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div>
+						<div class="w-full bg-stone-600 px-8 py-2">
+							<p class="flex">
+								<span class="text-teal-300 mr-1">Ki></span> 
+								<input type="text" ref="kinput" @keyup.enter="submitCommand" v-model.trim="command" class="flex-grow bg-stone-600 focus:outline-none border-0 caret-white" placeholder="Command..." />
+								<button class="text-teal-300" @click="exit">exit</button>
+							</p>
+						</div>
+						<div class="px-8 pt-2">
+							<p class="text-xs text-stone-200">Enter "help" to see a list of commands</p>
+						</div>
+					</div>
+				</section>`,
+	mounted: function()
+	{
+//		this.clear();
+
+		eventBus.$on('answer', messages => {
+			let lastKey = this.messenger.length - 1;
+			messages.forEach((message) =>
+			{
+				this.messenger[lastKey].answer.push(message);
+			});
+		});
+
+		eventBus.$on('nextCommands', nextcommands => {
+			let lastKey = this.messenger.length - 1;
+			nextcommands.forEach((nextcommand) =>
+			{
+				this.messenger[lastKey].nextCommands.push(nextcommand);
+			});
+		});
+
+		eventBus.$on('storable', data => {
+			let lastKey = this.messenger.length - 1;
+			this.messenger[lastKey].storable = data;
+		});
+
+		this.focusOnInput();
+	},
+	methods: {
+		exit()
+		{
+			eventBus.$emit('kiExit');
+		},
+		clear()
+		{
+			this.messenger = [];
+			this.params = false;
+			this.command = '';
+		},
+		focusOnInput()
+		{
+			this.$nextTick(() => {
+				const inputRef = this.$refs.kinput;
+				inputRef.focus();
+  			});
+		},		
+		finishCommand()
+		{
+			this.command = '';
+			this.focusOnInput();
+			eventBus.$emit('kiScrollBottom');
+		},
+		submitInlineCommand(command, index)
+		{
+			this.command = command;
+			this.messengerIndex = index;
+			// should we submit this.messenger[index].storable as params?
+			let storable = this.messenger[index].storable;
+			this.submitCommand(false, storable);
+		},
+		submitCommand(event, params = false)
+		{
+			if(this.command.trim() == '')
+			{
+				return;
+			}
+
+			let currentCommand = '<span class="text-teal-300">Ki></span> ' + this.command;
+			
+			let message = { 'command' : currentCommand, 'answer' : [], 'storable' : false, 'nextCommands' : [] }
+
+			if(this.command == 'exit')
+			{
+				this.exit();
+
+				return;
+			}
+
+			if(this.command == 'skip')
+			{
+				message.answer.push('We skipped the current task. Start with a new command.');
+
+				this.messenger.push(message);
+
+				this.params = false;
+
+				this.finishCommand();
+
+				return;
+			}
+
+			if(this.params)
+			{
+				let question = this.getNextQuestion(this.params);
+
+				if(question)
+				{
+					message.answer.push(question);
+
+					this.messenger.push(message);
+
+					this.finishCommand();
+
+					return;
+				}
+
+				// if no further question submit inital command with params
+				let params 	= this.params;
+				
+				this.params = false;
+				
+				this.command = params[0].value;
+				
+				this.submitCommand(false, params);
+				
+				return;
+			}
+
+			let commandObject = this.getCommandObject(this.command);
+			
+			if(!commandObject)
+			{
+				message.answer.push('Command not found. Type "help" to see a list of available commands.');
+
+				this.messenger.push(message);
+
+				this.finishCommand();
+
+				return;
+			}
+
+			if(params)
+			{
+				message.answer.push('Working ...');
+
+				this.messenger.push(message);
+
+				commandObject.method(params);
+
+				this.finishCommand();
+
+				return;
+			}
+
+			let initialParams = this.getCommandParams(commandObject);
+
+			if(initialParams)
+			{
+				this.params = initialParams;
+
+				let question = this.getFirstQuestion(initialParams);
+
+				if(question)
+				{
+					message.answer.push(question);
+
+					this.messenger.push(message);
+
+					this.finishCommand();
+
+					return;
+				}
+
+				console.info("no questions found");
+			}
+
+			if(commandObject.answer)
+			{
+				message.answer.push(commandObject.answer);
+			}
+
+			this.messenger.push(message);
+
+			commandObject.method();
+
+			this.finishCommand();
+		},
+		getCommandObject(command)
+		{
+			let result = false;
+	
+			kixoteCommands.forEach((commandObject) =>
+			{
+				if(commandObject.name == command)
+				{
+					result = commandObject;
+				}
+			});
+
+			return result;
+		},
+		getCommandParams(commandObject)
+		{
+			if(commandObject.params)
+			{
+				let params = [
+					{
+						name: 'submitWithCommand',
+						value: commandObject.name
+					}
+				];
+
+				commandObject.params.forEach((param) => 
+				{
+					param.value = false;
+					params.push(param);
+				});
+
+				return params;
+			}
+
+			return false;
+		},
+		getFirstQuestion(params)
+		{
+			if(typeof params[1].question != "undefined")
+			{
+				return params[1].question;
+			}
+
+			return false;
+		},
+		getNextQuestion(params)
+		{
+			let length = params.length;
+
+			for (var index = 0; index < length; index++)
+			{
+				if(!params[index].value)
+				{
+					// set param if valid
+					this.params[index].value = this.command;
+
+					// go to the next param if exists
+					let next = index + 1;
+					if(typeof params[next] != "undefined")
+					{
+						return params[next].question;
+					}
+				}
+			}
+
+			return false;
+		}
+	}
+})
+
+
+kixote.component('tab-translate', {
+	props: [],
+	data: function () {
+		return {
+		}
+	},
+	template: `<section class="dark:bg-stone-700 dark:text-stone-200">
+					<p>Translation Component</p>
+				</section>`,
+	mounted: function()
+	{
+	},
+	methods: {
+		selectComponent: function(type)
+		{ 
+		}
+	}
+})
+
+kixote.component('tab-automate', {
+	props: [],
+	data: function () {
+		return {
+		}
+	},
+	template: `<section class="dark:bg-stone-700 dark:text-stone-200">
+					<p>Automation Component</p>
+				</section>`,
+	mounted: function()
+	{
+	},
+	methods: {
+		selectComponent: function(type)
+		{ 
+		}
+	}
+})
+
+kixote.component('tab-seo', {
+	props: [],
+	data: function () {
+		return {
+		}
+	},
+	template: `<section class="dark:bg-stone-700 dark:text-stone-200">
+					<p>SEO Component</p>
+				</section>`,
+	mounted: function()
+	{
+	},
+	methods: {
+		selectComponent: function(type)
+		{ 
+		}
+	}
+})
+
+kixote.component('tab-rag', {
+	props: [],
+	data: function () {
+		return {
+		}
+	},
+	template: `<section class="dark:bg-stone-700 dark:text-stone-200">
+					<p>Retrieval Augmented Generation</p>
+				</section>`,
+	mounted: function()
+	{
+	},
+	methods: {
+		selectComponent: function(type)
+		{ 
+		}
+	}
+})
+
+kixote.component('tab-token', {
+	props: [],
+	data: function () {
+		return {
+		}
+	},
+	template: `<section class="dark:bg-stone-700 dark:text-stone-200">
+					<p>Token Overview Component</p>
+				</section>`,
+	mounted: function()
+	{
+	},
+	methods: {
+		selectComponent: function(type)
+		{ 
+		}
+	}
+})

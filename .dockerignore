@@ -1,0 +1,21 @@
+# Ignore everything
+**
+
+# Allow system files and directories
+!docker-utils/
+!system/
+!.htaccess
+!composer*
+!index.php
+
+# Allow content files and directories
+!cache/
+!content/
+!data/
+!media/
+!settings/
+!themes/
+
+# Ignore unnecessary files inside allowed directories below
+# This should go after the allowed directories
+# e.g. docker-utils/test.php

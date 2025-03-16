@@ -1,0 +1,31 @@
+version: '2.14.6'
+title: 'Typemill'
+author: 'Unknown'
+copyright: false
+language: 'en'
+langattr: 'en'
+editor: 'visual'
+storage: '\Typemill\Models\Storage'
+formats:
+  - 'markdown'
+  - 'headline'
+  - 'ulist'
+  - 'olist'
+  - 'table'
+  - 'quote'
+  - 'notice'
+  - 'image'
+  - 'video'
+  - 'audio'
+  - 'file'
+  - 'toc'
+  - 'hr'
+  - 'definition'
+  - 'code'
+  - 'shortcode'
+images:
+  live:
+    width: 820
+  thumbs:
+    width: 250
+    height: 150

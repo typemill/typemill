@@ -1,0 +1,13 @@
+<nav class="max-w-6xl m-auto flex justify-between">
+	<ul class="flex border-l-2 border-stone-200">
+		<div id="contentNavigation" v-cloak></div>
+	</ul>
+</nav>	
+
+{% block javascript %}
+
+	<script>
+		app.mount('#contentNavigation');
+	</script>
+
+{% endblock %}

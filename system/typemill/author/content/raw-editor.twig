@@ -1,0 +1,41 @@
+{% extends 'layouts/layoutContent.twig' %}
+{% block title %}{{ translate('Raw Editor') }}{% endblock %}
+
+{% block content %}
+	
+	<div id="meta"></div>
+
+	<div id="editor" v-cloak></div>
+
+	<div id="posts"></div>
+
+	<div id="publisher" class="fixed bottom-0 w-full lg:w-54rem bg-stone-100 border-t border-stone-200 shadow-md" v-cloak></div>
+
+{% endblock %}
+
+
+{% block javascript %}
+
+	<script src="{{ base_url() }}/system/typemill/author/js/highlight.min.js?v={{ settings.version }}"></script>
+	<script src="{{ base_url() }}/system/typemill/author/js/vue-raw.js?v={{ settings.version }}"></script>
+	<script src="{{ base_url() }}/system/typemill/author/js/vue-meta.js?v={{ settings.version }}"></script>
+	<script src="{{ base_url() }}/system/typemill/author/js/vue-forms.js?v={{ settings.version }}"></script>	
+	<script src="{{ base_url() }}/system/typemill/author/js/vue-publisher.js?v={{ settings.version }}"></script>
+	<script src="{{ base_url() }}/system/typemill/author/js/vue-posts.js?v={{ settings.version }}"></script>
+	<script>
+
+		raweditor.config.globalProperties.$filters = translatefilter;
+		raweditor.mount('#editor');
+
+		app.config.globalProperties.$filters = translatefilter;
+		app.mount('#meta');		
+		
+		publisher.config.globalProperties.$filters = translatefilter;
+		publisher.mount('#publisher');
+
+		posts.config.globalProperties.$filters = translatefilter;
+		posts.mount('#posts');
+	
+	</script>
+
+{% endblock %}

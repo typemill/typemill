@@ -1,0 +1,124 @@
+meta:
+  fields:
+    navtitle:
+      type: text
+      label: Navigation Title
+      maxlength: 60
+    fieldsetcontent:
+      type: fieldset
+      legend: Meta-Content
+      fields:
+        title:
+          type: text
+          label: Meta title
+          maxlength: 100
+        description:
+          type: textarea
+          label: Meta description
+          size: 160
+          description: If not filled, the description is extracted from content.
+        heroimage:
+          type: image
+          label: Hero Image
+          description: Maximum size for an image is 5 MB. Hero images are not supported by all themes.
+        heroimagealt:
+          type: text
+          label: Alternative Text for the hero image
+    fieldsetauthor:
+      type: fieldset
+      legend: Author
+      fields:
+        owner:
+          type: text
+          label: owner (username)
+          css: w-half
+          description: Has edit rights for this article.
+        author:
+          type: text
+          label: author
+          css: w-half
+          description: Can be used for author line in frontend.
+    fieldsetrights:
+      type: fieldset
+      legend: Access & Rights
+      fields:
+        allowedrole:
+          type: select
+          label: Minimum user-role to access this page
+          css: w-half
+          dataset: userroles
+          options:
+          description: Select the lowest userrole. Higher roles will have access too.
+        alloweduser:
+          type: text
+          label: Only the following users have access
+          css: w-half
+          description: Add one or more usernames separated with comma.
+    fieldsetpubdate:
+      type: fieldset
+      legend: Article Date
+      fields:
+        manualdate:
+          type: date
+          label: Manual date
+        modified:
+          type: date
+          label: Last modified live (readonly)
+          readonly: readonly
+          css: w-half
+          description: Used as fallback when no manual date is set.
+        created:
+          type: date
+          label: Created at (read only)
+          readonly: readonly
+          css: w-half
+        time:
+          type: text
+          readonly: readonly
+          hidden: true
+          css: hidden
+          pattern: '[0-9][0-9]-[0-9][0-9]-[0-9][0-9]'
+    fieldsetreference:
+      type: fieldset
+      legend: Reference
+      fields:
+        reference:
+          type: text
+          label: Reference to page
+          placeholder: '/path/to/internal/page or https://exgernal-page.org'
+          description: 'Use full relative path like "/somefolder/somefile" for internal pages or absolute url for external pages.'
+          maxlength: 200
+        referencetype:
+          type: radio
+          label: Type of reference
+          options: 
+            disable: Disable
+            redirect301: PERMANENT REDIRECT (301) the user to the referenced internal page
+            redirect302: TEMPORARY REDIRECT (302) the user to the referenced internal page
+            copy: COPY the content of the referenced internal page
+            outlink: LINK to an external page
+    fieldsetvisibility:
+      type: fieldset
+      legend: Visibility
+      fields:
+        hide:
+          type: checkbox
+          label: Hide
+          checkboxlabel: Hide page from navigation
+          css: w-half
+        noindex:
+          type: checkbox
+          label: Noindex
+          checkboxlabel: Add noindex tag and exclude from sitemap
+          css: w-half
+    fieldsetfolder:
+      type: fieldset
+      legend: Folder
+      fields:
+        contains:
+          type: radio
+          label: This folder contains
+          css: medium
+          options: 
+            pages: PAGES (sort in navigation with drag & drop)
+            posts: POSTS (sorted by publish date, for news or blogs)

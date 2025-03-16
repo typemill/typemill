@@ -1,0 +1,36 @@
+'system':
+  'title': 'System'
+  'routename': 'settings.show'
+  'icon': 'icon-wrench'
+  'aclresource': 'system'
+  'aclprivilege': 'read'
+'license':
+  'title': 'License'
+  'routename': 'license.show'
+  'icon': 'icon-wrench'
+  'aclresource': 'user'
+  'aclprivilege': 'read'
+'themes':
+  'title': 'Themes'
+  'routename': 'themes.show'
+  'icon': 'icon-paint-brush'
+  'aclresource': 'system'
+  'aclprivilege': 'read'
+'plugins':
+  'title': 'Plugins' 
+  'routename': 'plugins.show'
+  'icon': 'icon-plug'
+  'aclresource': 'system'
+  'aclprivilege': 'read'
+'account':
+  'title': 'Account' 
+  'routename': 'user.account'
+  'icon': 'icon-user'
+  'aclresource': 'account'
+  'aclprivilege': 'read'
+'users':
+  'title': 'Users'
+  'routename': 'users.show'
+  'icon': 'icon-group'
+  'aclresource': 'user'
+  'aclprivilege': 'read'

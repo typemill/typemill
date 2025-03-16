@@ -1,0 +1,35 @@
+{% extends 'layout.twig' %}
+
+{% block title %}ERROR 404: Page not found{% endblock %}
+
+{% block content %}
+
+<section class="landingpageinfo vh-100 dt w-100 tc bt bl br bb">
+
+	<div class="cover dtc v-mid bg-left bg-center-l">
+
+		<div class="mw7 ph3 center">
+
+			<div class="introbg pa4">
+
+				<header>
+					<h1 class="f-large f-headline-ns lh-title mv2 pt5-ns">{{title}}</h1>
+				</header>
+
+				<div class="f5 f4-ns fw3 lh-copy">
+
+					<p>{{description}}</p>
+
+					<a class="button link dim ph4 pv3 mt3 dib" href="{{ base_url }}">Return to the homepage</a>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>		
+
+</section>
+
+{% endblock %}

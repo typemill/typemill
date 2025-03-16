@@ -1,0 +1,30 @@
+'content':
+  'title': 'Content'
+  'icon': 'icon-pencil'
+  'routename': 'content.visual'
+  'aclresource': 'content'
+  'aclprivilege': 'read'
+'system':
+  'title': 'System'
+  'icon': 'icon-cog'
+  'routename': 'settings.show'
+  'aclresource': 'system'
+  'aclprivilege': 'read'
+'account': 
+  'title': 'Account'
+  'icon': 'icon-user1'
+  'routename': 'user.account'
+  'aclresource': 'account'
+  'aclprivilege': 'read'
+'frontend':
+  'title': 'Frontend'
+  'icon': 'icon-external-link'
+  'routename': 'home'
+  'aclresource': 'account'
+  'aclprivilege': 'read'
+'logout':
+  'title': 'Logout'
+  'icon': 'icon-switch'
+  'routename': 'auth.logout'
+  'aclresource': 'account'
+  'aclprivilege': 'read'

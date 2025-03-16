@@ -1,0 +1,11 @@
+meta:
+    navtitle: hidden
+    title: 'Hidden Page'
+    description: 'This is a hidden page. Hidden pages are published pages that are excluded from all navigation elements. You need to know the url to visit a hidden page. Hidden'
+    owner: typemill
+    author: ''
+    modified: '2024-03-19'
+    created: '2024-03-19'
+    time: 18-49-34
+    hide: true
+    noindex: false

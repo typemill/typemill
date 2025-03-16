@@ -1,0 +1,89 @@
+{% extends 'layouts/layoutAuth.twig' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+	<div class="lg:flex-row flex flex-col-reverse justify-end">
+		
+		<div class="lg:w-1/2 bg-teal-600 text-white min-h-screen flex justify-center items-center">
+			<div class="max-w-md content-center">
+
+				<h1 class="text-4xl py-5">Login</h1>
+			
+				<form method="POST" action="{{ url_for("auth.login") }}" autocomplete="off">
+				
+					<fieldset class="">
+
+						<div class="my-2 {{ errors.username ? ' errors' : '' }}">
+							<label for="username">{{ translate('Username') }} <abbr title="{{ translate('required') }}">*</abbr></label>
+							<input 
+								type="text" 
+								name="username" 
+								value="{{ old.username }}" 
+								class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+							required>
+							{% if errors.signup_username %}
+								<span class="">{{ errors.username|first }}</span>
+							{% endif %}
+						</div>
+						
+						<div class="my-2 {{ errors.password ? ' errors' : '' }}">
+							<label for="password">{{ translate('Password') }} <abbr title="{{ translate('required') }}">*</abbr></label>
+							<input 
+								type="password" 
+								name="password" 
+								autoomplete="off"
+								class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+							required>
+							{% if errors.password %}
+								<span class="error">{{ errors.password|first }}</span>
+							{% endif %}
+						</div>
+
+						<div class="personal-mail hidden">
+							<label>Personal Mail</label>
+							<input type="text" name="personal-honey-mail">
+						</div>
+
+						{% if captcha == 'standard' %}
+							
+							{{ captcha(true) }}
+						
+						{% elseif captcha == 'aftererror' %}
+
+							{{ captcha(old) }}
+
+						{% else %}
+
+							{{ clearcaptcha() }}
+						
+						{% endif %}
+
+						<input 
+							type="submit" 
+							value="{{ translate('Login') }}" 
+                      		class="block w-full mt-6 px-3 py-3 border-0 font-medium text-xs leading-tight uppercase border-2 border-stone-50 text-stone-50 pointer hover:bg-stone-50 hover:text-stone-800 cursor-pointer focus:outline-none focus:ring-0 transition duration-100 ease-in-out"
+						/>
+
+						{% if recover %}
+							<div class="text-center py-4">
+								<a class="hover:underline" href="{{ url_for("auth.recover") }}">{{ translate('forgot password') }}</a>
+							</div>
+						{% endif %}
+
+					</fieldset>
+
+				</form>	
+			</div>
+		</div>
+		
+		<div class="lg:w-1/2 lg:bg-white lg:text-black p-5 bg-teal-600 text-white border-b border-white content-center flex justify-center items-center">
+			<div class="max-w-md content-center">
+				<h2 class="text-4xl py-5">{{ translate('Welcome back') }}</h2>
+				<p>{{ translate('Login to the author area or go to the') }} <a class="underline" href="{{ url_for('home')}}">{{ translate('homepage') }}</a></p>
+			</div>
+		</div>
+	
+	</div>
+{% endblock %}

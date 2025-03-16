@@ -1,0 +1,75 @@
+{% extends 'layouts/layoutAuth.twig' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+	<div class="lg:flex-row flex flex-col-reverse justify-end">
+		
+		<div class="lg:w-1/2 bg-teal-600 text-white min-h-screen flex justify-center items-center">
+			<div class="max-w-md content-center">
+			
+				<form method="POST" action="{{ url_for("auth.reset") }}" autocomplete="off">
+				
+					<fieldset class="">
+
+						<div class="my-2 {{ errors.password ? ' errors' : '' }}">
+							<label for="password">{{ translate('New password') }} <abbr title="{{ translate('required') }}">*</abbr></label>
+							<input 
+								type="password" 
+								name="password" 
+								value="{{ old.password }}" 
+								class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+							required>
+							{% if errors.password %}
+								<span class="">{{ errors.password|first }}</span>
+							{% endif %}
+						</div>
+
+						<div class="my-2 {{ errors.passwordrepeat ? ' errors' : '' }}">
+							<label for="passwordrepeat">{{ translate('Repeat password') }} <abbr title="{{ translate('required') }}">*</abbr></label>
+							<input 
+								type="password" 
+								name="passwordrepeat" 
+								value="{{ old.passwordrepeat }}" 
+								class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+							required>
+							{% if errors.passwordrepeat %}
+								<span class="">{{ errors.passwordrepeat|first }}</span>
+							{% endif %}
+						</div>
+
+						<input type="hidden" name="recovertoken" value="{{recovertoken}}">
+						<input type="hidden" name="username" value="{{username}}">
+						
+						<div class="personal-mail hidden">
+							<label>Personal Mail</label>
+							<input type="text" name="personal-honey-mail">
+						</div>
+
+						<input 
+							type="submit" 
+							value="{{ translate('Create new password') }}" 
+                      		class="block w-full mt-6 px-3 py-3 border-0 font-medium text-xs leading-tight uppercase border-2 border-stone-50 text-stone-50 pointer hover:bg-stone-50 hover:text-stone-800 cursor-pointer focus:outline-none focus:ring-0 transition duration-100 ease-in-out"
+						/>
+
+					</fieldset>
+
+				</form>	
+			</div>
+		</div>
+		
+		<div class="lg:w-1/2 lg:bg-white lg:text-black p-5 bg-teal-600 text-white border-b border-white content-center flex justify-center items-center">
+			<div class="max-w-md content-center">
+				<h1 class="text-4xl py-5">{{ translate('Forgot your password') }}?</h1>
+				<p class="py-1">{{ translate('No problem, you can create a new one here.') }} {{ translate('And you might find the following tips helpful') }}:</p>
+				<ul class="list-disc pl-4 py-1">
+					<li>{{ translate('Use a strong and individual password for every account.') }}</li>
+					<li>{{ translate('Your browser can remember all of your passwords.') }}</p>
+					<li>{{ translate('The best option is a separate password manager like keepass and others.') }}</li>
+				</ul>
+			</div>
+		</div>
+	
+	</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% if flash.info %}
+
+	<div class="w-full text-center text-white p-2 bg-stone-700" id="flash-message">
+		{{ flash.info | first }}
+	</div>
+
+{% endif %}
+
+{% if flash.error %}
+
+	<div class="w-full text-center text-white p-2 bg-rose-500" id="flash-message">
+		{{ flash.error | first }}
+	</div>
+
+{% endif %}

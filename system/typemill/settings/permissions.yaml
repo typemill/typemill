@@ -1,0 +1,50 @@
+guest: 
+  name: guest
+  inherits: NULL
+  permissions: 
+    account:
+      - 'none'
+member:
+  name: member
+  inherits: NULL
+  permissions: 
+    account:
+      - 'read'
+      - 'update'
+      - 'delete'
+contributor:
+  name: contributor
+  inherits: member
+  permissions: 
+    mycontent:
+      - 'read'
+      - 'create'
+      - 'update'
+      - 'delete'
+author:
+  name: author
+  inherits: contributor
+  permissions: 
+    content:
+      - 'read'
+      - 'create'
+editor:
+  name: editor
+  inherits: author
+  permissions: 
+    mycontent:
+      - 'publish'
+      - 'unpublish'
+    content:
+      - 'update'
+      - 'delete'
+      - 'publish'
+      - 'unpublish'
+manager:
+  name: manager
+  inherits: editor
+  permissions: 
+    system:
+      - 'read'
+      - 'update'
+      - 'delete'

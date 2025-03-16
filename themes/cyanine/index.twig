@@ -1,0 +1,25 @@
+{% extends '/layout.twig' %}
+
+{% block title %}{{ metatabs.meta.title }} | {{ settings.title }}{% endblock %}
+
+{% block content %}
+	
+	{% if home and settings.themes.cyanine.landingpage %}
+	
+		{% include 'home.twig' %}
+
+	{% elseif home and settings.themes.cyanine.blog %}
+	
+		{% include 'blog.twig' %}
+		
+	{% elseif metatabs.meta.template == "landingpage" %}
+		
+		{% include 'landingpage.twig' %}
+
+	{% else %}
+		
+		{% include 'page.twig' %}
+	
+	{% endif %}
+	
+{% endblock %}

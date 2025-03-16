@@ -1,0 +1,13 @@
+meta:
+    navtitle: link
+    title: 'External link'
+    description: 'You can link to an external page in the navigation with the reference feature in the meta-tab. Just choose "link" and add the url to the external page.'
+    owner: typemill
+    author: ''
+    modified: '2024-03-19'
+    created: '2024-03-19'
+    time: 19-07-05
+    reference: 'https://typemill.net'
+    referencetype: outlink
+    hide: false
+    noindex: false
