@@ -639,6 +639,17 @@ kixote.component('tab-generate', {
 			this.initializeContent()
 		}
 	},
+	watch: {
+	    currentTab(newTab, oldTab) {
+	        if (newTab === 'article')
+	        {
+	        	console.info('article');
+	            this.$nextTick(() => {
+	                this.initAutosize(); // Trigger the resizing when switching back to the article tab
+	            });
+	        }
+	    }
+	},	
 	computed: {
 	    promptlistactive()
 	    {
@@ -704,12 +715,13 @@ kixote.component('tab-generate', {
 			})
 		},
 	    setCurrentTab(tabValue)
-	    {
+	    {	        
 	        this.currentTab = tabValue;
 
 	        if(tabValue == 'article')
 	        {
-	        	this.resizeAiEditor();
+				this.resizeAiEditor();
+				this.resizePromptEditor();
 	        }
 	    },
 		initializeContent()

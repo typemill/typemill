@@ -1,4 +1,5 @@
 cache/sitemap.xml
+cache/timer.yaml
 content/index.yaml
 content/00-welcome/index.yaml
 content/00-welcome/00-setup-your-website.yaml
@@ -15,6 +16,7 @@ system/vendor
 cypress
 data/navigation
 data/css
+data/security
 node_modules
 plugins/search
 settings/settings.yaml
