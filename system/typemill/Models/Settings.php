@@ -107,6 +107,47 @@ class Settings
 		return false;
 	}
 
+	public function getKixoteSettings()
+	{
+	    $defaultSettings = $this->storage->getYaml('systemSettings', '', 'kixote.yaml');
+	    $userSettings = $this->storage->getYaml('settingsFolder', '', 'kixote.yaml');
+
+	    if ($userSettings)
+	    {
+	        foreach ($defaultSettings['promptlist'] as $key => $prompt)
+	        {
+	            if (isset($userSettings['promptlist'][$key]))
+	            {
+	                # Use active setting from user but keep system settings intact
+	            	$active = $userSettings['promptlist'][$key]['active']; 
+	                $userSettings['promptlist'][$key] = $prompt;
+	                $userSettings['promptlist'][$key]['active'] = $active;
+	            }
+	            else
+	            {
+	                # New prompt from system settings, add it to user settings
+	                $userSettings['promptlist'][$key] = $prompt;
+	            }
+	        }
+	    }
+	    else
+	    {
+	        $userSettings = $defaultSettings;
+	    }
+
+	    return $userSettings;
+	}
+
+	public function updateKixoteSettings($kixoteSettings)
+	{
+		if($this->storage->updateYaml('settingsFolder', '', 'kixote.yaml', $kixoteSettings))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
 	public function getObjectSettings($objectType, $objectName)
 	{
 		$objectSettings = $this->storage->getYaml($objectType, $objectName, $objectName . '.yaml');
@@ -245,4 +286,101 @@ class Settings
 		return false;
 	}
 
+    public function findSecurityDefinitions($definitions, $securityDefinitions = [])
+    {
+        foreach ($definitions as $fieldname => $definition)
+        {
+            if (isset($definition['fields']))
+            {
+                $securityDefinitions = $this->findSecurityDefinitions($definition['fields'], $securityDefinitions);
+            }
+
+            if (isset($definition['type']) && $definition['type'] === 'password')
+            {
+                $securityDefinitions[] = $fieldname;
+            }
+        }
+
+        return $securityDefinitions;
+    }
+
+    public function extractSecuritySettings($settings, $securityFields)
+    {
+        $securitySettings = [];
+
+        foreach ($securityFields as $fieldname)
+        {
+            if (isset($settings[$fieldname]))
+            {
+                $securitySettings[$fieldname] = $settings[$fieldname];
+                unset($settings[$fieldname]);
+            }
+        }
+
+        return [
+            'settings' => $settings,
+            'securitySettings' => $securitySettings
+        ];
+    }
+
+    public function updateSecuritySettings($newSecuritySettings, $themeorplugin = null, $themeorpluginname = null)
+    {
+        # problem that settings with same name will overwrite (e.g. from theme and plugins)
+        $securitySettings = $this->getSecuritySettings();
+        foreach($newSecuritySettings as $fieldname => $value)
+        {
+            if($themeorplugin && $themeorpluginname)
+            {
+                $securitySettings[$themeorplugin][$themeorpluginname][$fieldname] = $value;
+            }
+            else
+            {
+                $securitySettings[$fieldname] = $value;
+            }
+        }
+
+        $secrets = $this->storage->updateYaml('settingsFolder', '', 'secrets.yaml', $securitySettings);
+        if($secrets)
+        {
+            return true; 
+        }
+
+        return false;
+    }
+
+    private function getSecuritySettings()
+    {
+        $secrets = $this->storage->getYaml('settingsFolder', '', 'secrets.yaml');
+
+        if($secrets)
+        {
+            return $secrets;
+        }
+        return [];
+    }
+
+    public function getSecret(string $fieldname, $objecttype = null, $objectname = null)
+    {
+        $secrets = $this->storage->getYaml('settingsFolder', '', 'secrets.yaml');
+
+        if(!$secrets)
+        {
+            return false;
+        }
+
+        if($fieldname && $objecttype && $objectname)
+        {
+            if(isset($secrets[$objecttype][$objectname][$fieldname]))
+            {
+                return $secrets[$objecttype][$objectname][$fieldname];
+            }
+        }
+
+        if($fieldname && isset($secrets[$fieldname]))
+        {
+            return $secrets[$fieldname];
+        }
+
+        return false;
+    }
 }

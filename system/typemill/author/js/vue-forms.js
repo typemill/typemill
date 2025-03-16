@@ -1,3 +1,12 @@
+app.component('component-paragraph', {
+	props: ['id', 'description', 'maxlength', 'hidden', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'css', 'errors'],	
+	template: `<div :class="css ? css : ''" class="w-full mt-5 mb-5">
+				<p :for="name" class="block mb-1 font-medium">{{ $filters.translate(label) }}</p>
+			  	<p v-html="$filters.translate(description)"></p>
+			  </div>`,
+})
+
+
 app.component('component-text', {
 	props: ['id', 'description', 'maxlength', 'hidden', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'css', 'errors'],	
 	template: `<div :class="css ? css : ''" class="w-full mt-5 mb-5">
@@ -15,7 +24,7 @@ app.component('component-text', {
 					:value="value"
 					@input="update($event, name)"><slot></slot>
 			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
-			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
+			  	<p v-else class="text-xs" v-html="$filters.translate(description)"></p>
 			  </div>`,
 	methods: {
 		update: function($event, name)
@@ -40,7 +49,7 @@ app.component('component-textarea', {
 					:value="value"
 					@input="update($event, name)"></textarea><slot></slot>
 			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
-			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
+			  	<p v-else class="text-xs" v-html="$filters.translate(description)"></p>
 			  </div>`,
 	methods: {
 		update: function($event, name)
@@ -84,7 +93,7 @@ app.component('component-codearea', {
 					<pre aria-hidden="true" class="highlight hljs"><code data-el="highlight" v-html="highlighted"></code></pre>
 				</div>
 			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
-			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
+			  	<p v-else class="text-xs" v-html="$filters.translate(description)"></p>
 			  </div>`,
 	mounted: function()
 	{
@@ -152,7 +161,7 @@ app.component('component-select', {
 			      	<option v-for="option,optionkey in options" v-bind:value="optionkey">{{option}}</option>
 			    </select><slot></slot>
 			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
-			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
+			  	<p v-else class="text-xs" v-html="$filters.translate(description)"></p>
 			  </div>`,
 	methods: {
 		update: function($event, name)
@@ -184,7 +193,7 @@ app.component('component-checkbox', {
 				    <span class="ml-2 text-sm">{{ $filters.translate(checkboxlabel) }}</span>
 			  	</label><slot></slot>
 			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
-			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
+			  	<p v-else class="text-xs" v-html="$filters.translate(description)"></p>
 			  </div>`,
 	mounted: function()
 	{
@@ -220,7 +229,7 @@ app.component('component-checkboxlist', {
 				  	<span class="ml-2 text-sm">{{ $filters.translate(option) }}</span>
 			  	</label><slot></slot>
 				<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
-				<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
+			  	<p v-else class="text-xs" v-html="$filters.translate(description)"></p>
 			  </div>`,
 	mounted: function()
 	{
@@ -260,7 +269,7 @@ app.component('component-radio', {
 				  	<span class="ml-2 text-sm">{{ $filters.translate(option) }}</span>
 			  	</label><slot></slot>
 			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
-			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
+			  	<p v-else class="text-xs" v-html="$filters.translate(description)"></p>
 			  </div>`,
 	methods: {
 		update: function(picked, name)
@@ -288,7 +297,7 @@ app.component('component-number', {
 					:value="value"
 					@input="update($event, name)"><slot></slot>
 			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
-			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
+			  	<p v-else class="text-xs" v-html="$filters.translate(description)"></p>
 			  </div>`,
 	methods: {
 		update: function($event, name)
@@ -320,7 +329,7 @@ app.component('component-date', {
 						@input="update($event, name)"><slot></slot>
 				</div>
 			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
-			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
+			  	<p v-else class="text-xs" v-html="$filters.translate(description)"></p>
 			  </div>`,
 	methods: {
 		update: function($event, name)
@@ -354,7 +363,7 @@ app.component('component-email', {
 						@input="update($event, name)"><slot></slot>
 				</div>
 			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
-			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
+			  	<p v-else class="text-xs" v-html="$filters.translate(description)"></p>
 			  </div>`,
 	methods: {
 		update: function($event, name)
@@ -387,7 +396,7 @@ app.component('component-tel', {
 						@input="update($event, name)"><slot></slot>
 				</div>
 			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
-			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
+			  	<p v-else class="text-xs" v-html="$filters.translate(description)"></p>
 			  </div>`,
 	methods: {
 		update: function($event, name)
@@ -421,7 +430,7 @@ app.component('component-url', {
 						@input="update($event, name)"><slot></slot>
 				</div>
 			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
-			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
+			  	<p v-else class="text-xs" v-html="$filters.translate(description)"></p>
 			  </div>`,
 	methods: {
 		update: function($event, name)
@@ -454,7 +463,7 @@ app.component('component-color', {
 						@input="update($event, name)"><slot></slot>
 				</div>
 			  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
-			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
+			  	<p v-else class="text-xs" v-html="$filters.translate(description)"></p>
 			  </div>`,
 	methods: {
 		update: function($event, name)
@@ -509,7 +518,7 @@ app.component('component-password', {
 				<div class="flex justify-between text-xs">
 					<div class="w-2/3">
 				  		<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
-				  		<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
+					  	<p v-else class="text-xs" v-html="$filters.translate(description)"></p>
 					</div>
 					<div v-if="generator" class="w-1/3 text-right">
 						<button @click.prevent="generatePassword()" class="text-teal-600">generate a password</button>
@@ -791,7 +800,7 @@ app.component('component-image', {
 							</div>
 						</div>
 					  	<p v-if="errors[name]" class="text-xs text-red-500">{{ errors[name] }}</p>
-					  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
+					  	<p v-else class="text-xs" v-html="$filters.translate(description)"></p>
 					</div>
 				</div>
 
@@ -1026,7 +1035,7 @@ app.component('component-file', {
 					</div>
 				</div>
 				<p v-if="error" class="text-xs text-red-500">{{ error }}</p>
-				<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
+			  	<p v-else class="text-xs" v-html="$filters.translate(description)"></p>
 
 				<Transition name="initial" appear>
 					<div v-if="showmedialib" class="fixed top-0 left-0 right-0 bottom-0 bg-stone-100 z-50">

@@ -20,7 +20,7 @@ class ControllerApiSystemPlugins extends Controller
 		$extension 			= new Extension();
 		$formdefinitions 	= $extension->getPluginDefinition($pluginname);
 		$formdefinitions 	= $this->addDatasets($formdefinitions['forms']['fields']);
-		$plugindata 		= [];
+#		$plugindata 		= [];
 
 		# validate input
 		$validator 			= new Validation();
@@ -43,8 +43,20 @@ class ControllerApiSystemPlugins extends Controller
 		}
 
 		# store updated settings here
-		$settings 			= new Settings();
-		$updatedSettings 	= $settings->updateSettings($validatedOutput, 'plugins', $pluginname);
+		$settingsModel 	= new Settings();
+		$securityFields = $settingsModel->findSecurityDefinitions($formdefinitions);
+		if(!empty($securityFields))
+		{
+			$splitSettings = $settingsModel->extractSecuritySettings($validatedOutput, $securityFields);
+			$validatedOutput = $splitSettings['settings'];
+
+			if($splitSettings['securitySettings'] && !empty($splitSettings['securitySettings']))
+			{
+				$settingsModel->updateSecuritySettings($splitSettings['securitySettings'], 'plugins', $pluginname);
+			}
+		}
+
+		$updatedSettings 	= $settingsModel->updateSettings($validatedOutput, 'plugins', $pluginname);
 
 		$response->getBody()->write(json_encode([
 			'message' => Translations::translate('settings have been saved')

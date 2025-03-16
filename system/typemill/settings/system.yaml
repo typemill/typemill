@@ -310,3 +310,34 @@ fieldsetdeveloper:
     trustedloginreferrer:
       type: text
       label: "Trusted IPs for the login-link-referrer (comma separated)"
+fieldsetai:
+  type: fieldset
+  legend: AI
+  fields:
+    aiprivacy: 
+      type: paragraph
+      label: "Privacy Notice"
+      description: "You can use the following AI features in the Kixote interface. If you enable any AI integrations, user inputs will be sent to external services for processing. Please review the details for each service and ensure compliance with your local data privacy regulations. Each user will be asked for confirmation before using a model in the Kixote AI interface."
+    aiservice:
+      type: radio
+      label: 'Choose an AI service'
+      options:
+        none: 'None'
+#        kixote: 'Kixote (not available yet)'
+        chatgpt: 'ChatGPT'
+    chatgptModel:
+      type: select
+      label: 'ChatGPT model'
+      description: "Select the AI model you want to use. Pricing may vary over time, so please check the latest details on [OpenAI's pricing page](https://platform.openai.com/docs/pricing)"
+      options: 
+        gpt-4o-mini: 'gpt-4o-mini ($0.6 / 1M output tokens)'
+        gpt-3.5-turbo-0125: 'gpt-3.5-turbo-0125 ($1.50 / 1M output tokens)'
+        gpt-4o: 'gpt-4o ($10.00 / 1M output tokens)'
+        o1-mini: 'o1-mini ($12.00 / 1M output tokens)'
+        o1: 'o1 ($60.00 / 1M output tokens)'
+    chatgptKey:
+      type: password
+      autocomplete: new-password 
+      generator: false
+      label: 'ChatGPT Api Key'
+      description: "Enter your ChatGPT API key here. You can generate a new key on [OpenAI's platform](https://platform.openai.com/docs/pricing). For security reasons, your API key is secret and will not be visible again after you leave this page."

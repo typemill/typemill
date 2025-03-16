@@ -682,6 +682,26 @@ class Validation
 		return $v->errors();
 	}
 
+	public function kixotePrompt(array $params)
+	{
+		$v = new Validator($params);
+		
+		$v->rule('required', 'title', 'content', 'active', 'system');
+		$v->rule('regex', 'title', '/^[a-z0-9 ]+$/i');
+		$v->rule('lengthBetween', 'title', 2,20);
+		$v->rule('noHTML', 'content');
+		$v->rule('lengthBetween', 'content',2,5000);
+		$v->rule('boolean', 'active');
+		$v->rule('boolean', 'system');
+
+		if($v->validate())
+		{
+			return true;
+		}
+
+		return $v->errors();
+	}
+
 	/**
 	* validation for password recovery
 	* 
@@ -848,7 +868,7 @@ class Validation
 				$v->rule('lengthMax', $fieldName, 10000);
 				break;
 			case "password":
-				$v->rule('lengthMax', $fieldName, 100);
+				$v->rule('lengthMax', $fieldName, 500);
 				break;
 			case "radio":
 				$v->rule('in', $fieldName, $fieldDefinitions['options']);

@@ -2,6 +2,7 @@ const app = Vue.createApp({
 	template: `<Transition name="initial" appear>
 				<div class="w-full">
 					<form class="w-full my-8">
+						{{formdata}}
 						<div v-for="(fieldDefinition, fieldname) in formDefinitions">
 							<fieldset class="flex flex-wrap justify-between border-2 border-stone-200 p-4 my-8" v-if="fieldDefinition.type == 'fieldset'">
 								<legend class="text-lg font-medium">{{ $filters.translate(fieldDefinition.legend) }}</legend>

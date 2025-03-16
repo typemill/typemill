@@ -87,7 +87,6 @@ class License
 
 		# check if license data are valid and not manipulated
 		$licenseStatus = $this->validateLicense($licensedata);
-
 		if($licenseStatus !== true)
 		{
 			$this->message = Translations::translate('The license data are invalid. ') . $this->message;
@@ -97,7 +96,6 @@ class License
 
 		# check if website uses licensed domain
 		$licenseDomain = $this->checkLicenseDomain($licensedata['domain'], $urlinfo);
-
 		if(!$licenseDomain)
 		{
 			$this->message = Translations::translate('The website is running not under the domain of your license.');
@@ -107,7 +105,6 @@ class License
 
 		# check if subscription period is paid
 		$subscriptionPaid = $this->checkLicenseDate($licensedata['payed_until']);
-
 	    if(!$subscriptionPaid) 
 	    {
 			$storage = new StorageWrapper('\Typemill\Models\Storage');

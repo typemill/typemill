@@ -1,0 +1,41 @@
+promptlist:
+  brainstorm:
+    title: 'brainstorm'
+    content: "Act as an experienced copywriter and brainstorm 10 compelling article ideas based on the provided topic. The goal is to create content that resonates with the target audience and ranks well on search engines. Identify relevant keywords and trends to align with user interests. Each idea should provide valuable insights, answer common questions, or solve specific problems. Craft engaging headlines that capture attention and match user search intent."
+    active: true
+    system: true
+  outline:
+    title: 'outline'
+    content: "You are an experienced copywriter skilled in crafting compelling articles tailored to a specific target audience. Conduct in-depth research on the following article idea. Identify the most relevant information, authoritative sources, and key insights. Analyze search intent to determine what readers are looking for when they search for this topic. Define the article’s target audience, ideal length, tone, and structure.\n\nBased on your research, create a detailed structured outline for the article, including:\n\n* A compelling title and meta description.\n* Main headlines (H2, H3) that logically structure the content.\n* Bullet points under each headline, summarizing the key points to be covered.\n\nAfter the outline add a divider list, the headline `Research` and add your research findings."
+    active: true
+    system: true
+  outline2:
+    title: 'outline2'
+    content: "You are an experienced copywriter skilled in crafting compelling, well-structured articles tailored to a specific target audience. Based on the provided article idea, develop a comprehensive content outline that includes:\n\n- Title: A compelling, SEO-optimized headline.\n- User Intent: A one-sentence description of the intent, followed by the category in brackets (Informational, Navigational, Transactional, or Commercial).\n- Keywords: A comma-separated list, with the main keyword first, followed by up to five secondary keywords.\n- Target Audience: One sentence who the article is for and what they expect to gain.\n- Ideal Tone & Style: Concise, authoritative, engaging, personal, etc.\n\nBelow that, provide a detailed article structure:\n- Headings (H2, H3): A logical outline that organizes the content.\n- Bullet points under each heading: Summarizing key points to cover."
+    active: true
+    system: true
+  write:
+    title: 'write'
+    content: "Act as an experienced copywriter tasked with creating a comprehensive and engaging article based on the provided outline or draft. If details such as keywords, user intent, target audience, tone, or style are included, ensure the article aligns with them. If no outline is given, structure the article logically based on best practices for the topic.\n\nCraft a compelling article with:\n- **An eye-catching, SEO-optimized title** featuring the primary keyword.\n- **A strong introduction** that immediately hooks the reader—use a compelling question, statistic, expert quote, or relatable scenario. Clearly state what the article will cover.\n- **A well-structured body** with clear subheadings (H2, H3) incorporating relevant keywords. Ensure smooth transitions between sections and provide thorough, engaging explanations.\n- **Bullet points or lists** where appropriate to enhance readability but prioritize a natural flow of ideas.\n- **A unique perspective** by integrating expert insights, statistics, case studies, or real-life examples.\n- **Natural keyword integration** that enhances SEO without disrupting readability.\n\nMaintain a tone and style that align with the article’s goals and audience, ensuring clarity, engagement, and credibility."
+    active: true
+    system: true
+  proofread:
+    title: 'proofread'
+    content: "Review the text for grammar, spelling, and correct word usage. Correct any errors and ensure that the appropriate words are used, while maintaining the original tone, style, and phrasing. At the end of the article, provide a list of all corrections made."
+    active: true
+    system: true
+  refine:
+    title: 'refine'
+    content: "Refine the text to enhance its wording and style. Ensure that the content is readable, clear, concise, and flows naturally. Feel free to rephrase sentences where necessary, but retain the original tone and unique language usage to avoid making the text sound generic."
+    active: true
+    system: true
+  review:
+    title: 'review'
+    content: "Review the article below. Evaluate it based on readability, clarity, SEO best practices, engagement, and search intent. Provide actionable suggestions for improvement, focusing on areas where the text can be refined for better flow, clarity, and alignment with SEO goals."
+    active: true
+    system: true
+  mermaid:
+    title: 'mermaid'
+    content: "Return pure mermaid syntax for a [pie, x, y] diagram."
+    active: true
+    system: true

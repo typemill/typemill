@@ -51,15 +51,18 @@ const translatefilter = {
 		    .replace(/^_+|_+$/g, "")                      // Trim underscores from the start and end of the string
 		    .toUpperCase();                               // Convert to uppercase
 
+
 		let translation_value = data.labels[translation_key];
+
 		if(!translation_value || translation_value.length === 0)
 		{
-			return value
+			translation_value = value;
 		}
-		else
-		{
-			return data.labels[translation_key]
-		}
+
+		/* process markdown links */
+		translation_value = translation_value.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-teal-500">$1</a>');
+
+		return translation_value;
 	}
 }
 

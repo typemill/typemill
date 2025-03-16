@@ -40,8 +40,20 @@ class ControllerApiSystemThemes extends Controller
 		unset($validatedOutput['customcss']);
 
 		# store updated settings here
-		$settings 			= new Settings();
-		$updatedSettings 	= $settings->updateSettings($validatedOutput, 'themes', $themename);
+		$settingsModel 		= new Settings();
+		$securityFields 	= $settingsModel->findSecurityDefinitions($formdefinitions);
+		if(!empty($securityFields))
+		{
+			$splitSettings = $settingsModel->extractSecuritySettings($validatedOutput, $securityFields);
+			$validatedOutput = $splitSettings['settings'];
+
+			if($splitSettings['securitySettings'] && !empty($splitSettings['securitySettings']))
+			{
+				$settingsModel->updateSecuritySettings($splitSettings['securitySettings'], 'themes', $themename);
+			}
+		}
+
+		$updatedSettings 	= $settingsModel->updateSettings($validatedOutput, 'themes', $themename);
 
 		$response->getBody()->write(json_encode([
 			'message' => Translations::translate('settings have been saved')

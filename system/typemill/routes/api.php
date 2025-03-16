@@ -20,6 +20,7 @@ use Typemill\Controllers\ControllerApiAuthorBlock;
 use Typemill\Controllers\ControllerApiAuthorMeta;
 use Typemill\Controllers\ControllerApiAuthorShortcode;
 use Typemill\Controllers\ControllerApiTestmail;
+use Typemill\Controllers\ControllerApiKixote;
 
 $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 
@@ -88,10 +89,17 @@ $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 	$group->post('/meta', ControllerApiAuthorMeta::class . ':updateMeta')->setName('api.metadata.update')->add(new ApiAuthorization($acl, 'mycontent', 'update'));
 
 	# KIXOTE
+	$group->get('/kixotesettings', ControllerApiKixote::class . ':getKixoteSettings')->setName('api.kixotesettings.get')->add(new ApiAuthorization($acl, 'mycontent', 'update')); # author
+	$group->put('/kixotesettings', ControllerApiKixote::class . ':updateKixoteSettings')->setName('api.kixotesettings.put')->add(new ApiAuthorization($acl, 'mycontent', 'update')); # author
 	$group->get('/securitylog', ControllerApiGlobals::class . ':showSecurityLog')->setName('api.securitylog.show')->add(new ApiAuthorization($acl, 'system', 'update')); # manager
 	$group->delete('/securitylog', ControllerApiGlobals::class . ':deleteSecurityLog')->setName('api.securitylog.delete')->add(new ApiAuthorization($acl, 'system', 'update')); # manager
 	$group->delete('/cache', ControllerApiGlobals::class . ':deleteCache')->setName('api.cache.delete')->add(new ApiAuthorization($acl, 'system', 'update')); # manager
 	$group->delete('/clearnavigation', ControllerApiGlobals::class . ':clearNavigation')->setName('api.navigation.clear')->add(new ApiAuthorization($acl, 'system', 'update')); # manager
+
+	# KIXOTE Remote Services
+	$group->get('/tokenstats', ControllerApiKixote::class . ':getTokenStats')->setName('api.kixote.tokenstats')->add(new ApiAuthorization($acl, 'mycontent', 'update')); # author
+	$group->post('/agreetoaiservice', ControllerApiKixote::class . ':agreeToAiService')->setName('api.kixote.serviceagreement')->add(new ApiAuthorization($acl, 'mycontent', 'update')); # author
+	$group->post('/chatgpt', ControllerApiKixote::class . ':promptChatGPT')->setName('api.kixote.chatgpt')->add(new ApiAuthorization($acl, 'mycontent', 'update')); # author
 
 	# API USED ONLY EXTERNALLY
 	$group->get('/systemnavi', ControllerApiGlobals::class . ':getSystemnavi')->setName('api.systemnavi.get')->add(new ApiAuthorization($acl, 'account', 'read')); # member
@@ -103,6 +111,7 @@ $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 	$group->get('/article/meta', ControllerApiGlobals::class . ':getArticleMeta')->setName('api.articlemeta.get')->add(new ApiAuthorization($acl, 'content', 'read')); # author
 
 })->add(new ApiAuthentication($settings));
+
 
 # api-routes from plugins
 if(isset($routes['api']) && !empty($routes['api']))

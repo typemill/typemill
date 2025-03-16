@@ -64,7 +64,19 @@ class ControllerApiSystemSettings extends Controller
 			}
 		}
 
-		# store updated settings here
+		$securityFields = $settingsModel->findSecurityDefinitions($formdefinitions);
+
+		if(!empty($securityFields))
+		{
+			$splitSettings = $settingsModel->extractSecuritySettings($validatedOutput, $securityFields);
+			$validatedOutput = $splitSettings['settings'];
+
+			if($splitSettings['securitySettings'] && !empty($splitSettings['securitySettings']))
+			{
+				$settingsModel->updateSecuritySettings($splitSettings['securitySettings']);
+			}
+		}
+
 		$updatedSettings 	= $settingsModel->updateSettings($validatedOutput);
 
 		$response->getBody()->write(json_encode([
