@@ -13,7 +13,8 @@ class ApiCalls
 
     public function makePostCall(string $url, array $data, $authHeader = '')
     {
-        if (in_array('curl', get_loaded_extensions())) {
+        if (in_array('curl', get_loaded_extensions())) 
+        {
             return $this->makeCurlCall($url, 'POST', $data, $authHeader);
         }
 
@@ -22,7 +23,8 @@ class ApiCalls
 
     public function makeGetCall($url, $authHeader = '')
     {
-        if (in_array('curl', get_loaded_extensions())) {
+        if (in_array('curl', get_loaded_extensions()))
+        {
             return $this->makeCurlCall($url, 'GET', null, $authHeader);
         }
 
@@ -37,16 +39,19 @@ class ApiCalls
             "Content-Type: application/json",
         ];
 
-        if (!empty($authHeader)) {
+        if (!empty($authHeader))
+        {
             $headers[] = $authHeader;
         }
 
         $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-        if ($method === 'POST' && $data) {
+        if ($method === 'POST' && $data)
+        {
             $postdata = json_encode($data);
-            if ($postdata === false) {
+            if ($postdata === false)
+            {
                 $this->error = "JSON encoding error: " . json_last_error_msg();
                 return false;
             }
@@ -57,7 +62,8 @@ class ApiCalls
 
         $response = curl_exec($curl);
 
-        if ($response === false) {
+        if ($response === false)
+        {
             $this->error = curl_error($curl);
         }
         curl_close($curl);
@@ -73,7 +79,8 @@ class ApiCalls
             "Content-Type: application/json"
         ];
 
-        if (!empty($authHeader)) {
+        if (!empty($authHeader))
+        {
             $headers[] = $authHeader;
         }
 
@@ -85,9 +92,11 @@ class ApiCalls
             ]
         ];
 
-        if ($method === 'POST' && $data !== null) {
+        if ($method === 'POST' && $data !== null)
+        {
             $postdata = json_encode($data);
-            if ($postdata === false) {
+            if ($postdata === false)
+            {
                 $this->error = "JSON encoding error: " . json_last_error_msg();
                 return false;
             }
@@ -97,7 +106,8 @@ class ApiCalls
         $context = stream_context_create($options);
         $response = file_get_contents($url, false, $context);
 
-        if ($response === false) {
+        if ($response === false)
+        {
             $this->error = 'file_get_contents failed for ' . $method . ' request.';
         }
 

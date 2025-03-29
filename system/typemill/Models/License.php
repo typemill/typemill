@@ -321,7 +321,7 @@ class License
 
 				return false;
 			}
-		}		
+		}
 	}
 
 
