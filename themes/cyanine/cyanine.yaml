@@ -900,6 +900,8 @@ metatabs:
             type: checkbox
             label: 'Glossary List (cyanine theme)'
             checkboxlabel: 'List pages or posts of this folder as glossary (only for folders)'
+  cyanine:
+    fields:
       fieldsetTemplates:
         type: fieldset
         legend: 'Templates'
