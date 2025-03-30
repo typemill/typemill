@@ -45,7 +45,12 @@ class ApiCalls
         }
 
         $curl = curl_init($url);
+        if (defined('CURLSSLOPT_NATIVE_CA') && version_compare(curl_version()['version'], '7.71', '>='))
+        {
+            curl_setopt($curl, CURLOPT_SSL_OPTIONS, CURLSSLOPT_NATIVE_CA);  
+        }        
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 5);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         if ($method === 'POST' && $data)
         {
@@ -58,17 +63,19 @@ class ApiCalls
             curl_setopt($curl, CURLOPT_POSTFIELDS, $postdata);
             curl_setopt($curl, CURLOPT_POST, true);
         }
-        curl_setopt($curl, CURLOPT_FAILONERROR, true);
+#        curl_setopt($curl, CURLOPT_FAILONERROR, true);
 
         $response = curl_exec($curl);
 
         if ($response === false)
         {
             $this->error = curl_error($curl);
+            curl_close($curl);
+            return false;
         }
-        curl_close($curl);
 
-        return $response !== false ? $response : false;
+        curl_close($curl);
+        return $response;
     }
 
     private function makeFileGetContentsCall($url, $method, $data = null, $authHeader = '')
@@ -108,9 +115,22 @@ class ApiCalls
 
         if ($response === false)
         {
-            $this->error = 'file_get_contents failed for ' . $method . ' request.';
+            if (!empty($http_response_header) && isset($http_response_header[0]))
+            {
+                $parts          = explode(' ', $http_response_header[0], 3);
+                $status_code    = $parts[1] ?? 'Unknown';
+                $msg            = $parts[2] ?? 'No status message';
+
+                $this->error = Translations::translate('We got an error from file_get_contents: ') . $status_code . ' ' . $msg;
+            }
+            else
+            {
+                $this->error = Translations::translate('No HTTP response received or file_get_contents is blocked.');
+            }
+
+            return false;
         }
 
-        return $response !== false ? $response : false;
+        return $response;
     }
 }

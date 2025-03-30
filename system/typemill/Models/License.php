@@ -3,6 +3,7 @@
 namespace Typemill\Models;
 
 use Typemill\Models\StorageWrapper;
+use Typemill\Models\ApiCalls;
 use Typemill\Static\Translations;
 
 class License
@@ -108,7 +109,31 @@ class License
 	    if(!$subscriptionPaid) 
 	    {
 			$storage = new StorageWrapper('\Typemill\Models\Storage');
-	    	if(!$forceUpdateCheck && !$storage->timeoutIsOver('licenseupdate', 3600))
+	    	$timeoutIsOver = $storage->timeoutIsOver('licenseupdate', 3600);
+	    	$storageError = $storage->getError();
+
+	    	if($storageError)
+	    	{
+				$this->message = Translations::translate($storageError) . $this->message;
+
+	    		return false;
+	    	}
+
+			$backtrace = debug_backtrace();
+			$callingMethod = isset($backtrace[1]['function']) ? $backtrace[1]['function'] : 'Unknown';
+
+/*
+	    	echo '<br><br>method: ';
+	    	echo $callingMethod;
+	    	echo '<br>force: ';
+	    	var_dump($forceUpdateCheck);
+	    	echo '<br>timer: ';
+	    	var_dump($timeoutIsOver);
+
+	    	$forceUpdateCheck = false;
+*/
+
+	    	if(!$forceUpdateCheck && $timeoutIsOver === false)
 	    	{
 				$this->message = Translations::translate('The subscription period has not been paid yet. We will check it every 60 minutes.') . $this->message;
 
@@ -246,7 +271,7 @@ class License
 
 				# make remote check on the license server
 				$url 				= 'https://service.typemill.net/api/v1/licensecheck';
-				$remoteCheck 		= $this->callLicenseServer($licensedata, $url);
+				$remoteCheck 		= $this->callLicenseServer($licensedata, $url, 'remoteCheck');
 
 				if(isset($remoteCheck['status']) && $remoteCheck['status'])
 				{
@@ -287,7 +312,7 @@ class License
 			ksort($licensedata);
 
 			# test manipulate data
-	#		$licensedata['plan'] 	= 'wrong';
+#			$licensedata['plan'] 	= 'wrong';
 
 			# Check signature
 			$public_key_pem 		= $this->getPublicKeyPem();
@@ -331,7 +356,7 @@ class License
 	{
 		# make the call to the license server
 		$url 				= 'https://service.typemill.net/api/v1/testcall';
-		$testcall 			= $this->callLicenseServer(['test' => 'test'], $url);
+		$testcall 			= $this->callLicenseServer(['test' => 'test'], $url, 'testLicensecall');
 
 		if(!$testcall)
 		{
@@ -354,7 +379,7 @@ class License
 
 		# make the call to the license server
 		$url 				= 'https://service.typemill.net/api/v1/activate';
-		$signedLicense 		= $this->callLicenseServer($licensedata, $url);
+		$signedLicense 		= $this->callLicenseServer($licensedata, $url, 'activateLicense');
 
 		if(!$signedLicense)
 		{
@@ -391,7 +416,7 @@ class License
 
 		# make the call to the license server
 		$url 				= 'https://service.typemill.net/api/v1/update';
-		$signedLicense 		= $this->callLicenseServer($licensedata, $url);
+		$signedLicense 		= $this->callLicenseServer($licensedata, $url, 'updateLicense');
 
 		if(!$signedLicense)
 		{
@@ -461,7 +486,7 @@ class License
 
 		$url 				= 'https://service.typemill.net/api/v1/gettoken';
 
-		$tokenresponse 		= $this->callLicenseServer($licensedata, $url);
+		$tokenresponse 		= $this->callLicenseServer($licensedata, $url, 'getToken');
 
 		if($tokenresponse && isset($tokenresponse['token']) && $tokenresponse['token'])
 		{
@@ -473,14 +498,53 @@ class License
 		return false;
 	}
 
-	private function callLicenseServer( $licensedata, $url )
+	private function callLicenseServer( $licensedata, $url, $from )
+	{
+		$authstring 		= $this->getPublicKeyPem();
+
+#		echo '<br>license server call from: ' . $from;
+
+		if(!$authstring)
+		{
+			$this->message 	= Translations::translate('Please check if there is a readable file public_key.pem in your settings folder.');
+ 
+			return false;
+		}
+
+		$authstring = hash('sha256', substr($authstring, 0, 50));
+		$authHeader = "Authorization: " . $authstring;
+
+	    $apiservice = new ApiCalls();
+	    $apiResponse = $apiservice->makePostCall($url, $licensedata, $authHeader);
+
+	    if (!$apiResponse)
+	    {
+	    	$error = $apiservice->getError();
+			$this->message 	= 'ApiCallError: ' . Translations::translate($error);
+
+			return false;
+	    }
+	    
+		$responseJson = json_decode($apiResponse, true);
+
+		if(isset($responseJson['code']))
+		{
+			$this->message 	= 'LicenseServerError: ' . $responseJson['code'];
+		
+			return false;
+		}
+
+		return $responseJson;
+	}
+
+	private function callLicenseServerOld( $licensedata, $url )
 	{
 		$authstring 		= $this->getPublicKeyPem();
 
 		if(!$authstring)
 		{
 			$this->message 	= Translations::translate('Please check if there is a readable file public_key.pem in your settings folder.');
-
+ 
 			return false;
 		}
 
@@ -499,7 +563,8 @@ class License
 			curl_setopt($curl, CURLOPT_POST, true);
 			curl_setopt($curl, CURLOPT_POSTFIELDS, $postdata);
 			curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-			    "Content-Type: application/x-www-form-urlencoded",
+#			    "Content-Type: application/x-www-form-urlencoded",
+			    "Content-Type: application/json",
 			    "Accept: application/json",
 			    "Authorization: $authstring",
 			    "Connection: close"

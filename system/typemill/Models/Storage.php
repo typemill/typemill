@@ -496,11 +496,15 @@ class Storage
 		$folder 	= '';
 		$filename 	= 'timer.yaml';
 
-		// Get current timers from the YAML file, if it exists
-		$timers = $this->getYaml($location, $folder, $filename) ?: [];
+		if(!$this->checkFolder('cacheFolder'))
+		{
+			return false;
+		}
 
-		$currentTime = time();
-		$timeThreshold = $currentTime - $timespan;
+		// Get current timers from the YAML file, if it exists
+		$currentTime 	= time();
+		$timeThreshold 	= $currentTime - $timespan;
+		$timers 		= $this->getYaml($location, $folder, $filename) ?: [];
 
 		# Check if the name exists and if the timestamp is older than the current time minus the timespan
 		if (!isset($timers[$name]) || !is_numeric($timers[$name]) || $timers[$name] <= $timeThreshold)
@@ -510,6 +514,11 @@ class Storage
 
 			# Update the YAML file with the new or updated timer
 			$this->updateYaml($location, $folder, $filename, $timers);
+
+			if($this->error)
+			{
+				return false;
+			}
 
 			return true;
 		}

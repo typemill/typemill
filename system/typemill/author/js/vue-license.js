@@ -111,7 +111,7 @@ const app = Vue.createApp({
 				self.disabled 		= false;
 				self.message 		= handleErrorMessage(error);
 				self.messageClass 	= 'bg-rose-500';
-				self.licensemessage = error.response.data.message;
+				self.licensemessage = self.licensemessage + ' ' + error.response.data.message;
 				if(error.response.data.errors !== undefined)
 				{
 					self.errors = error.response.data.errors;
