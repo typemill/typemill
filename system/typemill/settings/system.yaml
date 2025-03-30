@@ -341,3 +341,7 @@ fieldsetai:
       generator: false
       label: 'ChatGPT Api Key'
       description: "Enter your ChatGPT API key here. You can generate a new key on [OpenAI's platform](https://platform.openai.com/docs/pricing). For security reasons, your API key is secret and will not be visible again after you leave this page."
+    customsmall:
+      type: customfields
+      label: 'Customfield Small'
+      description: "This is a small standard customfield."

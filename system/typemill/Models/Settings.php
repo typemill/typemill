@@ -198,11 +198,11 @@ class Settings
 						}
 						else
 						{
-							$settings[$key] = array_merge($userSettings[$key], $newSettings[$key]);
+							# changed from array_merge to array_replace to preserve the index, otherwise numeric values get re-indexed. Alternative is 
+							$settings[$key] = array_replace($userSettings[$key], $newSettings[$key]);
 						}
 					}
 				}
-
 			}
 
 			if($this->storage->updateYaml('settingsFolder', '', 'settings.yaml', $settings))
@@ -213,6 +213,16 @@ class Settings
 
 		return false;
 	}
+
+	private function array_is_list(array $arr)
+	{
+		if ($arr === [])
+		{
+			return true;
+		}
+		return array_keys($arr) === range(0, count($arr) - 1);
+	}
+
 
 	public function updateThemeCss(string $name, string $css)
 	{
@@ -232,15 +242,6 @@ class Settings
 		}
 
 		return false;
-	}
-
-	private function array_is_list(array $arr)
-	{
-		if ($arr === [])
-		{
-			return true;
-		}
-		return array_keys($arr) === range(0, count($arr) - 1);
 	}
 
 	public function getSettingsDefinitions()

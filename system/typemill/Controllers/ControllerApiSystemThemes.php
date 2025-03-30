@@ -20,7 +20,7 @@ class ControllerApiSystemThemes extends Controller
 
 		$extension 			= new Extension();
 		$formdefinitions 	= $extension->getThemeDefinition($themename);
-		$formdefinitions 	= $this->addDatasets($formdefinitions['forms']['fields']);		
+		$formdefinitions 	= $this->addDatasets($formdefinitions['forms']['fields']);
 		$themedata 			= [];
 
 		# validate input

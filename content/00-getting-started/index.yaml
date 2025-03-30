@@ -11,5 +11,3 @@ meta:
     noindex: false
     contains: pages
     template: ''
-cyanine:
-    template: standard

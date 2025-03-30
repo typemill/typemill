@@ -43,6 +43,7 @@ class ControllerApiKixote extends Controller
 		$params 			= $request->getParsedBody();
 		$kixoteSettings 	= $params['kixotesettings'] ?? false;
 		$validate			= new Validation();
+		$cleanSettings 		= [];
 
 		if(isset($kixoteSettings['promptlist']))
 		{
@@ -57,6 +58,7 @@ class ControllerApiKixote extends Controller
 				}
 				else
 				{
+					$cleanSettings['promptlist'][$name] = $values;
 					unset($kixoteSettings['promptlist'][$name]['errors']);
 				}
 			}
@@ -74,7 +76,7 @@ class ControllerApiKixote extends Controller
 		}
 
 		$settingsModel = new Settings();
-		$result = $settingsModel->updateKixoteSettings($kixoteSettings);
+		$result = $settingsModel->updateKixoteSettings($cleanSettings);
 
 		if(!$result)
 		{

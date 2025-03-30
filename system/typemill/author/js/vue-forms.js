@@ -606,18 +606,54 @@ app.component('component-customfields', {
 	},
 	template: `<div :class="css ? css : ''" class="w-full mt-5 mb-5">
 				<label :for="name" class="block mb-1 font-medium">{{ $filters.translate(label) }}</label>
-			  	<p v-if="fielderrors" class="text-xs text-red-500">{{ fielderrors }}</p>
-			  	<p v-else class="text-xs">{{ $filters.translate(description) }}</p>
+			  	<p v-if="fielderrors" class="text-xs text-red-500 mb-2">{{ fielderrors }}</p>
+			  	<p v-else class="text-xs mb-2">{{ $filters.translate(description) }}</p>
 	  			<transition-group name="fade" tag="div">
-	  				<div class="relative flex mb-3" v-for="(pairobject, pairindex) in cfvalue" :key="pairindex">
+	  				<div 
+	  					v-show 	= "isLarge(css)" 
+	  					class 	= "relative mb-2 border-b border-stone-200 dark:border-stone-600" 
+	  					v-for 	= "(pairobject, pairindex) in cfvalue" 
+	  					:key 	= "pairindex"
+	  					>
+						<div class=" mb-3 w-100 flex justify-between">
+							<input 
+								type 		= "text" 
+								placeholder = "key" 
+								class 		= "h-12 w-half border px-2 py-3 border-stone-300 bg-stone-200 text-stone-900" 
+								:class 		= "pairobject.keyerror" 
+								:value 		= "pairobject.key" 
+								@input 		= "updatePairKey(pairindex,$event)">
+							<button class="text-white bg-stone-700 w-6 h-6 text-xs hover:bg-rose-500 ml-1" @click.prevent="deleteField(pairindex)">
+								<svg class="icon icon-minus">
+									<use xlink:href="#icon-minus"></use>
+								</svg>
+							</button>				  		
+				  		</div>
+				  		<div class="w-full mb-2">
+			  			  	<textarea 
+			  			  		placeholder = "value" 
+								class 		= "w-full border px-2 py-3 border-stone-300 bg-stone-200 text-stone-900" 
+			  			  		:class 		= "pairobject.valueerror" 
+								rows 		= "5"
+			  			  		:value 		= "pairobject.value" 
+			  			  		@input 		= "updatePairValue(pairindex,$event)">
+			  			  	</textarea>
+				  		</div>
+					</div>
+	  				<div
+						v-show 	= "!isLarge(css)"
+	  					v-for 	= "(pairobject, pairindex) in cfvalue" 
+	  					class 	= "relative flex mb-3" 
+	  					:key 	= "pairindex"
+	  					>
 						<div>
 							<input 
-								type="text" 
-								placeholder="key" 
-								class="h-12 w-full border px-2 py-3 border-stone-300 bg-stone-200 text-stone-900" 
-								:class="pairobject.keyerror" 
-								:value="pairobject.key" 
-								@input="updatePairKey(pairindex,$event)">
+								type 		= "text" 
+								placeholder = "key" 
+								class 		= "h-12 w-full border px-2 py-3 border-stone-300 bg-stone-200 text-stone-900" 
+								:class 		= "pairobject.keyerror" 
+								:value 		= "pairobject.key" 
+								@input 		= "updatePairKey(pairindex,$event)">
 				  		</div>
 				  		<div class="flex-grow">
 				  			<div class="flex">
@@ -625,11 +661,11 @@ app.component('component-customfields', {
 					  				<use xlink:href="#icon-dots-two-vertical"></use>
 					  			</svg>
 				  			  	<textarea 
-				  			  		placeholder="value" 
-									class="w-full border px-2 py-3 border-stone-300 bg-stone-200 text-stone-900" 
-				  			  		:class="pairobject.valueerror" 
-				  			  		v-html="pairobject.value" 
-				  			  		@input="updatePairValue(pairindex,$event)"></textarea>
+				  			  		placeholder = "value" 
+									class 		= "w-full border px-2 py-3 border-stone-300 bg-stone-200 text-stone-900" 
+				  			  		:class 		= "pairobject.valueerror" 
+				  			  		:value 		= "pairobject.value" 
+				  			  		@input 		= "updatePairValue(pairindex,$event)"></textarea>
 								<button class="text-white bg-stone-700 w-6 h-6 text-xs hover:bg-rose-500 ml-1" @click.prevent="deleteField(pairindex)">
 									<svg class="icon icon-minus">
 										<use xlink:href="#icon-minus"></use>
@@ -662,6 +698,14 @@ app.component('component-customfields', {
 		}
 	},
 	methods: {
+		isLarge: function(css)
+		{
+			if(css && css.indexOf('cf-large') >= 0)
+			{
+				return true;
+			}
+			return false;
+		},
 		update: function(value, name)
 		{
 			this.fielderrors = false;
