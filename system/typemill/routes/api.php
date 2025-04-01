@@ -99,7 +99,7 @@ $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 	# KIXOTE Remote Services
 	$group->get('/tokenstats', ControllerApiKixote::class . ':getTokenStats')->setName('api.kixote.tokenstats')->add(new ApiAuthorization($acl, 'mycontent', 'update')); # author
 	$group->post('/agreetoaiservice', ControllerApiKixote::class . ':agreeToAiService')->setName('api.kixote.serviceagreement')->add(new ApiAuthorization($acl, 'mycontent', 'update')); # author
-	$group->post('/chatgpt', ControllerApiKixote::class . ':promptChatGPT')->setName('api.kixote.chatgpt')->add(new ApiAuthorization($acl, 'mycontent', 'update')); # author
+	$group->post('/prompt', ControllerApiKixote::class . ':prompt')->setName('api.kixote.prompt')->add(new ApiAuthorization($acl, 'mycontent', 'update')); # author
 
 	# API USED ONLY EXTERNALLY
 	$group->get('/systemnavi', ControllerApiGlobals::class . ':getSystemnavi')->setName('api.systemnavi.get')->add(new ApiAuthorization($acl, 'account', 'read')); # member

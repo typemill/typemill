@@ -15,6 +15,19 @@ class ControllerApiKixote extends Controller
 {
 	private $error = false;
 
+	private function getSystemMessage()
+	{
+		$system = 'You are a content editor and writing assistant.'
+		          . ' If the user prompt does not explicitly specify otherwise,'
+		          . ' apply the prompt to the provided article and return only the updated article in Markdown syntax,'
+		          . ' without any extra comments or explanations.'
+		          . ' If you find the tag <focus></focus>,'
+		          . ' modify only the content inside these tags and leave everything else unchanged.' 
+		          . ' Always return the full article.';
+
+		return $system;		     
+	}
+
 	public function getKixoteSettings(Request $request, Response $response)
 	{
 		$settingsModel = new Settings();
@@ -35,7 +48,6 @@ class ControllerApiKixote extends Controller
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
-
 	}
 
 	public function updateKixoteSettings(Request $request, Response $response)
@@ -247,6 +259,199 @@ class ControllerApiKixote extends Controller
 		return $jwt;
 	}
 
+	public function prompt(Request $request, Response $response)
+	{
+	    $params 			= $request->getParsedBody();
+
+	    if (empty($params['prompt']) || !is_string($params['prompt']))
+	    {
+	        $response->getBody()->write(json_encode([
+	            'message' => 'Prompt is missing or invalid.'
+	        ]));
+	        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+	    }
+
+	    if (empty($params['article']) || !is_string($params['article']))
+	    {
+	        $response->getBody()->write(json_encode([
+	            'message' => 'Article is missing or invalid.'
+	        ]));
+	        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+	    }
+
+	    $promptname = $params['name'] ?? '';
+	    $prompt 	= $params['prompt'] ?? '';
+	    $article 	= $params['article'] ?? '';
+	    $tone 		= $params['tone'] ?? '';
+	    
+	    $aiservice 	= $this->settings['aiservice'] ?? false;
+	    if(!$aiservice)
+	    {
+	        $response->getBody()->write(json_encode([
+	            'message' => 'No ai service is selected.'
+	        ]));
+	        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);	    	
+	    }
+
+	    switch ($aiservice) {
+	    	case 'chatgpt':
+	    		$answer = $this->promptChatGPT($promptname, $prompt, $article, $tone);
+	    		break;
+	    	
+	    	case 'claude':
+	    		$answer = $this->promptClaude($promptname, $prompt, $article, $tone);
+	    		break;
+
+	    	default:
+	    		$answer = false;
+	    		break;
+	    }
+
+	    if(!isset($answer) or !$answer)
+	    {
+	        $response->getBody()->write(json_encode([
+	            'message' => $this->error
+	        ]));
+
+	        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+	    }
+
+	    $response->getBody()->write(json_encode([
+	        'message' 	=> 'Success',
+	        'answer' 	=> $answer,
+	    ]));
+
+	    return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+	}
+
+	public function promptChatGPT($promptname, $prompt, $article, $tone)
+	{
+		# check if user has accepted 
+
+		$settingsModel 	= new Settings();
+	    $model 			= $this->settings['chatgptModel'] ?? false;
+	    $apikey 		= $settingsModel->getSecret('chatgptKey');
+
+	    if (!$model || !$apikey)
+	    {
+	    	$this->error = 'Model or api key for chatgpt is missing, please add it in the system settings.';
+	    	return false;
+	    }
+
+	    $url = 'https://api.openai.com/v1/chat/completions';
+	    $authHeader = "Authorization: Bearer $apikey";
+
+	    $postdata = [
+	        'model' => $model,
+	        'messages' => [
+	            [
+	                'role' => 'system',
+	                'content' => $this->getSystemMessage(), 
+	            ],
+	            [
+	                'role' => 'user',
+	                'content' => $prompt . "\n" . $article
+	            ],
+	        ],
+	        'temperature' => 0.7,
+	        'max_tokens' => 8000,
+	    ];
+
+	    $apiservice = new ApiCalls();
+	    $apiResponse = $apiservice->makePostCall($url, $postdata, $authHeader);
+
+	    if (!$apiResponse)
+	    {
+	    	$this->error = 'Failed to communicate with ChatGPT: ' . $apiservice->getError();
+	    	return false;
+	    }
+
+	    $data = json_decode($apiResponse, true);
+
+	    if(isset($data['error']))
+	    {
+	    	$this->error = 'ChatGPT returned and error';
+	    	if(isset($data['error']['message']))
+	    	{
+	    		$this->error = $data['error']['message'];
+	    	}
+
+	    	return false;
+	    }
+
+	    if (!isset($data['choices'][0]['message']['content']) || !is_string($data['choices'][0]['message']['content']))
+	    {
+	        $this->error = 'ChatGPT did not return a valid answer.';
+	        return false;
+	    }
+
+	    $answer = trim($data['choices'][0]['message']['content']);
+
+	    return $answer;
+	}
+
+	public function promptClaude($promptname, $prompt, $article, $tone)
+	{
+	    # Check if user has accepted 
+	    $settingsModel = new Settings();
+	    $model = $this->settings['claudeModel'] ?? false;
+	    $apikey = $settingsModel->getSecret('claudeKey');
+
+	    if (!$model || !$apikey)
+	    {
+	        $this->error = 'Model or API key for Claude is missing, please add it in the system settings.';
+	        return false;
+	    }
+
+	    $url = 'https://api.anthropic.com/v1/messages';
+	    $headers = [
+	        "x-api-key: $apikey",
+	        "anthropic-version: 2023-06-01"
+	    ];
+
+	    $postdata = [
+	        'model' => $model,
+	        'system' => $this->getSystemMessage(),
+	        'messages' => [
+	            [
+	                'role' => 'user',
+	                'content' => $prompt . "\n" . $article
+	            ],
+	        ],
+	        'temperature' => 0.7,
+	        'max_tokens' => 8000,
+	    ];
+
+	    $apiservice = new ApiCalls();
+	    $apiResponse = $apiservice->makePostCall($url, $postdata, $headers);
+
+	    if (!$apiResponse) {
+	        $this->error = 'Failed to communicate with Claude: ' . $apiservice->getError();
+	        return false;
+	    }
+
+	    $data = json_decode($apiResponse, true);
+
+	    if (isset($data['error']))
+	    {
+	        $this->error = 'Claude API returned an error';
+	        if (isset($data['error']['message']))
+	        {
+	            $this->error = $data['error']['message'];
+	        }
+	        return false;
+	    }
+
+	    if (!isset($data['content'][0]['text']) || !is_string($data['content'][0]['text']))
+	    {
+	        $this->error = 'Claude did not return a valid answer.';
+	        return false;
+	    }
+
+	    return trim($data['content'][0]['text']);
+	}
+
+	# NOT READY YET
 	public function promptKixote(Request $request, Response $response)
 	{
 		$jwt = $this->getKixoteJWT();
@@ -295,85 +500,5 @@ class ControllerApiKixote extends Controller
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
-	}
-
-	public function promptChatGPT(Request $request, Response $response): Response
-	{
-		# check if user has accepted 
-
-	    $params = $request->getParsedBody();
-
-	    $params['name'] = $params['name'] ?? '';
-	    $params['prompt'] = $params['prompt'] ?? '';
-	    $params['article'] = $params['article'] ?? '';
-	    $params['tone'] = $params['tone'] ?? '';
-
-		$settingsModel = new Settings();
-	    $model = $this->settings['chatgptModel'] ?? false;
-	    $apikey = $settingsModel->getSecret('chatgptKey');
-
-	    if (empty($params['prompt']) || !is_string($params['prompt']))
-	    {
-	        $response->getBody()->write(json_encode([
-	            'message' => 'Prompt is missing or invalid.'
-	        ]));
-	        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
-	    }
-
-	    if (empty($params['article']) || !is_string($params['article']))
-	    {
-	        $response->getBody()->write(json_encode([
-	            'message' => 'Article is missing or invalid.'
-	        ]));
-	        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
-	    }
-
-	    if (!$model || !$apikey)
-	    {
-	        $response->getBody()->write(json_encode([
-	            'message' => 'Model or api key for chatgpt is missing, please add it in the system settings.'
-	        ]));
-	        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);	
-	    }
-
-	    $url = 'https://api.openai.com/v1/chat/completions';
-	    $authHeader = "Authorization: Bearer $apikey";
-
-	    $postdata = [
-	        'model' => $model,
-	        'messages' => [
-	            [
-	                'role' => 'system',
-	                'content' => 'You are a content editor and writing assistant. If the user prompt does not explicitly specify otherwise, apply the prompt to the provided article and return only the updated article in Markdown syntax, without any extra comments or explanations. If you find the tag <focus></focus>, modify only the content inside these tags and leave everything else unchanged. Always return the full article.'
-	            ],
-	            [
-	                'role' => 'user',
-	                'content' => $params['prompt'] . "\n" . $params['article']
-	            ],
-	        ],
-	        'temperature' => 0.7,
-	        'max_tokens' => 2000,
-	    ];
-
-	    $apiservice = new ApiCalls();
-	    $apiResponse = $apiservice->makePostCall($url, $postdata, $authHeader);
-
-	    if (!$apiResponse)
-	    {
-	        $response->getBody()->write(json_encode([
-	            'message' 	=> 'Failed to communicate with ChatGPT',
-	            'error'		=> $apiservice->getError()
-	        ]));
-
-	        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
-	    }
-
-	    $data = json_decode($apiResponse, true);
-	    $response->getBody()->write(json_encode([
-	        'message' => 'Success',
-	        'data' => $data,
-	    ]));
-
-	    return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
 	}
 }

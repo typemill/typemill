@@ -31,7 +31,7 @@ class ApiCalls
         return $this->makeFileGetContentsCall($url, 'GET', null, $authHeader);
     }
 
-    private function makeCurlCall($url, $method, $data = false, $authHeader = '')
+    private function makeCurlCall($url, $method, $data = false, $customHeader = '')
     {
         $this->error = null;
 
@@ -39,10 +39,7 @@ class ApiCalls
             "Content-Type: application/json",
         ];
 
-        if (!empty($authHeader))
-        {
-            $headers[] = $authHeader;
-        }
+        $headers = $this->addCustomHeader($customHeader);
 
         $curl = curl_init($url);
         if (defined('CURLSSLOPT_NATIVE_CA') && version_compare(curl_version()['version'], '7.71', '>='))
@@ -78,7 +75,7 @@ class ApiCalls
         return $response;
     }
 
-    private function makeFileGetContentsCall($url, $method, $data = null, $authHeader = '')
+    private function makeFileGetContentsCall($url, $method, $data = null, $customHeader = '')
     {
         $this->error = null;
 
@@ -86,10 +83,7 @@ class ApiCalls
             "Content-Type: application/json"
         ];
 
-        if (!empty($authHeader))
-        {
-            $headers[] = $authHeader;
-        }
+        $headers = $this->addCustomHeader($headers, $customHeader);
 
         $options = [
             'http' => [
@@ -132,5 +126,25 @@ class ApiCalls
         }
 
         return $response;
+    }
+
+    private function addCustomHeader(array $header, $customHeader = '')
+    {
+        if(!empty($customHeader))
+        {
+            if(is_array($customHeader))
+            {
+                foreach($customHeader as $cHeader)
+                {
+                    $header[] = $cHeader;
+                }
+            }
+            elseif(is_string($customHeader))
+            {
+                $header[] = $customHeader;
+            }
+        }
+
+        return $header;
     }
 }

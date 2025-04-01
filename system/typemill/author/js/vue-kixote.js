@@ -332,6 +332,7 @@ kixote.component('tab-generate', {
 	        activeversion: 0,
 	        versions: [],
 	        prompt: '',
+	      	promptError: false,
 		    showFocusButton: false,
 		    buttonPosition: { top: 0, left: 0 },
 		    selection: { start: 0, end: 0, text: '' },
@@ -456,6 +457,7 @@ kixote.component('tab-generate', {
 								</div>
 
 								<!-- PROMPT INPUT -->
+								<div v-if="promptError" class="w-full px-8 py-1 bg-rose-500 text-white">{{ promptError }}</div>
 								<div class="w-full bg-stone-600 px-8 py-2">
 									<div class="flex items-start">
 										<span class="text-teal-300 mr-1">Ki></span>
@@ -643,7 +645,6 @@ kixote.component('tab-generate', {
 	    currentTab(newTab, oldTab) {
 	        if (newTab === 'article')
 	        {
-	        	console.info('article');
 	            this.$nextTick(() => {
 	                this.initAutosize(); // Trigger the resizing when switching back to the article tab
 	            });
@@ -710,12 +711,12 @@ kixote.component('tab-generate', {
 			{
 				eventBus.$emit('agreetoservice');
 				self.$nextTick(() => {
-		        	self.resizeAiEditor();
+		        	self.initAutosize();
 				});
 			})
 		},
 	    setCurrentTab(tabValue)
-	    {	        
+	    {
 	        this.currentTab = tabValue;
 
 	        if(tabValue == 'article')
@@ -768,10 +769,12 @@ kixote.component('tab-generate', {
         },
 		submitPrompt()
 		{
+        	this.promptError = false;
+
 			var self = this;
 			eventBus.$emit('switchLoading');
 
-			tmaxios.post('/api/v1/chatgpt',{
+			tmaxios.post('/api/v1/prompt',{
 				'prompt': this.prompt,
 				'article': this.versions[this.activeversion]
 			})
@@ -780,7 +783,7 @@ kixote.component('tab-generate', {
 				eventBus.$emit('switchLoading');
 		        if (response.data.message === 'Success')
 		        {
-		            let answer = response.data.data.choices[0].message.content;
+		            let answer = response.data.answer;
 					answer = answer.replace(/<\/?focus>/g, '');
 		            self.versions.push(answer);
 		            self.activeversion = self.versions.length-1;
@@ -795,12 +798,11 @@ kixote.component('tab-generate', {
 				if(error.response)
 				{
 					self.disabled 		= false;
-					self.message 		= handleErrorMessage(error);
-					self.messageClass 	= 'bg-rose-500';
+					self.promptError 	= handleErrorMessage(error);
 					self.licensemessage = error.response.data.message;
 					if(error.response.data.errors !== undefined)
 					{
-						self.errors = error.response.data.errors;
+						self.promptError = error.response.data.errors;
 					}
 				}
 			});

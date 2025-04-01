@@ -325,23 +325,35 @@ fieldsetai:
         none: 'None'
 #        kixote: 'Kixote (not available yet)'
         chatgpt: 'ChatGPT'
+        claude: 'Claude'
     chatgptModel:
       type: select
       label: 'ChatGPT model'
       description: "Select the AI model you want to use. Pricing may vary over time, so please check the latest details on [OpenAI's pricing page](https://platform.openai.com/docs/pricing)"
       options: 
-        gpt-4o-mini: 'gpt-4o-mini ($0.6 / 1M output tokens)'
-        gpt-3.5-turbo-0125: 'gpt-3.5-turbo-0125 ($1.50 / 1M output tokens)'
-        gpt-4o: 'gpt-4o ($10.00 / 1M output tokens)'
-        o1-mini: 'o1-mini ($12.00 / 1M output tokens)'
-        o1: 'o1 ($60.00 / 1M output tokens)'
+        gpt-4o-mini: 'gpt-4o-mini ($0.15 / $0.6)'
+        gpt-4o: 'gpt-4o ($2.50 / $10)'
+        gpt-3.5-turbo-0125: 'gpt-3.5-turbo ($0.50 / $1.50)'
+        o1-mini: 'o1-mini ($1.10 / 4.40)'
+        o1: 'o1 ($15 / $60.00)'
     chatgptKey:
       type: password
       autocomplete: new-password 
       generator: false
       label: 'ChatGPT Api Key'
       description: "Enter your ChatGPT API key here. You can generate a new key on [OpenAI's platform](https://platform.openai.com/docs/pricing). For security reasons, your API key is secret and will not be visible again after you leave this page."
-    customsmall:
-      type: customfields
-      label: 'Customfield Small'
-      description: "This is a small standard customfield."
+    claudeModel:
+      type: select
+      label: 'Claude model'
+      description: "Select the AI model you want to use. Pricing may vary over time, so please check the latest details on [Claude's pricing page](https://docs.anthropic.com/en/docs/about-claude/models/all-models)"
+      options: 
+        claude-3-7-sonnet-20250219: 'Claude 3.7 Sonnet ($3 / $15)'
+        claude-3-5-haiku-20241022: 'Claude 3.5 Haiku ($0.80 / $4)'
+        claude-3-opus-20240229: 'Claude 3 Opus ($15.00 / $75)'
+        claude-3-haiku-20240307: 'Claude 3 Haiku ($0.25 / $1.25)'
+    claudeKey:
+      type: password
+      autocomplete: new-password 
+      generator: false
+      label: 'Claude Api Key'
+      description: "Enter your Claude API key here. You can generate a new key on [Claude's console](https://console.anthropic.com). For security reasons, your API key is secret and will not be visible again after you leave this page."
