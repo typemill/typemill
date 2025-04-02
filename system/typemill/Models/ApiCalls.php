@@ -31,7 +31,7 @@ class ApiCalls
         return $this->makeFileGetContentsCall($url, 'GET', null, $authHeader);
     }
 
-    private function makeCurlCall($url, $method, $data = false, $customHeader = '')
+    private function makeCurlCall($url, $method, $data = false, $customHeaders = '')
     {
         $this->error = null;
 
@@ -39,7 +39,7 @@ class ApiCalls
             "Content-Type: application/json",
         ];
 
-        $headers = $this->addCustomHeader($customHeader);
+        $headers = $this->addCustomHeaders($headers, $customHeaders);
 
         $curl = curl_init($url);
         if (defined('CURLSSLOPT_NATIVE_CA') && version_compare(curl_version()['version'], '7.71', '>='))
@@ -75,7 +75,7 @@ class ApiCalls
         return $response;
     }
 
-    private function makeFileGetContentsCall($url, $method, $data = null, $customHeader = '')
+    private function makeFileGetContentsCall($url, $method, $data = null, $customHeaders = '')
     {
         $this->error = null;
 
@@ -83,7 +83,7 @@ class ApiCalls
             "Content-Type: application/json"
         ];
 
-        $headers = $this->addCustomHeader($headers, $customHeader);
+        $headers = $this->addCustomHeader($headers, $customHeaders);
 
         $options = [
             'http' => [
@@ -128,23 +128,28 @@ class ApiCalls
         return $response;
     }
 
-    private function addCustomHeader(array $header, $customHeader = '')
+    private function addCustomHeaders($headers, $customHeaders = '')
     {
-        if(!empty($customHeader))
+        if(!is_array($headers))
         {
-            if(is_array($customHeader))
+            return false;
+        }
+
+        if(!empty($customHeaders))
+        {
+            if(is_array($customHeaders))
             {
-                foreach($customHeader as $cHeader)
+                foreach($customHeaders as $cHeader)
                 {
-                    $header[] = $cHeader;
+                    $headers[] = $cHeader;
                 }
             }
-            elseif(is_string($customHeader))
+            elseif(is_string($customHeaders))
             {
-                $header[] = $customHeader;
+                $headers[] = $customHeaders;
             }
         }
 
-        return $header;
+        return $headers;
     }
 }

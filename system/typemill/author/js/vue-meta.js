@@ -53,8 +53,7 @@ const app = Vue.createApp({
 				
 				const componentName = 'tab-' + this.currentTab.toLowerCase();
 
-
-		        if (this.$root.$options.components && this.$root.$options.components[componentName])
+		        if(this.$root.$.appContext.components[componentName])
 		        {
 		            return componentName;
 		        }

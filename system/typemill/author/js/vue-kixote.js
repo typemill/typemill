@@ -130,9 +130,9 @@ const kixote = Vue.createApp({
             tabs: [ 
             		"Admin", 
             		"Generate", 
+            		"SEO", 
 /*            		"Automate", 
             		"Translate", 
-            		"SEO", 
             		"RAG" */
             ],
 			icons: {
@@ -1004,6 +1004,246 @@ kixote.component('tab-generate', {
 	    },        
 	}
 })
+
+
+kixote.component('tab-seo', {
+	props: ['content', 'item', 'labels', 'urlinfo', 'settings', 'kixoteSettings', 'settingsSaved', 'aiservice', 'useragreement', 'tokenstats'],
+	data: function () {
+	    return {
+			article: '',
+      	};
+	},
+	template: `<section class="dark:bg-stone-700 dark:text-stone-200">
+
+					<div v-if="!aiservice" class="p-8 mt-4 w-full">
+					    <div class="bg-stone-700 p-8 border border-stone-500 rounded-lg shadow-md">
+					        <h2 class="text-xl font-bold text-white mb-4">Your AI Assistant for Typemill</h2>
+					        <p class="text-stone-300 mb-4">
+					            To get started with AI-powered assistance, go to <strong class="text-white">System Settings</strong>, open the <strong class="text-white">AI</strong> tab, and follow these steps:
+					        </p>
+					        <ol class="list-decimal list-inside text-stone-300 space-y-2">
+					            <li>Select an AI service.</li>
+					            <li>Choose a model.</li>
+					            <li>Enter your API key.</li>
+					        </ol>
+					        <p class="text-stone-300 mt-4">Once set up, you can start using AI assistance right away!</p>
+					    </div>
+					</div>
+
+					<div v-else-if="content">
+
+						<div v-if="!useragreement" class="p-8 mt-4 inline-block w-full">
+							<div class="bg-stone-700 p-8 border border-stone-500">
+								
+								<div class="w-full mt-5 mb-5">
+									<div class="block mb-1 font-medium">Activate {{aiservice}}</div>
+									<label class="flex items-start mb-2 mt-2">
+										<input 
+											type  = "checkbox" 
+											class = "w-6 h-6 border-stone-300 bg-stone-200" 
+											value = "chatgpt"
+											@change = "agreeTo(aiservice)"
+											>
+											<span class="ml-2 text-sm">
+											    Activate {{aiservice}} to start using AI assistance. By enabling this service, you agree to the terms and conditions of {{aiservice}}. 
+											    Your prompts and article content will be sent to {{aiservice}} to generate responses. 
+											    You can disable {{aiservice}} at any time in your user profile.
+											</span>
+									</label>
+								</div>
+
+							</div>
+						</div>
+
+						<div v-else>
+								<!-- PROMPT INPUT -->
+								<div v-if="promptError" class="w-full px-8 py-1 bg-rose-500 text-white">{{ promptError }}</div>
+								<div class="w-full bg-stone-600 px-8 py-2">
+									<div class="flex items-start">
+										<span class="text-teal-300 mr-1">Ki></span>
+										<textarea 
+											v-model.trim 	= "prompt" 
+											ref 			= "prompteditor"	
+											class 			= "flex-grow bg-stone-600 focus:outline-none border-0 caret-white" 
+											placeholder 	= "Prompt..."
+				            				@keydown.enter 	= "handleKeydown"
+			            					@input 			= "resizePromptEditor"
+											></textarea>
+								        <button 
+								        	class 	= "text-teal-300 px-2" 
+								        	@click 	= "submitPrompt"
+								        	>submit
+								        </button>
+								        <span class="px-1 text-stone-700">|</span> 
+								        <button 
+								        	class 	= "text-teal-300 px-2" 
+								        	@click 	= "exit"
+								        	>exit
+								        </button>
+									</div>
+								</div>
+
+					        </div>
+
+
+						</div>
+					</div>
+	
+					<div v-else class="p-8 mt-4 inline-block w-full">
+						<p class="text-center bg-stone-700 p-8 border border-stone-500">Content Generation only works on content pages. You are currently in the settings area.</p>
+					</div>
+
+				</section>`,
+	mounted: function()
+	{	
+		this.initAutosize();
+
+		if(this.versions.length == 0)
+		{
+			this.initializeContent()
+		}
+	},
+	watch: {
+	    currentTab(newTab, oldTab) {
+	        if (newTab === 'article')
+	        {
+	            this.$nextTick(() => {
+	                this.initAutosize(); // Trigger the resizing when switching back to the article tab
+	            });
+	        }
+	    }
+	},	
+	methods: {
+	    initAutosize()
+	    {
+	        let kieditor = this.$refs["kieditor"];
+	        let prompteditor = this.$refs["prompteditor"];
+
+	        if (kieditor)
+	        {
+	            autosize(kieditor);
+	        }
+	        if (prompteditor)
+	        {
+	            autosize(prompteditor);
+	        }
+	    },		
+		agreeTo(aiservice)
+		{
+			var self = this;
+
+			tmaxios.post('/api/v1/agreetoaiservice',{
+				'aiservice': aiservice
+			})
+			.then(function (response)
+			{
+				eventBus.$emit('agreetoservice');
+				self.$nextTick(() => {
+		        	self.initAutosize();
+				});
+			})
+		},
+		initializeContent()
+		{ 
+			let markdown = '';
+
+			for(block in this.content)
+			{
+				markdown += this.content[block].markdown + '\n\n';
+			}
+			this.originalmd = markdown;
+			this.versions.push(markdown);
+			this.resizeAiEditor();
+		},
+	    resizeAiEditor()
+	    {
+	        this.$nextTick(() => {
+	            let kieditor = this.$refs["kieditor"];
+	            if (kieditor)
+	            {
+	                autosize.update(kieditor);
+	            }
+	        });
+	    },
+	    resizePromptEditor()
+	    {
+	        this.$nextTick(() => {
+	            let prompteditor = this.$refs["prompteditor"];
+	            if (prompteditor) 
+	            {
+	                autosize.update(prompteditor);
+	            }
+	        });
+	    },
+		submitPrompt()
+		{
+        	this.promptError = false;
+
+			var self = this;
+			eventBus.$emit('switchLoading');
+
+			tmaxios.post('/api/v1/prompt',{
+				'prompt': this.prompt,
+				'article': this.versions[this.activeversion]
+			})
+			.then(function (response)
+			{
+				eventBus.$emit('switchLoading');
+		        if (response.data.message === 'Success')
+		        {
+		            let answer = response.data.answer;
+					answer = answer.replace(/<\/?focus>/g, '');
+		            self.versions.push(answer);
+		            self.activeversion = self.versions.length-1;
+		            self.prompt = '';
+		            self.resizePromptEditor();
+		            self.resizeAiEditor();
+		        } 
+			})
+			.catch(function (error)
+			{
+				eventBus.$emit('switchLoading');
+				if(error.response)
+				{
+					self.disabled 		= false;
+					self.promptError 	= handleErrorMessage(error);
+					self.licensemessage = error.response.data.message;
+					if(error.response.data.errors !== undefined)
+					{
+						self.promptError = error.response.data.errors;
+					}
+				}
+			});
+		},
+        handleKeydown(event)
+        {
+            if (event.key === 'Enter' && !event.shiftKey)
+            {
+                event.preventDefault();
+                this.submitPrompt();
+            } 
+            else if (event.key === 'Enter' && event.shiftKey)
+            {
+                // Allow line break
+                const textarea = event.target;
+                const start = textarea.selectionStart;
+                const end = textarea.selectionEnd;
+                textarea.value = textarea.value.slice(0, start) + '\n' + textarea.value.slice(end);
+                textarea.selectionStart = textarea.selectionEnd = start + 1;
+				
+				let prompteditor = this.$refs["prompteditor"];				
+				autosize.update(prompteditor);
+
+                event.preventDefault();
+            }
+        },
+	    exit()
+	    {
+			eventBus.$emit('kiExit');
+	    },        
+	}
+})
+
 
 // publish tree
 // unpublish tree
