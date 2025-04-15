@@ -697,27 +697,29 @@ class Storage
 			if(!$imageinfo && pathinfo($this->liveFolder . $name, PATHINFO_EXTENSION) == 'svg')
 			{
 				$imagedetails = [
-					'name' 		=> $name,
-					'timestamp'	=> filemtime($this->liveFolder . $name),
-					'bytes' 	=> filesize($this->liveFolder . $name),
-					'width'		=> '---',
-					'height'	=> '---',
-					'type'		=> 'svg',
-					'src_thumb'	=> 'media/thumbs/' . $name,
-					'src_live'	=> 'media/live/' . $name,
+					'name' 			=> $name,
+					'timestamp'		=> filemtime($this->liveFolder . $name),
+					'bytes' 		=> filesize($this->liveFolder . $name),
+					'width'			=> '---',
+					'height'		=> '---',
+					'type'			=> 'svg',
+					'src_thumb'		=> 'media/thumbs/' . $name,
+					'src_live'		=> 'media/live/' . $name,
+					'src_original'	=> 'media/original/' . $name,
 				];
 			}
 			else
 			{
 				$imagedetails = [
-					'name' 		=> $name,
-					'timestamp'	=> filemtime($this->liveFolder . $name),
-					'bytes' 	=> filesize($this->liveFolder . $name),
-					'width'		=> $imageinfo[0],
-					'height'	=> $imageinfo[1],
-					'type'		=> $imageinfo['mime'],
-					'src_thumb'	=> 'media/thumbs/' . $name,
-					'src_live'	=> 'media/live/' . $name,
+					'name' 			=> $name,
+					'timestamp'		=> filemtime($this->liveFolder . $name),
+					'bytes' 		=> filesize($this->liveFolder . $name),
+					'width'			=> $imageinfo[0],
+					'height'		=> $imageinfo[1],
+					'type'			=> $imageinfo['mime'],
+					'src_thumb'		=> 'media/thumbs/' . $name,
+					'src_live'		=> 'media/live/' . $name,
+					'src_original'	=> 'media/original/' . $name,
 				];
 			}
 
@@ -725,6 +727,40 @@ class Storage
 		}
 
 		return false;
+	}
+
+# COPIED FROM EBOOK PLUGIN, find a ssolution 
+	private function getOriginalImage($basepath, $imageMD)
+	{
+		/* REWRITE THIS: if original is requrested and not present, rewrite it to webp */
+	    $tryExtensions = ['webp', 'png', 'jpg', 'jpeg', 'gif'];
+
+	    # Extract image URL from markdown
+	    if (preg_match('/!\[.*?\]\((media\/live\/(.*?))\)/', $imageMD, $matches))
+	    {
+	        $origRelativePath = $matches[1]; // media/live/ps-1.webp
+	        $filename = $matches[2]; // ps-1.webp
+
+	        # Generate the original folder path
+	        $originalFolder = 'media/original/';
+	        $originalBasePath = $basepath . '/' . $originalFolder . pathinfo($filename, PATHINFO_FILENAME);
+
+	        # Check if the image exists in 'media/original/' with any extension
+	        foreach ($tryExtensions as $ext)
+	        {
+	            $newFile = $originalBasePath . '.' . $ext;
+	            if (file_exists($newFile))
+	            {
+	                # Replace 'media/live/' with 'media/original/' and use the correct extension
+	                $newRelativePath = preg_replace('/media\/live\//', $originalFolder, $origRelativePath);
+	                $newRelativePath = preg_replace('/\.\w+$/', '.' . $ext, $newRelativePath);
+	                return str_replace($origRelativePath, $newRelativePath, $imageMD);
+	            }
+	        }
+	    }
+
+	    # Return the original markdown if no match found
+	    return $imageMD;
 	}
 
 	public function storeCustomImage($image, $extension, $imageName)

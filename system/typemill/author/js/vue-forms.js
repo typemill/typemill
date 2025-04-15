@@ -792,7 +792,6 @@ app.component('component-customfields', {
 	},
 })
 
-
 app.component('component-image', {
 	props: ['id', 'description', 'maxlength', 'hidden', 'readonly', 'required', 'disabled', 'placeholder', 'label', 'name', 'type', 'value', 'css', 'errors', 'keepformat'],
 	components: {
@@ -857,6 +856,13 @@ app.component('component-image', {
 
 			  </div>`,
 	mounted: function() {
+
+		const maxsize = parseFloat(data?.settings?.maximageuploads);
+		if(!isNaN(maxsize) && maxsize > 0)
+		{
+			this.maxsize = maxsize;
+		}
+
 		if(this.hasValue(this.value))
 		{
 			this.imagepreview = tmaxios.defaults.baseURL + '/' + this.value;
@@ -1091,6 +1097,11 @@ app.component('component-file', {
 
 	mounted: function(){
 		this.getrestriction();
+		const maxsize = parseFloat(data?.settings?.maxfileuploads);		
+		if(!isNaN(maxsize) && maxsize > 0)
+		{
+			this.maxsize = maxsize;
+		}		
 	},
 	methods: {
 		addFromMedialibFunction(file)

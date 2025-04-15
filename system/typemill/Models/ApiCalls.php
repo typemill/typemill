@@ -6,9 +6,16 @@ class ApiCalls
 {
     private $error = null;
 
+    private $timeout = 5;
+
     public function getError()
     {
         return $this->error;
+    }
+
+    public function setTimeout(int $timeout)
+    {
+        $this->timeout = $timeout;
     }
 
     public function makePostCall(string $url, array $data, $authHeader = '')
@@ -47,7 +54,7 @@ class ApiCalls
             curl_setopt($curl, CURLOPT_SSL_OPTIONS, CURLSSLOPT_NATIVE_CA);  
         }        
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_TIMEOUT, 5);
+        curl_setopt($curl, CURLOPT_TIMEOUT, $this->timeout);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         if ($method === 'POST' && $data)
         {

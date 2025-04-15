@@ -1,16 +1,18 @@
 const app = Vue.createApp({
-	template: `<div>
-
-				<button
-					v-for="tab in tabs"
-					v-on:click="currentTab = tab"
-					:key="tab"
-					class="px-4 py-2 border-b-2 border-stone-200 hover:border-stone-700 hover:bg-stone-50 dark:text-stone-200 dark:bg-stone-700 dark:border-stone-600 hover:dark:bg-stone-200 hover:dark:text-stone-900 transition duration-100"
-					:class="(tab == currentTab) ? 'bg-stone-50 border-stone-700 dark:bg-stone-200 dark:text-stone-900' : ''"
-				>
-				{{ $filters.translate(tab) }}
-				</button>
-
+	template: `<div class="tabarea">
+				<div class="flex justify-between">
+					<div class="tabitems">
+						<button
+							v-for="tab in tabs"
+							v-on:click="currentTab = tab"
+							:key="tab"
+							class="px-4 py-2 border-b-2 border-stone-200 hover:border-stone-700 hover:bg-stone-50 dark:text-stone-200 dark:bg-stone-700 dark:border-stone-600 hover:dark:bg-stone-200 hover:dark:text-stone-900 transition duration-100"
+							:class="(tab == currentTab) ? 'bg-stone-50 border-stone-700 dark:bg-stone-200 dark:text-stone-900' : ''"
+						>
+						{{ $filters.translate(tab) }}
+						</button>
+					</div>
+				</div>
 				<component 
 					:class="css" 
 					:is="currentTabComponent" 
@@ -22,8 +24,7 @@ const app = Vue.createApp({
 					:formData="formData[currentTab]"
 					:item="item"
 					v-on:saveform="saveForm">
-				</component>
-
+				</component>	
 			</div>`,
 	data: function () {
 		return {
@@ -38,6 +39,7 @@ const app = Vue.createApp({
 			messageClass: false,
 			css: "lg:px-16 px-8 lg:py-16 py-8 bg-stone-50 shadow-md mb-16",
 			saved: false,
+			showmedialib: false,
 		}
 	},
 	computed: {

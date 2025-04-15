@@ -10,5 +10,8 @@ The content is organized in blocks, and you can move each content block up and d
 
 You can add all kinds of content like tables, quotes, images, files, an automatic table of contents (TOC), or YouTube videos. There are also plugins to embed media from other platforms or to use selected HTML tags in content.
 
+![](media/live/chatgpt-typemill-dummy-wide.webp){.center loading="lazy" width="820" height="470"}
+*Just a dummy image*
+
 If you are a developer, you can write plugins and integrate nearly everything into the editor with `{::]` shortcodes.
 

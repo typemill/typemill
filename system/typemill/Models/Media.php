@@ -12,6 +12,8 @@ class Media
 { 
 	public $errors 					= [];
 
+	public $filesize				= false;
+
 	protected $basepath 			= false;
 
 	protected $tmpFolder 			= false;
@@ -29,6 +31,8 @@ class Media
 	protected $animated 			= false;
 
 	protected $resizable 			= true;
+
+	protected $convertorig 			= false;
 
 	protected $sizes  				= [];
 
@@ -116,6 +120,11 @@ class Media
 	public function getExtension()
 	{
 		return $this->extension;
+	}
+
+	public function convertOriginal()
+	{
+		$this->convertorig = true;
 	}
 
 	public function getFiletype()
@@ -218,7 +227,6 @@ class Media
 			$this->filedata = $sanitized;
 		}
 		
-
 		$fullpath = $this->getFullPath();
 
 		if($this->filedata !== false && file_put_contents($fullpath, $this->filedata))
@@ -273,7 +281,7 @@ class Media
 			return true;
 		}
 
-		return false;		
+		return false;
 	}
 
 	public function storeRenditionsToTmp($sizes)
@@ -282,6 +290,12 @@ class Media
 		$image 	= $this->createImage();
 		
 		$originalsize = $this->getImageSize($image);
+
+		# if images converted to webp, then also store original as webp
+		if($this->convertorig)
+		{
+			$sizes['original'] = $originalsize;
+		}
 
 		foreach($sizes as $destinationfolder => $desiredsize)
 		{
@@ -432,11 +446,19 @@ class Media
 	public function resizeImage($image, array $desired, array $original)
 	{
 		# resize
-		$ratio 	= max($desired['width']/$original['width'], $desired['height']/$original['height']);
-		$h 		= $desired['height'] / $ratio;
-		$x 		= ($original['width'] - $desired['width'] / $ratio) / 2;
-		$y 		= ($original['height'] - $desired['height'] / $ratio) / 2;
+		$ratio 	= max(
+					$desired['width']/$original['width'], 
+					$desired['height']/$original['height']
+				);
+
+		# prevent upscaling
+		$ratio 	= ($ratio > 1) ? 1 : $ratio;
+
 		$w 		= $desired['width'] / $ratio;
+		$h 		= $desired['height'] / $ratio;
+
+		$x 		= ($original['width'] - $w) / 2;
+		$y 		= ($original['height'] - $h) / 2;
 
 		$resizedImage = imagecreatetruecolor($desired['width'], $desired['height']);
 
@@ -456,7 +478,7 @@ class Media
 	public function saveResizedImage($resizedImage, string $destinationfolder, string $extension)
 	{
 		# use method in storage class???
-		$destinationfolder = strtoupper($destinationfolder);		
+		$destinationfolder = strtoupper($destinationfolder);
 
 		switch($extension)
 		{
@@ -467,11 +489,11 @@ class Media
 				$storedImage = imagegif( $resizedImage, $this->tmpFolder . $destinationfolder . '+' . $this->filename . '.gif' );
 				break;
 			case "webp":
-				$storedImage = imagewebp( $resizedImage, $this->tmpFolder . $destinationfolder . '+' . $this->filename . '.webp', 80);
+				$storedImage = imagewebp( $resizedImage, $this->tmpFolder . $destinationfolder . '+' . $this->filename . '.webp', 95);
 				break;
 			case "jpg":
 			case "jpeg":
-				$storedImage = imagejpeg( $resizedImage, $this->tmpFolder . $destinationfolder . '+' . $this->filename . '.' . $extension, 80);
+				$storedImage = imagejpeg( $resizedImage, $this->tmpFolder . $destinationfolder . '+' . $this->filename . '.' . $extension, 90);
 				break;
 			default:
 				$storedImage = false;

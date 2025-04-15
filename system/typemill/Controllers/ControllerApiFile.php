@@ -176,11 +176,12 @@ class ControllerApiFile extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
-		# 20 MB (1 byte * 1024 * 1024 * 20 (for 20 MB))
-		if ($size > 20971520)
+		$maxsizeMB = (isset($this->settings['maxfileuploads']) && is_numeric($this->settings['maxfileuploads'])) ? $this->settings['maxfileuploads'] : 20;
+		$maxsizeBytes = $maxsizeMB * 1024 * 1024;
+		if ($size > $maxsizeBytes)
 		{
 			$response->getBody()->write(json_encode([
-				'message' => Translations::translate('File is bigger than 20MB.')
+				'message' => Translations::translate('File is bigger than '. $maxsizeMB . 'MB.')
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
@@ -226,8 +227,8 @@ class ControllerApiFile extends Controller
 		# if the previous check of the mtype with the base64 string failed, then do it now again with the temporary file
 		if(!$mtype)
 		{
-			$filePath = str_replace('media/files', 'media/tmp', $fileinfo['url']);
-			$filePath = str_replace('/', DIRECTORY_SEPARATOR, $filePath);
+			$filePath 	= str_replace('media/files', 'media/tmp', $fileinfo['url']);
+			$filePath 	= str_replace('/', DIRECTORY_SEPARATOR, $filePath);
 			$fullPath 	= $this->settings['rootPath'] . DIRECTORY_SEPARATOR . $filePath;
 			$finfo 		= finfo_open( FILEINFO_MIME_TYPE );
 			$mtype 		= @finfo_file( $finfo, $fullPath );
@@ -243,6 +244,30 @@ class ControllerApiFile extends Controller
 
 				return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 			}
+		}
+
+		if(isset($params['publish']) && $params['publish'] == true)
+		{
+			$storage 	= new StorageWrapper('\Typemill\Models\Storage');
+			$result 	= $storage->publishFile($fileinfo['name'] . '.' . $fileinfo['extension']);
+
+			if(!$result)
+			{
+				$response->getBody()->write(json_encode([
+					'message' 	=> Translations::translate('We got an error while publishing the file.'),
+					'fullerrors' => $storage->getError()
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
+			}
+
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('File saved successfully'),
+				'fileinfo' => $fileinfo,
+				'path' => $result,
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json');
 		}
 
 		$filePath = str_replace('media/files', 'media/tmp', $fileinfo['url']);
@@ -276,7 +301,8 @@ class ControllerApiFile extends Controller
 		if(!$result)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 		=> $storage->getError()
+				'message' 	=> Translations::translate('We got an error while publishing the file.'),
+				'fullerrors' => $storage->getError()
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);

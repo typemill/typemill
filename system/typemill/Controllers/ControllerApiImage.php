@@ -119,7 +119,6 @@ class ControllerApiImage extends Controller
 		return $response->withHeader('Content-Type', 'application/json');		
 	}
 	
-
 	public function saveImage(Request $request, Response $response, $args)
 	{
 		$params = $request->getParsedBody();
@@ -141,6 +140,18 @@ class ControllerApiImage extends Controller
 		}
 		
 		# prepare the image
+		$size 	= (int) (strlen(rtrim($params['image'], '=')) * 3 / 4);
+		$maxsizeMB = (isset($this->settings['maximageuploads']) && is_numeric($this->settings['maximageuploads'])) ? $this->settings['maximageuploads'] : 20;
+		$maxsizeBytes = $maxsizeMB * 1024 * 1024;
+		if ($size > $maxsizeBytes)
+		{
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('Image is bigger than ' . $maxsizeMB . 'MB.')
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+		}
+
 		if(!$media->prepareImage($params['image'], $params['name']))
 		{
 			$response->getBody()->write(json_encode([
@@ -156,8 +167,14 @@ class ControllerApiImage extends Controller
 		$uniqueImageName 	= $storage->createUniqueImageName($media->getFilename(), $media->getExtension());
 		$media->setFilename($uniqueImageName);
 
+		# check if images should be transformed to webp
+		if(!isset($params['keepformat']) && $this->settingActive('convertwebp'))
+		{
+			$media->setExtension('webp');
+			$media->convertOriginal();
+		}
 		# store the original image
-		if(!$media->storeOriginalToTmp())
+		elseif(!$media->storeOriginalToTmp())
 		{
 			$response->getBody()->write(json_encode([
 				'message' 		=> $media->errors[0],
@@ -188,12 +205,6 @@ class ControllerApiImage extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
 
-		# for all other image types, check if they should be transformed to webp
-		if(!isset($params['keepformat']) && $this->settingActive('convertwebp'))
-		{
-			$media->setExtension('webp');
-		}
-
 		if(!$media->storeRenditionsToTmp($this->settings['images']))
 		{
 			$response->getBody()->write(json_encode([
@@ -204,14 +215,35 @@ class ControllerApiImage extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
 
+		if(isset($params['publish']) && $params['publish'] === true)
+		{
+			$result = $storage->publishImage($media->getFullName());
 
-		$response->getBody()->write(json_encode([
-			'message' => Translations::translate('Image saved successfully'),
-			'name' => 'media/tmp/' . $media->getFullName(),
-		]));
+			if(!$result)
+			{
+				$response->getBody()->write(json_encode([
+					'message' 		=> $storage->getError()
+				]));
 
-		return $response->withHeader('Content-Type', 'application/json');
-	
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
+			}
+
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('Image saved successfully'),
+				'path' => $result,
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json');
+		}
+		else
+		{
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('Image saved successfully'),
+				'name' => 'media/tmp/' . $media->getFullName(),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json');
+		}
 	}
 
 	public function publishImage(Request $request, Response $response, $args)

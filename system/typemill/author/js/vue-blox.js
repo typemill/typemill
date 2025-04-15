@@ -1,5 +1,20 @@
 const bloxeditor = Vue.createApp({
 	template: `<div v-if="editorVisible" class="px-2 lg:px-12 py-8 bg-stone-50 dark:bg-stone-700 dark:text-stone-200 shadow-md mb-16">
+					<div class="absolute top-0 right-0">
+						<button 
+							@click.prevent="openmedialib()"
+							class="px-2 py-2 bg-stone-50 border-b-2 border-stone-50 hover:bg-stone-200 dark:text-stone-200 dark:bg-stone-700 dark:border-stone-600 hover:dark:bg-stone-200 hover:dark:text-stone-900 transition duration-100"
+						>
+							<svg class="icon icon-image"><use xlink:href="#icon-image"></use></svg>
+						</button>
+						<Transition name="initial" appear>
+							<div v-if="showmedialib" class="fixed top-0 left-0 right-0 bottom-0 bg-stone-100 z-50">
+								<button class="w-full bg-stone-200 hover:bg-rose-500 hover:text-white p-2 transition duration-100" @click.prevent="showmedialib = false">{{ $filters.translate('close library') }}</button>
+								<medialib parentcomponent="images" @addFromMedialibEvent="addFromMedialibFunction"></medialib>
+							</div>
+						</Transition>
+					</div>
+					
 					<draggable 
 						v-model="content" 
 						@start="onStart"
@@ -12,16 +27,20 @@ const bloxeditor = Vue.createApp({
 								<content-block :element="element" :index="index" :class="{dragme: index != 0}"></content-block>
 							</template>
 					</draggable>
-					<new-block :index="999999"></new-block>
+					<new-block ref="newBlock" :index="999999"></new-block>
 				</div>
 				`,
 	data() {
 		return {
+			showmedialib: false,
 			content: data.content,
 			editorVisible: true,
 			dragDisabled: false,
 		}
 	},
+	components: {
+		medialib: medialib
+	},	
 	computed: 
 	{
 		dragOptions() 
@@ -50,6 +69,50 @@ const bloxeditor = Vue.createApp({
 		});
 	},
 	methods: {
+		openmedialib()
+		{
+			this.showmedialib = true;
+		},
+		addFromMedialibFunction(media)
+		{
+			componentType = false;
+
+			if (typeof media === 'string')
+			{
+				componentType = 'image-component';
+				markdown = '![](' + media + ')';
+			}
+			else if (media.active === 'videos')
+			{
+				componentType = 'video-component';
+				markdown = '[:video path="'+ media.url +'" width="500" preload="auto" :]';
+			}
+			else if (media.active === 'audios')
+			{
+				componentType = 'audio-component';
+				markdown = '[:audio path="' + media.url + '" width="500px" preload="auto" :]';
+			}
+			else
+			{
+				componentType = 'file-component';
+				markdown = '[' + media.name + '](' + media.url + '){.tm-download file-' + media.extension + '}'
+			}
+
+			if(componentType)
+			{
+				this.showmedialib = false;
+				this.$refs.newBlock.openWithData(componentType, markdown);
+			
+				this.$nextTick(() => {
+					setTimeout(() => {
+						window.scrollTo({
+							top: document.body.scrollHeight,
+							behavior: 'smooth'
+						});
+					}, 100); // small delay, e.g. 100–200ms
+				});
+			}
+		},
 		checkMove(event)
 		{
 			if(event.draggedContext.index == 0 || event.draggedContext.futureIndex == 0)
@@ -454,6 +517,15 @@ bloxeditor.component('new-block',{
 		});
 	},
 	methods: {
+		openWithData(componentType, markdown)
+		{
+			this.componentType = false;
+			this.newblockmarkdown = '';
+			this.$nextTick(() => {
+				this.componentType = componentType;
+				this.newblockmarkdown = markdown;
+			});
+		},
 		setComponentType(event, componenttype)
 		{			
 			if(this.hasUnsafedContent)

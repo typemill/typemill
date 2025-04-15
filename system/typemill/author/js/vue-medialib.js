@@ -13,133 +13,153 @@ const medialib = {
 								</div>
 							</div>
 						</div>
-						<div v-if="showimages">
-							<h3 class="border-b-2 border-stone-700 pt-6 pb-3">Images</h3>
-							<div class="my-3">
-								<button @click.prevent="showImages('pageImages')" :class="isActive('pageImages')" class="px-2 py-1 mr-2 hover:bg-stone-700 hover:dark:bg-stone-900 hover:text-stone-50 transition duration-100">{{ $filters.translate('this page') }}</button>
-								<button @click.prevent="showImages('allImages')" :class="isActive('allImages')" class="px-2 py-1 hover:bg-stone-700 hover:dark:bg-stone-900 hover:text-stone-50 transition duration-100">{{ $filters.translate('all pages') }}</button>
+						<div class="flex justify-between w-100 pt-6 pb-3">
+							<div class="flex">
+								<button 
+									@click.prevent="showImages()" 
+									:class="isActive('images')" 
+									class="px-2 py-1 mr-2 hover:bg-stone-700 hover:dark:bg-stone-900 hover:text-stone-50 transition duration-100">
+									<svg class="icon icon-image"><use xlink:href="#icon-image"></use></svg>
+								</button>
+								<button 
+									@click.prevent="showFiles('files')" 
+									:class="isActive('files')" 
+									class="px-2 py-1 mr-2 hover:bg-stone-700 hover:dark:bg-stone-900 hover:text-stone-50 transition duration-100">
+									<svg class="icon icon-paperclip"><use xlink:href="#icon-paperclip"></use></svg>
+								</button>
+								<button 
+									@click.prevent="showFiles('videos')" 
+									:class="isActive('videos')" 
+									class="px-2 py-1 mr-2 hover:bg-stone-700 hover:dark:bg-stone-900 hover:text-stone-50 transition duration-100">
+									<svg class="icon icon-film"><use xlink:href="#icon-film"></use></svg>
+								</button>
+								<button 
+									@click.prevent="showFiles('audios')" 
+									:class="isActive('audios')" 
+									class="px-2 py-1 mr-2 hover:bg-stone-700 hover:dark:bg-stone-900 hover:text-stone-50 transition duration-100">
+									<svg class="icon icon-music"><use xlink:href="#icon-music"></use></svg>
+								</button>
 							</div>
-						</div>
-						<div v-if="showfiles">
-							<h3 class="border-b-2 border-stone-700 pt-3 pb-3">Files</h3>
-							<div class="my-3">
-								<button @click.prevent="showFiles('pageFiles')" :class="isActive('pageFiles')" class="px-2 py-1 mr-2 hover:bg-stone-700 hover:text-stone-50 transition duration-100">{{ $filters.translate('this page') }}</button>
-								<button @click.prevent="showFiles('allFiles')" :class="isActive('allFiles')" class="px-2 py-1 mr-2 hover:bg-stone-700 hover:text-stone-50 transition duration-100">{{ $filters.translate('all pages') }}</button>
-							</div>
-						</div>
+							<div class="relative inline-block">
+								<!-- Hidden File Input -->
+								<input 
+									ref="uploadInput"
+									type="file" 
+									class="hidden" 
+									@change="onFileChange($event)" 
+									accept="*/*"
+								/>
 
-						<div v-if="showimages && totalPages > 1 && active == 'allImages'">
-                            <h3 class="border-b-2 border-stone-700 pt-6 pb-3">Pagination</h3>						
+								<!-- Upload Button -->
+								<button 
+									@click.prevent="$refs.uploadInput.click()" 
+									class="px-2 py-2 bg-stone-600 text-white hover:bg-stone-700 hover:dark:bg-stone-900 hover:text-stone-50 transition duration-100 flex items-center"
+								>
+									<svg class="icon icon-upload w-4 h-4"><use xlink:href="#icon-upload"></use></svg>
+								</button>
+							</div>
+						</div>
+						<div v-if="totalPages > 1">
+                            <h3 class="border-b-2 border-stone-700 pt-6 pb-3">Pagination</h3>
 							<ul class="w-full flex flex-wrap py-3 text-xs">
 								<li v-for="num in totalPages" :key="num" class="py-1">
 									<button 
 										@click.prevent="goToPage(num)" 
-										class="bg-white py-2 px-1 mr-1 w-7 hover:bg-stone-900 hover:text-white transition duration-100"
-										:class="{'bg-stone-900 text-white': num === currentPage}"
+										:class="[
+											'py-2 px-1 mr-1 w-7 transition duration-100 hover:bg-stone-900 hover:text-white',
+											Number(num) === Number(currentPage) 
+												? 'bg-stone-900 text-white' 
+												: 'bg-white text-black'
+										]"
 									>{{ num }}</button>
 								</li>
 							</ul>
 						</div>
-
 					</div>
 					<div class="w-3/4">
-						<div v-if="errors" class="w-full mb-4 p-2 bg-rose-500 text-stone-50">{{errors}}</div>
-						<div class="flex flex-wrap justify-start px-5">
+						<div class="flex flex-wrap justify-start px-5 relative">
+							<div v-if="error" class="w-full mb-4 p-2 text-center bg-rose-500 text-stone-50">{{error}}</div>
 							<TransitionGroup name="list">
-								<div v-for="(image, index) in filteredImages" :key="image.name" v-if="showimages" class="w-60 ml-5 mr-5 mb-10 shadow-md overflow-hidden bg-stone-50">
-									<a href="#" @click.prevent="selectImage(image)" :style="getBackgroundImage(image)" class="inline-block bg-cover">
-										<span class="transition-opacity duration-100 opacity-0 hover:opacity-100 flex items-center justify-center h-32 bg-black/75 text-white">
-											<svg class="icon icon-check">
-												<use xlink:href="#icon-check"></use>
-											</svg> click to select
-										</span>
-									</a>
-									<div class="flex bg-stone-50 dark:bg-stone-600"> 
-										<div class="w-3/4 truncate p-3">{{ image.name }}</div>
-										<div class="w-1/4 flex">
-											<button @click.prevent="showImageDetails(image,index)" class="w-1/2 hover:bg-teal-500 hover:text-white transition duration-100">
-												<svg class="icon icon-info">
-													<use xlink:href="#icon-info"></use>
-												</svg>
-											</button>
-											<button @click.prevent="deleteImage(image,index)" class="w-1/2 hover:bg-rose-500 hover:text-white transition duration-100">
-												<svg class="icon icon-trash-o">
-													<use xlink:href="#icon-trash-o"></use>
-												</svg>
-											</button>
-										</div>
-									</div> 
-								</div>
-							</TransitionGroup>
-						</div>
-						<Transition name="fade">
-							<div class="px-5" v-if="showimagedetails">
-								<div class="flex flex-wrap item-start relative">
-									<div class="w-1/2 bg-stone-50 dark:bg-stone-600">
-										<div class="w-80 h-80 table-cell align-middle bg-chess">
-											<img :src="getImageUrl(imagedetaildata.src_live)" class="max-w-xs max-h-80 table mx-auto">
-										</div>
-									</div>
-									<div class="w-1/2 bg-stone-50 dark:bg-stone-600 p-4 text-xs">
-										<div class="text-stone-500 dark:text-stone-300 mt-3 mb-1">Name</div>
-										<div class="font-bold">{{ imagedetaildata.name}}</div>
-										<div class="text-stone-500 dark:text-stone-300 mt-3 mb-1">URL</div>
-										<div class="font-bold">{{ getImageUrl(imagedetaildata.src_live)}}</div>
-										<div class="flex flex-wrap item-start"> 
-											<div class="w-1/2">
-												<div class="text-stone-500 dark:text-stone-300 mt-3 mb-1">Size</div>
-												<div class="font-bold">{{ getSize(imagedetaildata.bytes) }}</div>
-											</div>
-											<div class="w-1/2">
-												<div class="text-stone-500 dark:text-stone-300 mt-3 mb-1">Dimensions</div>
-												<div class="font-bold">{{ imagedetaildata.width }}x{{ imagedetaildata.height }} px</div>
-											</div>
-											<div class="w-1/2">
-												<div class="text-stone-500 dark:text-stone-300 mt-3 mb-1">Type</div>
-												<div class="font-bold">{{ imagedetaildata.type }}</div>
-											</div>
-											<div class="w-1/2">
-												<div class="text-stone-500 dark:text-stone-300 mt-3 mb-1">Date</div>
-												<div class="font-bold">{{ getDate(imagedetaildata.timestamp) }}</div>
-											</div>
-										</div>
-										<div class="w-full flex justify-between mt-8">
-											<button @click.prevent="selectImage(imagedetaildata)" class="w-1/2 p-2 mr-2 bg-stone-200 dark:bg-stone-900 hover:bg-teal-500 hover:dark:bg-teal-500 hover:text-white transition duration-100">
-												<svg class="icon icon-check">
-													<use xlink:href="#icon-check"></use>
-												</svg> select
-											</button>
-											<button @click.prevent="deleteImage(imagedetaildata, detailindex)" class="w-1/2 p-2 bg-stone-200 dark:bg-stone-900 hover:bg-rose-500 hover:dark:bg-rose-500 hover:text-white transition duration-100">
-												<svg class="icon icon-trash-o baseline">
-													<use xlink:href="#icon-trash-o"></use>
-												</svg> delete
-											</button>                                    
-										</div>
-									</div>
-									<button class="text-xs px-3 py-2 text-stone-50 bg-rose-500 hover:bg-rose-700 absolute top-0 right-0" @click.prevent="showImages(active)">close details</button>
-								</div>
-							</div>
-						</Transition>
-						<div class="flex flex-wrap justify-start px-5">
-							<TransitionGroup name="list">
-								<div v-for="(file, index) in filteredFiles" :key="file.name" v-if="showfiles" class="w-60 ml-5 mr-5 mb-10 shadow-md overflow-hidden bg-stone-50">
-									<a href="#" @click.prevent="selectFile(file)" class="w-full bg-teal-500 inline-block bg-cover relative">
-										<div class="absolute top-10 w-full text-white text-4xl uppercase text-center">{{ file.info.extension }}</div>
+								<div 
+									v-for 	= "(media, index) in paginatedItems" 
+									:key 	= "media.name" 
+									v-if 	= "showmedialist" 
+									class 	= "w-60 ml-5 mr-5 mb-10 shadow-md overflow-hidden bg-stone-50"
+								>
+									<a 
+										v-if 			= "getMediaType(media) === 'image'"
+										@click.prevent 	= "selectMedia(media)" 
+										href 			= "#"
+										:style 			= getBackgroundImage(media)
+										class 			= "inline-block bg-cover"
+									>
 										<span class="relative transition-opacity duration-100 opacity-0 hover:opacity-100 flex items-center justify-center h-32 bg-black/75 text-white">
 											<svg class="icon icon-check">
 												<use xlink:href="#icon-check"></use>
 											</svg> click to select
 										</span>
 									</a>
-									<div class="flex"> 
-										<div class="w-3/4 truncate p-3">{{ file.name }}</div>
+									<a 
+										v-if 			= "getMediaType(media) === 'video'"
+										@click.prevent 	= "selectMedia(media)"
+										href 			= "#"
+										class 			= "w-full inline-block bg-cover relative bg-black"
+									>	
+										<video 
+											:src="baseurl + '/' + media.url" 
+											class="absolute top-0 w-full h-32" 
+											muted></video>
+										<span class="relative transition-opacity duration-100 opacity-0 hover:opacity-100 flex items-center justify-center h-32 bg-black/75 text-white">
+											<svg class="icon icon-check">
+												<use xlink:href="#icon-check"></use>
+											</svg> click to select
+										</span>
+									</a>
+									<a 
+										v-if 			= "getMediaType(media) === 'audio'"
+										@click.prevent 	= "selectMedia(media)" 
+										href 			= "#"
+										class 			= "w-full bg-yellow-500 inline-block bg-cover relative"
+									>
+										<div class="absolute top-10 w-full text-white text-4xl uppercase text-center">
+											{{ media.info.extension }}
+										</div>
+										<span class="relative transition-opacity duration-100 opacity-0 hover:opacity-100 flex items-center justify-center h-32 bg-black/75 text-white">
+											<svg class="icon icon-check">
+												<use xlink:href="#icon-check"></use>
+											</svg> click to select
+										</span>
+									</a>
+									<a 
+										v-if 			= "getMediaType(media) === 'file'"
+										@click.prevent 	= "selectMedia(media)" 
+										href 			= "#"
+										class 			= "w-full bg-teal-500 inline-block bg-cover relative"
+									>
+										<div class="absolute top-10 w-full text-white text-4xl uppercase text-center">
+											{{ media.info.extension }}
+										</div>
+										<span class="relative transition-opacity duration-100 opacity-0 hover:opacity-100 flex items-center justify-center h-32 bg-black/75 text-white">
+											<svg class="icon icon-check">
+												<use xlink:href="#icon-check"></use>
+											</svg> click to select
+										</span>
+									</a>
+									<div class="flex bg-stone-50 dark:bg-stone-600"> 
+										<div class="w-3/4 truncate p-3" :title="media.name">{{ media.name }}</div>
 										<div class="w-1/4 flex">
-											<button @click.prevent="showFileDetails(file,index)" class="w-1/2 bg-stone-50 hover:bg-teal-500 hover:text-white transition duration-100">
+											<button 
+												@click.prevent 	= "showMediaDetails(media)" 
+												class 			= "w-1/2 hover:bg-teal-500 hover:text-white transition duration-100"
+											>
 												<svg class="icon icon-info">
 													<use xlink:href="#icon-info"></use>
 												</svg>
 											</button>
-											<button @click.prevent="deleteFile(file,index)" class="w-1/2 hover:bg-rose-500 hover:text-white transition duration-100">
+											<button 
+												@click.prevent 	= "deleteMedia(media)" 
+												class 			= "w-1/2 hover:bg-rose-500 hover:text-white transition duration-100"
+											>
 												<svg class="icon icon-trash-o">
 													<use xlink:href="#icon-trash-o"></use>
 												</svg>
@@ -150,46 +170,122 @@ const medialib = {
 							</TransitionGroup>
 						</div>
 						<Transition name="fade">
-							<div class="px-5" v-if="showfiledetails">
+							<div 
+								class 	= "px-5" 
+								v-if 	= "showmediadetails"
+								>
 								<div class="flex flex-wrap item-start relative">
-									<div class="w-1/2 bg-stone-50">
-										<div class="w-80 h-80 table-cell align-middle bg-teal-500">
-											<div class="w-full text-white text-4xl uppercase text-center">{{ filedetaildata.info.extension }}</div>
+									<div class="w-1/2 bg-stone-50 dark:bg-stone-600">
+										<div v-if="getMediaType(mediadetails) === 'image'" class="w-80 h-80 table-cell align-middle bg-chess">
+											<img 
+												:src 	= "getMediaUrl(mediadetails.src_live)" 
+												class 	= "max-w-xs max-h-80 table mx-auto"
+											>
+										</div>
+										<div v-if="getMediaType(mediadetails) === 'video'" class="w-80 h-80 table-cell align-middle bg-yellow-500">
+											<video 
+												:src 	= "baseurl + '/' + mediadetails.url" 
+												class 	= "max-w-xs max-h-80 table mx-auto" 
+												preload = "metadata"
+												controls
+												>
+											</video>
+										</div>
+										<div v-if="getMediaType(mediadetails) === 'audio'" class="w-80 h-80 table-cell align-middle bg-yellow-500">
+											<audio 
+												:src 	= "baseurl + '/' + mediadetails.url" 
+												class 	= "max-w-xs max-h-80 table mx-auto" 
+												preload = "metadata"
+												controls
+												>
+											</audio>
+										</div>
+										<div v-if="getMediaType(mediadetails) === 'file'" class="w-80 h-80 table-cell align-middle bg-teal-500">
+											<div class="w-full text-white text-4xl uppercase text-center">{{ mediadetails.info.extension }}</div>
 										</div>
 									</div>
-									<div class="w-1/2 bg-stone-50 p-4 text-xs">
-										<div class="text-stone-500 mt-3 mb-1">Name</div>
-										<div class="font-bold">{{ filedetaildata.name}}</div>
-										<div class="text-stone-500 mt-3 mb-1">URL</div>
-										<div class="font-bold">{{ filedetaildata.url }}</div>
-										<div class="flex flex-wrap item-start"> 
-											<div class="w-1/2">
-												<div class="text-stone-500 mt-3 mb-1">Size</div>
-												<div class="font-bold">{{ getSize(filedetaildata.bytes) }}</div>
+									<div class="w-1/2 bg-stone-50 dark:bg-stone-600 p-4 text-xs">
+										<div class="mt-2 mb-1">
+											<span class="text-stone-500 dark:text-stone-300 w-16 inline-block">Name: </span>
+											<span class="font-bold">{{ mediadetails.name}}</span>
+										</div>
+										<div v-if="getMediaType(mediadetails) === 'image'">
+											<div class="mt-2 mb-1"> 
+												<span class="text-stone-500 dark:text-stone-300 w-16 inline-block">Live: </span>
+												<a class="font-bold" target="_blank" :href="getMediaUrl(mediadetails.src_live)">
+														{{ mediadetails.src_live }}
+												</a>
 											</div>
-											<div class="w-1/2">
-												<div class="text-stone-500 mt-3 mb-1">Type</div>
-												<div class="font-bold">{{ filedetaildata.info.extension }}</div>
+											<div class="mt-2 mb-1"> 
+												<span class="text-stone-500 dark:text-stone-300 w-16 inline-block">Original: </span>
+												<a class="font-bold" target="_blank" :href="getMediaUrl(mediadetails.src_original)">
+														{{ mediadetails.src_original }}
+												</a>
 											</div>
-											<div class="w-1/2">
-												<div class="text-stone-500 mt-3 mb-1">Date</div>
-												<div class="font-bold">{{ getDate(filedetaildata.timestamp) }}</div>
+											<div class="mt-2 mb-1"> 
+												<span class="text-stone-500 dark:text-stone-300 w-16 inline-block">Thumb: </span>
+												<a class="font-bold" target="_blank" :href="getMediaUrl(mediadetails.src_thumb)">
+														{{ mediadetails.src_thumb }}
+												</a>
+											</div>
+											<div class="mt-2 mb-1"> 
+												<span class="text-stone-500 dark:text-stone-300 w-16 inline-block">w/h: </span>
+												<span class="font-bold">{{ mediadetails.width }}/{{ mediadetails.height }} px</span>
+											</div>
+											<div class="mt-2 mb-1"> 
+												<span class="text-stone-500 dark:text-stone-300 w-16 inline-block">Type: </span>
+												<span class="font-bold">{{ mediadetails.type }}</span>
 											</div>
 										</div>
+										<div v-else>
+											<div class="mt-2 mb-1"> 
+												<span class="text-stone-500 dark:text-stone-300 w-16 inline-block">Url: </span>
+												<a class="font-bold" target="_blank" :href="getMediaUrl(mediadetails.url)">
+														{{ mediadetails.url }}
+												</a>
+											</div>
+											<div class="mt-2 mb-1"> 
+												<span class="text-stone-500 dark:text-stone-300 w-16 inline-block">Type: </span>
+												<span class="font-bold">{{ mediadetails.info.extension }}</span>
+											</div>
+										</div>	
+										<div class="mt-2 mb-1"> 
+											<span class="text-stone-500 dark:text-stone-300 w-16 inline-block">Size: </span>
+											<span class="font-bold">{{ getSize(mediadetails.bytes) }}</span>
+										</div>
+										<div class="mt-2 mb-1"> 
+											<span class="text-stone-500 dark:text-stone-300 w-16 inline-block">Date: </span>
+											<span class="font-bold">{{ getDate(mediadetails.timestamp) }}</span>
+										</div>
 										<div class="w-full flex justify-between mt-8">
-											<button @click.prevent="selectFile(filedetaildata)" class="w-1/2 p-2 mr-2 bg-stone-200 hover:bg-teal-500 hover:text-white transition duration-100">
+											<button 
+												@click.prevent = "selectMedia(mediadetails)" 
+												class = "w-1/2 p-2 mr-2 bg-stone-200 dark:bg-stone-900 hover:bg-teal-500 hover:dark:bg-teal-500 hover:text-white transition duration-100"
+												>
 												<svg class="icon icon-check">
 													<use xlink:href="#icon-check"></use>
 												</svg> select
 											</button>
-											<button @click.prevent="deleteFile(filedetaildata, detailindex)" class="w-1/2 p-2 bg-stone-200 hover:bg-rose-500 hover:text-white transition duration-100">
+											<button 
+												@click.prevent = "deleteMedia(mediadetails)" 
+												class = "w-1/2 p-2 bg-stone-200 dark:bg-stone-900 hover:bg-rose-500 hover:dark:bg-rose-500 hover:text-white transition duration-100"
+												>
 												<svg class="icon icon-trash-o baseline">
 													<use xlink:href="#icon-trash-o"></use>
 												</svg> delete
 											</button>
 										</div>
 									</div>
-									<button class="text-xs px-3 py-2 text-stone-50 bg-rose-500 hover:bg-rose-700 absolute top-0 right-0" @click.prevent="showFiles('all')">close details</button>
+									<button 
+										v-if = "active === 'images'"
+										class = "text-xs px-3 py-2 text-stone-50 bg-rose-500 hover:bg-rose-700 absolute top-0 right-0" 
+										@click.prevent = "showImages()"
+										>close details</button>
+									<button 
+										v-else
+										class = "text-xs px-3 py-2 text-stone-50 bg-rose-500 hover:bg-rose-700 absolute top-0 right-0" 
+										@click.prevent = "showFiles(active)"
+										>close details</button>
 								</div>
 							</div>
 						</Transition>
@@ -198,156 +294,128 @@ const medialib = {
 			  </div>`,
 	data: function(){
 		return {
-			active:             false,
-			imagedata:          false,
-			pagemedia:          false,
-			showimages:         true,
-			imagedetaildata:    false,
-			showimagedetails:   false,
-			filedata:           false,
-			showfiles:          false,
-			filedetaildata:     false,
-			showfiledetails:    false,
-			detailindex:        false,
+			currentItems: 		false, 	/* current list of items according to pagination */
+			currentPage: 		1,
+			itemsPerPage: 		9,
+			search:             '', 	/* search term */
+			active:             false, 	/* image, files, videos, audios, */
+			itempath: 			false, 	/* itempath to get media of the page */
+
+			filedata: 			false, 	/* holds the files */
+			imagedata: 			false, 	/* holds the images */
+			pagedata: 			false, 	/* holds the page media */
+			mediadetails: 		false, 	/* holds the details of a single media file */
+
+			showmediadetails: 	false,
+			showmedialist: 		false, 	/* show list of media files */
+
+			extensions: {
+				image: ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'],
+				video: ['.mp4', '.webm', '.ogg', '.mov', '.avi', '.mkv'],
+				audio: ['.mp3', '.wav', '.ogg', '.flac', '.m4a'],
+			},
+
+			maximagesize: 		10,
+			maxfilesize: 		20,
+
+			error:             	false,
 			load:               false,
 			adminurl:           false,
 			baseurl:            data.urlinfo.baseurl,
-			search:             '',
-			errors:             false,
-			currentPage: 		1,
-			totalPages: 		0,
-			itemsPerPage: 		15,
 		}
 	},
 	mounted: function(){
 
-		this.errors = false;
-
-		var self = this;
-
-		var itempath = false;
-		if(typeof data.item !== "undefined")
+		const maximagesize = parseFloat(data?.settings?.maximageuploads);
+		if(!isNaN(maximagesize) && maximagesize > 0)
 		{
-			itempath = data.item.pathWithoutType;
+			this.maximagesize = maximagesize;
 		}
 
-		tmaxios.get('/api/v1/pagemedia',{
-			params: {
-				'url':  data.urlinfo.route,
-				'path': itempath
-			}
-		})
-		.then(function (response)
+		const maxfilesize = parseFloat(data?.settings?.maxfileuploads);
+		if(!isNaN(maxfilesize) && maxfilesize > 0)
 		{
-			self.pagemedia = response.data.pagemedia;
-		})
-		.catch(function (error)
-		{
-			if(error.response)
-			{
-				self.errors = error.response.data.errors;
-			}
-		});
+			this.maxfilesize = maxfilesize;
+		}		
 
-		if(this.parentcomponent == 'files')
+		if(typeof data.item !== "undefined")
 		{
-			this.showFiles();
-/*			this.active = 'pageFiles'; */
+			this.itempath = data.item.pathWithoutType;
 		}
 		if(this.parentcomponent == 'images')
 		{
 			this.showImages();
-/*			this.active = 'pageImages'; */
+		}
+		else
+		{
+			this.showFiles(this.parentcomponent);
 		}
 	},
 	computed: {
-		filteredImages() {
+		filteredItems()
+		{
+	        const medialist = this.active === 'images' ? this.imagedata : this.filedata;
 
-			var searchimages    = this.search;
-			var filteredImages  = {};
-			var images          = this.imagedata;
-			var pagemedia       = this.pagemedia;
-			var active          = this.active;
+       		if (!medialist) return {};
 
-			if(images)
+			let filtered 			= {};
+			const searchterm 		= this.search.toLowerCase();
+
+			Object.keys(medialist).forEach((key) => 
 			{
-				if(active == 'pageImages')
-				{
-					Object.keys(images).forEach(function(key) {
-						var imagename = images[key].name;
-						if(pagemedia.indexOf(imagename) !== -1)
-						{
-							filteredImages[key] = images[key];
-						}
-					});
-				}
-				else if(searchimages != '')
-				{
-					Object.keys(images).forEach(function(key) {
-						var searchindex = key + ' ' + images[key].name;
-						if(searchindex.toLowerCase().indexOf(searchimages.toLowerCase()) !== -1)
-						{
-							filteredImages[key] = images[key];
-						}
-					});
-				}
-				else
-				{
-			        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-			        const endIndex = this.currentPage * this.itemsPerPage;
-			        filteredImages = this.imagedata.slice(startIndex, endIndex);
-				}
-			}
+				const mediaitem 	= medialist[key];
+				const filename		= mediaitem.name.toLowerCase();
 
-			return filteredImages;
+	            // Filter by search term (if exists)
+	            if (searchterm && !(`${key} ${mediaitem.name}`.toLowerCase().includes(searchterm))) {
+	                return;
+	            }
+
+				/* filter by page
+				if(active == 'pageFiles' && pagemedia.indexOf(file.name) === -1)
+				{
+					return;
+				}
+				*/
+
+				if (this.active === 'videos' && !this.extensions.video.some(ext => filename.endsWith(ext)))
+				{
+					return;
+				}
+
+				if (this.active === 'audios' && !this.extensions.audio.some(ext => filename.endsWith(ext)))
+				{
+					return;
+				}
+
+				if (this.active === 'files' && (this.extensions.audio.some(ext => filename.endsWith(ext)) || this.extensions.video.some(ext => filename.endsWith(ext))))
+				{
+					return;
+				}
+				filtered[key] = mediaitem;
+			});
+			
+			this.goToPage(1);
+
+			return filtered;
 		},
-		filteredFiles() {
+		paginatedItems()
+		{
+			const items = Object.values(this.filteredItems);
+			const start = (this.currentPage - 1) * this.itemsPerPage;
+			const end = start + this.itemsPerPage;
 
-			var searchfiles     = this.search;
-			var filteredFiles   = {};
-			var files           = this.filedata;
-			var pagemedia       = this.pagemedia;
-			var active          = this.active;
-
-			if(files)
-			{
-				if(active == 'pageFiles')
-				{
-					Object.keys(files).forEach(function(key) {
-						var filename = files[key].name;
-						if(pagemedia.indexOf(filename) !== -1)
-						{
-							filteredFiles[key] = files[key];
-						}
-					});
-				}
-				else
-				{
-					Object.keys(files).forEach(function(key) {
-						var searchindex = key + ' ' + files[key].name;
-						if(searchindex.toLowerCase().indexOf(searchfiles.toLowerCase()) !== -1)
-						{
-							filteredFiles[key] = files[key];
-						}
-					});
-				}
-			}
-			return filteredFiles;
+			return items.slice(start, end);
 		},
+		totalPages()
+		{
+			return Math.ceil(Object.keys(this.filteredItems).length / this.itemsPerPage);
+		}
 	},
 	methods: {
-	    setCurrentImages() 
-	    {
-	        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-	        const endIndex = this.currentPage * this.itemsPerPage;
-	        this.currentImages = this.imagedata.slice(startIndex, endIndex);
-	    },
-	    calculateTotalPages()
-	    {
-	        this.totalPages = Math.ceil(this.imagedata.length / this.itemsPerPage);	    	
-	    },
 		goToPage(num)
 		{
+			this.error = false;
 			this.currentPage = num;
 		},
 		isActive(activestring)
@@ -358,125 +426,116 @@ const medialib = {
 			}
 			return 'bg-stone-200 dark:bg-stone-600';
 		},
-		getBackgroundImage(image)
+		getMediaType(media)
 		{
-			return 'background-image: url(' + this.baseurl + '/' + image.src_thumb + ');width:250px';
+			const filename = media.name.toLowerCase();
+
+			if (this.extensions.image.some(ext => filename.endsWith(ext)) && media.src_thumb) {
+				return 'image';
+			}
+			if (this.extensions.video.some(ext => filename.endsWith(ext))) {
+				return 'video';
+			}
+			if (this.extensions.audio.some(ext => filename.endsWith(ext))) {
+				return 'audio';
+			}
+			return 'file'; // fallback
 		},
-		getImageUrl(relativeUrl)
+		getBackgroundImage(media)
+		{
+			if(media.src_thumb !== undefined)
+			{
+				return 'background-image: url(' + this.baseurl + '/' + media.src_thumb + ');width:250px';
+			}
+			return '';
+		},
+		getMediaUrl(relativeUrl)
 		{
 			return this.baseurl + '/' + relativeUrl;
 		},
-		showImages(pagesOrAll)
+		reset()
 		{
-			this.active             = pagesOrAll;
-			this.errors             = false;
-			this.showimages         = true;
-			this.showfiles          = false;
-			this.showimagedetails   = false;
-			this.showfiledetails    = false;
-			this.imagedetaildata    = false;
-			this.detailindex        = false;
-		
+/*			this.active 			= false; */
+			this.error             = false;
+			this.showmedialist      = false;
+			this.showmediadetails   = false;
+			this.mediadetails    	= false;
+			this.uploadfields 		= false;
+			this.currentPage 		= 1;
+		},
+		showImages()
+		{
 			if(!this.imagedata)
 			{
-				this.errors = false;
-
-				var imageself = this;
-
-				var itempath = false;
-				if(typeof data.item !== "undefined")
-				{
-					itempath = data.item.pathWithoutType;
-				}
-				tmaxios.get('/api/v1/images',{
-					params: {
-						'url':  data.urlinfo.route,
-						'path': itempath,
-					}
-				})
-				.then(function (response)
-				{
-					imageself.imagedata = response.data.images;
-					imageself.calculateTotalPages();
-					imageself.setCurrentImages();
-				})
-				.catch(function (error)
-				{
-					if(error.response)
-					{
-						let message = handleErrorMessage(error);
-						if(message)
-						{
-							eventBus.$emit('publishermessage', message);
-						}
-
-						imageself.errors = error.response.data.errors;
-
-					}
-				});
+				this.loadImages();
+				return;
 			}
+			this.reset();
+			this.active = 'images';
+			this.showmedialist = true;
 		},
-		showFiles(pagesOrAll)
+		showFiles(filetype)
 		{
-			this.active             = pagesOrAll;
-			this.showimages         = false;
-			this.showfiles          = true;
-			this.showimagedetails   = false;
-			this.showfiledetails    = false;
-			this.imagedetaildata    = false;
-			this.filedetaildata     = false;
-			this.detailindex        = false;
-
 			if(!this.filedata)
 			{
-				this.errors = false;
-				var filesself = this;
-
-				tmaxios.get('/api/v1/files',{
-					params: {
-						'url': data.urlinfo.route,
-					}
-				})
-				.then(function (response)
-				{
-					filesself.filedata = response.data.files;
-				})
-				.catch(function (error)
-				{
-					if(error.response)
-					{
-						let message = handleErrorMessage(error);
-						if(message)
-						{
-							eventBus.$emit('publishermessage', message);
-						}
-
-						fileself.errors = error.response.data.errors;
-					}
-				});
+				this.loadFiles(filetype);
+				return;
+			}
+			this.reset();
+			this.active = filetype;
+			this.showmedialist = true;
+		},
+		showUpload()
+		{
+			this.reset();
+			this.active = 'uploads';
+		},
+		showMediaDetails(media)
+		{
+			this.reset()
+			this.showmediadetails   = true;
+			this.mediadetails 		= media;
+			this.adminurl           = this.baseurl + '/tm/content/visual';
+			if(media.src_thumb)
+			{
+				this.loadImageDetails(media.name);
 			}
 		},
-		showImageDetails(image,index)
+		selectMedia(media)
 		{
-			this.errors             = false;
-			this.showimages         = false;
-			this.showfiles          = false;
-			this.showimagedetails   = true;
-			this.showfiledetails    = false;
-			this.detailindex        = index;
-			this.adminurl           = this.baseurl + '/tm/content/visual';
+			/* we need this to determine component if no component is open */
+			/* media.libtype = this.getMediaType(media);*/
+			media.active = this.active;
 
-			var imageself = this;
+			if(this.active == 'images')
+			{
+				if(media.src_live)
+				{
+					this.$emit('addFromMedialibEvent', media.src_live);
+				}
+			}
+			else
+			{
+				let extension   = media.info.extension.toUpperCase();
+				let size        = this.getSize(media.bytes);
+				media.name       = media.name + ' (' + extension + ', ' + size + ')';
 
-			tmaxios.get('/api/v1/image',{
+				this.$emit('addFromMedialibEvent', media);
+			}
+		},
+		loadFiles(filetype)
+		{
+			var fileself = this;
+
+			tmaxios.get('/api/v1/files',{
 				params: {
 					'url': data.urlinfo.route,
-					'name': image.name,
 				}
 			})
 			.then(function (response)
 			{
-				imageself.imagedetaildata = response.data.image;
+				fileself.filedata = response.data.files;
+				fileself.showFiles(filetype);
 			})
 			.catch(function (error)
 			{
@@ -488,43 +547,127 @@ const medialib = {
 						eventBus.$emit('publishermessage', message);
 					}
 
-					imageself.errors = error.response.data.errors;
-
+					fileself.error = message;
 				}
 			});
 		},
-		showFileDetails(file,index)
+		loadPageMedia()
 		{
-			this.errors             = false;
-			this.showimages         = false;
-			this.showfiles          = false;
-			this.showimagedetails   = false;
-			this.showfiledetails    = true;
-			this.filedetaildata     = file;
-			this.detailindex        = index;
-			this.adminurl           = this.baseurl + '/tm/content/visual';
-		},
-		selectImage(image)
-		{
-			this.$emit('addFromMedialibEvent', image.src_live);
-		},
-		selectFile(file)
-		{
-			let extension   = file.info.extension.toUpperCase();
-			let size        = this.getSize(file.bytes);
-			file.name       = file.name + ' (' + extension + ', ' + size + ')';
+			this.error = false;
 
-			this.$emit('addFromMedialibEvent', file);
+			var pageself = this;
+
+			tmaxios.get('/api/v1/pagemedia',{
+				params: {
+					'url':  data.urlinfo.route,
+					'path': this.itempath
+				}
+			})
+			.then(function (response)
+			{
+				pageself.pagemedia = response.data.pagemedia;
+			})
+			.catch(function (error)
+			{
+				let message = handleErrorMessage(error);
+				if(message)
+				{
+					eventBus.$emit('publishermessage', message);
+				}
+
+				pageself.error = message;
+			});
 		},
-		removeImage(index)
+		loadImages()
 		{
-			this.imagedata.splice(index,1);
+			var imageself = this;
+
+			var itempath = false;
+			if(typeof data.item !== "undefined")
+			{
+				itempath = data.item.pathWithoutType;
+			}
+			tmaxios.get('/api/v1/images',{
+				params: {
+					'url':  data.urlinfo.route,
+					'path': itempath,
+				}
+			})
+			.then(function (response)
+			{
+				imageself.imagedata = response.data.images;
+				imageself.showImages()
+			})
+			.catch(function (error)
+			{
+				if(error.response)
+				{
+					let message = handleErrorMessage(error);
+					if(message)
+					{
+						eventBus.$emit('publishermessage', message);
+					}
+
+					imageself.error = message;
+				}
+			});
 		},
-		removeFile(index)
+		loadImageDetails(imagename)
 		{
-			this.filedata.splice(index,1);
+			var imageself = this;
+
+			tmaxios.get('/api/v1/image',{
+				params: {
+					'url': data.urlinfo.route,
+					'name': imagename,
+				}
+			})
+			.then(function (response)
+			{
+				imageself.mediadetails = response.data.image;
+			})
+			.catch(function (error)
+			{
+				if(error.response)
+				{
+					let message = handleErrorMessage(error);
+					if(message)
+					{
+						eventBus.$emit('publishermessage', message);
+					}
+
+					imageself.error = message;
+				}
+			});
 		},
-		deleteImage(image, index)
+		deleteMedia(media)
+		{
+			if(media.src_live)
+			{
+				this.deleteImage(media);
+			}
+			else
+			{
+				this.deleteFile(media);
+			}
+		},
+		removeImage(name)
+		{
+			const index = this.imagedata.findIndex(item => item.name === name);
+			if(index !== -1)
+			{
+				this.imagedata.splice(index, 1);
+			}
+		},
+		removeFile(name)
+		{
+			const index = this.filedata.findIndex(item => item.name === name);
+			if(index !== -1)
+			{
+				this.filedata.splice(index, 1);
+			}
+		},
+		deleteImage(image)
 		{
 			imageself = this;
 
@@ -532,13 +675,12 @@ const medialib = {
 				data: {
 					'url':  data.urlinfo.route,
 					'name': image.name,
-					'index': index,
 				}
 			})
 			.then(function (response)
 			{
 				imageself.showImages();
-				imageself.removeImage(index);
+				imageself.removeImage(image.name);
 			})
 			.catch(function (error)
 			{
@@ -550,12 +692,11 @@ const medialib = {
 						eventBus.$emit('publishermessage', message);
 					}
 
-					imageself.errors = error.response.data.errors;
-
+					imageself.error = message;
 				}
 			});
 		},
-		deleteFile(file, index)
+		deleteFile(file)
 		{
 			fileself = this;
 
@@ -563,13 +704,12 @@ const medialib = {
 				data: {
 					'url': data.urlinfo.route,
 					'name': file.name,
-					'index': index,
 				}
 			})
 			.then(function (response)
 			{
-				fileself.showFiles();
-				fileself.removeFile(index);
+				fileself.showFiles(fileself.active);
+				fileself.removeFile(file.name);
 			})
 			.catch(function (error)
 			{
@@ -581,11 +721,93 @@ const medialib = {
 						eventBus.$emit('publishermessage', message);
 					}
 
-					fileself.errors = error.response.data.errors;
-
+					fileself.error = message;
 				}
 			});
 		},
+		onFileChange(e) {
+			if (e.target.files.length === 0) return;
+
+			const file = e.target.files[0];
+			const size = file.size / 1024 / 1024;
+
+			if (file.type.match('image.*'))
+			{
+				if (size > this.maximagesize)
+				{
+					this.error = 'The maximal size of images is ' + this.maximagesize + ' MB';
+					return;
+				}
+
+				const reader = new FileReader();
+
+				reader.readAsDataURL(file);
+				reader.onload = (event) => {
+					tmaxios.post('/api/v1/image', {
+						'image': event.target.result,
+						'name': file.name,
+						'publish': true,
+					})
+					.then((response) => {
+						this.loadImages()
+					})
+					.catch((error) => {
+						if(error.response)
+						{
+							let message = handleErrorMessage(error);
+							if(message)
+							{
+								this.error = message;
+							}
+						}
+					});
+				};
+
+			} else {
+
+				if (size > this.maxfilesize)
+				{
+					this.error = 'The maximal size of files is ' + this.maxfilesize + ' MB';
+					return;
+				}
+
+				let reader = new FileReader();
+				reader.readAsDataURL(file);
+				reader.onload = (event) => 
+				{
+					tmaxios.post('/api/v1/file',{
+						'file':	event.target.result,
+						'name': file.name,
+						'publish': true
+					})
+				    .then((response) =>
+				    {
+				    	console.info(file);
+				    	var type = 'files';
+						if (file.type.startsWith('video/'))
+						{
+							type = 'videos';
+						} 
+						else if (file.type.startsWith('audio/'))
+						{
+							type = 'audios';
+						}
+						this.loadFiles(type)
+				    })
+				    .catch((error) =>
+				    {
+						if(error.response)
+						{
+							let message = handleErrorMessage(error);
+							if(message)
+							{
+								this.error = message;
+							}
+						}
+				    });
+				}
+			}
+		},		
 		getDate(timestamp)
 		{
 			date = new Date(timestamp * 1000);

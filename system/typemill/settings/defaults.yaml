@@ -6,6 +6,8 @@ language: 'en'
 langattr: 'en'
 editor: 'visual'
 storage: '\Typemill\Models\Storage'
+maxfileuploads: 20
+maximageuploads: 10
 formats:
   - 'markdown'
   - 'headline'

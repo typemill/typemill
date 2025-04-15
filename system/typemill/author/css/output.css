@@ -946,6 +946,10 @@ video {
   height: 8rem;
 }
 
+.h-4 {
+  height: 1rem;
+}
+
 .h-40 {
   height: 10rem;
 }
@@ -1034,8 +1038,16 @@ video {
   width: 75%;
 }
 
+.w-3\/5 {
+  width: 60%;
+}
+
 .w-32 {
   width: 8rem;
+}
+
+.w-4 {
+  width: 1rem;
 }
 
 .w-4\/5 {
@@ -1072,6 +1084,10 @@ video {
 
 .w-full {
   width: 100%;
+}
+
+.w-half {
+  width: 48%;
 }
 
 .max-w-4xl {
@@ -2425,10 +2441,6 @@ video {
 
   .lg\:w-2\/5 {
     width: 40%;
-  }
-
-  .lg\:w-24 {
-    width: 6rem;
   }
 
   .lg\:w-3\/4 {

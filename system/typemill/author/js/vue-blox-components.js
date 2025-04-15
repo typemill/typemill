@@ -1500,6 +1500,15 @@ bloxeditor.component('image-component', {
 				<div v-if="load" class="loadwrapper"><span class="load"></span></div>
 				<div class="imgmeta p-8" v-if="imgmeta">
 					<div class="flex mb-2">
+						<label class="w-1/5 py-2" for="imgsrc">{{ $filters.translate('Source') }}: </label>
+						<input class="w-3/5 p-2 bg-stone-200 text-stone-900" name="imgsrc" type="text" placeholder="alt" readonly v-model="imgfile" max="100" />
+						<button 
+							v-if = "hasSwitchPath()"
+							@click = "switchquality" 
+							class = "w-1/5 bg-stone-600 hover:bg-stone-900 text-white px-2 py-3 text-center cursor-pointer transition duration-100"
+							>switch quality</button>
+					</div>
+					<div class="flex mb-2">
 						<label class="w-1/5 py-2" for="imgalt">{{ $filters.translate('Alt-Text') }}: </label>
 						<input class="w-4/5 p-2 bg-stone-200 text-stone-900" name="imgalt" type="text" placeholder="alt" @input="createmarkdown" v-model="imgalt" max="100" />
 					</div>
@@ -1528,19 +1537,13 @@ bloxeditor.component('image-component', {
 						<input class="w-2/5 p-2 mr-1 bg-stone-200 text-stone-900" title="imgwidth" type="text" :placeholder="originalwidth" v-model="imgwidth" @input="changewidth" max="6" />
 						<input class="w-2/5 p-2 ml-1 bg-stone-200 text-stone-900" title="imgheight" type="text" :placeholder="originalheight" v-model="imgheight" @input="changeheight" max="6" />
 					</div>
-					<div class="mb-2">
-						<label v-if="showresize" for="saveoriginal" class="flex w-full">
-							<span class="w-1/5">{{ $filters.translate('Do not resize') }}:</span>
-							<input type="checkbox" class="w-6 h-6" name="saveoriginal"  v-model="noresize" @change="createmarkdown"  />
-						</label>
-					</div>
 					<input title="imgid" type="hidden" placeholder="id" v-model="imgid" @input="createmarkdown" max="140" />
 				</div></div>`,
 	data: function(){
 		return {
 			compmarkdown: '',
 			saveimage: false,
-			maxsize: 5, // megabyte
+			maxsize: 10, // megabyte
 			imgpreview: '',
 			showmedialib: false,
 			load: false,
@@ -1558,7 +1561,6 @@ bloxeditor.component('image-component', {
 			imgloading: 'lazy',
 			imgattr: '',
 			imgfile: '',
-			showresize: true,
 			noresize: false,
 			newblock: true,
 		}
@@ -1566,6 +1568,12 @@ bloxeditor.component('image-component', {
 	mounted: function(){
 		
 		eventBus.$on('beforeSave', this.beforeSave );
+
+		const maxsize = parseFloat(data?.settings?.maximageuploads);
+		if(!isNaN(maxsize) && maxsize > 0)
+		{
+			this.maxsize = maxsize;
+		}
 
 		this.$refs.markdown.focus();
 
@@ -1686,6 +1694,29 @@ bloxeditor.component('image-component', {
 		updatemarkdown(event)
 		{
 			this.$emit('updateMarkdownEvent', event.target.value);
+		},
+		hasSwitchPath()
+		{
+			if (this.imgfile.startsWith('media/live') || this.imgfile.startsWith('media/original'))
+			{
+				return true;
+			}
+			return false;
+		},
+		switchquality()
+		{
+			if (this.imgfile.startsWith('media/live'))
+			{
+				this.imgfile = this.imgfile.replace('media/live', 'media/original');
+			}
+			else if (this.imgfile.startsWith('media/original'))
+			{
+				this.imgfile = this.imgfile.replace('media/original', 'media/live');
+			}
+			this.imgpreview = data.urlinfo.baseurl + '/' + this.imgfile;
+			this.imgwidth = 0;
+			this.imgheight = 0;
+			this.createmarkdown();
 		},
 		createmarkdown()
 		{
@@ -2065,6 +2096,12 @@ bloxeditor.component('file-component', {
 		
 		eventBus.$on('beforeSave', this.beforeSave );
 
+		const maxsize = parseFloat(data?.settings?.maxfileuploads);
+		if(!isNaN(maxsize) && maxsize > 0)
+		{
+			this.maxsize = maxsize;
+		}
+
 		this.$refs.markdown.focus();
 
 		if(this.markdown)
@@ -2332,7 +2369,7 @@ bloxeditor.component('video-component', {
 				<Transition name="initial" appear>
 					<div v-if="showmedialib == 'files'" class="fixed top-0 left-0 right-0 bottom-0 bg-stone-100 z-50">
 						<button class="w-full bg-stone-200 hover:bg-rose-500 hover:text-white p-2 transition duration-100" @click.prevent="showmedialib = false">{{ $filters.translate('close library') }}</button>
-						<medialib parentcomponent="files" @addFromMedialibEvent="addFromMedialibFunction"></medialib>
+						<medialib parentcomponent="videos" @addFromMedialibEvent="addFromMedialibFunction"></medialib>
 					</div>
 				</Transition>
 				<Transition name="initial" appear>
@@ -2346,6 +2383,21 @@ bloxeditor.component('video-component', {
 					<svg class="icon icon-paperclip">
 						<use xlink:href="#icon-paperclip"></use>
 					</svg>
+				</div>
+				<div class="bg-chess preview-chess w-full mb-4 flex items-center justify-center">
+					<video
+						v-if 		= "fileurl" 
+						controls 	= "true" 
+						:width 		= "width" 
+						:preload 	= "preload"
+						:poster 	= "getPoster()"
+						:key 		= "preload + fileurl"  
+						>
+                          <source 
+                          	:src = "baseurl + '/' + fileurl" 
+                          	:type = "getType()"
+                          	>
+                    </video>
 				</div>
 				<div v-if="load" class="loadwrapper"><span class="load"></span></div>
 				<div class="imgmeta p-8" v-if="filemeta">
@@ -2385,7 +2437,7 @@ bloxeditor.component('video-component', {
   			</div>`,
 	data: function(){
 		return {
-			maxsize: 100, // megabyte
+			maxsize: 20, // megabyte
 			showmedialib: false,
 			load: false,
 			filemeta: false,
@@ -2393,6 +2445,7 @@ bloxeditor.component('video-component', {
 			allowedImageExtensions: ['webp', 'png', 'svg', 'jpg', 'jpeg'],
 			allowedExtensions: ['mp4', 'webm', 'ogg'],
 			fileurl: '',
+			baseurl: '',
 			width: '500',
 			fileid: '',
 			imageurl: '',
@@ -2403,6 +2456,14 @@ bloxeditor.component('video-component', {
 	},
 	mounted: function() {
 	    eventBus.$on('beforeSave', this.beforeSave);
+
+	    this.baseurl = data.urlinfo.baseurl;
+
+		const maxsize = parseFloat(data?.settings?.maxfileuploads);
+		if(!isNaN(maxsize) && maxsize > 0)
+		{
+			this.maxsize = maxsize;
+		}
 
 	    this.$refs.markdown.focus();
 
@@ -2436,6 +2497,25 @@ bloxeditor.component('video-component', {
 	    }
 	},
 	methods: {
+		getType()
+		{
+			if(this.fileurl)
+			{
+				const parts = this.fileurl.split('.');
+				const extension = parts.pop().toLowerCase();
+				extension.split('?')[0];
+				return 'video/' + extension;
+			}
+			return 'video/';
+		},
+		getPoster()
+		{
+			if(this.imageurl)
+			{
+				return this.baseurl + '/' + this.imageurl;
+			}
+			return false;
+		},
 		addFromMedialibFunction(file)
 		{
 		    this.showmedialib  = false;
@@ -2668,7 +2748,7 @@ bloxeditor.component('audio-component', {
 				<Transition name="initial" appear>
 					<div v-if="showmedialib" class="fixed top-0 left-0 right-0 bottom-0 bg-stone-100 z-50">
 						<button class="w-full bg-stone-200 hover:bg-rose-500 hover:text-white p-2 transition duration-100" @click.prevent="showmedialib = false">{{ $filters.translate('close library') }}</button>
-						<medialib parentcomponent="files" @addFromMedialibEvent="addFromMedialibFunction"></medialib>
+						<medialib parentcomponent="audios" @addFromMedialibEvent="addFromMedialibFunction"></medialib>
 					</div>
 				</Transition>
 
@@ -2678,6 +2758,15 @@ bloxeditor.component('audio-component', {
 					</svg>
 				</div>
 				<div v-if="load" class="loadwrapper"><span class="load"></span></div>
+				<div v-if="fileurl" class="bg-yellow-500 w-full py-5 flex items-center justify-center">
+					<audio 
+                        :src 		= "baseurl + '/' + fileurl" 
+						class 		= "mx-auto w-3/4" 
+						preload 	= "metadata" 
+						controls 	= "true">
+					</audio>
+				</div>
+				</div>
 				<div class="imgmeta p-8" v-if="filemeta">
 					<input 
 						title 		= "fileid" 
@@ -2694,7 +2783,7 @@ bloxeditor.component('audio-component', {
 					<div class="flex mb-2">
 						<label class="w-1/5 py-2" for="width">{{ $filters.translate('Width') }}: </label>
 						<input class="w-4/5 p-2 bg-stone-200 text-stone-900" name="width" type="text" placeholder="500" v-model="width" @input="createmarkdown" />
-					</div>					
+					</div>
 					<div class="flex mb-2">
 					    <label class="w-1/5 py-2" for="videopreload">{{ $filters.translate('Preload') }}: </label>
 					    <select class="w-4/5 p-2 bg-stone-200 text-stone-900" name="videopreload" v-model="preload" @change="createmarkdown">
@@ -2707,7 +2796,7 @@ bloxeditor.component('audio-component', {
   			</div>`,
 	data: function(){
 		return {
-			maxsize: 100, // megabyte
+			maxsize: 20, // megabyte
 			showmedialib: false,
 			load: false,
 			filemeta: false,
@@ -2718,10 +2807,17 @@ bloxeditor.component('audio-component', {
 			fileid: '',
 			savefile: false,
 			preload: 'none',
+			baseurl: data.urlinfo.baseurl,
 		}
 	},
 	mounted: function() {
 	    eventBus.$on('beforeSave', this.beforeSave);
+
+		const maxsize = parseFloat(data?.settings?.maxfileuploads);
+		if(!isNaN(maxsize) && maxsize > 0)
+		{
+			this.maxsize = maxsize;
+		}
 
 	    this.$refs.markdown.focus();
 

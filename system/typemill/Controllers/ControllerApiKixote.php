@@ -358,6 +358,7 @@ class ControllerApiKixote extends Controller
 	    ];
 
 	    $apiservice = new ApiCalls();
+	    $apiservice->setTimeout(30);
 	    $apiResponse = $apiservice->makePostCall($url, $postdata, $authHeader);
 
 	    if (!$apiResponse)
@@ -423,6 +424,7 @@ class ControllerApiKixote extends Controller
 	    ];
 
 	    $apiservice = new ApiCalls();
+	    $apiservice->setTimeout(30);
 	    $apiResponse = $apiservice->makePostCall($url, $postdata, $headers);
 
 	    if (!$apiResponse) {

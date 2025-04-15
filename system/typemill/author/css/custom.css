@@ -112,13 +112,6 @@
 .fade-enter-from{
   opacity: 0;
 }
-.list-enter-active {
-  transition: opacity 0.2s ease;
-}
-.list-enter-from{
-  opacity: 0;
-}
-
 .fade-item {
   transition: opacity 0.5s ease-in-out;
 }
@@ -131,14 +124,16 @@
 }
 
 /* enter or fade items in list with transition group */
-.list-enter-active, .list-leave-active {
-  transition: all 0.2s;
+.list-enter-active, 
+.list-leave-active {
+  transition: all 0.2s ease;
+  position: absolute; /* avoids content shifts */
 }
-.list-enter, .list-leave-to {
+.list-enter,
+.list-enter-from,
+.list-leave-to {
   opacity: 0;
 }
-
-
 
 .accordion-enter-active, .accordion-leave-active {
   transition: max-height 0.5s ease, padding 0.5s ease;
