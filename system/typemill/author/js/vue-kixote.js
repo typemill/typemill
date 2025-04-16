@@ -130,8 +130,8 @@ const kixote = Vue.createApp({
             tabs: [ 
             		"Admin", 
             		"Generate", 
-            		"SEO", 
-/*            		"Automate", 
+/*            		"SEO", 
+            		"Automate", 
             		"Translate", 
             		"RAG" */
             ],
