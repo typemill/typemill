@@ -288,6 +288,11 @@ class Media
 	{
 		# transform image-stream into image
 		$image 	= $this->createImage();
+
+		if(!empty($this->errors))
+		{
+			return false;
+		}
 		
 		$originalsize = $this->getImageSize($image);
 
@@ -418,7 +423,14 @@ class Media
 
 	public function createImage()
 	{
-		return imagecreatefromstring($this->filedata);
+		$image = imagecreatefromstring($this->filedata);
+		if(!$image)
+		{
+			$this->errors[] = Translations::translate('Could not create image from string. File corrupted, unsupported extension or gd-library not configured for extension.');
+			return false;
+		}
+
+		return $image;
 	}
 
 	public function getImageSize($image)
@@ -643,8 +655,14 @@ class Media
 			case 'webp': $image = imagecreatefromwebp($imagePath); break;
 			default: return 'image type not supported';
 		}
+
+		if(!$image)
+		{
+			$this->errors[] = Translations::translate('Could not create image from string. File corrupted, unsupported extension or gd-library not configured for extension.');
+			return false;
+		}
 		
-		return $image;		
+		return $image;
 	}
 
 
