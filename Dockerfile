@@ -1,21 +1,23 @@
-FROM php:8.0-apache
+FROM php:8.2-apache
 
 # Install OS dependencies required
-RUN apt-get update && apt-get upgrade -y && apt-get install git unzip zlib1g-dev libpng-dev -y
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y git unzip zlib1g-dev libpng-dev libjpeg-dev
 
-# Adapt apache config
-RUN a2enmod rewrite \
-    && echo "ServerName 127.0.0.1" >> /etc/apache2/apache2.conf
+# Enable Apache rewrite module
+RUN a2enmod rewrite && \
+    echo "ServerName 127.0.0.1" >> /etc/apache2/apache2.conf
 
-# Install PHP ext-gd
-RUN docker-php-ext-install gd
+# Configure GD with JPEG support and install it
+RUN docker-php-ext-configure gd --with-jpeg && \
+    docker-php-ext-install gd
 
 # Copy app content
 # Use the .dockerignore file to control what ends up inside the image!
 WORKDIR /var/www/html
 COPY . .
 
-# Install server dependencies
+# Install server dependencies (like Composer)
 RUN chmod +x /var/www/html/docker-utils/install-composer && \
     /var/www/html/docker-utils/install-composer && \
     ./composer.phar update && \
