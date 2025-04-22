@@ -969,19 +969,19 @@ app.component('component-image', {
 					    tmaxios.post('/api/v1/image',{
 							'image':			e.target.result,
 							'name': 			imageFile.name,
-							'publish':  		true,
+							'publish':  		false,
 							'keepformat': 		keepformat
 						})
 					    .then(function (response) {
-							sharedself.update(response.data.name);
-					    })
+							sharedself.update(response.data.path);
+						})
 					    .catch(function (error)
 					    {
 							sharedself.load = false;
 					    	if(error.response)
 					    	{
-				    		console.info(error.response);
-/*				        	publishController.errors.message = error.response.data.errors; */
+					    		console.info(error.response);
+	/*				        	publishController.errors.message = error.response.data.errors; */
 					      	}
 					    });
 					}

@@ -1958,7 +1958,7 @@ bloxeditor.component('image-component', {
 								self.saveimage = true;
 
 								self.imgmeta = true;
-								self.imgfile = response.data.name;
+								self.imgfile = response.data.path;
 
 								if(self.imgwidth > 820)
 								{

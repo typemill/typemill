@@ -5,5 +5,4 @@ Typemill is a lightweight, flat-file CMS designed for simple, fast, and flexible
 Stay in the loop and subscribe to the [Typemill newsletter](https://typemill.net/news)!
 
 ![](media/live/chatgpt-typemill-dummy-wide.webp){.center loading="lazy" width="820" height="470"}
-*Just a dummy image*
 

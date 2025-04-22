@@ -459,12 +459,12 @@ class Media
 	{
 		# resize
 		$ratio 	= max(
-					$desired['width']/$original['width'], 
-					$desired['height']/$original['height']
+					$desired['width'] / $original['width'], 
+					$desired['height'] / $original['height']
 				);
 
 		# prevent upscaling
-		$ratio 	= ($ratio > 1) ? 1 : $ratio;
+		# $ratio 	= ($ratio > 1) ? 1 : $ratio;
 
 		$w 		= $desired['width'] / $ratio;
 		$h 		= $desired['height'] / $ratio;

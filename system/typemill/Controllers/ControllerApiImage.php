@@ -191,7 +191,7 @@ class ControllerApiImage extends Controller
 			{
 				$response->getBody()->write(json_encode([
 					'message' => Translations::translate('Image saved successfully'),
-					'name' => 'media/live/' . $media->getFullName(),
+					'path' => 'media/live/' . $media->getFullName(),
 				]));
 
 				return $response->withHeader('Content-Type', 'application/json');
@@ -239,7 +239,7 @@ class ControllerApiImage extends Controller
 		{
 			$response->getBody()->write(json_encode([
 				'message' => Translations::translate('Image saved successfully'),
-				'name' => 'media/tmp/' . $media->getFullName(),
+				'path' => 'media/tmp/' . $media->getFullName(),
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json');

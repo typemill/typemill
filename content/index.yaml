@@ -2,9 +2,10 @@ meta:
     navtitle: Home
     title: Typemill
     description: 'The open-source flat-file cms for text-driven websites. Create handbooks, documentations, manuals, web-novels, traditional websites, and more.'
+    heroimage: ''
     owner: typemill
     author: typemill
-    modified: '2024-04-25'
+    modified: '2025-04-22'
     created: '2024-03-19'
     time: 17-56-00
     hide: false
