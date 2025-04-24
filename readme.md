@@ -53,7 +53,7 @@ composer update
 
 ### Using Docker
 
-Use the official image from [DockerHub](https://hub.docker.com/kixote/typemill) or read the description on [docs.typemill.net](https://docs.typemill.net/getting-started/installation/docker)
+Use the official image from [DockerHub](https://hub.docker.com/r/kixote/typemill) or read the description on [docs.typemill.net](https://docs.typemill.net/getting-started/installation/docker)
 
 ## Folder Permissions
 
