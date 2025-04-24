@@ -1,50 +1,41 @@
-# Typemill: A Flat File CMS for Publishers
+# Typemill
 
-Typemill is a lightweight, flat-file CMS designed for simple, fast, and flexible website and eBook creation using Markdown. 
+Typemill is an open-source flat-file CMS for creating websites and eBooks with markdown files. It’s commonly used for informational websites such as user manuals, documentation, knowledge bases, wikis, and handbooks.
 
-![Typemill Screenshot](/typemill.png)
+Learn more at [typemill.net](https://typemill.net) or get started with the [starter guide](https://docs.typemill.net/getting-started).
 
-With a focus on content and text, it perfectly fits use cases such as documentations, manuals, and other text-heavy websites.
+![Typemill Screenshot](/typemill.webp)
 
-## Key Features (Selection)
+## Key Features
 
-* No database required (flat-file approach).
-* High performance, with a modern tech stack including Vue.js, Tailwind CSS, and Slim PHP.
-* Lightweight, with a gzip size of about 2MB.
-* Markdown editing with a visual block editor or a raw markdown editor.
-* Easy extendible with plugins, themes, and page-tabs.
-* Generation of ebooks (pdf, epub) with an ebook-plugin.
-* Flexible form-generation.
-* API-architecture and headless mode.
-
-## Resources
-
-* Download and Documentation: [Typemill Website](https://typemill.net)
-* Plugins: [Typemill Plugins](https://plugins.typemill.net)
-* Themes: [Typemill Themes](https://themes.typemill.net)
-* Book Layouts: [Typemill Book Layouts](https://books.typemill.net)
-* Issues and Bug Reports: [GitHub Issues](https://github.com/typemill/typemill/issues)
-* Discussions: [GitHub Discussions](https://github.com/typemill/typemill/discussions)
-* Newsletter: [Typemill Newsletter](https://typemill.net/news)
+* **Flat-file** – no database required.  
+* **Modern stack** – built with Slim PHP, Vue.js, and Tailwind CSS.  
+* **Lightweight** – only 2MB when gzipped.  
+* **Author-friendly** – visual block editor and raw markdown editor.  
+* **Developer-friendly** – Twig templates, Symfony event dispatcher, YAML definitions.  
+* **Flexible** – extend with plugins, themes, and custom eBook layouts.  
+* **Single Source Publishing** – convert content to PDF and ePUB with the eBook plugin.
 
 ## Requirements
 
 To run Typemill, you need the following:
 
-* Web server (Apache, not tested on other servers).
+* Web server (Apache or Nginx).
 * PHP 8.0 or higher.
-* Standard PHP libraries like mod_rewrite, gd-image, mbstring, fileinfo, session, iconv, and more.
+* Standard PHP libraries like mod_rewrite, gd, mbstring, fileinfo, session, iconv, and more.
 
 ## Installation
 
-Check installations with different setups on [typemill.net](https://typemill.net/getting-started/installation)
+Check installation guides for different setups at [docs.typemill.net](https://docs.typemill.net/getting-started/installation)
 
 ### Using ZIP File and FTP
 
-1. Download and unpack the latest version of Typemill as a zip file from [Typemill Website](https://typemill.net).
+1. Download and unpack the latest zip-version from the [Typemill Website](https://typemill.net).
 2. Upload all files to your server.
-3. Visit your new website at `www.your-typemill-website.com/tm/setup` and create an admin user.
-4. Log in and start publishing.
+3. Check the file-permissions (see below).
+4. Visit your new website at `www.your-typemill-website.com/tm/setup`.
+5. Create an admin user.
+6. Log in and start writing.
 
 ### Using GitHub and Composer 
 
@@ -54,7 +45,7 @@ Clone this repository:
 git clone https://github.com/typemill/typemill.git
 ```
 
-Then update composer to load the libraries:
+Run Composer to install the required libraries:
 
 ```
 composer update
@@ -62,7 +53,7 @@ composer update
 
 ### Using Docker
 
-See description on [typemill.net](https://typemill.net/getting-started/installation/docker)
+Use the official image from [DockerHub](https://hub.docker.com/kixote/typemill) or read the description on [docs.typemill.net](https://docs.typemill.net/getting-started/installation/docker)
 
 ## Folder Permissions
 
@@ -73,12 +64,6 @@ Ensure that the following folders are writable:
 * `/data`
 * `/media`
 * `/settings`
-
-## Tech Stack
-
-* PHP (Slim Framework Version 4)
-* JavaScript (Vue.js Version 3)
-* CSS (Tailwind)
 
 ## Security Issues
 
