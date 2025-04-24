@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - 'v*.*.*'   # Triggers only on semantic version tags like v2.2.2
+      - '*.*.*'   # Triggers only on semantic version tags like 2.2.2
 
 jobs:
   build-and-push:
