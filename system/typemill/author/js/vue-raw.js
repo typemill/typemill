@@ -1,6 +1,19 @@
 const raweditor = Vue.createApp({
-	template: `
-				<fieldset v-if="showraw" class="lg:px-12 py-8 bg-stone-50 dark:bg-stone-700 dark:text-stone-200 shadow-md mb-16">
+	template: `<fieldset v-if="showraw" class="lg:px-12 py-8 bg-stone-50 dark:bg-stone-700 dark:text-stone-200 shadow-md mb-16">
+					<div class="absolute top-0 right-0">
+						<button 
+							@click.prevent="openmedialib()"
+							class="px-2 py-2 bg-stone-50 border-b-2 border-stone-50 hover:bg-stone-200 dark:text-stone-200 dark:bg-stone-700 dark:border-stone-600 hover:dark:bg-stone-200 hover:dark:text-stone-900 transition duration-100"
+						>
+							<svg class="icon icon-image"><use xlink:href="#icon-image"></use></svg>
+						</button>
+						<Transition name="initial" appear>
+							<div v-if="showmedialib" class="fixed top-0 left-0 right-0 bottom-0 bg-stone-100 z-50">
+								<button class="w-full bg-stone-200 hover:bg-rose-500 hover:text-white p-2 transition duration-100" @click.prevent="showmedialib = false">{{ $filters.translate('close library') }}</button>
+								<medialib parentcomponent="images" @addFromMedialibEvent="addFromMedialibFunction"></medialib>
+							</div>
+						</Transition>
+					</div>					
 					<div class="w-full px-6 py-3" :class="{'error' : errors.title}">
 						<label class="block mb-1 font-medium" for="title">{{ $filters.translate('Title') }}*</label>
 						<input 
@@ -41,8 +54,12 @@ const raweditor = Vue.createApp({
 			freeze: false,
 			showraw: true,
 			editorsize: false,	
+			showmedialib: false,
 		}
 	},
+	components: {
+		medialib: medialib
+	},	
 	mounted() {
 		this.initializeContent(data.content)
 
@@ -57,6 +74,41 @@ const raweditor = Vue.createApp({
 
 	},
 	methods: {
+		openmedialib()
+		{
+			this.showmedialib = true;
+		},
+		addFromMedialibFunction(media)
+		{
+			if (typeof media === 'string')
+			{
+				markdown = '![](' + media + ')';
+			}
+			else if (media.active === 'videos')
+			{
+				markdown = '[:video path="'+ media.url +'" width="500" preload="auto" :]';
+			}
+			else if (media.active === 'audios')
+			{
+				markdown = '[:audio path="' + media.url + '" width="500px" preload="auto" :]';
+			}
+			else
+			{
+				markdown = '[' + media.name + '](' + media.url + '){.tm-download file-' + media.extension + '}'
+			}
+
+			this.showmedialib = false;
+
+			let content = this.content.trim();
+			this.content = content + '\n\n' + markdown; 
+
+			let codeeditor 		= this.$refs["raweditor"];
+			this.$nextTick(() => {
+				this.highlight(this.content);
+				autosize.update(codeeditor);
+				eventBus.$emit('editdraft');
+			})
+		},
 		showEditor(value)
 		{
 			this.showraw = value;
