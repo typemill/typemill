@@ -47,6 +47,7 @@ $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 
 	# IMAGES
 	$group->get('/pagemedia', ControllerApiImage::class . ':getPagemedia')->setName('api.image.pagemedia')->add(new ApiAuthorization($acl, 'mycontent', 'read')); # author
+	$group->get('/unusedmedia', ControllerApiImage::class . ':getUnusedMedia')->setName('api.image.unusedmedia')->add(new ApiAuthorization($acl, 'mycontent', 'read')); # author
 	$group->get('/images', ControllerApiImage::class . ':getImages')->setName('api.image.images')->add(new ApiAuthorization($acl, 'mycontent', 'read')); # author
 	$group->post('/image', ControllerApiImage::class . ':saveImage')->setName('api.image.create')->add(new ApiAuthorization($acl, 'mycontent', 'create')); # author
 	$group->put('/image', ControllerApiImage::class . ':publishImage')->setName('api.image.publish')->add(new ApiAuthorization($acl, 'mycontent', 'create')); # author

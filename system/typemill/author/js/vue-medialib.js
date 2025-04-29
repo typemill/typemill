@@ -41,22 +41,31 @@ const medialib = {
 								</button>
 							</div>
 							<div class="relative inline-block">
-								<!-- Hidden File Input -->
-								<input 
-									ref="uploadInput"
-									type="file" 
-									class="hidden" 
-									@change="onFileChange($event)" 
-									accept="*/*"
-								/>
+								<div class="flex">
+									<button 
+										@click.prevent="loadUnusedMedia()" 
+										:class="isActive('unusedmedia')" 
+										class="px-2 py-1 mr-2 hover:bg-stone-700 hover:dark:bg-stone-900 hover:text-stone-50 transition duration-100">
+										<svg class="icon icon-eye-blocked"><use xlink:href="#icon-eye-blocked"></use></svg>
+									</button>
 
-								<!-- Upload Button -->
-								<button 
-									@click.prevent="$refs.uploadInput.click()" 
-									class="px-2 py-2 bg-stone-600 text-white hover:bg-stone-700 hover:dark:bg-stone-900 hover:text-stone-50 transition duration-100 flex items-center"
-								>
-									<svg class="icon icon-upload w-4 h-4"><use xlink:href="#icon-upload"></use></svg>
-								</button>
+									<!-- Hidden File Input -->
+									<input 
+										ref="uploadInput"
+										type="file" 
+										class="hidden" 
+										@change="onFileChange($event)" 
+										accept="*/*"
+									/>
+
+									<!-- Upload Button -->
+									<button 
+										@click.prevent="$refs.uploadInput.click()" 
+										class="px-2 py-2 bg-stone-600 text-white hover:bg-stone-700 hover:dark:bg-stone-900 hover:text-stone-50 transition duration-100 flex items-center"
+									>
+										<svg class="icon icon-upload w-4 h-4"><use xlink:href="#icon-upload"></use></svg>
+									</button>
+								</div>
 							</div>
 						</div>
 						<div v-if="totalPages > 1">
@@ -77,8 +86,14 @@ const medialib = {
 						</div>
 					</div>
 					<div class="w-3/4">
+						<div class="px-5">
+							<div v-if="error" class="w-full px-5 mb-4 p-2 text-center bg-rose-500 text-stone-50">{{error}}</div>
+							<div v-if="active == 'unusedmedia'" class="px-5 flex">
+								<div class="px-5 mb-4 p-2 bg-rose-500 text-stone-50">!!!</div>
+								<div class=" px-5 mb-4 p-2 bg-stone-200">The media listed below are not used in content files, user files, or settings. We do not check for usage in any other places, so please be careful and double-check before deleting any media.</div>
+							</div>
+						</div>
 						<div class="flex flex-wrap justify-start px-5 relative">
-							<div v-if="error" class="w-full mb-4 p-2 text-center bg-rose-500 text-stone-50">{{error}}</div>
 							<TransitionGroup name="list">
 								<div 
 									v-for 	= "(media, index) in paginatedItems" 
@@ -303,8 +318,9 @@ const medialib = {
 
 			filedata: 			false, 	/* holds the files */
 			imagedata: 			false, 	/* holds the images */
-			pagedata: 			false, 	/* holds the page media */
+			unuseddata:    		false,  /* holds media that are not in use */
 			mediadetails: 		false, 	/* holds the details of a single media file */
+			pagedata: 			false, 	/* holds the page media */
 
 			showmediadetails: 	false,
 			showmedialist: 		false, 	/* show list of media files */
@@ -320,6 +336,7 @@ const medialib = {
 
 			error:             	false,
 			load:               false,
+			refresh: 			false,
 			adminurl:           false,
 			baseurl:            data.urlinfo.baseurl,
 		}
@@ -354,7 +371,19 @@ const medialib = {
 	computed: {
 		filteredItems()
 		{
-	        const medialist = this.active === 'images' ? this.imagedata : this.filedata;
+	        var medialist = false;
+	        if (this.active === 'images')
+	        {
+	        	medialist = this.imagedata;
+	        }
+	        else if(this.active === 'files')
+	        {
+	        	medialist = this.filedata;
+	        }
+	        else if(this.active === 'unusedmedia')
+	        {
+	        	medialist = this.unuseddata;
+	        }
 
        		if (!medialist) return {};
 
@@ -455,7 +484,6 @@ const medialib = {
 		},
 		reset()
 		{
-/*			this.active 			= false; */
 			this.error             = false;
 			this.showmedialist      = false;
 			this.showmediadetails   = false;
@@ -465,7 +493,7 @@ const medialib = {
 		},
 		showImages()
 		{
-			if(!this.imagedata)
+			if(!this.imagedata || this.refresh)
 			{
 				this.loadImages();
 				return;
@@ -476,13 +504,24 @@ const medialib = {
 		},
 		showFiles(filetype)
 		{
-			if(!this.filedata)
+			if(!this.filedata || this.refresh)
 			{
 				this.loadFiles(filetype);
 				return;
 			}
 			this.reset();
 			this.active = filetype;
+			this.showmedialist = true;
+		},
+		showUnusedMedia()
+		{
+			if(!this.unuseddata)
+			{
+				this.loadUnusedMedia();
+				return;
+			}
+			this.reset();
+			this.active = 'unusedmedia';
 			this.showmedialist = true;
 		},
 		showUpload()
@@ -523,6 +562,48 @@ const medialib = {
 				this.$emit('addFromMedialibEvent', media);
 			}
 		},
+		removeMedia(name)
+		{
+			if(this.active === 'images')
+			{
+				const index = this.imagedata.findIndex(item => item.name === name);
+				if(index !== -1)
+				{
+					this.imagedata.splice(index, 1);
+				}
+				this.showImages(this.active);
+			}
+			else if(this.active == 'unusedmedia')
+			{
+				const index = this.unuseddata.findIndex(item => item.name === name);
+				if(index !== -1)
+				{
+					this.unuseddata.splice(index, 1);
+				}
+				this.showUnusedMedia();
+				this.refresh = true;
+			}
+			else
+			{
+				const index = this.filedata.findIndex(item => item.name === name);
+				if(index !== -1)
+				{
+					this.filedata.splice(index, 1);
+				}				
+				this.showFiles(this.active);
+			}
+		},
+		deleteMedia(media)
+		{
+			if(media.src_live)
+			{
+				this.deleteImage(media);
+			}
+			else
+			{
+				this.deleteFile(media);
+			}
+		},		
 		loadFiles(filetype)
 		{
 			var fileself = this;
@@ -548,6 +629,34 @@ const medialib = {
 					}
 
 					fileself.error = message;
+				}
+			});
+		},
+		loadUnusedMedia()
+		{
+			var mediaself = this;
+
+			tmaxios.get('/api/v1/unusedmedia',{
+				params: {
+					'url': data.urlinfo.route,
+				}
+			})
+			.then(function (response)
+			{
+				mediaself.unuseddata = response.data.unused;
+				mediaself.showUnusedMedia();
+			})
+			.catch(function (error)
+			{
+				if(error.response)
+				{
+					let message = handleErrorMessage(error);
+					if(message)
+					{
+						eventBus.$emit('publishermessage', message);
+					}
+
+					mediaself.error = message;
 				}
 			});
 		},
@@ -640,33 +749,6 @@ const medialib = {
 				}
 			});
 		},
-		deleteMedia(media)
-		{
-			if(media.src_live)
-			{
-				this.deleteImage(media);
-			}
-			else
-			{
-				this.deleteFile(media);
-			}
-		},
-		removeImage(name)
-		{
-			const index = this.imagedata.findIndex(item => item.name === name);
-			if(index !== -1)
-			{
-				this.imagedata.splice(index, 1);
-			}
-		},
-		removeFile(name)
-		{
-			const index = this.filedata.findIndex(item => item.name === name);
-			if(index !== -1)
-			{
-				this.filedata.splice(index, 1);
-			}
-		},
 		deleteImage(image)
 		{
 			imageself = this;
@@ -679,8 +761,7 @@ const medialib = {
 			})
 			.then(function (response)
 			{
-				imageself.showImages();
-				imageself.removeImage(image.name);
+				imageself.removeMedia(image.name);
 			})
 			.catch(function (error)
 			{
@@ -708,8 +789,7 @@ const medialib = {
 			})
 			.then(function (response)
 			{
-				fileself.showFiles(fileself.active);
-				fileself.removeFile(file.name);
+				fileself.removeMedia(file.name);
 			})
 			.catch(function (error)
 			{
@@ -782,7 +862,6 @@ const medialib = {
 					})
 				    .then((response) =>
 				    {
-				    	console.info(file);
 				    	var type = 'files';
 						if (file.type.startsWith('video/'))
 						{

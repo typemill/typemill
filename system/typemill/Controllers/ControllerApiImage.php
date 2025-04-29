@@ -6,17 +6,13 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Typemill\Models\Media;
 use Typemill\Models\StorageWrapper;
+use Typemill\Models\Navigation;
+use Typemill\Models\User;
 use Typemill\Extensions\ParsedownExtension;
 use Typemill\Static\Translations;
 
 class ControllerApiImage extends Controller
 {
-
-	# MISSING
-	# 
-	# return error messages and display in image component
-	# check if resized is bigger than original, then use original
-
 	public function getPagemedia(Request $request, Response $response, $args)
 	{
 		$url 			= $request->getQueryParams()['url'] ?? false;
@@ -59,6 +55,145 @@ class ControllerApiImage extends Controller
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json');
+	}
+
+	public function getUnusedMedia(Request $request, Response $response, $args)
+	{
+		$storage 		= new StorageWrapper('\Typemill\Models\Storage');
+
+		# load all images
+		$imagelist 		= $storage->getImageList();
+
+		# load all files
+		$filelist 		= $storage->getFileList();
+
+		# get navigation
+		$urlinfo 			= $this->c->get('urlinfo');
+		$langattr 			= $this->settings['langattr'];
+	    $navigation 		= new Navigation();
+		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $langattr);
+
+		$fullNavigation = $navigation->getHomepageItem($urlinfo['baseurl']);
+		$fullNavigation->folderContent = $draftNavigation;
+
+		$usedmediaList = $this->getMediaFromPages([$fullNavigation], $storage, $media = []);
+
+		# get media from users
+		$userModel = new User();
+		$userList = $userModel->getAllUsers();
+		$usedmediaList = $this->getMediaFromUsers($storage, $usedmediaList, $userList);
+
+		# get media from settings
+		$settingsfile 	= $storage->getFile('settingsFolder', '', 'settings.yaml');
+		$settingsmedia  = $this->findMediaInText($settingsfile);
+		if(isset($settingsmedia[2]) && !empty($settingsmedia[2]))
+		{
+			$usedmediaList 	= array_merge($usedmediaList, $settingsmedia[2]);
+		}
+
+
+		if(empty($usedmediaList))
+		{
+
+		}
+
+		$usedMedia = [];
+		foreach($usedmediaList as $name)
+		{
+			$usedMedia[$name] = true;
+		}
+
+		$unusedMedia = [];
+		foreach($imagelist as $key => $item)
+		{
+			if(!isset($usedMedia[$item['name']]))
+			{
+				$unusedMedia[] = $item;
+			}
+		}
+
+		foreach($filelist as $key => $item)
+		{
+			if(!isset($usedMedia[$item['name']]))
+			{
+				$unusedMedia[] = $item;
+			}
+		}
+
+		$response->getBody()->write(json_encode([
+			'used' => $usedMedia,
+			'unused' => $unusedMedia
+		]));
+
+		return $response->withHeader('Content-Type', 'application/json');
+	}
+
+	protected function getMediaFromUsers($storage, $usedmediaList, $userList)
+	{
+		foreach($userList as $username)
+		{
+			$userfile 	= $storage->getFile('settingsFolder', 'users', $username . '.yaml');
+			$usermedia  = $this->findMediaInText($userfile);
+			if(isset($usermedia[2]) && !empty($usermedia[2]))
+			{
+				$usedmediaList 	= array_merge($usedmediaList, $usermedia[2]);
+			}
+		}
+
+		return $usedmediaList;
+	}
+
+	protected function getMediaFromPages($navigation, $storage, $usedMedia)
+	{
+		foreach($navigation as $item)
+		{
+			$pagemedia = [];
+			$path = $item->pathWithoutType;
+			$draftmd = $storage->getFile('contentFolder', '', $path . '.txt');
+			if($draftmd)
+			{
+				$markdownArray 	= json_decode($draftmd);
+				$parsedown 		= new ParsedownExtension();
+				$markdown 		= $parsedown->arrayBlocksToMarkdown($markdownArray);
+				$draftmedia 	= $this->findMediaInText($markdown);
+				if(isset($draftmedia[2]) && !empty($draftmedia[2]))
+				{
+					$pagemedia 		= array_merge($pagemedia, $draftmedia[2]);
+				}
+			}
+			
+			$livemd = $storage->getFile('contentFolder', '', $path . '.md');
+			if($livemd)
+			{
+				$livemedia 		= $this->findMediaInText($livemd);
+				if(isset($livemedia[2]) && !empty($livemedia[2]))
+				{
+					$pagemedia 		= array_merge($pagemedia, $livemedia[2]);
+				}
+			}
+			
+			$meta = $storage->getFile('contentFolder', '', $path . '.yaml');
+			if($meta)
+			{
+				$metamedia  	= $this->findMediaInText($meta);
+				if(isset($metamedia[2]) && !empty($metamedia[2]))
+				{
+					$pagemedia 		= array_merge($pagemedia, $metamedia[2]);
+				}
+			}
+
+			if(!empty($pagemedia))
+			{
+				$usedMedia = array_merge($usedMedia, $pagemedia);
+			}
+
+			if($item->elementType == 'folder' && !empty($item->folderContent))
+			{
+				$usedMedia = $this->getMediaFromPages($item->folderContent, $storage, $usedMedia);
+			}
+		}
+
+		return $usedMedia;
 	}
 
 	protected function findMediaInText($text)

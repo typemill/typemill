@@ -1,5 +1,6 @@
 cache/sitemap.xml
 cache/timer.yaml
+media/tmp/.gitkeep
 system/vendor
 cypress
 data/navigation
