@@ -81,7 +81,7 @@ const publisher = Vue.createApp({
 							<span class="hidden lg:block">{{ $filters.translate('visual') }}</span>
 						</a>
 						<a 
-							:href="item.urlAbs"
+							:href="absoluteUrl"
 							target="_blank" 
 							class="lg:px-4 px-2 py-2 border border-stone-200 bg-stone-50 hover:bg-stone-700 hover:text-white transition ml-1" 
 							>
@@ -247,6 +247,17 @@ const publisher = Vue.createApp({
 		{
 			return data.urlinfo.baseurl + '/tm/content/visual' + this.item.urlRelWoF;
 		},
+		absoluteUrl()
+		{
+			if(this.item.urlAbs)
+			{
+				return this.item.urlAbs;
+			}
+			else
+			{
+				return data.urlinfo.baseurl;
+			}
+		}
 	},
 	methods: {
 		clearPublisher()
