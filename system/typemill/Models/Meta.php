@@ -20,6 +20,8 @@ class Meta
 	public function getMetaData($item)
 	{
 		$metadata = $this->storage->getYaml('contentFolder', '', $item->pathWithoutType . '.yaml');
+		
+		$metadata['meta']['modified'] = $this->storage->getFileTime('contentFolder', '', $item->pathWithoutType . '.md');
 			
 		return $metadata;
 	}

@@ -1,6 +1,6 @@
 # Create Your First Page
 
-To create a new page in Typemill, follow these simple steps:
+To create a new page in Typemill, follow these steps:
 
 * Use the **interactive navigation** located on the left side of the screen. 
 * **Enter a page title** for your new page into one of the grey input fields.
