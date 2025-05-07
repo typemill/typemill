@@ -209,7 +209,7 @@ navigation.component('navilevel',{
 					<div class="flex w-full my-px border mt-1 mb-1 border-stone-300 dark:border-stone-600 hover:bg-stone-200 group">
 						<div class="border-l-4 border-stone-200"></div>
 						<div class="flex-grow">
-							<input :class="getNaviInputLevel(parentId)" class="w-full p-1 bg-transparent focus:bg-stone-200 focus:outline-none dark:text-stone-600" placeholder="..." v-model="newItem">
+							<input :class="getNaviInputLevel(parentId)" class="w-full p-1 bg-transparent focus:bg-stone-200 focus:outline-none dark:text-stone-600" placeholder="new page/folder" v-model="newItem">
 						</div>
 <!--						<div class="w-1/4 invisible group-hover:visible"> -->
 						<div class="flex">
