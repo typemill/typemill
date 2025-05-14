@@ -34,17 +34,15 @@ class ControllerApiAuthorMeta extends Controller
 
 		$metadata = $meta->getMetaData($item);
 
-		if(!$metadata or !isset($metadata['meta']['owner']) OR !$metadata['meta']['owner'])
+		if(
+			!$metadata or 
+			!isset($metadata['meta']['owner']) OR 
+			!$metadata['meta']['owner']
+		)
 		{
 			$metadata = $meta->addMetaDefaults($metadata, $item, $this->settings['author'], $request->getAttribute('c_username'));
 		}
-
-		#fix for version 1 because owner in meta is often 'false'
-		if(!isset($metadata['meta']['owner']) OR !$metadata['meta']['owner'])
-		{
-			$metadata = $meta->addMetaDefaults($metadata, $item, $this->settings['author'], $request->getAttribute('c_username'));
-		}
-
+		
 		# if user is not allowed to perform this action (e.g. not admin)
 		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'read'))
 		{

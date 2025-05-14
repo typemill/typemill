@@ -5,6 +5,8 @@ namespace Typemill\Controllers;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Typemill\Models\Validation;
+use Typemill\Models\Navigation;
+use Typemill\Models\Content;
 use Typemill\Models\License;
 use Typemill\Models\Settings;
 use Typemill\Models\User;
@@ -19,7 +21,7 @@ class ControllerApiKixote extends Controller
 	{
 		$system = 'You are a content editor and writing assistant.'
 		          . ' If the user prompt does not explicitly specify otherwise,'
-		          . ' apply the prompt to the provided article and return only the updated article in Markdown syntax,'
+		          . ' apply the prompt to the provided article inside the <article></article> tag and return only the updated article in Markdown syntax,'
 		          . ' without any extra comments or explanations.'
 		          . ' If you find the tag <focus></focus>,'
 		          . ' modify only the content inside these tags and leave everything else unchanged.' 
@@ -261,7 +263,7 @@ class ControllerApiKixote extends Controller
 
 	public function prompt(Request $request, Response $response)
 	{
-	    $params 			= $request->getParsedBody();
+	    $params = $request->getParsedBody();
 
 	    if (empty($params['prompt']) || !is_string($params['prompt']))
 	    {
@@ -282,8 +284,35 @@ class ControllerApiKixote extends Controller
 	    $promptname = $params['name'] ?? '';
 	    $prompt 	= $params['prompt'] ?? '';
 	    $article 	= $params['article'] ?? '';
-	    $tone 		= $params['tone'] ?? '';
-	    
+	    $example 	= $params['link'] ?? false;
+
+	    if($example)
+	    {
+			$validate			= new Validation();
+			$validInput 		= $validate->articleUrl(['url' => $params['link']]);
+			if($validInput === true)
+			{
+				$urlinfo 			= $this->c->get('urlinfo');
+				$langattr 			= $this->settings['langattr'];
+				$navigation 		= new Navigation();
+				$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
+				if($item)
+				{
+					$content 		= new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
+					$markdown 		= $content->getDraftMarkdown($item);
+					if($markdown)
+					{
+						if(is_array($markdown))
+						{
+							$markdown 		= $content->markdownArrayToText($markdown);
+						}
+						
+						$example = $markdown;
+					}
+				}
+			}
+	    }
+
 	    $aiservice 	= $this->settings['aiservice'] ?? false;
 	    if(!$aiservice)
 	    {
@@ -295,11 +324,11 @@ class ControllerApiKixote extends Controller
 
 	    switch ($aiservice) {
 	    	case 'chatgpt':
-	    		$answer = $this->promptChatGPT($promptname, $prompt, $article, $tone);
+	    		$answer = $this->promptChatGPT($promptname, $prompt, $article, $example);
 	    		break;
 	    	
 	    	case 'claude':
-	    		$answer = $this->promptClaude($promptname, $prompt, $article, $tone);
+	    		$answer = $this->promptClaude($promptname, $prompt, $article, $example);
 	    		break;
 
 	    	default:
@@ -324,7 +353,7 @@ class ControllerApiKixote extends Controller
 	    return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
 	}
 
-	public function promptChatGPT($promptname, $prompt, $article, $tone)
+	public function promptChatGPT($promptname, $prompt, $article, $example)
 	{
 		# check if user has accepted 
 
@@ -341,6 +370,13 @@ class ControllerApiKixote extends Controller
 	    $url = 'https://api.openai.com/v1/chat/completions';
 	    $authHeader = "Authorization: Bearer $apikey";
 
+	    $content = $prompt;
+	    if($example)
+	    {
+	    	$content .= "\n<example>" . $example . "</example>";
+	    }
+	    $content .= "\n<article>" . $article . "<article>";
+
 	    $postdata = [
 	        'model' => $model,
 	        'messages' => [
@@ -350,7 +386,7 @@ class ControllerApiKixote extends Controller
 	            ],
 	            [
 	                'role' => 'user',
-	                'content' => $prompt . "\n" . $article
+	                'content' => $content
 	            ],
 	        ],
 	        'temperature' => 0.7,
@@ -391,7 +427,7 @@ class ControllerApiKixote extends Controller
 	    return $answer;
 	}
 
-	public function promptClaude($promptname, $prompt, $article, $tone)
+	public function promptClaude($promptname, $prompt, $article, $example)
 	{
 	    # Check if user has accepted 
 	    $settingsModel = new Settings();
@@ -410,13 +446,20 @@ class ControllerApiKixote extends Controller
 	        "anthropic-version: 2023-06-01"
 	    ];
 
+	    $content = $prompt;
+	    if($example)
+	    {
+	    	$content .= "\n<example>" . $example . "</example>";
+	    }
+	    $content .= "\n<article>" . $article . "<article>";
+
 	    $postdata = [
 	        'model' => $model,
 	        'system' => $this->getSystemMessage(),
 	        'messages' => [
 	            [
 	                'role' => 'user',
-	                'content' => $prompt . "\n" . $article
+	                'content' => $content
 	            ],
 	        ],
 	        'temperature' => 0.7,
