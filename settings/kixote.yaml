@@ -39,3 +39,16 @@ promptlist:
         content: 'Return pure mermaid syntax for a [pie, x, y] diagram.'
         active: true
         system: true
+    example:
+        title: example
+        content: 'Please use the following and write an article.'
+        active: true
+        system: false
+        errors:
+            title: false
+            body: false
+    check:
+        title: check
+        content: 'Warum geht das?'
+        active: true
+        system: false
