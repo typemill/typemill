@@ -90,7 +90,7 @@ class ApiCalls
             "Content-Type: application/json"
         ];
 
-        $headers = $this->addCustomHeader($headers, $customHeaders);
+        $headers = $this->addCustomHeaders($headers, $customHeaders);
 
         $options = [
             'http' => [
