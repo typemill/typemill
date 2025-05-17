@@ -362,56 +362,50 @@ class ParsedownExtension extends \ParsedownExtra
 
     protected function blockHeader($Line)
     {
-        if (isset($Line['text'][1]))
+        # Let ParsedownExtra do its job first
+        $block = parent::blockHeader($Line);
+        if (!$block)
         {
-            $level = strspn($Line['text'], '#');
-
-            if ($level > 6)
-            {
-                return;
-            }
-
-            $text = trim($Line['text'], '#');
-            $lang = $this->settings['langattr'] ?? false;
-            $headline = Slug::createSlug($Line['text'], $lang);
-
-            if ($this->strictMode and isset($text[0]) and $text[0] !== ' ')
-            {
-                return;
-            }
-
-            $text = trim($text, ' ');
-
-            $tocText = $text;
-
-            if($this->showAnchor && $level > 1)
-            {
-                # should we add more info like level so duplicate headline text is possible?
-                $text = "[#](#h-$headline){.tm-heading-anchor}" . $text;
-            }
-
-            $Block = array(
-                'element' => array(
-                    'name' => 'h' . min(6, $level),
-                    'attributes' => array(
-                       'id' => "h-$headline"
-                    ),
-                    'handler' => array(
-                        'function' => 'lineElements',
-                        'argument' => $text,
-                        'destination' => 'elements',
-                    ),
-                )
-            );
-
-            # fix: make sure no duplicates in headlines if user logged in and restrictions on
-            if(!isset($this->headlines[$headline]))
-            {
-                $this->headlines[$headline] = array('level' => $level, 'name' => $Block['element']['name'], 'attribute' => $Block['element']['attributes']['id'], 'text' => $tocText);
-            }
-
-            return $Block;
+            return;
         }
+
+        $text = $block['element']['handler']['argument'] ?? '';
+        $level = (int) str_replace('h', '', $block['element']['name']);
+        if ($level > 6)
+        {
+            return;
+        }
+        $lang = $this->settings['langattr'] ?? false;
+
+        # Get plain text for TOC slug (strip anchor link syntax)
+        $tocText = strip_tags($text);
+ 
+        if (isset($block['element']['attributes']['id']))
+        {
+            $id = $block['element']['attributes']['id'];
+        }
+        else
+        {
+            $id = "h$level-" . Slug::createSlug($tocText, $lang);
+            $block['element']['attributes']['id'] = $id;
+        }
+
+        # Add anchor only for levels > 1
+        if ($this->showAnchor && $level > 1)
+        {
+            $anchor = "[#](#$id){.tm-heading-anchor}";
+            $block['element']['handler']['argument'] = $anchor . $text;
+        }
+
+        # Store for TOC
+        $this->headlines[$id] = [
+            'level' => $level,
+            'name' => $block['element']['name'],
+            'attribute' => $id,
+            'text' => $tocText
+        ];
+
+        return $block;
     }
   
 
