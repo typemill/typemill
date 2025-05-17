@@ -5,8 +5,6 @@ namespace Typemill\Controllers;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Typemill\Models\Validation;
-use Typemill\Models\Navigation;
-use Typemill\Models\Content;
 use Typemill\Models\License;
 use Typemill\Models\Settings;
 use Typemill\Models\User;
@@ -46,7 +44,7 @@ class ControllerApiKixote extends Controller
 
 		# send to Kixote
 		$response->getBody()->write(json_encode([
-			'settings' => $kixoteSettings
+			'kixotesettings' => $kixoteSettings
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
@@ -284,31 +282,35 @@ class ControllerApiKixote extends Controller
 	    $promptname = $params['name'] ?? '';
 	    $prompt 	= $params['prompt'] ?? '';
 	    $article 	= $params['article'] ?? '';
-	    $example 	= $params['link'] ?? false;
-
-	    if($example)
+	    $example 	= $params['example'] ?? false;
+		 
+	    if($example && $example != "")
 	    {
-			$validate			= new Validation();
-			$validInput 		= $validate->articleUrl(['url' => $params['link']]);
-			if($validInput === true)
+		    $validation = new Validation();
+		    $v = $validation->returnValidator(['content' => $example]);
+		    $v->rule('markdownSecure', 'content');
+			if(!$v->validate())
 			{
-				$urlinfo 			= $this->c->get('urlinfo');
-				$langattr 			= $this->settings['langattr'];
-				$navigation 		= new Navigation();
-				$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
-				if($item)
+				$example = false;
+			}
+			else
+			{
+				# Rough estimate: 1 token ≈ 4 characters
+				$allContent = $prompt . $article . $example;
+				$length = strlen($allContent);
+				$maxlength = 8000 * 4;
+				if ($length > $maxlength)
 				{
-					$content 		= new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
-					$markdown 		= $content->getDraftMarkdown($item);
-					if($markdown)
-					{
-						if(is_array($markdown))
-						{
-							$markdown 		= $content->markdownArrayToText($markdown);
-						}
-						
-						$example = $markdown;
-					}
+				    $overLimit = $length - $maxlength;
+				    $keep = strlen($example) - $overLimit;
+				    if($keep > 0)
+				    {
+						$example = substr($example, 0, $keep);
+				    }
+				    else
+				    {
+				    	$example = false;
+				    }
 				}
 			}
 	    }
@@ -370,12 +372,11 @@ class ControllerApiKixote extends Controller
 	    $url = 'https://api.openai.com/v1/chat/completions';
 	    $authHeader = "Authorization: Bearer $apikey";
 
-	    $content = $prompt;
+	    $content = $prompt . "\n<article>" . $article . "<article>";
 	    if($example)
 	    {
 	    	$content .= "\n<example>" . $example . "</example>";
 	    }
-	    $content .= "\n<article>" . $article . "<article>";
 
 	    $postdata = [
 	        'model' => $model,
@@ -446,12 +447,11 @@ class ControllerApiKixote extends Controller
 	        "anthropic-version: 2023-06-01"
 	    ];
 
-	    $content = $prompt;
+	    $content = $prompt . "\n<article>" . $article . "<article>";
 	    if($example)
 	    {
 	    	$content .= "\n<example>" . $example . "</example>";
 	    }
-	    $content .= "\n<article>" . $article . "<article>";
 
 	    $postdata = [
 	        'model' => $model,

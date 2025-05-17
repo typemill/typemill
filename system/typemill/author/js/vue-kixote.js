@@ -189,6 +189,32 @@ const kixote = Vue.createApp({
 		}
 	},	
 	methods: {
+		setKixoteSettings(rawSettings)
+		{
+			// Clone to avoid mutating original input
+			const normalizedSettings = rawSettings;
+
+			if (
+				normalizedSettings &&
+				normalizedSettings.promptlist
+			)
+			{
+				const promptlist = normalizedSettings.promptlist;
+
+				for (const key in promptlist)
+				{
+					if (promptlist.hasOwnProperty(key))
+					{
+						if (typeof promptlist[key].link === 'undefined')
+						{
+							promptlist[key].link = null;
+						}
+					}
+				}
+			}
+
+			this.kixoteSettings = normalizedSettings;
+		},
 		loadKixoteSettings()
 		{
 			self = this;
@@ -200,9 +226,9 @@ const kixote = Vue.createApp({
 			})
 			.then(function (response)
 			{
-		        if (response.data.settings)
+		        if (response.data.kixotesettings)
 		        {
-		        	self.kixoteSettings = response.data.settings;
+		        	self.setKixoteSettings(response.data.kixotesettings);
 		        } 
 			})
 			.catch(function (error)
@@ -294,7 +320,13 @@ const kixote = Vue.createApp({
 	    updateKixoteSettings(newSettings)
 	    {
 	    	this.settingsSaved = false;
-	        this.kixoteSettings = { ...this.kixoteSettings, ...newSettings }; // ✅ Merge settings
+	    	this.kixoteSettings = newSettings;
+/*
+	        this.kixoteSettings = { ...this.kixoteSettings, ...newSettings };
+
+	        console.info("this.settings after merge");
+	        console.info(this.kixoteSettings);
+*/
 	    },
 	    storeKixoteSettings()
 	    {
@@ -307,13 +339,13 @@ const kixote = Vue.createApp({
 			.then(function (response)
 			{
 				self.settingsSaved = true;
-				self.kixoteSettings = response.data.kixotesettings;
+				self.setKixoteSettings(response.data.kixotesettings);
 			})
 			.catch(function (error)
 			{
 				if(error.response)
 				{
-					self.kixoteSettings = error.response.data.kixotesettings;
+					self.setKixoteSettings(error.response.data.kixotesettings);
 				}
 			});	    	
 	    }
@@ -333,7 +365,8 @@ kixote.component('tab-generate', {
 	        activeversion: 0,
 	        versions: [],
 	        prompt: '',
-	        promptlink: null,
+	        promptlink: false,
+	        examplecontent: false,
 	      	promptError: false,
 		    showFocusButton: false,
 		    buttonPosition: { top: 0, left: 0 },
@@ -349,7 +382,7 @@ kixote.component('tab-generate', {
 	      	},
 	      	titleError: false,
 	      	bodyError: false,
-	      	currentFilter: 'all',
+	      	currentFilter: 'user',
 			article: '',
 			index: '',
 			flatnavi: false,
@@ -465,14 +498,17 @@ kixote.component('tab-generate', {
 								<div class="w-full bg-stone-600 px-8 py-2">
 									<div class="flex items-start">
 										<span class="text-teal-300 mr-1">Ki></span>
-										<textarea 
-											v-model.trim 	= "prompt" 
-											ref 			= "prompteditor"	
-											class 			= "flex-grow bg-stone-600 focus:outline-none border-0 caret-white" 
-											placeholder 	= "Prompt..."
-				            				@keydown.enter 	= "handleKeydown"
-			            					@input 			= "resizePromptEditor"
-											></textarea>
+										<div class="flex-grow bg-stone-600">
+											<textarea 
+												v-model.trim 	= "prompt" 
+												ref 			= "prompteditor"	
+												class 			= "w-full bg-stone-600 focus:outline-none border-0 caret-white" 
+												placeholder 	= "Prompt..."
+					            				@keydown.enter 	= "handleKeydown"
+				            					@input 			= "resizePromptEditor"
+												></textarea>
+											<p class="" v-if="promptlink">Example: {{promptlink}}</p>
+										</div>
 								        <button 
 								        	class 	= "text-teal-300 px-2" 
 								        	@click 	= "submitPrompt"
@@ -517,18 +553,18 @@ kixote.component('tab-generate', {
 										<div class="flex space-x-2">
 										  <span class="px-1">Filter:</span>
 										  <button
-										    @click.prevent="currentFilter = 'system'"
-										    :class="{'text-teal-500': currentFilter === 'system', 'text-white': currentFilter !== 'system'}"
-										    class="px-1 transition-colors"
-										  >
-										    system prompts
-										  </button>
-										  <button
 										    @click.prevent="currentFilter = 'user'"
 										    :class="{'text-teal-500': currentFilter === 'user', 'text-white': currentFilter !== 'user'}"
 										    class="px-1 transition-colors"
 										  >
 										    my prompts
+										  </button>
+										  <button
+										    @click.prevent="currentFilter = 'system'"
+										    :class="{'text-teal-500': currentFilter === 'system', 'text-white': currentFilter !== 'system'}"
+										    class="px-1 transition-colors"
+										  >
+										    system prompts
 										  </button>
 										</div>
 
@@ -540,7 +576,7 @@ kixote.component('tab-generate', {
 													<input 
 													  	type 		= "text" 
 													  	class 		= "w-50 p-2 my-1 font-mono bg-stone-600 text-white caret-white focus:outline-none"
-														@input 		= "validateTitle(newPrompt.title)"
+														@input 		= "validatePromptTitle(newPrompt.title)"
 														@focus 		= "editPrompt = newPrompt.title"
 														placeholder = "Enter a title"
 													  	v-model 	= "newPrompt.title"
@@ -550,7 +586,7 @@ kixote.component('tab-generate', {
 												<textarea 
 													class 		= "w-full p-2 my-1 font-mono bg-stone-600 no-outline text-white caret-white focus:outline-none"
 													rows 		= "5"
-													@input 		= "validateBody(newPrompt.content)"
+													@input 		= "validatePromptBody(newPrompt.content)"
 													@focus 		= "editPrompt = newPrompt.name"
 													placeholder = "Enter a prompt"
 													v-model 	= "newPrompt.content"
@@ -562,8 +598,8 @@ kixote.component('tab-generate', {
 													<select v-model="newPrompt.link"
 														class="w-full p-2 font-mono bg-stone-600 text-white caret-white focus:outline-none">
 														<option :value="null" class="text-stone-400 italic">Select example article</option>
-														<option v-for="naviitem in flatnavi" :key="naviitem.urlWoF" :value="naviitem.urlRelWoF">
-															{{ naviitem }}
+														<option v-for="navilink in flatnavi" :key="navilink" :value="navilink">
+															{{ navilink }}
 														</option>
 													</select>
 												</div>
@@ -577,11 +613,26 @@ kixote.component('tab-generate', {
 										</div>
 									</transition>
 									<div 
-										v-for = "(prompttemplate, name) in filteredPrompts"
-										:key="name"
+										v-if = "currentFilter == 'user' && Object.keys(filteredPrompts).length === 0"
 										class = "py-2 px-2"
 										>
-										{{ prompttemplate }}
+										<div class="border border-stone-700 bg-stone-700 text-stone-100 p-4">
+											<h2 class="text-lg font-semibold mb-2">How to Use</h2>
+											<p class="mb-2">Click the <span class="font-medium">+ Add Prompt</span> button to create your own prompts. A custom prompt can include:</p>
+											<ul class="list-disc list-inside mb-4 space-y-1">
+												<li>A title or name</li>
+												<li>The main prompt text</li>
+												<li>An optional link to an article used as example (e.g. for style or tone)</li>
+												<li>An activation checkbox to show or hide the prompt below the prompt input field</li>
+											</ul>
+											<p>You can also browse the predefined system prompts using the filter above. These cannot be edited, but you can activate or deactivate them as needed.</p>
+										</div>
+									</div>
+									<div 
+										v-for = "(prompttemplate, name) in filteredPrompts"
+										:key  = "name"
+										class = "py-2 px-2"
+										>
 										<fieldset class="border border-stone-700 p-4">
 											<div class="flex w-full justify-between">
 												<input 
@@ -590,7 +641,7 @@ kixote.component('tab-generate', {
 												  	:readonly 	= "prompttemplate.system"
 												  	v-model 	= "prompttemplate.title"
 													@focus 		= "editPrompt = name"
-			                                      	@input 		= "updatePrompt(kixoteSettings, name)"
+			                                      	@input 		= "updatePrompt(name)"
 												/>
 												<div class="flex space-x-2 items-center">
 													<div v-if="prompttemplate.system == false">
@@ -606,7 +657,7 @@ kixote.component('tab-generate', {
 														</span>
 														<button 
 															v-else
-															@click.prevent="savePrompts"
+															@click.prevent="saveSettings"
 														    class="px-1 text-teal-300 hover:text-teal-500 transition-colors"
 															>update
 														</button>
@@ -617,7 +668,7 @@ kixote.component('tab-generate', {
 													    type 	= "checkbox" 
 													    class 	= "w-5 h-5 border border-stone-300 bg-stone-600 text-white cursor-pointer" 
 													    v-model = "prompttemplate.active"
-		                                                @change = "updateSettings(kixoteSettings)"
+		                                                @change = "saveSettings"
 													  >
 													</div>
 												</div>
@@ -629,17 +680,17 @@ kixote.component('tab-generate', {
 												v-model 	= "prompttemplate.content"
 												:readonly 	= "prompttemplate.system"
 		                                        @focus 		= "editPrompt = name"
-		                                        @input 		= "updatePrompt(kixoteSettings, name)"
+		                                        @input 		= "updatePrompt(name)"
 												>
 											</textarea>
 											<span v-if="prompttemplate.errors?.body" class="text-red-500 text-sm">{{ prompttemplate.errors.body }}</span>
 
-											<div class="space-y-2 my-2">
+											<div class="space-y-2 my-2" v-if="prompttemplate.system !== true">
 												<select v-model="prompttemplate.link"
 													class="w-full p-2 font-mono bg-stone-600 text-white caret-white focus:outline-none">
 													<option :value="null">Select example article</option>
-													<option v-for="naviitem in flatnavi" :key="naviitem.urlWoF" :value="naviitem.urlRelWoF">
-														{{ naviitem }}
+													<option v-for="navilink in flatnavi" :key="navilink" :value="navilink">
+														{{ navilink }}
 													</option>
 												</select>
 											</div>
@@ -648,57 +699,6 @@ kixote.component('tab-generate', {
 									</div>
 								</div>
 					        </div>
-
-							<div v-else-if="currentTab === 'tone'">
-								<div class="w-full bg-stone-900 px-8 py-8">
-									<div class="flex justify-between py-2 px-2">
-										<button @click.prevent="addNewTone = !addNewTone">
-											<span v-if="addNewTone">-</span>
-											<span v-else>+</span> add tone
-										</button>
-									</div>
-
-									<transition name="fade">
-										<div v-if="addNewTone" class="py-2 px-2">
-											<fieldset class="border border-stone-700 p-4">
-												<input 
-													type="text" 
-													class="w-50 p-2 my-1 font-mono bg-stone-600 text-white caret-white focus:outline-none"
-													placeholder="Enter a tone name"
-													v-model="newTone.title"
-												/>
-
-
-												<!-- Tone description result -->
-												<textarea 
-													rows="5"
-													class="w-full p-2 my-1 font-mono bg-stone-600 text-white caret-white focus:outline-none"
-													placeholder="Tone description"
-													v-model="newTone.description"
-												></textarea>
-
-												<div class="w-full flex justify-between">
-
-													<!-- Button to analyze tone -->
-													<button 
-														@click.prevent="analyzeTone(newTone)"
-														class="px-1 text-teal-300 hover:text-teal-500 transition-colors"
-													>analyze tone</button>
-
-													<!-- Save button -->
-													<button 
-														@click.prevent="saveNewTone"
-														class="px-1 text-teal-300 hover:text-teal-500 transition-colors"
-													>save</button>
-
-												</div>
-
-											</fieldset>
-										</div>
-									</transition>
-
-								</div>
-							</div>
 
 						</div>
 					</div>
@@ -755,17 +755,7 @@ kixote.component('tab-generate', {
 		      ? this.promptlistuser
 		      : this.kixoteSettings.promptlist;
 
-		  // Normalize `link` to `null` if not present
-		  const normalized = {};
-		  for (const [key, prompt] of Object.entries(list))
-		  {
-		    normalized[key] = {
-		      ...prompt,
-		      link: prompt.link ?? null
-		    };
-		  }
-
-		  return normalized;
+		  return list;
 		}
     },
 	methods: {
@@ -820,6 +810,23 @@ kixote.component('tab-generate', {
 			this.versions.push(markdown);
 			this.resizeAiEditor();
 		},
+		setExampleContent(example)
+		{			
+			let markdown = '';
+
+			if (Array.isArray(example))
+			{
+				for (const block of example)
+				{
+					if (block && block.markdown)
+					{
+						markdown += block.markdown + '\n\n';
+					}
+				}
+			}
+
+			this.examplecontent = markdown.trim();
+		},
 		createFlatNavi() {
 			if (this.navigation && !this.flatnavi) {
 				const nestedNavi = [];
@@ -863,6 +870,7 @@ kixote.component('tab-generate', {
         {
         	this.prompt = this.promptlistactive[index].content;
         	this.promptlink = this.promptlistactive[index].link;
+		    this.examplecontent = false;
 		    this.resizePromptEditor();
         },
         switchVersion(index)
@@ -874,13 +882,19 @@ kixote.component('tab-generate', {
 		{
         	this.promptError = false;
 
+			if (this.promptlink && this.examplecontent === false)
+			{
+				this.loadExampleContent();
+				return;
+			}
+
 			var self = this;
 			eventBus.$emit('switchLoading');
 
 			tmaxios.post('/api/v1/prompt',{
 				'prompt': this.prompt,
 				'article': this.versions[this.activeversion],
-				'link': this.promptlink
+				'example': this.examplecontent
 			})
 			.then(function (response)
 			{
@@ -893,6 +907,7 @@ kixote.component('tab-generate', {
 		            self.activeversion = self.versions.length-1;
 		            self.prompt = '';
 		            self.promptlink = null;
+		            self.examplecontent = false;
 		            self.resizePromptEditor();
 		            self.resizeAiEditor();
 		        } 
@@ -910,6 +925,34 @@ kixote.component('tab-generate', {
 						self.promptError = error.response.data.errors;
 					}
 				}
+			});
+		},
+		loadExampleContent()
+		{			
+			self = this;
+
+			this.examplecontent = '';
+
+			tmaxios.get('/api/v1/article/content',{
+				params: {
+					'url':  this.promptlink,
+					'draft': true
+				}
+			})
+			.then(function (response)
+			{
+		        if (response.data.content)
+		        {
+		        	self.setExampleContent(response.data.content);
+		        }
+		        self.submitPrompt(true);
+			})
+			.catch(function (error)
+			{
+				if(error.response)
+				{
+				}
+		        self.submitPrompt(true);
 			});
 		},
         handleKeydown(event)
@@ -1015,11 +1058,7 @@ kixote.component('tab-generate', {
 		        .replace(/-+/g, '-')               // Remove multiple dashes
 		        .trim();                           // Trim leading/trailing dashes
 		},
-		updateSettings(newSettings)
-		{
-			eventBus.$emit('updateKixoteSettings', newSettings); // Emit event
-        },
-	    validateTitle(title)
+	    validatePromptTitle(title)
 	    {
 	      	const titleRegex = /^[a-zA-Z0-9 ]{0,20}$/;
 	      	if (!titleRegex.test(title))
@@ -1031,7 +1070,7 @@ kixote.component('tab-generate', {
 	      		this.titleError = false;
 	      	}
 	    },
-	    validateBody(body)
+	    validatePromptBody(body)
 	    {
 			const bodyRegex = /<\/?[^>]+(>|$)/g;
 	      	if (bodyRegex.test(body))
@@ -1042,36 +1081,36 @@ kixote.component('tab-generate', {
 	      	{
 	        	this.bodyError = false;
 	      	}
-	    },		
-		savePrompts()
+	    },
+		updatePrompt(name)
 		{
-			if (!this.titleError && !this.bodyError)
+			var newSettings = this.kixoteSettings;
+			if(newSettings.promptlist[name] != undefined)
 			{
-	            eventBus.$emit('storeKixoteSettings');
-			}			
-		},
-		updatePrompt(kixoteSettings, promptname)
-		{
-			if(kixoteSettings.promptlist[promptname] != undefined)
-			{
-				kixoteSettings.promptlist[promptname].errors = {};
+				newSettings.promptlist[name].errors = {};
 
-				this.validateTitle(kixoteSettings.promptlist[promptname].title);
-				kixoteSettings.promptlist[promptname].errors.title = this.titleError;
+				this.validatePromptTitle(newSettings.promptlist[name].title);
+				if(this.titleError)
+				{
+					newSettings.promptlist[name].errors.title = this.titleError;
+				}
 
-				this.validateBody(kixoteSettings.promptlist[promptname].content);
-				kixoteSettings.promptlist[promptname].errors.body = this.bodyError;
+				this.validatePromptBody(newSettings.promptlist[name].content);
+				if(this.bodyError)
+				{
+					newSettings.promptlist[name].errors.body = this.bodyError;
+				}
 
-				this.updateSettings(kixoteSettings);
+				this.updateSettings(newSettings);
 			}
 		},
 		deletePrompt(name)
 		{
-	      	var promptlist = this.kixoteSettings.promptlist;
+			var newSettings = this.kixoteSettings;
 
-    		delete promptlist[name];
+    		delete newSettings.promptlist[name];
 
-    		this.updateSettings(promptlist);
+    		this.updateSettings(newSettings);
 
     		eventBus.$emit('storeKixoteSettings');
 
@@ -1083,30 +1122,41 @@ kixote.component('tab-generate', {
 				return false;
 			}
 
-	      	var promptlist = this.kixoteSettings.promptlist;
+	    	var newSettings = this.kixoteSettings;
+	      	
 	      	var promptkey = this.slugify(this.newPrompt.title);
-	      	promptlist[promptkey] = {
+	      	newSettings.promptlist[promptkey] = {
 	        	title: this.newPrompt.title,
 	        	content: this.newPrompt.content,
 	        	active: this.newPrompt.active,
-	       	 	system: this.newPrompt.system
+	       	 	system: this.newPrompt.system,
+	       	 	link: this.newPrompt.link
 	      	};
 
 	      	this.newPrompt = {
 	        	title: '',
 	        	content: '',
 	        	active: true,
-	        	system: false
+	        	system: false,
+	        	link: null
 	      	};
 
 	      	this.addNewPrompt = false;
-	      	this.updateSettings(promptlist);
+	      	this.updateSettings(newSettings);
             eventBus.$emit('storeKixoteSettings');
 	    },
-	    getArticleMarkdown(url)
-	    {
-
-	    },
+		updateSettings(newSettings)
+		{
+			eventBus.$emit('updateKixoteSettings', newSettings);
+        },
+        saveSettings()
+        {
+        	/* used if activate box for prompts is clicked */
+			if (!this.titleError && !this.bodyError)
+			{
+	            eventBus.$emit('storeKixoteSettings');
+			}
+        },
 	    exit()
 	    {
 			eventBus.$emit('kiExit');
