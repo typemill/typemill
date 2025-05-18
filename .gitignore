@@ -9,6 +9,7 @@ data/security
 node_modules
 plugins/search
 settings/settings.yaml
+settings/kixote.yaml
 settings/secrets.yaml
 settings/license.yaml
 settings/users
