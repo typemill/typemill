@@ -21,7 +21,13 @@ class Meta
 	{
 		$metadata = $this->storage->getYaml('contentFolder', '', $item->pathWithoutType . '.yaml');
 		
-		$metadata['meta']['modified'] = $this->storage->getFileTime('contentFolder', '', $item->pathWithoutType . '.md');
+		$modified = $this->storage->getFileTime('contentFolder', '', $item->pathWithoutType . '.md');
+		if(!$modified)
+		{
+			$modified = $this->storage->getFileTime('contentFolder', '', $item->pathWithoutType . '.txt');
+		}
+
+		$metadata['meta']['modified'] = $modified;
 			
 		return $metadata;
 	}
