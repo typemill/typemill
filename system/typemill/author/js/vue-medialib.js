@@ -603,7 +603,7 @@ const medialib = {
 			{
 				this.deleteFile(media);
 			}
-		},		
+		},
 		loadFiles(filetype)
 		{
 			var fileself = this;
@@ -615,7 +615,12 @@ const medialib = {
 			})
 			.then(function (response)
 			{
-				fileself.filedata = response.data.files;
+				fileself.filedata = [];
+				const files = response.data.files;
+				if(files && Array.isArray(files))
+				{
+					fileself.filedata = files;
+				}
 				fileself.showFiles(filetype);
 			})
 			.catch(function (error)
@@ -704,8 +709,13 @@ const medialib = {
 			})
 			.then(function (response)
 			{
-				imageself.imagedata = response.data.images;
-				imageself.showImages()
+				imageself.imagedata = [];	
+				const images = response.data.images;
+				if (images && Array.isArray(images))
+				{
+					imageself.imagedata = images;
+				}
+				imageself.showImages();
 			})
 			.catch(function (error)
 			{
