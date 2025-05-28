@@ -23,21 +23,22 @@ RUN chmod +x /var/www/html/docker-utils/install-composer && \
     ./composer.phar update && \
     chmod +x /var/www/html/docker-utils/init-server
 
+# Create a default copy of content and theme in case of empty directories binding
+RUN mkdir -p /var/www/html/content.default/ && \
+    cp -R /var/www/html/content/* /var/www/html/content.default/ && \
+    mkdir -p /var/www/html/themes.default/ && \
+    cp -R /var/www/html/themes/* /var/www/html/themes.default/ && \
+    mkdir -p /var/www/html/media.default/ && \
+    cp -R /var/www/html/media/* /var/www/html/media.default/
+
 # Expose useful volumes (see documentation)
 VOLUME /var/www/html/settings
 VOLUME /var/www/html/media
 VOLUME /var/www/html/cache
 VOLUME /var/www/html/plugins
 VOLUME /var/www/html/data
-
-# Create a default copy of content and theme in case of empty directories binding
-RUN mkdir -p /var/www/html/content.default/ && \
-    cp -R /var/www/html/content/* /var/www/html/content.default/ && \
-    mkdir -p /var/www/html/themes.default/ && \
-    cp -R /var/www/html/themes/* /var/www/html/themes.default/
-
 VOLUME /var/www/html/content
 VOLUME /var/www/html/themes
 
-# Inject default values if content and themes are mounted with empty directories, adjust rights and start the server
+# Inject default values for persistant data and start the server
 CMD ["/var/www/html/docker-utils/init-server"]

@@ -667,20 +667,24 @@ class Storage
 
 	public function getImageList()
 	{
-		$thumbs 		= array_diff(scandir($this->thumbsFolder), array('..', '.'));
-		$imagelist		= array();
+		$imagelist		= [];
 
-		foreach ($thumbs as $key => $name)
+		if(is_dir($this->thumbsFolder))
 		{
-			$imagelist[] = [
-				'name' 		=> $name,
-				'timestamp'	=> filemtime($this->thumbsFolder . $name),
-				'src_thumb'	=> 'media/thumbs/' . $name,
-				'src_live'	=> 'media/live/' . $name,
-			];
+			$thumbs 		= array_diff(scandir($this->thumbsFolder), array('..', '.'));
+
+			foreach ($thumbs as $key => $name)
+			{
+				$imagelist[] = [
+					'name' 		=> $name,
+					'timestamp'	=> filemtime($this->thumbsFolder . $name),
+					'src_thumb'	=> 'media/thumbs/' . $name,
+					'src_live'	=> 'media/live/' . $name,
+				];
+			}
+			
+			$imagelist = Helpers::array_sort($imagelist, 'timestamp', SORT_DESC);
 		}
-		
-		$imagelist = Helpers::array_sort($imagelist, 'timestamp', SORT_DESC);
 
 		return $imagelist;
 	}
@@ -895,24 +899,28 @@ class Storage
 
 	public function getFileList()
 	{
-		$files 		= scandir($this->fileFolder);
-		$filelist	= array();
+		$filelist	= [];
 
-		foreach ($files as $key => $name)
+		if(is_dir($this->fileFolder))
 		{
-			if (!in_array($name, array(".","..","filerestrictions.yaml")) && file_exists($this->fileFolder . $name))
-			{
-				$filelist[] = [
-					'name' 		=> $name,
-					'timestamp'	=> filemtime($this->fileFolder . $name),
-					'bytes' 	=> filesize($this->fileFolder . $name),					
-					'info'		=> pathinfo($this->fileFolder . $name),
-					'url'		=> 'media/files/' . $name,
-				];
-			}
-		}
+			$files 		= scandir($this->fileFolder);
 
-		$filelist = Helpers::array_sort($filelist, 'timestamp', SORT_DESC);
+			foreach ($files as $key => $name)
+			{
+				if (!in_array($name, array(".","..","filerestrictions.yaml")) && file_exists($this->fileFolder . $name))
+				{
+					$filelist[] = [
+						'name' 		=> $name,
+						'timestamp'	=> filemtime($this->fileFolder . $name),
+						'bytes' 	=> filesize($this->fileFolder . $name),					
+						'info'		=> pathinfo($this->fileFolder . $name),
+						'url'		=> 'media/files/' . $name,
+					];
+				}
+			}
+
+			$filelist = Helpers::array_sort($filelist, 'timestamp', SORT_DESC);
+		}
 
 		return $filelist;
 	}
