@@ -5,7 +5,8 @@ meta:
     heroimage: ''
     owner: trendschau
     author: 'Sebastian Schürmanns'
-    modified: '2025-05-07'
+    allowedrole: member
+    modified: '2025-05-17'
     created: '2024-04-25'
     time: 17-24-48
     hide: false

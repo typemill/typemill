@@ -263,20 +263,18 @@ $timer['permissions'] = microtime(true);
 * SEGMENTS WITH SESSION			*
 ****************************/
 
+$session_segments = ['setup', 'tm/', 'api/'];
+
 # if website is restricted to registered user
 if( ( isset($settings['access']) && $settings['access'] ) || ( isset($settings['pageaccess']) && $settings['pageaccess'] ) )
 {
 	# activate session for all routes
 	$session_segments = [$urlinfo['route']];
 }
-else
-{
-	$session_segments = ['setup', 'tm/', 'api/'];
 
-	# let plugins add own segments for session, eg. to enable csrf for forms
-	$client_segments 	= $dispatcher->dispatch(new OnSessionSegmentsLoaded([]), 'onSessionSegmentsLoaded')->getData();
-	$session_segments	= array_merge($session_segments, $client_segments);
-}
+# let plugins add own segments for session, eg. to enable csrf for forms
+$client_segments 	= $dispatcher->dispatch(new OnSessionSegmentsLoaded([]), 'onSessionSegmentsLoaded')->getData();
+$session_segments	= array_merge($session_segments, $client_segments);
 
 # start session
 # Session::startSessionForSegments($session_segments, $urlinfo['route']);
