@@ -39,9 +39,13 @@
 			
 			<textarea id="{{ itemName }}[{{ field.name }}]" name="{{ itemName }}[{{ field.name }}]"{{field.getAttributeValues() }}{{ field.getAttributes() }}>{{ field.getContent() }}</textarea>
 
-		{% elseif (field.type == 'paragraph') and (field.getContent() != '') %}
+		{% elseif (field.type == 'paragraph') %}
+
+			{% if (field.getContent() != '') %}
 			
-			{{ markdown(field.getContent()) }}	
+				{{ markdown(field.getContent()) }}	
+
+			{% endif %}
 
 		{% elseif field.type == 'checkbox' %}
 				
