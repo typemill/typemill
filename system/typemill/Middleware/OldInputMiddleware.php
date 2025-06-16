@@ -16,22 +16,38 @@ class OldInputMiddleware
 	}
 	
 	public function __invoke(Request $request, RequestHandler $handler)
-	{		
+	{
+		if(isset($_SESSION) && isset($_SESSION['old']))
+		{
+			$this->view->getEnvironment()->addGlobal('old', $_SESSION['old']);
+		}
+
+		$response = $handler->handle($request);
+
+		# unset old values after the request is processed. This keeps old values also if there is a redirect to another page and before the page is rendered but removes the values on page refresh.
 		if(isset($_SESSION))
 		{
-			if(isset($_SESSION['old']))
-			{
-				$this->view->getEnvironment()->addGlobal('old', $_SESSION['old']);
-				unset($_SESSION['old']);
-			}
-			if(!empty($request->getParsedBody()))
-			{
-				$_SESSION['old'] = $request->getParsedBody();
-			}
+			unset($_SESSION['old']);
+
+ 			if(!empty($request->getParsedBody()))
+ 			{
+			    $oldinput = $request->getParsedBody();
+
+			    if(is_array($oldinput))
+			    {
+				    foreach($oldinput as $key => $value)
+				    {
+				        if (stripos($key, 'pass') !== false)
+				        {
+				            unset($oldinput[$key]);
+				        }
+			    	}
+			    }
+
+				$_SESSION['old'] = $oldinput;
+ 			}
 		}
-		
-		$response = $handler->handle($request);
-	
+
 		return $response;
 	}
 }

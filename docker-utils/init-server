@@ -1,5 +1,12 @@
 #!/bin/sh
+
+# mount data from persistant storage if not empty
 find /var/www/html/content -type d -empty -exec cp -R /var/www/html/content.default/* /var/www/html/content \;
 find /var/www/html/themes -type d -empty -exec cp -R /var/www/html/themes.default/* /var/www/html/themes \;
+find /var/www/html/media -type d -empty -exec cp -R /var/www/html/media.default/* /var/www/html/media \;
+
+# Fix ownership (in case of new folders)
 chown -R www-data:www-data /var/www/html/
-apache2-foreground
+
+# Start Apache in foreground
+exec apache2-foreground
