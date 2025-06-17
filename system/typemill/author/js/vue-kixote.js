@@ -150,6 +150,7 @@ const kixote = Vue.createApp({
 			loading: false,
 			item: data.item,
 			content: data.content,
+			switchToGenerateTab: false,
 			navigation: data.navigation,
 			urlinfo: data.urlinfo,
 			labels: data.labels,
@@ -160,6 +161,8 @@ const kixote = Vue.createApp({
 		}
 	},
 	mounted() {
+
+		eventBus.$on('startAi', this.startAi);
 
 		eventBus.$on('kiExit', this.stopKixote);
 
@@ -278,6 +281,7 @@ const kixote = Vue.createApp({
 		        	self.aiservice 		= response.data.aiservice;
 		        	self.tokenstats 	= response.data.tokenstats;
 		        	self.useragreement 	= response.data.useragreement;
+		        	self.afterContentLoaded();
 		        } 
 			})
 			.catch(function (error)
@@ -291,6 +295,19 @@ const kixote = Vue.createApp({
 		startKixote()
 		{
 			this.showKixote = true;
+		},
+		startAi()
+		{
+			this.showKixote = true;
+			this.switchToGenerateTab = true;
+		},
+		afterContentLoaded()
+		{
+			if(this.switchToGenerateTab)
+			{
+				this.currentTab = "Generate";
+				this.switchToGenerateTab = false;
+			}
 		},
 		stopKixote()
 		{
@@ -321,12 +338,6 @@ const kixote = Vue.createApp({
 	    {
 	    	this.settingsSaved = false;
 	    	this.kixoteSettings = newSettings;
-/*
-	        this.kixoteSettings = { ...this.kixoteSettings, ...newSettings };
-
-	        console.info("this.settings after merge");
-	        console.info(this.kixoteSettings);
-*/
 	    },
 	    storeKixoteSettings()
 	    {
