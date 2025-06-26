@@ -15,114 +15,253 @@ const getKixoteError = function(error)
 	return ['something went wrong'];
 }
 
+const kixoteCommands = [
+	{
+		name: 'help',
+		description: 'List all available commands with a short description.',
+		method: function()
+				{
+					let result = ['<ul>'];
+					kixoteCommands.forEach((command) =>
+					{
+						let block = '<li><span class="text-teal-600">' + command.name + ':</span> ' + command.description + '</li>';
+						result.push(block);
+					})
+					result.push('</ul>');
+
+					eventBus.$emit('answer', result);
+				},
+		answer: '<p>You can use the following commands:</p>',
+	},
+	{
+		name: 'exit',
+		description: 'Exit Kixote and close the Kixote window.',
+	},
+	{
+		name: 'clear navigation',
+		description: 'Clear the cached navigation.',
+		method: function()
+				{
+					var self = this;
+
+					tmaxios.delete('/api/v1/clearnavigation',{
+					})
+					.then(function (response)
+					{
+						eventBus.$emit('answer', ['navigation has been cleared']);
+					})
+					.catch(function (error)
+					{
+						eventBus.$emit('answer', getKixoteError(error));
+					});
+				},
+		answer: ['Asking server ...'],
+	},
+	{
+		name: 'clear cache',
+		description: 'Clear the cache-folder and delete cached files.',
+		method: function()
+				{
+					var self = this;
+
+					tmaxios.delete('/api/v1/cache',{
+					})
+					.then(function (response)
+					{
+						eventBus.$emit('answer', ['cache has been cleared']);
+					})
+					.catch(function (error)
+					{
+						eventBus.$emit('answer', getKixoteError(error));
+					});
+				},
+		answer: ['Asking server ...'],
+	},
+	{
+		name: 'show security log',
+		description: 'Show the security log that you can activate in the security tab of the system settings.',
+		method: function()
+				{
+					var self = this;
+
+					tmaxios.get('/api/v1/securitylog',{
+					})
+					.then(function (response)
+					{
+						eventBus.$emit('answer', response.data.lines);
+						eventBus.$emit('nextCommands', ['clear security log']);
+					})
+					.catch(function (error)
+					{
+						eventBus.$emit('answer', getKixoteError(error));
+					});
+				},
+		answer: ['Asking server ...'],
+	},
+	{
+		name: 'clear security log',
+		description: 'Clear the security log.',
+		method: function()
+				{
+					var self = this;
+
+					tmaxios.delete('/api/v1/securitylog',{
+					})
+					.then(function (response)
+					{
+						eventBus.$emit('answer', ['Security log has been cleared.']);
+					})
+					.catch(function (error)
+					{
+						eventBus.$emit('answer', getKixoteError(error));
+					});
+				},
+		answer: ['Asking server ...'],
+	},
 /*
-+ If you change page and open kixote, then the old version without changes is loaded
-+ store kixoteSettings
+	{
+		name: 'skip',
+		description: 'Skip the current task and start a new command.',
+		answer: ['We skipped the current task. Waiting for your next command.'],
+	},
+	{
+		name: 'create content',
+		description: 'Create content with artificial intelligence.',						
+		params: [
+					{
+						name: 'topic',
+						value: false,
+						question: 'Please describe a topic in few words:',
+						required: true,
+						regex: false,
+					},
+					{
+						name: 'length',
+						value: false,
+						question: 'How many words should the text have?',
+						required: true,
+						regex: false,
+					},
+				],
+		method: function(params)
+				{ 
+					eventBus.$emit('storable', ['Lorem ipsum in markdown.']);
+					eventBus.$emit('nextCommands', ['transform', 'translate', 'save to page']);
+					eventBus.$emit('answer', ['This is the answer from the server. The server can ask an AI service with the collected parameters and return any kind of answer in HTML and preferably in markdown, so that typemill can process the content again (e.g. store, translate, and more).']);
+				},
+		answer: ['Creating content...'],
+	},
+	{
+		name: 'save to page',
+		description: 'Save markdown to current page.',
+		method: function(params)
+				{
+					console.info(params[0]);
+					eventBus.$emit('answer', ['saved content to page']);
+				},
+		answer: ['Save content...'],
+	},
 */
+];
 
 const kixote = Vue.createApp({
-	template: `<div class="m-1 ml-2">
+	template: `
+				<div class="m-1 ml-2">
 					<button @click="startKixote" class="p-1 bg-stone-700 text-white text-xs">Kixote</button>
-					<div 
-						v-if 	= "showKixote" 
-						class   = "fixed w-full h-100 inset-0 z-50 overflow-hidden flex justify-center items-center bg-stone-50 bg-opacity-90"
-					>
-						<div
-							ref 	= "kdisplay"  
-							class 	= "fixed overflow-y-auto z-50 mx-auto inset-x-0 w-full max-w-4xl bottom-3 top-3 bg-stone-700 text-stone-50"
-						>
-							<div class="relative">
-
-								<div class="mt-20">
-									<keep-alive>
-										<component 
-											:is 			= "currentTabComponent" 
-											:command 		= "command"
-											:content 		= "content"
-											:navigation 	= "navigation"
-											:item 			= "item"
-											:useragreement 	= "useragreement"
-											:aiservice  	= "aiservice"
-											:tokenstats 	= "tokenstats"
-											:labels 		= "labels"
-											:settings 		= "settings"
-											:settingsSaved 	= "settingsSaved"
-											v-model:kixoteSettings = "kixoteSettings" 
-											:urlinfo 		= "urlinfo"
-											>
-										</component>
-									</keep-alive>
-								</div>
-
-								<div class="fixed top-3 bg-stone-700 max-w-4xl px-8 py-4 bg w-full">
-									<div class="flex flex-wrap justify-between">
-										<div class="flex">
-											<div 
-												v-for 	= "tab in tabs" 
-												:key 	= "tab" 
-												class 	= "text-xs p-2 mr-2 w-20 border border-gray-500 rounded text-center cursor-pointer transition-all hover:bg-stone-900 hover:border-teal-500"
-												:class 	= "{ 'bg-stone-900 border-teal-500': currentTab === tab }"
-												@click	= "currentTab = tab"
-											>
-												<svg
-													v-if 	= "icons[tab]"
-													:xmlns 	= "'http://www.w3.org/2000/svg'"
-													class 	= "w-6 h-6 mx-auto mb-1"
-													viewBox = "0 0 32 32"
-													fill 	= "currentColor"
+					<Transition name="initial" appear>
+						<div v-if="showKixote" class="fixed top-0 left-0 right-0 bottom-0 bg-stone-100 z-50">
+							<button @click="stopKixote" class="w-full bg-stone-200 hover:bg-rose-500 hover:text-white p-2 transition duration-100">Close</button>
+							<div class="max-w-7xl mx-auto p-8 overflow-auto h-full">
+								<div class="flex h-full">
+									<div class="w-1/4">
+										<div class="p-5">
+											<div class="">
+												<button 
+													v-for 	= "tab in tabs" 
+													:key 	= "tab" 
+													class 	= "flex w-full mb-1 mr-2 px-2 py-2 cursor-pointer transition-all dark:bg-stone-600 hover:bg-stone-200 hover:dark:bg-stone-900 transition duration-100"
+													:class 	= "{ 'bg-stone-200': currentTab === tab }"
+													@click	= "currentTab = tab"
 												>
-													<path :d="icons[tab]" />
-												</svg>
-												<span>{{ tab }}</span>
-											</div>
-										</div>
-										<div 
-											class 	= "p-2 mr-2 w-20 border border-gray-500 rounded text-center cursor-pointer transition-all hover:bg-stone-900 hover:border-teal-500"
-											:class 	= "{ 'bg-stone-900 border-teal-500': currentTab === 'token' }"
-											>
-											<div v-if="tokenstats.url">
-												<a class="block" :href="tokenstats.url" target="_blank">
-										  			<svg class="icon icon-external-link">
-										  				<use xlink:href="#icon-external-link"></use>
-										  			</svg>
-												</a>
-												<span class="text-xs">Usage</span>
-											</div>
-											<div 
-												v-else
-												@click="currentTab = 'token'"
-												>
-												<span class="block">0</span>
-												<span class="text-xs">Token</span>
+													<svg
+														v-if 	= "icons[tab]"
+														:xmlns 	= "'http://www.w3.org/2000/svg'"
+														class 	= "w-5 h-5 mb-1"
+														viewBox = "0 0 32 32"
+														fill 	= "currentColor"
+													>
+														<path :d="icons[tab]" />
+													</svg>
+													<span class="ml-2">{{ tab }}</span>
+												</button>
+												<div 
+													class 	= "flex w-full mb-1 mr-2 px-2 py-2 cursor-pointer transition-all dark:bg-stone-600 hover:bg-stone-200 hover:dark:bg-stone-900 transition duration-100"
+													:class 	= "{ 'bg-stone-200': currentTab === 'token' }"
+													>
+													<div v-if="tokenstats.url">
+														<a :href="tokenstats.url" target="_blank">
+												  			<svg class="icon icon-external-link">
+												  				<use xlink:href="#icon-external-link"></use>
+												  			</svg>
+														</a>
+														<span>Usage</span>
+													</div>
+													<div 
+														v-else
+														@click="currentTab = 'token'"
+														>
+														<span>0</span>
+														<span>Token</span>
+													</div>
+												</div>
 											</div>
 										</div>
 
 									</div>
-									<button class="absolute top-0 right-0 p-2 m-1 text-teal-300 hover:bg-stone-600" @click="stopKixote">x</button>
+									<div class="w-3/4 overflow-y-auto h-full scroll-smooth" ref="kdisplay">
+										<div class="p-5">
+											<keep-alive>
+												<component 
+													:is 			= "currentTabComponent" 
+													:command 		= "command"
+													:content 		= "content"
+													:navigation 	= "navigation"
+													:item 			= "item"
+													:useragreement 	= "useragreement"
+													:aiservice  	= "aiservice"
+													:tokenstats 	= "tokenstats"
+													:labels 		= "labels"
+													:settings 		= "settings"
+													:settingsSaved 	= "settingsSaved"
+													v-model:kixoteSettings = "kixoteSettings" 
+													:urlinfo 		= "urlinfo"
+													>
+												</component>
+											</keep-alive>
+										</div>
+									</div>
 								</div>
-
 							</div>
 
+							<div id="loading-overlay" v-if="loading" class="fixed inset-0 flex flex-col items-center justify-center bg-black bg-opacity-80 z-50">
+							    <div class="iconwrapper">
+									<div class="loader"></div>
+							        <svg 
+										class 	= "magicicon"
+							          	xmlns 	= "http://www.w3.org/2000/svg" 
+							          	viewBox = "0 0 32 32"
+										fill 	= "inherit"
+							        >
+							          <symbol id="icon-magic-wand" viewBox="0 0 32 32">
+							            <path d="M8 6l-4-4h-2v2l4 4zM10 0h2v4h-2zM18 10h4v2h-4zM20 4v-2h-2l-4 4 2 2zM0 10h4v2h-4zM10 18h2v4h-2zM2 18v2h2l4-4-2-2zM31.563 27.563l-19.879-19.879c-0.583-0.583-1.538-0.583-2.121 0l-1.879 1.879c-0.583 0.583-0.583 1.538 0 2.121l19.879 19.879c0.583 0.583 1.538 0.583 2.121 0l1.879-1.879c0.583-0.583 0.583-1.538 0-2.121zM15 17l-6-6 2-2 6 6-2 2z"></path>
+							          </symbol>
+							          <use href="#icon-magic-wand" />
+							        </svg>
+							    </div>
+							    <p class="mt-4 text-stone-200 text-lg font-semibold">Generating, please be patient ...</p>
+							</div>
 						</div>
-
-						<div id="loading-overlay" v-if="loading" class="fixed inset-0 flex flex-col items-center justify-center bg-black bg-opacity-80 z-50">
-						    <div class="iconwrapper">
-								<div class="loader"></div>
-						        <svg 
-									class 	= "magicicon"
-						          	xmlns 	= "http://www.w3.org/2000/svg" 
-						          	viewBox = "0 0 32 32"
-									fill 	= "inherit"
-						        >
-						          <symbol id="icon-magic-wand" viewBox="0 0 32 32">
-						            <path d="M8 6l-4-4h-2v2l4 4zM10 0h2v4h-2zM18 10h4v2h-4zM20 4v-2h-2l-4 4 2 2zM0 10h4v2h-4zM10 18h2v4h-2zM2 18v2h2l4-4-2-2zM31.563 27.563l-19.879-19.879c-0.583-0.583-1.538-0.583-2.121 0l-1.879 1.879c-0.583 0.583-0.583 1.538 0 2.121l19.879 19.879c0.583 0.583 1.538 0.583 2.121 0l1.879-1.879c0.583-0.583 0.583-1.538 0-2.121zM15 17l-6-6 2-2 6 6-2 2z"></path>
-						          </symbol>
-						          <use href="#icon-magic-wand" />
-						        </svg>
-						    </div>
-						    <p class="mt-4 text-stone-200 text-lg font-semibold">Generating, please be patient ...</p>
-						</div>
-					</div>
+					</Transition>
 			  	</div>`,
 	data() {
 		return {
@@ -331,7 +470,12 @@ const kixote = Vue.createApp({
 		{
 			this.$nextTick(() => {
 				const displayRef = this.$refs.kdisplay;
-				displayRef.scrollTop = displayRef.scrollHeight;
+				if (displayRef) {
+					displayRef.scrollTo({
+						top: displayRef.scrollHeight,
+						behavior: 'smooth'
+					});
+				}
 			});
 		},
 	    updateKixoteSettings(newSettings)
@@ -361,6 +505,305 @@ const kixote = Vue.createApp({
 			});	    	
 	    }
 	},
+})
+
+/*
+// publish tree
+// unpublish tree
+// load page
+// save page
+// translate page
+// translate tree
+*/
+
+kixote.component('tab-admin', {
+	props: ['content', 'navigation', 'item', 'useragreement', 'aiservice', 'tokenstats', 'labels', 'settings', 'settingsSaved', 'kixoteSettings', 'urlinfo'],
+	data: function () {
+		return {
+			messenger: [],
+			messengerIndex: false,
+			command: '',
+			params: false,
+		}
+	},
+	template: `<section class="dark:bg-stone-700 dark:text-stone-200 bg-stone-200">
+					<div class="p-5">
+						<h1 class="mb-d3">Hello, I am <span class="text-teal-600">Kixote</span> from Typemill. How can I help?</h1>
+					</div>
+					<div>
+						<div v-for="message,index in messenger">
+							<div class="p-5">
+								<div v-html="message.command" class="w-100 bg-stone-100 p-2"></div>
+							</div>
+							<div class="p-8">
+								<div v-for="block in message.answer" v-html="block"></div>
+								<div class="flex w-full justify-end" v-if="message.nextCommands.length > 0">
+									<button v-for="nextCommand in message.nextCommands" @click="submitInlineCommand(nextCommand,index)" class="text-xs text-teal-600 hover:text-white hover:bg-teal-600 border border-teal-600 p-1 ml-1">{{ nextCommand }}</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="p-5">
+						<div class="w-full bg-stone-100 p-2 flex justify-between">
+							<p class="flex w-full">
+								<span class="text-teal-600 p-1">Ki></span> 
+								<input type="text" ref="kinput" @keyup.enter="submitCommand" v-model.trim="command" class="flex-grow mr-1 bg-stone-100 focus:outline-none border-0 dark:caret-white" placeholder="Command..." />
+							</p>
+					        <button 
+					        	class 	= "text-white px-2 py-1 bg-teal-600 hover:bg-teal-700" 
+					        	@click 	= "submitCommand"
+					        	>send
+					        </button>
+						</div>
+						<div class="py-2">
+							<p class="text-xs">Enter "help" to see a list of commands</p>
+						</div>
+					</div>
+				</section>`,
+	mounted: function()
+	{
+//		this.clear();
+
+		eventBus.$on('answer', messages => {
+			let lastKey = this.messenger.length - 1;
+			messages.forEach((message) =>
+			{
+				this.messenger[lastKey].answer.push(message);
+			});
+		});
+
+		eventBus.$on('nextCommands', nextcommands => {
+			let lastKey = this.messenger.length - 1;
+			nextcommands.forEach((nextcommand) =>
+			{
+				this.messenger[lastKey].nextCommands.push(nextcommand);
+			});
+		});
+
+		eventBus.$on('storable', data => {
+			let lastKey = this.messenger.length - 1;
+			this.messenger[lastKey].storable = data;
+		});
+
+		this.focusOnInput();
+	},
+	methods: {
+		exit()
+		{
+			eventBus.$emit('kiExit');
+		},
+		clear()
+		{
+			this.messenger = [];
+			this.params = false;
+			this.command = '';
+		},
+		focusOnInput()
+		{
+			this.$nextTick(() => {
+				const inputRef = this.$refs.kinput;
+				inputRef.focus();
+  			});
+		},		
+		finishCommand()
+		{
+			this.command = '';
+			this.focusOnInput();
+			eventBus.$emit('kiScrollBottom');
+		},
+		submitInlineCommand(command, index)
+		{
+			this.command = command;
+			this.messengerIndex = index;
+			// should we submit this.messenger[index].storable as params?
+			let storable = this.messenger[index].storable;
+			this.submitCommand(false, storable);
+		},
+		submitCommand(event, params = false)
+		{
+			if(this.command.trim() == '')
+			{
+				return;
+			}
+
+			let currentCommand = '<span class="text-teal-600 p-1">Ki></span> ' + this.command;
+			
+			let message = { 'command' : currentCommand, 'answer' : [], 'storable' : false, 'nextCommands' : [] }
+
+			if(this.command == 'exit')
+			{
+				this.exit();
+
+				return;
+			}
+
+			if(this.command == 'skip')
+			{
+				message.answer.push('We skipped the current task. Start with a new command.');
+
+				this.messenger.push(message);
+
+				this.params = false;
+
+				this.finishCommand();
+
+				return;
+			}
+
+			if(this.params)
+			{
+				let question = this.getNextQuestion(this.params);
+
+				if(question)
+				{
+					message.answer.push(question);
+
+					this.messenger.push(message);
+
+					this.finishCommand();
+
+					return;
+				}
+
+				// if no further question submit inital command with params
+				let params 	= this.params;
+				
+				this.params = false;
+				
+				this.command = params[0].value;
+				
+				this.submitCommand(false, params);
+				
+				return;
+			}
+
+			let commandObject = this.getCommandObject(this.command);
+			
+			if(!commandObject)
+			{
+				message.answer.push('Command not found. Type "help" to see a list of available commands.');
+
+				this.messenger.push(message);
+
+				this.finishCommand();
+
+				return;
+			}
+
+			if(params)
+			{
+				message.answer.push('Working ...');
+
+				this.messenger.push(message);
+
+				commandObject.method(params);
+
+				this.finishCommand();
+
+				return;
+			}
+
+			let initialParams = this.getCommandParams(commandObject);
+
+			if(initialParams)
+			{
+				this.params = initialParams;
+
+				let question = this.getFirstQuestion(initialParams);
+
+				if(question)
+				{
+					message.answer.push(question);
+
+					this.messenger.push(message);
+
+					this.finishCommand();
+
+					return;
+				}
+
+				console.info("no questions found");
+			}
+
+			if(commandObject.answer)
+			{
+				message.answer.push(commandObject.answer);
+			}
+
+			this.messenger.push(message);
+
+			commandObject.method();
+
+			this.finishCommand();
+		},
+		getCommandObject(command)
+		{
+			let result = false;
+	
+			kixoteCommands.forEach((commandObject) =>
+			{
+				if(commandObject.name == command)
+				{
+					result = commandObject;
+				}
+			});
+
+			return result;
+		},
+		getCommandParams(commandObject)
+		{
+			if(commandObject.params)
+			{
+				let params = [
+					{
+						name: 'submitWithCommand',
+						value: commandObject.name
+					}
+				];
+
+				commandObject.params.forEach((param) => 
+				{
+					param.value = false;
+					params.push(param);
+				});
+
+				return params;
+			}
+
+			return false;
+		},
+		getFirstQuestion(params)
+		{
+			if(typeof params[1].question != "undefined")
+			{
+				return params[1].question;
+			}
+
+			return false;
+		},
+		getNextQuestion(params)
+		{
+			let length = params.length;
+
+			for (var index = 0; index < length; index++)
+			{
+				if(!params[index].value)
+				{
+					// set param if valid
+					this.params[index].value = this.command;
+
+					// go to the next param if exists
+					let next = index + 1;
+					if(typeof params[next] != "undefined")
+					{
+						return params[next].question;
+					}
+				}
+			}
+
+			return false;
+		}
+	}
 })
 
 kixote.component('tab-generate', {
@@ -443,13 +886,13 @@ kixote.component('tab-generate', {
 
 						<div v-else>
 
-					        <ul class="flex p-8 pb-0">
+					        <ul class="flex pb-0">
 					            <li 
 					                v-for 	= "action in tabs" 
 					                :key 	= "action.value" 
 					                @click 	= "setCurrentTab(action.value)"
-									class 	= "border-b-2 border-stone-700 p-2 cursor-pointer hover:bg-stone-900 hover:border-teal-500"
-									:class 	= "{'bg-stone-900 border-teal-500': currentTab === action.value}"
+									class 	= "px-4 py-2 border-b-2 border-stone-200 hover:border-stone-700 hover:bg-stone-200 dark:text-stone-200 dark:bg-stone-700 dark:border-stone-600 hover:dark:bg-stone-200 hover:dark:text-stone-900 transition duration-100 cursor-pointer"
+									:class 	= "{'bg-stone-200 border-stone-700 dark:bg-stone-200 dark:text-stone-900': currentTab === action.value}"
 					            	>
 					                {{ action.name }}
 					            </li>
@@ -458,9 +901,9 @@ kixote.component('tab-generate', {
 					        <div v-if="currentTab === 'article'">
 
 								<!-- EDITOR -->
-								<div class="relative bg-stone-900 p-8">
+								<div class="relative border-b-2 border-stone-700 bg-stone-200 dark:bg-stone-900 p-8">
 						            <textarea 
-						            	class		= "editor bg-stone-900 no-outline text-white caret-white focus:outline-none"
+						            	class		= "editor bg-stone-200 dark:bg-stone-900 no-outline dark:text-white dark:caret-white focus:outline-none"
 										id 			= "kieditor"
 										ref 		= "kieditor" 
 										v-model 	= "versions[activeversion]"
@@ -481,21 +924,27 @@ kixote.component('tab-generate', {
 								    </button>
 
 								    <!-- PAGING / BUTTONS -->
-									<div class="flex justify-between bg-stone-900 p-2">
-										<ul class="list flex">
-											<li v-for="version,index in versions">
-												<button 
-													class = "p-1 mr-1 bg-stone-700 border border-stone-700 hover:border-teal-500"
-													:class = "{'border-teal-500': index === activeversion}"
-													@click.prevent = "switchVersion(index)"
-													>
-													{{ index }}
-												</button>
-											</li>
-										</ul>
+									<div class="flex justify-between p-2 dark:bg-stone-900">
+										<div>
+											<ul class="list flex">
+												<li v-for="version,index in versions">
+													<button 
+														:class="[
+														  'px-3 py-1 mr-1 border hover:bg-stone-200 hover:border-stone-700 transition duration-100 cursor-pointer dark:text-stone-200 dark:bg-stone-700 dark:border-stone-600 hover:dark:bg-stone-200 hover:dark:text-stone-900 hover:dark:border-stone-700',
+														  index === activeversion
+														    ? 'bg-stone-200 border-stone-700 dark:bg-stone-200 dark:text-stone-900 dark:border-stone-700'
+														    : 'bg-stone-50 border-stone-50'
+														]"
+														@click.prevent = "switchVersion(index)"
+														>
+														{{ index }}
+													</button>
+												</li>
+											</ul>
+										</div>
 										<div class="flex">
 											<button 
-												class = "p-1 border border-stone-700 hover:border-teal-500"
+												class = "px-3 py-1 border border-stone-700 bg-stone-200 hover:bg-teal-600 hover:border-teal-500 hover:text-white dark:text-stone-200 dark:bg-stone-700 dark:border-stone-600 hover:dark:bg-stone-200 hover:dark:text-stone-900 transition duration-100 cursor-pointer"
 												@click.prevent = "storeArticle()"
 												>
 												store
@@ -506,14 +955,14 @@ kixote.component('tab-generate', {
 
 								<!-- PROMPT INPUT -->
 								<div v-if="promptError" class="w-full px-8 py-1 bg-rose-500 text-white">{{ promptError }}</div>
-								<div class="w-full bg-stone-600 px-8 py-2">
+								<div class="w-full bg-stone-200 px-8 py-4 border-b border-stone-50">
 									<div class="flex items-start">
-										<span class="text-teal-300 mr-1">Ki></span>
-										<div class="flex-grow bg-stone-600">
+										<span class="text-teal-600 mr-1">Ki></span>
+										<div class="flex-grow bg-stone-200 mr-2">
 											<textarea 
 												v-model.trim 	= "prompt" 
 												ref 			= "prompteditor"	
-												class 			= "w-full bg-stone-600 focus:outline-none border-0 caret-white" 
+												class 			= "w-full bg-stone-200 focus:outline-none border-0 dark:caret-white" 
 												placeholder 	= "Prompt..."
 					            				@keydown.enter 	= "handleKeydown"
 				            					@input 			= "resizePromptEditor"
@@ -521,26 +970,20 @@ kixote.component('tab-generate', {
 											<p class="" v-if="promptlink">Example: {{promptlink}}</p>
 										</div>
 								        <button 
-								        	class 	= "text-teal-300 px-2" 
+								        	class 	= "text-white px-2 py-1 bg-teal-600 hover:bg-teal-700" 
 								        	@click 	= "submitPrompt"
-								        	>submit
-								        </button>
-								        <span class="px-1 text-stone-700">|</span> 
-								        <button 
-								        	class 	= "text-teal-300 px-2" 
-								        	@click 	= "exit"
-								        	>exit
+								        	>send
 								        </button>
 									</div>
 								</div>
 
 								<!-- PROMPT COLLECTION -->
-								<div class="px-8 py-4">
+								<div class="px-8 py-4 bg-stone-200">
 									<ul class="list flex">
 									  <li 
 									    v-for="(promptitem, name) in promptlistactive" 
 									    :key="index" 
-									    class="mr-3 hover:text-teal-300 cursor-pointer"
+									    class="mr-3 hover:text-teal-600 cursor-pointer"
 									  >
 									    <button 
 									      class="button" 
@@ -555,9 +998,9 @@ kixote.component('tab-generate', {
 					        </div>
 
 					        <div v-else-if="currentTab === 'prompts'">
-								<div class="w-full bg-stone-900 px-8 py-8">
-									<div class="flex justify-between py-2 px-2">
-										<button @click.prevent="addNewPrompt = !addNewPrompt">
+								<div class="w-full bg-stone-200 px-8 py-8">
+									<div class="flex justify-between px-2 py-4 mb-4 border-b border-stone-700">
+										<button class="hover:text-teal-600" @click.prevent="addNewPrompt = !addNewPrompt">
 											<span v-if="addNewPrompt">-</span>
 											<span v-else>+</span> add prompt
 										</button>
@@ -565,14 +1008,14 @@ kixote.component('tab-generate', {
 										  <span class="px-1">Filter:</span>
 										  <button
 										    @click.prevent="currentFilter = 'user'"
-										    :class="{'text-teal-500': currentFilter === 'user', 'text-white': currentFilter !== 'user'}"
+										    :class="{'text-teal-600': currentFilter === 'user', 'text-stone-700' : currentFilter !== 'user'}"
 										    class="px-1 transition-colors"
 										  >
 										    my prompts
 										  </button>
 										  <button
 										    @click.prevent="currentFilter = 'system'"
-										    :class="{'text-teal-500': currentFilter === 'system', 'text-white': currentFilter !== 'system'}"
+										    :class="{'text-teal-600': currentFilter === 'system', 'text-stone-700': currentFilter !== 'system'}"
 										    class="px-1 transition-colors"
 										  >
 										    system prompts
@@ -581,21 +1024,28 @@ kixote.component('tab-generate', {
 
 									</div>
 									<transition name="fade">
-										<div v-if="addNewPrompt" class="py-2 px-2">
-											<fieldset class="border border-stone-700 p-4">
+										<div v-if="addNewPrompt" class="border-b border-stone-700 px-2 pt-4 pb-8 mb-4">
+											<fieldset class="">
 												<div class="flex w-full justify-between">
 													<input 
 													  	type 		= "text" 
-													  	class 		= "w-50 p-2 my-1 font-mono bg-stone-600 text-white caret-white focus:outline-none"
+													  	class 		= "w-50 p-2 my-1 font-mono bg-stone-100 dark:text-white dark:caret-white focus:outline-none"
 														@input 		= "validatePromptTitle(newPrompt.title)"
 														@focus 		= "editPrompt = newPrompt.title"
 														placeholder = "Enter a title"
 													  	v-model 	= "newPrompt.title"
 													/>
+													<div class="flex space-x-2 items-center">
+														<span v-if="titleError" class="text-red-500 text-sm">{{ titleError }}</span>
+														<button v-if="!titleError && !bodyError"
+															@click.prevent="saveNewPrompt"
+															class="px-2 py-1 mr-1 border border-stone-700 hover:bg-teal-600 hover:text-white hover:border-teal-600 transition-colors"
+															>save
+														</button>
+													</div>
 												</div>
-												<span v-if="titleError" class="text-red-500 text-sm">{{ titleError }}</span>
 												<textarea 
-													class 		= "w-full p-2 my-1 font-mono bg-stone-600 no-outline text-white caret-white focus:outline-none"
+													class 		= "w-full p-2 my-1 font-mono bg-stone-100 no-outline dark:text-white dark:caret-white focus:outline-none"
 													rows 		= "5"
 													@input 		= "validatePromptBody(newPrompt.content)"
 													@focus 		= "editPrompt = newPrompt.name"
@@ -603,23 +1053,17 @@ kixote.component('tab-generate', {
 													v-model 	= "newPrompt.content"
 													>
 												</textarea>
-												<span v-if="bodyError" class="text-red-500 text-sm">{{ bodyError }}</span>
+												<span v-if="bodyError" class="text-rose-500 text-sm">{{ bodyError }}</span>
 
 												<div class="space-y-2 my-2">
 													<select v-model="newPrompt.link"
-														class="w-full p-2 font-mono bg-stone-600 text-white caret-white focus:outline-none">
+														class="w-full p-2 font-mono bg-stone-100 dark:bg-stone-600 dark:text-white dark:caret-white focus:outline-none">
 														<option :value="null" class="text-stone-400 italic">Select example article</option>
 														<option v-for="navilink in flatnavi" :key="navilink" :value="navilink">
 															{{ navilink }}
 														</option>
 													</select>
 												</div>
-
-												<button v-if="!titleError && !bodyError"
-													@click.prevent="saveNewPrompt"
-													class="px-1 text-teal-300 hover:text-teal-500 transition-colors"													
-													>save
-												</button>
 											</fieldset>
 										</div>
 									</transition>
@@ -627,7 +1071,7 @@ kixote.component('tab-generate', {
 										v-if = "currentFilter == 'user' && Object.keys(filteredPrompts).length === 0"
 										class = "py-2 px-2"
 										>
-										<div class="border border-stone-700 bg-stone-700 text-stone-100 p-4">
+										<div class="text-stone-900">
 											<h2 class="text-lg font-semibold mb-2">How to Use</h2>
 											<p class="mb-2">Click the <span class="font-medium">+ Add Prompt</span> button to create your own prompts. A custom prompt can include:</p>
 											<ul class="list-disc list-inside mb-4 space-y-1">
@@ -644,11 +1088,11 @@ kixote.component('tab-generate', {
 										:key  = "name"
 										class = "py-2 px-2"
 										>
-										<fieldset class="border border-stone-700 p-4">
+										<fieldset class="border border-stone-200 p-0 pb-4">
 											<div class="flex w-full justify-between">
 												<input 
 												  	type 		= "text" 
-												  	class 		= "w-50 p-2 my-1 font-mono bg-stone-600 text-white caret-white focus:outline-none"
+												  	class 		= "w-50 p-2 my-1 font-mono bg-stone-100 dark:bg-stone-700 dark:text-white dark:caret-white focus:outline-none"
 												  	:readonly 	= "prompttemplate.system"
 												  	v-model 	= "prompttemplate.title"
 													@focus 		= "editPrompt = name"
@@ -658,26 +1102,26 @@ kixote.component('tab-generate', {
 													<div v-if="prompttemplate.system == false">
 														<button 
 															@click.prevent="deletePrompt(name)" 
-														    class="px-1 text-rose-300 hover:text-rose-500 transition-colors"
+														    class="px-2 py-1 mr-1 border border-stone-700 hover:bg-rose-700 hover:text-white transition-colors"
 															>delete
 														</button>
 														<span 
 															v-if="editPrompt === name && settingsSaved" 
-															class="text-teal-300">
+															class="px-2 py-2 mr-1 border border-teal-600 bg-teal-600 text-white">
 															✔ saved
 														</span>
 														<button 
 															v-else
 															@click.prevent="saveSettings"
-														    class="px-1 text-teal-300 hover:text-teal-500 transition-colors"
+														    class="px-2 py-1 mr-1 border border-stone-700 hover:bg-teal-600 hover:text-white hover:border-teal-600 transition-colors"
 															>update
 														</button>
 													</div>
 													<div class="flex items-center space-x-2">
-													  <label class="text-sm text-white">Active</label>
+													  <label class="text-sm dark:text-white">Active</label>
 													  <input 
 													    type 	= "checkbox" 
-													    class 	= "w-5 h-5 border border-stone-300 bg-stone-600 text-white cursor-pointer" 
+													    class 	= "w-5 h-5 border border-stone-300 bg-stone-200 dark:bg-stone-600 dark:text-white cursor-pointer" 
 													    v-model = "prompttemplate.active"
 		                                                @change = "saveSettings"
 													  >
@@ -686,7 +1130,7 @@ kixote.component('tab-generate', {
 											</div>
 											<span v-if="prompttemplate.errors?.title" class="text-red-500 text-sm">{{ prompttemplate.errors.title }}</span>
 											<textarea 
-												class 		= "w-full p-2 my-1 font-mono bg-stone-600 no-outline text-white caret-white focus:outline-none"
+												class 		= "w-full p-2 my-1 font-mono bg-stone-100 dark:bg-stone-600 no-outline dark:text-white dark:caret-white focus:outline-none"
 												rows 		= "5"
 												v-model 	= "prompttemplate.content"
 												:readonly 	= "prompttemplate.system"
@@ -698,7 +1142,7 @@ kixote.component('tab-generate', {
 
 											<div class="space-y-2 my-2" v-if="prompttemplate.system !== true">
 												<select v-model="prompttemplate.link"
-													class="w-full p-2 font-mono bg-stone-600 text-white caret-white focus:outline-none">
+													class="w-full p-2 font-mono bg-stone-100 dark:bg-stone-600 dark:text-white caret-white focus:outline-none">
 													<option :value="null">Select example article</option>
 													<option v-for="navilink in flatnavi" :key="navilink" :value="navilink">
 														{{ navilink }}
@@ -1155,6 +1599,7 @@ kixote.component('tab-generate', {
 	      	this.addNewPrompt = false;
 	      	this.updateSettings(newSettings);
             eventBus.$emit('storeKixoteSettings');
+            this.currentFilter = 'user';
 	    },
 		updateSettings(newSettings)
 		{
@@ -1172,784 +1617,5 @@ kixote.component('tab-generate', {
 	    {
 			eventBus.$emit('kiExit');
 	    },        
-	}
-})
-
-
-kixote.component('tab-seo', {
-	props: ['content', 'item', 'labels', 'urlinfo', 'settings', 'kixoteSettings', 'settingsSaved', 'aiservice', 'useragreement', 'tokenstats'],
-	data: function () {
-	    return {
-			article: '',
-      	};
-	},
-	template: `<section class="dark:bg-stone-700 dark:text-stone-200">
-
-					<div v-if="!aiservice" class="p-8 mt-4 w-full">
-					    <div class="bg-stone-700 p-8 border border-stone-500 rounded-lg shadow-md">
-					        <h2 class="text-xl font-bold text-white mb-4">Your AI Assistant for Typemill</h2>
-					        <p class="text-stone-300 mb-4">
-					            To get started with AI-powered assistance, go to <strong class="text-white">System Settings</strong>, open the <strong class="text-white">AI</strong> tab, and follow these steps:
-					        </p>
-					        <ol class="list-decimal list-inside text-stone-300 space-y-2">
-					            <li>Select an AI service.</li>
-					            <li>Choose a model.</li>
-					            <li>Enter your API key.</li>
-					        </ol>
-					        <p class="text-stone-300 mt-4">Once set up, you can start using AI assistance right away!</p>
-					    </div>
-					</div>
-
-					<div v-else-if="content">
-
-						<div v-if="!useragreement" class="p-8 mt-4 inline-block w-full">
-							<div class="bg-stone-700 p-8 border border-stone-500">
-								
-								<div class="w-full mt-5 mb-5">
-									<div class="block mb-1 font-medium">Activate {{aiservice}}</div>
-									<label class="flex items-start mb-2 mt-2">
-										<input 
-											type  = "checkbox" 
-											class = "w-6 h-6 border-stone-300 bg-stone-200" 
-											value = "chatgpt"
-											@change = "agreeTo(aiservice)"
-											>
-											<span class="ml-2 text-sm">
-											    Activate {{aiservice}} to start using AI assistance. By enabling this service, you agree to the terms and conditions of {{aiservice}}. 
-											    Your prompts and article content will be sent to {{aiservice}} to generate responses. 
-											    You can disable {{aiservice}} at any time in your user profile.
-											</span>
-									</label>
-								</div>
-
-							</div>
-						</div>
-
-						<div v-else>
-								<!-- PROMPT INPUT -->
-								<div v-if="promptError" class="w-full px-8 py-1 bg-rose-500 text-white">{{ promptError }}</div>
-								<div class="w-full bg-stone-600 px-8 py-2">
-									<div class="flex items-start">
-										<span class="text-teal-300 mr-1">Ki></span>
-										<textarea 
-											v-model.trim 	= "prompt" 
-											ref 			= "prompteditor"	
-											class 			= "flex-grow bg-stone-600 focus:outline-none border-0 caret-white" 
-											placeholder 	= "Prompt..."
-				            				@keydown.enter 	= "handleKeydown"
-			            					@input 			= "resizePromptEditor"
-											></textarea>
-								        <button 
-								        	class 	= "text-teal-300 px-2" 
-								        	@click 	= "submitPrompt"
-								        	>submit
-								        </button>
-								        <span class="px-1 text-stone-700">|</span> 
-								        <button 
-								        	class 	= "text-teal-300 px-2" 
-								        	@click 	= "exit"
-								        	>exit
-								        </button>
-									</div>
-								</div>
-
-					        </div>
-
-
-						</div>
-					</div>
-	
-					<div v-else class="p-8 mt-4 inline-block w-full">
-						<p class="text-center bg-stone-700 p-8 border border-stone-500">Content Generation only works on content pages. You are currently in the settings area.</p>
-					</div>
-
-				</section>`,
-	mounted: function()
-	{	
-		this.initAutosize();
-
-		if(this.versions.length == 0)
-		{
-			this.initializeContent()
-		}
-	},
-	watch: {
-	    currentTab(newTab, oldTab) {
-	        if (newTab === 'article')
-	        {
-	            this.$nextTick(() => {
-	                this.initAutosize(); // Trigger the resizing when switching back to the article tab
-	            });
-	        }
-	    }
-	},	
-	methods: {
-	    initAutosize()
-	    {
-	        let kieditor = this.$refs["kieditor"];
-	        let prompteditor = this.$refs["prompteditor"];
-
-	        if (kieditor)
-	        {
-	            autosize(kieditor);
-	        }
-	        if (prompteditor)
-	        {
-	            autosize(prompteditor);
-	        }
-	    },		
-		agreeTo(aiservice)
-		{
-			var self = this;
-
-			tmaxios.post('/api/v1/agreetoaiservice',{
-				'aiservice': aiservice
-			})
-			.then(function (response)
-			{
-				eventBus.$emit('agreetoservice');
-				self.$nextTick(() => {
-		        	self.initAutosize();
-				});
-			})
-		},
-		initializeContent()
-		{ 
-			let markdown = '';
-
-			for(block in this.content)
-			{
-				markdown += this.content[block].markdown + '\n\n';
-			}
-			this.originalmd = markdown;
-			this.versions.push(markdown);
-			this.resizeAiEditor();
-		},
-	    resizeAiEditor()
-	    {
-	        this.$nextTick(() => {
-	            let kieditor = this.$refs["kieditor"];
-	            if (kieditor)
-	            {
-	                autosize.update(kieditor);
-	            }
-	        });
-	    },
-	    resizePromptEditor()
-	    {
-	        this.$nextTick(() => {
-	            let prompteditor = this.$refs["prompteditor"];
-	            if (prompteditor) 
-	            {
-	                autosize.update(prompteditor);
-	            }
-	        });
-	    },
-		submitPrompt()
-		{
-        	this.promptError = false;
-
-			var self = this;
-			eventBus.$emit('switchLoading');
-
-			tmaxios.post('/api/v1/prompt',{
-				'prompt': this.prompt,
-				'article': this.versions[this.activeversion]
-			})
-			.then(function (response)
-			{
-				eventBus.$emit('switchLoading');
-		        if (response.data.message === 'Success')
-		        {
-		            let answer = response.data.answer;
-					answer = answer.replace(/<\/?focus>/g, '');
-		            self.versions.push(answer);
-		            self.activeversion = self.versions.length-1;
-		            self.prompt = '';
-		            self.resizePromptEditor();
-		            self.resizeAiEditor();
-		        } 
-			})
-			.catch(function (error)
-			{
-				eventBus.$emit('switchLoading');
-				if(error.response)
-				{
-					self.disabled 		= false;
-					self.promptError 	= handleErrorMessage(error);
-					self.licensemessage = error.response.data.message;
-					if(error.response.data.errors !== undefined)
-					{
-						self.promptError = error.response.data.errors;
-					}
-				}
-			});
-		},
-        handleKeydown(event)
-        {
-            if (event.key === 'Enter' && !event.shiftKey)
-            {
-                event.preventDefault();
-                this.submitPrompt();
-            } 
-            else if (event.key === 'Enter' && event.shiftKey)
-            {
-                // Allow line break
-                const textarea = event.target;
-                const start = textarea.selectionStart;
-                const end = textarea.selectionEnd;
-                textarea.value = textarea.value.slice(0, start) + '\n' + textarea.value.slice(end);
-                textarea.selectionStart = textarea.selectionEnd = start + 1;
-				
-				let prompteditor = this.$refs["prompteditor"];				
-				autosize.update(prompteditor);
-
-                event.preventDefault();
-            }
-        },
-	    exit()
-	    {
-			eventBus.$emit('kiExit');
-	    },        
-	}
-})
-
-
-// publish tree
-// unpublish tree
-// load page
-// save page
-// translate page
-// translate tree
-
-
-const kixoteCommands = [
-					{
-						name: 'help',
-						description: 'List all available commands with a short description.',
-						method: function()
-								{
-									let result = ['<ul>'];
-									kixoteCommands.forEach((command) =>
-									{
-										let block = '<li><span class="text-teal-300">' + command.name + ':</span> ' + command.description + '</li>';
-										result.push(block);
-									})
-									result.push('</ul>');
-
-									eventBus.$emit('answer', result);
-								},
-						answer: '<p>You can use the following commands:</p>',
-					},
-					{
-						name: 'exit',
-						description: 'Exit Kixote and close the Kixote window.',
-					},
-					{
-						name: 'clear navigation',
-						description: 'Clear the cached navigation.',
-						method: function()
-								{
-									var self = this;
-
-									tmaxios.delete('/api/v1/clearnavigation',{
-									})
-									.then(function (response)
-									{
-										eventBus.$emit('answer', ['navigation has been cleared']);
-									})
-									.catch(function (error)
-									{
-										eventBus.$emit('answer', getKixoteError(error));
-									});
-								},
-						answer: ['Asking server ...'],
-					},
-					{
-						name: 'clear cache',
-						description: 'Clear the cache-folder and delete cached files.',
-						method: function()
-								{
-									var self = this;
-
-									tmaxios.delete('/api/v1/cache',{
-									})
-									.then(function (response)
-									{
-										eventBus.$emit('answer', ['cache has been cleared']);
-									})
-									.catch(function (error)
-									{
-										eventBus.$emit('answer', getKixoteError(error));
-									});
-								},
-						answer: ['Asking server ...'],
-					},
-					{
-						name: 'show security log',
-						description: 'Show the security log that you can activate in the security tab of the system settings.',
-						method: function()
-								{
-									var self = this;
-
-									tmaxios.get('/api/v1/securitylog',{
-									})
-									.then(function (response)
-									{
-										eventBus.$emit('answer', response.data.lines);
-										eventBus.$emit('nextCommands', ['clear security log']);
-									})
-									.catch(function (error)
-									{
-										eventBus.$emit('answer', getKixoteError(error));
-									});
-								},
-						answer: ['Asking server ...'],
-					},
-					{
-						name: 'clear security log',
-						description: 'Clear the security log.',
-						method: function()
-								{
-									var self = this;
-
-									tmaxios.delete('/api/v1/securitylog',{
-									})
-									.then(function (response)
-									{
-										eventBus.$emit('answer', ['Security log has been cleared.']);
-									})
-									.catch(function (error)
-									{
-										eventBus.$emit('answer', getKixoteError(error));
-									});
-								},
-						answer: ['Asking server ...'],
-					},
-/*
-					{
-						name: 'skip',
-						description: 'Skip the current task and start a new command.',
-						answer: ['We skipped the current task. Waiting for your next command.'],
-					},
-					{
-						name: 'create content',
-						description: 'Create content with artificial intelligence.',						
-						params: [
-									{
-										name: 'topic',
-										value: false,
-										question: 'Please describe a topic in few words:',
-										required: true,
-										regex: false,
-									},
-									{
-										name: 'length',
-										value: false,
-										question: 'How many words should the text have?',
-										required: true,
-										regex: false,
-									},
-								],
-						method: function(params)
-								{ 
-									eventBus.$emit('storable', ['Lorem ipsum in markdown.']);
-									eventBus.$emit('nextCommands', ['transform', 'translate', 'save to page']);
-									eventBus.$emit('answer', ['This is the answer from the server. The server can ask an AI service with the collected parameters and return any kind of answer in HTML and preferably in markdown, so that typemill can process the content again (e.g. store, translate, and more).']);
-								},
-						answer: ['Creating content...'],
-					},
-					{
-						name: 'save to page',
-						description: 'Save markdown to current page.',
-						method: function(params)
-								{
-									console.info(params[0]);
-									eventBus.$emit('answer', ['saved content to page']);
-								},
-						answer: ['Save content...'],
-					},
-*/
-				];
-
-
-
-kixote.component('tab-admin', {
-	props: [],
-	data: function () {
-		return {
-			messenger: [],
-			messengerIndex: false,
-			command: '',
-			params: false,
-		}
-	},
-	template: `<section class="dark:bg-stone-700 dark:text-stone-200">
-					<div class="p-8 pb-4">
-						<h1 class="mb-d3">Hello, I am <span class="text-teal-300">Kixote</span> from Typemill. How can I help?</h1>
-					</div>
-					<div>
-						<div v-for="message,index in messenger">
-							<div v-html="message.command" class="w-100 bg-stone-600 px-8 py-2"></div>
-							<div class="p-8">
-								<div v-for="block in message.answer" v-html="block"></div>
-								<div class="flex w-full justify-end" v-if="message.nextCommands.length > 0">
-									<button v-for="nextCommand in message.nextCommands" @click="submitInlineCommand(nextCommand,index)" class="text-xs text-teal-500 hover:text-stone-700 hover:bg-teal-500 border border-teal-500 p-1 ml-1">{{ nextCommand }}</button>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div>
-						<div class="w-full bg-stone-600 px-8 py-2">
-							<p class="flex">
-								<span class="text-teal-300 mr-1">Ki></span> 
-								<input type="text" ref="kinput" @keyup.enter="submitCommand" v-model.trim="command" class="flex-grow bg-stone-600 focus:outline-none border-0 caret-white" placeholder="Command..." />
-								<button class="text-teal-300" @click="exit">exit</button>
-							</p>
-						</div>
-						<div class="px-8 pt-2">
-							<p class="text-xs text-stone-200">Enter "help" to see a list of commands</p>
-						</div>
-					</div>
-				</section>`,
-	mounted: function()
-	{
-//		this.clear();
-
-		eventBus.$on('answer', messages => {
-			let lastKey = this.messenger.length - 1;
-			messages.forEach((message) =>
-			{
-				this.messenger[lastKey].answer.push(message);
-			});
-		});
-
-		eventBus.$on('nextCommands', nextcommands => {
-			let lastKey = this.messenger.length - 1;
-			nextcommands.forEach((nextcommand) =>
-			{
-				this.messenger[lastKey].nextCommands.push(nextcommand);
-			});
-		});
-
-		eventBus.$on('storable', data => {
-			let lastKey = this.messenger.length - 1;
-			this.messenger[lastKey].storable = data;
-		});
-
-		this.focusOnInput();
-	},
-	methods: {
-		exit()
-		{
-			eventBus.$emit('kiExit');
-		},
-		clear()
-		{
-			this.messenger = [];
-			this.params = false;
-			this.command = '';
-		},
-		focusOnInput()
-		{
-			this.$nextTick(() => {
-				const inputRef = this.$refs.kinput;
-				inputRef.focus();
-  			});
-		},		
-		finishCommand()
-		{
-			this.command = '';
-			this.focusOnInput();
-			eventBus.$emit('kiScrollBottom');
-		},
-		submitInlineCommand(command, index)
-		{
-			this.command = command;
-			this.messengerIndex = index;
-			// should we submit this.messenger[index].storable as params?
-			let storable = this.messenger[index].storable;
-			this.submitCommand(false, storable);
-		},
-		submitCommand(event, params = false)
-		{
-			if(this.command.trim() == '')
-			{
-				return;
-			}
-
-			let currentCommand = '<span class="text-teal-300">Ki></span> ' + this.command;
-			
-			let message = { 'command' : currentCommand, 'answer' : [], 'storable' : false, 'nextCommands' : [] }
-
-			if(this.command == 'exit')
-			{
-				this.exit();
-
-				return;
-			}
-
-			if(this.command == 'skip')
-			{
-				message.answer.push('We skipped the current task. Start with a new command.');
-
-				this.messenger.push(message);
-
-				this.params = false;
-
-				this.finishCommand();
-
-				return;
-			}
-
-			if(this.params)
-			{
-				let question = this.getNextQuestion(this.params);
-
-				if(question)
-				{
-					message.answer.push(question);
-
-					this.messenger.push(message);
-
-					this.finishCommand();
-
-					return;
-				}
-
-				// if no further question submit inital command with params
-				let params 	= this.params;
-				
-				this.params = false;
-				
-				this.command = params[0].value;
-				
-				this.submitCommand(false, params);
-				
-				return;
-			}
-
-			let commandObject = this.getCommandObject(this.command);
-			
-			if(!commandObject)
-			{
-				message.answer.push('Command not found. Type "help" to see a list of available commands.');
-
-				this.messenger.push(message);
-
-				this.finishCommand();
-
-				return;
-			}
-
-			if(params)
-			{
-				message.answer.push('Working ...');
-
-				this.messenger.push(message);
-
-				commandObject.method(params);
-
-				this.finishCommand();
-
-				return;
-			}
-
-			let initialParams = this.getCommandParams(commandObject);
-
-			if(initialParams)
-			{
-				this.params = initialParams;
-
-				let question = this.getFirstQuestion(initialParams);
-
-				if(question)
-				{
-					message.answer.push(question);
-
-					this.messenger.push(message);
-
-					this.finishCommand();
-
-					return;
-				}
-
-				console.info("no questions found");
-			}
-
-			if(commandObject.answer)
-			{
-				message.answer.push(commandObject.answer);
-			}
-
-			this.messenger.push(message);
-
-			commandObject.method();
-
-			this.finishCommand();
-		},
-		getCommandObject(command)
-		{
-			let result = false;
-	
-			kixoteCommands.forEach((commandObject) =>
-			{
-				if(commandObject.name == command)
-				{
-					result = commandObject;
-				}
-			});
-
-			return result;
-		},
-		getCommandParams(commandObject)
-		{
-			if(commandObject.params)
-			{
-				let params = [
-					{
-						name: 'submitWithCommand',
-						value: commandObject.name
-					}
-				];
-
-				commandObject.params.forEach((param) => 
-				{
-					param.value = false;
-					params.push(param);
-				});
-
-				return params;
-			}
-
-			return false;
-		},
-		getFirstQuestion(params)
-		{
-			if(typeof params[1].question != "undefined")
-			{
-				return params[1].question;
-			}
-
-			return false;
-		},
-		getNextQuestion(params)
-		{
-			let length = params.length;
-
-			for (var index = 0; index < length; index++)
-			{
-				if(!params[index].value)
-				{
-					// set param if valid
-					this.params[index].value = this.command;
-
-					// go to the next param if exists
-					let next = index + 1;
-					if(typeof params[next] != "undefined")
-					{
-						return params[next].question;
-					}
-				}
-			}
-
-			return false;
-		}
-	}
-})
-
-
-kixote.component('tab-translate', {
-	props: [],
-	data: function () {
-		return {
-		}
-	},
-	template: `<section class="dark:bg-stone-700 dark:text-stone-200">
-					<p>Translation Component</p>
-				</section>`,
-	mounted: function()
-	{
-	},
-	methods: {
-		selectComponent: function(type)
-		{ 
-		}
-	}
-})
-
-kixote.component('tab-automate', {
-	props: [],
-	data: function () {
-		return {
-		}
-	},
-	template: `<section class="dark:bg-stone-700 dark:text-stone-200">
-					<p>Automation Component</p>
-				</section>`,
-	mounted: function()
-	{
-	},
-	methods: {
-		selectComponent: function(type)
-		{ 
-		}
-	}
-})
-
-kixote.component('tab-seo', {
-	props: [],
-	data: function () {
-		return {
-		}
-	},
-	template: `<section class="dark:bg-stone-700 dark:text-stone-200">
-					<p>SEO Component</p>
-				</section>`,
-	mounted: function()
-	{
-	},
-	methods: {
-		selectComponent: function(type)
-		{ 
-		}
-	}
-})
-
-kixote.component('tab-rag', {
-	props: [],
-	data: function () {
-		return {
-		}
-	},
-	template: `<section class="dark:bg-stone-700 dark:text-stone-200">
-					<p>Retrieval Augmented Generation</p>
-				</section>`,
-	mounted: function()
-	{
-	},
-	methods: {
-		selectComponent: function(type)
-		{ 
-		}
-	}
-})
-
-kixote.component('tab-token', {
-	props: [],
-	data: function () {
-		return {
-		}
-	},
-	template: `<section class="dark:bg-stone-700 dark:text-stone-200">
-					<p>Token Overview Component</p>
-				</section>`,
-	mounted: function()
-	{
-	},
-	methods: {
-		selectComponent: function(type)
-		{ 
-		}
 	}
 })
