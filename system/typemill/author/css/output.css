@@ -1238,10 +1238,6 @@ video {
   white-space: nowrap;
 }
 
-.rounded-lg {
-  border-radius: 0.5rem;
-}
-
 .border {
   border-width: 1px;
 }
@@ -1884,11 +1880,6 @@ video {
   color: rgb(28 25 23 / var(--tw-text-opacity));
 }
 
-.text-teal-300 {
-  --tw-text-opacity: 1;
-  color: rgb(94 234 212 / var(--tw-text-opacity));
-}
-
 .text-teal-500 {
   --tw-text-opacity: 1;
   color: rgb(20 184 166 / var(--tw-text-opacity));
@@ -2105,11 +2096,6 @@ video {
   color: rgb(250 250 249 / var(--tw-text-opacity));
 }
 
-.hover\:text-stone-700:hover {
-  --tw-text-opacity: 1;
-  color: rgb(68 64 60 / var(--tw-text-opacity));
-}
-
 .hover\:text-stone-800:hover {
   --tw-text-opacity: 1;
   color: rgb(41 37 36 / var(--tw-text-opacity));
@@ -2310,6 +2296,11 @@ video {
   border-color: rgb(68 64 60 / var(--tw-border-opacity));
 }
 
+.dark\:hover\:bg-rose-500:hover:is(.dark *) {
+  --tw-bg-opacity: 1;
+  background-color: rgb(244 63 94 / var(--tw-bg-opacity));
+}
+
 .dark\:hover\:bg-stone-200:hover:is(.dark *) {
   --tw-bg-opacity: 1;
   background-color: rgb(231 229 228 / var(--tw-bg-opacity));
@@ -2353,6 +2344,11 @@ video {
 .hover\:dark\:text-stone-900:is(.dark *):hover {
   --tw-text-opacity: 1;
   color: rgb(28 25 23 / var(--tw-text-opacity));
+}
+
+.hover\:dark\:text-teal-600:is(.dark *):hover {
+  --tw-text-opacity: 1;
+  color: rgb(13 148 136 / var(--tw-text-opacity));
 }
 
 .focus\:dark\:border-stone-600:is(.dark *):focus {
