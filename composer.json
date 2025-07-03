@@ -11,11 +11,11 @@
             "composer/installers": true
         },
         "platform": {
-            "php": "8.0.0"
+            "php": "8.1.0"
         }    
     },
     "require": {
-        "php": "^8.0",
+        "php": "^8.1",
         "slim/slim": "4.*",
         "slim/psr7": "^1.5",
         "php-di/php-di": "^6.3",
