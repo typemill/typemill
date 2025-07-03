@@ -233,7 +233,7 @@ class ParsedownExtension extends \ParsedownExtra
         return $image;
     }
     
-    protected function blockTable($Line, array $Block = null)
+    protected function blockTable($Line, ?array $Block = null)
     {
 
         $Block = parent::blockTable($Line, $Block);

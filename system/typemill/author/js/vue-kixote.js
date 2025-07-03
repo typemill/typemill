@@ -171,7 +171,7 @@ const kixote = Vue.createApp({
 					<Transition name="initial" appear>
 						<div v-if="showKixote" class="fixed top-0 left-0 right-0 bottom-0 bg-stone-100 text-stone-900 z-50 dark:bg-stone-900 dark:text-stone-50">
 							<button @click="stopKixote" class="w-full bg-stone-200 hover:bg-rose-500 hover:text-white dark:bg-stone-700 dark:hover:bg-rose-500 p-2 transition duration-100">Close</button>
-							<div class="max-w-7xl mx-auto p-8 overflow-auto h-full">
+							<div class="max-w-7xl mx-auto p-8 h-full">
 								<div class="flex h-full">
 									<div class="w-1/4">
 										<div class="p-5">
@@ -201,7 +201,7 @@ const kixote = Vue.createApp({
 											<div v-else><p>No AI service has been activated.</p><p>You can enable and configure one in the system settings to start using AI features.</p></div>
 										</div>
 									</div>
-									<div class="w-3/4 overflow-y-auto h-full scroll-smooth" ref="kdisplay">
+									<div class="w-3/4 overflow-auto h-full" ref="kdisplay">
 										<div class="p-5">
 											<keep-alive>
 												<component 
@@ -507,7 +507,7 @@ kixote.component('tab-admin', {
 			params: false,
 		}
 	},
-	template: `<section class="dark:bg-stone-700 dark:text-stone-200 bg-stone-200">
+	template: `<section class="dark:bg-stone-700 smooth-scroll dark:text-stone-200 bg-stone-200">
 					<div class="p-5">
 						<h1 class="mb-d3">Hello, I am <span class="text-teal-600">Kixote</span> from Typemill. How can I help?</h1>
 					</div>
@@ -906,7 +906,6 @@ kixote.component('tab-generate', {
 		      							@mouseup 	= "detectSelection($event)"
 	      								@keyup 		= "detectSelection($event)"
 						            	>
-						            	{{ article }}
 						            </textarea>
 
 								    <!-- FOCUS BUTTON -->

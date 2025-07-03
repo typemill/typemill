@@ -14,15 +14,15 @@ class ApiAuthorization implements MiddlewareInterface
 
 	private $acl;
 
-	private $resource;
+	private ?string $resource;
 
-	private $action;
-	
-	public function __construct($acl, string $resource = NULL, string $action = NULL)
+	private ?string $action;
+
+	public function __construct($acl, ?string $resource = null, ?string $action = null)
 	{
-		$this->acl 			= $acl;
-		$this->resource 	= $resource;
-		$this->action 		= $action;		
+		$this->acl      = $acl;
+		$this->resource = $resource;
+		$this->action   = $action;
 	}
 
 	public function process(Request $request, RequestHandler $handler) :Response

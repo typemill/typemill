@@ -66,12 +66,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/erusev/parsedown.git",
-                "reference": "c9dc49f68f7bd14e5aa107d86a08ce59203f02ee"
+                "reference": "5b74b74145aa14653d3285d793cf7fa817b3f7e7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/erusev/parsedown/zipball/c9dc49f68f7bd14e5aa107d86a08ce59203f02ee",
-                "reference": "c9dc49f68f7bd14e5aa107d86a08ce59203f02ee",
+                "url": "https://api.github.com/repos/erusev/parsedown/zipball/5b74b74145aa14653d3285d793cf7fa817b3f7e7",
+                "reference": "5b74b74145aa14653d3285d793cf7fa817b3f7e7",
                 "shasum": ""
             },
             "require": {
@@ -109,7 +109,7 @@
                 "issues": "https://github.com/erusev/parsedown/issues",
                 "source": "https://github.com/erusev/parsedown/tree/master"
             },
-            "time": "2024-12-01T16:36:17+00:00"
+            "time": "2025-06-05T05:59:58+00:00"
         },
         {
             "name": "erusev/parsedown-extra",
@@ -229,22 +229,23 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Gregwar/Captcha.git",
-                "reference": "229d3cdfe33d6f1349e0aec94a26e9205a6db08e"
+                "reference": "9ff3588c7b83d6470763a11045c12a39d77c868e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Gregwar/Captcha/zipball/229d3cdfe33d6f1349e0aec94a26e9205a6db08e",
-                "reference": "229d3cdfe33d6f1349e0aec94a26e9205a6db08e",
+                "url": "https://api.github.com/repos/Gregwar/Captcha/zipball/9ff3588c7b83d6470763a11045c12a39d77c868e",
+                "reference": "9ff3588c7b83d6470763a11045c12a39d77c868e",
                 "shasum": ""
             },
             "require": {
+                "ext-fileinfo": "*",
                 "ext-gd": "*",
                 "ext-mbstring": "*",
                 "php": ">=5.3.0",
                 "symfony/finder": "*"
             },
             "require-dev": {
-                "phpunit/phpunit": "^6.4"
+                "phpunit/phpunit": "^4.8.35 || ^5.7.21 || ^6.4 || ^7.0 || ^8.0 || ^9.0"
             },
             "default-branch": true,
             "type": "library",
@@ -277,9 +278,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Gregwar/Captcha/issues",
-                "source": "https://github.com/Gregwar/Captcha/tree/v1.2.1"
+                "source": "https://github.com/Gregwar/Captcha/tree/master"
             },
-            "time": "2023-09-26T13:45:37+00:00"
+            "time": "2025-06-30T21:15:17+00:00"
         },
         {
             "name": "jbroadway/urlify",
@@ -2355,9 +2356,9 @@
     "platform": {
         "php": "^8.0"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "platform-overrides": {
         "php": "8.0.0"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

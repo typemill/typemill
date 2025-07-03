@@ -15,11 +15,11 @@ class WebAuthorization implements MiddlewareInterface
 
 	private $acl;
 
-	private $resource;
+	private ?string $resource;
 
-	private $action;
+	private ?string $action;
 	
-	public function __construct(RouteParser $router, $acl, string $resource = NULL, string $action = NULL)
+	public function __construct(RouteParser $router, $acl, ?string $resource = NULL, ?string $action = NULL)
 	{
 		$this->router 		= $router;
 		$this->acl 			= $acl;
