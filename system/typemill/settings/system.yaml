@@ -264,6 +264,15 @@ fieldsetdeveloper:
       type: checkbox
       label: "Twig cache"
       checkboxlabel: "Activate the cache for twig templates"
+    autorefresh:
+      type: checkbox
+      label: "Auto-Refresh Navigation"
+      checkboxlabel: "Enable to refresh the navigation automatically at regular intervals"
+    refreshtimer:
+      type: number
+      label: "Refresh Interval (Minutes)"
+      placeholder: 10
+      description: "Define how often the navigation should be refreshed (in minutes)"
     proxy:
       type: checkbox
       label: "Proxy"

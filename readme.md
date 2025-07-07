@@ -2,7 +2,7 @@
 
 Typemill is an open-source flat-file CMS for creating websites and eBooks with markdown files. It’s commonly used for informational websites such as user manuals, documentation, knowledge bases, wikis, and handbooks.
 
-Learn more at [typemill.net](https://typemill.net) or get started with the [starter guide](https://docs.typemill.net/getting-started).
+Learn more at [typemill.net](https://typemill.net), check the [demo installation](https://try.typemill.net), or get started with the [starter guide](https://docs.typemill.net/getting-started).
 
 ![Typemill Screenshot](/typemill.webp)
 

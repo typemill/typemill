@@ -8,6 +8,7 @@ use Slim\Routing\RouteContext;
 use Typemill\Models\Navigation;
 use Typemill\Models\Content;
 use Typemill\Models\Meta;
+use Typemill\Models\StorageWrapper;
 use Typemill\Events\OnPagetreeLoaded;
 use Typemill\Events\OnBreadcrumbLoaded;
 use Typemill\Events\OnItemLoaded;
@@ -31,6 +32,21 @@ class ControllerWebFrontend extends Controller
 
 		# GET THE NAVIGATION
 	    $navigation 		= new Navigation();
+
+		# CLEAR NAVIGATION IF MODE WITHOUT ADMIN
+		if(isset($this->settings['autorefresh']) && $this->settings['autorefresh'] == true)
+		{
+			$interval = (int) ($this->settings['refreshtimer'] ?? 10);
+			$interval = $interval * 60; # seconds
+
+			$storage = new StorageWrapper('\Typemill\Models\Storage');
+	    	$timeoutIsOver = $storage->timeoutIsOver('refreshnavi', $interval);
+			if($timeoutIsOver === true)
+			{
+				$navigation->clearNavigation();
+			}
+		}
+
 		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $langattr);
 	    $home 				= false;
 
