@@ -179,9 +179,23 @@ class Settings
 				$userSettings[$key1] = $newSettings;
 				$settings = $userSettings;
 			}
-			# only merge
+			# replace system settings
 			else
 			{
+				# keep old plugin and theme settings unless explicitly replaced
+				$plugins = $newSettings['plugins'] ?? ($userSettings['plugins'] ?? []);
+				$themes  = $newSettings['themes'] ?? ($userSettings['themes'] ?? []);
+
+				# remove them from $newSettings to avoid overwriting twice
+				unset($newSettings['plugins'], $newSettings['themes']);
+
+				# final combined settings
+				$settings = array_merge($newSettings, [
+				    'plugins' => $plugins,
+				    'themes'  => $themes,
+				]);
+
+				/*
 				# merge usersettings with new settings
 				$settings 	= array_merge($userSettings, $newSettings);
 
@@ -203,6 +217,7 @@ class Settings
 						}
 					}
 				}
+				*/
 			}
 
 			if($this->storage->updateYaml('settingsFolder', '', 'settings.yaml', $settings))

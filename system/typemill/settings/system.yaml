@@ -346,7 +346,7 @@ fieldsetai:
       description: "Select the AI model you want to use. Pricing may vary over time, so please check the latest details on [OpenAI's pricing page](https://platform.openai.com/docs/pricing)"
       options: 
         gpt-4.1-nano: 'gpt-4.1-nano ($0.10 / $0.40)'
-        gpt-4.1-mini: 'gpt-4.1-mini ($0.30 / $1.20)'
+        gpt-4.1-mini: 'gpt-4.1-mini ($0.40 / $1.60)'
         gpt-4.1: 'gpt-4.1 ($2.00 / $8.00)'        
         gpt-4o-mini: 'gpt-4o-mini ($0.15 / $0.6)'
         gpt-4o: 'gpt-4o ($2.50 / $10)'

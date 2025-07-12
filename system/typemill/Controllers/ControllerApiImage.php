@@ -340,7 +340,9 @@ class ControllerApiImage extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
 
-		if(!$media->storeRenditionsToTmp($this->settings['images']))
+		$desiredSizes = $this->getDesiredSizes();
+
+		if(!$media->storeRenditionsToTmp($desiredSizes))
 		{
 			$response->getBody()->write(json_encode([
 				'message' 		=> $media->errors[0],
@@ -509,7 +511,7 @@ class ControllerApiImage extends Controller
 		}
 
 		# set to youtube size
-		$sizes = $this->settings['images'];
+		$sizes = $this->getDesiredSizes();
 		$sizes['live'] = ['width' => 560, 'height' => 315];
 
 		if(!$media->storeRenditionsToTmp($sizes))
@@ -573,5 +575,30 @@ class ControllerApiImage extends Controller
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
+	}
+
+	private function getDesiredSizes()
+	{
+		$desiredSizes = [
+		    'live' => [
+		        'width' => 820,
+		    ],
+		    'thumbs' => [
+		        'width' => 250,
+		        'height' => 150,
+		    ],
+		];
+		if(isset($this->settings['liveimagewidth']) && is_int($this->settings['liveimagewidth']) && $this->settings['liveimagewidth'] > 10)
+		{
+			$desiredSizes['live']['width'] = $this->settings['liveimagewidth'];
+		}
+		if(isset($this->settings['liveimageheight']) && is_int($this->settings['liveimageheight']) && $this->settings['liveimageheight'] > 10)
+		{
+			$desiredSizes['live']['height'] = $this->settings['liveimageheight'];
+		}
+
+		# we could check for theme settings here
+
+		return $desiredSizes;
 	}
 }
