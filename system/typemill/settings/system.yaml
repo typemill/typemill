@@ -155,6 +155,11 @@ fieldsetaccess:
       type: checkbox
       label: 'Page restriction'
       checkboxlabel: 'Activate individual restrictions for pages in the meta-tab of each page.'
+    hiderestrictedpageslive:
+      type: checkbox
+      label: 'Hide Restricted Pages in Frontend'
+      checkboxlabel: 'Hide restricted pages in the navigation for users without rights in frontend.'
+      description: 'Be aware that this feature can slow down performance for large websites with many pages.'
     hrdelimiter:
       type: checkbox
       label: 'Content break'

@@ -113,8 +113,23 @@ class ControllerWebFrontend extends Controller
 
 		$liveNavigation = $navigation->generateLiveNavigationFromDraft($draftNavigation);
 
-		# STRIP OUT HIDDEN PAGES
-		$liveNavigation = $navigation->removeHiddenPages($liveNavigation);
+		# STRIP OUT HIDDEN AND RESTRICTED PAGES
+		$hidden 		= true; 
+		$restricted 	= false;
+		if(
+			isset($this->settings['pageaccess']) 
+			&& $this->settings['pageaccess']
+			&& isset($this->settings['hiderestrictedpageslive'])
+			&& $this->settings['hiderestrictedpageslive']
+		)
+		{
+			$restricted = [
+				'username' => $username,
+				'userrole' => $userrole,
+				'acl' => $username ? $this->c->get('acl') : false
+			];
+		}
+		$liveNavigation = $navigation->removePages($liveNavigation, $hidden, $restricted);
 
 		# SET PAGEs ACTIVE
 		$liveNavigation = $navigation->setActiveNaviItemsWithKeyPath($liveNavigation, $item->keyPathArray);
@@ -351,7 +366,6 @@ class ControllerWebFrontend extends Controller
 
 	    return $this->c->get('view')->render($response, $route, $pagedata);
 	}
-
 
 	# checks if a page has a restriction in meta and if the current user is blocked by that restriction
 	public function checkRestrictions($meta, $username, $userrole)

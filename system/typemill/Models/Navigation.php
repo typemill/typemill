@@ -504,10 +504,25 @@ class Navigation extends Folder
 			}
 
 			$extended[$item->urlRelWoF]['navtitle'] 	= isset($meta['meta']['navtitle']) ? $meta['meta']['navtitle'] : '';
-			$extended[$item->urlRelWoF]['hide'] 		= isset($meta['meta']['hide']) ? $meta['meta']['hide'] : false;
-			$extended[$item->urlRelWoF]['noindex'] 		= isset($meta['meta']['noindex']) ? $meta['meta']['noindex'] : false;
 			$extended[$item->urlRelWoF]['path']			= $item->path;
 			$extended[$item->urlRelWoF]['keyPath']		= $item->keyPath;
+
+			if(isset($meta['meta']['hide']) && $meta['meta']['hide'])
+			{
+				$extended[$item->urlRelWoF]['hide'] = $meta['meta']['hide'];
+			}
+			if(isset($meta['meta']['noindex']) && $meta['meta']['noindex'])
+			{
+				$extended[$item->urlRelWoF]['noindex'] 	= $meta['meta']['noindex'];
+			}
+			if(isset($meta['meta']['allowedrole']) && $meta['meta']['allowedrole'] )
+			{
+				$extended[$item->urlRelWoF]['allowedrole'] 	= $meta['meta']['allowedrole'];
+			}
+			if(isset($meta['meta']['alloweduser']) && $meta['meta']['alloweduser'] )
+			{
+				$extended[$item->urlRelWoF]['alloweduser'] 	= $meta['meta']['alloweduser'];
+			}
 
 			if ($item->elementType == 'folder')
 			{
@@ -528,8 +543,22 @@ class Navigation extends Folder
 			if($extendedNavigation && isset($extendedNavigation[$item->urlRelWoF]))
 			{
 				$item->name 		= ($extendedNavigation[$item->urlRelWoF]['navtitle'] != '') ? $extendedNavigation[$item->urlRelWoF]['navtitle'] : $item->name;
-				$item->hide 		= ($extendedNavigation[$item->urlRelWoF]['hide'] === true) ? true : false;
-				$item->noindex		= (isset($extendedNavigation[$item->urlRelWoF]['noindex']) && $extendedNavigation[$item->urlRelWoF]['noindex'] === true) ? true : false;
+				if(isset($extendedNavigation[$item->urlRelWoF]['hide']) && $extendedNavigation[$item->urlRelWoF]['hide'] === true)
+				{
+					$item->hide	= true;
+				}
+				if(isset($extendedNavigation[$item->urlRelWoF]['noindex']) && $extendedNavigation[$item->urlRelWoF]['noindex'] === true)
+				{
+					$item->noindex	= true;
+				}
+				if(isset($extendedNavigation[$item->urlRelWoF]['allowedrole']) && $extendedNavigation[$item->urlRelWoF]['allowedrole'])
+				{
+					$item->allowedrole = $extendedNavigation[$item->urlRelWoF]['allowedrole'];
+				}
+				if(isset($extendedNavigation[$item->urlRelWoF]['alloweduser']) && $extendedNavigation[$item->urlRelWoF]['alloweduser'])
+				{
+					$item->alloweduser = $extendedNavigation[$item->urlRelWoF]['alloweduser'];
+				}
 			}
 
 			if($item->elementType == 'folder')
@@ -702,17 +731,76 @@ class Navigation extends Folder
 		return false;		
 	}
 
-	public function removeHiddenPages($liveNavigation)
+	public function removePages($liveNavigation, $hidden, $restricted)
 	{
 		foreach($liveNavigation as $key => $item)
 		{
-			if(isset($item->hide) && $item->hide == true)
+			$removed = false;
+
+			if($hidden && (isset($item->hide) && $item->hide == true))
 			{
 				unset($liveNavigation[$key]);
+				$removed = true;
 			}
-			elseif($item->elementType == 'folder' && !empty($item->folderContent))
+
+			if($restricted && !$removed)
 			{
-				$item->folderContent = $this->removeHiddenPages($item->folderContent);
+				if(isset($item->alloweduser) && $item->alloweduser)
+				{
+					# if user is logged in
+					if(is_array($restricted) && isset($restricted['username']) && $restricted['username'])
+					{
+						$alloweduser = array_map('trim', explode(",", $item->alloweduser));
+						if(!in_array($restricted['username'], $alloweduser))
+						{
+							# user has no access to page
+							unset($liveNavigation[$key]);
+							$removed = true;
+						}						
+					}
+					else
+					{
+						# user is not logged in so should never have access
+						unset($liveNavigation[$key]);
+						$removed = true;
+					}
+				}
+				elseif(isset($item->allowedrole))
+				{
+					# if user is logged in
+					if(
+						is_array($restricted) 
+						&& isset($restricted['userrole']) 
+						&& $restricted['userrole']
+						&& isset($restricted['acl'])
+						&& $restricted['acl']
+					)
+					{
+						$userrole = $restricted['userrole'];
+						$acl = $restricted['acl'];
+
+						if(
+							$userrole !== 'administrator' 
+							AND $userrole !== $item->allowedrole
+							AND !$acl->inheritsRole($userrole, $item->allowedrole)
+						)
+						{
+							# user has no access to page
+							unset($liveNavigation[$key]);
+							$removed = true;
+						}						
+					}
+					else
+					{
+						unset($liveNavigation[$key]);
+						$removed = true;
+					}
+				}
+			}
+
+			if(!$removed && ($item->elementType == 'folder') && !empty($item->folderContent))
+			{
+				$item->folderContent = $this->removePages($item->folderContent, $hidden, $restricted);
 			}
 		}
 
