@@ -5,7 +5,7 @@ system/vendor
 cypress
 data/navigation
 data/css
-data/security
+data/security/securitylog.txt
 node_modules
 plugins/search
 settings/settings.yaml
