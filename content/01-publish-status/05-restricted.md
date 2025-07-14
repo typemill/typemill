@@ -1,6 +1,9 @@
 # Restricted Page
 
-This is a restricted page (to activate the feature please read the paragraph below). Restricted pages are published pages that require an authentication to see the content. You can cut the content with a hr-line, everything below this line is not visible in frontend for unauthenticated users.
+This is a restricted page (to activate the feature please read the paragraph below). Restricted pages are published pages that require an authentication to see the content. You have several options:
+
+* You can cut the content with a hr-line, everything below this line is not visible in frontend for unauthenticated users. This is great if you want to teaser the content and require authentication or even payment to read more.
+* You can completely remove the page from the navigation for users that are not allowed to see the page. neu
 
 ---
 

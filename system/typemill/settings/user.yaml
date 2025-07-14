@@ -32,6 +32,7 @@ aiservices:
   type: 'checkboxlist'
   options:
     chatgpt: "Use ChatGPT and accept their terms and conditions."
+    claude: "Use Claude and accept their terms and conditions."
 password:
   name: password
   label: 'Actual Password' 

@@ -119,10 +119,10 @@ class License
 	    		return false;
 	    	}
 
+/*
 			$backtrace = debug_backtrace();
 			$callingMethod = isset($backtrace[1]['function']) ? $backtrace[1]['function'] : 'Unknown';
 
-/*
 	    	echo '<br><br>method: ';
 	    	echo $callingMethod;
 	    	echo '<br>force: ';

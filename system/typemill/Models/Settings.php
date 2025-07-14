@@ -179,30 +179,24 @@ class Settings
 				$userSettings[$key1] = $newSettings;
 				$settings = $userSettings;
 			}
-			# only merge
+			# replace system settings
 			else
 			{
-				# merge usersettings with new settings
-				$settings 	= array_merge($userSettings, $newSettings);
+				# keep old plugin and theme settings unless explicitly replaced
+				$plugins = $newSettings['plugins'] ?? ($userSettings['plugins'] ?? []);
+				$themes  = $newSettings['themes'] ?? ($userSettings['themes'] ?? []);
 
-				# make sure that multidimensional arrays are merged correctly
-				# for example: only one plugin data will be passed with new settings, with array merge all others will be deleted.
-				foreach($newSettings as $key => $settingsItems)
-				{
-					if(is_array($settingsItems) && isset($userSettings[$key]))
-					{
-						if($this->array_is_list($settingsItems))
-						{
-							# for numeric/list arrays instead of associative arrays we only use new values
-							$settings[$key] = $newSettings[$key];
-						}
-						else
-						{
-							# changed from array_merge to array_replace to preserve the index, otherwise numeric values get re-indexed. Alternative is 
-							$settings[$key] = array_replace($userSettings[$key], $newSettings[$key]);
-						}
-					}
-				}
+				# remove them from $newSettings to avoid overwriting twice
+				unset($newSettings['plugins'], $newSettings['themes']);
+
+				# add current theme from usersettings
+				$newSettings['theme']	 = $userSettings['theme'];
+
+				# final combined settings
+				$settings = array_merge($newSettings, [
+				    'plugins' => $plugins,
+				    'themes'  => $themes,
+				]);
 			}
 
 			if($this->storage->updateYaml('settingsFolder', '', 'settings.yaml', $settings))

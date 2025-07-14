@@ -155,6 +155,11 @@ fieldsetaccess:
       type: checkbox
       label: 'Page restriction'
       checkboxlabel: 'Activate individual restrictions for pages in the meta-tab of each page.'
+    hiderestrictedpageslive:
+      type: checkbox
+      label: 'Hide Restricted Pages in Frontend'
+      checkboxlabel: 'Hide restricted pages in the navigation for users without rights in frontend.'
+      description: 'Be aware that this feature can slow down performance for large websites with many pages.'
     hrdelimiter:
       type: checkbox
       label: 'Content break'
@@ -264,6 +269,15 @@ fieldsetdeveloper:
       type: checkbox
       label: "Twig cache"
       checkboxlabel: "Activate the cache for twig templates"
+    autorefresh:
+      type: checkbox
+      label: "Auto-Refresh Navigation"
+      checkboxlabel: "Enable to refresh the navigation automatically at regular intervals"
+    refreshtimer:
+      type: number
+      label: "Refresh Interval (Minutes)"
+      placeholder: 10
+      description: "Define how often the navigation should be refreshed (in minutes)"
     proxy:
       type: checkbox
       label: "Proxy"
@@ -331,6 +345,9 @@ fieldsetai:
       label: 'ChatGPT model'
       description: "Select the AI model you want to use. Pricing may vary over time, so please check the latest details on [OpenAI's pricing page](https://platform.openai.com/docs/pricing)"
       options: 
+        gpt-4.1-nano: 'gpt-4.1-nano ($0.10 / $0.40)'
+        gpt-4.1-mini: 'gpt-4.1-mini ($0.40 / $1.60)'
+        gpt-4.1: 'gpt-4.1 ($2.00 / $8.00)'        
         gpt-4o-mini: 'gpt-4o-mini ($0.15 / $0.6)'
         gpt-4o: 'gpt-4o ($2.50 / $10)'
         gpt-3.5-turbo-0125: 'gpt-3.5-turbo ($0.50 / $1.50)'
@@ -347,6 +364,8 @@ fieldsetai:
       label: 'Claude model'
       description: "Select the AI model you want to use. Pricing may vary over time, so please check the latest details on [Claude's pricing page](https://docs.anthropic.com/en/docs/about-claude/models/all-models)"
       options: 
+        claude-opus-4-20250514: 'Claude Opus 4 ($15 / $75)'
+        claude-sonnet-4-20250514: 'Claude Sonnet 4 ($3 / $15)'
         claude-3-7-sonnet-20250219: 'Claude 3.7 Sonnet ($3 / $15)'
         claude-3-5-haiku-20241022: 'Claude 3.5 Haiku ($0.80 / $4)'
         claude-3-opus-20240229: 'Claude 3 Opus ($15.00 / $75)'

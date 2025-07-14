@@ -143,20 +143,30 @@ class ControllerApiKixote extends Controller
 			}
 		}
 
-		# get toke stats for AI service
+		# get token stats for AI service
 		if($aiservice && $useragreement)
 		{
 			switch ($aiservice)
 			{
 				case 'chatgpt':
 					$tokenstats = [
-						'url' => 'https://platform.openai.com/settings/organization/billing/overview',
-						'label' => 'ChatGPT Billing'
+						'service' 	=> 'ChatGPT',
+						'url' 		=> 'https://platform.openai.com/settings/organization/billing/overview',
+					];
+					break;
+
+				case 'claude':
+					$tokenstats = [
+						'service' 	=> 'Claude',
+						'url' 		=> 'https://console.anthropic.com/usage',
 					];
 					break;
 				
 				default:
-					$tokenstats = 0;
+					$tokenstats = [
+						'service' 	=> 'Kixote',
+						'token' 	=> 0
+					];
 					break;
 			}
 		}
@@ -395,7 +405,7 @@ class ControllerApiKixote extends Controller
 	    ];
 
 	    $apiservice = new ApiCalls();
-	    $apiservice->setTimeout(30);
+	    $apiservice->setTimeout(120);
 	    $apiResponse = $apiservice->makePostCall($url, $postdata, $authHeader);
 
 	    if (!$apiResponse)
@@ -467,7 +477,7 @@ class ControllerApiKixote extends Controller
 	    ];
 
 	    $apiservice = new ApiCalls();
-	    $apiservice->setTimeout(30);
+	    $apiservice->setTimeout(120);
 	    $apiResponse = $apiservice->makePostCall($url, $postdata, $headers);
 
 	    if (!$apiResponse) {

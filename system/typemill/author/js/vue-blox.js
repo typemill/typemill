@@ -2,6 +2,12 @@ const bloxeditor = Vue.createApp({
 	template: `<div v-if="editorVisible" class="px-2 lg:px-12 py-8 bg-stone-50 dark:bg-stone-700 dark:text-stone-200 shadow-md mb-16">
 					<div class="absolute top-0 right-0">
 						<button 
+							@click.prevent="openkixoteai()"
+							class="mr-1 px-2 py-2 bg-stone-50 border-b-2 border-stone-50 hover:bg-stone-200 dark:text-stone-200 dark:bg-stone-700 dark:border-stone-600 hover:dark:bg-stone-200 hover:dark:text-stone-900 transition duration-100"
+						>
+							<svg class="icon icon-magic-wand"><use xlink:href="#icon-magic-wand"></use></svg>
+						</button>
+						<button 
 							@click.prevent="openmedialib()"
 							class="px-2 py-2 bg-stone-50 border-b-2 border-stone-50 hover:bg-stone-200 dark:text-stone-200 dark:bg-stone-700 dark:border-stone-600 hover:dark:bg-stone-200 hover:dark:text-stone-900 transition duration-100"
 						>
@@ -69,6 +75,10 @@ const bloxeditor = Vue.createApp({
 		});
 	},
 	methods: {
+		openkixoteai()
+		{
+			eventBus.$emit('startAi');
+		},
 		openmedialib()
 		{
 			this.showmedialib = true;

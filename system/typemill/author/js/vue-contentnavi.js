@@ -17,11 +17,12 @@ const navigation = Vue.createApp({
 						</a>
 					</div>
 					<div class="pl-2 pl-3 pl-4 pl-6 pl-8 pl-9 pl-10 pl-12 pl-15 pl-18 pl-21 pl-24 text-stone-50"></div>
-					<navilevel :navigation="navigation" :expanded="expanded" />
+					<navilevel :navigation="navigation" :expanded="expanded" :pageaccess="pageaccess" />
 				</div>
 			</div>`,
 	data: function () {
 		return {
+			pageaccess: false,
 			navigation: data.navigation,
 			home: data.home,
 			backup: false,
@@ -31,6 +32,10 @@ const navigation = Vue.createApp({
 		}
 	},
 	mounted: function(){
+		if(data.settings.pageaccess)
+		{
+			this.pageaccess = true;
+		}
 		var expanded = localStorage.getItem('expanded');
 		if(expanded !== null)
 		{
@@ -167,6 +172,7 @@ navigation.component('navilevel',{
 				id: parentId ? parentId : false
 			}"
 			:expanded="expanded"
+			:pageaccess="pageaccess"
 		  >
 			<template #item="{ element }">
 				<li :class="element.elementType" :id="element.keyPath" :data-url="element.urlRelWoF" :data-active="element.active" :data-hide="element.hide">
@@ -181,18 +187,25 @@ navigation.component('navilevel',{
 								<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
 							</svg>
 						</div>
-						<div v-if="element.hide" class="p-1 absolute right-0">
-							<svg  class="icon icon-eye-blocked">
-								<use xlink:href="#icon-eye-blocked"></use>
-							</svg> 
-						</div>
-						<div v-if="element.elementType == 'folder' && element.contains == 'pages'" class=" p-1 bg-transparent absolute right-0" @click="callToggle(element.urlRelWoF)">
-							<svg v-if="isExpanded(element.urlRelWoF)" class="icon icon-cheveron-up">
-								<use xlink:href="#icon-cheveron-up"></use>
-							</svg>
-							<svg v-else class="icon icon-cheveron-down">
-								<use xlink:href="#icon-cheveron-down"></use>
-							</svg>
+						<div class="absolute right-0 flex">
+							<div v-if="isRestricted(element)" class="p-1 transparent">
+								<svg  class="icon icon-blocked text-stone-500">
+									<use xlink:href="#icon-blocked"></use>
+								</svg> 
+							</div>
+							<div v-if="element.hide" class="p-1 transparent">
+								<svg  class="icon icon-eye-blocked text-stone-500">
+									<use xlink:href="#icon-eye-blocked"></use>
+								</svg> 
+							</div>
+							<div v-if="element.elementType == 'folder' && element.contains == 'pages'" class="p-1 bg-transparent" @click="callToggle(element.urlRelWoF)">
+								<svg v-if="isExpanded(element.urlRelWoF)" class="icon icon-cheveron-up">
+									<use xlink:href="#icon-cheveron-up"></use>
+								</svg>
+								<svg v-else class="icon icon-cheveron-down">
+									<use xlink:href="#icon-cheveron-down"></use>
+								</svg>
+							</div>
 						</div>
 					</div>
 					<navilevel 
@@ -201,7 +214,8 @@ navigation.component('navilevel',{
 						:list 		= "element.folderContent" 
 						:navigation = "element.folderContent" 
 						:parentId 	= "element.keyPath" 
-						:expanded 	= "expanded" />
+						:expanded 	= "expanded" 
+						:pageaccess = "pageaccess" />
 				</li>
 			</template>
 			<template #footer>
@@ -229,6 +243,11 @@ navigation.component('navilevel',{
 			</template>
 		  </draggable>`,
 	props: { 
+		pageaccess: {
+			type: Boolean,
+			required: false,
+			default: false
+		},
 		navigation: {
 			type: Array,
 			required: true
@@ -358,6 +377,17 @@ navigation.component('navilevel',{
 			}
 			return false;
 */
+		},
+		isRestricted(element)
+		{
+			if(this.pageaccess)
+			{
+				if(element.allowedrole || element.alloweduser)
+				{
+					return true;
+				}
+			}
+			return false;
 		},
 		onStart(evt)
 		{

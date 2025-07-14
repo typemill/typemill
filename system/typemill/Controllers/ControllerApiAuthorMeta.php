@@ -305,6 +305,10 @@ class ControllerApiAuthorMeta extends Controller
 				($this->hasChanged($params['data'], $metadata['meta'], 'hide'))
 				OR
 				($this->hasChanged($params['data'], $metadata['meta'], 'noindex'))
+				OR
+				($this->hasChanged($params['data'], $metadata['meta'], 'alloweduser'))
+				OR
+				($this->hasChanged($params['data'], $metadata['meta'], 'allowedrole'))
 			)
 			{
 				$navigation->clearNavigation([$naviFileName, $naviFileName . '-extended']);
