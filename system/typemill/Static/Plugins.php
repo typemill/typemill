@@ -77,25 +77,32 @@ class Plugins
 
 	public static function getPremiumLicense($className)
 	{
-		$premiumlist = [
-			'\Plugins\html\html' 			=> 'MAKER',
-			'\Plugins\html\register' 		=> 'MAKER',
-			'\Plugins\html\seo' 			=> 'MAKER',
-			'\Plugins\html\embed' 			=> 'MAKER',
-			'\Plugins\html\ebookproducts' 	=> 'MAKER',
-			'\Plugins\html\bettersearch' 	=> 'MAKER',
-			'\Plugins\html\templates' 		=> 'BUSINESS',
-			'\Plugins\html\revisions' 		=> 'BUSINESS',
+		$premiumList = [
+			'\Plugins\bettersearch\bettersearch' 	=> 'MAKER',
+			'\Plugins\ebookproducts\ebookproducts' 	=> 'MAKER',
+			'\Plugins\embed\embed' 					=> 'MAKER',
+			'\Plugins\html\html' 					=> 'MAKER',
+			'\Plugins\newsletter\newslettter' 		=> 'MAKER',
+			'\Plugins\register\register' 			=> 'MAKER',
+			'\Plugins\revisions\revisions' 			=> 'BUSINESS',
+			'\Plugins\seo\seo' 						=> 'MAKER',
+			'\Plugins\templates\templates' 			=> 'BUSINESS',
+			'\Plugins\variables\variables' 			=> 'BUSINESS',
 		];
 
-		if(isset($premiumList['className']))
+		if(isset($premiumList[$className]))
 		{
-			return $premiumList['className'];
+			return $premiumList[$className];
 		}
 
 		if(method_exists($className, 'setPremiumLicense'))
 		{
-			return $className::setPremiumLicense();			
+			return $className::setPremiumLicense();
+		}
+
+		if(method_exists($className, 'setPremiumLicence'))
+		{
+			return $className::setPremiumLicence();
 		}
 		
 		return false;
