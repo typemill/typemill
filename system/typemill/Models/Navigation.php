@@ -267,7 +267,7 @@ class Navigation extends Folder
 
 		$liveNavigation = $this->generateLiveNavigationFromDraft($draftNavigation);
 
-		$liveNavigation = $this->removeHiddenPages($liveNavigation);
+		$liveNavigation = $this->removePages($liveNavigation, $hidden = true, $restricted = false);
 
 		return $liveNavigation;
 	}
