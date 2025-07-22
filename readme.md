@@ -4,7 +4,7 @@ Typemill is an open-source flat-file CMS for creating websites and eBooks with m
 
 Learn more at [typemill.net](https://typemill.net), check the [demo installation](https://try.typemill.net), or get started with the [starter guide](https://docs.typemill.net/getting-started).
 
-![Typemill Screenshot](/typemill.webp)
+![Typemill Screenshot](/typemill-editor.webp)
 
 ## Key Features
 

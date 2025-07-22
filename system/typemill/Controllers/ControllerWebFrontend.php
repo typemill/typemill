@@ -353,7 +353,7 @@ class ControllerWebFrontend extends Controller
 			'home'			=> $home,
 			'navigation' 	=> $liveNavigation,
 			'title' 		=> $title,
-			'content' 		=> $contentHtml, 
+			'content' 		=> $contentHtml,
 			'item' 			=> $item,
 			'breadcrumb' 	=> $breadcrumb, 
 			'settings' 		=> $this->settings,
