@@ -343,6 +343,12 @@ class ControllerWebFrontend extends Controller
 			$assets->addMeta('twitter_card','<meta name="twitter:card" content="summary_large_image">');
 		}
 
+		$notice = $this->missingRessources();
+		if($notice !== false)
+		{
+			$contentHtml = $notice . $contentHtml;
+		}
+
 		$pagedata = [
 			'home'			=> $home,
 			'navigation' 	=> $liveNavigation,
@@ -469,5 +475,19 @@ class ControllerWebFrontend extends Controller
 		}
 
 		return $restrictionNotice;
+	}
+
+	private function missingRessources()
+	{
+		$prothemes = ['lume', 'guide', 'pilot'];
+		$theme = $this->settings['theme'];
+		$license = $this->settings['license'] ?? false;
+		if(in_array($theme, $prothemes) && !$license)
+		{
+			$notice = '<p style="display:block;width:100%;min-height:20px;color:white;background:red;padding:2px;text-align:center">Resources are missing for this theme.</p>';
+			return $notice;
+		}
+
+		return false;
 	}
 }
