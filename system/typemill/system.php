@@ -200,14 +200,15 @@ foreach($plugins as $plugin)
 #			\Typemill\Static\Helpers\addLogEntry('No License: ' . $pluginName);
 			if($pluginSettings[$pluginName]['active'])
 			{
+#				$settings['plugins'][$pluginName]['active'] = false;
 				$pluginSettings[$pluginName]['active'] = false;
-				$updateSettings = true;
+				# $updateSettings = true;
 			}
 		}
 	}
 
 	# if the plugin is activated, add routes/middleware and add plugin as event subscriber
-	if(isset($settings['plugins'][$pluginName]['active']) && $settings['plugins'][$pluginName]['active'])
+	if(isset($pluginSettings[$pluginName]['active']) && $pluginSettings[$pluginName]['active'])
 	{
 		$routes 		= Plugins::getNewRoutes($className, $routes);
 		$middleware		= Plugins::getNewMiddleware($className, $middleware);
