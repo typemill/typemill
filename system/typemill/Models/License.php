@@ -53,6 +53,12 @@ class License
 	# used to activate or deactivate features that require a license
 	public function getLicenseScope(array $urlinfo)
 	{
+
+	    if($this->checkIfTest($urlinfo))
+	    {
+	        return $this->plans['BUSINESS']['scope'];
+	    }
+	    
 		$licensedata 	= $this->getLicenseFile();
 		if(!$licensedata)
 		{

@@ -376,7 +376,7 @@ const medialib = {
 	        {
 	        	medialist = this.imagedata;
 	        }
-	        else if(this.active === 'files')
+	        else if(this.active === 'files' || this.active === 'videos' || this.active === 'audios')
 	        {
 	        	medialist = this.filedata;
 	        }
