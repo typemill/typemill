@@ -143,6 +143,28 @@ fieldsetwriting:
       label: 'Url schemes'
       description: 'Add more url schemes for external links e.g. like dict:// (comma separated list)'
       maxlength: 60
+fieldsetlang:
+  type: fieldset
+  legend: Lang
+  fields:
+    multilang:
+      type: checkbox
+      label: 'Multilanguage Website'
+      checkboxlabel: 'Activate the multi-language feature to provide your content in multiple languages.'
+    baselangcode:
+      type: text
+      label: 'Base Language Code'
+      description: 'Use ISO 639-1 codes like "en".'
+      css: 'lg:w-half w-full'
+    baselanglabel:
+      type: text
+      label: 'Base Language Label'
+      description: 'Use the full name, e.g., "English".'
+      css: 'lg:w-half w-full'
+    multilanguages:
+      type: customfields
+      label: 'Additional Languages (code | label)'
+      description: 'For each language add a language code like "en" on the left and a label like "English" on the right'
 fieldsetaccess:
   type: fieldset
   legend: Access

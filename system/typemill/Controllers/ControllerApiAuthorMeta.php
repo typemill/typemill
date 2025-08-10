@@ -71,6 +71,9 @@ class ControllerApiAuthorMeta extends Controller
 			$metadefinitions = $meta->getMetaDefinitions($this->settings, $folder = false);
 		}
 
+		# add multilanguage definitions if active
+		$metadefinitions = $this->addMultilangDefinitions($metadefinitions, $this->settings);
+
 		# update metadefinitions from plugins.
 		$metadefinitions = $this->c->get('dispatcher')->dispatch(new OnMetaDefinitionsLoaded($metadefinitions),'onMetaDefinitionsLoaded')->getData();
 
@@ -345,6 +348,49 @@ class ControllerApiAuthorMeta extends Controller
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
+	}
+
+	public function addMultilangDefinitions($metadefinitions, $settings)
+	{
+
+		## We should only add the urls for other languages. Maybe disable the current language? 
+
+		if (
+			!empty($settings['multilang']) &&
+			!empty($settings['baselangcode']) &&
+			!empty($settings['baselanglabel']) &&
+			!empty($settings['multilanguages']) &&
+			is_array($settings['multilanguages'])
+		) {
+			$fields = [];
+
+			// Add base language first
+			$fields[$settings['baselangcode']] = [
+				'type' => 'text',
+				'label' => $settings['baselanglabel'] . ' URL',
+				'maxlength' => 60,
+				'description' => 'Url to the base language ' . $settings['baselanglabel'] . ' (read only, change the slug in the meta tab)',
+				'disabled' => 'disabled'
+			];
+
+			// Add all other languages
+			foreach ($settings['multilanguages'] as $languagecode => $languagelabel) {
+				// Skip base language if it was accidentally added to multilanguages
+				if ($languagecode === $settings['baselangcode']) {
+					continue;
+				}
+				$fields[$languagecode] = [
+					'type' => 'text',
+					'label' => $languagelabel . ' URL',
+					'maxlength' => 60,
+					'description' => 'Add the url to the ' . $languagelabel . ' version'
+				];
+			}
+
+			$metadefinitions['lang']['fields'] = $fields;
+		}
+
+		return $metadefinitions;
 	}
 
 	# we have to flatten field definitions for tabs if there are fieldsets in it
