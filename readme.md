@@ -21,7 +21,7 @@ Learn more at [typemill.net](https://typemill.net), check the [demo installation
 To run Typemill, you need the following:
 
 * Web server (Apache or Nginx).
-* PHP 8.0 or higher.
+* PHP 8.1 or higher.
 * Standard PHP libraries like mod_rewrite, gd, mbstring, fileinfo, session, iconv, and more.
 
 ## Installation
