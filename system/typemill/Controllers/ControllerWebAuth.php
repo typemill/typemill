@@ -253,20 +253,26 @@ class ControllerWebAuth extends Controller
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
 		}
 
-		# optionally check trusted ips
-		$trustedLogin	= ( isset($this->settings['trustedloginreferrer']) && !empty($this->settings['trustedloginreferrer']) ) ? explode(",", $this->settings['trustedloginreferrer']) : [];
-		$ipAddress 		= $_SERVER['REMOTE_ADDR'] ?? null;
-		if (
-			!empty($trustedLogin)
-			&& !in_array($ipAddress, $trustedLogin)
-		)
-		{            
-			if($securitylog)
+		# optionally check trusted ips and hosts
+		$trustedReferrers = $this->settings['trustedloginreferrer'] ?? false;
+		if($trustedReferrers && is_string($trustedReferrers) && $trustedReferrers !== '')
+		{
+			$ipAddress 		= $_SERVER['REMOTE_ADDR'] ?? null;
+			$host 			= $request->getUri()->getHost();
+			$trustedLogin 	= array_filter(array_map('trim', explode(',', $trustedReferrers)), 'strlen');
+			if (
+				!empty($trustedLogin)
+				&& !in_array($ipAddress, $trustedLogin, true)
+				&& !in_array($host, $trustedLogin, true)
+			)
 			{
-				\Typemill\Static\Helpers::addLogEntry('loginlink: remote address is not a trusted ip');
-			}
+				if($securitylog)
+				{
+					\Typemill\Static\Helpers::addLogEntry('loginlink: remote address is not a trusted ip');
+				}
 
-			return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
+				return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
+			}
 		}
 
         $input 			= $request->getQueryParams();
