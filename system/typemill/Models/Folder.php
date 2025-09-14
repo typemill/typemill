@@ -19,12 +19,12 @@ class Folder
 
 		foreach ($folderItems as $key => $item)
 		{
-			if (!in_array($item, array(".","..")) && substr($item, 0, 1) != '.')
+			if (!in_array($item, array(".","..")) && substr($item, 0, 1) != '.' && substr($item, 0, 1) != '_')
 			{
 				if (is_dir($folderPath . DIRECTORY_SEPARATOR . $item))
 				{
 					if($flat)
-					{
+					{						
 						if($flat === $item)
 						{
 							$folderContent[$item] = $this->scanFolder($folderPath . DIRECTORY_SEPARATOR . $item);

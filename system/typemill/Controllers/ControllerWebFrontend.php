@@ -33,6 +33,9 @@ class ControllerWebFrontend extends Controller
 		# GET THE NAVIGATION
 	    $navigation 		= new Navigation();
 
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $url);
+
 		# CLEAR NAVIGATION IF MODE WITHOUT ADMIN
 		if(isset($this->settings['autorefresh']) && $this->settings['autorefresh'] == true)
 		{
@@ -70,15 +73,18 @@ class ControllerWebFrontend extends Controller
 
 
 		# FIND THE PAGE/ITEM IN NAVIGATION
-		if($url == '/')
+		if($navigation->isHome($url))
 		{
 			$item 				= $navigation->getHomepageItem($urlinfo['baseurl']);
 			$item->active 		= true;
-			$home 				= true;
+			if($url == '/')
+			{
+				$home 				= true;
+			}
 		}
 		else
 		{
-			$pageinfo 			= $navigation->getPageInfoForUrl($url, $urlinfo, $langattr);			
+			$pageinfo 			= $navigation->getPageInfoForUrl($url, $urlinfo, $langattr);
 
 		    if(!$pageinfo)
 		    {
@@ -162,7 +168,6 @@ class ControllerWebFrontend extends Controller
 		$liveMarkdown		= $content->getLiveMarkdown($item);
 		$liveMarkdown 		= $this->c->get('dispatcher')->dispatch(new OnMarkdownLoaded($liveMarkdown), 'onMarkdownLoaded')->getData();
 		$markdownArray 		= $content->markdownTextToArray($liveMarkdown);
-
 
 		# GET THE META
 		$meta 				= new Meta();
@@ -364,6 +369,20 @@ class ControllerWebFrontend extends Controller
 			'currentpage'	=> $currentpage
 		];
 
+		# add a project switch
+		$projects = $navigation->getAllProjects($this->settings);
+		if (
+			$projects && 
+			is_array($projects) && 
+			count($projects) > 1 && 
+			isset($this->settings['projectswitch']) && 
+			$this->settings['projectswitch'])
+		{
+		    $pagedata['widgets']['projects'] = $this->getProjectWidget($urlinfo,$projects);
+	
+			$assets->addInlineCSS($this->getProjectCSS());
+		}
+
 		$morepagedata = $this->c->get('dispatcher')->dispatch(new OnPageReady([]), 'onPageReady')->getData();
 
 		$pagedata = array_merge($pagedata, $morepagedata);
@@ -475,6 +494,52 @@ class ControllerWebFrontend extends Controller
 		}
 
 		return $restrictionNotice;
+	}
+
+	protected function getProjectWidget($urlinfo, $projects)
+	{
+	    $projectSelection  = '<div class="project-box">';
+		$projectSelection .= '<label for="project-switch" class="sr-only">Select project</label>';
+	    $projectSelection .= '<select id="project-switch" onchange="location = this.value;" class="project-selection">';
+
+	    foreach ($projects as $project)
+	    {
+	        $id    = $project['id'];
+	        $label = htmlspecialchars($project['label'], ENT_QUOTES);
+
+	        $url = $urlinfo['baseurl'];
+	        if ($id !== $this->settings['baseprojectid'])
+	        {
+	            $url .= '/' . $id;
+	        }
+
+	        $selected = $project['active'] ? ' selected' : '';
+	        $projectSelection .= '<option value="' . $url . '"' . $selected . '>' . $label . '</option>';
+	    }
+
+	    $projectSelection .= '</select></div>';
+
+	    return $projectSelection;
+	}
+
+	protected function getProjectCSS()
+	{
+		return '
+			.sr-only {
+				position: absolute;
+				width: 1px;
+				height: 1px;
+				padding: 0;
+				margin: -1px;
+				overflow: hidden;
+				clip: rect(0, 0, 0, 0);
+				border: 0;
+			}
+			.project-selection{
+				width: 100%;
+				padding: 5px 10px;
+			}
+		';
 	}
 
 	private function missingRessources()

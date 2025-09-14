@@ -7,6 +7,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Routing\RouteContext;
 use Typemill\Models\Validation;
 use Typemill\Models\Navigation;
+use Typemill\Models\Multilang;
 use Typemill\Models\Meta;
 use Typemill\Static\Translations;
 use Typemill\Events\OnMetaDefinitionsLoaded;
@@ -16,10 +17,14 @@ class ControllerApiAuthorMeta extends Controller
 	public function getMeta(Request $request, Response $response, $args)
 	{
 		$url 				= $request->getQueryParams()['url'] ?? false;
-
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
+
 		$navigation 		= new Navigation();
+
+		# configure multilang or multiproject
+		$navigation->setProject($this->settings, $url);
+
 		$item 				= $navigation->getItemForUrl($url, $urlinfo, $langattr);
 		if(!$item)
 		{
@@ -37,7 +42,11 @@ class ControllerApiAuthorMeta extends Controller
 		if(
 			!$metadata or 
 			!isset($metadata['meta']['owner']) OR 
-			!$metadata['meta']['owner']
+			!$metadata['meta']['owner'] OR 
+			!isset($metadata['meta']['pageid']) OR
+			!isset($metadata['meta']['modified']) OR
+			!$metadata['meta']['modified']
+#			$metadata['meta']['pageid']
 		)
 		{
 			$metadata = $meta->addMetaDefaults($metadata, $item, $this->settings['author'], $request->getAttribute('c_username'));
@@ -72,7 +81,8 @@ class ControllerApiAuthorMeta extends Controller
 		}
 
 		# add multilanguage definitions if active
-		$metadefinitions = $this->addMultilangDefinitions($metadefinitions, $this->settings);
+#		$multilang = new Multilang();
+#		$metadefinitions = $multilang->addMultilangDefinitions($metadefinitions, $this->settings);
 
 		# update metadefinitions from plugins.
 		$metadefinitions = $this->c->get('dispatcher')->dispatch(new OnMetaDefinitionsLoaded($metadefinitions),'onMetaDefinitionsLoaded')->getData();
@@ -129,7 +139,12 @@ class ControllerApiAuthorMeta extends Controller
 
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
+		
 		$navigation 		= new Navigation();
+
+		# configure multilang or multiproject
+		$navigation->setProject($this->settings, $params['url']);
+
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 
 		if(!$item)
@@ -200,7 +215,8 @@ class ControllerApiAuthorMeta extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
-		$navigation 		= new Navigation();
+#		$navigation 		= new Navigation();
+
 		$naviFileName 		= $navigation->getNaviFileNameForPath($item->path);
 		$extended 			= $navigation->getExtendedNavigation($urlinfo, $this->settings['langattr'], $naviFileName);
 		$draftNavigation 	= false;
@@ -348,49 +364,6 @@ class ControllerApiAuthorMeta extends Controller
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
-	}
-
-	public function addMultilangDefinitions($metadefinitions, $settings)
-	{
-
-		## We should only add the urls for other languages. Maybe disable the current language? 
-
-		if (
-			!empty($settings['multilang']) &&
-			!empty($settings['baselangcode']) &&
-			!empty($settings['baselanglabel']) &&
-			!empty($settings['multilanguages']) &&
-			is_array($settings['multilanguages'])
-		) {
-			$fields = [];
-
-			// Add base language first
-			$fields[$settings['baselangcode']] = [
-				'type' => 'text',
-				'label' => $settings['baselanglabel'] . ' URL',
-				'maxlength' => 60,
-				'description' => 'Url to the base language ' . $settings['baselanglabel'] . ' (read only, change the slug in the meta tab)',
-				'disabled' => 'disabled'
-			];
-
-			// Add all other languages
-			foreach ($settings['multilanguages'] as $languagecode => $languagelabel) {
-				// Skip base language if it was accidentally added to multilanguages
-				if ($languagecode === $settings['baselangcode']) {
-					continue;
-				}
-				$fields[$languagecode] = [
-					'type' => 'text',
-					'label' => $languagelabel . ' URL',
-					'maxlength' => 60,
-					'description' => 'Add the url to the ' . $languagelabel . ' version'
-				];
-			}
-
-			$metadefinitions['lang']['fields'] = $fields;
-		}
-
-		return $metadefinitions;
 	}
 
 	# we have to flatten field definitions for tabs if there are fieldsets in it

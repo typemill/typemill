@@ -62,10 +62,49 @@ fieldsetsystem:
       css: lg:w-half
       label: 'Disable Sitemap Generation'
       checkboxlabel: 'Disable Sitemap generation to improve the performance for publish action.'
+fieldsetproject:
+  type: fieldset
+  legend: Projects
+  fields:
+    projecthint: 
+      type: paragraph
+      label: 'Notice'
+      description: 'Create multiple projects with their own navigation. Use it for products, books, versions, and more. Read more in the [documentation](https://docs.typemill.net)'
+    projects:
+      type: radio
+      label: 'Multi-Project Website'
+      options:
+        'standard': 'Disabled (Standard Website)'
+        'projects': 'Create a multi-project website'
+#        'languages': 'Create a multi-language website'
+    projectswitch:
+      type: checkbox
+      label: 'Frontend Project Switch'
+      checkboxlabel: 'Add a project switch to the frontend website'
+    baseprojectid:
+      type: text
+      label: 'Base Project ID'
+      placeholder: 'base'
+      description: 'The id will be used to identify your base website.'
+      css: 'w-full'
+    baseprojectlabel:
+      type: text
+      label: 'Base Project Label'
+      placeholder: 'Homebase'
+      description: 'The label/name will be use to create a visible switch between projects.'
+      css: 'w-full'
+    projectinstances:
+      type: customfields
+      label: 'Additional Projects (ID | label)'
+      description: 'For each project, add an ID on the left and a Label on the right. The id will be used as url segment, the label to switch between projects.'
 fieldsetmedia:
   type: fieldset
   legend: Media
   fields:
+    mediahint: 
+      type: paragraph
+      label: 'Notice'
+      description: 'Upload a logo and favicon, set default image sizes, and manage SVG or file uploads. Read more in the [documentation](https://docs.typemill.net)'
     logo:
       type: image
       label: Logo
@@ -105,6 +144,10 @@ fieldsetwriting:
   type: fieldset
   legend: Writing
   fields:
+    writinghint: 
+      type: paragraph
+      label: 'Notice'
+      description: 'Choose the default editor (visual or raw markdown) and enable buttons for different content types. Read more in the [documentation](https://docs.typemill.net)'
     editor:
       type: radio
       label: 'Standard editor mode'
@@ -143,32 +186,14 @@ fieldsetwriting:
       label: 'Url schemes'
       description: 'Add more url schemes for external links e.g. like dict:// (comma separated list)'
       maxlength: 60
-fieldsetlang:
-  type: fieldset
-  legend: Lang
-  fields:
-    multilang:
-      type: checkbox
-      label: 'Multilanguage Website'
-      checkboxlabel: 'Activate the multi-language feature to provide your content in multiple languages.'
-    baselangcode:
-      type: text
-      label: 'Base Language Code'
-      description: 'Use ISO 639-1 codes like "en".'
-      css: 'lg:w-half w-full'
-    baselanglabel:
-      type: text
-      label: 'Base Language Label'
-      description: 'Use the full name, e.g., "English".'
-      css: 'lg:w-half w-full'
-    multilanguages:
-      type: customfields
-      label: 'Additional Languages (code | label)'
-      description: 'For each language add a language code like "en" on the left and a label like "English" on the right'
 fieldsetaccess:
   type: fieldset
   legend: Access
   fields:
+    accesshint: 
+      type: paragraph
+      label: 'Notice'
+      description: 'Restrict access to the entire website or individual pages. Cookies are used for all frontend pages when restrictions are enabled. Read more in the [documentation](https://docs.typemill.net)'
     access:
       type: checkbox
       label: 'Website restriction'
@@ -222,6 +247,10 @@ fieldsetmail:
   type: fieldset
   legend: Email
   fields:
+    mailhint: 
+      type: paragraph
+      label: 'Notice'
+      description: 'Set up mail to send emails from your website. Required for features like password reset or login verification. Read more in the [documentation](https://docs.typemill.net)'
     mailfrom:
       type: email
       label: 'Mail From (required)'
@@ -244,6 +273,10 @@ fieldsetrecover:
   type: fieldset
   legend: Password
   fields:
+    recoverhint: 
+      type: paragraph
+      label: 'Notice'
+      description: 'Enable password recovery for users. Since this has security implications, use it only when necessary. Make sure mail is configured first. Read more in the [documentation](https://docs.typemill.net)'
     recoverpw:
       type: checkbox
       label: 'Recover password'
@@ -263,6 +296,10 @@ fieldsetsecurity:
   type: fieldset
   legend: Security
   fields:
+    recoverhint: 
+      type: paragraph
+      label: 'Notice'
+      description: 'Enable login verification to send confirmation codes via email after login. Requires a working mail setup. Read more in the [documentation](https://docs.typemill.net)'
     authcode:
       type: checkbox
       label: 'Login Verification (recommended)'
@@ -283,6 +320,10 @@ fieldsetdeveloper:
   type: fieldset
   legend: "Developer"
   fields:
+    devhint: 
+      type: paragraph
+      label: 'Notice'
+      description: 'Advanced options such as proxy configuration, error reporting, or CSP rules. Read more in the [documentation](https://docs.typemill.net)'
     displayErrorDetails:
       type: checkbox
       label: "Error reporting"
@@ -352,7 +393,7 @@ fieldsetai:
   fields:
     aiprivacy: 
       type: paragraph
-      label: "Privacy Notice"
+      label: "Notice"
       description: "You can use the following AI features in the Kixote interface. If you enable any AI integrations, user inputs will be sent to external services for processing. Please review the details for each service and ensure compliance with your local data privacy regulations. Each user will be asked for confirmation before using a model in the Kixote AI interface."
     aiservice:
       type: radio

@@ -4,9 +4,10 @@ meta:
     description: 'You can add one or many blog- or news-sections to your website. Just create a new folder and change the content of the folder from "pages" to "posts" in the'
     owner: typemill
     author: ''
-    modified: '2024-03-19'
+    modified: '2024-04-27'
     created: '2024-03-19'
     time: 19-12-31
     hide: false
     noindex: false
     contains: posts
+    pageid: 5d138e74d4c4882e

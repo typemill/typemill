@@ -10,11 +10,16 @@ class Sitemap
 
 	public function __construct()
 	{
-		$this->storage 				= new StorageWrapper('\Typemill\Models\Storage');
+		$this->storage 	= new StorageWrapper('\Typemill\Models\Storage');
 	}
 
 	public function updateSitemap($navigation, $urlinfo)
 	{
+		if(!$navigation OR !empty($navigation))
+		{
+			return false;
+		}
+
 		$sitemap 	= '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
 		$sitemap 	.= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
 		$sitemap	= $this->addUrlSet($sitemap, $urlinfo['baseurl']);

@@ -258,6 +258,7 @@ const publisher = Vue.createApp({
 				return data.urlinfo.baseurl;
 			}
 		}
+
 	},
 	methods: {
 		clearPublisher()

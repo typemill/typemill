@@ -42,7 +42,12 @@ class ControllerApiAuthorArticle extends Controller
 
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
+
 		$navigation 		= new Navigation();
+
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $params['url']);
+
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
@@ -141,7 +146,12 @@ class ControllerApiAuthorArticle extends Controller
 
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
+
 		$navigation 		= new Navigation();
+
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $params['url']);
+
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
@@ -235,7 +245,12 @@ class ControllerApiAuthorArticle extends Controller
 
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
+
 		$navigation 		= new Navigation();
+
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $params['url']);
+
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
@@ -315,7 +330,12 @@ class ControllerApiAuthorArticle extends Controller
 
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
+
 		$navigation 		= new Navigation();
+
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $params['url']);
+
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
@@ -407,7 +427,12 @@ class ControllerApiAuthorArticle extends Controller
 
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
+
 		$navigation 		= new Navigation();
+
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $params['url']);
+
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
@@ -489,8 +514,13 @@ class ControllerApiAuthorArticle extends Controller
 		$langattr 			= $this->settings['langattr'] ?? 'en';
 
 		# get navigation
-	    $navigation 		= new Navigation();
-	    $draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $langattr);
+		$navigation 		= new Navigation();
+
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $params['url']);
+
+	    $draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $langattr) ?: [];
+
 	    if($params['folder_id'] == 'root')
 	    {
    			if($params['item_name'] == 'tm')
@@ -526,10 +556,12 @@ class ControllerApiAuthorArticle extends Controller
 
 		$slug 			= Slug::createSlug($params['item_name'], $langattr);
 
+		# for root elements use '' or the name of the project folder, otherwise the folder-path of item that includes the project folder already
+		$folderPath 	= isset($folder) ? $folder->path : $navigation->getProjectFolder();
+
 		# iterate through the whole content of the new folder
 		$index 			= 0;
 		$writeError 	= false;
-		$folderPath 	= isset($folder) ? $folder->path : '';
 		$storage 		= new StorageWrapper('\Typemill\Models\Storage');
 
 		foreach($folderContent as $folderItem)
@@ -563,7 +595,7 @@ class ControllerApiAuthorArticle extends Controller
 
 		# add prefix number to the name
 		$namePath 	= $index > 9 ? $index . '-' . $slug : '0' . $index . '-' . $slug;
-		
+
 		# create default content
 		$markdown 	= '# ' . $params['item_name'] . '/n/n' . 'Content';
 		$content 	= json_encode(['# ' . $params['item_name'], 'Content']);
@@ -652,7 +684,11 @@ class ControllerApiAuthorArticle extends Controller
 		$langattr 			= $this->settings['langattr'] ?? 'en';
 
 		# get navigation
-	    $navigation 		= new Navigation();
+		$navigation 		= new Navigation();
+
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $params['url']);
+
 	    $draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $langattr);
 	    if($params['folder_id'] == 'root')
 	    {
@@ -782,7 +818,12 @@ class ControllerApiAuthorArticle extends Controller
 
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
+
 		$navigation 		= new Navigation();
+
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $params['url']);
+
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
@@ -892,7 +933,12 @@ class ControllerApiAuthorArticle extends Controller
 		$dispatchurl 		= false; # without editor
 		$redirecturl 		= false; # with editor
 		$langattr 			= $this->settings['langattr'];
+		
 		$navigation 		= new Navigation();
+
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $params['url']);
+
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
@@ -939,7 +985,7 @@ class ControllerApiAuthorArticle extends Controller
 		{
 			# create empty and default values so that the logic below still works
 			$newFolder 			=  new \stdClass();
-			$newFolder->path	= '';
+			$newFolder->path	= $navigation->getProjectFolder();
 			$folderContent		= $draftNavigation;
 		}
 		else
@@ -1063,7 +1109,12 @@ class ControllerApiAuthorArticle extends Controller
 
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
+
 		$navigation 		= new Navigation();
+
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $params['url']);
+
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
@@ -1126,7 +1177,8 @@ class ControllerApiAuthorArticle extends Controller
 		}
 		else
 		{
-			$naviFileName 		= $navigation->getNaviFileNameForPath($item->path);
+			$naviFileName 		= $navigation->whichNaviToDelete($item->path);
+						
 		    $navigation->clearNavigation([$naviFileName, $naviFileName . '-extended']);
 		}
 
@@ -1138,8 +1190,15 @@ class ControllerApiAuthorArticle extends Controller
 			$sitemap->updateSitemap($draftNavigation, $urlinfo);
 		}
 
-		# check if it is a subfile or subfolder and set the redirect-url to the parent item
 		$url = $urlinfo['baseurl'] . '/tm/content/' . $this->settings['editor'];
+
+		# if it is a project and the item was a base item
+		if($navigation->getProject() && count($item->keyPathArray) == 1)
+		{
+			$url .= '/' . $navigation->getProject();
+		}
+
+		# check if it is a subfile or subfolder and set the redirect-url to the parent item
 		if(count($item->keyPathArray) > 1)
 		{
 			array_pop($item->keyPathArray);

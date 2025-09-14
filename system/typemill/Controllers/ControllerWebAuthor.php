@@ -12,11 +12,10 @@ use Typemill\Events\OnItemLoaded;
 use Typemill\Events\OnMarkdownLoaded;
 use Typemill\Events\OnPageReady;
 
-
 class ControllerWebAuthor extends Controller
 {
 	public function showBlox(Request $request, Response $response, $args)
-	{		
+	{
 		# get url for requested page
 		$url 				= isset($args['route']) ? '/' . $args['route'] : '/';
 		$urlinfo 			= $this->c->get('urlinfo');
@@ -24,10 +23,17 @@ class ControllerWebAuthor extends Controller
 		$langattr 			= $this->settings['langattr'];
 
 	    $navigation 		= new Navigation();
+
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $url);
+
+	    $projects 			= $navigation->getAllProjects($this->settings);
+
 		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $langattr);
+
 	    $home 				= $navigation->getHomepageItem($urlinfo['baseurl']);
 
-		if($url == '/')
+		if($navigation->isHome($url))
 		{
 			$item 				= $home;
 			$item->active 		= true;
@@ -35,6 +41,7 @@ class ControllerWebAuthor extends Controller
 		else
 		{
 			$pageinfo = $navigation->getPageInfoForUrl($url, $urlinfo, $langattr);
+
 		    if(!$pageinfo)
 		    {
 			    return $this->c->get('view')->render($response->withStatus(404), '404.twig', [
@@ -57,12 +64,10 @@ class ControllerWebAuthor extends Controller
 		$mainNavigation 	= $navigation->getMainNavigation($request->getAttribute('c_userrole'), $this->c->get('acl'), $urlinfo, $this->settings['editor']);
 
 		$content 			= new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
-
 		$draftMarkdown  	= $content->getDraftMarkdown($item);
 		$draftMarkdown 		= $this->c->get('dispatcher')->dispatch(new OnMarkdownLoaded($draftMarkdown), 'onMarkdownLoaded')->getData();
 
 		$draftMarkdownHtml	= $content->addDraftHtml($draftMarkdown);
-
 
 	    return $this->c->get('view')->render($response, 'content/blox-editor.twig', [
 			'settings' 			=> $this->settings,
@@ -76,6 +81,7 @@ class ControllerWebAuthor extends Controller
 										'navigation'	=> $draftNavigation,
 										'item'			=> $item,
 										'home' 			=> $home,
+										'projects' 		=> $projects,
 										'content' 		=> $draftMarkdownHtml
 									]
 		]);
@@ -90,6 +96,14 @@ class ControllerWebAuthor extends Controller
 		$langattr 			= $this->settings['langattr'];
 
 	    $navigation 		= new Navigation();
+
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $url);
+
+		$extendedNavigation 	= $navigation->getFullExtendedNavigation($urlinfo, $langattr);
+
+	    $projects 			= $navigation->getAllProjects($this->settings);
+
 		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $langattr);
 	    $home 				= $navigation->getHomepageItem($urlinfo['baseurl']);
 
@@ -142,6 +156,7 @@ class ControllerWebAuthor extends Controller
 										'navigation'	=> $draftNavigation,
 										'item'			=> $item,
 										'home' 			=> $home,
+										'projects' 		=> $projects,
 										'content' 		=> $draftMarkdownHtml,
 									]
 		]);

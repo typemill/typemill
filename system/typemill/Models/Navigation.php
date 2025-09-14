@@ -8,13 +8,15 @@ use Typemill\Events\OnSystemnaviLoaded;
 
 class Navigation extends Folder
 {
-	private $storage;
+	private $storage = NULL;
 
-	private $naviFolder;
+	private $naviFolder = NULL;
 
-	private $draftNaviName;
+	private $project = NULL; 
 
-	private $DS;
+	private $draftNaviName = NULL;
+
+	private $DS = NULL;
 
 	public function __construct()
 	{
@@ -25,6 +27,217 @@ class Navigation extends Folder
 		$this->draftNaviName 		= 'draft-navi';
 
 		$this->DS 					= DIRECTORY_SEPARATOR;
+	}
+
+	# set the current project from url and initialize project folders
+	public function setProject($settings, $url)
+	{
+		$project = $this->getProjectFromUrl($url, $settings);
+	
+		if($project)
+		{
+			$this->project 	= strtolower($project);
+
+			$projectPath = '_' . $this->project;
+			$projectNaviPath =  $this->naviFolder . $this->DS . $projectPath;
+
+			# create folder of navigation
+			if(!$this->storage->checkFolder('dataFolder', $projectNaviPath))
+			{
+				$this->storage->createFolder('dataFolder', $projectNaviPath);
+			}
+
+			# create startpage with initial content
+			if(!$this->storage->checkFolder('contentFolder', $projectPath))
+			{
+				$this->storage->createFolder('contentFolder', $projectPath);
+
+				$content = "# Welcome\n\nContent";
+				$this->storage->writeFile('contentFolder', $projectPath, 'index.md', $content);
+			}
+		}
+	}
+
+	public function getProject()
+	{
+		return $this->project;
+	}
+
+	# /_name for content files and navigation files
+	public function getProjectFolder()
+	{
+		if($this->project)
+		{
+			return $this->DS . '_' . $this->project;
+		}
+
+		return '';
+	}
+
+	# RENAME: getPathForNavi
+	private function getNaviFolderPath()
+	{
+		$dataPath 	= $this->storage->getFolderPath('dataFolder');
+		$naviPath 	= $dataPath . DIRECTORY_SEPARATOR . $this->naviFolder;
+
+		return $naviPath;
+	}
+
+	# RENAME getProjectPathForNavi
+	private function getProjectFolderPath()
+	{
+		$dataPath 	= $this->storage->getFolderPath('dataFolder');
+		$naviPath 	= $dataPath . DIRECTORY_SEPARATOR . $this->naviFolder;
+		if($this->project)
+		{
+			$naviPath .= DIRECTORY_SEPARATOR . '_' . $this->project;
+		}
+
+		return $naviPath;
+	}
+
+	# this is wrong? _ is missing???
+	private function getNaviFolder()
+	{
+		$folder = $this->naviFolder;
+		if($this->project)
+		{
+			$folder .= DIRECTORY_SEPARATOR . $this->project; 
+		}
+		return $folder;
+	}
+
+	public function getUrlSegments($url)
+	{
+		return explode('/', trim($url, '/'));
+	}
+
+	public function getPathSegments($path)
+	{
+		#normalize
+		return explode($this->DS, trim($path, $this->DS));
+	}
+
+
+  	# used by getPageInfoForUrl()
+	public function getStartUrl($urlSegments)
+	{
+		$startUrl = '/';
+		
+		if(is_array($urlSegments) && isset($urlSegments[0]))
+		{
+			# use the first segment per default, so /page
+			$startUrl .= $urlSegments[0];
+
+			# use the first two segments if a lang or project is active, so /de/page
+			if($this->project && isset($urlSegments[1]))
+			{
+				$startUrl .= '/' . $urlSegments[1];
+			}
+		}
+
+		return $startUrl;
+	}
+
+	/* NOT IN USE
+	public function getStartPath($pathSegments)
+	{
+		$startPath = $this->DS;
+
+		if(is_array($pathSegments) && isset($pathSegments[0]))
+		{
+			# use the first segment per default, so /00-page
+			$startPath .= $pathSegments[0];
+
+			# use the first two segments if a lang or project is active, so /_de/00-page
+			if($this->project && isset($pathSegments[1]))
+			{
+				$startPath .= '/' . $pathSegments[1];
+			}
+		}
+
+		return $startPath;
+	}
+	*/
+
+	# used to show projects in frontend and interface
+	public function getAllProjects($settings)
+	{
+		if($this->checkProjectSettings($settings))
+		{
+			$projects =[];
+			$projects[] = [
+				'id' 		=> $settings['baseprojectid'], 
+				'label' 	=> $settings['baseprojectlabel'],
+				'active' 	=> ($this->project == $settings['baseprojectid']) ? true : false,
+				'base'		=> true
+			];
+
+			foreach($settings['projectinstances'] as $id => $label)
+			{
+				$projects[] = [
+					'id' 		=> $id, 
+					'label' 	=> $label,
+					'active' 	=> ($this->project == $id) ? true : false,
+					'base'		=> false
+				];
+			}
+
+			return $projects;
+		}
+
+		return false;
+	}
+
+	# get the project from the url
+	public function getProjectFromUrl($url, $settings)
+	{
+	    $project = null;
+
+	    if ($this->checkProjectSettings($settings))
+	    {
+	        $url           = $this->removeEditorFromUrl($url);
+	        $segments      = explode('/', trim($url, '/'));
+	        $firstSegment  = $segments[0] ?? null;
+
+	        $projects      = array_keys($settings['projectinstances']);
+	        if ($firstSegment && in_array($firstSegment, $projects))
+	        {
+	            $project = $firstSegment;
+	        }
+	    }
+
+	    return $project;
+	}
+
+    public function checkProjectSettings($settings): bool
+    {
+	    if (
+	        empty($settings['projects']) ||
+	        $settings['projects'] == 'standard' ||
+	        empty($settings['baseprojectid']) ||
+	        empty($settings['baseprojectlabel']) ||
+	        empty($settings['projectinstances']) ||
+	        !is_array($settings['projectinstances'])
+	    ) {
+	        return false;
+	    }
+	    return true;
+	}
+
+	public function isHome($url)
+	{
+		if($url == '/')
+		{
+			return true;
+		}
+
+		if($this->project && $url == '/' . $this->project)
+		{
+			return true;
+		}
+
+		return false;
 	}
 
 	public function getMainNavigation($userrole, $acl, $urlinfo, $editor)
@@ -101,27 +314,42 @@ class Navigation extends Folder
 		return $allowedsystemnavi;
 	}
 
-
 	# use array ['extended' => true, 'draft' => true, 'live' => true] to clear files
 	public function clearNavigation($deleteItems = NULL)
 	{
 		$result = false;
 
-		$dataPath 			= $this->storage->getFolderPath('dataFolder');
-		$naviPath 			= $dataPath . DIRECTORY_SEPARATOR . $this->naviFolder;
-		$naviFiles 			= scandir($naviPath);
+		# we want to clear only the folder for the current project or lang
+		$naviPath = $this->getProjectFolderPath();
 
+		if(!is_dir($naviPath))
+		{
+			return false;
+		}
+
+		$naviFiles 	= array_values(array_diff(scandir($naviPath), ['.', '..']));
+
+		if($this->project)
+		{
+			foreach($naviFiles as &$value)
+			{
+				$value = '_' . $this->project . $this->DS . $value;
+			}
+		}
+		
+		# filter only specific items
 		if($deleteItems)
 		{
-			# replace the placeholder '/' for a base-item with the cached base navigation
 			foreach ($deleteItems as &$value)
 			{
+				# replace '' (base item) with the name of the base navigation
 			    if ($value === '/')
 			    {
 			        $value = $this->draftNaviName;
 			    }
 			    else
 			    {
+			    	$value = trim($value, '/');
 			    	$value .= '.txt';
 			    }
 			}
@@ -158,7 +386,9 @@ class Navigation extends Folder
 	{
 		$url = $this->removeEditorFromUrl($url);
 
-		if($url == '/')
+		$home = $this->project ? '/' . $this->project : '/';
+
+		if($url == $home)
 		{
 			return $this->getHomepageItem($urlinfo['baseurl']);
 		}
@@ -170,6 +400,7 @@ class Navigation extends Folder
 			return false;
 		}
 
+		# pageinfo['path'] has project or lang segment like /_de/01-page
 		$foldername = $this->getNaviFileNameForPath($pageinfo['path']);
 
 		$draftNavigation = $this->getFullDraftNavigation($urlinfo, $langattr, $foldername);
@@ -190,12 +421,13 @@ class Navigation extends Folder
 		$url = '/' . trim($url, '/');
 
 		# get the first level navigation
-		$firstLevelExtended = $this->getExtendedNavigation($urlinfo, $langattr, '/');
+		$itempath = $this->project ? '_' . $this->project : $this->DS;
+		$firstLevelExtended = $this->getExtendedNavigation($urlinfo, $langattr, $itempath);
 
-		$firstUrlSegment 	= $this->getFirstUrlSegment($url);
-		$firstUrlSegment 	= '/' . $firstUrlSegment;
+		$urlSegments 	= $this->getUrlSegments($url);
+		$startUrl 		= $this->getStartUrl($urlSegments);
 
-		$pageinfo = $firstLevelExtended[$firstUrlSegment] ?? false;
+		$pageinfo 		= $firstLevelExtended[$startUrl] ?? false;
 
 		# first level does not exist
 		if(!$pageinfo)
@@ -204,14 +436,15 @@ class Navigation extends Folder
 		}
 
 		# url is first level
-		if($url == $firstUrlSegment)
+		if($url == $startUrl)
 		{
 			return $pageinfo;
 		}
 
-		$foldername = trim($pageinfo['path'], $this->DS);
+# ???? can be page or de/page
+		$startFolder = trim($pageinfo['path'], $this->DS);
 
-		$extendedNavigation = $this->getExtendedNavigation($urlinfo, $langattr, $foldername);
+		$extendedNavigation = $this->getExtendedNavigation($urlinfo, $langattr, $startFolder);
 
 		$pageinfo = $extendedNavigation[$url] ?? false;
 		if(!$pageinfo)
@@ -222,7 +455,69 @@ class Navigation extends Folder
 		return $pageinfo;
 	}
 
-	private function removeEditorFromUrl($url)
+	/* 
+	* params: an itempath (with or without a language or project segment)
+	* returns: 
+	* * the name of the base segment, if there are more segments, so /_en/00-firstfolder
+	* * or the name of the first-folder navigation cache, so /_en/draft-navi
+	* usage: add .txt or -extended.txt to get the cached navigation file 
+	*/
+
+	# which navi to delete
+	public function getNaviFileNameForPath($itempath)
+	{
+		return $this->whichNaviToDelete($itempath);
+	}
+
+	public function whichNaviToDelete($itempath)
+	{
+		$pathSegments = $this->getPathSegments($itempath);
+
+		if($this->project)
+		{
+			$projectPath = $this->DS . $pathSegments[0] . $this->DS;
+			if(isset($pathSegments[2]))
+			{
+				return $projectPath . $pathSegments[1]; # /_de/getting-started
+			}
+
+			return $projectPath . $this->draftNaviName; # /_de/draft-navi
+		}
+
+		if(isset($pathSegments[1]))
+		{
+			return $this->DS . $pathSegments[0]; # /getting-started
+		}
+
+		return $this->DS . $this->draftNaviName; # /draft-navi		
+	}
+
+	# which navi to load
+	public function whichNaviToLoad($itempath)
+	{
+		$pathSegments = $this->getPathSegments($itempath);
+
+		if($this->project)
+		{
+			$projectPath = $this->DS . $pathSegments[0] . $this->DS;
+			if(isset($pathSegments[1]))
+			{
+				return $projectPath . $pathSegments[1]; # /_de/getting-started
+			}
+
+			return $projectPath . $this->draftNaviName; # /_de/draft-navi
+		}
+
+		if(isset($pathSegments[0]) && $pathSegments[0] != '')
+		{
+			return $this->DS . $pathSegments[0]; # /getting-started
+		}
+
+		return $this->DS . $this->draftNaviName; # /draft-navi
+	}
+
+
+	public function removeEditorFromUrl($url)
 	{
 		$url = trim($url, '/');
 
@@ -233,33 +528,6 @@ class Navigation extends Folder
 
 		return '/' . $url;
 	}
-
-	public function getFirstUrlSegment($url)
-	{
-		$segments = explode('/', $url);
-
-		if(isset($segments[1]))
-		{
-			return $segments[1];
-		}
-
-		return '';
-	}
-
-	public function getNaviFileNameForPath($path)
-	{
-		$segments = explode($this->DS, $path);
-
-		# navi-file-name for a base-folder is draftNaviName where first level items are cached.
-		if(isset($segments[2]))
-		{
-			return $segments[1];
-		}
-
-		return $this->draftNaviName;
-	}
-
-
 
 	public function getLiveNavigation($urlinfo, $langattr)
 	{
@@ -275,14 +543,24 @@ class Navigation extends Folder
 	# ASK FOR THE FULL DRAFT NAVIGATION AND MERGE ALL SEPARATED NAVIGATIONS
 	public function getFullDraftNavigation($urlinfo, $language, $userrole = null, $username = null)
 	{
-		# get first level
-		$draftNavigation = $this->getDraftNavigation($urlinfo, $language, '/');
+		# generate the item path for the default draft navigation
+		$itempath = $this->DS;
+		if($this->project)
+		{
+			$itempath .= '_' . $this->project;
+		}
+
+		$draftNavigation = $this->getDraftNavigation($urlinfo, $language, $itempath);
+		if(!$draftNavigation)
+		{
+			return false;
+		}
 
 		foreach($draftNavigation as $key => $item)
 		{
 			if($item->elementType == 'folder')
 			{
-				$subfolder = $this->getDraftNavigation($urlinfo, $language, $item->originalName);
+				$subfolder = $this->getDraftNavigation($urlinfo, $language, $item->path);
 
 				$draftNavigation[$key]->folderContent = $subfolder[$key]->folderContent;
 			}
@@ -291,26 +569,57 @@ class Navigation extends Folder
 		return $draftNavigation;
 	}
 
-	# ASK FOR A STATIC DRAFT NAVIGATION AND CREATE ONE IF NOT THERE
-	public function getDraftNavigation($urlinfo, $language, $foldername)
+	public function getFullExtendedNavigation($urlinfo, $langattr)
 	{
-		$draftFileName 		= $this->getDraftFileName($foldername);
-		$extendedFileName 	= $this->getExtendedFileName($foldername);
+		# generate the item path for the default draft navigation
+		$itempath = $this->DS;
+		if($this->project)
+		{
+			$itempath .= '_' . $this->project;
+		}
 
-		$draftNavigation = $this->getDraftNavigationFile($draftFileName);
+		$firstLevelExtended = $this->getExtendedNavigation($urlinfo, $langattr, $itempath);
 
+		$extended = [];
+
+		foreach($firstLevelExtended as $key => $item)
+		{
+		    if(!$item['path'])
+		    {
+		        continue;
+		    }
+		    $extension = pathinfo($item['path'], PATHINFO_EXTENSION);
+		    if($extension)
+		    {
+		    	# skip files
+		        continue;
+		    }
+
+			$folderContent 	= $this->getExtendedNavigation($urlinfo, $langattr, $item['path']);
+			$extended 		= $extended + $folderContent;
+		}
+
+		return $extended;
+	}
+
+	# ASK FOR A STATIC DRAFT NAVIGATION AND CREATE ONE IF NOT THERE
+	public function getDraftNavigation($urlinfo, $language, $itempath)
+	{
+		$navipath 		= $this->whichNaviToLoad($itempath);
+
+		$draftNavigation 	= $this->storage->getFile('dataFolder', $this->naviFolder, $navipath . '.txt', 'unserialize');
 		if($draftNavigation)
 		{
 			return $draftNavigation;
 		}
 
-		$rawDraftNavigation = $this->generateRawDraftNavigation($urlinfo, $language, $foldername);
+		$rawDraftNavigation = $this->generateRawDraftNavigation($urlinfo, $language, $itempath);
 		if(!$rawDraftNavigation)
 		{
 			return false;
 		}
 
-		$extendedNavigation = $this->getExtendedNavigationFile($extendedFileName);
+		$extendedNavigation 	= $this->storage->getFile('dataFolder', $this->naviFolder, $navipath . '-extended.txt', 'unserialize');
 		if(!$extendedNavigation)
 		{
 			$extendedNavigation = $this->generateExtendedFromDraft($rawDraftNavigation);
@@ -320,7 +629,7 @@ class Navigation extends Folder
 				return false;
 			}
 			
-			$this->storeStaticNavigation($extendedFileName, $extendedNavigation);
+			$this->storeStaticNavigation($navipath . '-extended.txt', $extendedNavigation);
 		}
 
 		$draftNavigation = $this->mergeExtendedWithDraft($rawDraftNavigation, $extendedNavigation);
@@ -328,52 +637,50 @@ class Navigation extends Folder
 		{
 			return false;
 		}
-		
-		$this->storeStaticNavigation($draftFileName, $draftNavigation);
+
+		$this->storeStaticNavigation($navipath . '.txt', $draftNavigation);
 
 		return $draftNavigation;
 	}
 
-	public function getExtendedNavigation($urlinfo, $language, $foldername)
+	public function getExtendedNavigation($urlinfo, $language, $itempath)
 	{
-		$draftFileName 		= $this->getDraftFileName($foldername);
-		$extendedFileName 	= $this->getExtendedFileName($foldername);
+		$navipath 				= $this->whichNaviToLoad($itempath);
 
-		$extendedNavigation = $this->getExtendedNavigationFile($extendedFileName);
+		$extendedNavigation 	= $this->storage->getFile('dataFolder', $this->naviFolder, $navipath . '-extended.txt', 'unserialize');
+
 		if($extendedNavigation)
 		{
 			return $extendedNavigation;
 		}
 
-		$draftNavigation 	= $this->getDraftNavigationFile($draftFileName);
+		$draftNavigation 		= $this->storage->getFile('dataFolder', $this->naviFolder, $navipath . '.txt', 'unserialize');
 		if(!$draftNavigation)
 		{
 			# we have to create and store extended and draft in this case 
 
-			$rawDraftNavigation = $this->generateRawDraftNavigation($urlinfo, $language, $foldername);
-
+			$rawDraftNavigation = $this->generateRawDraftNavigation($urlinfo, $language, $itempath);
 			if(!$rawDraftNavigation)
 			{
 				return false;
 			}
 		
 			$extendedNavigation = $this->generateExtendedFromDraft($rawDraftNavigation);
-
 			if(!$extendedNavigation)
 			{
 				return false;
 			}
 			
-			$this->storeStaticNavigation($extendedFileName, $extendedNavigation);
+			$this->storeStaticNavigation($navipath . '-extended.txt', $extendedNavigation);
 
 			$draftNavigation = $this->mergeExtendedWithDraft($rawDraftNavigation, $extendedNavigation);
 			if(!$draftNavigation)
 			{
 				return false;
 			}
-			
-			$this->storeStaticNavigation($draftFileName, $draftNavigation);
 
+			$this->storeStaticNavigation($navipath . '.txt', $draftNavigation);
+			
 			return $extendedNavigation;
 		}
 
@@ -386,13 +693,83 @@ class Navigation extends Folder
 			return false;
 		}
 		
-		$this->storeStaticNavigation($extendedFileName, $extendedNavigation);
+		$this->storeStaticNavigation($navipath . '-extended.txt', $extendedNavigation);
 
 		return $extendedNavigation;
 	}
 
+	# generates a raw draft navigation 
+	private function generateRawDraftNavigation($urlinfo, $language, $filepath)
+	{
+		# this works, but it is horrible!!!
+		# alternative: always base folder (flat = true) and subfolder, then merge both
+
+		$filepath = trim($filepath, $this->DS);
+
+		$contentFolder = $this->storage->getFolderPath('contentFolder');
+
+		$flat = $filepath; # scan the whole folder
+		if($filepath == '')
+		{
+			$flat = true; # scan only the first level of the folder
+		}
+		if($this->project)
+		{
+			$contentFolder = $this->storage->getFolderPath('contentFolder') . '_' . $this->project;
+
+			if($filepath == '_' . $this->project)
+			{
+				$flat = true; # scan only the first level of the project folder
+			}
+			else
+			{
+				# the item will be scanned in folder _/de but will not have prefix _de, so 
+				$flat = trim(str_replace('_'. $this->project, '', $filepath), $this->DS);
+			}
+		}
+
+#		$contentFolder = $this->storage->getFolderPath('contentFolder') . $filepath;
+
+		# scan the content of the folder
+		$draftContentTree = $this->scanFolder($contentFolder, $flat);
+
+		# if there is content, then get the content details
+		if(count($draftContentTree) > 0)
+		{
+			if($this->project)
+			{
+				$draftNavigation = $this->getFolderContentDetails(
+					$draftContentTree, 
+					$language, 
+					$baseurl 			= $urlinfo['baseurl'], 
+					$slugWithFolder 	= $urlinfo['basepath'] . '/' . $this->project,
+					$slugWithoutFolder 	= '/' . $this->project,
+					$fullPath 			= DIRECTORY_SEPARATOR . '_' . $this->project
+				);
+			}
+			else
+			{
+				$draftNavigation = $this->getFolderContentDetails(
+					$draftContentTree, 
+					$language, 
+					$urlinfo['baseurl'], 
+					$urlinfo['basepath']
+				);
+			}
+
+			return $draftNavigation;
+		}
+
+		return false;
+	}
+
 	public function generateLiveNavigationFromDraft($draftNavigation)
 	{
+		if(!$draftNavigation OR empty($draftNavigation))
+		{
+			return [];
+		}
+
 		foreach($draftNavigation as $key => $item)
 		{
 			if($item->status == 'unpublished')
@@ -417,62 +794,17 @@ class Navigation extends Folder
 		return $draftNavigation;
 	}
 
-	private function storeStaticNavigation($filename, $data)
+	private function storeStaticNavigation($filepath, $data)
 	{
-		if($filename == '.txt' OR $filename == '-extended.txt')
+# Maybe Remove
+		if($filepath == '.txt' OR $filepath == '-extended.txt')
 		{
 			return false;
 		}
 
-		if($this->storage->writeFile('dataFolder', $this->naviFolder, $filename, $data, 'serialize'))
+		if($this->storage->writeFile('dataFolder', $this->naviFolder, $filepath, $data, 'serialize'))
 		{
 			return true;
-		}
-
-		return false;
-	}
-
-	# gets the cached draft navigation of a folder or of the first level
-	private function getDraftNavigationFile($filename)
-	{
-		$draftNavigation = $this->storage->getFile('dataFolder', $this->naviFolder, $filename, 'unserialize');
-
-		if($draftNavigation)
-		{
-			return $draftNavigation;
-		}
-
-		return false;
-	}
-
-	# generates a raw draft navigation 
-	private function generateRawDraftNavigation($urlinfo, $language, $foldername = false)
-	{
-		# convert basefolder '/' to true
-		$flat = ($foldername == '/') ? true : $foldername;
-
-		# scan the content of the folder
-		$draftContentTree = $this->scanFolder($this->storage->getFolderPath('contentFolder'), $flat);
-
-		# if there is content, then get the content details
-		if(count($draftContentTree) > 0)
-		{
-			$draftNavigation = $this->getFolderContentDetails($draftContentTree, $language, $urlinfo['baseurl'], $urlinfo['basepath']);
-			
-			return $draftNavigation;
-		}
-
-		return false;
-	}
-
-	# get the extended Navigation file for a folder or base 
-	private function getExtendedNavigationFile($filename)
-	{
-		$extendedNavigation = $this->storage->getFile('dataFolder', $this->naviFolder, $filename, 'unserialize');
-
-		if($extendedNavigation)
-		{
-			return $extendedNavigation;
 		}
 
 		return false;
@@ -572,30 +904,6 @@ class Navigation extends Folder
 		return $mergedNavigation;
 	}
 
-	protected function getDraftFileName($foldername)
-	{
-		$draftFileName = $foldername;
-
-		if($draftFileName == '/')
-		{
-			$draftFileName = $this->draftNaviName;
-		}
-
-		return $draftFileName . '.txt';
-	}
-
-	protected function getExtendedFileName($foldername)
-	{
-		$draftFileName = $foldername;
-
-		if($draftFileName == '/')
-		{
-			$draftFileName = $this->draftNaviName;
-		}
-
-		return $draftFileName . '-extended.txt';
-	}
-
 	public function getItemWithKeyPath($navigation, array $searchArray, $baseUrl = null)
 	{
 		$item = false;
@@ -652,8 +960,15 @@ class Navigation extends Folder
 
 	public function getHomepageItem($baseUrl)
 	{
-#		$live 	= $this->storage->getFile('contentFolder', '', 'index.md');
-		$draft 	= $this->storage->getFile('contentFolder', '', 'index.txt');
+		$slug 		= '';
+		$path 		= '';
+		if($this->project)
+		{
+			$slug = $this->project;
+			$path = $this->DS . '_' . $this->project;
+		}
+
+		$draft 	= $this->storage->getFile('contentFolder', $path, 'index.txt');
 
 		# return a standard item-object
 		$item 					= new \stdClass;
@@ -664,16 +979,16 @@ class Navigation extends Folder
 		$item->fileType			= $draft ? 'mdtxt' : 'md';
 		$item->order 			= false;
 		$item->name 			= 'home';
-		$item->slug				= '';
-		$item->path				= '';
-		$item->pathWithoutType	= DIRECTORY_SEPARATOR . 'index';
+		$item->slug				= $slug;
+		$item->path				= $path;
+		$item->pathWithoutType	= $path . DIRECTORY_SEPARATOR . 'index';
 		$item->key				= false;
 		$item->keyPath			= '';
 		$item->keyPathArray		= [''];
 		$item->chapter			= false;
-		$item->urlRel			= '/';
-		$item->urlRelWoF		= '/';
-		$item->urlAbs			= $baseUrl;
+		$item->urlRel			= '/' . $slug;
+		$item->urlRelWoF		= '/' . $slug;
+		$item->urlAbs			= trim($baseUrl, '/') . '/' . $slug;
 		$item->active			= false;
 		$item->activeParent		= false;
 		$item->hide 			= false;
@@ -690,6 +1005,7 @@ class Navigation extends Folder
 
 		if($item->elementType == 'folder')
 		{
+# UPDATE
 			$result = $this->storage->renameFile('contentFolder', $folder, $oldname, $newname);
 		}
 
@@ -872,7 +1188,7 @@ class Navigation extends Folder
 
 		$flat = $this->flatten($navigation, $item->urlRel);
 
-		$itemkey = $flat[0];
+		$itemkey = isset($flat[0]) ? $flat[0] : false;
 
 		# if no previous or next is found (e.g. hidden page)
 		if(!is_int($itemkey))

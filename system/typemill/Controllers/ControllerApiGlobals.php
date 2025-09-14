@@ -5,6 +5,7 @@ namespace Typemill\Controllers;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Typemill\Models\Navigation;
+use Typemill\Models\Multilang;
 use Typemill\Models\Validation;
 use Typemill\Models\Content;
 use Typemill\Models\Meta;
@@ -57,6 +58,13 @@ class ControllerApiGlobals extends Controller
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
 		$navigation 		= new Navigation();
+
+###
+		if(isset($params['lang']))
+		{
+			# validate language first !!
+			$navigation->setLanguage($lang);
+		}
 
 		if(isset($params['draft']) && $params['draft'] == true)
 		{
@@ -114,8 +122,18 @@ class ControllerApiGlobals extends Controller
 
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
+		$url 				= $params['url'];
+
 		$navigation 		= new Navigation();
-		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
+	
+###
+		if(isset($params['lang']))
+		{
+			# validate language first !!
+			$navigation->setLanguage($lang);
+		}
+
+		$item 				= $navigation->getItemForUrl($url, $urlinfo, $langattr);
 
 		if(!$item)
 		{
@@ -151,9 +169,20 @@ class ControllerApiGlobals extends Controller
 
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
-		$navigation 		= new Navigation();
-		$items 				= $navigation->getItemsForSlug($params['slug'], $urlinfo, $langattr);
+		$url 				= $params['url'];
 
+		$navigation 		= new Navigation();
+		$url 				= $navigation->removeEditorFromUrl($url);
+
+		# Multilang
+		$multilang 			= new Multilang();
+		$lang 				= $multilang->getLangFromUrl($this->settings, $url);
+		if($lang)
+		{
+			$navigation->setLanguage($lang);
+		}
+
+		$item 				= $navigation->getItemForUrl($url, $urlinfo, $langattr);
 		if(!$items)
 		{
 			$response->getBody()->write(json_encode([
@@ -188,8 +217,20 @@ class ControllerApiGlobals extends Controller
 
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
+		$url 				= $params['url'];
+
 		$navigation 		= new Navigation();
-		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
+		$url 				= $navigation->removeEditorFromUrl($url);
+
+		# Multilang
+		$multilang 			= new Multilang();
+		$lang 				= $multilang->getLangFromUrl($this->settings, $url);
+		if($lang)
+		{
+			$navigation->setLanguage($lang);
+		}
+
+		$item 				= $navigation->getItemForUrl($url, $urlinfo, $langattr);
 		if(!$item)
 		{
 			$response->getBody()->write(json_encode([
@@ -265,8 +306,14 @@ class ControllerApiGlobals extends Controller
 
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
+		$url 				= $params['url'];
+
 		$navigation 		= new Navigation();
-		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
+
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $params['url']);
+
+		$item 				= $navigation->getItemForUrl($url, $urlinfo, $langattr);
 		if(!$item)
 		{
 			$response->getBody()->write(json_encode([

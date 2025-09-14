@@ -103,6 +103,8 @@ class Meta
 
 		$meta['meta']['created'] = date("Y-m-d");
 
+		$meta['meta']['modified'] = date("Y-m-d");
+
 		$meta['meta']['time'] = date("H-i-s");
 
 		$meta['meta']['navtitle'] = $navtitle;
@@ -123,7 +125,15 @@ class Meta
 		{ 
 			$meta['meta'] = []; 
 		}
-		
+
+/*
+	    if(!isset($meta['meta']['pageid']) OR !$meta['meta']['pageid'])
+	    {
+	        $meta['meta']['pageid'] = bin2hex(random_bytes(8));
+	        $modified = true;
+	    }
+*/
+	    
 		if(!isset($meta['meta']['owner']) OR !$meta['meta']['owner'])
 		{
 			if($currentuser)
@@ -182,7 +192,9 @@ class Meta
 		{
 			$filePath 	= $item->path . DIRECTORY_SEPARATOR . 'index.md';
 		}
-		$meta['meta']['modified'] = $this->storage->getFileTime('contentFolder', '', $filePath);
+
+		$modified = $this->storage->getFileTime('contentFolder', '', $filePath);
+		$meta['meta']['modified'] = $modified ? $modified : $meta['meta']['created'];
 
 		return $meta;
 	}
