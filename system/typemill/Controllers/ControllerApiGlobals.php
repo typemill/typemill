@@ -58,14 +58,13 @@ class ControllerApiGlobals extends Controller
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
 		$navigation 		= new Navigation();
-
-###
+/*
 		if(isset($params['lang']))
 		{
 			# validate language first !!
 			$navigation->setLanguage($lang);
 		}
-
+*/
 		if(isset($params['draft']) && $params['draft'] == true)
 		{
 			$contentnavi   	= $navigation->getFullDraftNavigation($urlinfo, $langattr);
@@ -126,12 +125,13 @@ class ControllerApiGlobals extends Controller
 
 		$navigation 		= new Navigation();
 	
-###
+/*
 		if(isset($params['lang']))
 		{
 			# validate language first !!
 			$navigation->setLanguage($lang);
 		}
+*/
 
 		$item 				= $navigation->getItemForUrl($url, $urlinfo, $langattr);
 
@@ -174,13 +174,14 @@ class ControllerApiGlobals extends Controller
 		$navigation 		= new Navigation();
 		$url 				= $navigation->removeEditorFromUrl($url);
 
-		# Multilang
+/*
 		$multilang 			= new Multilang();
 		$lang 				= $multilang->getLangFromUrl($this->settings, $url);
 		if($lang)
 		{
 			$navigation->setLanguage($lang);
 		}
+*/
 
 		$item 				= $navigation->getItemForUrl($url, $urlinfo, $langattr);
 		if(!$items)
@@ -222,6 +223,7 @@ class ControllerApiGlobals extends Controller
 		$navigation 		= new Navigation();
 		$url 				= $navigation->removeEditorFromUrl($url);
 
+/*
 		# Multilang
 		$multilang 			= new Multilang();
 		$lang 				= $multilang->getLangFromUrl($this->settings, $url);
@@ -229,7 +231,8 @@ class ControllerApiGlobals extends Controller
 		{
 			$navigation->setLanguage($lang);
 		}
-
+*/
+		
 		$item 				= $navigation->getItemForUrl($url, $urlinfo, $langattr);
 		if(!$item)
 		{

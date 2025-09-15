@@ -8,6 +8,7 @@ use Slim\Routing\RouteContext;
 use Typemill\Models\Navigation;
 use Typemill\Models\Content;
 use Typemill\Models\Meta;
+use Typemill\Models\User;
 use Typemill\Models\StorageWrapper;
 use Typemill\Events\OnPagetreeLoaded;
 use Typemill\Events\OnBreadcrumbLoaded;
@@ -71,7 +72,6 @@ class ControllerWebFrontend extends Controller
 			'favicon'		=> false,
 		];
 
-
 		# FIND THE PAGE/ITEM IN NAVIGATION
 		if($navigation->isHome($url))
 		{
@@ -118,6 +118,31 @@ class ControllerWebFrontend extends Controller
 		}
 
 		$liveNavigation = $navigation->generateLiveNavigationFromDraft($draftNavigation);
+
+		# CHECK FOLDER RESTRICTIONS FOR USER
+		if($url != '/' && $username)
+		{
+		    $userModel = new User();
+		    $user = $userModel->setUser($username);
+
+		    if($user && $user->getValue('folderaccess'))
+		    {
+		    	$accessallowed = $navigation->checkFolderAccess($url, $user->getValue('folderaccess'));
+
+		        # if not allowed show a 404 not found so that reengineering of urls is not possible
+		        if(!$accessallowed)
+		        {
+		            return $this->c->get('view')->render(
+		                $response->withStatus(404),
+		                '404.twig',
+		                $pagedata
+		            );
+		        }
+
+		        # then create navigation based on allowed folders (to be implemented)
+		      	$liveNavigation = $navigation->getAllowedFolders($liveNavigation, $user->getValue('folderaccess'));
+		    }
+		}
 
 		# STRIP OUT HIDDEN AND RESTRICTED PAGES
 		$hidden 		= true; 

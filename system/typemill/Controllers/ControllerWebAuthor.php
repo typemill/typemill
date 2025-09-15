@@ -7,6 +7,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Routing\RouteContext;
 use Typemill\Models\Navigation;
 use Typemill\Models\Content;
+use Typemill\Models\User;
 use Typemill\Events\OnPagetreeLoaded;
 use Typemill\Events\OnItemLoaded;
 use Typemill\Events\OnMarkdownLoaded;
@@ -21,6 +22,8 @@ class ControllerWebAuthor extends Controller
 		$urlinfo 			= $this->c->get('urlinfo');
 		$fullUrl  			= $urlinfo['baseurl'] . $url;
 		$langattr 			= $this->settings['langattr'];
+		$userrole 			= $request->getAttribute('c_userrole');
+		$username 			= $request->getAttribute('c_username');
 
 	    $navigation 		= new Navigation();
 
@@ -58,6 +61,28 @@ class ControllerWebAuthor extends Controller
 			$item 				= $navigation->getItemWithKeyPath($draftNavigation, $keyPathArray);
 			$item 				= $this->c->get('dispatcher')->dispatch(new OnItemLoaded($item), 'onItemLoaded')->getData();
 		}
+
+	    $userModel = new User();
+	    $user = $userModel->setUser($username);
+	    if($user && $user->getValue('folderaccess'))
+	    {
+	        # then create navigation based on allowed folders (to be implemented)
+	      	$draftNavigation = $navigation->getAllowedFolders($draftNavigation, $user->getValue('folderaccess'));
+
+	      	if($url != '/')
+	      	{
+		    	$accessallowed = $navigation->checkFolderAccess($url, $user->getValue('folderaccess'));
+
+		        # if not allowed show a 404 not found so that reengineering of urls is not possible
+		        if(!$accessallowed)
+		        {
+		        	$destination = isset($draftNavigation[0]->slug) ? $draftNavigation[0]->slug : '';
+					$redirect = $urlinfo['baseurl'] . '/tm/content/visual/' . $destination;
+
+					return $response->withHeader('Location', $redirect)->withStatus(302);
+		        }
+	      	}
+	    }
 
 	#	$item->modified		= ($item->published OR $item->drafted) ? filemtime($this->settings['contentFolder'] . $this->path) : false;
 

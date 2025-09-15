@@ -186,7 +186,7 @@ class User
 		# if a plugin with a role has been deactivated, then users with the role throw an error, so set them back to member...
 		if(!$acl->hasRole($userrole))
 		{
-			$userrole = 'member';
+			$userrole = 'guest';
 		}
 
 		# dispatch fields;
@@ -196,20 +196,32 @@ class User
 			$userfields = $customfields['userfields'];
 		}
 
-		# only roles who can edit content need profile image and description
-		if($acl->isAllowed($userrole, 'mycontent', 'create'))
+		# CONDITIONALLY CLEANUP FIELDS BELOW
+
+		# only guest can have access with login link
+		if($userrole != 'guest')
 		{
-			$newfield['image'] 			= ['label' => Translations::translate('Profile-Image'), 'type' => 'image'];
-			$newfield['description'] 	= ['label' => Translations::translate('Author-Description (Markdown)'), 'type' => 'textarea'];
-			
-			$userfields = array_slice($userfields, 0, 1, true) + $newfield + array_slice($userfields, 1, NULL, true);
-			# array_splice($fields,1,0,$newfield);
+			unset($userfields['linkaccess']);
 		}
 
-		# Only admin ...
-		if($acl->isAllowed($inspectorrole, 'user', 'update'))
+		# only roles with edit rights need profile image and description
+		if(!$acl->isAllowed($userrole, 'mycontent', 'create'))
 		{
-			# can change userroles
+			unset($userfields['image']);
+			unset($userfields['description']);
+		}
+
+		# If admin
+		if(!$acl->isAllowed($inspectorrole, 'user', 'update'))
+		{
+			unset($userfields['userhint']);
+			unset($userfields['folderaccess']);
+			unset($userfields['apiaccess']);
+			unset($userfields['linkaccess']);
+		}
+		else
+		{
+			# add userroles for admin
 			$definedroles = $acl->getRoles();
 			$options = [];
 
@@ -220,14 +232,6 @@ class User
  			}
 
 			$userfields['userrole'] = ['label' => Translations::translate('Role'), 'type' => 'select', 'options' => $options];
-
-			# can activate api access
-			$userfields['apiaccess'] = ['label' => Translations::translate('API access'), 'checkboxlabel' => Translations::translate('Activate API access for this user. Use username and password for api calls. Whitelist calling domains in the developer settings.'), 'type' => 'checkbox'];
-
-			if($loginlink)
-			{
-				$userfields['linkaccess'] = ['label' => Translations::translate('Link access'), 'checkboxlabel' => Translations::translate('Activate link access for this user (only for member role). Use username and password for the link. Optionally whitelist IPs in the developer settings.'), 'type' => 'checkbox'];
-			}
 		}
 
 		return $userfields;

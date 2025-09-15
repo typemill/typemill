@@ -1123,6 +1123,63 @@ class Navigation extends Folder
 		return $liveNavigation;
 	}
 
+	public function checkFolderAccess($url, $folderaccess)
+	{
+		if(!$folderaccess or $folderaccess == '')
+		{
+			return true;
+		}
+
+        # normalize allowed folders
+        $folderlist = array_map(function($f)
+        {
+            return trim(explode('/', trim($f, '/'))[0]);
+        }, explode(',', $folderaccess));
+
+        # get first segment of current url
+        $segments   = explode('/', trim($url, '/'));
+        $firstSegment = $segments[0] ?? '';
+
+        # check if first segment is explicitly allowed
+        if(in_array($firstSegment, $folderlist, true))
+        {
+            return true;
+        }
+
+        return false;
+	}
+
+	public function getAllowedFolders($navigation, $folderaccess)
+	{
+		if(!$folderaccess or $folderaccess == '')
+		{
+			return true;
+		}
+
+        # normalize allowed folders
+        $folderlist = array_map(function($f)
+        {
+            return trim(explode('/', trim($f, '/'))[0]);
+        }, explode(',', $folderaccess));
+
+        $allowedNavigation = [];
+
+        foreach($navigation as $key => $item)
+        {
+	        # get first segment of current url
+	        $segments   = explode('/', trim($item->urlRelWoF, '/'));
+	        $firstSegment = $segments[0] ?? '';
+
+	        # check if first segment is explicitly allowed
+	        if(in_array($firstSegment, $folderlist, true))
+	        {
+	            $allowedNavigation[] = $item;
+	        }
+        }
+
+        return $allowedNavigation;
+	}
+
 	public function getBreadcrumb($navigation, $searchArray, $i = NULL, $breadcrumb = NULL)
 	{
 		# if it is the first round, create an empty array
