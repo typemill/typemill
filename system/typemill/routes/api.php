@@ -21,6 +21,7 @@ use Typemill\Controllers\ControllerApiAuthorMeta;
 use Typemill\Controllers\ControllerApiAuthorShortcode;
 use Typemill\Controllers\ControllerApiTestmail;
 use Typemill\Controllers\ControllerApiKixote;
+use Typemill\Controllers\ControllerApiMultilang;
 
 $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 
@@ -101,6 +102,10 @@ $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 	$group->get('/tokenstats', ControllerApiKixote::class . ':getTokenStats')->setName('api.kixote.tokenstats')->add(new ApiAuthorization($acl, 'mycontent', 'update')); # author
 	$group->post('/agreetoaiservice', ControllerApiKixote::class . ':agreeToAiService')->setName('api.kixote.serviceagreement')->add(new ApiAuthorization($acl, 'mycontent', 'update')); # author
 	$group->post('/prompt', ControllerApiKixote::class . ':prompt')->setName('api.kixote.prompt')->add(new ApiAuthorization($acl, 'mycontent', 'update')); # author
+
+	# Multilang
+	$group->get('/multilang/{pageid}', ControllerApiMultilang::class . ':getMultilang')->setName('api.multilang.get')->add(new ApiAuthorization($acl, 'content', 'read'));
+	$group->post('/multilang/{pageid}', ControllerApiMultilang::class . ':createMultilang')->setName('api.multilang.get')->add(new ApiAuthorization($acl, 'content', 'read'));
 
 	# API USED ONLY EXTERNALLY
 	$group->get('/systemnavi', ControllerApiGlobals::class . ':getSystemnavi')->setName('api.systemnavi.get')->add(new ApiAuthorization($acl, 'account', 'read')); # member

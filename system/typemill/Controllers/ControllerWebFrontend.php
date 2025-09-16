@@ -8,6 +8,7 @@ use Slim\Routing\RouteContext;
 use Typemill\Models\Navigation;
 use Typemill\Models\Content;
 use Typemill\Models\Meta;
+use Typemill\Models\User;
 use Typemill\Models\StorageWrapper;
 use Typemill\Events\OnPagetreeLoaded;
 use Typemill\Events\OnBreadcrumbLoaded;
@@ -32,6 +33,9 @@ class ControllerWebFrontend extends Controller
 
 		# GET THE NAVIGATION
 	    $navigation 		= new Navigation();
+
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $url);
 
 		# CLEAR NAVIGATION IF MODE WITHOUT ADMIN
 		if(isset($this->settings['autorefresh']) && $this->settings['autorefresh'] == true)
@@ -68,17 +72,19 @@ class ControllerWebFrontend extends Controller
 			'favicon'		=> false,
 		];
 
-
 		# FIND THE PAGE/ITEM IN NAVIGATION
-		if($url == '/')
+		if($navigation->isHome($url))
 		{
 			$item 				= $navigation->getHomepageItem($urlinfo['baseurl']);
 			$item->active 		= true;
-			$home 				= true;
+			if($url == '/')
+			{
+				$home 				= true;
+			}
 		}
 		else
 		{
-			$pageinfo 			= $navigation->getPageInfoForUrl($url, $urlinfo, $langattr);			
+			$pageinfo 			= $navigation->getPageInfoForUrl($url, $urlinfo, $langattr);
 
 		    if(!$pageinfo)
 		    {
@@ -112,6 +118,31 @@ class ControllerWebFrontend extends Controller
 		}
 
 		$liveNavigation = $navigation->generateLiveNavigationFromDraft($draftNavigation);
+
+		# CHECK FOLDER RESTRICTIONS FOR USER
+		if($username)
+		{
+		    $userModel = new User();
+		    $user = $userModel->setUser($username);
+
+		    if($user && $user->getValue('folderaccess'))
+		    {
+		    	$accessallowed = $navigation->checkFolderAccess($url, $user->getValue('folderaccess'));
+
+		        # if not allowed show a 404 not found so that reengineering of urls is not possible
+		        if(!$accessallowed)
+		        {
+		            return $this->c->get('view')->render(
+		                $response->withStatus(404),
+		                '404.twig',
+		                $pagedata
+		            );
+		        }
+
+		        # then create navigation based on allowed folders (to be implemented)
+		      	$liveNavigation = $navigation->getAllowedFolders($liveNavigation, $user->getValue('folderaccess'), $frontend = true);
+		    }
+		}
 
 		# STRIP OUT HIDDEN AND RESTRICTED PAGES
 		$hidden 		= true; 
@@ -162,7 +193,6 @@ class ControllerWebFrontend extends Controller
 		$liveMarkdown		= $content->getLiveMarkdown($item);
 		$liveMarkdown 		= $this->c->get('dispatcher')->dispatch(new OnMarkdownLoaded($liveMarkdown), 'onMarkdownLoaded')->getData();
 		$markdownArray 		= $content->markdownTextToArray($liveMarkdown);
-
 
 		# GET THE META
 		$meta 				= new Meta();
@@ -299,7 +329,6 @@ class ControllerWebFrontend extends Controller
 			$assets->addMeta('icon180','<link rel="apple-touch-icon" sizes="180x180" href="' . $urlinfo['baseurl'] . '/media/custom/favicon-180x180.png" />');
 		}
 
-
 		# ADD META TAGS
 		if(isset($metadata['meta']['noindex']) && $metadata['meta']['noindex'])
 		{
@@ -365,8 +394,31 @@ class ControllerWebFrontend extends Controller
 		];
 
 		$morepagedata = $this->c->get('dispatcher')->dispatch(new OnPageReady([]), 'onPageReady')->getData();
-
 		$pagedata = array_merge($pagedata, $morepagedata);
+
+		# add a project switch
+		$projects = $navigation->getAllProjects($this->settings);
+		if (
+			$projects && 
+			is_array($projects) && 
+			count($projects) > 1 && 
+			isset($this->settings['projectswitch']) && 
+			$this->settings['projectswitch'])
+		{
+			$projectsWidget = ['projects' => $this->getProjectWidget($urlinfo, $projects)];
+
+			if(isset($pagedata['widgets']) && is_array($pagedata['widgets']))
+			{
+			    # put projects widget first, then the rest
+			    $pagedata['widgets'] = $projectsWidget + $pagedata['widgets'];
+			}
+			else
+			{
+			    $pagedata['widgets'] = $projectsWidget;
+			}
+	
+			$assets->addInlineCSS($this->getProjectCSS());
+		}
 
 		$route = empty($args) && isset($this->settings['themes'][$theme]['cover']) ? 'cover.twig' : 'index.twig';
 
@@ -475,6 +527,57 @@ class ControllerWebFrontend extends Controller
 		}
 
 		return $restrictionNotice;
+	}
+
+	protected function getProjectWidget($urlinfo, $projects)
+	{
+	    $projectSelection  = '<div class="project-box">';
+		$projectSelection .= '<label for="project-switch" class="sr-only">Select project</label>';
+	    $projectSelection .= '<select id="project-switch" onchange="location = this.value;" class="project-selection">';
+
+	    foreach ($projects as $project)
+	    {
+	        $id    = $project['id'];
+	        $label = htmlspecialchars($project['label'], ENT_QUOTES);
+
+	        $url = $urlinfo['baseurl'];
+	        if ($id !== $this->settings['baseprojectid'])
+	        {
+	            $url .= '/' . $id;
+	        }
+
+	        $selected = $project['active'] ? ' selected' : '';
+	        $projectSelection .= '<option value="' . $url . '"' . $selected . '>' . $label . '</option>';
+	    }
+
+	    $projectSelection .= '</select></div>';
+
+	    return $projectSelection;
+	}
+
+	protected function getProjectCSS()
+	{
+		return '
+			.sr-only {
+				position: absolute;
+				width: 1px;
+				height: 1px;
+				padding: 0;
+				margin: -1px;
+				overflow: hidden;
+				clip: rect(0, 0, 0, 0);
+				border: 0;
+			}
+			.project-selection{
+				width: 100%;
+				padding: 5px 10px;
+			}
+			#projects{
+				width: 100%;
+				padding-bottom: 15px;
+				font-size: 1em;
+			}
+		';
 	}
 
 	private function missingRessources()

@@ -44,7 +44,7 @@ class Content
 		{
 			$markdownArray = [];
 		}
-		elseif($filetype == '.txt')
+		elseif($filetype == '.txt' && json_decode($markdown))
 		{
 			$markdownArray = json_decode($markdown);
 		}

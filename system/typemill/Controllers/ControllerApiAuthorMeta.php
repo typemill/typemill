@@ -7,6 +7,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Routing\RouteContext;
 use Typemill\Models\Validation;
 use Typemill\Models\Navigation;
+use Typemill\Models\Multilang;
 use Typemill\Models\Meta;
 use Typemill\Static\Translations;
 use Typemill\Events\OnMetaDefinitionsLoaded;
@@ -16,10 +17,14 @@ class ControllerApiAuthorMeta extends Controller
 	public function getMeta(Request $request, Response $response, $args)
 	{
 		$url 				= $request->getQueryParams()['url'] ?? false;
-
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
+
 		$navigation 		= new Navigation();
+
+		# configure multilang or multiproject
+		$navigation->setProject($this->settings, $url);
+
 		$item 				= $navigation->getItemForUrl($url, $urlinfo, $langattr);
 		if(!$item)
 		{
@@ -37,7 +42,11 @@ class ControllerApiAuthorMeta extends Controller
 		if(
 			!$metadata or 
 			!isset($metadata['meta']['owner']) OR 
-			!$metadata['meta']['owner']
+			!$metadata['meta']['owner'] OR 
+			!isset($metadata['meta']['pageid']) OR
+			!isset($metadata['meta']['modified']) OR
+			!$metadata['meta']['modified']
+#			$metadata['meta']['pageid']
 		)
 		{
 			$metadata = $meta->addMetaDefaults($metadata, $item, $this->settings['author'], $request->getAttribute('c_username'));
@@ -70,6 +79,10 @@ class ControllerApiAuthorMeta extends Controller
 			# get global metadefinitions
 			$metadefinitions = $meta->getMetaDefinitions($this->settings, $folder = false);
 		}
+
+		# add multilanguage definitions if active
+#		$multilang = new Multilang();
+#		$metadefinitions = $multilang->addMultilangDefinitions($metadefinitions, $this->settings);
 
 		# update metadefinitions from plugins.
 		$metadefinitions = $this->c->get('dispatcher')->dispatch(new OnMetaDefinitionsLoaded($metadefinitions),'onMetaDefinitionsLoaded')->getData();
@@ -126,7 +139,12 @@ class ControllerApiAuthorMeta extends Controller
 
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
+		
 		$navigation 		= new Navigation();
+
+		# configure multilang or multiproject
+		$navigation->setProject($this->settings, $params['url']);
+
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 
 		if(!$item)
@@ -197,7 +215,8 @@ class ControllerApiAuthorMeta extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
-		$navigation 		= new Navigation();
+#		$navigation 		= new Navigation();
+
 		$naviFileName 		= $navigation->getNaviFileNameForPath($item->path);
 		$extended 			= $navigation->getExtendedNavigation($urlinfo, $this->settings['langattr'], $naviFileName);
 		$draftNavigation 	= false;

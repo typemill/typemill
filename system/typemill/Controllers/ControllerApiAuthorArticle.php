@@ -10,6 +10,7 @@ use Typemill\Models\Validation;
 use Typemill\Models\Navigation;
 use Typemill\Models\Content;
 use Typemill\Models\Meta;
+use Typemill\Models\User;
 use Typemill\Models\Sitemap;
 use Typemill\Static\Slug;
 use Typemill\Static\Translations;
@@ -27,6 +28,8 @@ class ControllerApiAuthorArticle extends Controller
 	public function publishArticle(Request $request, Response $response, $args)
 	{
 		$params 			= $request->getParsedBody();
+		$userrole 			= $request->getAttribute('c_userrole');
+		$username 			= $request->getAttribute('c_username');
 		$validate			= new Validation();
 		$validInput 		= $validate->articlePublish($params);
 		if($validInput !== true)
@@ -42,7 +45,12 @@ class ControllerApiAuthorArticle extends Controller
 
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
+
 		$navigation 		= new Navigation();
+
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $params['url']);
+
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
@@ -54,12 +62,12 @@ class ControllerApiAuthorArticle extends Controller
 		}
 
 		# if user is not allowed to perform this action (e.g. not admin)
-		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'publish'))
+		if(!$this->userroleIsAllowed($userrole, 'content', 'publish'))
 		{
 			# then check if user is the owner of this content
 			$meta = new Meta();
 			$metadata = $meta->getMetaData($item);
-			if(!$this->userIsAllowed($request->getAttribute('c_username'), $metadata))
+			if(!$this->userIsAllowed($username, $metadata))
 			{
 				$response->getBody()->write(json_encode([
 					'message' 	=> Translations::translate('You do not have enough rights.'),
@@ -95,10 +103,19 @@ class ControllerApiAuthorArticle extends Controller
 			$sitemap->updateSitemap($draftNavigation, $urlinfo);
 		}
 
+		# If only certain folders are allowed for users, filter the navigation accordingly
+	    $userModel = new User();
+	    $user = $userModel->setUser($username);
+	    if($user && $user->getValue('folderaccess'))
+	    {
+	        # then create navigation based on allowed folders (to be implemented)
+	      	$draftNavigation = $navigation->getAllowedFolders($draftNavigation, $user->getValue('folderaccess'));
+	    }
+
 		# META is important e.g. for newsletter, so send it, too
 		$meta 				= new Meta();
 		$metadata  			= $meta->getMetaData($item);
-		$metadata 			= $meta->addMetaDefaults($metadata, $item, $this->settings['author'], $request->getAttribute('c_username'));
+		$metadata 			= $meta->addMetaDefaults($metadata, $item, $this->settings['author'], $username);
 		$metadata 			= $meta->addMetaTitleDescription($metadata, $item, $draftMarkdown);
 
 		# dispatch event, e.g. send newsletter and more
@@ -106,7 +123,7 @@ class ControllerApiAuthorArticle extends Controller
 			'markdown' 	=> $content->markdownArrayToText($draftMarkdown), 
 			'item' 		=> $item,
 			'metadata'	=> $metadata,
-			'username'	=> $request->getAttribute('c_username')
+			'username'	=> $username
 		];
 
 		$message = $this->c->get('dispatcher')->dispatch(new OnPagePublished($data), 'onPagePublished')->getData();
@@ -126,6 +143,8 @@ class ControllerApiAuthorArticle extends Controller
 	public function unpublishArticle(Request $request, Response $response, $args)
 	{
 		$params 			= $request->getParsedBody();
+		$userrole 			= $request->getAttribute('c_userrole');
+		$username 			= $request->getAttribute('c_username');
 		$validate			= new Validation();
 		$validInput 		= $validate->articlePublish($params);
 		if($validInput !== true)
@@ -141,7 +160,12 @@ class ControllerApiAuthorArticle extends Controller
 
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
+
 		$navigation 		= new Navigation();
+
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $params['url']);
+
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
@@ -153,12 +177,12 @@ class ControllerApiAuthorArticle extends Controller
 		}
 
 		# if user is not allowed to perform this action (e.g. not admin)
-		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'publish'))
+		if(!$this->userroleIsAllowed($userrole, 'content', 'publish'))
 		{
 			# then check if user is the owner of this content
 			$meta = new Meta();
 			$metadata = $meta->getMetaData($item);
-			if(!$this->userIsAllowed($request->getAttribute('c_username'), $metadata))
+			if(!$this->userIsAllowed($username, $metadata))
 			{
 				$response->getBody()->write(json_encode([
 					'message' 	=> Translations::translate('You do not have enough rights.'),
@@ -186,6 +210,15 @@ class ControllerApiAuthorArticle extends Controller
 			$sitemap->updateSitemap($draftNavigation, $urlinfo);
 		}
 
+		# If only certain folders are allowed for users, filter the navigation accordingly
+	    $userModel = new User();
+	    $user = $userModel->setUser($username);
+	    if($user && $user->getValue('folderaccess'))
+	    {
+	        # then create navigation based on allowed folders (to be implemented)
+	      	$draftNavigation = $navigation->getAllowedFolders($draftNavigation, $user->getValue('folderaccess'));
+	    }
+
 		# check if it is a folder and if the folder has published pages.
 		$message = false;
 		if($item->elementType == 'folder' && isset($item->folderContent))
@@ -202,7 +235,7 @@ class ControllerApiAuthorArticle extends Controller
 		$data = [
 			'markdown' 	=> $content->markdownArrayToText($draftMarkdown), 
 			'item' 		=> $item,
-			'username'	=> $request->getAttribute('c_username')
+			'username'	=> $username
 		];
 
 		# dispatch event
@@ -220,6 +253,8 @@ class ControllerApiAuthorArticle extends Controller
 	public function updateDraft(Request $request, Response $response, $args)
 	{
 		$params 			= $request->getParsedBody();
+		$userrole 			= $request->getAttribute('c_userrole');
+		$username 			= $request->getAttribute('c_username');
 		$validate			= new Validation();
 		$validInput 		= $validate->articleUpdate($params);
 		if($validInput !== true)
@@ -235,7 +270,12 @@ class ControllerApiAuthorArticle extends Controller
 
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
+
 		$navigation 		= new Navigation();
+
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $params['url']);
+
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
@@ -247,12 +287,12 @@ class ControllerApiAuthorArticle extends Controller
 		}
 
 		# if user is not allowed to perform this action (e.g. not admin)
-		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'update'))
+		if(!$this->userroleIsAllowed($userrole, 'content', 'update'))
 		{
 			# then check if user is the owner of this content
 			$meta = new Meta();
 			$metadata = $meta->getMetaData($item);
-			if(!$this->userIsAllowed($request->getAttribute('c_username'), $metadata))
+			if(!$this->userIsAllowed($username, $metadata))
 			{
 				$response->getBody()->write(json_encode([
 					'message' 	=> Translations::translate('You do not have enough rights.'),
@@ -275,6 +315,15 @@ class ControllerApiAuthorArticle extends Controller
 		$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
 		$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
 
+		# If only certain folders are allowed for users, filter the navigation accordingly
+	    $userModel = new User();
+	    $user = $userModel->setUser($username);
+	    if($user && $user->getValue('folderaccess'))
+	    {
+	        # then create navigation based on allowed folders (to be implemented)
+	      	$draftNavigation = $navigation->getAllowedFolders($draftNavigation, $user->getValue('folderaccess'));
+	    }
+
 		# refresh content
 		$draftMarkdown  	= $content->getDraftMarkdown($item);
 		$draftMarkdownHtml	= $content->addDraftHtml($draftMarkdown);
@@ -282,7 +331,7 @@ class ControllerApiAuthorArticle extends Controller
 		$data = [
 			'oldMarkdown'		=> $content->markdownArrayToText($oldMarkdown),
 			'newMarkdown'		=> $content->markdownArrayToText($draftMarkdown),
-			'username'			=> $request->getAttribute('c_username'),
+			'username'			=> $username,
 			'item'				=> $item,
 		];
 
@@ -300,6 +349,8 @@ class ControllerApiAuthorArticle extends Controller
 	public function publishDraft(Request $request, Response $response, $args)
 	{
 		$params 			= $request->getParsedBody();
+		$userrole 			= $request->getAttribute('c_userrole');
+		$username 			= $request->getAttribute('c_username');
 		$validate			= new Validation();
 		$validInput 		= $validate->articleUpdate($params);
 		if($validInput !== true)
@@ -315,7 +366,12 @@ class ControllerApiAuthorArticle extends Controller
 
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
+
 		$navigation 		= new Navigation();
+
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $params['url']);
+
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
@@ -327,12 +383,12 @@ class ControllerApiAuthorArticle extends Controller
 		}
 
 		# if user is not allowed to perform this action (e.g. not admin)
-		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'update'))
+		if(!$this->userroleIsAllowed($userrole, 'content', 'update'))
 		{
 			# then check if user is the owner of this content
 			$meta = new Meta();
 			$metadata = $meta->getMetaData($item);
-			if(!$this->userIsAllowed($request->getAttribute('c_username'), $metadata))
+			if(!$this->userIsAllowed($username, $metadata))
 			{
 				$response->getBody()->write(json_encode([
 					'message' 	=> Translations::translate('You do not have enough rights.'),
@@ -360,6 +416,15 @@ class ControllerApiAuthorArticle extends Controller
 			$sitemap 		= new Sitemap();
 			$sitemap->updateSitemap($draftNavigation, $urlinfo);
 		}
+
+		# If only certain folders are allowed for users, filter the navigation accordingly
+	    $userModel = new User();
+	    $user = $userModel->setUser($username);
+	    if($user && $user->getValue('folderaccess'))
+	    {
+	        # then create navigation based on allowed folders (to be implemented)
+	      	$draftNavigation = $navigation->getAllowedFolders($draftNavigation, $user->getValue('folderaccess'));
+	    }
 		
 		# refresh content
 		$draftMarkdown  	= $content->getDraftMarkdown($item);
@@ -368,7 +433,7 @@ class ControllerApiAuthorArticle extends Controller
 		# META is important e.g. for newsletter, so send it, too
 		$meta 				= new Meta();
 		$metadata  			= $meta->getMetaData($item);
-		$metadata 			= $meta->addMetaDefaults($metadata, $item, $this->settings['author'], $request->getAttribute('c_username'));
+		$metadata 			= $meta->addMetaDefaults($metadata, $item, $this->settings['author'], $username);
 #		$metadata 			= $meta->addMetaTitleDescription($metadata, $item, $markdownArray);
 
 		# dispatch event, e.g. send newsletter and more
@@ -376,7 +441,7 @@ class ControllerApiAuthorArticle extends Controller
 			'markdown' 	=> $content->markdownArrayToText($draftMarkdown), 
 			'item' 		=> $item,
 			'metadata'	=> $metadata,
-			'username'	=> $request->getAttribute('c_username')
+			'username'	=> $username
 		];
 		$this->c->get('dispatcher')->dispatch(new OnPagePublished($data), 'onPagePublished');
 
@@ -392,6 +457,8 @@ class ControllerApiAuthorArticle extends Controller
 	public function discardArticleChanges(Request $request, Response $response, $args)
 	{
 		$params 			= $request->getParsedBody();
+		$userrole 			= $request->getAttribute('c_userrole');
+		$username 			= $request->getAttribute('c_username');
 		$validate			= new Validation();
 		$validInput 		= $validate->articlePublish($params);
 		if($validInput !== true)
@@ -407,7 +474,12 @@ class ControllerApiAuthorArticle extends Controller
 
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
+
 		$navigation 		= new Navigation();
+
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $params['url']);
+
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
@@ -419,12 +491,12 @@ class ControllerApiAuthorArticle extends Controller
 		}
 
 		# if user is not allowed to perform this action (e.g. not admin)
-		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'update'))
+		if(!$this->userroleIsAllowed($userrole, 'content', 'update'))
 		{
 			# then check if user is the owner of this content
 			$meta = new Meta();
 			$metadata = $meta->getMetaData($item);
-			if(!$this->userIsAllowed($request->getAttribute('c_username'), $metadata))
+			if(!$this->userIsAllowed($username, $metadata))
 			{
 				$response->getBody()->write(json_encode([
 					'message' 	=> Translations::translate('You do not have enough rights.'),
@@ -444,6 +516,15 @@ class ControllerApiAuthorArticle extends Controller
 		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
 		$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
 		$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
+
+		# If only certain folders are allowed for users, filter the navigation accordingly
+	    $userModel = new User();
+	    $user = $userModel->setUser($username);
+	    if($user && $user->getValue('folderaccess'))
+	    {
+	        # then create navigation based on allowed folders (to be implemented)
+	      	$draftNavigation = $navigation->getAllowedFolders($draftNavigation, $user->getValue('folderaccess'));
+	    }
 		
 		# refresh content
 		$draftMarkdown  	= $content->getDraftMarkdown($item);
@@ -453,7 +534,7 @@ class ControllerApiAuthorArticle extends Controller
 		$data = [
 			'oldMarkdown'		=> false,
 			'newMarkdown'		=> $content->markdownArrayToText($draftMarkdown),
-			'username'			=> $request->getAttribute('c_username'),
+			'username'			=> $username,
 			'item'				=> $item,
 		];		
 
@@ -471,6 +552,8 @@ class ControllerApiAuthorArticle extends Controller
 	public function createArticle(Request $request, Response $response, $args)
 	{
 		$params 			= $request->getParsedBody();
+		$userrole 			= $request->getAttribute('c_userrole');
+		$username 			= $request->getAttribute('c_username');
 		$validate			= new Validation();
 		$validInput 		= $validate->navigationItem($params);
 		if($validInput !== true)
@@ -489,8 +572,13 @@ class ControllerApiAuthorArticle extends Controller
 		$langattr 			= $this->settings['langattr'] ?? 'en';
 
 		# get navigation
-	    $navigation 		= new Navigation();
-	    $draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $langattr);
+		$navigation 		= new Navigation();
+
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $params['url']);
+
+	    $draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $langattr) ?: [];
+
 	    if($params['folder_id'] == 'root')
 	    {
    			if($params['item_name'] == 'tm')
@@ -526,10 +614,12 @@ class ControllerApiAuthorArticle extends Controller
 
 		$slug 			= Slug::createSlug($params['item_name'], $langattr);
 
+		# for root elements use '' or the name of the project folder, otherwise the folder-path of item that includes the project folder already
+		$folderPath 	= isset($folder) ? $folder->path : $navigation->getProjectFolder();
+
 		# iterate through the whole content of the new folder
 		$index 			= 0;
 		$writeError 	= false;
-		$folderPath 	= isset($folder) ? $folder->path : '';
 		$storage 		= new StorageWrapper('\Typemill\Models\Storage');
 
 		foreach($folderContent as $folderItem)
@@ -563,7 +653,7 @@ class ControllerApiAuthorArticle extends Controller
 
 		# add prefix number to the name
 		$namePath 	= $index > 9 ? $index . '-' . $slug : '0' . $index . '-' . $slug;
-		
+
 		# create default content
 		$markdown 	= '# ' . $params['item_name'] . '/n/n' . 'Content';
 		$content 	= json_encode(['# ' . $params['item_name'], 'Content']);
@@ -582,7 +672,7 @@ class ControllerApiAuthorArticle extends Controller
 				return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 			}
 
-			$metadata = $meta->createInitialMeta($request->getAttribute('c_username'), $params['item_name']);
+			$metadata = $meta->createInitialMeta($username, $params['item_name']);
 
 			$storage->updateYaml('contentFolder', $folderPath, $namePath . '.yaml', $metadata);
 		}
@@ -599,7 +689,7 @@ class ControllerApiAuthorArticle extends Controller
 
 			$storage->writeFile('contentFolder', $folderPath . DIRECTORY_SEPARATOR . $namePath, 'index.txt', $content);
 
-			$metadata = $meta->createInitialMeta($request->getAttribute('c_username'), $params['item_name']);
+			$metadata = $meta->createInitialMeta($username, $params['item_name']);
 
 			$storage->updateYaml('contentFolder', $folderPath . DIRECTORY_SEPARATOR . $namePath, 'index.yaml', $metadata);
 
@@ -613,11 +703,20 @@ class ControllerApiAuthorArticle extends Controller
 	    $navigation->clearNavigation([$naviFileName, $naviFileName . '-extended']);
 		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
 
+		# If only certain folders are allowed for users, filter the navigation accordingly
+	    $userModel = new User();
+	    $user = $userModel->setUser($username);
+	    if($user && $user->getValue('folderaccess'))
+	    {
+	        # then create navigation based on allowed folders (to be implemented)
+	      	$draftNavigation = $navigation->getAllowedFolders($draftNavigation, $user->getValue('folderaccess'));
+	    }
+
 		$data = [
 			'markdown' 	=> $markdown, 
 			'metadata'	=> $metadata,
 			'itempath' 	=> $itempath,
-			'username'	=> $request->getAttribute('c_username')
+			'username'	=> $username
 		];
 
 		$this->c->get('dispatcher')->dispatch(new OnPageCreated($data), 'onPageCreated');
@@ -634,6 +733,8 @@ class ControllerApiAuthorArticle extends Controller
 	public function createPost(Request $request, Response $response, $args)
 	{
 		$params 			= $request->getParsedBody();
+		$userrole 			= $request->getAttribute('c_userrole');
+		$username 			= $request->getAttribute('c_username');
 		$validate			= new Validation();
 		$validInput 		= $validate->navigationItem($params);
 		if($validInput !== true)
@@ -652,7 +753,11 @@ class ControllerApiAuthorArticle extends Controller
 		$langattr 			= $this->settings['langattr'] ?? 'en';
 
 		# get navigation
-	    $navigation 		= new Navigation();
+		$navigation 		= new Navigation();
+
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $params['url']);
+
 	    $draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $langattr);
 	    if($params['folder_id'] == 'root')
 	    {
@@ -720,7 +825,7 @@ class ControllerApiAuthorArticle extends Controller
 				return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 			}
 
-			$metadata = $meta->createInitialMeta($request->getAttribute('c_username'), $params['item_name']);
+			$metadata = $meta->createInitialMeta($username, $params['item_name']);
 
 			$storage->updateYaml('contentFolder', $folderPath, $namePath . '.yaml', $metadata);
 		}
@@ -747,11 +852,20 @@ class ControllerApiAuthorArticle extends Controller
 			$item 			= $navigation->getItemWithKeyPath($draftNavigation, $folder->keyPathArray);
 		}
 
+		# If only certain folders are allowed for users, filter the navigation accordingly
+	    $userModel = new User();
+	    $user = $userModel->setUser($username);
+	    if($user && $user->getValue('folderaccess'))
+	    {
+	        # then create navigation based on allowed folders (to be implemented)
+	      	$draftNavigation = $navigation->getAllowedFolders($draftNavigation, $user->getValue('folderaccess'));
+	    }
+
 		$data = [
 			'markdown' 	=> $markdown, 
 			'metadata'	=> $metadata,
 			'itempath' 	=> $itempath,
-			'username'	=> $request->getAttribute('c_username')
+			'username'	=> $username
 		];
 
 		$this->c->get('dispatcher')->dispatch(new OnPageCreated($data), 'onPageCreated');
@@ -767,6 +881,8 @@ class ControllerApiAuthorArticle extends Controller
 	public function renameArticle(Request $request, Response $response, $args)
 	{
 		$params 			= $request->getParsedBody();
+		$userrole 			= $request->getAttribute('c_userrole');
+		$username 			= $request->getAttribute('c_username');
 		$validate			= new Validation();
 		$validInput 		= $validate->articleRename($params);
 		if($validInput !== true)
@@ -782,7 +898,12 @@ class ControllerApiAuthorArticle extends Controller
 
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
+
 		$navigation 		= new Navigation();
+
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $params['url']);
+
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
@@ -794,12 +915,12 @@ class ControllerApiAuthorArticle extends Controller
 		}
 
 		# if user is not allowed to perform this action (e.g. not admin)
-		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'update'))
+		if(!$this->userroleIsAllowed($userrole, 'content', 'update'))
 		{
 			# then check if user is the owner of this content
 			$meta = new Meta();
 			$metadata = $meta->getMetaData($item);
-			if(!$this->userIsAllowed($request->getAttribute('c_username'), $metadata))
+			if(!$this->userIsAllowed($username, $metadata))
 			{
 				$response->getBody()->write(json_encode([
 					'message' 	=> Translations::translate('You do not have enough rights.'),
@@ -848,6 +969,15 @@ class ControllerApiAuthorArticle extends Controller
 			$sitemap->updateSitemap($draftNavigation, $urlinfo);
 		}
 
+		# If only certain folders are allowed for users, filter the navigation accordingly
+	    $userModel = new User();
+	    $user = $userModel->setUser($username);
+	    if($user && $user->getValue('folderaccess'))
+	    {
+	        # then create navigation based on allowed folders (to be implemented)
+	      	$draftNavigation = $navigation->getAllowedFolders($draftNavigation, $user->getValue('folderaccess'));
+	    }
+
 		# create the new url for redirects
 		$newUrlRel =  str_replace($newitem->slug, $params['slug'], $newitem->urlRelWoF);
 		$url = $urlinfo['baseurl'] . '/tm/content/' . $this->settings['editor'] . $newUrlRel;
@@ -870,6 +1000,8 @@ class ControllerApiAuthorArticle extends Controller
 	public function sortArticle(Request $request, Response $response, $args)
 	{ 
 		$params 			= $request->getParsedBody();
+		$userrole 			= $request->getAttribute('c_userrole');
+		$username 			= $request->getAttribute('c_username');
 		$validate			= new Validation();
 		$validInput 		= $validate->navigationSort($params);
 		if($validInput !== true)
@@ -892,7 +1024,12 @@ class ControllerApiAuthorArticle extends Controller
 		$dispatchurl 		= false; # without editor
 		$redirecturl 		= false; # with editor
 		$langattr 			= $this->settings['langattr'];
+		
 		$navigation 		= new Navigation();
+
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $params['url']);
+
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
@@ -904,12 +1041,12 @@ class ControllerApiAuthorArticle extends Controller
 		}
 
 		# if user is not allowed to perform this action (e.g. not admin)
-		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'update'))
+		if(!$this->userroleIsAllowed($userrole, 'content', 'update'))
 		{
 			# then check if user is the owner of this content
 			$meta = new Meta();
 			$metadata = $meta->getMetaData($item);
-			if(!$this->userIsAllowed($request->getAttribute('c_username'), $metadata))
+			if(!$this->userIsAllowed($username, $metadata))
 			{
 				$response->getBody()->write(json_encode([
 					'message' 	=> Translations::translate('You do not have enough rights.'),
@@ -939,7 +1076,7 @@ class ControllerApiAuthorArticle extends Controller
 		{
 			# create empty and default values so that the logic below still works
 			$newFolder 			=  new \stdClass();
-			$newFolder->path	= '';
+			$newFolder->path	= $navigation->getProjectFolder();
 			$folderContent		= $draftNavigation;
 		}
 		else
@@ -1025,6 +1162,15 @@ class ControllerApiAuthorArticle extends Controller
 			$sitemap->updateSitemap($draftNavigation, $urlinfo);
 		}
 
+		# If only certain folders are allowed for users, filter the navigation accordingly
+	    $userModel = new User();
+	    $user = $userModel->setUser($username);
+	    if($user && $user->getValue('folderaccess'))
+	    {
+	        # then create navigation based on allowed folders (to be implemented)
+	      	$draftNavigation = $navigation->getAllowedFolders($draftNavigation, $user->getValue('folderaccess'));
+	    }
+
 	    # get the new item to dispatch it
 	    $newurl 			= $dispatchurl ? $dispatchurl : $params['url'];
 	    $newitem 			= $navigation->getItemForUrl($newurl, $urlinfo, $langattr);
@@ -1048,6 +1194,8 @@ class ControllerApiAuthorArticle extends Controller
 	public function deleteArticle(Request $request, Response $response, $args)
 	{
 		$params 			= $request->getParsedBody();
+		$userrole 			= $request->getAttribute('c_userrole');
+		$username 			= $request->getAttribute('c_username');
 		$validate			= new Validation();
 		$validInput 		= $validate->articlePublish($params);
 		if($validInput !== true)
@@ -1063,7 +1211,12 @@ class ControllerApiAuthorArticle extends Controller
 
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
+
 		$navigation 		= new Navigation();
+
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $params['url']);
+
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
@@ -1075,12 +1228,12 @@ class ControllerApiAuthorArticle extends Controller
 		}
 
 		# if user is not allowed to perform this action (e.g. not admin)
-		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'delete'))
+		if(!$this->userroleIsAllowed($userrole, 'content', 'delete'))
 		{
 			# then check if user is the owner of this content
 			$meta = new Meta();
 			$metadata = $meta->getMetaData($item);
-			if(!$this->userIsAllowed($request->getAttribute('c_username'), $metadata))
+			if(!$this->userIsAllowed($username, $metadata))
 			{
 				$response->getBody()->write(json_encode([
 					'message' 	=> Translations::translate('You do not have enough rights.'),
@@ -1126,7 +1279,8 @@ class ControllerApiAuthorArticle extends Controller
 		}
 		else
 		{
-			$naviFileName 		= $navigation->getNaviFileNameForPath($item->path);
+			$naviFileName 		= $navigation->whichNaviToDelete($item->path);
+						
 		    $navigation->clearNavigation([$naviFileName, $naviFileName . '-extended']);
 		}
 
@@ -1138,8 +1292,24 @@ class ControllerApiAuthorArticle extends Controller
 			$sitemap->updateSitemap($draftNavigation, $urlinfo);
 		}
 
-		# check if it is a subfile or subfolder and set the redirect-url to the parent item
+		# If only certain folders are allowed for users, filter the navigation accordingly
+	    $userModel = new User();
+	    $user = $userModel->setUser($username);
+	    if($user && $user->getValue('folderaccess'))
+	    {
+	        # then create navigation based on allowed folders (to be implemented)
+	      	$draftNavigation = $navigation->getAllowedFolders($draftNavigation, $user->getValue('folderaccess'));
+	    }
+
 		$url = $urlinfo['baseurl'] . '/tm/content/' . $this->settings['editor'];
+
+		# if it is a project and the item was a base item
+		if($navigation->getProject() && count($item->keyPathArray) == 1)
+		{
+			$url .= '/' . $navigation->getProject();
+		}
+
+		# check if it is a subfile or subfolder and set the redirect-url to the parent item
 		if(count($item->keyPathArray) > 1)
 		{
 			array_pop($item->keyPathArray);

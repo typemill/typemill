@@ -84,6 +84,8 @@ const posts = Vue.createApp({
 					'folder_id': 	this.item.keyPath,
 					'item_name': 	this.posttitle,
 					'type':			'file',
+					'url': 			data.urlinfo.route,
+
 			})
 			.then(function (response) 
 			{

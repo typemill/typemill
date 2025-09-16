@@ -3,6 +3,14 @@ username:
   label: 'Username (read only)' 
   type: 'text'
   readonly: true
+image:
+  name: profileimage
+  label: 'Profile Image'
+  type: 'image' 
+description:
+  name: description
+  label: 'Author-Description (Markdown)'
+  type: 'textarea'
 firstname:
   name: firstname
   label: 'First Name' 
@@ -16,11 +24,17 @@ email:
   label: 'E-Mail'
   type: 'text'
   required: true
-userrole:
-  name: userrole
-  label: 'Role'
-  type: 'text'
-  readonly: true
+password:
+  name: password
+  label: 'Actual Password' 
+  type: 'password'
+  autocomplete: 'new-password'
+newpassword: 
+  name: newpassword
+  label: 'New Password'
+  type: 'password'
+  autocomplete: 'new-password'
+  generator: true
 darkmode: 
   name: darkmode
   label: 'Darkmode'
@@ -33,14 +47,28 @@ aiservices:
   options:
     chatgpt: "Use ChatGPT and accept their terms and conditions."
     claude: "Use Claude and accept their terms and conditions."
-password:
-  name: password
-  label: 'Actual Password' 
-  type: 'password'
-  autocomplete: 'new-password'
-newpassword: 
-  name: newpassword
-  label: 'New Password'
-  type: 'password'
-  autocomplete: 'new-password'
-  generator: true
+userhint:
+  name: userhint
+  type: 'paragraph'
+  label: '__________________________'
+  description: 'The following settings are only visible and editable for admins'
+userrole:
+  name: userrole
+  label: 'Role'
+  type: 'text'
+  readonly: true
+folderaccess:
+  name: folderaccess
+  label: 'Folder access'
+  type: 'text'
+  description: 'Add one or more folders like "getting-started,news" to restrict access to those folders in the author interface. In frontend it only works if the website is fully restricted with a login.'
+apiaccess:
+  name: apiaccess
+  label: 'API access'
+  checkboxlabel: 'Activate API access for this user. Use username and password for api calls. Whitelist calling domains in the developer settings.'
+  type: 'checkbox'
+linkaccess: 
+  name: linkaccess
+  label: 'Link access'
+  checkboxlabel: 'Activate link access for this user (only for guest role). Use username and password for the link. Optionally whitelist IPs in the developer settings.'
+  type: 'checkbox'

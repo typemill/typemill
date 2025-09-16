@@ -265,7 +265,7 @@ class Storage
 		if($this->checkFile($location, $folder, $filename))
 		{
 			$filepath = $this->getFolderPath($location, $folder) . $filename;
-
+			
 			$fileContent = file_get_contents($filepath);
 		
 			# use unserialise or json_decode
@@ -375,6 +375,38 @@ class Storage
 		return true;
 	}
 
+	public function copyFile($location, $folder, $oldname, $newname)
+	{
+	    if (!isset($this->isWritable[$location])) {
+	        $this->error = Translations::translate('It is not allowed to write into') . ' ' . $location;
+	        return false;
+	    }
+
+	    # normalize
+		$oldname = trim($oldname, DIRECTORY_SEPARATOR);
+		$newname = trim($newname, DIRECTORY_SEPARATOR);
+	    if($folder && $folder != '')
+	    {
+		    $folder = trim($folder, DIRECTORY_SEPARATOR);
+		    $folder = $folder . DIRECTORY_SEPARATOR;
+	    }
+
+	    $oldFilePath = $this->getFolderPath($location) . $folder . $oldname;
+	    $newFilePath = $this->getFolderPath($location) . $folder . $newname;
+
+	    if ($oldFilePath !== $newFilePath) {
+	        if (!file_exists($oldFilePath)) {
+	            return false;
+	        }
+
+	        if (!copy($oldFilePath, $newFilePath)) {
+	            return false;
+	        }
+	    }
+
+	    return true;
+	}
+
 	public function deleteFile($location, $folder, $filename)
 	{
 		if(!isset($this->isWritable[$location]))
@@ -387,6 +419,13 @@ class Storage
 		if($this->checkFile($location, $folder, $filename))
 		{
 			$filepath = $this->getFolderPath($location) . $folder . DIRECTORY_SEPARATOR . $filename;
+
+			if(is_dir($filepath))
+			{
+				$this->error = Translations::translate('DeleteFile can only delete files, but the path is a folder: ') . ' ' . $filepath;
+
+				return false;				
+			}
 	
 			if(unlink($filepath))
 			{

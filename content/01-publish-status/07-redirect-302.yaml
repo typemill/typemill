@@ -8,6 +8,7 @@ meta:
     referencetype: redirect302
     hide: false
     noindex: false
-    modified: '2024-03-19'
+    modified: '2024-04-27'
     title: 'Redirect 302'
     description: 'This page redirects to the published page with a 302 temporary redirect. You can choose this option in the meta-tab, section "References".'
+    pageid: f7d77d868fe65984

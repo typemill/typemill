@@ -1,5 +1,11 @@
 meta:
   fields:
+    pageid:
+      type: text
+      label: Page ID
+      maxlength: 60
+      readonly: true
+      css: 'hidden'
     navtitle:
       type: text
       label: Navigation Title

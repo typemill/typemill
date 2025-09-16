@@ -1,9 +1,25 @@
 const navigation = Vue.createApp({
 	template: `
 			<div class="lg:mr-3 dark:text-stone-200">
-				<div class="flex w-100 mb-8 hidden lg:block">
+				<div class="flex w-100 mb-4 hidden lg:block">
 					<button class="w-1/2 hover:bg-stone-700  hover:border-stone-700 hover:text-stone-50 border-b-2 border-stone-200 dark:border-stone-600 px-2 py-2 transition duration-100" @click.prevent="collapseNavigation()">{{ $filters.translate('collapse all') }}</button>
 					<button class="w-1/2 hover:bg-stone-700 hover:border-stone-700 hover:text-stone-50 border-b-2 border-stone-200 dark:border-stone-600 px-2 py-2 transition duration-100" @click.prevent="expandNavigation()">{{ $filters.translate('expand all') }}</button>
+				</div>
+				<div class="w-100 mb-4" v-if="projects">
+					<select 
+						class="form-select block w-full border border-stone-300 text-stone-900 bg-stone-200 px-2 py-2 transition ease-in-out" 
+						name="projects"
+						@change="switchProject($event.target.value)"
+					>
+						<option 
+							v-for="project in projects" 
+							:key="project.id"
+							:value="project.id"
+							:selected="project.active"
+						>
+							{{ project.label }}
+						</option>
+					</select>
 				</div>
 				<button @click="togglemenue" class="lg:hidden w-full flex-1 flex items-center justify-center space-x-4 p-2 mb-2 bg-stone-700 hover:bg-stone-900 text-white cursor-pointer transition duration-100">
 					<span>{{ $filters.translate('Menu') }}</span>
@@ -12,12 +28,12 @@ const navigation = Vue.createApp({
 				<div class="lg:block" :class="menuvisible ? '' : 'hidden'">
 					<div class="flex w-full my-px border-y border-stone-200 dark:border-stone-900 font-bold">
 						<div class="border-l-4" :class="getStatusClass(home.status)"></div>
-						<a :href="getUrl(home.urlRelWoF)" class="flex-grow p-1 pl-3 border-stone-50 hover:bg-teal-500 hover:text-stone-50 dark:hover:bg-stone-200 hover:dark:text-stone-900" :class="home.active ? 'text-stone-50 bg-teal-500 dark:bg-stone-200 dark:text-stone-900' : 'dark:bg-stone-700'">
+						<a :href="getHomeUrl()" class="flex-grow p-1 pl-3 border-stone-50 hover:bg-teal-500 hover:text-stone-50 dark:hover:bg-stone-200 hover:dark:text-stone-900" :class="home.active ? 'text-stone-50 bg-teal-500 dark:bg-stone-200 dark:text-stone-900' : 'dark:bg-stone-700'">
 							{{ $filters.translate(home.name) }}
 						</a>
 					</div>
 					<div class="pl-2 pl-3 pl-4 pl-6 pl-8 pl-9 pl-10 pl-12 pl-15 pl-18 pl-21 pl-24 text-stone-50"></div>
-					<navilevel :navigation="navigation" :expanded="expanded" :pageaccess="pageaccess" />
+					<navilevel :navigation="navigation || []" :expanded="expanded" :pageaccess="pageaccess" />
 				</div>
 			</div>`,
 	data: function () {
@@ -25,6 +41,7 @@ const navigation = Vue.createApp({
 			pageaccess: false,
 			navigation: data.navigation,
 			home: data.home,
+			projects: data.projects,
 			backup: false,
 			isExpended: false,
 			expanded: [],
@@ -67,6 +84,29 @@ const navigation = Vue.createApp({
 		});
 	},
 	methods: {
+		switchProject(id) {
+		    const project = this.projects.find(p => p.id === id);
+		    let url = this.getUrl();
+		    if (project && project.base === false)
+		    {
+		        url = url + "/" + project.id;
+		    }
+		   	window.location.href = url;
+		},
+		getHomeUrl()
+		{
+		    let homeUrl = this.getUrl();
+			if(this.projects)
+			{
+			    const project = this.projects.find(p => p.active === true);
+			    if (project && project.base === false)
+			    {
+			        homeUrl = homeUrl + "/" + project.id;
+			    }
+			}
+
+			return homeUrl;
+		},
 		togglemenue()
 		{
 			if(this.menuvisible)
@@ -484,7 +524,8 @@ navigation.component('navilevel',{
 			tmaxios.post('/api/v1/article',{
 				'item_name': 		this.newItem,
 				'folder_id': 		parent,
-				'type':				type
+				'type':				type,
+				'url': 				data.urlinfo.route
 			})
 			.then(function (response) {
 							

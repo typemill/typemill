@@ -141,6 +141,7 @@ class ControllerApiSystemUsers extends Controller
 		{
 			# do not change userrole
 			unset($userdata['userrole']);
+#			unset($userdata['useraccess']);
 
 			# if a non-admin-user tries to update another account 
 			if(($username !== $request->getAttribute('c_username')))
@@ -279,13 +280,13 @@ class ControllerApiSystemUsers extends Controller
 		$user 			= new User();
 		$userform 		= $user->getUserFields($this->c->get('acl'), $this->c->get('dispatcher'), $userrole, $inspectorrole = $request->getAttribute('c_userrole'), $loginlink = NULL);
 
-		# fix the standard form
+		# Rewrite some fields of the standard form for new user form
 		$userform['password']['label'] = 'Password';
 		$userform['password']['generator'] = true;
+		unset($userform['newpassword']);
 		$userform['username']['label'] = 'Username';
 		unset($userform['username']['readonly']);
 		unset($userform['userrole']);
-		unset($userform['newpassword']);
 
 		$response->getBody()->write(json_encode([
 			'userform' => $userform,
@@ -294,6 +295,7 @@ class ControllerApiSystemUsers extends Controller
 		return $response->withHeader('Content-Type', 'application/json');
 	}
 
+### CHECK !!!!
 	public function createUser(Request $request, Response $response, $args)
 	{
 		$params 		= $request->getParsedBody();
@@ -354,7 +356,6 @@ class ControllerApiSystemUsers extends Controller
 
 		return $response->withHeader('Content-Type', 'application/json');
 	}
-
 
 	public function deleteUser(Request $request, Response $response, $args)
 	{

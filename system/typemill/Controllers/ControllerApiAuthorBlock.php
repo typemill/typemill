@@ -17,7 +17,6 @@ class ControllerApiAuthorBlock extends Controller
 	public function addBlock(Request $request, Response $response, $args)
 	{
 		$params 			= $request->getParsedBody();
-
 		$validate			= new Validation();
 		$validInput 		= $validate->blockInput($params);
 		if($validInput !== true)
@@ -34,6 +33,10 @@ class ControllerApiAuthorBlock extends Controller
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
 		$navigation 		= new Navigation();
+
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $params['url']);
+
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
@@ -155,6 +158,10 @@ class ControllerApiAuthorBlock extends Controller
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
 		$navigation 		= new Navigation();
+
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $params['url']);
+
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
@@ -265,6 +272,10 @@ class ControllerApiAuthorBlock extends Controller
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
 		$navigation 		= new Navigation();
+
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $params['url']);
+
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{
@@ -388,6 +399,10 @@ class ControllerApiAuthorBlock extends Controller
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
 		$navigation 		= new Navigation();
+
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $params['url']);
+
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
 		{

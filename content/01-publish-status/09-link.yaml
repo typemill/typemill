@@ -4,10 +4,11 @@ meta:
     description: 'You can link to an external page in the navigation with the reference feature in the meta-tab. Just choose "link" and add the url to the external page.'
     owner: typemill
     author: ''
-    modified: '2024-03-19'
+    modified: '2024-03-27'
     created: '2024-03-19'
     time: 19-07-05
     reference: 'https://typemill.net'
     referencetype: outlink
     hide: false
     noindex: false
+    pageid: 0f4736d1b7796ca6
