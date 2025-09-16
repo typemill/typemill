@@ -846,6 +846,12 @@ class ControllerApiAuthorArticle extends Controller
 #		$item 				= $navigation->getItemForUrl($url, $urlinfo, $langattr);
 #		$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
 
+		$item 				= $draftNavigation;
+		if($folder)
+		{
+			$item 			= $navigation->getItemWithKeyPath($draftNavigation, $folder->keyPathArray);
+		}
+
 		# If only certain folders are allowed for users, filter the navigation accordingly
 	    $userModel = new User();
 	    $user = $userModel->setUser($username);
@@ -854,12 +860,6 @@ class ControllerApiAuthorArticle extends Controller
 	        # then create navigation based on allowed folders (to be implemented)
 	      	$draftNavigation = $navigation->getAllowedFolders($draftNavigation, $user->getValue('folderaccess'));
 	    }
-
-		$item 				= $draftNavigation;
-		if($folder)
-		{
-			$item 			= $navigation->getItemWithKeyPath($draftNavigation, $folder->keyPathArray);
-		}
 
 		$data = [
 			'markdown' 	=> $markdown, 

@@ -61,6 +61,7 @@ folderaccess:
   name: folderaccess
   label: 'Folder access'
   type: 'text'
+  description: 'Add one or more folders like "getting-started,news" to restrict access to those folders in the author interface. In frontend it only works if the website is fully restricted with a login.'
 apiaccess:
   name: apiaccess
   label: 'API access'

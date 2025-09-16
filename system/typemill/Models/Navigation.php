@@ -1125,7 +1125,7 @@ class Navigation extends Folder
 
 	public function checkFolderAccess($url, $folderaccess)
 	{
-		if(!$folderaccess or $folderaccess == '')
+		if(!$folderaccess or $folderaccess == '' OR $url == '/')
 		{
 			return true;
 		}
@@ -1149,7 +1149,7 @@ class Navigation extends Folder
         return false;
 	}
 
-	public function getAllowedFolders($navigation, $folderaccess)
+	public function getAllowedFolders($navigation, $folderaccess, $frontend = false)
 	{
 		if(!$folderaccess or $folderaccess == '')
 		{
@@ -1173,7 +1173,15 @@ class Navigation extends Folder
 	        # check if first segment is explicitly allowed
 	        if(in_array($firstSegment, $folderlist, true))
 	        {
-	            $allowedNavigation[] = $item;
+	        	# in frontend we need to keep the keys to use findItemWithKeyPath
+	        	if($frontend)
+	        	{
+		            $allowedNavigation[$key] = $item;
+	        	}
+	        	else
+	        	{
+		            $allowedNavigation[] = $item;	        		
+	        	}
 	        }
         }
 

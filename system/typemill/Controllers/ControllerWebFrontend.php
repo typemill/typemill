@@ -120,7 +120,7 @@ class ControllerWebFrontend extends Controller
 		$liveNavigation = $navigation->generateLiveNavigationFromDraft($draftNavigation);
 
 		# CHECK FOLDER RESTRICTIONS FOR USER
-		if($url != '/' && $username)
+		if($username)
 		{
 		    $userModel = new User();
 		    $user = $userModel->setUser($username);
@@ -140,7 +140,7 @@ class ControllerWebFrontend extends Controller
 		        }
 
 		        # then create navigation based on allowed folders (to be implemented)
-		      	$liveNavigation = $navigation->getAllowedFolders($liveNavigation, $user->getValue('folderaccess'));
+		      	$liveNavigation = $navigation->getAllowedFolders($liveNavigation, $user->getValue('folderaccess'), $frontend = true);
 		    }
 		}
 
@@ -329,7 +329,6 @@ class ControllerWebFrontend extends Controller
 			$assets->addMeta('icon180','<link rel="apple-touch-icon" sizes="180x180" href="' . $urlinfo['baseurl'] . '/media/custom/favicon-180x180.png" />');
 		}
 
-
 		# ADD META TAGS
 		if(isset($metadata['meta']['noindex']) && $metadata['meta']['noindex'])
 		{
@@ -394,6 +393,9 @@ class ControllerWebFrontend extends Controller
 			'currentpage'	=> $currentpage
 		];
 
+		$morepagedata = $this->c->get('dispatcher')->dispatch(new OnPageReady([]), 'onPageReady')->getData();
+		$pagedata = array_merge($pagedata, $morepagedata);
+
 		# add a project switch
 		$projects = $navigation->getAllProjects($this->settings);
 		if (
@@ -403,14 +405,20 @@ class ControllerWebFrontend extends Controller
 			isset($this->settings['projectswitch']) && 
 			$this->settings['projectswitch'])
 		{
-		    $pagedata['widgets']['projects'] = $this->getProjectWidget($urlinfo,$projects);
+			$projectsWidget = ['projects' => $this->getProjectWidget($urlinfo, $projects)];
+
+			if(isset($pagedata['widgets']) && is_array($pagedata['widgets']))
+			{
+			    # put projects widget first, then the rest
+			    $pagedata['widgets'] = $projectsWidget + $pagedata['widgets'];
+			}
+			else
+			{
+			    $pagedata['widgets'] = $projectsWidget;
+			}
 	
 			$assets->addInlineCSS($this->getProjectCSS());
 		}
-
-		$morepagedata = $this->c->get('dispatcher')->dispatch(new OnPageReady([]), 'onPageReady')->getData();
-
-		$pagedata = array_merge($pagedata, $morepagedata);
 
 		$route = empty($args) && isset($this->settings['themes'][$theme]['cover']) ? 'cover.twig' : 'index.twig';
 
@@ -563,6 +571,11 @@ class ControllerWebFrontend extends Controller
 			.project-selection{
 				width: 100%;
 				padding: 5px 10px;
+			}
+			#projects{
+				width: 100%;
+				padding-bottom: 15px;
+				font-size: 1em;
 			}
 		';
 	}
