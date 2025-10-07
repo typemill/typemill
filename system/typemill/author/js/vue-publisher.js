@@ -111,12 +111,12 @@ const publisher = Vue.createApp({
 						</template>
 						<template #body>
 							<p>
-								{{ $filters.translate('Do you really want to delete this page') }} 
-								{{ $filters.translate('Please confirm') }}.
+								{{ $filters.translate(getDeleteMessage()) }}? 
+								{{ $filters.translate('Please confirm.') }}.
 							</p>
 						</template>
 						<template #button>
-							<button @click="deleteArticle" class="focus:outline-none px-4 p-3 mr-3 text-white bg-rose-500 hover:bg-rose-700 transition duration-100">{{ $filters.translate('Delete page') }}</button>
+							<button @click="deleteArticle" class="focus:outline-none px-4 p-3 mr-3 text-white bg-rose-500 hover:bg-rose-700 transition duration-100">{{ $filters.translate('Delete') }}</button>
 						</template>
 					</modal>
 				</transition>
@@ -433,6 +433,26 @@ const publisher = Vue.createApp({
 					}
 				}
 			});
+		},
+		getDeleteMessage()
+		{
+			let message = 'Do you really want to delete this page';
+
+			if (this.item.elementType === 'folder' && Array.isArray(this.item.folderContent) && this.item.folderContent.length > 0)
+			{
+				message = 'This folder contains pages. Do you really want to delete all of them';
+
+				for (const subitem of this.item.folderContent)
+				{
+					if (subitem.status === 'modified' || subitem.status === 'published')
+					{
+						message = 'ATTENTION: This folder contains published pages. Do you really want to delete all of them';
+						break;
+					}
+				}
+			}
+
+			return message;
 		},
 		checkUnsafedContent(url)
 		{
