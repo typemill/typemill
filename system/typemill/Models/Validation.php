@@ -99,7 +99,7 @@ class Validation
 			}
 			foreach($customfields as $key => $value)
 			{
-				if(!isset($key) OR empty($key) OR (preg_match('/^([a-z0-9])+$/i', $key) == false) )
+				if(!isset($key) OR empty($key) OR (preg_match('/^([a-z0-9-_ ])+$/i', $key) == false) )
 				{
 		        	return false;
 		        }

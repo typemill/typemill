@@ -720,10 +720,10 @@ app.component('component-customfields', {
 			eventBus.$emit('forminput', {'name': name, 'value': storedvalue});
 		},
 		updatePairKey: function(index,event)
-		{			
-			this.cfvalue[index].key = event.target.value;
+		{
+			this.cfvalue[index].key = event.target.value.trim();
 
-			var regex = /^[a-z0-9]+$/i;
+			var regex = /^[a-z0-9_\- ]+$/i;
 
 			if(!this.keyIsUnique(event.target.value,index))
 			{
