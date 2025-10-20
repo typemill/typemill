@@ -81,6 +81,10 @@ fieldsetproject:
       type: checkbox
       label: 'Frontend Project Switch'
       checkboxlabel: 'Add a project switch to the frontend website'
+    projecthome:
+      type: checkbox
+      label: 'Project Homepage'
+      checkboxlabel: 'The logo should target to the project homepage (depending on the theme)'
     baseprojectid:
       type: text
       label: 'Base Project ID'
