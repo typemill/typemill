@@ -1245,18 +1245,10 @@ class ControllerApiAuthorArticle extends Controller
 
 		$content = new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
 
-		# check if it is a folder and if the folder has published pages.
+		# check if it is a folder.
 		if($item->elementType == 'folder')
 		{
-			# check if folder has published pages
-			if($content->hasPublishedItems($item))
-			{
-				$result = Translations::translate('The folder contains published pages. Please unpublish or delete them first.');
-			}
-			else
-			{
-				$result = $content->deleteFolder($item);
-			}
+			$result = $content->deleteFolder($item);
 		}
 		else
 		{

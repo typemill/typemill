@@ -387,6 +387,8 @@ fieldsetdeveloper:
     trustedloginreferrer:
       type: text
       label: "Trusted IPs or HOSTs for the login-link-referrer (comma separated)"
+      placeholder: "mydomain.com,docs.mydomain.com,127.0.0.1"
+      description: "Keep empty to allow loginlinks from all IPs and Domains."
 fieldsetai:
   type: fieldset
   legend: AI

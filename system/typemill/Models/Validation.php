@@ -99,12 +99,23 @@ class Validation
 			}
 			foreach($customfields as $key => $value)
 			{
-				if(!isset($key) OR empty($key) OR (preg_match('/^([a-z0-9])+$/i', $key) == false) )
+				if (!isset($key) OR empty($key) OR ( $key != strip_tags($key) ) )
+				{
+					return false;
+				}
+				if (!isset($value) OR empty($value) OR ( $value != strip_tags($value) ) )
+				{
+					return false;
+				}
+
+				$keypattern 	= isset($params[0]['keypattern']) ? '/^' .  $params[0]['keypattern']  . '$/i' : '/^([a-z0-9])+$/i';
+				if(preg_match($keypattern, $key) == false)
 				{
 		        	return false;
 		        }
 
-				if (!isset($value) OR empty($value) OR ( $value != strip_tags($value) ) )
+				$valuepattern 	= isset($params[0]['valuepattern']) ? '/^' . $params[0]['valuepattern']  . '$/i' : false;
+				if($valuepattern && (preg_match($valuepattern, $value) == false))
 				{
 					return false;
 				}
@@ -843,7 +854,7 @@ class Validation
 				break;
 			case "customfields":
 				$v->rule('array', $fieldName);
-				$v->rule('customfields', $fieldName);
+				$v->rule('customfields', $fieldName, $fieldDefinitions);
 				break;
 			case "date":
 				$v->rule('date', $fieldName);

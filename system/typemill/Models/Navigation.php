@@ -349,7 +349,7 @@ class Navigation extends Folder
 			    }
 			    else
 			    {
-			    	$value = trim($value, '/');
+			    	$value = trim($value, $this->DS);
 			    	$value .= '.txt';
 			    }
 			}
