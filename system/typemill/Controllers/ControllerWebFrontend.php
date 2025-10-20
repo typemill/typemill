@@ -75,6 +75,7 @@ class ControllerWebFrontend extends Controller
 		# FIND THE PAGE/ITEM IN NAVIGATION
 		if($navigation->isHome($url))
 		{
+			echo "HOME";
 			$item 				= $navigation->getHomepageItem($urlinfo['baseurl']);
 			$item->active 		= true;
 			if($url == '/')

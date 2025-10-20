@@ -595,7 +595,7 @@ app.component('component-hidden', {
 })
 
 app.component('component-customfields', {
-	props: ['id', 'description', 'readonly', 'required', 'disabled', 'options', 'label', 'name', 'type', 'css', 'value', 'errors'],
+	props: ['id', 'description', 'readonly', 'required', 'disabled', 'options', 'label', 'name', 'type', 'css', 'keypattern', 'valuepattern', 'value', 'errors'],
 	data: function () {
 		return {
 			fielderrors: false,
@@ -723,7 +723,17 @@ app.component('component-customfields', {
 		{
 			this.cfvalue[index].key = event.target.value.trim();
 
-			var regex = /^[a-z0-9_\- ]+$/i;
+			var regex = /^[a-z0-9]+$/i;
+			let keymessage = 'Error: Only alphanumeric for keys allowed';
+			if (this.keypattern)
+			{
+				try {
+			      regex = new RegExp('^' + this.keypattern + '$', 'i');
+			      keymessage = 'Error: the input for the KEY must follow the pattern ' + this.keypattern;
+			    } catch (e) {
+			      console.error('Invalid regex pattern from YAML:', this.keypattern, e);
+			    }
+			}
 
 			if(!this.keyIsUnique(event.target.value,index))
 			{
@@ -735,7 +745,7 @@ app.component('component-customfields', {
 			else if(!regex.test(event.target.value))
 			{
 				this.cfvalue[index].keyerror = 'red';
-				this.fielderrors = 'Error: Only alphanumeric for keys allowed';
+				this.fielderrors = keymessage;
 				this.disableaddbutton = 'disabled';
 				return;
 			}
@@ -758,18 +768,40 @@ app.component('component-customfields', {
 		updatePairValue: function(index, event)
 		{
 			this.cfvalue[index].value = event.target.value;
-			
-			var regex = /<.*(?=>)/gm;
-			if(event.target.value == '' || regex.test(event.target.value))
+			delete this.cfvalue[index].valueerror;
+
+			if(event.target.value == '')
 			{
 				this.cfvalue[index].valueerror = 'red';
-				this.fielderrors = 'Error: No empty values or html tags are allowed';				
+				this.fielderrors = 'The input for the VALUE cannot be empty.';
+			}
+			else if(this.valuepattern)
+			{
+				try {
+			      	let regex = new RegExp('^' + this.valuepattern + '$', 'i');
+			      	valuemessage = 'Error: the input for the VALUE must follow the pattern ' + this.valuepattern;
+					if(!regex.test(event.target.value))
+					{
+						this.cfvalue[index].valueerror = 'red';
+						this.fielderrors = 'Error: the input for the VALUE must follow the pattern ' + this.valuepattern;					}
+			    } catch (e) {
+			      console.error('Invalid regex pattern from YAML:', this.valuepattern, e);
+			    }
 			}
 			else
 			{
-				delete this.cfvalue[index].valueerror;
-				this.update(this.cfvalue,this.name);
+				let regex = /<.*(?=>)/gm;
+				if(regex.test(event.target.value))
+				{
+					this.cfvalue[index].valueerror = 'red';
+					this.fielderrors = 'Error: the input contains invalid characters like html code';
+				}
 			}
+			
+			if(!this.cfvalue[index].valueerror)
+			{
+				this.update(this.cfvalue,this.name);
+			} 
 		},
 		addField: function()
 		{
