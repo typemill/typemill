@@ -3,23 +3,23 @@
 		<div class="mw8 pv6 ph3 center flex-m flex-l justify-around">
 			{% if settings.themes.cyanine.teaser1title %}
 				<div class="mw5 center ml0-l mr0-l mv4 flex flex-column flex-grow">
-					<h2 class="f2">{{ settings.themes.cyanine.teaser1title }}</h2>
-					<p class="f5 f4-ns fw3 mt0 lh-copy flex-grow">{{ settings.themes.cyanine.teaser1text }}</p>
-					<a href="{{ settings.themes.cyanine.teaser1link }}" class="button link dim w-100 dib pa3 ma1 ba">{{ settings.themes.cyanine.teaser1label }}</a>
+					<h2 class="f2">{{ settings.themes.cyanine.teaser1title|e }}</h2>
+					<p class="f5 f4-ns fw3 mt0 lh-copy flex-grow">{{ settings.themes.cyanine.teaser1text|e }}</p>
+					<a href="{{ settings.themes.cyanine.teaser1link }}" class="button link dim w-100 dib pa3 ma1 ba">{{ settings.themes.cyanine.teaser1label|e }}</a>
 				</div>
 			{% endif %}
 			{% if settings.themes.cyanine.teaser2title %}
 				<div class="mw5 center ml0-l mr0-l mv4 flex flex-column flex-grow">
-					<h2 class="f2">{{ settings.themes.cyanine.teaser2title }}</h2>
-					<p class="f5 f4-ns fw3 mt0 lh-copy flex-grow">{{ settings.themes.cyanine.teaser2text }}</p>
-					<a href="{{ settings.themes.cyanine.teaser2link }}" class="button link dim w-100 dib pa3 ma1 ba">{{ settings.themes.cyanine.teaser2label }}</a>
+					<h2 class="f2">{{ settings.themes.cyanine.teaser2title|e }}</h2>
+					<p class="f5 f4-ns fw3 mt0 lh-copy flex-grow">{{ settings.themes.cyanine.teaser2text|e }}</p>
+					<a href="{{ settings.themes.cyanine.teaser2link }}" class="button link dim w-100 dib pa3 ma1 ba">{{ settings.themes.cyanine.teaser2label|e }}</a>
 				</div>
 			{% endif %}
 			{% if settings.themes.cyanine.teaser3title %}
 				<div class="mw5 center ml0-l mr0-l mv4 flex flex-column flex-grow">
-					<h2 class="f2">{{ settings.themes.cyanine.teaser3title }}</h2>
-					<p class="f5 f4-ns fw3 mt0 lh-copy flex-grow">{{ settings.themes.cyanine.teaser3text }}</p>
-					<a href="{{ settings.themes.cyanine.teaser3link }}" class="button link dim w-100 dib pa3 ma1 ba">{{ settings.themes.cyanine.teaser3label }}</a>
+					<h2 class="f2">{{ settings.themes.cyanine.teaser3title|e }}</h2>
+					<p class="f5 f4-ns fw3 mt0 lh-copy flex-grow">{{ settings.themes.cyanine.teaser3text|e }}</p>
+					<a href="{{ settings.themes.cyanine.teaser3link }}" class="button link dim w-100 dib pa3 ma1 ba">{{ settings.themes.cyanine.teaser3label|e }}</a>
 				</div>
 			{% endif %}
 		</div>

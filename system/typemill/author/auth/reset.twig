@@ -17,8 +17,10 @@
 							<label for="password">{{ translate('New password') }} <abbr title="{{ translate('required') }}">*</abbr></label>
 							<input 
 								type="password" 
+								id="password"
 								name="password" 
-								value="{{ old.password }}" 
+								autocomplete="new-password"
+								value="{{ old.password|e }}" 
 								class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
 							required>
 							{% if errors.password %}
@@ -30,8 +32,10 @@
 							<label for="passwordrepeat">{{ translate('Repeat password') }} <abbr title="{{ translate('required') }}">*</abbr></label>
 							<input 
 								type="password" 
+								id="passwordrepeat"
 								name="passwordrepeat" 
-								value="{{ old.passwordrepeat }}" 
+								autocomplete="new-password"
+								value="{{ old.passwordrepeat|e }}" 
 								class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
 							required>
 							{% if errors.passwordrepeat %}
@@ -39,8 +43,8 @@
 							{% endif %}
 						</div>
 
-						<input type="hidden" name="recovertoken" value="{{recovertoken}}">
-						<input type="hidden" name="username" value="{{username}}">
+						<input type="hidden" name="recovertoken" value="{{recovertoken|e}}">
+						<input type="hidden" name="username" value="{{username|e}}">
 						
 						<div class="personal-mail hidden">
 							<label>Personal Mail</label>
@@ -65,7 +69,7 @@
 				<p class="py-1">{{ translate('No problem, you can create a new one here.') }} {{ translate('And you might find the following tips helpful') }}:</p>
 				<ul class="list-disc pl-4 py-1">
 					<li>{{ translate('Use a strong and individual password for every account.') }}</li>
-					<li>{{ translate('Your browser can remember all of your passwords.') }}</p>
+					<li>{{ translate('Your browser can remember all of your passwords.') }}</li>
 					<li>{{ translate('The best option is a separate password manager like keepass and others.') }}</li>
 				</ul>
 			</div>

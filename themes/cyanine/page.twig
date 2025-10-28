@@ -14,7 +14,7 @@
 							{% if logo %}
 								<img src="{{ base_url }}/{{ logo }}" class="logo-image"/>
 							{% else %}
-								{{ settings.title }}
+								{{ settings.title|e }}
 							{% endif %}
 						</a>
 					</p>

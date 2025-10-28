@@ -31,7 +31,11 @@
 {% import _self as macros %}
 
 {% if settings.themes.cyanine.collapseNav %}
-    <button id="expander" data-expandlabel="{{ settings.themes.cyanine.expand|default('expand navigation') }}" data-collapselabel="{{ settings.themes.cyanine.collapse|default('collapse navigation') }}" class="expander dim dn db-l link pointer w-100 ba pa2 mb3 f6">{{ settings.themes.cyanine.expand|default('expand navigation') }}</button>
+    <button 
+    	id="expander" 
+    	data-expandlabel="{{ settings.themes.cyanine.expand|default('expand navigation')|e }}" 
+    	data-collapselabel="{{ settings.themes.cyanine.collapse|default('collapse navigation')|e }}" 
+    	class="expander dim dn db-l link pointer w-100 ba pa2 mb3 f6">{{ settings.themes.cyanine.expand|default('expand navigation')|e }}</button>
 {% endif %}
 
 <ul class="cy-nav mainnavigation list pa0 menu f5">

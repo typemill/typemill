@@ -16,9 +16,10 @@
 						<div class="my-2 {{ errors.email ? ' errors' : '' }}">
 							<label for="email">{{ translate('Email') }} <abbr title="{{ translate('required') }}">*</abbr></label>
 							<input 
+								id="email"
 								type="text" 
 								name="email" 
-								value="{{ old.email }}" 
+								value="{{ old.email|e }}" 
 								class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
 							required>
 							{% if errors.email %}

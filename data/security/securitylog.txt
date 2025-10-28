@@ -1,3 +1,9 @@
 127.0.0.1;2025-07-12 10:18:02;login: invalid data
 127.0.0.1;2025-07-12 10:18:08;login: invalid data
 127.0.0.1;2025-07-12 10:18:19;login: invalid data
+127.0.0.1;2025-10-28 15:59:20;login: invalid data
+127.0.0.1;2025-10-28 16:00:31;login: invalid data
+127.0.0.1;2025-10-28 16:00:45;login: invalid data
+127.0.0.1;2025-10-28 16:02:23;login: invalid data
+127.0.0.1;2025-10-28 16:29:40;login: user not found
+127.0.0.1;2025-10-28 16:30:47;login: invalid data

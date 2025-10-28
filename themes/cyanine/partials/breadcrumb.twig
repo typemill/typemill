@@ -6,7 +6,7 @@
 		{% for crumb in breadcrumb %}
 			&nbsp; &#x203A; &nbsp;  
 			{% if loop.last %}
-				{{ crumb.name }}
+				{{ crumb.name|e }}
 			{% else %}
 				<a class="link f-link underline-hover" href="{{ crumb.urlRel }}">{{ crumb.name }}</a>
 			{% endif %}

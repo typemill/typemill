@@ -160,7 +160,22 @@ class Validation
 		
 		Validator::addRule('noHTML', function($field, $value, array $params, array $fields)
 		{
-			if ( $value == strip_tags($value) )
+			# Remove suspicious URI schemes (javascript:, data:, vbscript:)
+		    # if (preg_match('/(javascript:|data:|vbscript:)/i', $cleanvalue))
+		    # {
+		    #    return false;
+		    # }
+
+			# strip out html tags
+			$cleanvalue = strip_tags($value);
+
+		    # Remove control characters (\0-\x1F, \x7F) and non-printables
+			$cleanvalue = preg_replace('/[\x00-\x1F\x7F]/u', '', $cleanvalue);
+
+		    # Remove invisible HTML entities or encoding tricks (optional but more secure)
+		    $cleanvalue = html_entity_decode($cleanvalue, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+			if ( $value == $cleanvalue )
 			{
 				return true;
 			}

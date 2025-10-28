@@ -2,7 +2,7 @@
 		
 		<div class="mw8 pv6 ph3 center">
 
-			<h2 class="f2">{{ settings.themes.cyanine.newsHeadline }}</h2>
+			<h2 class="f2">{{ settings.themes.cyanine.newsHeadline|e }}</h2>
 
 			{% set pagelist = getPageList(navigation, settings.themes.cyanine.newsFolder, base_url) %}
 
