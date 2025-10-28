@@ -100,7 +100,7 @@ class ControllerApiAuthorArticle extends Controller
 		if(!isset($this->settings['disableSitemap']) OR !$this->settings['disableSitemap'])
 		{
 			$sitemap 		= new Sitemap();
-			$sitemap->updateSitemap($draftNavigation, $urlinfo);
+			$sitemap->updateSitemap($draftNavigation, $urlinfo, $navigation->getProject());
 		}
 
 		# If only certain folders are allowed for users, filter the navigation accordingly
@@ -207,7 +207,7 @@ class ControllerApiAuthorArticle extends Controller
 		if(!isset($this->settings['disableSitemap']) OR !$this->settings['disableSitemap'])
 		{
 			$sitemap 		= new Sitemap();
-			$sitemap->updateSitemap($draftNavigation, $urlinfo);
+			$sitemap->updateSitemap($draftNavigation, $urlinfo, $navigation->getProject());
 		}
 
 		# If only certain folders are allowed for users, filter the navigation accordingly
@@ -414,7 +414,7 @@ class ControllerApiAuthorArticle extends Controller
 		if(!isset($this->settings['disableSitemap']) OR !$this->settings['disableSitemap'])
 		{
 			$sitemap 		= new Sitemap();
-			$sitemap->updateSitemap($draftNavigation, $urlinfo);
+			$sitemap->updateSitemap($draftNavigation, $urlinfo, $navigation->getProject());
 		}
 
 		# If only certain folders are allowed for users, filter the navigation accordingly
@@ -966,7 +966,7 @@ class ControllerApiAuthorArticle extends Controller
 		if(!isset($this->settings['disableSitemap']) OR !$this->settings['disableSitemap'])
 		{
 			$sitemap 		= new Sitemap();
-			$sitemap->updateSitemap($draftNavigation, $urlinfo);
+			$sitemap->updateSitemap($draftNavigation, $urlinfo, $navigation->getProject());
 		}
 
 		# If only certain folders are allowed for users, filter the navigation accordingly
@@ -1159,7 +1159,7 @@ class ControllerApiAuthorArticle extends Controller
 		if(!isset($this->settings['disableSitemap']) OR !$this->settings['disableSitemap'])
 		{
 			$sitemap 		= new Sitemap();
-			$sitemap->updateSitemap($draftNavigation, $urlinfo);
+			$sitemap->updateSitemap($draftNavigation, $urlinfo, $navigation->getProject());
 		}
 
 		# If only certain folders are allowed for users, filter the navigation accordingly
@@ -1281,7 +1281,7 @@ class ControllerApiAuthorArticle extends Controller
 		if(!isset($this->settings['disableSitemap']) OR !$this->settings['disableSitemap'])
 		{
 			$sitemap 		= new Sitemap();
-			$sitemap->updateSitemap($draftNavigation, $urlinfo);
+			$sitemap->updateSitemap($draftNavigation, $urlinfo, $navigation->getProject());
 		}
 
 		# If only certain folders are allowed for users, filter the navigation accordingly

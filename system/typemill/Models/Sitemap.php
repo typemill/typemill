@@ -13,11 +13,17 @@ class Sitemap
 		$this->storage 	= new StorageWrapper('\Typemill\Models\Storage');
 	}
 
-	public function updateSitemap($navigation, $urlinfo)
+	public function updateSitemap($navigation, $urlinfo, $project = NULL)
 	{
-		if(!$navigation OR !empty($navigation))
+		if(!$navigation OR empty($navigation))
 		{
 			return false;
+		}
+
+		$filename  	= 'sitemap.xml';
+		if($project)
+		{
+			$filename = 'sitemap-' . $project . '.xml';
 		}
 
 		$sitemap 	= '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
@@ -26,7 +32,7 @@ class Sitemap
 		$sitemap	.= $this->generateUrlSets($navigation);
 		$sitemap 	.= '</urlset>';
 		
-		$this->storage->writeFile('cacheFolder', '', 'sitemap.xml', $sitemap);
+		$this->storage->writeFile('cacheFolder', '', $filename, $sitemap);
 	}
 
 	public function generateUrlSets($navigation)
