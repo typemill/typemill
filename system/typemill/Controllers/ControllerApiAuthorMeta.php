@@ -23,7 +23,7 @@ class ControllerApiAuthorMeta extends Controller
 		$navigation 		= new Navigation();
 
 		# configure multilang or multiproject
-		$navigation->setProject($this->settings, $url);
+		$navigation->setProject($this->settings, $url, $this->c->get('dispatcher'));
 
 		$item 				= $navigation->getItemForUrl($url, $urlinfo, $langattr);
 		if(!$item)
@@ -143,7 +143,7 @@ class ControllerApiAuthorMeta extends Controller
 		$navigation 		= new Navigation();
 
 		# configure multilang or multiproject
-		$navigation->setProject($this->settings, $params['url']);
+		$navigation->setProject($this->settings, $params['url'], $this->c->get('dispatcher'));
 
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 

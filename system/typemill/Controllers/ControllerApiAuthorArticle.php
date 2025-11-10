@@ -49,7 +49,7 @@ class ControllerApiAuthorArticle extends Controller
 		$navigation 		= new Navigation();
 
 		# configure multilang and multiproject
-		$navigation->setProject($this->settings, $params['url']);
+		$navigation->setProject($this->settings, $params['url'], $this->c->get('dispatcher'));
 
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
@@ -164,7 +164,7 @@ class ControllerApiAuthorArticle extends Controller
 		$navigation 		= new Navigation();
 
 		# configure multilang and multiproject
-		$navigation->setProject($this->settings, $params['url']);
+		$navigation->setProject($this->settings, $params['url'], $this->c->get('dispatcher'));
 
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
@@ -274,7 +274,7 @@ class ControllerApiAuthorArticle extends Controller
 		$navigation 		= new Navigation();
 
 		# configure multilang and multiproject
-		$navigation->setProject($this->settings, $params['url']);
+		$navigation->setProject($this->settings, $params['url'], $this->c->get('dispatcher'));
 
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
@@ -370,7 +370,7 @@ class ControllerApiAuthorArticle extends Controller
 		$navigation 		= new Navigation();
 
 		# configure multilang and multiproject
-		$navigation->setProject($this->settings, $params['url']);
+		$navigation->setProject($this->settings, $params['url'], $this->c->get('dispatcher'));
 
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
@@ -478,7 +478,7 @@ class ControllerApiAuthorArticle extends Controller
 		$navigation 		= new Navigation();
 
 		# configure multilang and multiproject
-		$navigation->setProject($this->settings, $params['url']);
+		$navigation->setProject($this->settings, $params['url'], $this->c->get('dispatcher'));
 
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
@@ -575,7 +575,7 @@ class ControllerApiAuthorArticle extends Controller
 		$navigation 		= new Navigation();
 
 		# configure multilang and multiproject
-		$navigation->setProject($this->settings, $params['url']);
+		$navigation->setProject($this->settings, $params['url'], $this->c->get('dispatcher'));
 
 	    $draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $langattr) ?: [];
 
@@ -756,7 +756,7 @@ class ControllerApiAuthorArticle extends Controller
 		$navigation 		= new Navigation();
 
 		# configure multilang and multiproject
-		$navigation->setProject($this->settings, $params['url']);
+		$navigation->setProject($this->settings, $params['url'], $this->c->get('dispatcher'));
 
 	    $draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $langattr);
 	    if($params['folder_id'] == 'root')
@@ -902,7 +902,7 @@ class ControllerApiAuthorArticle extends Controller
 		$navigation 		= new Navigation();
 
 		# configure multilang and multiproject
-		$navigation->setProject($this->settings, $params['url']);
+		$navigation->setProject($this->settings, $params['url'], $this->c->get('dispatcher'));
 
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
@@ -1028,7 +1028,7 @@ class ControllerApiAuthorArticle extends Controller
 		$navigation 		= new Navigation();
 
 		# configure multilang and multiproject
-		$navigation->setProject($this->settings, $params['url']);
+		$navigation->setProject($this->settings, $params['url'], $this->c->get('dispatcher'));
 
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
@@ -1215,7 +1215,7 @@ class ControllerApiAuthorArticle extends Controller
 		$navigation 		= new Navigation();
 
 		# configure multilang and multiproject
-		$navigation->setProject($this->settings, $params['url']);
+		$navigation->setProject($this->settings, $params['url'], $this->c->get('dispatcher'));
 
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)

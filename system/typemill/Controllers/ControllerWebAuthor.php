@@ -28,7 +28,7 @@ class ControllerWebAuthor extends Controller
 	    $navigation 		= new Navigation();
 
 		# configure multilang and multiproject
-		$navigation->setProject($this->settings, $url);
+		$navigation->setProject($this->settings, $url, $this->c->get('dispatcher'));
 
 	    $projects 			= $navigation->getAllProjects($this->settings);
 
@@ -123,7 +123,7 @@ class ControllerWebAuthor extends Controller
 	    $navigation 		= new Navigation();
 
 		# configure multilang and multiproject
-		$navigation->setProject($this->settings, $url);
+		$navigation->setProject($this->settings, $url, $this->c->get('dispatcher'));
 
 		$extendedNavigation 	= $navigation->getFullExtendedNavigation($urlinfo, $langattr);
 

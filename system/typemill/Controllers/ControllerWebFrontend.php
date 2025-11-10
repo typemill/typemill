@@ -35,7 +35,7 @@ class ControllerWebFrontend extends Controller
 	    $navigation 		= new Navigation();
 
 		# configure multilang and multiproject
-		$navigation->setProject($this->settings, $url);
+		$navigation->setProject($this->settings, $url, $this->c->get('dispatcher'));
 
 		$homeurl = $urlinfo['baseurl'];
 		if(isset($this->settings['projecthome']) && $this->settings['projecthome'] && $navigation->getProject())

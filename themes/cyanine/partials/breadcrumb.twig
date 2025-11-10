@@ -3,6 +3,11 @@
 	<div class="mw6">
 		<a class="link f-link underline-hover" href="{{ base_url }}">{{ settings.title }}</a>
 
+		{% if settings.currentproject %}
+			&nbsp; &#x203A; &nbsp;  
+			<a class="link f-link underline-hover" href="{{ base_url }}/{{ settings.currentproject }}">{{ settings.currentproject }}</a>
+		{% endif %}
+
 		{% for crumb in breadcrumb %}
 			&nbsp; &#x203A; &nbsp;  
 			{% if loop.last %}
