@@ -132,7 +132,7 @@ class ControllerWebAuthor extends Controller
 		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $langattr);
 	    $home 				= $navigation->getHomepageItem($urlinfo['baseurl']);
 
-		if($url == '/')
+		if($navigation->isHome($url))
 		{
 			$item 				= $home;
 			$item->active 		= true;
