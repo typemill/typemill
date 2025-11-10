@@ -9,7 +9,8 @@ use Typemill\Models\Extension;
 use Typemill\Models\Validation;
 use Typemill\Models\Fields;
 use Typemill\Extensions\ParsedownExtension;
-
+use Twig\TwigFilter;
+use Twig\TwigFunction;
 
 abstract class Plugin implements EventSubscriberInterface
 {
@@ -191,14 +192,14 @@ abstract class Plugin implements EventSubscriberInterface
 	
 	protected function addTwigFilter($name, $filter)
 	{
-		$filter = new \Twig_SimpleFilter($name, $filter);
-		$this->container->get('view')->getEnvironment()->addFilter($filter);
+	    $filter = new TwigFilter($name, $filter);
+	    $this->container->get('view')->getEnvironment()->addFilter($filter);
 	}
-	
+
 	protected function addTwigFunction($name, $function)
 	{
-		$function = new \Twig_SimpleFunction($name, $function);
-		$this->container->get('view')->getEnvironment()->addFunction($function);
+	    $function = new TwigFunction($name, $function);
+	    $this->container->get('view')->getEnvironment()->addFunction($function);
 	}
 
 	protected function addJS($JS, $attr="")

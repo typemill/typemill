@@ -8,6 +8,7 @@ data/css
 data/security/securitylog.txt
 node_modules
 plugins/search
+plugins/demo
 settings/settings.yaml
 settings/kixote.yaml
 settings/secrets.yaml
