@@ -234,6 +234,8 @@ class Navigation extends Folder
 
 	public function isHome($url)
 	{
+		$url = $this->removeEditorFromUrl($url);
+		
 		if($url == '/')
 		{
 			return true;
