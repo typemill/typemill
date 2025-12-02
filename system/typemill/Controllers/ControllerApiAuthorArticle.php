@@ -49,7 +49,7 @@ class ControllerApiAuthorArticle extends Controller
 		$navigation 		= new Navigation();
 
 		# configure multilang and multiproject
-		$navigation->setProject($this->settings, $params['url']);
+		$navigation->setProject($this->settings, $params['url'], $this->c->get('dispatcher'));
 
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
@@ -100,7 +100,7 @@ class ControllerApiAuthorArticle extends Controller
 		if(!isset($this->settings['disableSitemap']) OR !$this->settings['disableSitemap'])
 		{
 			$sitemap 		= new Sitemap();
-			$sitemap->updateSitemap($draftNavigation, $urlinfo);
+			$sitemap->updateSitemap($draftNavigation, $urlinfo, $navigation->getProject());
 		}
 
 		# If only certain folders are allowed for users, filter the navigation accordingly
@@ -164,7 +164,7 @@ class ControllerApiAuthorArticle extends Controller
 		$navigation 		= new Navigation();
 
 		# configure multilang and multiproject
-		$navigation->setProject($this->settings, $params['url']);
+		$navigation->setProject($this->settings, $params['url'], $this->c->get('dispatcher'));
 
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
@@ -207,7 +207,7 @@ class ControllerApiAuthorArticle extends Controller
 		if(!isset($this->settings['disableSitemap']) OR !$this->settings['disableSitemap'])
 		{
 			$sitemap 		= new Sitemap();
-			$sitemap->updateSitemap($draftNavigation, $urlinfo);
+			$sitemap->updateSitemap($draftNavigation, $urlinfo, $navigation->getProject());
 		}
 
 		# If only certain folders are allowed for users, filter the navigation accordingly
@@ -274,7 +274,7 @@ class ControllerApiAuthorArticle extends Controller
 		$navigation 		= new Navigation();
 
 		# configure multilang and multiproject
-		$navigation->setProject($this->settings, $params['url']);
+		$navigation->setProject($this->settings, $params['url'], $this->c->get('dispatcher'));
 
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
@@ -370,7 +370,7 @@ class ControllerApiAuthorArticle extends Controller
 		$navigation 		= new Navigation();
 
 		# configure multilang and multiproject
-		$navigation->setProject($this->settings, $params['url']);
+		$navigation->setProject($this->settings, $params['url'], $this->c->get('dispatcher'));
 
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
@@ -414,7 +414,7 @@ class ControllerApiAuthorArticle extends Controller
 		if(!isset($this->settings['disableSitemap']) OR !$this->settings['disableSitemap'])
 		{
 			$sitemap 		= new Sitemap();
-			$sitemap->updateSitemap($draftNavigation, $urlinfo);
+			$sitemap->updateSitemap($draftNavigation, $urlinfo, $navigation->getProject());
 		}
 
 		# If only certain folders are allowed for users, filter the navigation accordingly
@@ -478,7 +478,7 @@ class ControllerApiAuthorArticle extends Controller
 		$navigation 		= new Navigation();
 
 		# configure multilang and multiproject
-		$navigation->setProject($this->settings, $params['url']);
+		$navigation->setProject($this->settings, $params['url'], $this->c->get('dispatcher'));
 
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
@@ -575,7 +575,7 @@ class ControllerApiAuthorArticle extends Controller
 		$navigation 		= new Navigation();
 
 		# configure multilang and multiproject
-		$navigation->setProject($this->settings, $params['url']);
+		$navigation->setProject($this->settings, $params['url'], $this->c->get('dispatcher'));
 
 	    $draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $langattr) ?: [];
 
@@ -756,7 +756,7 @@ class ControllerApiAuthorArticle extends Controller
 		$navigation 		= new Navigation();
 
 		# configure multilang and multiproject
-		$navigation->setProject($this->settings, $params['url']);
+		$navigation->setProject($this->settings, $params['url'], $this->c->get('dispatcher'));
 
 	    $draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $langattr);
 	    if($params['folder_id'] == 'root')
@@ -902,7 +902,7 @@ class ControllerApiAuthorArticle extends Controller
 		$navigation 		= new Navigation();
 
 		# configure multilang and multiproject
-		$navigation->setProject($this->settings, $params['url']);
+		$navigation->setProject($this->settings, $params['url'], $this->c->get('dispatcher'));
 
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
@@ -966,7 +966,7 @@ class ControllerApiAuthorArticle extends Controller
 		if(!isset($this->settings['disableSitemap']) OR !$this->settings['disableSitemap'])
 		{
 			$sitemap 		= new Sitemap();
-			$sitemap->updateSitemap($draftNavigation, $urlinfo);
+			$sitemap->updateSitemap($draftNavigation, $urlinfo, $navigation->getProject());
 		}
 
 		# If only certain folders are allowed for users, filter the navigation accordingly
@@ -1028,7 +1028,7 @@ class ControllerApiAuthorArticle extends Controller
 		$navigation 		= new Navigation();
 
 		# configure multilang and multiproject
-		$navigation->setProject($this->settings, $params['url']);
+		$navigation->setProject($this->settings, $params['url'], $this->c->get('dispatcher'));
 
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
@@ -1159,7 +1159,7 @@ class ControllerApiAuthorArticle extends Controller
 		if(!isset($this->settings['disableSitemap']) OR !$this->settings['disableSitemap'])
 		{
 			$sitemap 		= new Sitemap();
-			$sitemap->updateSitemap($draftNavigation, $urlinfo);
+			$sitemap->updateSitemap($draftNavigation, $urlinfo, $navigation->getProject());
 		}
 
 		# If only certain folders are allowed for users, filter the navigation accordingly
@@ -1215,7 +1215,7 @@ class ControllerApiAuthorArticle extends Controller
 		$navigation 		= new Navigation();
 
 		# configure multilang and multiproject
-		$navigation->setProject($this->settings, $params['url']);
+		$navigation->setProject($this->settings, $params['url'], $this->c->get('dispatcher'));
 
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 		if(!$item)
@@ -1281,7 +1281,7 @@ class ControllerApiAuthorArticle extends Controller
 		if(!isset($this->settings['disableSitemap']) OR !$this->settings['disableSitemap'])
 		{
 			$sitemap 		= new Sitemap();
-			$sitemap->updateSitemap($draftNavigation, $urlinfo);
+			$sitemap->updateSitemap($draftNavigation, $urlinfo, $navigation->getProject());
 		}
 
 		# If only certain folders are allowed for users, filter the navigation accordingly

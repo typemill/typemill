@@ -23,7 +23,7 @@ class ControllerApiAuthorMeta extends Controller
 		$navigation 		= new Navigation();
 
 		# configure multilang or multiproject
-		$navigation->setProject($this->settings, $url);
+		$navigation->setProject($this->settings, $url, $this->c->get('dispatcher'));
 
 		$item 				= $navigation->getItemForUrl($url, $urlinfo, $langattr);
 		if(!$item)
@@ -66,18 +66,20 @@ class ControllerApiAuthorMeta extends Controller
 			}
 		}
 
+		$home = $navigation->isHome($url);
+
 		# if item is a folder
 		if($item->elementType == "folder" && isset($item->contains))
 		{
 			$metadata['meta']['contains'] = isset($metadata['meta']['contains']) ? $metadata['meta']['contains'] : $item->contains;
 
 			# get global metadefinitions
-			$metadefinitions = $meta->getMetaDefinitions($this->settings, $folder = true);
+			$metadefinitions = $meta->getMetaDefinitions($this->settings, $folder = true, $home);
 		}
 		else
 		{
 			# get global metadefinitions
-			$metadefinitions = $meta->getMetaDefinitions($this->settings, $folder = false);
+			$metadefinitions = $meta->getMetaDefinitions($this->settings, $folder = false, $home);
 		}
 
 		# add multilanguage definitions if active
@@ -143,7 +145,7 @@ class ControllerApiAuthorMeta extends Controller
 		$navigation 		= new Navigation();
 
 		# configure multilang or multiproject
-		$navigation->setProject($this->settings, $params['url']);
+		$navigation->setProject($this->settings, $params['url'], $this->c->get('dispatcher'));
 
 		$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
 
@@ -173,18 +175,20 @@ class ControllerApiAuthorMeta extends Controller
 			}
 		}
 
+		$home = $navigation->isHome($params['url']);
+
 		# if item is a folder
 		if($item->elementType == "folder" && isset($item->contains))
 		{
 			$metadata['meta']['contains'] = isset($metadata['meta']['contains']) ? $metadata['meta']['contains'] : $item->contains;
 
 			# get global metadefinitions
-			$metadefinitions = $meta->getMetaDefinitions($this->settings, $folder = true);
+			$metadefinitions = $meta->getMetaDefinitions($this->settings, $folder = true, $home);
 		}
 		else
 		{
 			# get global metadefinitions
-			$metadefinitions = $meta->getMetaDefinitions($this->settings, $folder = false);
+			$metadefinitions = $meta->getMetaDefinitions($this->settings, $folder = false, $home);
 		}
 
 		# update metadefinitions from plugins.

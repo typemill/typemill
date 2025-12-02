@@ -32,7 +32,7 @@ class Meta
 		return $metadata;
 	}
 
-	public function getMetaDefinitions($settings, $folder)
+	public function getMetaDefinitions($settings, $folder = false, $home = false)
 	{
 		$metadefinitions 	= $this->storage->getYaml('systemSettings', '', 'metatabs.yaml');
 		$settingsModel 		= new Settings();
@@ -71,6 +71,17 @@ class Meta
 		if(!$folder)
 		{
 			unset($metadefinitions['meta']['fields']['fieldsetfolder']);
+		}
+
+		if(!$home)
+		{
+			foreach($metadefinitions as $key => $value)
+			{
+				if(isset($metadefinitions[$key]['show']) && $metadefinitions[$key]['show'] == 'home')
+				{
+					unset($metadefinitions[$key]);
+				}
+			}
 		}
 
 		# dispatch meta 

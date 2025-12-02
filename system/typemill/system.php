@@ -41,6 +41,7 @@ use Typemill\Extensions\TwigLanguageExtension;
 use Typemill\Extensions\TwigMarkdownExtension;
 use Typemill\Extensions\TwigMetaExtension;
 use Typemill\Extensions\TwigPagelistExtension;
+use Typemill\Extensions\TwigProjectExtension;
 use Typemill\Extensions\TwigCaptchaExtension;
 
 $timer = [];
@@ -340,6 +341,7 @@ $container->set('view', function() use ($settings, $TwigGlobals, $urlinfo, $tran
 	$twig->addExtension(new TwigMarkdownExtension($urlinfo['baseurl'], $settings, $dispatcher));
 	$twig->addExtension(new TwigMetaExtension());
 	$twig->addExtension(new TwigPagelistExtension());
+	$twig->addExtension(new TwigProjectExtension());
 	$twig->addExtension(new TwigCaptchaExtension());
 
 	return $twig;

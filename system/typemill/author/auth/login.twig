@@ -18,9 +18,10 @@
 						<div class="my-2 {{ errors.username ? ' errors' : '' }}">
 							<label for="username">{{ translate('Username') }} <abbr title="{{ translate('required') }}">*</abbr></label>
 							<input 
+								id="username"
 								type="text" 
 								name="username" 
-								value="{{ old.username }}" 
+								value="{{ old.username|e }}" 
 								class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
 							required>
 							{% if errors.signup_username %}
@@ -31,9 +32,10 @@
 						<div class="my-2 {{ errors.password ? ' errors' : '' }}">
 							<label for="password">{{ translate('Password') }} <abbr title="{{ translate('required') }}">*</abbr></label>
 							<input 
+								id="password"
 								type="password" 
 								name="password" 
-								autoomplete="off"
+								autocomplete="off"
 								class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
 							required>
 							{% if errors.password %}
@@ -41,7 +43,7 @@
 							{% endif %}
 						</div>
 
-						<div class="personal-mail hidden">
+						<div class="personal-mail hidden" style="display:none">
 							<label>Personal Mail</label>
 							<input type="text" name="personal-honey-mail">
 						</div>

@@ -5,6 +5,7 @@ namespace Typemill\Models;
 use Typemill\Models\StorageWrapper;
 use Typemill\Models\Folder;
 use Typemill\Events\OnSystemnaviLoaded;
+use Typemill\Events\OnProjectFound;
 
 class Navigation extends Folder
 {
@@ -30,13 +31,19 @@ class Navigation extends Folder
 	}
 
 	# set the current project from url and initialize project folders
-	public function setProject($settings, $url)
+	public function setProject($settings, $url, $dispatcher = false)
 	{
 		$project = $this->getProjectFromUrl($url, $settings);
 	
 		if($project)
 		{
 			$this->project 	= strtolower($project);
+
+			# dispatch the project
+			if($dispatcher)
+			{
+				$dispatcher->dispatch(new OnProjectFound(['project' => $this->project]), 'onProjectFound');
+			}
 
 			$projectPath = '_' . $this->project;
 			$projectNaviPath =  $this->naviFolder . $this->DS . $projectPath;
@@ -227,6 +234,8 @@ class Navigation extends Folder
 
 	public function isHome($url)
 	{
+		$url = $this->removeEditorFromUrl($url);
+		
 		if($url == '/')
 		{
 			return true;

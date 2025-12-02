@@ -44,7 +44,7 @@ RewriteRule ^ index.php [QSA,L]
 
 # Deny access to these file types generally
 RewriteRule ^(.*)?\.yml$ - [F,L]
-Rewriterule ^(.*)?\.yaml$ - [F,L]
+RewriteRule ^(.*)?\.yaml$ - [F,L]
 RewriteRule ^(.*)?\.txt$ - [F,L]
 RewriteRule ^(.*)?\.example$ - [F,L]
 RewriteRule ^(.*)?\.git+ - [F,L]

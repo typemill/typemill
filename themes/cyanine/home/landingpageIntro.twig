@@ -32,9 +32,9 @@
 						{% if settings.themes.cyanine.introLogoTitle %}
 							<img src="{{ base_url }}/{{ logo }}" class="logo-image"/>
 						{% elseif settings.themes.cyanine.introTitleFallback %}
-							<h1 class="f-large lh-title mv2">{{ title }}</h1>
+							<h1 class="f-large lh-title mv2">{{ title|e }}</h1>
 						{% elseif settings.themes.cyanine.introTitle %}
-							<h1 class="f-large lh-title mv2">{{ settings.themes.cyanine.introTitle }}</h1>
+							<h1 class="f-large lh-title mv2">{{ settings.themes.cyanine.introTitle|e }}</h1>
 						{% endif %}
 					</header>
 
@@ -48,7 +48,7 @@
 
 					{% if settings.themes.cyanine.introButtonLink %}
 
-						<a class="button link dim ph4 pv3 mt3 ba dib" href="{{ settings.themes.cyanine.introButtonLink }}">{{ settings.themes.cyanine.introButtonLabel }}</a>
+						<a class="button link dim ph4 pv3 mt3 ba dib" href="{{ settings.themes.cyanine.introButtonLink }}">{{ settings.themes.cyanine.introButtonLabel|e }}</a>
 
 					{% endif %}
 				</div>

@@ -160,11 +160,38 @@ class Validation
 		
 		Validator::addRule('noHTML', function($field, $value, array $params, array $fields)
 		{
-			if ( $value == strip_tags($value) )
+		    # Transform invisible HTML entities or encoding tricks (optional but more secure)
+		    $decodedvalue = html_entity_decode($value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+			# strip out html tags
+			$cleanvalue = strip_tags($decodedvalue);
+
+			if($decodedvalue !== $cleanvalue)
 			{
-				return true;
+				return false;
 			}
-			return false;
+
+			/*
+			# Remove suspicious URI schemes (javascript:, data:, vbscript:)
+		    if (preg_match('/(javascript:|data:|vbscript:)/i', $cleanvalue))
+		    {
+		       return false;
+		    }
+
+		    # 2. Optional: check for suspicious HTML entities
+		    if (preg_match('/&(lt|gt|#0*60|#0*62);/i', $value))
+		    {
+		        return false;
+		    }
+		    
+		    # Remove control characters (\0-\x1F, \x7F) and non-printables
+			if(preg_match('/[\x00-\x1F\x7F]/u', $value))
+		    {
+		        return false;
+		    }
+		    */
+			
+			return true;
 		}, 'contains html');
 		
 		Validator::addRule('markdownSecure', function($field, $value, array $params, array $fields)

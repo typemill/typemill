@@ -314,7 +314,7 @@ class ControllerApiGlobals extends Controller
 		$navigation 		= new Navigation();
 
 		# configure multilang and multiproject
-		$navigation->setProject($this->settings, $params['url']);
+		$navigation->setProject($this->settings, $params['url'], $this->c->get('dispatcher'));
 
 		$item 				= $navigation->getItemForUrl($url, $urlinfo, $langattr);
 		if(!$item)

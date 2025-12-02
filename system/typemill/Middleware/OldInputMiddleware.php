@@ -29,25 +29,69 @@ class OldInputMiddleware
 		{
 			unset($_SESSION['old']);
 
- 			if(!empty($request->getParsedBody()))
+            $oldinput = $request->getParsedBody();
+            if (!empty($oldinput) && is_array($oldinput))
  			{
-			    $oldinput = $request->getParsedBody();
-
-			    if(is_array($oldinput))
-			    {
-				    foreach($oldinput as $key => $value)
-				    {
-				        if (stripos($key, 'pass') !== false)
-				        {
-				            unset($oldinput[$key]);
-				        }
-			    	}
-			    }
+                $oldinput = $this->sanitizeRecursive($oldinput);
 
 				$_SESSION['old'] = $oldinput;
  			}
 		}
 
 		return $response;
+	}
+
+	private function sanitizeRecursive(array $oldinput): array
+	{
+	    $output = [];
+
+	    foreach ($oldinput as $key => $value)
+	    {
+	        # Skip sensitive keys (passwords, tokens, etc.)
+	        if ( stripos($key, 'pass') !== false || 
+	        	 stripos($key, 'token') !== false ||
+	        	 stripos($key, 'user') !== false
+	        	)
+	        {
+	            continue;
+	        }
+
+	        # Clean key name to avoid weird characters
+	        $safeKey = preg_replace('/[^\w\-\.]/u', '', (string)$key);
+
+	        # If it's a nested array (e.g. field groups), sanitize recursively
+	        if (is_array($value))
+	        {
+	            $output[$safeKey] = $this->sanitizeRecursive($value);
+	            continue;
+	        }
+
+	        # Sanitize string values
+	        if (is_string($value))
+	        {
+	            # 1) Remove HTML tags
+	            $value = strip_tags($value);
+
+	            # 2) Remove control chars (null bytes, etc.)
+	            $value = preg_replace('/[\x00-\x1F\x7F]+/u', '', $value);
+
+	            # 3) Remove dangerous characters
+	            $value = str_replace(['<', '>', '`', "\x00", "\r", "\n"], '', $value);
+
+	            # 4) Optionally remove quotes to prevent attribute injection
+	            $value = str_replace(['"', "'"], '', $value);
+
+	            # 5) Trim & limit length
+	            $value = trim($value);
+	            if (mb_strlen($value) > 10000)
+	            {
+	                $value = mb_substr($value, 0, 10000);
+	            }
+	        }
+
+	        $output[$safeKey] = $value;
+	    }
+
+	    return $output;
 	}
 }

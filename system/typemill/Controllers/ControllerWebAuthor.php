@@ -28,7 +28,7 @@ class ControllerWebAuthor extends Controller
 	    $navigation 		= new Navigation();
 
 		# configure multilang and multiproject
-		$navigation->setProject($this->settings, $url);
+		$navigation->setProject($this->settings, $url, $this->c->get('dispatcher'));
 
 	    $projects 			= $navigation->getAllProjects($this->settings);
 
@@ -123,7 +123,7 @@ class ControllerWebAuthor extends Controller
 	    $navigation 		= new Navigation();
 
 		# configure multilang and multiproject
-		$navigation->setProject($this->settings, $url);
+		$navigation->setProject($this->settings, $url, $this->c->get('dispatcher'));
 
 		$extendedNavigation 	= $navigation->getFullExtendedNavigation($urlinfo, $langattr);
 
@@ -132,7 +132,7 @@ class ControllerWebAuthor extends Controller
 		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $langattr);
 	    $home 				= $navigation->getHomepageItem($urlinfo['baseurl']);
 
-		if($url == '/')
+		if($navigation->isHome($url))
 		{
 			$item 				= $home;
 			$item->active 		= true;

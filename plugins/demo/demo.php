@@ -221,14 +221,14 @@ class demo extends Plugin
 		# $this->addTwigGlobal('text', new Text());
 
 		# you can add your own filter function to twig.
-		# $this->addTwigFilter('rot13', function ($string) {
-		# 	return str_rot13($string);
-		# });
+		$this->addTwigFilter('rot13', function ($string) {
+		 	return str_rot13($string);
+		});
 
 		# you can add your own function to a twig-views *
-		# $this->addTwigFunction('myName', function(){
-		# 	return 'My name is ';
-		# });
+		$this->addTwigFunction('myName', function(){
+		 	return 'My name is ';
+		});
 	}
 
 

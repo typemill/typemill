@@ -11,7 +11,7 @@
 
 				<h1 class="text-4xl py-5">Login Verification Code</h1>
 			
-				<p>{{ translate('Enter the verification code from your email:') }}</a>
+				<p>{{ translate('Enter the verification code from your email:') }}</p>
 
 				<form method="POST" action="{{ url_for("auth.authcode") }}" autocomplete="off">
 				
@@ -65,9 +65,9 @@
 							required>
 						</div>
 
-						<input type="hidden" value="{{username}}" name="username">
+						<input type="hidden" value="{{username|e}}" name="username">
 
-						<div class="personal-mail hidden">
+						<div class="personal-mail hidden" style="display:none">
 							<label>Personal Mail</label>
 							<input type="text" name="personal-honey-mail">
 						</div>
@@ -99,8 +99,8 @@
 		
 		<div class="lg:w-1/2 lg:bg-white lg:text-black p-5 bg-teal-600 text-white border-b border-white content-center flex justify-center items-center">
 			<div class="max-w-md content-center">
-				<h2 class="text-4xl py-5">{{ authtitle }}</h2>
-				<p class="py-2">{{ authtext }}</p>
+				<h2 class="text-4xl py-5">{{ authtitle|e }}</h2>
+				<p class="py-2">{{ authtext|e }}</p>
 				<a class="text-teal-600 py-2" href="{{ url_for('auth.show') }}">&#x2192; {{ translate('Back to login') }}</a>
 			</div>
 		</div>

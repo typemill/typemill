@@ -17,19 +17,19 @@
 				</figure>
 				<div class="pa2 ph4-ns pb4-ns">
 					<header>
-						<a class="link f-link underline-hover" href="{{ element.urlAbs }}"><h2 class="mt4 mb2">{{ post.meta.title }}</h2></a>
-						<div class="mt3"><small><time datetime="{{date}}">{{ date | date("d.m.Y") }}</time> | {{ post.meta.author | default(post.meta.owner) }}</small></div>
+						<a class="link f-link underline-hover" href="{{ element.urlAbs }}"><h2 class="mt4 mb2">{{ post.meta.title|e }}</h2></a>
+						<div class="mt3"><small><time datetime="{{date}}">{{ date | date("d.m.Y") }}</time> | {{ post.meta.author|default(post.meta.owner)|e }}</small></div>
 					</header>
-					<p>{{ post.meta.description }}</p>
+					<p>{{ post.meta.description|e }}</p>
 				</div>
 			</li>
 		{% else %}
 			<li class="post-entry">
 				<header>
-					<a class="link f-link underline-hover" href="{{ element.urlAbs }}"><h2 class="mt4 mb2">{{ post.meta.title }}</h2></a>
-					<div class="mt3"><small><time datetime="{{date}}">{{ date | date("d.m.Y") }}</time> | {{ post.meta.author | default(post.meta.owner) }}</small></div>
+					<a class="link f-link underline-hover" href="{{ element.urlAbs }}"><h2 class="mt4 mb2">{{ post.meta.title|e }}</h2></a>
+					<div class="mt3"><small><time datetime="{{date}}">{{ date | date("d.m.Y") }}</time> | {{ post.meta.author|default(post.meta.owner)|e }}</small></div>
 				</header>
-				<p>{{ post.meta.description }}</p>
+				<p>{{ post.meta.description|e }}</p>
 			</li>
 		{% endif %}
 

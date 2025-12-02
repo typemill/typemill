@@ -19,8 +19,9 @@
 							<label for="username">{{ translate('Username') }} <abbr title="{{ translate('required') }}">*</abbr></label>
 							<input 
 								type="text" 
-								name="username" 
-								value="{{ old.username }}" 
+								name="username"
+								id="username" 
+								value="{{ old.username|e }}" 
 								class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
 							required>
 							{% if errors.username %}
@@ -33,7 +34,8 @@
 							<input 
 								type="text" 
 								name="email" 
-								value="{{ old.email }}" 
+								id="email"
+								value="{{ old.email|e }}" 
 								class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
 							required>
 							{% if errors.email %}
@@ -45,8 +47,9 @@
 							<label for="password">{{ translate('Password') }} <abbr title="{{ translate('required') }}">*</abbr></label>
 							<input 
 								type="password" 
+								id="password"
 								name="password" 
-								autoomplete="off"
+								autocomplete="off"
 								class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
 							required>
 							{% if errors.password %}

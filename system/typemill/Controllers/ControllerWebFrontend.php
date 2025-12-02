@@ -35,7 +35,13 @@ class ControllerWebFrontend extends Controller
 	    $navigation 		= new Navigation();
 
 		# configure multilang and multiproject
-		$navigation->setProject($this->settings, $url);
+		$navigation->setProject($this->settings, $url, $this->c->get('dispatcher'));
+
+		$homeurl = $urlinfo['baseurl'];
+		if(isset($this->settings['projecthome']) && $this->settings['projecthome'] && $navigation->getProject())
+		{
+			$homeurl = trim($homeurl, '/') . '/' . $navigation->getProject();
+		}
 
 		# CLEAR NAVIGATION IF MODE WITHOUT ADMIN
 		if(isset($this->settings['autorefresh']) && $this->settings['autorefresh'] == true)
@@ -67,7 +73,9 @@ class ControllerWebFrontend extends Controller
 			'title' 		=> 'Page not found',
 			'description' 	=> 'Sorry, but we did not find the page you where looking for.',
 			'settings' 		=> $this->settings,
-			'base_url' 		=> $urlinfo['baseurl'], 
+			'base_url' 		=> $urlinfo['baseurl'],
+			'home_url'		=> $homeurl,
+			'project'		=> $navigation->getProject(),
 			'logo'			=> false,
 			'favicon'		=> false,
 		];
@@ -387,6 +395,8 @@ class ControllerWebFrontend extends Controller
 			'breadcrumb' 	=> $breadcrumb, 
 			'settings' 		=> $this->settings,
 			'base_url' 		=> $urlinfo['baseurl'], 
+			'home_url'		=> $homeurl,
+			'project'		=> $navigation->getProject(),
 			'metatabs'		=> $metadata,
 			'logo'			=> $logo,
 			'favicon'		=> $favicon,
