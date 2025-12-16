@@ -30,6 +30,7 @@ class ControllerWebAuthor extends Controller
 		# configure multilang and multiproject
 		$navigation->setProject($this->settings, $url, $this->c->get('dispatcher'));
 
+		$project 			= $navigation->getProject();
 	    $projects 			= $navigation->getAllProjects($this->settings);
 
 		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $langattr);
@@ -106,6 +107,7 @@ class ControllerWebAuthor extends Controller
 										'navigation'	=> $draftNavigation,
 										'item'			=> $item,
 										'home' 			=> $home,
+										'project'		=> $project,
 										'projects' 		=> $projects,
 										'content' 		=> $draftMarkdownHtml
 									]

@@ -137,13 +137,12 @@ class Meta
 			$meta['meta'] = []; 
 		}
 
-/*
+
 	    if(!isset($meta['meta']['pageid']) OR !$meta['meta']['pageid'])
 	    {
 	        $meta['meta']['pageid'] = bin2hex(random_bytes(8));
 	        $modified = true;
 	    }
-*/
 	    
 		if(!isset($meta['meta']['owner']) OR !$meta['meta']['owner'])
 		{
@@ -198,7 +197,7 @@ class Meta
 			$this->updateMeta($meta, $item);
 		}
 
-		$filePath = $item->path;		
+		$filePath = $item->path;
 		if($item->elementType == 'folder')
 		{
 			$filePath 	= $item->path . DIRECTORY_SEPARATOR . 'index.md';

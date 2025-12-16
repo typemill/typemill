@@ -24,6 +24,7 @@ const app = Vue.createApp({
 					:formData="formData[currentTab]"
 					:item="item"
 					:pageid="pageid"
+					:translationfor="translationfor"
 					v-on:saveform="saveForm">
 				</component>	
 			</div>`,
@@ -41,7 +42,8 @@ const app = Vue.createApp({
 			css: "lg:px-16 px-8 lg:py-16 py-8 bg-stone-50 shadow-md mb-16",
 			saved: false,
 			showmedialib: false,
-			pageid: false
+			pageid: false,
+			translationfor: false,
 		}
 	},
 	computed: {
@@ -93,6 +95,9 @@ const app = Vue.createApp({
 
 			self.formData = response.data.metadata;
 			self.pageid = self.formData.meta.pageid;
+			if(self.formData.meta.translation_for){
+				self.translationfor = self.formData.meta.translation_for;
+			}
 
 /*
 			self.userroles = response.data.userroles;
@@ -324,115 +329,167 @@ app.component('tab-meta', {
 	}
 })
 
-/*
+
 app.component('tab-lang', {
-	props: ['pageid', 'item'],
+	props: ['pageid', 'item', 'translationfor'],
 	data() {
 		return {
 			formDefinitions: null,
 			formData: {},
-			slugValues: {},
-			slugErrors: {},
+			editData: {},
 			disabledButtons: {},
-			basePath: [], // store base language paths for fallbacks
+			isBlurred: {},
+			langErrors: {},
+			langMessages: {},
+			project: data.project,
 			loading: true,
-			message: '',
-			messageClass: ''
 		}
 	},
 	template: `
-	<section class="dark:bg-stone-700 dark:text-stone-200">
-		<div v-if="loading" class="p-5">{{ $filters.translate('Loading translations...') }}</div>
-		<form v-else>
-			<div 
-				v-for="(fieldDefinition, langKey) in formDefinitions.fields" 
-				:key="langKey" 
-				class="w-full mt-5 mb-5"
-			>
-				<label class="block mb-1 font-medium">{{ fieldDefinition.label }}</label>
-				<div class="flex">
-					<input 
-						class="h-12 w-2/3 border px-2 py-3 border-stone-300 bg-stone-200 text-stone-900"
-						type="text" 
-						v-model="slugValues[langKey]" 
-						:maxlength="fieldDefinition.maxlength"
-						:disabled="fieldDefinition.disabled"
-						@input="changeSlug(langKey)"
-					/>
-					<div class="flex w-1/3">
-						<button 
-							class="w-1/3 px-1 py-3 ml-1 text-stone-50 bg-stone-700 hover:bg-stone-900 hover:text-white transition duration-100 cursor-pointer disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-800"
-							@click.prevent="storeSlug(langKey)" 
-							:disabled="disabledButtons[langKey]"
-						>
-							{{ $filters.translate('save') }}
-						</button>
-						<button 
-							v-if="langKey != baseLang"
-							class="w-1/3 px-1 py-3 ml-1 text-stone-50 bg-stone-700 hover:bg-stone-900 hover:text-white transition duration-100 cursor-pointer disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-800"
-							@click.prevent="autotranslate(langKey)" 
-							:disabled="translationDisabled(langKey)"
-						>
-							{{ $filters.translate('transl') }}
-						</button>
-						<a 
-							v-if="getEditorPath(langKey)"
-							:href="getEditorPath(langKey)"
-							class="w-1/3 px-1 py-3 ml-1 text-center text-stone-50 bg-stone-700 hover:bg-stone-900 hover:text-white transition duration-100 cursor-pointer"
-						>
-							{{ $filters.translate('visit') }}
-						</a>
-						<span 
-							v-else
-							:href="getEditorPath(langKey)"
-							class="w-1/3 px-1 py-3 ml-1 text-center cursor-not-allowed bg-stone-200 text-stone-800"
-						>
-							{{ $filters.translate('visit') }}
-						</span>
+		<section class="dark:bg-stone-700 dark:text-stone-200">
+			<h2 class="text-3xl font-bold mb-4">Translations</h2>
+			<div v-if="loading" class="p-5">{{ $filters.translate('Loading translations...') }}</div>
+			<form v-else>
+				<div v-if="project">
+					<div 
+						v-for="(fieldDefinition, langKey) in formDefinitions.fields" 
+						:key="langKey" 
+						class="w-full mt-5 mb-5"
+					>
+						<div v-if="fieldDefinition.base">
+							<label class="block mb-1 font-medium">Translation for</label>
+							<div class="flex">
+								<input 
+									class="h-12 w-2/3 border px-2 py-3 border-stone-300 bg-stone-200"
+									type="text" 
+									v-model="editData[langKey]"
+									:maxlength="fieldDefinition.maxlength"
+									:disabled="fieldDefinition.disabled"
+									@input="changeUrl(langKey)"
+								/>
+								<div class="flex w-1/3">
+									<a 
+										:href="getEditorPath(langKey)"
+										class="flex-1 px-1 py-3 ml-1 text-center bg-stone-200 text-stone-800
+										       hover:bg-stone-900 hover:text-white transition duration-100"
+									>
+										{{ $filters.translate('visit') }}
+									</a>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
+				<div v-else>
+					<div 
+						v-for="(fieldDefinition, langKey) in formDefinitions.fields" 
+						:key="langKey" 
+						class="w-full mt-5 mb-5"
+					>
+						<label class="block mb-1 font-medium">{{ fieldDefinition.label }}</label>
+						<div class="flex">
+							<input 
+								class="h-12 border px-2 py-3 border-stone-300 bg-stone-200"
+								:class="inputClasses(langKey, fieldDefinition)"
+								type="text" 
+								v-model="editData[langKey]"
+								:maxlength="fieldDefinition.maxlength"
+								:disabled="fieldDefinition.disabled"
+								@input="changeUrl(langKey)"
+							/>
+							<div v-if="!fieldDefinition.base" class="flex w-1/3 items-stretch">
 
-				<!-- full path preview -->
-				<div class="text-sm text-stone-500 mt-1">
-					Path: 
-					<span v-if="langKey != baseLang">/{{langKey}}</span>
-					<span 
-						v-for="(segment, idx) in mergedPath(langKey)" 
-						:key="idx"
-						class="pointer"
-						:class="segment.missing ? 'text-rose-500' : ''"
-						:title="segment.missing ? 'parent page is missing' : 'parent page'"
-					>/{{ segment.slug }}
-					</span>/{{ slugValues[langKey] }}
+								<button
+									class="w-8 px-1 ml-1 flex items-center justify-center
+										   bg-stone-200 text-stone-800
+										   dark:bg-stone-600 dark:text-stone-200 
+									       hover:bg-rose-500 hover:text-white
+									       transition duration-100"
+									@click.prevent="unlinkTranslation(langKey)"
+									:title="$filters.translate('Unlink translation page')"
+								>x</button>
+
+								<!-- create -->
+								<button 
+									class="flex-1 px-1 py-3 ml-1 text-stone-50 bg-stone-700
+									       hover:bg-stone-900 hover:text-white transition duration-100
+									       disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-800"
+									@click.prevent="storeTranslation(langKey)" 
+									:disabled="disabledButtons[langKey]"
+								>
+									{{ $filters.translate('create') }}
+								</button>
+
+								<!-- auto translate -->
+								<button 
+									v-if="autotrans"
+									class="flex-1 px-1 py-3 ml-1 text-stone-50 bg-stone-700
+									       hover:bg-stone-900 hover:text-white transition duration-100
+									       disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-800"
+									@click.prevent="autotranslate(langKey)" 
+									:disabled="translationDisabled(langKey)"
+								>
+									{{ $filters.translate('transl') }}
+								</button>
+
+								<!-- visit -->
+								<a 
+									:href="getEditorPath(langKey)"
+									class="flex-1 px-1 py-3 ml-1 text-center bg-stone-200 text-stone-800
+									       hover:bg-stone-900 hover:text-white transition duration-100"
+								>
+									{{ $filters.translate('visit') }}
+								</a>
+							</div>
+
+						</div>
+						<div v-if="!fieldDefinition.base" class="text-sm mt-1">
+							<div v-if="langMessages[lang]" class="p-1 bg-teal-500 text-white">
+								{{ langMessages[langKey] }}
+							</div>
+							<div v-else-if="langErrors[langKey]" class="p-1 bg-rose-500 text-white">
+								{{ langErrors[langKey] }}
+							</div>
+							<div v-else class="text-stone-500">
+								Edit and save the url to create a new translation page.
+							</div>
+						</div>
+					</div>
 				</div>
-
-				<!-- validation errors -->
-				<div v-if="slugErrors[langKey]" class="f6 tm-red mt1">{{ slugErrors[langKey] }}</div>
-			</div>
-		</form>
-	</section>
+			</form>
+		</section>
 	`,
 	mounted() {
 		this.loadTranslations();
 	},
 	methods: {
-		loadTranslations() {
-			tmaxios.get(`/api/v1/multilang/${this.pageid}`)
+		inputClasses(langKey, fieldDefinition)
+		{
+		    return {
+		      'w-full': fieldDefinition.base,
+		      'w-2/3': !fieldDefinition.base,
+		      'text-stone-900': this.isBlurred[langKey],
+		      'text-stone-400': !this.isBlurred[langKey],
+		    };
+		},
+		loadTranslations()
+		{
+			tmaxios.get(`/api/v1/multilang`, {
+				  params: {
+				  	'url':				data.urlinfo.route,
+				  	'pageid': 			this.pageid,
+				  	'translationfor': 	this.translationfor
+				  }
+				})
 				.then(response => {
 					this.formDefinitions = response.data.multilangDefinitions;
 					this.formData = response.data.multilangData;
+					this.refreshEditData();
+					this.loading = false;
 
 					// base language (for fallbacks)
-					this.basePath = this.formData.path[this.baseLang] || [];
+//					this.basePath = this.formData.path[this.baseLang] || [];
 
-					// init values
-					for (const langKey in this.formDefinitions.fields)
-					{
-						this.disabledButtons[langKey] = true;
-						this.slugErrors[langKey] = false;
-						this.slugValues[langKey] = this.formData[langKey] || '';
-					}
-					this.loading = false;
 				})
 				.catch(error => {
 					this.message = handleErrorMessage(error) || 'Failed to load translations';
@@ -440,98 +497,155 @@ app.component('tab-lang', {
 					this.loading = false;
 				});
 		},
-		mergedPath(langKey)
+		refreshEditData()
 		{
-			const path = this.formData.path?.[langKey] || [];
+			this.editData = [];
 
-			// take all parent segments only (ignore last)
-			return path.slice(0, -1).map((seg, idx) => {
-			    if (seg === false) {
-			      return { slug: this.basePath[idx], missing: true }
-			    }
-			    return { slug: seg, missing: false }
-			});
+			for (const langKey in this.formDefinitions.fields)
+			{
+				this.editData[langKey] 			= this.getInitialEditData(langKey);
+				this.disabledButtons[langKey] 	= true;
+				this.langErrors[langKey] 		= false;
+				this.langMessages[langKey] 		= false;
+				if(this.formData[langKey])
+				{
+					this.isBlurred[langKey] 	= true;
+				}
+			}
+		},
+		getInitialEditData(langKey)
+		{
+			let initValue = '';
+			if(!this.formData[langKey])
+			{
+				if(this.formData['parent'] && this.formData['parent'][langKey])
+				{
+					initValue = this.formData['parent'][langKey];
+				}
+				else
+				{
+					initValue = '/' + langKey + '/';
+				}
+			}
+			else
+			{
+				initValue = this.formData[langKey];
+			}
+
+			return initValue;
+		},
+		changeUrl(langKey)
+		{
+		    let url = this.editData[langKey] || '';
+
+		    // required prefix: /langKey/
+		    const prefix = `/${langKey}/`;
+
+		    // if user deletes the whole thing, restore the prefix only
+		    if (!url.startsWith(prefix))
+		    {
+		        url = prefix;
+		    }
+
+		    url = url.toLowerCase();
+			url = url.replace(/[^a-z0-9\-_/]/g, '-');
+			url = url.replace(/-+/g, '-');
+			url = url.replace(/_+/g, '_');
+			url = url.replace(/\/+/g, '/');
+
+		    this.editData[langKey] = url;
+
+			let control = this.getInitialEditData(langKey);
+		    if(this.editData[langKey] != control)
+		    {
+		        this.disabledButtons[langKey] = false;
+		        this.isBlurred[langKey] = true;
+		    }
+		    else
+		    {
+		        this.disabledButtons[langKey] = true;
+		        this.isBlurred[langKey] = false;
+		    }
 		},
 		getEditorPath(langKey)
 		{
+			/* not totally correct because it adds /en to base version */
 			let editorPath = data.urlinfo.baseurl + "/tm/content/visual";
 
-			// add language prefix if not base language
-			if (langKey !== this.baseLang) {
-				editorPath += "/" + langKey;
-			}
-
-			const path = this.formData.path?.[langKey] || [];
-
-			for (let i = 0; i < path.length; i++) {
-				const segment = path[i];
-
-				// if a parent segment is missing → bail out
-				if (!segment)
-				{
-					return false;
-				}
-
-				editorPath += "/" + segment;
-			}
-
-			return editorPath;
-		},
-		translationDisabled(langKey)
-		{
-			const pageExists = this.getEditorPath(langKey);
-			const aiActive = data.settings.aiservice && data.settings.aiservice !== 'none';
-
-			if(!pageExists || !aiActive)
+			let slug = this.formData[langKey] || '';
+			if(slug == '')
 			{
-				return true;
+				slug = '/' + langKey;
 			}
-			return false;
+
+			return editorPath + slug;
+		},
+		storeTranslation(langKey)
+		{
+			this.langMessages[langKey] = false;
+			this.langErrors[langKey] = false;
+
+			const path = this.editData[langKey];
+			if (/^[a-z0-9\-_/]*$/.test(path)) 
+			{
+				tmaxios.post(`/api/v1/multilang`, {
+					pageid: this.pageid,
+					lang: langKey,
+					path: path,
+				})
+				.then((response) => {
+					this.disabledButtons[langKey] = true;
+					this.langMessages[langKey] = 'Page created';
+					if(response.data.multilangData)
+					{
+						this.formData = response.data.multilangData;
+						this.refreshEditData();
+					}
+					else
+					{
+						this.loadTranslations();
+					}
+				})
+				.catch(error => {
+					this.langErrors[langKey] = handleErrorMessage(error) || 'Failed to save translation';
+				});
+			}
+		},
+		unlinkTranslation(langKey)
+		{
+			this.langMessages[langKey] = false;
+			this.langErrors[langKey] = false;
+
+			tmaxios.delete('/api/v1/multilang',{
+				data: {
+					pageid: this.pageid,
+					lang: langKey,
+					url: this.formData[langKey]
+				}
+			})
+			.then((response) => {
+				this.langMessages[langKey] = 'Unlinked translation page';
+				this.isBlurred[langKey] = false;
+				if(response.data.multilangData)
+				{
+					this.formData = response.data.multilangData;
+					this.refreshEditData();
+				}
+				else
+				{
+					this.loadTranslations();
+				}
+			})	
+			.catch(error => {
+				this.langErrors[langKey] = handleErrorMessage(error) || 'Failed to unlink translation page';
+			});
 		},
 		autotranslate(langKey)
 		{
 			alert('will translate into '+langKey);
 		},
-		changeSlug(langKey) {
-			let slugPart = this.slugValues[langKey];
-			if (!slugPart) {
-				this.slugErrors[langKey] = false;
-				this.disabledButtons[langKey] = true;
-				return;
-			}
-			slugPart = slugPart.replace(/ /g, '-').toLowerCase();
-			if (/^[a-z0-9\-]*$/.test(slugPart)) {
-				this.slugErrors[langKey] = false;
-				this.disabledButtons[langKey] = false;
-				this.slugValues[langKey] = slugPart;
-			} else {
-				this.slugErrors[langKey] = 'Only lowercase a-z, 0-9, and "-" are allowed.';
-				this.disabledButtons[langKey] = true;
-			}
-		},
-		storeSlug(langKey) {
-			const slugPart = this.slugValues[langKey];
-			if (/^[a-z0-9\-]*$/.test(slugPart)) 
-			{
-				tmaxios.post(`/api/v1/multilang/${this.pageid}`, {
-					lang: langKey,
-					slug: slugPart,
-				})
-				.then(() => {
-					this.message = 'Page created';
-					this.messageClass = 'bg-green-600';
-					this.disabledButtons[langKey] = true;
-				})
-				.catch(error => {
-					this.message = handleErrorMessage(error) || 'Failed to save translation';
-					this.messageClass = 'bg-red-600';
-				});
-			}
-		}
 	}
 });
-
-*/
 
 app.component('tab-defaulttab', {
 	props: ['item', 'formData', 'formDefinitions', 'pageid', 'saved', 'errors', 'message', 'messageClass'],

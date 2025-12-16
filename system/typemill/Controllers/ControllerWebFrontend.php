@@ -8,6 +8,7 @@ use Slim\Routing\RouteContext;
 use Typemill\Models\Navigation;
 use Typemill\Models\Content;
 use Typemill\Models\Meta;
+use Typemill\Models\Multilang;
 use Typemill\Models\User;
 use Typemill\Models\StorageWrapper;
 use Typemill\Events\OnPagetreeLoaded;
@@ -42,6 +43,7 @@ class ControllerWebFrontend extends Controller
 		{
 			$homeurl = trim($homeurl, '/') . '/' . $navigation->getProject();
 		}
+
 
 		# CLEAR NAVIGATION IF MODE WITHOUT ADMIN
 		if(isset($this->settings['autorefresh']) && $this->settings['autorefresh'] == true)
@@ -406,28 +408,80 @@ class ControllerWebFrontend extends Controller
 		$morepagedata = $this->c->get('dispatcher')->dispatch(new OnPageReady([]), 'onPageReady')->getData();
 		$pagedata = array_merge($pagedata, $morepagedata);
 
-		# add a project switch
+		# add a project switch and language links
 		$projects = $navigation->getAllProjects($this->settings);
 		if (
 			$projects && 
 			is_array($projects) && 
-			count($projects) > 1 && 
-			isset($this->settings['projectswitch']) && 
-			$this->settings['projectswitch'])
+			count($projects) > 1
+		)
 		{
-			$projectsWidget = ['projects' => $this->getProjectWidget($urlinfo, $projects)];
 
-			if(isset($pagedata['widgets']) && is_array($pagedata['widgets']))
+			if(isset($this->settings['projectswitch']) && $this->settings['projectswitch'])
 			{
-			    # put projects widget first, then the rest
-			    $pagedata['widgets'] = $projectsWidget + $pagedata['widgets'];
+				$projectsWidget = ['projects' => $this->getProjectWidget($urlinfo, $projects)];
+
+				if(isset($pagedata['widgets']) && is_array($pagedata['widgets']))
+				{
+				    # put projects widget first, then the rest
+				    $pagedata['widgets'] = $projectsWidget + $pagedata['widgets'];
+				}
+				else
+				{
+				    $pagedata['widgets'] = $projectsWidget;
+				}
+		
+				$assets->addInlineCSS($this->getProjectCSS());
 			}
-			else
+
+			if($this->settings['projects'] == 'languages')
 			{
-			    $pagedata['widgets'] = $projectsWidget;
+				$pageid = $metadata['meta']['pageid'] ?? false;
+				if(isset($metadata['meta']['translation_for']))
+				{
+					$pageid = $metadata['meta']['translation_for'];
+				}
+
+				if($pageid)
+				{
+					$multilang 			= new Multilang();
+					$multilangIndex 	= $multilang->getMultilangIndex();
+					$multilangData      = $multilang->getMultilangData($pageid, $multilangIndex);
+
+					unset($multilangData['parent']);
+ 
+					foreach($projects as $project)
+					{
+						if($project['active'])
+						{
+							# we do not need the current page, only translations
+							unset($multilangData[$project['id']]);
+							continue;
+						}
+
+						if(!isset($multilangData[$project['id']]))
+						{
+							continue;
+						}
+
+						if(!$multilangData[$project['id']] OR $multilangData[$project['id']] == '')
+						{
+							# remove empty
+							unset($multilangData[$project['id']]);
+							continue;
+						}
+
+						if(!$this->urlIsPublished($multilangData[$project['id']], $urlinfo, $langattr))
+						{
+							# remove if not published
+							unset($multilangData[$project['id']]);
+							continue;
+						}
+					}
+
+					$pagedata['multilang'] = $multilangData;
+				}
 			}
-	
-			$assets->addInlineCSS($this->getProjectCSS());
 		}
 
 		$route = empty($args) && isset($this->settings['themes'][$theme]['cover']) ? 'cover.twig' : 'index.twig';
@@ -537,6 +591,38 @@ class ControllerWebFrontend extends Controller
 		}
 
 		return $restrictionNotice;
+	}
+
+	protected function urlIsPublished($url, $urlinfo, $langattr)
+	{
+		$langnavi = new Navigation();
+		$langnavi->setProject($this->settings, $url);
+		$pageinfo = $langnavi->getPageInfoForUrl($url, $urlinfo, $langattr);
+		if(!$pageinfo OR !isset($pageinfo['path']))
+		{
+			return false;
+		}
+
+	    $path = rtrim($pageinfo['path'], '/');
+
+    	if (pathinfo($path, PATHINFO_EXTENSION))
+    	{
+	        if (pathinfo($path, PATHINFO_EXTENSION) === 'md')
+	        {
+		        return true;
+        	}
+
+        	return false;
+    	}
+
+	    $indexFile = $path . '/index.md';	    
+		$storage = new StorageWrapper($this->settings['storage']);
+	    if ($storage->checkFile('contentFolder', '', $indexFile))
+	    {
+	        return true;
+	    }
+
+	    return false;
 	}
 
 	protected function getProjectWidget($urlinfo, $projects)

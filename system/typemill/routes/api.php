@@ -104,8 +104,9 @@ $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 	$group->post('/prompt', ControllerApiKixote::class . ':prompt')->setName('api.kixote.prompt')->add(new ApiAuthorization($acl, 'mycontent', 'update')); # author
 
 	# Multilang
-	$group->get('/multilang/{pageid}', ControllerApiMultilang::class . ':getMultilang')->setName('api.multilang.get')->add(new ApiAuthorization($acl, 'content', 'read'));
-	$group->post('/multilang/{pageid}', ControllerApiMultilang::class . ':createMultilang')->setName('api.multilang.get')->add(new ApiAuthorization($acl, 'content', 'read'));
+	$group->get('/multilang', ControllerApiMultilang::class . ':getMultilang')->setName('api.multilang.get')->add(new ApiAuthorization($acl, 'content', 'read'));
+	$group->post('/multilang', ControllerApiMultilang::class . ':createMultilang')->setName('api.multilang.create')->add(new ApiAuthorization($acl, 'content', 'read'));
+	$group->delete('/multilang', ControllerApiMultilang::class . ':deleteMultilang')->setName('api.multilang.delete')->add(new ApiAuthorization($acl, 'content', 'read'));
 
 	# API USED ONLY EXTERNALLY
 	$group->get('/systemnavi', ControllerApiGlobals::class . ':getSystemnavi')->setName('api.systemnavi.get')->add(new ApiAuthorization($acl, 'account', 'read')); # member

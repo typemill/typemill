@@ -6,6 +6,12 @@ meta:
       maxlength: 60
       readonly: true
       css: 'hidden'
+    translation_for:
+      type: text
+      label: Translation For
+      maxlength: 60
+      readonly: true
+      css: 'hidden'
     navtitle:
       type: text
       label: Navigation Title

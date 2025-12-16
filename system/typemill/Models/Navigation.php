@@ -172,11 +172,11 @@ class Navigation extends Folder
 	{
 		if($this->checkProjectSettings($settings))
 		{
-			$projects =[];
+			$projects = [];
 			$projects[] = [
 				'id' 		=> $settings['baseprojectid'], 
 				'label' 	=> $settings['baseprojectlabel'],
-				'active' 	=> ($this->project == $settings['baseprojectid']) ? true : false,
+				'active' 	=> !$this->project ? true : false,
 				'base'		=> true
 			];
 
@@ -588,6 +588,11 @@ class Navigation extends Folder
 		}
 
 		$firstLevelExtended = $this->getExtendedNavigation($urlinfo, $langattr, $itempath);
+
+		if(!$firstLevelExtended)
+		{
+			return [];
+		}
 
 		$extended = [];
 

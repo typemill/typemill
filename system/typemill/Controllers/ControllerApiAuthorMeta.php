@@ -83,8 +83,11 @@ class ControllerApiAuthorMeta extends Controller
 		}
 
 		# add multilanguage definitions if active
-#		$multilang = new Multilang();
-#		$metadefinitions = $multilang->addMultilangDefinitions($metadefinitions, $this->settings);
+		if($navigation->checkProjectSettings($this->settings) && $this->settings['projects'] == 'languages')
+		{
+			$multilang = new Multilang();
+			$metadefinitions = $multilang->addMultilangDefinitions($metadefinitions, $this->settings, $navigation->getProject());
+		}
 
 		# update metadefinitions from plugins.
 		$metadefinitions = $this->c->get('dispatcher')->dispatch(new OnMetaDefinitionsLoaded($metadefinitions),'onMetaDefinitionsLoaded')->getData();
