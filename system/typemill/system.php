@@ -34,6 +34,7 @@ use Typemill\Middleware\AssetMiddleware;
 use Typemill\Middleware\SecurityMiddleware;
 use Typemill\Middleware\CustomHeadersMiddleware;
 use Typemill\Extensions\MediaExtension;
+use Typemill\Extensions\MultilangExtension;
 use Typemill\Extensions\TwigCsrfExtension;
 use Typemill\Extensions\TwigUrlExtension;
 use Typemill\Extensions\TwigUserExtension;
@@ -227,6 +228,12 @@ if(isset($updateSettings))
 
 # add media extension to integrate video/audio with shortcodes
 $dispatcher->addSubscriber(new MediaExtension($settings['rootPath'], $urlinfo['baseurl']));
+
+if(isset($settings['projects']) && $settings['projects'] == 'languages')
+{
+	# add multilanguage extension to update the index when pages are deleted, renamed, or moved.
+	$dispatcher->addSubscriber(new MultilangExtension($settings['storage']));
+}
 
 # add final settings to the container
 $container->set('settings', function() use ($settings){ return $settings; });

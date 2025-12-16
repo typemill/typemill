@@ -1176,8 +1176,10 @@ class ControllerApiAuthorArticle extends Controller
 	    $newitem 			= $navigation->getItemForUrl($newurl, $urlinfo, $langattr);
 
 		$data = [
-			'olditem' 	=> $item,
-			'newitem' 	=> $newitem
+			'olditem' 			=> $item,
+			'newitem' 			=> $newitem,
+			'parent_id_from' 	=> $params['parent_id_from'],
+			'parent_id_to' 		=> $params['parent_id_to']
 		];
 
 		$this->c->get('dispatcher')->dispatch(new OnPageSorted($data), 'onPageSorted');

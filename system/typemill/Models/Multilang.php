@@ -28,53 +28,40 @@ class Multilang
 		$this->DS 					= DIRECTORY_SEPARATOR;
 	}
 
+	public function addMultilangDefinitions($metadefinitions, $settings, $project)
+	{		
+		$fields = [];
 
-# DELETE (part of navigation model now)
-    public function checkMultilangSettings($settings): bool
-    {    	
-        if (
-            empty($settings['multilang']) ||
-            empty($settings['baselangcode']) ||
-            empty($settings['baselanglabel']) ||
-            empty($settings['multilanguages']) ||
-            !is_array($settings['multilanguages'])
-        ) {
-            return false;
-        }
-        return true;
-    }
+		# Add base language first
+		$fields[$settings['baseprojectid']] = [
+			'type' 			=> 'text',
+			'label' 		=> 'URL: ' . $settings['baseprojectlabel'] . ' (Base Language)',
+			'maxlength' 	=> 60,
+			'description' 	=> 'Url to the base language ' . $settings['baseprojectlabel'] . ' (read only, change the slug in the meta tab)',
+			'disabled' 		=> 'disabled',
+			'active' 		=> ($project == $settings['baseprojectid']) ? true : false,
+			'base'			=> true
+		];
 
-	public function addMultilangDefinitions($metadefinitions, $settings)
-	{
-		if ($this->checkMultilangSettings($settings))
+		# Add all other languages
+		foreach ($settings['projectinstances'] as $languagecode => $languagelabel)
 		{
-			$fields = [];
-
-			// Add base language first
-			$fields[$settings['baselangcode']] = [
-				'type' => 'text',
-				'label' => 'URL: ' . $settings['baselanglabel'] . ' (Base Language)',
-				'maxlength' => 60,
-				'description' => 'Url to the base language ' . $settings['baselanglabel'] . ' (read only, change the slug in the meta tab)',
-				'disabled' => 'disabled'
-			];
-
-			// Add all other languages
-			foreach ($settings['multilanguages'] as $languagecode => $languagelabel) {
-				// Skip base language if it was accidentally added to multilanguages
-				if ($languagecode === $settings['baselangcode']) {
-					continue;
-				}
-				$fields[$languagecode] = [
-					'type' => 'text',
-					'label' => 'URL: ' . $languagelabel,
-					'maxlength' => 60,
-					'description' => 'Add the url to the ' . $languagelabel . ' version'
-				];
+			# Skip base language if it was accidentally added to multilanguages
+			if ($languagecode === $settings['baseprojectid'])
+			{
+				continue;
 			}
-
-			$metadefinitions['lang']['fields'] = $fields;
+			$fields[$languagecode] = [
+				'type' 			=> 'text',
+				'label' 		=> 'URL: ' . $languagelabel,
+				'maxlength' 	=> 60,
+				'description' 	=> 'Add the url to the ' . $languagelabel . ' version',
+				'active' 		=> ($project == $languagecode) ? true : false,
+				'base'			=> false
+			];
 		}
+
+		$metadefinitions['lang']['fields'] = $fields;
 
 		return $metadefinitions;
 	}
@@ -83,23 +70,27 @@ class Multilang
     {
         $fields = [];
 
-        $baseLang       = $settings['baselangcode'];
-        $baseLabel      = $settings['baselanglabel'];
+        $baseLang       = $settings['baseprojectid'];
+        $baseLabel      = $settings['baseprojectlabel'];
+
 
         $fields[$baseLang] = [
-            'type'        => 'text',
-            'label'       => 'Slug: ' . $baseLabel . ' (Base Language)',
-            'maxlength'   => 60,
-            'disabled'    => false
+            'type'     		=> 'text',
+            'label'   		=> 'url: ' . $baseLabel . ' (Base Language)',
+            'maxlength'		=> 60,
+            'disabled'		=> true,
+            'base'			=> true
         ];
 
-        foreach ($settings['multilanguages'] as $languagecode => $languagelabel) {
-            if ($languagecode === $baseLang) {
+        foreach ($settings['projectinstances'] as $languagecode => $languagelabel)
+        {
+            if ($languagecode === $baseLang)
+            {
                 continue;
             }
             $fields[$languagecode] = [
                 'type'        => 'text',
-                'label'       => 'Slug: ' . $languagelabel,
+                'label'       => 'url: ' . $languagelabel,
                 'maxlength'   => 60,
             ];
         }
@@ -107,28 +98,14 @@ class Multilang
         return ['fields' => $fields];
     }
 
-# NOW IN NAVIGATION
-	public function getLanguagesFromSettings($settings)
+	public function getMultilangData($pageid, $multilangIndex)
 	{
-		return array_keys($settings['multilanguages']);
-	}
+	    if (!isset($multilangIndex[$pageid]))
+	    {
+	        return null;
+	    }
 
-# NOW PART OF NAVIGATION
-	public function getLangFromUrl($settings, $url)
-	{
-		$lang 				= null;
-		if($this->checkMultilangSettings($settings))
-		{
-			$languages = $this->getLanguagesFromSettings($settings);
-			$segments = explode('/', trim($url, '/'));
-			$firstSegment = $segments[0] ?? null;
-			if ($firstSegment && in_array($firstSegment, $languages))
-			{
-					$lang = $firstSegment;
-			}
-		}
-
-		return $lang;
+	    return $multilangIndex[$pageid];
 	}
 
 	public function getMultilangIndex()
@@ -143,7 +120,8 @@ class Multilang
 		return false;
 	}
 
-	public function generateMultilangIndex($meta, $draftNavi, $settings, $parentId = null, &$multilangIndex = [])
+	# generate the baseic index with the basic navigation
+	public function generateMultilangBaseIndex($meta, $draftNavi, $settings, $parentId = null, &$multilangIndex = [])
 	{
 		if(!$meta)
 		{
@@ -154,24 +132,29 @@ class Multilang
 	    {
 	        // Load or create metadata
 	        $metadata = $meta->getMetaData($item);
-	        if (!isset($metadata['pageid']))
+	        if (!isset($metadata['meta']['pageid']))
 	        {
 	            $metadata = $meta->addMetaDefaults($metadata, $item, false, false);
+	            if(!isset($metadata['meta']['pageid']))
+	            {
+	            	continue;
+	            }
 	        }
+
 	        $pageId = $metadata['meta']['pageid'];
 
 	        // Initialize entry for this page
 	        $pageIndex = [];
-	        $pageIndex[$settings['baselangcode']] = $item->slug;
+	        $pageIndex[$settings['baseprojectid']] = $item->urlRelWoF;
 
-	        foreach ($settings['multilanguages'] as $langcode => $langlabel)
+	        foreach ($settings['projectinstances'] as $langcode => $langlabel)
 	        {
 	            // Skip base language if someone added it to multilanguages by mistake
-	            if ($langcode === $settings['baselangcode'])
+	            if ($langcode === $settings['baseprojectid'])
 	            {
 	                continue;
 	            }
-	            $pageIndex[$langcode] = false;
+	            $pageIndex[$langcode] = '';
 	        }
 
 	        $pageIndex['parent'] = $parentId;
@@ -182,9 +165,46 @@ class Multilang
 	        // Recurse into children if available
 	        if (!empty($item->folderContent))
 	        {
-	            $this->generateMultilangIndex($meta, $item->folderContent, $settings, $pageId, $multilangIndex);
+	            $this->generateMultilangBaseIndex($meta, $item->folderContent, $settings, $pageId, $multilangIndex);
 	        }
 	    }
+
+	    return $multilangIndex;
+	}
+
+	# add a single project with the project navigation to the base index
+	public function addProjectToIndex($lang, $meta, $draftNavi, &$multilangIndex = [])
+	{
+		if(!$meta)
+		{
+		    $meta = new Meta();
+		}
+
+		if($draftNavi)
+		{
+		    foreach ($draftNavi as $item)
+		    {
+		        // Load or create metadata
+		        $metadata = $meta->getMetaData($item);
+		        if (!isset($metadata['meta']['translation_for']))
+		        {
+		            continue;
+		        }
+
+		        $pageId = $metadata['meta']['translation_for'];
+
+		        if(isset($multilangIndex[$pageId]))
+		        {
+		        	$multilangIndex[$pageId][$lang] = $item->urlRelWoF;
+		        }
+
+		        // Recurse into children if available
+		        if (!empty($item->folderContent))
+		        {
+		            $this->addProjectToIndex($lang, $meta, $item->folderContent, $multilangIndex);
+		        }
+		    }
+		}
 
 	    return $multilangIndex;
 	}
@@ -203,30 +223,7 @@ class Multilang
 	    return $this->storage->writeFile('dataFolder', $this->langFolder, 'index.txt', $multilangIndex, 'serialize');
 	}
 
-	public function getMultilangData($pageid, $multilangIndex)
-	{
-	    if (!isset($multilangIndex[$pageid]))
-	    {
-	        return null;
-	    }
-
-	    $entry = $multilangIndex[$pageid];
-	    $entry['path'] = [];
-
-	    foreach ($multilangIndex[$pageid] as $lang => $slug)
-	    {
-	        if ($lang === 'parent')
-	        {
-	            continue;
-	        }
-
-	        $segments = $this->getParentSegments($pageid, $lang, $multilangIndex);
-	        $entry['path'][$lang] = $segments; // <-- array with slugs or false
-	    }
-
-	    return $entry;
-	}
-
+	# NOT IN USE
 	protected function getParentSegments($pageId, $lang, $multilangIndex)
 	{
 	    if (!isset($multilangIndex[$pageId]))

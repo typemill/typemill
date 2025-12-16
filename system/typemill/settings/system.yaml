@@ -76,7 +76,7 @@ fieldsetproject:
       options:
         'standard': 'Disabled (Standard Website)'
         'projects': 'Create a multi-project website'
-#        'languages': 'Create a multi-language website'
+        'languages': 'Create a multi-language website'
     projectswitch:
       type: checkbox
       label: 'Frontend Project Switch'
