@@ -348,7 +348,7 @@ app.component('tab-lang', {
 	template: `
 		<section class="dark:bg-stone-700 dark:text-stone-200">
 			<h2 class="text-3xl font-bold mb-4">Translations</h2>
-			<div v-if="loading" class="p-5">{{ $filters.translate('Loading translations...') }}</div>
+			<div v-if="loading" class="pv-5">{{ $filters.translate('Loading translations...') }}</div>
 			<form v-else>
 				<div v-if="project">
 					<div 
@@ -400,6 +400,7 @@ app.component('tab-lang', {
 							<div v-if="!fieldDefinition.base" class="flex w-1/3 items-stretch">
 
 								<button
+									v-if="!isHome()"
 									class="w-8 px-1 ml-1 flex items-center justify-center
 										   bg-stone-200 text-stone-800
 										   dark:bg-stone-600 dark:text-stone-200 
@@ -411,6 +412,7 @@ app.component('tab-lang', {
 
 								<!-- create -->
 								<button 
+									v-if="!isHome()"
 									class="flex-1 px-1 py-3 ml-1 text-stone-50 bg-stone-700
 									       hover:bg-stone-900 hover:text-white transition duration-100
 									       disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-800"
@@ -444,7 +446,7 @@ app.component('tab-lang', {
 
 						</div>
 						<div v-if="!fieldDefinition.base" class="text-sm mt-1">
-							<div v-if="langMessages[lang]" class="p-1 bg-teal-500 text-white">
+							<div v-if="langMessages[langKey]" class="text-teal-600">
 								{{ langMessages[langKey] }}
 							</div>
 							<div v-else-if="langErrors[langKey]" class="p-1 bg-rose-500 text-white">
@@ -463,6 +465,14 @@ app.component('tab-lang', {
 		this.loadTranslations();
 	},
 	methods: {
+		isHome()
+		{
+			if(this.item.originalName == "home" && !this.item.key)
+			{
+				return true;
+			}
+			return false;
+		},
 		inputClasses(langKey, fieldDefinition)
 		{
 		    return {
@@ -482,19 +492,15 @@ app.component('tab-lang', {
 				  }
 				})
 				.then(response => {
-					this.formDefinitions = response.data.multilangDefinitions;
-					this.formData = response.data.multilangData;
+					this.loading 			= false;
+					this.formDefinitions 	= response.data.multilangDefinitions;
+					this.formData 			= response.data.multilangData;
 					this.refreshEditData();
-					this.loading = false;
-
-					// base language (for fallbacks)
-//					this.basePath = this.formData.path[this.baseLang] || [];
-
 				})
 				.catch(error => {
-					this.message = handleErrorMessage(error) || 'Failed to load translations';
-					this.messageClass = 'bg-red-600';
-					this.loading = false;
+					this.loading 			= false;
+					this.message 			= handleErrorMessage(error) || 'Failed to load translations';
+					this.messageClass 		= 'bg-red-600';
 				});
 		},
 		refreshEditData()
@@ -506,8 +512,8 @@ app.component('tab-lang', {
 				this.editData[langKey] 			= this.getInitialEditData(langKey);
 				this.disabledButtons[langKey] 	= true;
 				this.langErrors[langKey] 		= false;
-				this.langMessages[langKey] 		= false;
-				if(this.formData[langKey])
+//				this.langMessages[langKey] 		= false;
+				if(this.formData && this.formData[langKey])
 				{
 					this.isBlurred[langKey] 	= true;
 				}
@@ -515,24 +521,45 @@ app.component('tab-lang', {
 		},
 		getInitialEditData(langKey)
 		{
-			let initValue = '';
-			if(!this.formData[langKey])
+			let slug = '/' + langKey + '/';
+
+			if(this.formDefinitions.fields[langKey].base)
 			{
-				if(this.formData['parent'] && this.formData['parent'][langKey])
-				{
-					initValue = this.formData['parent'][langKey];
-				}
-				else
-				{
-					initValue = '/' + langKey + '/';
-				}
-			}
-			else
-			{
-				initValue = this.formData[langKey];
+				slug = '/';
 			}
 
-			return initValue;
+			if(this.formData)
+			{
+				if(this.formData[langKey])
+				{
+					slug = this.formData[langKey];
+				}
+				else if(this.formData['parent'] && this.formData['parent'][langKey])
+				{
+					slug = this.formData['parent'][langKey];
+				}
+			}
+
+			return slug;
+		},
+		getEditorPath(langKey)
+		{
+			/* not totally correct because it adds /en to base version */
+			let editorPath = data.urlinfo.baseurl + "/tm/content/visual";
+
+			let slug = '/' + langKey;
+
+			if(this.formDefinitions.fields[langKey].base)
+			{
+				slug = '';
+			}
+
+			if(this.formData && this.formData[langKey])
+			{
+				slug = this.formData[langKey];
+			}
+
+			return editorPath + slug;
 		},
 		changeUrl(langKey)
 		{
@@ -566,19 +593,6 @@ app.component('tab-lang', {
 		        this.disabledButtons[langKey] = true;
 		        this.isBlurred[langKey] = false;
 		    }
-		},
-		getEditorPath(langKey)
-		{
-			/* not totally correct because it adds /en to base version */
-			let editorPath = data.urlinfo.baseurl + "/tm/content/visual";
-
-			let slug = this.formData[langKey] || '';
-			if(slug == '')
-			{
-				slug = '/' + langKey;
-			}
-
-			return editorPath + slug;
 		},
 		storeTranslation(langKey)
 		{
