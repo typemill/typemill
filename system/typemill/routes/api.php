@@ -102,6 +102,7 @@ $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 	$group->get('/tokenstats', ControllerApiKixote::class . ':getTokenStats')->setName('api.kixote.tokenstats')->add(new ApiAuthorization($acl, 'mycontent', 'update')); # author
 	$group->post('/agreetoaiservice', ControllerApiKixote::class . ':agreeToAiService')->setName('api.kixote.serviceagreement')->add(new ApiAuthorization($acl, 'mycontent', 'update')); # author
 	$group->post('/prompt', ControllerApiKixote::class . ':prompt')->setName('api.kixote.prompt')->add(new ApiAuthorization($acl, 'mycontent', 'update')); # author
+	$group->post('/autotrans', ControllerApiKixote::class . ':autotrans')->setName('api.kixote.autotrans')->add(new ApiAuthorization($acl, 'mycontent', 'update')); # author
 
 	# Multilang
 	$group->get('/multilang', ControllerApiMultilang::class . ':getMultilang')->setName('api.multilang.get')->add(new ApiAuthorization($acl, 'content', 'read'));

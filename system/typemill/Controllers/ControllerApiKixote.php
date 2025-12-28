@@ -9,23 +9,34 @@ use Typemill\Models\License;
 use Typemill\Models\Settings;
 use Typemill\Models\User;
 use Typemill\Models\ApiCalls;
+use Typemill\Models\Multilang;
+use Typemill\Models\Navigation;
+use Typemill\Models\Content;
+use Typemill\Models\Meta;
 use Typemill\Static\Translations;
+use Symfony\Component\Yaml\Yaml;
 
 class ControllerApiKixote extends Controller
 {
 	private $error = false;
 
+	private $system = 	'You are a content editor and writing assistant.'
+		          		. ' If the user prompt does not explicitly specify otherwise,'
+		          		. ' apply the prompt to the provided article inside the <article></article> tag and return only the updated article in Markdown syntax,'
+		          		. ' without any extra comments or explanations.'
+		          		. ' If you find the tag <focus></focus>,'
+		          		. ' modify only the content inside these tags and leave everything else unchanged.' 
+		          		. ' Always return the full article with clean markdown format and without the tags <article> and <focus>.';
+
+
+	private function setSystemMessage($message)
+	{
+		$this->system = $message;
+	}
+
 	private function getSystemMessage()
 	{
-		$system = 'You are a content editor and writing assistant.'
-		          . ' If the user prompt does not explicitly specify otherwise,'
-		          . ' apply the prompt to the provided article inside the <article></article> tag and return only the updated article in Markdown syntax,'
-		          . ' without any extra comments or explanations.'
-		          . ' If you find the tag <focus></focus>,'
-		          . ' modify only the content inside these tags and leave everything else unchanged.' 
-		          . ' Always return the full article.';
-
-		return $system;		     
+		return $this->system;		     
 	}
 
 	public function getKixoteSettings(Request $request, Response $response)
@@ -267,6 +278,174 @@ class ControllerApiKixote extends Controller
 		}
 
 		return $jwt;
+	}
+
+	public function autotrans(Request $request, Response $response)
+	{
+	    $params 	= $request->getParsedBody();
+		$lang 		= $params['lang'] ?? false;
+		$pageid 	= $params['pageid'] ?? false;
+		$urlinfo 	= $this->c->get('urlinfo');
+
+	    $aiservice 	= $this->settings['aiservice'] ?? false;
+	    if(!$aiservice)
+	    {
+	        $response->getBody()->write(json_encode([
+	            'message' => 'No ai service is selected.'
+	        ]));
+	        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);	    	
+	    }
+
+	    if (!$pageid || !$lang)
+	    {
+	        $response->getBody()->write(json_encode([
+	            'message' => 'Prompt is missing or invalid.'
+	        ]));
+	        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+	    }
+
+        $multilang 			= new Multilang();
+		$multilangIndex 	= $multilang->getMultilangIndex();
+        if(!$multilangIndex)
+        {
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('no index for multilanguage found'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+        }
+
+		$multilangData 	= $multilang->getMultilangData($pageid, $multilangIndex);
+        if(!$multilangData or !isset($multilangData[$lang]))
+        {
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('We did not find the page id in the mulitlangindex'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+        }
+
+		$navigation 		= new Navigation();
+		$url 				= $multilangData[$lang];
+
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $url, $dispatcher = false);
+
+		$item 				= $navigation->getItemForUrl($url, $urlinfo, $lang);
+		if(!$item)
+		{
+			$response->getBody()->write(json_encode([
+				'message' => 'page not found',
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+		}
+
+		# GET THE CONTENT
+		$content 			= new Content($urlinfo['baseurl'], $this->settings, $dispather = false);
+		$draftMarkdown		= $content->getDraftMarkdown($item);
+		$markdown 			= $content->markdownArrayToText($draftMarkdown);
+
+	    $promptname 	= 'translateArticle';
+		$prompt 		= 'Translate the following article into ' 
+							. $this->settings['projectinstances'][$lang] . ' (' . $lang . '). '
+							. 'Preserve the original Markdown structure exactly (headings, lists, links, emphasis, code blocks). '
+							. 'Do not translate or alter Markdown syntax itself. '
+							. 'Rewrite sentences freely where necessary so the translation sounds natural, fluent, and idiomatic in ' . $this->settings['projectinstances'][$lang] . '.';
+	    $article 		= $markdown;
+	    $translation 	= false;
+	    $example 		= false;
+
+	    switch ($aiservice) {
+	    	case 'chatgpt':
+	    		$answer = $this->promptChatGPT($promptname, $prompt, $article, $example);
+	    		break;
+	    	
+	    	case 'claude':
+	    		$answer = $this->promptClaude($promptname, $prompt, $article, $example);
+	    		break;
+
+	    	default:
+	    		$answer = false;
+	    		break;
+	    }
+
+	    if(!isset($answer) or !$answer)
+	    {
+	        $response->getBody()->write(json_encode([
+	            'message' => $this->error
+	        ]));
+
+	        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+	    }
+
+	    $markdownArray 		= $content->markdownTextToArray($answer);
+
+		$content->saveDraftMarkdown($item, $markdownArray);
+
+		# GET THE META
+		$meta 				= new Meta();
+		$metadata  			= $meta->getMetaData($item);
+		$metadata 			= $meta->addMetaDefaults($metadata, $item, $this->settings['author']);
+		$metadata 			= $meta->addMetaTitleDescription($metadata, $item, $markdownArray);
+
+		$yaml = Yaml::dump(
+		    $metadata,
+		    10, // depth
+		    2,  // indentation
+		    Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK
+		);
+
+	    $promptname 		= 'translateMeta';
+	    $prompt 			= 'Translate the following yaml configurations into ' . $this->settings['projectinstances'][$lang] . ' (' . $lang . '). Only tranlsate values on the right, not keys on the left.';
+	    $article 			= $yaml;
+	    $translation 		= false;
+		
+		$system 			=  'You are a content editor and writing assistant.'
+                 			. ' If the user prompt does not explicitly specify otherwise,'
+                 			. ' apply the prompt to the provided content inside the <article></article> tag and return only the updated content in valid YAML format,'
+                 			. ' without any extra comments, explanations, or formatting outside YAML.'
+                 			. ' Preserve correct YAML syntax, indentation, quoting, and data types.'
+                 			. ' Always return the full YAML document without the  <article> tag.';
+
+        $this->setSystemMessage($system);
+
+	    switch ($aiservice) {
+	    	case 'chatgpt':
+	    		$answer = $this->promptChatGPT($promptname, $prompt, $article, $example);
+	    		break;
+	    	
+	    	case 'claude':
+	    		$answer = $this->promptClaude($promptname, $prompt, $article, $example);
+	    		break;
+
+	    	default:
+	    		$answer = false;
+	    		break;
+	    }
+
+	    if(!isset($answer) or !$answer)
+	    {
+	        $response->getBody()->write(json_encode([
+	            'message' => $this->error
+	        ]));
+
+	        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+	    }
+
+		# validate meta
+		$parsedYaml = Yaml::parse($answer);
+
+		if($parsedYaml)
+		{
+	    	$meta->updateMeta($parsedYaml, $item);
+		}
+
+	    $response->getBody()->write(json_encode([
+	        'message' 	=> 'Success',
+	    ]));
+
+	    return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
 	}
 
 	public function prompt(Request $request, Response $response)

@@ -40,11 +40,12 @@ fieldsetsystem:
       description: 'Used for translations in author area, themes, and plugins.'
       options:
         'en': 'English'
-        'ru': 'Russian'
-        'nl': 'Dutch, Flemish'
         'de': 'German'
-        'it': 'Italian'
         'fr': 'French'
+        'it': 'Italian'
+        'nl': 'Dutch, Flemish'
+        'ru': 'Russian'
+        'uk': 'Ukrainian'
     langattr:
       type: text
       label: 'Language attribute (website)'
@@ -77,6 +78,10 @@ fieldsetproject:
         'standard': 'Disabled (Standard Website)'
         'projects': 'Create a multi-project website'
         'languages': 'Create a multi-language website'
+    autotranslate:
+      type: checkbox
+      label: 'AI auto-translation'
+      checkboxlabel: 'Auto-translate pages for multi-language webseites'
     projectswitch:
       type: checkbox
       label: 'Frontend Project Switch'

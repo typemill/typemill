@@ -614,6 +614,10 @@ app.component('tab-lang', {
 					{
 						this.formData = response.data.multilangData;
 						this.refreshEditData();
+						if(response.data.autotranslate)
+						{
+							this.autotranslate(langKey);
+						}
 					}
 					else
 					{
@@ -624,6 +628,23 @@ app.component('tab-lang', {
 					this.langErrors[langKey] = handleErrorMessage(error) || 'Failed to save translation';
 				});
 			}
+		},
+		autotranslate(langKey)
+		{
+			this.langMessages[langKey] = 'tranlating ...';
+			this.langErrors[langKey] = false;
+
+			tmaxios.post(`/api/v1/autotrans`, {
+				pageid: this.pageid,
+				lang: langKey,
+			})
+			.then((response) => {
+				this.disabledButtons[langKey] = true;
+				this.langMessages[langKey] = 'Page translated';
+			})
+			.catch(error => {
+				this.langErrors[langKey] = handleErrorMessage(error) || 'Failed to save translation';
+			});
 		},
 		unlinkTranslation(langKey)
 		{
@@ -653,10 +674,6 @@ app.component('tab-lang', {
 			.catch(error => {
 				this.langErrors[langKey] = handleErrorMessage(error) || 'Failed to unlink translation page';
 			});
-		},
-		autotranslate(langKey)
-		{
-			alert('will translate into '+langKey);
 		},
 	}
 });

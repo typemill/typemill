@@ -120,7 +120,7 @@ class ControllerApiMultilang extends Controller
 		return $response->withHeader('Content-Type', 'application/json');
 	}
 
-    # used for author environment (api based)
+    # used for author environment
 	public function createMultilang(Request $request, Response $response, $args)
 	{
 		$baselang 			= $this->settings['baseprojectid'] ?? false;
@@ -254,7 +254,8 @@ class ControllerApiMultilang extends Controller
 
 		# send the updated data to the frontend
 		$response->getBody()->write(json_encode([
-			'multilangData' 			=> $multilangData
+			'multilangData' 			=> $multilangData,
+			'autotranslate'				=> $this->settings['autotranslate'] ?? false,
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json');
