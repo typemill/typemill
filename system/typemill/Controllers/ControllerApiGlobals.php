@@ -58,13 +58,14 @@ class ControllerApiGlobals extends Controller
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
 		$navigation 		= new Navigation();
-/*
-		if(isset($params['lang']))
+		$draft 				= $params['draft'] ?? false;
+		$url 				= $params['url'] ?? false;
+
+		if($url)
 		{
-			# validate language first !!
-			$navigation->setLanguage($lang);
+			$navigation->setProject($this->settings, $params['url'], $dispatcher = false);
 		}
-*/
+
 		if(isset($params['draft']) && $params['draft'] == true)
 		{
 			$contentnavi   	= $navigation->getFullDraftNavigation($urlinfo, $langattr);
@@ -94,7 +95,7 @@ class ControllerApiGlobals extends Controller
 	{
 		$navigation = new Navigation();
 
-		$result = $navigation->clearNavigation();
+		$result = $navigation->clearAllNavigations();
 
 		$response->getBody()->write(json_encode([
 			'result' => $result
@@ -124,14 +125,7 @@ class ControllerApiGlobals extends Controller
 		$url 				= $params['url'];
 
 		$navigation 		= new Navigation();
-	
-/*
-		if(isset($params['lang']))
-		{
-			# validate language first !!
-			$navigation->setLanguage($lang);
-		}
-*/
+		$navigation->setProject($this->settings, $url, $dispatcher = false);
 
 		$item 				= $navigation->getItemForUrl($url, $urlinfo, $langattr);
 
@@ -173,15 +167,10 @@ class ControllerApiGlobals extends Controller
 
 		$navigation 		= new Navigation();
 		$url 				= $navigation->removeEditorFromUrl($url);
-
-/*
-		$multilang 			= new Multilang();
-		$lang 				= $multilang->getLangFromUrl($this->settings, $url);
-		if($lang)
+		if($url)
 		{
-			$navigation->setLanguage($lang);
+			$navigation->setProject($this->settings, $params['url'], $dispatcher = false);
 		}
-*/
 
 		$item 				= $navigation->getItemForUrl($url, $urlinfo, $langattr);
 		if(!$items)
@@ -222,16 +211,10 @@ class ControllerApiGlobals extends Controller
 
 		$navigation 		= new Navigation();
 		$url 				= $navigation->removeEditorFromUrl($url);
-
-/*
-		# Multilang
-		$multilang 			= new Multilang();
-		$lang 				= $multilang->getLangFromUrl($this->settings, $url);
-		if($lang)
+		if($url)
 		{
-			$navigation->setLanguage($lang);
+			$navigation->setProject($this->settings, $params['url'], $dispatcher = false);
 		}
-*/
 		
 		$item 				= $navigation->getItemForUrl($url, $urlinfo, $langattr);
 		if(!$item)

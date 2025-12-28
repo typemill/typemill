@@ -493,8 +493,6 @@ const kixote = Vue.createApp({
 // unpublish tree
 // load page
 // save page
-// translate page
-// translate tree
 */
 
 kixote.component('tab-admin', {

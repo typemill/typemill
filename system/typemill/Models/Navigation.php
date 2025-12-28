@@ -323,6 +323,13 @@ class Navigation extends Folder
 		return $allowedsystemnavi;
 	}
 
+	public function clearAllNavigations()
+	{
+		$result = $this->storage->deleteContentFolderRecursive('navigation', $dataFolder = true);
+
+		return $result;
+	}
+
 	# use array ['extended' => true, 'draft' => true, 'live' => true] to clear files
 	public function clearNavigation($deleteItems = NULL)
 	{

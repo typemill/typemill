@@ -204,9 +204,13 @@ class Storage
 		return true;
 	}
 
-	public function deleteContentFolderRecursive($folderpath)
+	public function deleteContentFolderRecursive($folderpath, $dataFolder = NULL)
 	{
 		$folderdir = $this->getFolderPath('contentFolder');
+		if($dataFolder)
+		{
+			$folderdir = $this->getFolderPath('dataFolder');
+		}
 
 		if(!is_dir($folderdir . $folderpath))
 		{
@@ -222,7 +226,7 @@ class Storage
 				$fullfilepath = $folderdir . $folderpath . DIRECTORY_SEPARATOR . $filepath;
 				if(is_dir($fullfilepath))
 				{
-					$this->deleteContentFolderRecursive($folderpath . DIRECTORY_SEPARATOR . $filepath);
+					$this->deleteContentFolderRecursive($folderpath . DIRECTORY_SEPARATOR . $filepath, $dataFolder);
 				}
 				else
 				{
