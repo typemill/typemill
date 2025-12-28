@@ -169,7 +169,7 @@ class ControllerApiGlobals extends Controller
 		$url 				= $navigation->removeEditorFromUrl($url);
 		if($url)
 		{
-			$navigation->setProject($this->settings, $params['url'], $dispatcher = false);
+			$navigation->setProject($this->settings, $url, $dispatcher = false);
 		}
 
 		$item 				= $navigation->getItemForUrl($url, $urlinfo, $langattr);
@@ -213,7 +213,7 @@ class ControllerApiGlobals extends Controller
 		$url 				= $navigation->removeEditorFromUrl($url);
 		if($url)
 		{
-			$navigation->setProject($this->settings, $params['url'], $dispatcher = false);
+			$navigation->setProject($this->settings, $url, $dispatcher = false);
 		}
 		
 		$item 				= $navigation->getItemForUrl($url, $urlinfo, $langattr);
@@ -295,9 +295,10 @@ class ControllerApiGlobals extends Controller
 		$url 				= $params['url'];
 
 		$navigation 		= new Navigation();
+		$url 				= $navigation->removeEditorFromUrl($url);
 
 		# configure multilang and multiproject
-		$navigation->setProject($this->settings, $params['url'], $this->c->get('dispatcher'));
+		$navigation->setProject($this->settings, $url, $this->c->get('dispatcher'));
 
 		$item 				= $navigation->getItemForUrl($url, $urlinfo, $langattr);
 		if(!$item)
