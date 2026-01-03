@@ -1335,12 +1335,9 @@ class Navigation extends Folder
 		return $result;
 	}	
 
-
-	# NOT IN USE ANYMORE BUT KEEP IT
+	# In use in meta controller
 	public function getItemWithUrl($navigation, $url, $result = NULL)
 	{
-		die('getItemWithURL in navigation model not in use.');
-
 		foreach($navigation as $key => $item)
 		{
 			# set item active, needed to move item in navigation

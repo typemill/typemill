@@ -163,6 +163,7 @@ class ControllerApiAuthorMeta extends Controller
 
 		$meta 				= new Meta();
 		$metadata 			= $meta->getMetaData($item);
+		$originalmeta 		= $metadata;
 
 		# if user is not allowed to perform this action (e.g. not admin)
 		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'update'))
@@ -222,8 +223,6 @@ class ControllerApiAuthorMeta extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
-#		$navigation 		= new Navigation();
-
 		$naviFileName 		= $navigation->getNaviFileNameForPath($item->path);
 		$extended 			= $navigation->getExtendedNavigation($urlinfo, $this->settings['langattr'], $naviFileName);
 		$draftNavigation 	= false;
@@ -231,44 +230,13 @@ class ControllerApiAuthorMeta extends Controller
 
 		if($params['tab'] == 'meta')
 		{
-			# if manual date has been modified
-			if( $this->hasChanged($params['data'], $metadata['meta'], 'manualdate'))
+			# if folder content has changed to pages or posts
+			if(
+				$item->elementType == "folder" && 
+				isset($params['data']['contains']) && 
+				isset($metadata['meta']['contains']) && 
+				$this->hasChanged($params['data'], $metadata['meta'], 'contains'))
 			{
-				# update the time
-				$validated['data']['time'] = date('H-i-s', time());
-
-				# if it is a post, then rename the post
-				if($item->elementType == "file" && strlen($item->order) == 12)
-				{
-					# create file-prefix with date
-					$metadate 	= $params['data']['manualdate'];
-					if($metadate == '')
-					{ 
-						$metadate = $metadata['meta']['created']; 
-					} 
-					$datetime 	= $metadate . '-' . $params['data']['time'];
-					$datetime 	= implode(explode('-', $datetime));
-					$datetime	= substr($datetime,0,12);
-
-					# create the new filename
-					$pathWithoutFile 	= str_replace($item->originalName, "", $item->path);
-					$newPathWithoutType	= $pathWithoutFile . $datetime . '-' . $item->slug;
-
-					$renameresults = $meta->renamePost($item->pathWithoutType, $newPathWithoutType);
-
-					# make sure the whole navigation with base-navigation and folder-navigation is updated. Bad for performance but rare case
-				    $navigation->clearNavigation();
-
-					# RECREATE ITEM AND NAVIGATION, because we rename filename first and later update the meta-content
-					$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
-					$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
-					$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
-				}
-			}
-
-			# if folder has changed and contains pages instead of posts or posts instead of pages
-			if($item->elementType == "folder" && isset($params['data']['contains']) && isset($metadata['meta']['contains']) && $this->hasChanged($params['data'], $metadata['meta'], 'contains'))
-			{				
 				if($meta->folderContainsFolders($item))
 				{
 					$response->getBody()->write(json_encode([
@@ -314,7 +282,7 @@ class ControllerApiAuthorMeta extends Controller
 			$validated['data']['hide'] 		= (isset($params['data']['hide']) && $params['data']['hide'] !== null) ? $params['data']['hide'] : false;
 			$validated['data']['noindex'] 	= (isset($params['data']['noindex']) && $params['data']['noindex'] !== null) ? $params['data']['noindex'] : false;
 
-			# input values are empty but entry in structure exists
+			# input values are empty but entry in navigation exists
 			if(
 				!$params['data']['hide'] 
 				&& $params['data']['navtitle'] == "" 
@@ -348,29 +316,66 @@ class ControllerApiAuthorMeta extends Controller
 		# store the metadata
 		$store = $meta->updateMeta($metadata, $item);
 
-		if($store === true)
+		if($store !== true)
 		{
-			if($updateDraftNavi)
-			{
-				$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
-				$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
-				$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);				
-			}
-
 			$response->getBody()->write(json_encode([
-				'navigation'	=> $draftNavigation,
-				'item'			=> $item,
-				'rename' 		=> $renameresults ?? false
+				'message' 	=> $store,
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json');
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);			
+		}
+
+		# rename file if manual date has been changed
+		if( 
+			$params['tab'] == 'meta' &&
+			$item->elementType == "file" &&
+			strlen($item->order) == 12 &&
+			$this->hasChanged($params['data'], $originalmeta['meta'], 'manualdate')
+		)
+		{
+			$rawDate = $params['data']['manualdate'] ?: ($metadata['meta']['created'] ?? null);
+
+			$datetimeObj = \DateTime::createFromFormat('Y-m-d', $rawDate);
+			if (!$datetimeObj)
+			{
+			    $datetimeObj = new \DateTime();
+			}
+
+			$datetimeObj->setTime((int)date('H'), (int)date('i'));
+			$datetime = $datetimeObj->format('YmdHi');
+
+			# create the new filename
+			$pathWithoutFile 	= str_replace($item->originalName, "", $item->path);
+			$newPathWithoutType	= $pathWithoutFile . $datetime . '-' . $item->slug;
+
+			$renameresults 		= $meta->renamePost($item->pathWithoutType, $newPathWithoutType);
+
+			# make sure the whole navigation with base-navigation and folder-navigation is updated. Bad for performance but rare case
+	    	$navigation->clearNavigation();
+
+	    	# refresh the navigation and get the new item
+			$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
+			$item 				= $navigation->getItemForUrl($params['url'], $urlinfo, $langattr);
+
+			$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
+			$updateDraftNavi 	= false;
+		}
+
+		# update the navigation
+		if($updateDraftNavi)
+		{
+			$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
+			$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
+			$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);				
 		}
 
 		$response->getBody()->write(json_encode([
-			'message' 	=> $store,
+			'navigation'	=> $draftNavigation,
+			'item'			=> $item,
+			'rename' 		=> $renameresults ?? false
 		]));
 
-		return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
+		return $response->withHeader('Content-Type', 'application/json');
 	}
 
 	# we have to flatten field definitions for tabs if there are fieldsets in it

@@ -1,4 +1,5 @@
 meta:
+    pageid: 5d138e74d4c4882e
     navtitle: news
     title: 'Blog or News'
     description: 'You can add one or many blog- or news-sections to your website. Just create a new folder and change the content of the folder from "pages" to "posts" in the'
@@ -10,4 +11,3 @@ meta:
     hide: false
     noindex: false
     contains: posts
-    pageid: 5d138e74d4c4882e

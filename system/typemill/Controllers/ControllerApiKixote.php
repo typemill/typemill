@@ -406,7 +406,10 @@ class ControllerApiKixote extends Controller
                  			. ' apply the prompt to the provided content inside the <article></article> tag and return only the updated content in valid YAML format,'
                  			. ' without any extra comments, explanations, or formatting outside YAML.'
                  			. ' Preserve correct YAML syntax, indentation, quoting, and data types.'
-                 			. ' Always return the full YAML document without the  <article> tag.';
+                 			. ' Always return the full YAML document without the  <article> tag.'
+							. ' For the field "navtitle", use a very short, natural navigation title.'
+							. ' Prefer concise nouns or verb phrases and avoid unnecessary words.'
+							. ' Example: Instead of "create your first page", use "create page".';
 
         $this->setSystemMessage($system);
 
@@ -439,6 +442,10 @@ class ControllerApiKixote extends Controller
 		if($parsedYaml)
 		{
 	    	$meta->updateMeta($parsedYaml, $item);
+
+			$naviFileName 		= $navigation->getNaviFileNameForPath($item->path);
+		 #   $navigation->clearNavigation([$naviFileName]);
+	    	$navigation->clearNavigation();
 		}
 
 	    $response->getBody()->write(json_encode([
