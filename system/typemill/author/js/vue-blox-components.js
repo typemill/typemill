@@ -1749,30 +1749,30 @@ bloxeditor.component('image-component', {
 			
 			var imgmarkdown = '';
 
-			if(this.imgalt.length < 101)
+			if(this.imgalt.length < 201)
 			{
 				imgmarkdown = '![' + this.imgalt + ']';
 			}
 			else
 			{
-				errors = this.$filters.translate('Maximum size of image alt-text is 100 characters');
+				errors = this.$filters.translate('Maximum size of image alt-text is 200 characters');
 				imgmarkdown = '![]';
 			}
 			
 			if(this.imgtitle != '')
 			{
-				if(this.imgtitle.length < 101)
+				if(this.imgtitle.length < 201)
 				{
 					imgmarkdown = imgmarkdown + '(' + this.imgfile + ' "' + this.imgtitle + '")';
 				}
 				else
 				{
-					errors = this.$filters.translate('Maximum size of image title is 100 characters');
+					errors = this.$filters.translate('Maximum size of image title is 200 characters');
 				}
 			}
 			else
 			{
-				imgmarkdown = imgmarkdown + '(' + this.imgfile + ')';		
+				imgmarkdown = imgmarkdown + '(' + this.imgfile + ')';
 			}
 			
 			var imgattr = '';
@@ -1821,24 +1821,24 @@ bloxeditor.component('image-component', {
 			}			
 			if(this.imglink != '')
 			{
-				if(this.imglink.length < 101)
+				if(this.imglink.length < 201)
 				{
 					imgmarkdown = '[' + imgmarkdown + '](' + this.imglink + ')';
 				}
 				else
 				{
-					errors = this.$filters.translate('Maximum size of image link is 100 characters');
+					errors = this.$filters.translate('Maximum size of image link is 200 characters');
 				}
 			}
 			if(this.imgcaption != '')
 			{
-				if(this.imgcaption.length < 140)
+				if(this.imgcaption.length < 251)
 				{
 					imgmarkdown = imgmarkdown + '\n*' + this.imgcaption + '*'; 
 				}
 				else
 				{
-					errors = this.$filters.translate('Maximum size of image caption is 140 characters');
+					errors = this.$filters.translate('Maximum size of image caption is 250 characters');
 				}
 			}
 			if(errors)
@@ -2168,24 +2168,24 @@ bloxeditor.component('file-component', {
 		{
 			var errors = false;
 			
-			if(this.filetitle.length < 101)
+			if(this.filetitle.length < 201)
 			{
 				filemarkdown = '[' + this.filetitle + ']';
 			}
 			else
 			{
-				errors = this.$filters.translate('Maximum size of file-text is 100 characters');
+				errors = this.$filters.translate('Maximum size of file-text is 200 characters');
 				filemarkdown = '[]';
 			}
 			if(this.fileurl != '')
 			{
-				if(this.fileurl.length < 101)
+				if(this.fileurl.length < 201)
 				{
 					filemarkdown = '[' + this.filetitle + '](' + this.fileurl + ')';
 				}
 				else
 				{
-					errors = this.$filters.translate('Maximum size of file link is 100 characters');
+					errors = this.$filters.translate('Maximum size of file link is 200 characters');
 				}
 			}
 			if(this.fileextension != '')

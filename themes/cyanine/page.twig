@@ -118,9 +118,24 @@
 
 			{% elseif item.elementType == 'folder' and item.contains == 'pages' %}
 
-				<nav class="f4-l f5">
-					{% include 'partials/navigationFlat.twig'  with {'flatnavi': item.folderContent} %}
-				</nav>
+				{% if settings.themes.cyanine.nofoldernavi and (item.prevItem or item.nextItem) %}
+
+					<div id="bottompager" class="f5 pv5 flex-l flex-m justify-between {{ settings.themes.cyanine.fontnavi|default('tm-sans-serif') }}">
+						{% if item.prevItem %}
+							<a class="navigation link w-100 w-40-l w-40-m mv1 pv2 ph3 ba dim dib" href="{{ item.prevItem.urlRel }}">&lsaquo;&nbsp; {{ item.prevItem.name }}</a>
+						{% endif %}
+						{% if item.nextItem %}
+							<a class="navigation link w-100 w-40-l w-40-m mv1 pv2 ph3 dib ba dim tr" href="{{ item.nextItem.urlRel }}">{{ item.nextItem.name }} &nbsp;&rsaquo;</a>
+						{% endif %}
+					</div>
+
+				{% else  %}
+				
+					<nav class="f4-l f5">
+						{% include 'partials/navigationFlat.twig'  with {'flatnavi': item.folderContent} %}
+					</nav>
+
+				{% endif  %}
 
 			{% elseif item.elementType == 'folder' and item.contains == 'posts' %}
 
