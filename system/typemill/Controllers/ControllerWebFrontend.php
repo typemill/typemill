@@ -416,7 +416,7 @@ class ControllerWebFrontend extends Controller
 			count($projects) > 1
 		)
 		{
-
+			# MULTIPROJECT
 			if(isset($this->settings['projectswitch']) && $this->settings['projectswitch'])
 			{
 				$projectsWidget = ['projects' => $this->getProjectWidget($urlinfo, $projects)];
@@ -434,6 +434,7 @@ class ControllerWebFrontend extends Controller
 				$assets->addInlineCSS($this->getProjectCSS());
 			}
 
+			# MULTILANG
 			if($this->settings['projects'] == 'languages')
 			{
 				$pageid = $metadata['meta']['pageid'] ?? false;
@@ -447,39 +448,59 @@ class ControllerWebFrontend extends Controller
 					$multilang 			= new Multilang();
 					$multilangIndex 	= $multilang->getMultilangIndex();
 					$multilangData      = $multilang->getMultilangData($pageid, $multilangIndex);
+					$multilangRefs 		= [];					
 
 					unset($multilangData['parent']);
  
 					foreach($projects as $project)
 					{
 						if($project['active'])
-						{
-							# we do not need the current page, only translations
-							unset($multilangData[$project['id']]);
+						{							
+							# use current project as language tag
+							$settings = $this->settings;
+							$settings['langattr'] = $project['id'];
+							$pagedata['settings'] = $settings;
+
+							# we do not need to link the current page, only translations
 							continue;
 						}
 
-						if(!isset($multilangData[$project['id']]))
+						if(
+							isset($multilangData[$project['id']]) && 
+							$multilangData[$project['id']] != '' &&
+							$this->urlIsPublished($multilangData[$project['id']], $urlinfo, $langattr)
+						)
 						{
-							continue;
-						}
-
-						if(!$multilangData[$project['id']] OR $multilangData[$project['id']] == '')
-						{
-							# remove empty
-							unset($multilangData[$project['id']]);
-							continue;
-						}
-
-						if(!$this->urlIsPublished($multilangData[$project['id']], $urlinfo, $langattr))
-						{
-							# remove if not published
-							unset($multilangData[$project['id']]);
-							continue;
+							$multilangRefs[$project['id']] = $multilangData[$project['id']];
 						}
 					}
 
-					$pagedata['multilang'] = $multilangData;
+					# if there are translations
+					if(!empty($multilangRefs))
+					{
+						foreach($projects as $project)
+						{
+							# add meta hreflang to current page
+							if($project['active'])
+							{
+								$assets->addMeta('alternate_' . $project['id'], '<link rel="alternate" hreflang="' . $project['id'] . '" href="' . $urlinfo['baseurl'] . $multilangData[$project['id']] . '" />');
+							}
+
+							# add meta hreflang to base language
+							if($project['base'])
+							{
+								$assets->addMeta('alternate_baselang', '<link rel="alternate" hreflang="x-default" href="' . $urlinfo['baseurl'] . $multilangData[$project['id']] . '" />');								
+							}
+
+							# add meta hreflang to translations
+							if(isset($multilangRefs[$project['id']]))
+							{
+								$assets->addMeta('alternate_' . $project['id'], '<link rel="alternate" hreflang="' . $project['id'] . '" href="' . $urlinfo['baseurl'] . $multilangData[$project['id']] . '" />');
+							}
+						}
+					}
+
+					$pagedata['multilang'] = $multilangRefs;
 				}
 			}
 		}
