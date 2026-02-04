@@ -205,7 +205,9 @@ const kixote = Vue.createApp({
 										<div class="p-5">
 											<keep-alive>
 												<component 
+													v-if 			= "isReady"
 													:is 			= "currentTabComponent" 
+													:key 			= "currentTab"
 													:command 		= "command"
 													:content 		= "content"
 													:navigation 	= "navigation"
@@ -306,9 +308,13 @@ const kixote = Vue.createApp({
 	    }
 	},	
 	computed: {
-		currentTabComponent: function ()
+		currentTabComponent()
 		{
 			return 'tab-' + this.currentTab.toLowerCase()
+		},
+		isReady() 
+		{
+		    return this.content && this.navigation && this.item
 		}
 	},	
 	methods: {
