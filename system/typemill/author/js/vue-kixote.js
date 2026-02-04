@@ -271,7 +271,7 @@ const kixote = Vue.createApp({
 			useragreement: false,
 			loading: false,
 			item: data.item,
-			content: data.content,
+			content: '',
 			switchToGenerateTab: false,
 			navigation: data.navigation,
 			urlinfo: data.urlinfo,
@@ -828,7 +828,7 @@ kixote.component('tab-generate', {
       	};
 	},
 	template: `<section class="dark:text-stone-200">
-
+				<Transition name="fade" appear>
 					<div v-if="!aiservice" class="dark:bg-stone-700 bg-stone-200 w-full p-5 dark:text-white">
 					    <div class="p-5">
 					        <h2 class="text-xl font-bold mb-4">Your AI Assistant for Typemill</h2>
@@ -1172,7 +1172,7 @@ kixote.component('tab-generate', {
 							<p class="text-center p-8">Content Generation only works on content pages. You are currently in the settings area.</p>
 						</div>
 					</div>
-
+				  </Transition>
 				</section>`,
 	mounted: function()
 	{	
