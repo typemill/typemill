@@ -953,18 +953,6 @@ app.component('component-image', {
 		{
 			eventBus.$emit('forminput', {'name': this.name, 'value': filepath});
 		},
-		/*
-		updatemarkdown: function(markdown, url)
-		{
-			/* is called from child component medialib 
-			this.update(url);
-		},
-		createmarkdown: function(url)
-		{
-			/* is called from child component medialib 
-			this.update(url);
-		},
-		*/
 		deleteImage: function()
 		{
 			this.imagepreview = '';
@@ -1001,7 +989,7 @@ app.component('component-image', {
 					    tmaxios.post('/api/v1/image',{
 							'image':			e.target.result,
 							'name': 			imageFile.name,
-							'publish':  		false,
+							'publish':  		true,
 							'keepformat': 		keepformat
 						})
 					    .then(function (response) {

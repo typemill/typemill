@@ -1,13 +1,13 @@
 meta:
+    pageid: c9eb33d2af86b19a
     navtitle: Home
     title: Typemill
     description: 'The open-source flat-file cms for text-driven websites. Create handbooks, documentations, manuals, web-novels, traditional websites, and more.'
-    heroimage: ''
+    heroimage: media/live/publisher.png
     owner: typemill
     author: typemill
-    modified: '2025-05-17'
+    modified: '2025-09-16'
     created: '2024-03-19'
     time: 17-56-00
     hide: false
     noindex: false
-    pageid: c9eb33d2af86b19a

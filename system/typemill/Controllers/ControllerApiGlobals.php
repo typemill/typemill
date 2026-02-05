@@ -104,6 +104,19 @@ class ControllerApiGlobals extends Controller
 		return $response->withHeader('Content-Type', 'application/json')->withStatus(200);;
 	}
 
+	public function clearMultilang(Request $request, Response $response)
+	{
+		$multilang = new Multilang();
+
+		$result = $multilang->deleteMultilangIndex();
+
+		$response->getBody()->write(json_encode([
+			'result' => $result
+		]));
+
+		return $response->withHeader('Content-Type', 'application/json')->withStatus(200);;
+	}
+
 	public function getItemForUrl(Request $request, Response $response, $args)
 	{
 		$params 			= $request->getQueryParams();

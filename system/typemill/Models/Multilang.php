@@ -108,6 +108,13 @@ class Multilang
 	    return $multilangIndex[$pageid];
 	}
 
+	public function deleteMultilangIndex()
+	{
+		$multilangIndex = $this->storage->deleteFile('dataFolder', $this->langFolder, 'index.txt');
+
+		return $multilangIndex;
+	}
+
 	public function getMultilangIndex()
 	{
 		$multilangIndex = $this->storage->getFile('dataFolder', $this->langFolder, 'index.txt', 'unserialize');

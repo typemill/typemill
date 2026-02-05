@@ -78,6 +78,26 @@ const kixoteCommands = [
 		answer: ['Asking server ...'],
 	},
 	{
+		name: 'clear multilang',
+		description: 'Clear the multilanguage index. It will be recreated after next ',
+		method: function()
+				{
+					var self = this;
+
+					tmaxios.delete('/api/v1/clearmultilang',{
+					})
+					.then(function (response)
+					{
+						eventBus.$emit('answer', ['multilanguage index has been cleared']);
+					})
+					.catch(function (error)
+					{
+						eventBus.$emit('answer', getKixoteError(error));
+					});
+				},
+		answer: ['Asking server ...'],
+	},
+	{
 		name: 'show security log',
 		description: 'Show the security log that you can activate in the security tab of the system settings.',
 		method: function()

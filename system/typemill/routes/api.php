@@ -97,6 +97,7 @@ $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 	$group->delete('/securitylog', ControllerApiGlobals::class . ':deleteSecurityLog')->setName('api.securitylog.delete')->add(new ApiAuthorization($acl, 'system', 'update')); # manager
 	$group->delete('/cache', ControllerApiGlobals::class . ':deleteCache')->setName('api.cache.delete')->add(new ApiAuthorization($acl, 'system', 'update')); # manager
 	$group->delete('/clearnavigation', ControllerApiGlobals::class . ':clearNavigation')->setName('api.navigation.clear')->add(new ApiAuthorization($acl, 'system', 'update')); # manager
+	$group->delete('/clearmultilang', ControllerApiGlobals::class . ':clearMultilang')->setName('api.multilang.clear')->add(new ApiAuthorization($acl, 'system', 'update')); # manager
 
 	# KIXOTE Remote Services
 	$group->get('/tokenstats', ControllerApiKixote::class . ':getTokenStats')->setName('api.kixote.tokenstats')->add(new ApiAuthorization($acl, 'mycontent', 'update')); # author

@@ -23,6 +23,31 @@ class ControllerApiMultilang extends Controller
 
 	protected $langattr = false;
 
+    # used for kixote command
+	public function deleteMultilang(Request $request, Response $response, $args)
+	{
+        $multilang 	= new Multilang();
+
+        $result = $multilang->deleteMultilangIndex();
+
+        if(!$result)
+        {
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('We could not delete the multilang index'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+        }
+
+		$response->getBody()->write(json_encode([
+			'multilangData' 			=> $multilangData, 
+			'multilangDefinitions'		=> $multilangDefinitions, 
+			'project' 					=> $project
+		]));
+
+		return $response->withHeader('Content-Type', 'application/json');
+	}
+
     # used for author environment (api based)
 	public function getMultilang(Request $request, Response $response, $args)
 	{
