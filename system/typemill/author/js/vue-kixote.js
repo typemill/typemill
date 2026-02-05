@@ -225,7 +225,6 @@ const kixote = Vue.createApp({
 										<div class="p-5">
 											<keep-alive>
 												<component 
-													v-if 			= "isReady"
 													:is 			= "currentTabComponent" 
 													:key 			= "currentTab"
 													:command 		= "command"
@@ -332,10 +331,6 @@ const kixote = Vue.createApp({
 		{
 			return 'tab-' + this.currentTab.toLowerCase()
 		},
-		isReady() 
-		{
-		    return this.content && this.navigation && this.item
-		}
 	},	
 	methods: {
 		setKixoteSettings(rawSettings)
@@ -607,7 +602,10 @@ kixote.component('tab-admin', {
 		{
 			this.$nextTick(() => {
 				const inputRef = this.$refs.kinput;
-				inputRef.focus();
+				if(inputRef)
+				{
+					inputRef.focus();
+				}
   			});
 		},		
 		finishCommand()
@@ -849,6 +847,7 @@ kixote.component('tab-generate', {
 	},
 	template: `<section class="dark:text-stone-200">
 				<Transition name="fade" appear>
+
 					<div v-if="!aiservice" class="dark:bg-stone-700 bg-stone-200 w-full p-5 dark:text-white">
 					    <div class="p-5">
 					        <h2 class="text-xl font-bold mb-4">Your AI Assistant for Typemill</h2>
@@ -864,334 +863,335 @@ kixote.component('tab-generate', {
 					    </div>
 					</div>
 
-					<div v-else-if="content">
-
-						<div v-if="!useragreement" class="dark:bg-stone-700 bg-stone-200 w-full p-5 dark:text-white">
-							<div class="p-5">
-								<div class="w-full">
-									<h2 class="text-xl font-bold mb-2">Agree to {{aiservice}}</h2>
-									<label class="flex items-start mb-2 mt-2">
-										<input 
-											type  = "checkbox" 
-											class = "w-6 h-6 border-stone-300 bg-stone-200" 
-											value = "chatgpt"
-											@change = "agreeTo(aiservice)"
-											>
-											<span class="ml-2 text-sm">
-											    By enabling {{aiservice}}, you agree to the terms and conditions of {{aiservice}}. 
-											    Your prompts and article content will be sent to {{aiservice}} to generate responses. 
-											    You can disable {{aiservice}} at any time in your user account.
-											</span>
-									</label>
-									<div class="text-sm mt-4">
-										<p class="font-bold mt-2 mb-2">Links:</p>
-										<ol v-if="aiservice == 'chatgpt'" class="list-decimal list-inside space-y-2">
-											<li><a class="text-teal-600" href="https://openai.com/policies/terms-of-use" target="_blank">OpenAI Terms of Use</a></li>
-											<li><a class="text-teal-600" href="https://openai.com/policies/service-terms" target="_blank">Service Terms</a></li>
-											<li><a class="text-teal-600" href="https://openai.com/policies/business-terms" target="_blank">Business Terms</a></li>
-										</ol>
-										<ol v-if="aiservice == 'claude'" class="list-decimal list-inside space-y-2">
-											<li><a class="text-teal-600" href="https://console.anthropic.com/legal/terms" target="_blank">Anthropic Terms of Service</a></li>
-											<li><a class="text-teal-600" href="https://docs.anthropic.com/en/docs/claude-code/legal-and-compliance" target="_blank">Anthropic Commercial Terms of Service</a></li>
-											<li><a class="text-teal-600" href="https://privacy.anthropic.com/en/articles/9301722-updates-to-our-acceptable-use-policy-now-usage-policy-consumer-terms-of-service-and-privacy-policy" target="_blank">Anthropic Usage Policy & Privacy Policy</a></li>
-										</ol>	
-									</div>
+					<div v-else-if="!useragreement"  class="dark:bg-stone-700 bg-stone-200 w-full p-5 dark:text-white">
+						<div class="p-5">
+							<div class="w-full">
+								<h2 class="text-xl font-bold mb-2">Agree to {{aiservice}}</h2>
+								<label class="flex items-start mb-2 mt-2">
+									<input 
+										type  = "checkbox" 
+										class = "w-6 h-6 border-stone-300 bg-stone-200" 
+										value = "chatgpt"
+										@change = "agreeTo(aiservice)"
+										>
+										<span class="ml-2 text-sm">
+										    By enabling {{aiservice}}, you agree to the terms and conditions of {{aiservice}}. 
+										    Your prompts and article content will be sent to {{aiservice}} to generate responses. 
+										    You can disable {{aiservice}} at any time in your user account.
+										</span>
+								</label>
+								<div class="text-sm mt-4">
+									<p class="font-bold mt-2 mb-2">Links:</p>
+									<ol v-if="aiservice == 'chatgpt'" class="list-decimal list-inside space-y-2">
+										<li><a class="text-teal-600" href="https://openai.com/policies/terms-of-use" target="_blank">OpenAI Terms of Use</a></li>
+										<li><a class="text-teal-600" href="https://openai.com/policies/service-terms" target="_blank">Service Terms</a></li>
+										<li><a class="text-teal-600" href="https://openai.com/policies/business-terms" target="_blank">Business Terms</a></li>
+									</ol>
+									<ol v-if="aiservice == 'claude'" class="list-decimal list-inside space-y-2">
+										<li><a class="text-teal-600" href="https://console.anthropic.com/legal/terms" target="_blank">Anthropic Terms of Service</a></li>
+										<li><a class="text-teal-600" href="https://docs.anthropic.com/en/docs/claude-code/legal-and-compliance" target="_blank">Anthropic Commercial Terms of Service</a></li>
+										<li><a class="text-teal-600" href="https://privacy.anthropic.com/en/articles/9301722-updates-to-our-acceptable-use-policy-now-usage-policy-consumer-terms-of-service-and-privacy-policy" target="_blank">Anthropic Usage Policy & Privacy Policy</a></li>
+									</ol>	
 								</div>
 							</div>
 						</div>
+					</div>
 
-						<div v-else>
+			        <div v-else-if="!isReady" class="dark:bg-stone-700 bg-stone-200 w-full p-5 dark:text-white">
+			          <div class="p-5">
+			            <p class="text-center p-8">
+			              Content Generation only works on content pages.
+			              You are currently in the settings area.
+			            </p>
+			          </div>
+			        </div>
 
-					        <ul class="flex pb-0">
-					            <li 
-					                v-for 	= "action in tabs" 
-					                :key 	= "action.value" 
-					                @click 	= "setCurrentTab(action.value)"
-									:class 	= "[
-									  'px-4 py-2 border-b-2 transition duration-100 cursor-pointer',
-									  currentTab === action.value 
-									    ? 'bg-stone-200 border-stone-700 text-stone-900 dark:bg-stone-600 dark:text-stone-200 dark:border-stone-700' 
-									    : 'border-stone-200 text-stone-700 hover:bg-stone-200 hover:border-stone-700 dark:border-stone-600 dark:text-stone-200 dark:bg-stone-700 hover:dark:bg-stone-600'
-									]"
+					<div v-else>
+
+				        <ul class="flex pb-0">
+				            <li 
+				                v-for 	= "action in tabs" 
+				                :key 	= "action.value" 
+				                @click 	= "setCurrentTab(action.value)"
+								:class 	= "[
+								  'px-4 py-2 border-b-2 transition duration-100 cursor-pointer',
+								  currentTab === action.value 
+								    ? 'bg-stone-200 border-stone-700 text-stone-900 dark:bg-stone-600 dark:text-stone-200 dark:border-stone-700' 
+								    : 'border-stone-200 text-stone-700 hover:bg-stone-200 hover:border-stone-700 dark:border-stone-600 dark:text-stone-200 dark:bg-stone-700 hover:dark:bg-stone-600'
+								]"
+				            	>
+				                {{ action.name }}
+				            </li>
+				        </ul>
+
+				        <div v-if="currentTab === 'article'">
+
+							<!-- EDITOR -->
+							<div class="relative border-b-2 border-stone-700 bg-stone-200 dark:bg-stone-700 p-8">
+					            <textarea 
+					            	class		= "editor bg-stone-200 dark:bg-stone-700 no-outline dark:text-white dark:caret-white focus:outline-none"
+									id 			= "kieditor"
+									ref 		= "kieditor" 
+									v-model 	= "versions[activeversion]"
+	      							@mouseup 	= "detectSelection($event)"
+      								@keyup 		= "detectSelection($event)"
 					            	>
-					                {{ action.name }}
-					            </li>
-					        </ul>
+					            </textarea>
 
-					        <div v-if="currentTab === 'article'">
+							    <!-- FOCUS BUTTON -->
+							    <button 
+							    	v-if 	= "showFocusButton" 
+							      	@click 	= "wrapInFocus" 
+							      	class 	= "absolute bg-teal-700 hover:bg-teal-500 border border-stone-500 text-white px-2 py-1 transition duration-100"
+							      	:style 	= "{ top: buttonPosition.top + 'px', left: buttonPosition.left + 'px' }"
+							    	>
+							      	Focus
+							    </button>
 
-								<!-- EDITOR -->
-								<div class="relative border-b-2 border-stone-700 bg-stone-200 dark:bg-stone-700 p-8">
-						            <textarea 
-						            	class		= "editor bg-stone-200 dark:bg-stone-700 no-outline dark:text-white dark:caret-white focus:outline-none"
-										id 			= "kieditor"
-										ref 		= "kieditor" 
-										v-model 	= "versions[activeversion]"
-		      							@mouseup 	= "detectSelection($event)"
-	      								@keyup 		= "detectSelection($event)"
-						            	>
-						            </textarea>
-
-								    <!-- FOCUS BUTTON -->
-								    <button 
-								    	v-if 	= "showFocusButton" 
-								      	@click 	= "wrapInFocus" 
-								      	class 	= "absolute bg-teal-700 hover:bg-teal-500 border border-stone-500 text-white px-2 py-1 transition duration-100"
-								      	:style 	= "{ top: buttonPosition.top + 'px', left: buttonPosition.left + 'px' }"
-								    	>
-								      	Focus
-								    </button>
-
-								    <!-- PAGING / BUTTONS -->
-									<div class="flex justify-between p-2">
-										<div>
-											<ul class="list flex">
-												<li v-for="version,index in versions">
-													<button 
-														:class="[
-														  'px-3 py-1 mr-1 border transition duration-100 cursor-pointer',
-														  'text-stone-700 bg-stone-50 border-stone-50 hover:bg-stone-200 hover:border-stone-700',
-														  'dark:text-stone-200 dark:border-stone-200 hover:dark:bg-stone-600',
-														  index === activeversion 
-														    ? 'bg-stone-200 border-stone-700 dark:bg-stone-600' 
-														    : 'dark:bg-stone-700'
-														]"
-														@click.prevent = "switchVersion(index)"
-														>
-														{{ index }}
-													</button>
-												</li>
-											</ul>
-										</div>
-										<div class="flex">
-											<button 
-												class = "px-3 py-1 border border-stone-700 bg-stone-200 hover:bg-teal-600 hover:border-teal-500 hover:text-white dark:border-stone-200 dark:text-stone-200 dark:bg-stone-700 hover:dark:bg-stone-600 transition duration-100 cursor-pointer"
-												@click.prevent = "storeArticle()"
-												>
-												store
-											</button>
-										</div>
-									</div>
-								</div>
-
-								<!-- PROMPT INPUT -->
-								<div v-if="promptError" class="w-full px-8 py-1 bg-rose-500 text-white">{{ promptError }}</div>
-								<div class="w-full bg-stone-200 px-8 py-4 border-b border-stone-50 dark:bg-stone-600 dark:border-stone-900">
-									<div class="flex items-start">
-										<span class="text-teal-600 mr-1">Ki></span>
-										<div class="flex-grow bg-stone-200 dark:bg-stone-600 mr-2">
-											<textarea 
-												v-model.trim 	= "prompt" 
-												ref 			= "prompteditor"
-												class 			= "w-full bg-stone-200 dark:bg-stone-600 focus:outline-none border-0 dark:caret-white" 
-												placeholder 	= "Prompt..."
-					            				@keydown.enter 	= "handleKeydown"
-				            					@input 			= "resizePromptEditor"
-												></textarea>
-											<p class="" v-if="promptlink">Example: {{promptlink}}</p>
-										</div>
-								        <button 
-								        	class 	= "text-white px-2 py-1 bg-teal-600 hover:bg-teal-700" 
-								        	@click 	= "submitPrompt"
-								        	>send
-								        </button>
-									</div>
-								</div>
-
-								<!-- PROMPT COLLECTION -->
-								<div class="px-8 py-4 bg-stone-200 dark:bg-stone-700">
-									<ul class="list flex">
-									  <li 
-									    v-for="(promptitem, name) in promptlistactive" 
-									    :key="index" 
-									    class="mr-3 hover:text-teal-600 cursor-pointer"
-									  >
-									    <button 
-									      class="button" 
-									      @click.prevent="usePrompt(name)"
-									    >
-									      {{ promptitem.title }}
-									    </button>
-									  </li>
-									</ul>
-								</div>
-
-					        </div>
-
-					        <div v-else-if="currentTab === 'prompts'">
-								<div class="w-full bg-stone-200 dark:bg-stone-700 px-8 py-8">
-									<div class="flex justify-between px-2 py-4 mb-4 border-b border-stone-700">
-										<button class="hover:text-teal-600" @click.prevent="addNewPrompt = !addNewPrompt">
-											<span v-if="addNewPrompt">-</span>
-											<span v-else>+</span> add prompt
-										</button>
-										<div class="flex space-x-2">
-										  <span class="px-1">Filter:</span>
-										  <button
-										    @click.prevent="currentFilter = 'user'"
-											:class="[
-											    'px-1 transition-colors',
-											    currentFilter === 'user'
-											      ? 'text-teal-600'
-											      : 'text-stone-700 dark:text-stone-200 hover:text-teal-600 hover:dark:text-teal-600'
-											]"
-										  >
-										    my prompts
-										  </button>
-										  <button
-										    @click.prevent="currentFilter = 'system'"
-											:class="[
-											    'px-1 transition-colors',
-											    currentFilter === 'system'
-											      ? 'text-teal-600'
-											      : 'text-stone-700 dark:text-stone-200 hover:text-teal-600 hover:dark:text-teal-600'
-											]"
-										  >
-										    system prompts
-										  </button>
-										</div>
-
-									</div>
-									<transition name="fade">
-										<div v-if="addNewPrompt" class="border-b border-stone-700 px-2 pt-4 pb-8 mb-4">
-											<fieldset class="">
-												<div class="flex w-full justify-between">
-													<input 
-													  	type 		= "text" 
-													  	class 		= "w-50 p-2 my-1 font-mono bg-stone-100 dark:bg-stone-600 dark:text-white dark:caret-white focus:outline-none"
-														@input 		= "validatePromptTitle(newPrompt.title)"
-														@focus 		= "editPrompt = newPrompt.title"
-														placeholder = "Enter a title"
-													  	v-model 	= "newPrompt.title"
-													/>
-													<div class="flex space-x-2 items-center">
-														<span v-if="titleError" class="text-red-500 text-sm">{{ titleError }}</span>
-														<button v-if="!titleError && !bodyError"
-															@click.prevent="saveNewPrompt"
-															class="px-2 py-1 mr-1 border border-stone-700 hover:bg-teal-600 hover:text-white hover:border-teal-600 transition-colors"
-															>save
-														</button>
-													</div>
-												</div>
-												<textarea 
-													class 		= "w-full p-2 my-1 font-mono bg-stone-100 no-outline dark:text-white dark:bg-stone-600 dark:caret-white focus:outline-none"
-													rows 		= "5"
-													@input 		= "validatePromptBody(newPrompt.content)"
-													@focus 		= "editPrompt = newPrompt.name"
-													placeholder = "Enter a prompt"
-													v-model 	= "newPrompt.content"
+							    <!-- PAGING / BUTTONS -->
+								<div class="flex justify-between p-2">
+									<div>
+										<ul class="list flex">
+											<li v-for="version,index in versions">
+												<button 
+													:class="[
+													  'px-3 py-1 mr-1 border transition duration-100 cursor-pointer',
+													  'text-stone-700 bg-stone-50 border-stone-50 hover:bg-stone-200 hover:border-stone-700',
+													  'dark:text-stone-200 dark:border-stone-200 hover:dark:bg-stone-600',
+													  index === activeversion 
+													    ? 'bg-stone-200 border-stone-700 dark:bg-stone-600' 
+													    : 'dark:bg-stone-700'
+													]"
+													@click.prevent = "switchVersion(index)"
 													>
-												</textarea>
-												<span v-if="bodyError" class="text-rose-500 text-sm">{{ bodyError }}</span>
-
-												<div class="space-y-2 my-2">
-													<select v-model="newPrompt.link"
-														class="w-full p-2 font-mono bg-stone-100 dark:bg-stone-600 dark:text-white dark:caret-white focus:outline-none">
-														<option :value="null" class="text-stone-400 italic">Select example article</option>
-														<option v-for="navilink in flatnavi" :key="navilink" :value="navilink">
-															{{ navilink }}
-														</option>
-													</select>
-												</div>
-											</fieldset>
-										</div>
-									</transition>
-									<div 
-										v-if = "currentFilter == 'user' && Object.keys(filteredPrompts).length === 0"
-										class = "py-2 px-2"
-										>
-										<div class="text-stone-900 dark:text-stone-200">
-											<h2 class="text-lg font-semibold mb-2">How to Use</h2>
-											<p class="mb-2">Click the <span class="font-medium">+ Add Prompt</span> button to create your own prompts. A custom prompt can include:</p>
-											<ul class="list-disc list-inside mb-4 space-y-1">
-												<li>A title or name</li>
-												<li>The main prompt text</li>
-												<li>An optional link to an article used as example (e.g. for style or tone)</li>
-												<li>An activation checkbox to show or hide the prompt below the prompt input field</li>
-											</ul>
-											<p>You can also browse the predefined system prompts using the filter above. These cannot be edited, but you can activate or deactivate them as needed.</p>
-										</div>
+													{{ index }}
+												</button>
+											</li>
+										</ul>
 									</div>
-									<div 
-										v-for = "(prompttemplate, name) in filteredPrompts"
-										:key  = "name"
-										class = "py-2 px-2"
-										>
-										<fieldset class="border border-stone-200 dark:border-stone-700 p-0 pb-4">
+									<div class="flex">
+										<button 
+											class = "px-3 py-1 border border-stone-700 bg-stone-200 hover:bg-teal-600 hover:border-teal-500 hover:text-white dark:border-stone-200 dark:text-stone-200 dark:bg-stone-700 hover:dark:bg-stone-600 transition duration-100 cursor-pointer"
+											@click.prevent = "storeArticle()"
+											>
+											store
+										</button>
+									</div>
+								</div>
+							</div>
+
+							<!-- PROMPT INPUT -->
+							<div v-if="promptError" class="w-full px-8 py-1 bg-rose-500 text-white">{{ promptError }}</div>
+							<div class="w-full bg-stone-200 px-8 py-4 border-b border-stone-50 dark:bg-stone-600 dark:border-stone-900">
+								<div class="flex items-start">
+									<span class="text-teal-600 mr-1">Ki></span>
+									<div class="flex-grow bg-stone-200 dark:bg-stone-600 mr-2">
+										<textarea 
+											v-model.trim 	= "prompt" 
+											ref 			= "prompteditor"
+											class 			= "w-full bg-stone-200 dark:bg-stone-600 focus:outline-none border-0 dark:caret-white" 
+											placeholder 	= "Prompt..."
+				            				@keydown.enter 	= "handleKeydown"
+			            					@input 			= "resizePromptEditor"
+											></textarea>
+										<p class="" v-if="promptlink">Example: {{promptlink}}</p>
+									</div>
+							        <button 
+							        	class 	= "text-white px-2 py-1 bg-teal-600 hover:bg-teal-700" 
+							        	@click 	= "submitPrompt"
+							        	>send
+							        </button>
+								</div>
+							</div>
+
+							<!-- PROMPT COLLECTION -->
+							<div class="px-8 py-4 bg-stone-200 dark:bg-stone-700">
+								<ul class="list flex">
+								  <li 
+								    v-for="(promptitem, name) in promptlistactive" 
+								    :key="index" 
+								    class="mr-3 hover:text-teal-600 cursor-pointer"
+								  >
+								    <button 
+								      class="button" 
+								      @click.prevent="usePrompt(name)"
+								    >
+								      {{ promptitem.title }}
+								    </button>
+								  </li>
+								</ul>
+							</div>
+
+				        </div>
+
+				        <div v-else-if="currentTab === 'prompts'">
+							<div class="w-full bg-stone-200 dark:bg-stone-700 px-8 py-8">
+								<div class="flex justify-between px-2 py-4 mb-4 border-b border-stone-700">
+									<button class="hover:text-teal-600" @click.prevent="addNewPrompt = !addNewPrompt">
+										<span v-if="addNewPrompt">-</span>
+										<span v-else>+</span> add prompt
+									</button>
+									<div class="flex space-x-2">
+									  <span class="px-1">Filter:</span>
+									  <button
+									    @click.prevent="currentFilter = 'user'"
+										:class="[
+										    'px-1 transition-colors',
+										    currentFilter === 'user'
+										      ? 'text-teal-600'
+										      : 'text-stone-700 dark:text-stone-200 hover:text-teal-600 hover:dark:text-teal-600'
+										]"
+									  >
+									    my prompts
+									  </button>
+									  <button
+									    @click.prevent="currentFilter = 'system'"
+										:class="[
+										    'px-1 transition-colors',
+										    currentFilter === 'system'
+										      ? 'text-teal-600'
+										      : 'text-stone-700 dark:text-stone-200 hover:text-teal-600 hover:dark:text-teal-600'
+										]"
+									  >
+									    system prompts
+									  </button>
+									</div>
+
+								</div>
+								<transition name="fade">
+									<div v-if="addNewPrompt" class="border-b border-stone-700 px-2 pt-4 pb-8 mb-4">
+										<fieldset class="">
 											<div class="flex w-full justify-between">
 												<input 
 												  	type 		= "text" 
 												  	class 		= "w-50 p-2 my-1 font-mono bg-stone-100 dark:bg-stone-600 dark:text-white dark:caret-white focus:outline-none"
-												  	:readonly 	= "prompttemplate.system"
-												  	v-model 	= "prompttemplate.title"
-													@focus 		= "editPrompt = name"
-			                                      	@input 		= "updatePrompt(name)"
+													@input 		= "validatePromptTitle(newPrompt.title)"
+													@focus 		= "editPrompt = newPrompt.title"
+													placeholder = "Enter a title"
+												  	v-model 	= "newPrompt.title"
 												/>
 												<div class="flex space-x-2 items-center">
-													<div v-if="prompttemplate.system == false">
-														<button 
-															@click.prevent="deletePrompt(name)" 
-														    class="px-2 py-1 mr-1 border border-stone-700 dark:border-stone-200 hover:bg-rose-700 hover:text-white transition-colors"
-															>delete
-														</button>
-														<span 
-															v-if="editPrompt === name && settingsSaved" 
-															class="px-2 py-2 mr-1 border border-teal-600 bg-teal-600 text-white">
-															✔ saved
-														</span>
-														<button 
-															v-else
-															@click.prevent="saveSettings"
-														    class="px-2 py-1 mr-1 border border-stone-700 dark:border-stone-200 hover:bg-teal-600 hover:text-white hover:border-teal-600 transition-colors"
-															>update
-														</button>
-													</div>
-													<div class="flex items-center space-x-2">
-													  <label class="text-sm dark:text-white">Active</label>
-													  <input 
-													    type 	= "checkbox" 
-													    class 	= "w-5 h-5 border border-stone-300 bg-stone-200 dark:bg-stone-600 dark:text-white cursor-pointer" 
-													    v-model = "prompttemplate.active"
-		                                                @change = "saveSettings"
-													  >
-													</div>
+													<span v-if="titleError" class="text-red-500 text-sm">{{ titleError }}</span>
+													<button v-if="!titleError && !bodyError"
+														@click.prevent="saveNewPrompt"
+														class="px-2 py-1 mr-1 border border-stone-700 hover:bg-teal-600 hover:text-white hover:border-teal-600 transition-colors"
+														>save
+													</button>
 												</div>
 											</div>
-											<span v-if="prompttemplate.errors?.title" class="text-red-500 text-sm">{{ prompttemplate.errors.title }}</span>
 											<textarea 
-												class 		= "w-full p-2 my-1 font-mono bg-stone-100 dark:bg-stone-600 no-outline dark:text-white dark:caret-white focus:outline-none"
+												class 		= "w-full p-2 my-1 font-mono bg-stone-100 no-outline dark:text-white dark:bg-stone-600 dark:caret-white focus:outline-none"
 												rows 		= "5"
-												v-model 	= "prompttemplate.content"
-												:readonly 	= "prompttemplate.system"
-		                                        @focus 		= "editPrompt = name"
-		                                        @input 		= "updatePrompt(name)"
+												@input 		= "validatePromptBody(newPrompt.content)"
+												@focus 		= "editPrompt = newPrompt.name"
+												placeholder = "Enter a prompt"
+												v-model 	= "newPrompt.content"
 												>
 											</textarea>
-											<span v-if="prompttemplate.errors?.body" class="text-red-500 text-sm">{{ prompttemplate.errors.body }}</span>
+											<span v-if="bodyError" class="text-rose-500 text-sm">{{ bodyError }}</span>
 
-											<div class="space-y-2 my-2" v-if="prompttemplate.system !== true">
-												<select v-model="prompttemplate.link"
-													class="w-full p-2 font-mono bg-stone-100 dark:bg-stone-600 dark:text-white caret-white focus:outline-none">
-													<option :value="null">Select example article</option>
+											<div class="space-y-2 my-2">
+												<select v-model="newPrompt.link"
+													class="w-full p-2 font-mono bg-stone-100 dark:bg-stone-600 dark:text-white dark:caret-white focus:outline-none">
+													<option :value="null" class="text-stone-400 italic">Select example article</option>
 													<option v-for="navilink in flatnavi" :key="navilink" :value="navilink">
 														{{ navilink }}
 													</option>
 												</select>
 											</div>
-
 										</fieldset>
 									</div>
+								</transition>
+								<div 
+									v-if = "currentFilter == 'user' && Object.keys(filteredPrompts).length === 0"
+									class = "py-2 px-2"
+									>
+									<div class="text-stone-900 dark:text-stone-200">
+										<h2 class="text-lg font-semibold mb-2">How to Use</h2>
+										<p class="mb-2">Click the <span class="font-medium">+ Add Prompt</span> button to create your own prompts. A custom prompt can include:</p>
+										<ul class="list-disc list-inside mb-4 space-y-1">
+											<li>A title or name</li>
+											<li>The main prompt text</li>
+											<li>An optional link to an article used as example (e.g. for style or tone)</li>
+											<li>An activation checkbox to show or hide the prompt below the prompt input field</li>
+										</ul>
+										<p>You can also browse the predefined system prompts using the filter above. These cannot be edited, but you can activate or deactivate them as needed.</p>
+									</div>
 								</div>
-					        </div>
+								<div 
+									v-for = "(prompttemplate, name) in filteredPrompts"
+									:key  = "name"
+									class = "py-2 px-2"
+									>
+									<fieldset class="border border-stone-200 dark:border-stone-700 p-0 pb-4">
+										<div class="flex w-full justify-between">
+											<input 
+											  	type 		= "text" 
+											  	class 		= "w-50 p-2 my-1 font-mono bg-stone-100 dark:bg-stone-600 dark:text-white dark:caret-white focus:outline-none"
+											  	:readonly 	= "prompttemplate.system"
+											  	v-model 	= "prompttemplate.title"
+												@focus 		= "editPrompt = name"
+		                                      	@input 		= "updatePrompt(name)"
+											/>
+											<div class="flex space-x-2 items-center">
+												<div v-if="prompttemplate.system == false">
+													<button 
+														@click.prevent="deletePrompt(name)" 
+													    class="px-2 py-1 mr-1 border border-stone-700 dark:border-stone-200 hover:bg-rose-700 hover:text-white transition-colors"
+														>delete
+													</button>
+													<span 
+														v-if="editPrompt === name && settingsSaved" 
+														class="px-2 py-2 mr-1 border border-teal-600 bg-teal-600 text-white">
+														✔ saved
+													</span>
+													<button 
+														v-else
+														@click.prevent="saveSettings"
+													    class="px-2 py-1 mr-1 border border-stone-700 dark:border-stone-200 hover:bg-teal-600 hover:text-white hover:border-teal-600 transition-colors"
+														>update
+													</button>
+												</div>
+												<div class="flex items-center space-x-2">
+												  <label class="text-sm dark:text-white">Active</label>
+												  <input 
+												    type 	= "checkbox" 
+												    class 	= "w-5 h-5 border border-stone-300 bg-stone-200 dark:bg-stone-600 dark:text-white cursor-pointer" 
+												    v-model = "prompttemplate.active"
+	                                                @change = "saveSettings"
+												  >
+												</div>
+											</div>
+										</div>
+										<span v-if="prompttemplate.errors?.title" class="text-red-500 text-sm">{{ prompttemplate.errors.title }}</span>
+										<textarea 
+											class 		= "w-full p-2 my-1 font-mono bg-stone-100 dark:bg-stone-600 no-outline dark:text-white dark:caret-white focus:outline-none"
+											rows 		= "5"
+											v-model 	= "prompttemplate.content"
+											:readonly 	= "prompttemplate.system"
+	                                        @focus 		= "editPrompt = name"
+	                                        @input 		= "updatePrompt(name)"
+											>
+										</textarea>
+										<span v-if="prompttemplate.errors?.body" class="text-red-500 text-sm">{{ prompttemplate.errors.body }}</span>
 
-						</div>
+										<div class="space-y-2 my-2" v-if="prompttemplate.system !== true">
+											<select v-model="prompttemplate.link"
+												class="w-full p-2 font-mono bg-stone-100 dark:bg-stone-600 dark:text-white caret-white focus:outline-none">
+												<option :value="null">Select example article</option>
+												<option v-for="navilink in flatnavi" :key="navilink" :value="navilink">
+													{{ navilink }}
+												</option>
+											</select>
+										</div>
+
+									</fieldset>
+								</div>
+							</div>
+				        </div>
+
 					</div>
 
-					<div v-else class="dark:bg-stone-700 dark:text-stone-200 bg-stone-200 w-full p-5 dark:text-white">
-						<div class="p-5">	
-							<p class="text-center p-8">Content Generation only works on content pages. You are currently in the settings area.</p>
-						</div>
-					</div>
 				  </Transition>
 				</section>`,
 	mounted: function()
@@ -1199,13 +1199,21 @@ kixote.component('tab-generate', {
 		this.initAutosize();
 
 		this.createFlatNavi();
-
-		if(this.versions.length == 0)
-		{
-			this.initializeContent()
-		}
 	},
 	watch: {
+	 	isReady: {
+	    	immediate: true,
+	    	handler(val) {
+	      		if (val && this.versions.length === 0) {
+		        	this.initializeContent();
+
+		        	this.$nextTick(() => {
+		          		this.initAutosize();
+		        	});
+	     	 	}
+	    	}
+	  	},
+
 	    currentTab(newTab, oldTab) {
 	        if (newTab === 'article')
 	        {
@@ -1214,8 +1222,17 @@ kixote.component('tab-generate', {
 	            });
 	        }
 	    }
-	},	
+	},
 	computed: {
+		isReady() 
+		{
+		    return !!(
+		      Array.isArray(this.content) &&
+		      this.content.length &&
+		      this.navigation &&
+		      this.item
+		    );
+		},
 	    promptlistactive()
 	    {
 	        return Object.values(this.kixoteSettings?.promptlist || {}).filter(prompt => prompt.active);
