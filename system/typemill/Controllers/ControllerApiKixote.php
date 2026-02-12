@@ -475,10 +475,11 @@ class ControllerApiKixote extends Controller
 	        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 	    }
 
-	    $promptname = $params['name'] ?? '';
-	    $prompt 	= $params['prompt'] ?? '';
-	    $article 	= $params['article'] ?? '';
-	    $example 	= $params['example'] ?? false;
+	    $promptname 	= $params['name'] ?? '';
+	    $prompt 		= $params['prompt'] ?? '';
+	    $article 		= $params['article'] ?? '';
+	    $example 		= $params['example'] ?? false;
+	    $translation 	= $params['translation'] ?? false;
 		 
 	    if($example && $example != "")
 	    {
@@ -492,9 +493,10 @@ class ControllerApiKixote extends Controller
 			else
 			{
 				# Rough estimate: 1 token ≈ 4 characters
-				$allContent = $prompt . $article . $example;
-				$length = strlen($allContent);
-				$maxlength = 8000 * 4;
+				$allContent 	= $prompt . $article . $example;
+				$length 		= strlen($allContent);
+				$maxInputTokens = $this->getInputTokenBudget();
+				$maxlength 		= $maxInputTokens * 4;
 				if ($length > $maxlength)
 				{
 				    $overLimit = $length - $maxlength;
@@ -524,7 +526,7 @@ class ControllerApiKixote extends Controller
 	    	case 'chatgpt':
 	    		$answer = $this->promptChatGPT($promptname, $prompt, $article, $example);
 	    		break;
-	    	
+
 	    	case 'claude':
 	    		$answer = $this->promptClaude($promptname, $prompt, $article, $example);
 	    		break;
@@ -586,8 +588,8 @@ class ControllerApiKixote extends Controller
 	                'content' => $content
 	            ],
 	        ],
-	        'temperature' => 0.7,
-	        'max_tokens' => 8000,
+	        'temperature' => $this->getTemperature(),
+	        'max_tokens' => $this->getOutputBudget($model, $content)
 	    ];
 
 	    $apiservice = new ApiCalls();
@@ -658,8 +660,8 @@ class ControllerApiKixote extends Controller
 	                'content' => $content
 	            ],
 	        ],
-	        'temperature' => 0.7,
-	        'max_tokens' => 8000,
+	        'temperature' => $this->getTemperature(),
+	        'max_tokens' => $this->getOutputBudget($model, $content)
 	    ];
 
 	    $apiservice = new ApiCalls();
@@ -741,5 +743,151 @@ class ControllerApiKixote extends Controller
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+	}
+
+	private function getInputTokenBudget(): int
+	{
+	    $aiservice 	= $this->settings['aiservice'] ?? false;
+
+	    if(!$aiservice){
+	    	return 0;
+	    } 
+
+	    if($aiservice == 'chatgpt')
+	    {
+	    	$model = $this->settings['chatgptModel'] ?? false
+	    }
+	    if($aiservice == 'claude')
+	    {
+	    	$model = $this->settings['claudeModel'] ?? false
+	    }
+	    if(!$model){
+	    	return 0;
+	    }
+
+	    $model = strtolower($model);
+
+	    // Ultra / flagship
+	    if (
+	        str_contains($model, 'opus') ||
+	        str_contains($model, 'gpt-5.2') ||
+	        str_contains($model, 'o3-deep')
+	    ) {
+	        return 64000;
+	    }
+
+	    // High tier
+	    if (
+	        str_contains($model, 'sonnet') ||
+	        str_contains($model, 'gpt-5') ||
+	        str_contains($model, 'o3')
+	    ) {
+	        return 32000;
+	    }
+
+	    // Medium tier
+	    if (
+	        str_contains($model, 'gpt-4.1') ||
+	        str_contains($model, 'o4-mini')
+	    ) {
+	        return 16000;
+	    }
+
+	    // Low tier
+	    if (
+	        str_contains($model, 'haiku') ||
+	        str_contains($model, 'mini')
+	    ) {
+	        return 8000;
+	    }
+
+	    // Very low tier
+	    if (str_contains($model, 'nano')) {
+	        return 4000;
+	    }
+
+	    // Fallback
+	    return 16000;
+	}
+
+	private function getMaxTokenBudget(string $model): int
+	{
+	    $model = strtolower($model);
+
+	    // Ultra tier
+	    if (
+	        str_contains($model, 'opus') ||
+	        str_contains($model, 'gpt-5.2') ||
+	        str_contains($model, 'o3-deep')
+	    ) {
+	        return 200000;
+	    }
+
+	    // High tier
+	    if (
+	        str_contains($model, 'sonnet') ||
+	        str_contains($model, 'gpt-5') ||
+	        str_contains($model, 'o3')
+	    ) {
+	        return 128000;
+	    }
+
+	    // Medium tier
+	    if (
+	        str_contains($model, 'gpt-4.1') ||
+	        str_contains($model, 'o4-mini')
+	    ) {
+	        return 64000;
+	    }
+
+	    // Low tier
+	    if (
+	        str_contains($model, 'haiku') ||
+	        str_contains($model, 'mini')
+	    ) {
+	        return 32000;
+	    }
+
+	    // Very low tier
+	    if (str_contains($model, 'nano')) {
+	        return 16000;
+	    }
+
+	    // Fallback
+	    return 64000;
+	}
+
+	private function getOutputBudget($model, $content)
+	{
+		$model = strtolower($model);
+
+	    $inputTokens = (int) (mb_strlen($content, 'UTF-8') / 4);
+
+	    $total  = $this->getMaxTokenBudget($model);
+	    $safety = 2000;
+
+	    $available = $total - $inputTokens - $safety;
+
+	    if ($available < 250)
+	    {
+	        return 250;
+	    }
+
+		$hardCap = (int) ($this->settings['aioutputtoken'] ?? 4000);
+
+		# Clamp: min 256, max 12000
+		$hardCap = max(256, min(12000, $hardCap));
+
+	    return min($available, $hardCap);
+	}
+
+	private function getTemperature()
+	{
+		$temperature = (float) ($this->settings['aitemperature'] ?? 0.7);
+
+		# Clamp: 0.0 – 1.0
+		$temperature = max(0.0, min(1.0, $temperature));
+
+		return $temperature;
 	}
 }

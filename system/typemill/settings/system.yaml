@@ -418,15 +418,21 @@ fieldsetai:
       type: select
       label: 'ChatGPT model'
       description: "Select the AI model you want to use. Pricing may vary over time, so please check the latest details on [OpenAI's pricing page](https://platform.openai.com/docs/pricing)"
-      options: 
-        gpt-4.1-nano: 'gpt-4.1-nano ($0.10 / $0.40)'
-        gpt-4.1-mini: 'gpt-4.1-mini ($0.40 / $1.60)'
-        gpt-4.1: 'gpt-4.1 ($2.00 / $8.00)'        
-        gpt-4o-mini: 'gpt-4o-mini ($0.15 / $0.6)'
-        gpt-4o: 'gpt-4o ($2.50 / $10)'
-        gpt-3.5-turbo-0125: 'gpt-3.5-turbo ($0.50 / $1.50)'
-        o1-mini: 'o1-mini ($1.10 / 4.40)'
-        o1: 'o1 ($15 / $60.00)'
+      options:
+        gpt-5.2:         '5.2 General/Agentic ($1.75 / $14.00)'   # flagship general/agentic model :contentReference[oaicite:1]{index=1}
+        gpt-5.2-chat-latest: '5.2 Chat ($1.75 / $14.00)'          # chat-optimized :contentReference[oaicite:2]{index=2}
+        gpt-5.2-codex:   '5.2 Coding/Agentic ($1.75 / $14.00)'    # coding/agent tasks variant :contentReference[oaicite:3]{index=3}
+        gpt-5.1:         '5.1 General ($1.25 / $10.00)'         # prior version :contentReference[oaicite:4]{index=4}
+        gpt-5:           '5 Standard ($1.25 / $10.00)'          # standard GPT-5 :contentReference[oaicite:5]{index=5}
+        gpt-5-mini:      '5 Mini ($0.25 / $2.00)'               # cheaper smaller variant :contentReference[oaicite:6]{index=6}
+        gpt-5-nano:      '5 Nano ($0.05 / $0.40)'      # fastest, most cost-efficient GPT-5 variant :contentReference[oaicite:7]{index=7}
+        gpt-4.1:         '4.1 ($2.00 / $8.00)'         # improved successor to GPT-4o :contentReference[oaicite:8]{index=8}
+        gpt-4.1-mini:    '4.1 Mini ($0.40 / $1.60)'    # efficient small model :contentReference[oaicite:9]{index=9}
+        gpt-4.1-nano:    '4.1 Nano ($0.10 / $0.40)'    # ultra-light variant :contentReference[oaicite:10]{index=10}
+        o3:              'o3 General Reasoning ($2.00 / $8.00)' # general reasoning model; mid-range :contentReference[oaicite:11]{index=11}
+        o3-deep-research: 'o3 Deep Research ($10 / $40)'      # deeper reasoning research model :contentReference[oaicite:12]{index=12}
+        o4-mini:         'o4 Mini Reasoning ($1.10 / $4.40)'  # compact reasoning model :contentReference[oaicite:13]{index=13}
+        o1:              'o1 Reasoning Legacy ($15 / $60)'                  # older higher-capability model :contentReference[oaicite:14]{index=14}
     chatgptKey:
       type: password
       autocomplete: new-password 
@@ -437,16 +443,48 @@ fieldsetai:
       type: select
       label: 'Claude model'
       description: "Select the AI model you want to use. Pricing may vary over time, so please check the latest details on [Claude's pricing page](https://docs.anthropic.com/en/docs/about-claude/models/all-models)"
-      options: 
-        claude-opus-4-20250514: 'Claude Opus 4 ($15 / $75)'
-        claude-sonnet-4-20250514: 'Claude Sonnet 4 ($3 / $15)'
-        claude-3-7-sonnet-20250219: 'Claude 3.7 Sonnet ($3 / $15)'
-        claude-3-5-haiku-20241022: 'Claude 3.5 Haiku ($0.80 / $4)'
-        claude-3-opus-20240229: 'Claude 3 Opus ($15.00 / $75)'
-        claude-3-haiku-20240307: 'Claude 3 Haiku ($0.25 / $1.25)'
+      options:
+        claude-opus-4-6:    '4.6 Opus ($5 / $25)'         # latest flagship with long-context & agent features :contentReference[oaicite:1]{index=1}
+        claude-opus-4-5:    '4.5 Opus ($5 / $25)'         # previous top model with strong reasoning & coding :contentReference[oaicite:2]{index=2}
+        claude-opus-4-1:    '4.1 Opus ($15 / $75)'        # earlier flagship variant :contentReference[oaicite:3]{index=3}
+        claude-sonnet-4-5:  '4.5 Sonnet ($3 / $15)'       # mid-range balanced performance :contentReference[oaicite:4]{index=4}
+        claude-sonnet-4:    '4 Sonnet ($3 / $15)'         # core reasoning/performance model :contentReference[oaicite:5]{index=5}
+        claude-haiku-4-5:   '4.5 Haiku ($1 / $5)'         # efficient, cost-effective model :contentReference[oaicite:6]{index=6}
+        claude-3-7-sonnet:  '3.7 Sonnet ($3 / $15)'       # older generation mid-range model :contentReference[oaicite:7]{index=7}
+        claude-3-5-haiku:   '3.5 Haiku ($0.80 / $4)'      # legacy small model :contentReference[oaicite:8]{index=8}
+        claude-3-opus:      '3 Opus ($15 / $75)'         # legacy powerful model :contentReference[oaicite:9]{index=9}
+        claude-3-haiku:     '3 Haiku ($0.25 / $1.25)'     # legacy budget model :contentReference[oaicite:10]{index=10}
     claudeKey:
       type: password
       autocomplete: new-password 
       generator: false
       label: 'Claude Api Key'
       description: "Enter your Claude API key here. You can generate a new key on [Claude's console](https://console.anthropic.com). For security reasons, your API key is secret and will not be visible again after you leave this page."
+    aitemperature:
+      type: select
+      label: 'Temperature (strict/creative)'
+      description: "Default: 0.7 (0.1 = very strict, 1.0 = very creative)"
+      class: "w-half"
+      options:
+        '0.1': '0.1'
+        '0.2': '0.2'
+        '0.3': '0.3'
+        '0.4': '0.4'
+        '0.5': '0.5'
+        '0.6': '0.6'
+        '0.7': '0.7'
+        '0.8': '0.8'
+        '0.9': '0.9'
+        '1.0': '1.0'
+    aioutputtoken:
+      type: select
+      label: 'Maximum output tokens'
+      description: "Default: 4000 (output tokens determine the length/cost of answers)"
+      class: "w-half"
+      options:
+        '2000': '2000 (Chat)'
+        '4000': '4000 (Docs)'
+        '6000': '6000 (Analysis)'
+        '8000': '8000 (Research)'
+        '10000': '10000 (High)'
+        '12000': '12000 (Max)'

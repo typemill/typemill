@@ -329,7 +329,6 @@ app.component('tab-meta', {
 	}
 })
 
-
 app.component('tab-lang', {
 	props: ['pageid', 'item', 'translationfor'],
 	data() {
@@ -337,143 +336,288 @@ app.component('tab-lang', {
 			formDefinitions: null,
 			formData: {},
 			editData: {},
-			disabledButtons: {},
-			isBlurred: {},
 			langErrors: {},
 			langMessages: {},
 			project: data.project,
 			loading: true,
 			translate: false,
+			settings: data.settings,
+			multilangIndex: {},
+			showMultilangIndex: false,
 		}
 	},
 	template: `
 		<section class="dark:bg-stone-700 dark:text-stone-200">
-			<h2 class="text-3xl font-bold mb-4">Translations</h2>
-			<div v-if="loading" class="pv-5">{{ $filters.translate('Loading translations...') }}</div>
-			<form v-else>
-				<div v-if="project">
-					<div 
-						v-for="(fieldDefinition, langKey) in formDefinitions.fields" 
-						:key="langKey" 
-						class="w-full mt-5 mb-5"
-					>
-						<div v-if="fieldDefinition.base">
-							<label class="block mb-1 font-medium">Translation for</label>
-							<div class="flex">
-								<input 
-									class="h-12 w-2/3 border px-2 py-3 border-stone-300 bg-stone-200"
-									type="text" 
-									v-model="editData[langKey]"
-									:maxlength="fieldDefinition.maxlength"
-									:disabled="fieldDefinition.disabled"
-									@input="changeUrl(langKey)"
-								/>
-								<div class="flex w-1/3">
-									<a 
-										:href="getEditorPath(langKey)"
-										class="flex-1 px-1 py-3 ml-1 text-center bg-stone-200 text-stone-800
-										       hover:bg-stone-900 hover:text-white transition duration-100"
-									>
-										{{ $filters.translate('visit') }}
-									</a>
+
+			<div class="flex justify-between">
+				<h2 class="text-3xl font-bold mb-4">Translations</h2>
+
+				<div class="flex justify-end mb-2 text-sm">
+
+				  <!-- Show overview -->
+				  <a
+				    v-if="!showMultilangIndex"
+				    href="#"
+				    class="text-teal-600 hover:underline"
+				    @click.prevent="loadTranslationIndex"
+				  >
+				    Translation overview
+				  </a>
+
+				  <!-- Back to page -->
+				  <a
+				    v-else
+				    href="#"
+				    class="text-teal-600 hover:underline"
+				    @click.prevent="showMultilangIndex = false"
+				  >
+				    This page
+				  </a>
+
+				</div>
+			</div>
+
+			<div v-if="!showMultilangIndex">
+				<div v-if="loading" class="pv-5">{{ $filters.translate('Loading translations...') }}</div>
+				<form v-else>
+					<div v-if="project">
+						<div 
+							v-for="(fieldDefinition, langKey) in formDefinitions.fields" 
+							:key="langKey" 
+							class="w-full mt-5 mb-5"
+						>
+							<div v-if="fieldDefinition.base">
+								<label class="block mb-1 font-medium">Translation for</label>
+								<div class="flex">
+									<input 
+										class="h-12 w-2/3 border px-2 py-3 border-stone-300 bg-stone-200"
+										type="text" 
+										v-model="editData[langKey]"
+										:maxlength="fieldDefinition.maxlength"
+										:disabled="fieldDefinition.disabled"
+										@input="changeUrl(langKey)"
+									/>
+									<div class="flex w-1/3">
+										<a 
+											:href="getEditorPath(langKey)"
+											class="flex-1 px-1 py-3 ml-1 text-center bg-stone-200 text-stone-800
+											       hover:bg-stone-900 hover:text-white transition duration-100"
+										>
+											{{ $filters.translate('visit') }}
+										</a>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<div v-else>
-					<div 
-						v-for="(fieldDefinition, langKey) in formDefinitions.fields" 
-						:key="langKey" 
-						class="relative w-full mt-5 mb-5"
-					>
+					<div v-else>
 						<div 
-							v-if="translate == langKey"
-							class="absolute right-0 left-0 top-0 bottom-0 pt-6 bg-stone-50 dark:bg-stone-700 dark:text-stone-200 bg-opacity-90 flex"
-							>
-								<p class="p-3 font-bold text-teal-600">Translating ... </p> 
-								<svg class="animate-spin mt-3 h-5 w-5 text-stone-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-									<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-									<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-								</svg>
-						</div>
-						<label class="block mb-1 font-medium">{{ fieldDefinition.label }}</label>
-						<div class="flex">
-							<input 
-								class="h-12 border px-2 py-3 border-stone-300 bg-stone-200"
-								:class="inputClasses(langKey, fieldDefinition)"
-								type="text" 
-								v-model="editData[langKey]"
-								:maxlength="fieldDefinition.maxlength"
-								:disabled="fieldDefinition.disabled"
-								@input="changeUrl(langKey)"
-							/>
-							<div v-if="!fieldDefinition.base" class="flex w-1/3 items-stretch">
-
-								<button
-									v-if="!isHome()"
-									class="w-8 px-1 ml-1 flex items-center justify-center
-										   bg-stone-200 text-stone-800
-										   dark:bg-stone-600 dark:text-stone-200 
-									       hover:bg-rose-500 hover:text-white
-									       transition duration-100"
-									@click.prevent="unlinkTranslation(langKey)"
-									:title="$filters.translate('Unlink translation page')"
-								>x</button>
-
-								<!-- create -->
-								<button 
-									v-if="!isHome()"
-									class="flex-1 px-1 py-3 ml-1 text-stone-50 bg-stone-700
-									       hover:bg-stone-900 hover:text-white transition duration-100
-									       disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-800"
-									@click.prevent="storeTranslation(langKey)" 
-									:disabled="disabledButtons[langKey]"
+							v-for="(fieldDefinition, langKey) in formDefinitions.fields" 
+							:key="langKey" 
+							class="relative w-full mt-5 mb-5"
+						>
+							<div 
+								v-if="translate == langKey"
+								class="absolute right-0 left-0 top-0 bottom-0 pt-6 bg-stone-50 dark:bg-stone-700 dark:text-stone-200 bg-opacity-90 flex"
 								>
-									{{ $filters.translate('create') }}
-								</button>
-
-								<!-- auto translate -->
-								<button 
-									v-if="autotrans"
-									class="flex-1 px-1 py-3 ml-1 text-stone-50 bg-stone-700
-									       hover:bg-stone-900 hover:text-white transition duration-100
-									       disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-800"
-									@click.prevent="autotranslate(langKey)" 
-									:disabled="translationDisabled(langKey)"
-								>
-									{{ $filters.translate('transl') }}
-								</button>
-
-								<!-- visit -->
-								<a 
-									:href="getEditorPath(langKey)"
-									class="flex-1 px-1 py-3 ml-1 text-center bg-stone-200 text-stone-800
-									       hover:bg-stone-900 hover:text-white transition duration-100"
-								>
-									{{ $filters.translate('visit') }}
-								</a>
+									<p class="p-3 font-bold text-teal-600">Translating ... </p> 
+									<svg class="animate-spin mt-3 h-5 w-5 text-stone-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+										<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+										<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+									</svg>
 							</div>
+							<label class="block mb-1 font-medium">{{ fieldDefinition.label }}</label>
+							<div class="flex">
 
-						</div>
-						<div v-if="!fieldDefinition.base" class="text-sm mt-1">
-							<div v-if="langMessages[langKey]" class="text-teal-600">
-								{{ langMessages[langKey] }}
+								<input
+								  class="h-12 border px-2 py-3 border-stone-300 bg-stone-200"
+								  :class="[
+								    fieldDefinition.base ? 'w-full' : 'w-2/3',
+								    isInputBlurred(langKey) ? 'blur-sm text-stone-400' : 'text-stone-900'
+								  ]"
+								  type="text"
+								  v-model="editData[langKey]"
+								  :maxlength="fieldDefinition.maxlength"
+								  :disabled="isInputDisabled(langKey)"
+								  @input="changeUrl(langKey)"
+								/>
+
+								<div v-if="!fieldDefinition.base" class="flex w-1/3 items-stretch">
+
+									<button
+										v-if="!isHome()"
+										class="w-8 px-1 ml-1 flex items-center justify-center
+										       bg-rose-500 text-white
+											   hover:bg-rose-600
+											   dark:bg-stone-600 dark:text-stone-200 
+										       disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-800 
+										       transition duration-100"
+										:disabled="!canUseButtons(langKey)"
+										@click.prevent="unlinkTranslation(langKey)"
+										:title="$filters.translate('Unlink translation page')"
+									>x</button>
+
+									<!-- create -->
+									<button 
+										v-if="!showUpdate(langKey)"
+										class= "flex-1 px-1 py-3 ml-1 
+												text-stone-50 bg-stone-700 
+										       	hover:bg-stone-900 hover:text-white 
+										       	disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-800 
+										       	transition duration-100"
+										:disabled="!canCreate(langKey)"
+										@click.prevent="storeTranslation(langKey)" 
+										:title="$filters.translate('Create translation page')"
+									>
+										<svg v-if="autotranslateActive" class="icon icon-magic-wand">
+											<use xlink:href="#icon-magic-wand"></use>
+										</svg>
+										{{ $filters.translate('create') }}
+									</button>
+
+									<!-- autoupdate -->
+									<button 
+										v-if="showUpdate(langKey)"
+										class =	"flex-1 px-1 py-3 ml-1 text-center transition duration-100 
+												bg-stone-700 text-white
+										       	hover:bg-stone-900"
+										@click.prevent="updateTranslation(langKey)" 
+									>
+										<svg class="icon icon-magic-wand">
+											<use xlink:href="#icon-magic-wand"></use>
+										</svg>
+										{{ $filters.translate('update') }}
+									</button>
+
+									<!-- visit -->
+									<a 
+										:href="getEditorPath(langKey)"
+										:class="[
+											'flex-1 px-1 py-3 ml-1 text-center transition duration-100',
+											hasTranslation(langKey)
+									      	? 'bg-stone-700 hover:bg-stone-900 text-white'
+									      	: 'bg-stone-200 text-stone-800 cursor-not-allowed pointer-events-none'
+									  	]"
+										:title="$filters.translate('Visit translation page')"
+									>
+										{{ $filters.translate('visit') }}
+									</a>
+								</div>
+
 							</div>
-							<div v-else-if="langErrors[langKey]" class="p-1 bg-rose-500 text-white">
-								{{ langErrors[langKey] }}
-							</div>
-							<div v-else class="text-stone-500">
-								Edit and save the url to create a new translation page.
+							<div v-if="!fieldDefinition.base" class="text-sm mt-1">
+								<div v-if="langMessages[langKey]" class="text-teal-600">
+									{{ langMessages[langKey] }}
+								</div>
+								<div v-else-if="langErrors[langKey]" class="p-1 bg-rose-500 text-white">
+									{{ langErrors[langKey] }}
+								</div>
+								<div v-else class="text-stone-500">
+									Edit and save the url to create a new translation page.
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			</form>
+
+				</form>
+
+			</div>
+
+			<!-- Translation Overview -->
+			<div v-else>
+
+			  <div class="overflow-x-auto mt-5">
+
+			    <table class="w-full border border-stone-300 text-sm">
+
+			      <thead class="bg-stone-100 dark:bg-stone-700">
+
+			        <tr>
+
+			          <th class="p-2 text-left">
+			            Page
+			          </th>
+
+			          <th
+			            v-for="lang in languages"
+			            :key="lang"
+			            class="p-2 text-center"
+			          >
+			            {{ lang.toUpperCase() }}
+			          </th>
+
+			        </tr>
+
+			      </thead>
+
+			      <tbody>
+
+			        <tr
+			          v-for="(row, i) in translationRows"
+			          :key="i"
+			          class="border-t hover:bg-stone-50 dark:hover:bg-stone-700"
+			        >
+
+			          <!-- Base page -->
+			          <td class="p-2 font-mono text-xs">
+
+			            {{ row.en }}
+
+			          </td>
+
+			          <!-- Languages -->
+			          <td
+			            v-for="lang in languages"
+			            :key="lang"
+			            class="p-2 text-center"
+			          >
+
+			            <!-- Exists -->
+			            <a
+			              v-if="row[lang]"
+			              :href="getEditorPathFromUrl(row[lang])"
+			              class="text-teal-600 hover:underline font-semibold"
+			            >
+			              ●
+			            </a>
+
+			            <!-- Missing -->
+			            <span
+			              v-else
+			              class="text-stone-400"
+			            >
+			              ○
+			            </span>
+
+			          </td>
+
+			        </tr>
+
+			      </tbody>
+
+			    </table>
+
+			  </div>
+			</div>
 		</section>
 	`,
 	mounted() {
 		this.loadTranslations();
+	},
+	computed: {
+		translationRows()
+	  	{
+		    if (!this.multilangIndex) return [];
+
+		    return Object.values(this.multilangIndex);
+	  	},
+	  	languages()
+	  	{
+		    if (!this.translationRows.length) return [];
+
+		    return Object.keys(this.translationRows[0])
+		      .filter(l => l !== 'parent');
+	  	}
 	},
 	methods: {
 		isHome()
@@ -484,35 +628,46 @@ app.component('tab-lang', {
 			}
 			return false;
 		},
-		inputClasses(langKey, fieldDefinition)
+		autotranslateActive()
 		{
-		    return {
-		      'w-full': fieldDefinition.base,
-		      'w-2/3': !fieldDefinition.base,
-		      'text-stone-900': this.isBlurred[langKey],
-		      'text-stone-400': !this.isBlurred[langKey],
-		    };
+			if(this.settings.autotranslate)
+			{
+				return true;
+			}
+
+			return false;
 		},
-		loadTranslations()
+		hasTranslation(langKey)
 		{
-			tmaxios.get(`/api/v1/multilang`, {
-				  params: {
-				  	'url':				data.urlinfo.route,
-				  	'pageid': 			this.pageid,
-				  	'translationfor': 	this.translationfor
-				  }
-				})
-				.then(response => {
-					this.loading 			= false;
-					this.formDefinitions 	= response.data.multilangDefinitions;
-					this.formData 			= response.data.multilangData;
-					this.refreshEditData();
-				})
-				.catch(error => {
-					this.loading 			= false;
-					this.message 			= handleErrorMessage(error) || 'Failed to load translations';
-					this.messageClass 		= 'bg-red-600';
-				});
+		  return !!(this.formData && this.formData[langKey]);
+		},
+		isUrlChanged(langKey)
+		{
+		  return this.editData[langKey] !== this.getInitialEditData(langKey);
+		},
+		isInputDisabled(langKey)
+		{
+		  // disabled if translation exists
+		  return this.hasTranslation(langKey);
+		},
+		isInputBlurred(langKey)
+		{
+		  // blurred only if no translation AND not changed
+		  return !this.hasTranslation(langKey) && !this.isUrlChanged(langKey);
+		},
+		canUseButtons(langKey)
+		{
+		  // buttons enabled only if translation exists
+		  return this.hasTranslation(langKey);
+		},
+		canCreate(langKey)
+		{
+		  // create if no translation AND url changed
+		  return !this.hasTranslation(langKey) && this.isUrlChanged(langKey);
+		},
+		showUpdate(langKey)
+		{
+			return this.hasTranslation(langKey) && this.autotranslateActive;
 		},
 		refreshEditData()
 		{
@@ -521,13 +676,7 @@ app.component('tab-lang', {
 			for (const langKey in this.formDefinitions.fields)
 			{
 				this.editData[langKey] 			= this.getInitialEditData(langKey);
-				this.disabledButtons[langKey] 	= true;
 				this.langErrors[langKey] 		= false;
-//				this.langMessages[langKey] 		= false;
-				if(this.formData && this.formData[langKey])
-				{
-					this.isBlurred[langKey] 	= true;
-				}
 			}
 		},
 		getInitialEditData(langKey)
@@ -572,6 +721,12 @@ app.component('tab-lang', {
 
 			return editorPath + slug;
 		},
+	  	getEditorPathFromUrl(url)
+	  	{
+	    	if (!url) return '#';
+
+	    	return data.urlinfo.baseurl + '/tm/content/visual' + url;
+	  	},
 		changeUrl(langKey)
 		{
 		    let url = this.editData[langKey] || '';
@@ -592,18 +747,49 @@ app.component('tab-lang', {
 			url = url.replace(/\/+/g, '/');
 
 		    this.editData[langKey] = url;
+		},
+		loadTranslationIndex()
+		{
+			if (this.multilangIndex && Object.keys(this.multilangIndex).length > 0)
+			{
+			  this.showMultilangIndex = true;
+			  return;
+			}
 
-			let control = this.getInitialEditData(langKey);
-		    if(this.editData[langKey] != control)
-		    {
-		        this.disabledButtons[langKey] = false;
-		        this.isBlurred[langKey] = true;
-		    }
-		    else
-		    {
-		        this.disabledButtons[langKey] = true;
-		        this.isBlurred[langKey] = false;
-		    }
+			tmaxios.get(`/api/v1/multilangindex`, {
+				  params: {
+				  	'url':	data.urlinfo.route
+				  }
+				})
+				.then(response => {
+					this.multilangIndex 	= response.data.multilangIndex;
+					this.showMultilangIndex = true;
+				})
+				.catch(error => {
+					this.message 			= handleErrorMessage(error) || 'Failed to load translations';
+					this.messageClass 		= 'bg-red-600';
+				});
+		},
+		loadTranslations()
+		{
+			tmaxios.get(`/api/v1/multilang`, {
+				  params: {
+				  	'url':				data.urlinfo.route,
+				  	'pageid': 			this.pageid,
+				  	'translationfor': 	this.translationfor
+				  }
+				})
+				.then(response => {
+					this.loading 			= false;
+					this.formDefinitions 	= response.data.multilangDefinitions;
+					this.formData 			= response.data.multilangData;
+					this.refreshEditData();
+				})
+				.catch(error => {
+					this.loading 			= false;
+					this.message 			= handleErrorMessage(error) || 'Failed to load translations';
+					this.messageClass 		= 'bg-red-600';
+				});
 		},
 		storeTranslation(langKey)
 		{
@@ -619,7 +805,6 @@ app.component('tab-lang', {
 					path: path,
 				})
 				.then((response) => {
-					this.disabledButtons[langKey] = true;
 					this.langMessages[langKey] = 'Page created';
 					this.translate = false;
 					if(response.data.multilangData)
@@ -641,6 +826,25 @@ app.component('tab-lang', {
 				});
 			}
 		},
+		updateTranslation(langKey)
+		{
+			this.translate = langKey;
+			this.langMessages[langKey] = 'updating ...';
+			this.langErrors[langKey] = false;
+
+			tmaxios.put(`/api/v1/autotrans`, {
+				pageid: this.pageid,
+				lang: langKey,
+			})
+			.then((response) => {
+				this.translate = false;
+				this.langMessages[langKey] = 'Page translated';
+			})
+			.catch(error => {
+				this.translate = false;
+				this.langErrors[langKey] = handleErrorMessage(error) || 'Failed to save translation';
+			});
+		},
 		autotranslate(langKey)
 		{
 			this.translate = langKey;
@@ -653,7 +857,6 @@ app.component('tab-lang', {
 			})
 			.then((response) => {
 				this.translate = false;
-				this.disabledButtons[langKey] = true;
 				this.langMessages[langKey] = 'Page translated';
 			})
 			.catch(error => {
@@ -675,7 +878,6 @@ app.component('tab-lang', {
 			})
 			.then((response) => {
 				this.langMessages[langKey] = 'Unlinked translation page';
-				this.isBlurred[langKey] = false;
 				if(response.data.multilangData)
 				{
 					this.formData = response.data.multilangData;
