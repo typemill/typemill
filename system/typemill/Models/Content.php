@@ -172,6 +172,9 @@ class Content
 
 		$toc_id = false;
 
+ 		# prevent from duplicated tocs in frontend
+        $this->parsedown->resetTocState();
+
 		$this->parsedown->setSafeMode(true);
 		
 		foreach($markdownArray as $key => $markdown)
@@ -226,6 +229,9 @@ class Content
 
 	public function getContentArray($markdown)
 	{
+ 		# prevent from duplicated tocs in frontend
+        $this->parsedown->resetTocState();
+
 		$this->parsedown->setSafeMode(true);
 
 		$contentArray = $this->parsedown->text($markdown);

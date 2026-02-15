@@ -18,6 +18,10 @@ class ParsedownExtension extends \ParsedownExtra
 
     private $baseUrl;
 
+    public $headlines = [];
+
+    public $usedHeadingIds = [];
+
     function __construct($baseUrl = '', $settings = NULL, $dispatcher = NULL)
     {
         parent::__construct();
@@ -30,6 +34,8 @@ class ParsedownExtension extends \ParsedownExtra
         $this->showAnchor = isset($settings['headlineanchors']) ? $settings['headlineanchors'] : false;
 
         $this->headlines = [];
+
+        $this->usedHeadingIds = [];
 
         # extend link schemes 
         $urlschemes = ( isset($settings['urlschemes']) && !empty($settings['urlschemes']) ) ? explode(",", $settings['urlschemes']) : false;
@@ -65,6 +71,13 @@ class ParsedownExtension extends \ParsedownExtra
         # identify Table Of contents after footnotes and links and shortcodes
         array_unshift($this->BlockTypes['['], 'TableOfContents');
     }
+
+    public function resetTocState()
+    {
+        $this->headlines = [];
+        $this->usedHeadingIds = [];
+        $this->DefinitionData['TableOfContents'] = false;
+    }    
 
     public function extendLinksWhitelist($linktypes)
     {
@@ -104,7 +117,7 @@ class ParsedownExtension extends \ParsedownExtra
         {
             $TOC = $this->buildTOC($this->headlines);
             
-            $markup = preg_replace('%(<p[^>]*>\[TOC\]</p>)%i', $TOC, $markup);
+            $markup = preg_replace('%(<p[^>]*>\[TOC\]</p>)%i', $TOC, $markup);            
         }
         
         # add footnotes
@@ -114,6 +127,7 @@ class ParsedownExtension extends \ParsedownExtra
             
             $markup .= "\n" . $this->element($Element);
         }
+
         return $markup;
     }
 
@@ -356,10 +370,6 @@ class ParsedownExtension extends \ParsedownExtra
         }
     }
 
-
-    # Headlines
-    public $headlines = [];
-
     protected function blockHeader($Line)
     {
         # Let ParsedownExtra do its job first
@@ -386,9 +396,20 @@ class ParsedownExtension extends \ParsedownExtra
         }
         else
         {
-            $id = "h$level-" . Slug::createSlug($tocText, $lang);
-            $block['element']['attributes']['id'] = $id;
+            $id = Slug::createSlug($tocText, $lang);
         }
+
+        if (!isset($this->usedHeadingIds[$id]))
+        {
+            $this->usedHeadingIds[$id] = 1;
+        } 
+        else
+        {
+            $this->usedHeadingIds[$id]++;
+            $id = $id . '-' . $this->usedHeadingIds[$id];
+        }
+
+        $block['element']['attributes']['id'] = $id;
 
         # Add anchor only for levels > 1
         if ($this->showAnchor && $level > 1)
@@ -465,7 +486,7 @@ class ParsedownExtension extends \ParsedownExtra
 
         # Close the top-level <ul> tag
         $markup .= '</ul>';
-        
+
         return $markup;
     }
 
