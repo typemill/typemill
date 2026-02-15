@@ -20,6 +20,148 @@ class ControllerApiKixote extends Controller
 {
 	private $error = false;
 
+    private array $aimodels = [
+
+        // OpenAI
+        'gpt-5.2' => [
+            'input' => 64000,
+            'max'   => 200000,
+        ],
+
+        'gpt-5' => [
+            'input' => 32000,
+            'max'   => 128000,
+        ],
+
+        'gpt-4.1' => [
+            'input' => 16000,
+            'max'   => 64000,
+        ],
+
+        // Anthropic
+        'opus' => [
+            'input' => 64000,
+            'max'   => 200000,
+        ],
+
+        'sonnet' => [
+            'input' => 32000,
+            'max'   => 128000,
+        ],
+
+        'haiku' => [
+            'input' => 8000,
+            'max'   => 32000,
+        ],
+
+        // Small models
+        'nano' => [
+            'input' => 4000,
+            'max'   => 16000,
+        ],
+
+        'default' => [
+	        'input' => 16000,
+	        'max'   => 64000,
+        ],
+    ];
+
+    private $aiservice = null;
+
+    private $aimodel = null;
+
+    private $apikey = null;
+
+	private function setAiInfo()
+	{
+	    $this->aiservice = $this->settings['aiservice'] ?? null;
+
+	    $this->aimodel = match ($this->aiservice) {
+	        'chatgpt' => $this->settings['chatgptModel'] ?? null,
+	        'claude'  => $this->settings['claudeModel'] ?? null,
+	        default   => null,
+	    };
+
+	    $settingsModel = new Settings();
+	    $this->apikey = match ($this->aiservice) {
+	        'chatgpt' => $settingsModel->getSecret('chatgptKey'),
+	        'claude'  => $settingsModel->getSecret('claudeKey'),
+	        default   => null,
+	    };
+
+		$missing = [];
+		if (!$this->aiservice) { $missing[] = 'AI service'; }
+		if (!$this->aimodel) { $missing[] = 'AI model'; }
+		if (!$this->apikey) { $missing[] = 'API key'; }
+		if (!empty($missing))
+		{
+			$this->error = 'Missing configuration: ' . implode(', ', $missing);
+
+			return false;
+		}
+
+		return true;
+	}
+
+    /**
+     * Get token limits for a model name
+     */
+    private function getTokenInfo(): array
+    {
+        $aimodel = strtolower($this->aimodel);
+
+        foreach ($this->aimodels as $key => $limits)
+        {
+            if (str_contains($aimodel, $key))
+            {
+                return $limits;
+            }
+        }
+
+        return $this->aimodels['default'];
+    }
+
+    private function getInputBudget(): int
+    {
+        return $this->getTokenInfo($this->aimodels)['input'];
+    }
+
+    private function getMaxBudget(): int
+    {
+        return $this->getTokenInfo($this->aimodels)['max'];
+    }
+
+	private function getOutputBudget($content)
+	{
+	    $inputTokens 	= (int) (mb_strlen($content, 'UTF-8') / 4);
+	    $total 			= $this->getMaxBudget();
+	    $safety 		= 2000;
+
+	    $available 		= $total - $inputTokens - $safety;
+
+	    if ($available < 250)
+	    {
+	        return 250;
+	    }
+
+		$hardCap = (int) ($this->settings['aioutputtoken'] ?? 4000);
+
+		# Clamp: min 256, max 12000
+		$hardCap = max(256, min(12000, $hardCap));
+
+	    return min($available, $hardCap);
+	}
+
+	private function getTemperature()
+	{
+		$temperature = (float) ($this->settings['aitemperature'] ?? 0.7);
+
+		# Clamp: 0.0 – 1.0
+		$temperature = max(0.0, min(1.0, $temperature));
+
+		return $temperature;
+	}
+
 	private $system = 	'You are a content editor and writing assistant.'
 		          		. ' If the user prompt does not explicitly specify otherwise,'
 		          		. ' apply the prompt to the provided article inside the <article></article> tag and return only the updated article in Markdown syntax,'
@@ -27,7 +169,6 @@ class ControllerApiKixote extends Controller
 		          		. ' If you find the tag <focus></focus>,'
 		          		. ' modify only the content inside these tags and leave everything else unchanged.' 
 		          		. ' Always return the full article with clean markdown format and without the tags <article> and <focus>.';
-
 
 	private function setSystemMessage($message)
 	{
@@ -125,7 +266,6 @@ class ControllerApiKixote extends Controller
 	# initial token statistics
 	public function getTokenStats(Request $request, Response $response): Response
 	{
-		$aiservice 		= false;
 		$tokenstats 	= 0;
 		$useragreement  = false;
 		$user 			= new User();
@@ -140,24 +280,21 @@ class ControllerApiKixote extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
-		if(isset($this->settings['aiservice']) && $this->settings['aiservice'] !== 'none')
+		$aisettings = $this->setAiInfo();
+		if(!$aisettings)
 		{
-			$aiservice = $this->settings['aiservice'];
+			$response->getBody()->write(json_encode([
+				'message' 	=> $this->error
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);			
 		}
 
-		if($aiservice)
+		$userdata 		= $user->getUserData();
+		if(isset($userdata['aiservices']) && in_array($this->aiservice, $userdata['aiservices']))
 		{
-			$userdata 		= $user->getUserData();
-			if(isset($userdata['aiservices']) && in_array($aiservice, $userdata['aiservices']))
-			{
-				$useragreement = true;
-			}
-		}
-
-		# get token stats for AI service
-		if($aiservice && $useragreement)
-		{
-			switch ($aiservice)
+			$useragreement = true;
+			switch ($this->aiservice)
 			{
 				case 'chatgpt':
 					$tokenstats = [
@@ -180,20 +317,12 @@ class ControllerApiKixote extends Controller
 					];
 					break;
 			}
-		}
 
-		if($tokenstats === false)
-		{
-			$response->getBody()->write(json_encode([
-				'message' 	=> Translations::translate('Could not get tokenstats.')
-			]));
-
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
 	    $response->getBody()->write(json_encode([
 	        'message' 		=> 'Success',
-	        'aiservice' 	=> $aiservice,
+	        'aiservice' 	=> $this->aiservice,
 	        'useragreement' => $useragreement,
 	        'tokenstats' 	=> $tokenstats
 	    ]));
@@ -201,10 +330,18 @@ class ControllerApiKixote extends Controller
 	    return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
 	}
 
-	# initial token statistics
 	public function agreeToAiService(Request $request, Response $response): Response
 	{
-		$aiservice 		= false;
+		$aisettings = $this->setAiInfo();
+		if(!$aisettings)
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> $this->error
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);			
+		}
+
 		$user 			= new User();
 		$username 		= $request->getAttribute('c_username');
 
@@ -217,28 +354,15 @@ class ControllerApiKixote extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
-		if(isset($this->settings['aiservice']) && $this->settings['aiservice'] !== 'none')
-		{
-			$aiservice = $this->settings['aiservice'];
-		}
-		else
-		{
-			$response->getBody()->write(json_encode([
-				'message' 	=> Translations::translate('No valid ai service has been selected.')
-			]));
-
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
-		}
-
 		$agreements = $user->getValue('aiservices');
 
 		if(!$agreements)
 		{
-			$agreements = [$aiservice];
+			$agreements = [$this->aiservice];
 		}
-		elseif(!isset($agreements[$aiservice]))
+		elseif(!isset($agreements[$this->aiservice]))
 		{
-			$agreements[] = $aiservice;
+			$agreements[] = $this->aiservice;
 		}
 
 		$user->setValue('aiservices', $agreements);		
@@ -280,181 +404,6 @@ class ControllerApiKixote extends Controller
 		return $jwt;
 	}
 
-	public function autotrans(Request $request, Response $response)
-	{
-	    $params 	= $request->getParsedBody();
-		$lang 		= $params['lang'] ?? false;
-		$pageid 	= $params['pageid'] ?? false;
-		$urlinfo 	= $this->c->get('urlinfo');
-
-	    $aiservice 	= $this->settings['aiservice'] ?? false;
-	    if(!$aiservice)
-	    {
-	        $response->getBody()->write(json_encode([
-	            'message' => 'No ai service is selected.'
-	        ]));
-	        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);	    	
-	    }
-
-	    if (!$pageid || !$lang)
-	    {
-	        $response->getBody()->write(json_encode([
-	            'message' => 'Prompt is missing or invalid.'
-	        ]));
-	        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
-	    }
-
-        $multilang 			= new Multilang();
-		$multilangIndex 	= $multilang->getMultilangIndex();
-        if(!$multilangIndex)
-        {
-			$response->getBody()->write(json_encode([
-				'message' => Translations::translate('no index for multilanguage found'),
-			]));
-
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
-        }
-
-		$multilangData 	= $multilang->getMultilangData($pageid, $multilangIndex);
-        if(!$multilangData or !isset($multilangData[$lang]))
-        {
-			$response->getBody()->write(json_encode([
-				'message' => Translations::translate('We did not find the page id in the mulitlangindex'),
-			]));
-
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
-        }
-
-		$navigation 		= new Navigation();
-		$url 				= $multilangData[$lang];
-
-		# configure multilang and multiproject
-		$navigation->setProject($this->settings, $url, $dispatcher = false);
-
-		$item 				= $navigation->getItemForUrl($url, $urlinfo, $lang);
-		if(!$item)
-		{
-			$response->getBody()->write(json_encode([
-				'message' => 'page not found',
-			]));
-
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
-		}
-
-		# GET THE CONTENT
-		$content 			= new Content($urlinfo['baseurl'], $this->settings, $dispather = false);
-		$draftMarkdown		= $content->getDraftMarkdown($item);
-		$markdown 			= $content->markdownArrayToText($draftMarkdown);
-
-	    $promptname 	= 'translateArticle';
-		$prompt 		= 'Translate the following article into ' 
-							. $this->settings['projectinstances'][$lang] . ' (' . $lang . '). '
-							. 'Preserve the original Markdown structure exactly (headings, lists, links, emphasis, code blocks). '
-							. 'Do not translate or alter Markdown syntax itself. '
-							. 'Rewrite sentences freely where necessary so the translation sounds natural, fluent, and idiomatic in ' . $this->settings['projectinstances'][$lang] . '.';
-	    $article 		= $markdown;
-	    $translation 	= false;
-	    $example 		= false;
-
-	    switch ($aiservice) {
-	    	case 'chatgpt':
-	    		$answer = $this->promptChatGPT($promptname, $prompt, $article, $example);
-	    		break;
-	    	
-	    	case 'claude':
-	    		$answer = $this->promptClaude($promptname, $prompt, $article, $example);
-	    		break;
-
-	    	default:
-	    		$answer = false;
-	    		break;
-	    }
-
-	    if(!isset($answer) or !$answer)
-	    {
-	        $response->getBody()->write(json_encode([
-	            'message' => $this->error
-	        ]));
-
-	        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
-	    }
-
-	    $markdownArray 		= $content->markdownTextToArray($answer);
-
-		$content->saveDraftMarkdown($item, $markdownArray);
-
-		# GET THE META
-		$meta 				= new Meta();
-		$metadata  			= $meta->getMetaData($item);
-		$metadata 			= $meta->addMetaDefaults($metadata, $item, $this->settings['author']);
-		$metadata 			= $meta->addMetaTitleDescription($metadata, $item, $markdownArray);
-
-		$yaml = Yaml::dump(
-		    $metadata,
-		    10, // depth
-		    2,  // indentation
-		    Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK
-		);
-
-	    $promptname 		= 'translateMeta';
-	    $prompt 			= 'Translate the following yaml configurations into ' . $this->settings['projectinstances'][$lang] . ' (' . $lang . '). Only tranlsate values on the right, not keys on the left.';
-	    $article 			= $yaml;
-	    $translation 		= false;
-		
-		$system 			=  'You are a content editor and writing assistant.'
-                 			. ' If the user prompt does not explicitly specify otherwise,'
-                 			. ' apply the prompt to the provided content inside the <article></article> tag and return only the updated content in valid YAML format,'
-                 			. ' without any extra comments, explanations, or formatting outside YAML.'
-                 			. ' Preserve correct YAML syntax, indentation, quoting, and data types.'
-                 			. ' Always return the full YAML document without the  <article> tag.'
-							. ' For the field "navtitle", use a very short, natural navigation title.'
-							. ' Prefer concise nouns or verb phrases and avoid unnecessary words.'
-							. ' Example: Instead of "create your first page", use "create page".';
-
-        $this->setSystemMessage($system);
-
-	    switch ($aiservice) {
-	    	case 'chatgpt':
-	    		$answer = $this->promptChatGPT($promptname, $prompt, $article, $example);
-	    		break;
-	    	
-	    	case 'claude':
-	    		$answer = $this->promptClaude($promptname, $prompt, $article, $example);
-	    		break;
-
-	    	default:
-	    		$answer = false;
-	    		break;
-	    }
-
-	    if(!isset($answer) or !$answer)
-	    {
-	        $response->getBody()->write(json_encode([
-	            'message' => $this->error
-	        ]));
-
-	        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
-	    }
-
-		# validate meta
-		$parsedYaml = Yaml::parse($answer);
-
-		if($parsedYaml)
-		{
-	    	$meta->updateMeta($parsedYaml, $item);
-
-			$naviFileName 		= $navigation->getNaviFileNameForPath($item->path);
-		 #   $navigation->clearNavigation([$naviFileName]);
-	    	$navigation->clearNavigation();
-		}
-
-	    $response->getBody()->write(json_encode([
-	        'message' 	=> 'Success',
-	    ]));
-
-	    return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
-	}
-
 	public function prompt(Request $request, Response $response)
 	{
 	    $params = $request->getParsedBody();
@@ -475,11 +424,20 @@ class ControllerApiKixote extends Controller
 	        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 	    }
 
+		$aisettings = $this->setAiInfo();
+		if(!$aisettings)
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> $this->error
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);			
+		}
+
 	    $promptname 	= $params['name'] ?? '';
 	    $prompt 		= $params['prompt'] ?? '';
 	    $article 		= $params['article'] ?? '';
 	    $example 		= $params['example'] ?? false;
-	    $translation 	= $params['translation'] ?? false;
 		 
 	    if($example && $example != "")
 	    {
@@ -495,7 +453,7 @@ class ControllerApiKixote extends Controller
 				# Rough estimate: 1 token ≈ 4 characters
 				$allContent 	= $prompt . $article . $example;
 				$length 		= strlen($allContent);
-				$maxInputTokens = $this->getInputTokenBudget();
+				$maxInputTokens = $this->getInputBudget();
 				$maxlength 		= $maxInputTokens * 4;
 				if ($length > $maxlength)
 				{
@@ -513,22 +471,13 @@ class ControllerApiKixote extends Controller
 			}
 	    }
 
-	    $aiservice 	= $this->settings['aiservice'] ?? false;
-	    if(!$aiservice)
-	    {
-	        $response->getBody()->write(json_encode([
-	            'message' => 'No ai service is selected.'
-	        ]));
-	        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);	    	
-	    }
-
-	    switch ($aiservice) {
+	    switch ($this->aiservice) {
 	    	case 'chatgpt':
-	    		$answer = $this->promptChatGPT($promptname, $prompt, $article, $example);
+	    		$answer = $this->promptChatGPT($promptname, $prompt, $article, $example, 'example');
 	    		break;
 
 	    	case 'claude':
-	    		$answer = $this->promptClaude($promptname, $prompt, $article, $example);
+	    		$answer = $this->promptClaude($promptname, $prompt, $article, $example, 'example');
 	    		break;
 
 	    	default:
@@ -553,31 +502,19 @@ class ControllerApiKixote extends Controller
 	    return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
 	}
 
-	public function promptChatGPT($promptname, $prompt, $article, $example)
+	public function promptChatGPT($promptname, $prompt, $article, $addition = null, $tag = null)
 	{
-		# check if user has accepted 
-
-		$settingsModel 	= new Settings();
-	    $model 			= $this->settings['chatgptModel'] ?? false;
-	    $apikey 		= $settingsModel->getSecret('chatgptKey');
-
-	    if (!$model || !$apikey)
-	    {
-	    	$this->error = 'Model or api key for chatgpt is missing, please add it in the system settings.';
-	    	return false;
-	    }
-
 	    $url = 'https://api.openai.com/v1/chat/completions';
-	    $authHeader = "Authorization: Bearer $apikey";
+	    $authHeader = "Authorization: Bearer $this->apikey";
 
 	    $content = $prompt . "\n<article>" . $article . "<article>";
-	    if($example)
+	    if($addition && $tag)
 	    {
-	    	$content .= "\n<example>" . $example . "</example>";
+	    	$content .= "\n<" . $tag . ">" . $addition . "</" . $tag . ">";
 	    }
 
 	    $postdata = [
-	        'model' => $model,
+	        'model' => $this->aimodel,
 	        'messages' => [
 	            [
 	                'role' => 'system',
@@ -589,7 +526,7 @@ class ControllerApiKixote extends Controller
 	            ],
 	        ],
 	        'temperature' => $this->getTemperature(),
-	        'max_tokens' => $this->getOutputBudget($model, $content)
+	        'max_tokens' => $this->getOutputBudget($content)
 	    ];
 
 	    $apiservice = new ApiCalls();
@@ -626,33 +563,22 @@ class ControllerApiKixote extends Controller
 	    return $answer;
 	}
 
-	public function promptClaude($promptname, $prompt, $article, $example)
+	public function promptClaude($promptname, $prompt, $article, $addition = null, $tag = null)
 	{
-	    # Check if user has accepted 
-	    $settingsModel = new Settings();
-	    $model = $this->settings['claudeModel'] ?? false;
-	    $apikey = $settingsModel->getSecret('claudeKey');
-
-	    if (!$model || !$apikey)
-	    {
-	        $this->error = 'Model or API key for Claude is missing, please add it in the system settings.';
-	        return false;
-	    }
-
 	    $url = 'https://api.anthropic.com/v1/messages';
 	    $headers = [
-	        "x-api-key: $apikey",
+	        "x-api-key: $this->apikey",
 	        "anthropic-version: 2023-06-01"
 	    ];
 
 	    $content = $prompt . "\n<article>" . $article . "<article>";
-	    if($example)
+	    if($addition && $tag)
 	    {
-	    	$content .= "\n<example>" . $example . "</example>";
+	    	$content .= "\n<" . $tag . ">" . $addition . "</" . $tag . ">";
 	    }
 
 	    $postdata = [
-	        'model' => $model,
+	        'model' => $this->aimodel,
 	        'system' => $this->getSystemMessage(),
 	        'messages' => [
 	            [
@@ -661,7 +587,7 @@ class ControllerApiKixote extends Controller
 	            ],
 	        ],
 	        'temperature' => $this->getTemperature(),
-	        'max_tokens' => $this->getOutputBudget($model, $content)
+	        'max_tokens' => $this->getOutputBudget($content)
 	    ];
 
 	    $apiservice = new ApiCalls();
@@ -745,149 +671,414 @@ class ControllerApiKixote extends Controller
 		return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
 	}
 
-	private function getInputTokenBudget(): int
+	/****************************
+	 * Translation Features 
+	 * *************************/
+
+	public function autotrans(Request $request, Response $response)
 	{
-	    $aiservice 	= $this->settings['aiservice'] ?? false;
+	    $params 	= $request->getParsedBody();
+		$lang 		= $params['lang'] ?? false;
+		$pageid 	= $params['pageid'] ?? false;
+		$urlinfo 	= $this->c->get('urlinfo');
 
-	    if(!$aiservice){
-	    	return 0;
-	    } 
-
-	    if($aiservice == 'chatgpt')
+	    if (!$pageid || !$lang)
 	    {
-	    	$model = $this->settings['chatgptModel'] ?? false
+	        $response->getBody()->write(json_encode([
+	            'message' => 'Prompt is missing or invalid.'
+	        ]));
+	        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 	    }
-	    if($aiservice == 'claude')
+
+		$aisettings = $this->setAiInfo();
+		if(!$aisettings)
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> $this->error
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);			
+		}
+
+        $multilang 			= new Multilang();
+		$multilangIndex 	= $multilang->getMultilangIndex();
+        if(!$multilangIndex)
+        {
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('no index for multilanguage found'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+        }
+
+		$multilangData 	= $multilang->getMultilangData($pageid, $multilangIndex);
+        if(!$multilangData or !isset($multilangData[$lang]))
+        {
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('We did not find the page id in the mulitlangindex'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+        }
+
+		$navigation 		= new Navigation();
+		$url 				= $multilangData[$lang];
+
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $url, $dispatcher = false);
+
+		$item 				= $navigation->getItemForUrl($url, $urlinfo, $lang);
+		if(!$item)
+		{
+			$response->getBody()->write(json_encode([
+				'message' => 'page not found',
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+		}
+
+		# GET THE CONTENT
+		$content 			= new Content($urlinfo['baseurl'], $this->settings, $dispather = false);
+		$draftMarkdown		= $content->getDraftMarkdown($item);
+		$markdown 			= $content->markdownArrayToText($draftMarkdown);
+
+	    $promptname 	= 'translateArticle';
+		$prompt 		= 'Translate the following article into ' 
+						. $this->settings['projectinstances'][$lang] . ' (' . $lang . '). '
+						. 'Preserve the original Markdown structure exactly (headings, lists, links, emphasis, code blocks). '
+						. 'Do not translate or alter Markdown syntax itself. '
+						. 'Rewrite sentences freely where necessary so the translation sounds natural, fluent, and idiomatic in ' . $this->settings['projectinstances'][$lang] . '. '
+				        . 'Return ONLY the translation content in pure Markdown. '
+				        . 'Do NOT include the <article> tag. '
+				        . 'Do NOT add explanations, comments, headings, or any extra text.';
+	    $article 		= $markdown;
+
+	    switch ($this->aiservice) {
+	    	case 'chatgpt':
+	    		$answer = $this->promptChatGPT($promptname, $prompt, $article);
+	    		break;
+	    	
+	    	case 'claude':
+	    		$answer = $this->promptClaude($promptname, $prompt, $article);
+	    		break;
+
+	    	default:
+	    		$answer = false;
+	    		break;
+	    }
+
+	    if(!isset($answer) or !$answer)
 	    {
-	    	$model = $this->settings['claudeModel'] ?? false
-	    }
-	    if(!$model){
-	    	return 0;
-	    }
+	        $response->getBody()->write(json_encode([
+	            'message' => $this->error
+	        ]));
 
-	    $model = strtolower($model);
-
-	    // Ultra / flagship
-	    if (
-	        str_contains($model, 'opus') ||
-	        str_contains($model, 'gpt-5.2') ||
-	        str_contains($model, 'o3-deep')
-	    ) {
-	        return 64000;
+	        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 	    }
 
-	    // High tier
-	    if (
-	        str_contains($model, 'sonnet') ||
-	        str_contains($model, 'gpt-5') ||
-	        str_contains($model, 'o3')
-	    ) {
-	        return 32000;
+	    $markdownArray 		= $content->markdownTextToArray($answer);
+
+		$content->saveDraftMarkdown($item, $markdownArray);
+
+		# GET THE META
+		$meta 				= new Meta();
+		$metadata  			= $meta->getMetaData($item);
+		$metadata 			= $meta->addMetaDefaults($metadata, $item, $this->settings['author']);
+		$metadata 			= $meta->addMetaTitleDescription($metadata, $item, $markdownArray);
+
+		$yaml = Yaml::dump(
+		    $metadata,
+		    10, // depth
+		    2,  // indentation
+		    Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK
+		);
+
+	    $promptname 		= 'translateMeta';
+	    $prompt 			= 'Translate the following yaml configurations into ' . $this->settings['projectinstances'][$lang] . ' (' . $lang . '). Only tranlsate values on the right, not keys on the left.';
+	    $article 			= $yaml;
+		
+		$system 			=  'You are a content editor and writing assistant.'
+                 			. ' If the user prompt does not explicitly specify otherwise,'
+                 			. ' apply the prompt to the provided content inside the <article></article> tag and return only the updated content in valid YAML format,'
+                 			. ' without any extra comments, explanations, or formatting outside YAML.'
+                 			. ' Preserve correct YAML syntax, indentation, quoting, and data types.'
+                 			. ' Always return the full YAML document without the  <article> tag.'
+							. ' For the field "navtitle", use a very short, natural navigation title.'
+							. ' Prefer concise nouns or verb phrases and avoid unnecessary words.'
+							. ' Example: Instead of "create your first page", use "create page".';
+
+        $this->setSystemMessage($system);
+
+	    switch ($this->aiservice) {
+	    	case 'chatgpt':
+	    		$answer = $this->promptChatGPT($promptname, $prompt, $article);
+	    		break;
+	    	
+	    	case 'claude':
+	    		$answer = $this->promptClaude($promptname, $prompt, $article);
+	    		break;
+
+	    	default:
+	    		$answer = false;
+	    		break;
 	    }
 
-	    // Medium tier
-	    if (
-	        str_contains($model, 'gpt-4.1') ||
-	        str_contains($model, 'o4-mini')
-	    ) {
-	        return 16000;
-	    }
-
-	    // Low tier
-	    if (
-	        str_contains($model, 'haiku') ||
-	        str_contains($model, 'mini')
-	    ) {
-	        return 8000;
-	    }
-
-	    // Very low tier
-	    if (str_contains($model, 'nano')) {
-	        return 4000;
-	    }
-
-	    // Fallback
-	    return 16000;
-	}
-
-	private function getMaxTokenBudget(string $model): int
-	{
-	    $model = strtolower($model);
-
-	    // Ultra tier
-	    if (
-	        str_contains($model, 'opus') ||
-	        str_contains($model, 'gpt-5.2') ||
-	        str_contains($model, 'o3-deep')
-	    ) {
-	        return 200000;
-	    }
-
-	    // High tier
-	    if (
-	        str_contains($model, 'sonnet') ||
-	        str_contains($model, 'gpt-5') ||
-	        str_contains($model, 'o3')
-	    ) {
-	        return 128000;
-	    }
-
-	    // Medium tier
-	    if (
-	        str_contains($model, 'gpt-4.1') ||
-	        str_contains($model, 'o4-mini')
-	    ) {
-	        return 64000;
-	    }
-
-	    // Low tier
-	    if (
-	        str_contains($model, 'haiku') ||
-	        str_contains($model, 'mini')
-	    ) {
-	        return 32000;
-	    }
-
-	    // Very low tier
-	    if (str_contains($model, 'nano')) {
-	        return 16000;
-	    }
-
-	    // Fallback
-	    return 64000;
-	}
-
-	private function getOutputBudget($model, $content)
-	{
-		$model = strtolower($model);
-
-	    $inputTokens = (int) (mb_strlen($content, 'UTF-8') / 4);
-
-	    $total  = $this->getMaxTokenBudget($model);
-	    $safety = 2000;
-
-	    $available = $total - $inputTokens - $safety;
-
-	    if ($available < 250)
+	    if(!isset($answer) or !$answer)
 	    {
-	        return 250;
+	        $response->getBody()->write(json_encode([
+	            'message' => $this->error
+	        ]));
+
+	        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 	    }
 
-		$hardCap = (int) ($this->settings['aioutputtoken'] ?? 4000);
+		# validate meta
+		$parsedYaml = Yaml::parse($answer);
 
-		# Clamp: min 256, max 12000
-		$hardCap = max(256, min(12000, $hardCap));
+		if($parsedYaml)
+		{
+	    	$meta->updateMeta($parsedYaml, $item);
 
-	    return min($available, $hardCap);
-	}
+			$naviFileName 		= $navigation->getNaviFileNameForPath($item->path);
+	    	$navigation->clearNavigation();
+		}
 
-	private function getTemperature()
+	    $response->getBody()->write(json_encode([
+	        'message' 	=> 'Success',
+	    ]));
+
+	    return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+	}	
+
+	public function autotransUpdate(Request $request, Response $response)
 	{
-		$temperature = (float) ($this->settings['aitemperature'] ?? 0.7);
+	    $params 	= $request->getParsedBody();
+		$lang 		= $params['lang'] ?? false;
+		$pageid 	= $params['pageid'] ?? false;
+		$urlinfo 	= $this->c->get('urlinfo');
 
-		# Clamp: 0.0 – 1.0
-		$temperature = max(0.0, min(1.0, $temperature));
+	    if (!$pageid || !$lang)
+	    {
+	        $response->getBody()->write(json_encode([
+	            'message' => 'Page id or language is missing.'
+	        ]));
+	        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+	    }
 
-		return $temperature;
+		$aisettings = $this->setAiInfo();
+		if(!$aisettings)
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> $this->error
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);			
+		}
+
+        $multilang 			= new Multilang();
+		$multilangIndex 	= $multilang->getMultilangIndex();
+        if(!$multilangIndex)
+        {
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('no index for multilanguage found'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+        }
+
+		$multilangData 	= $multilang->getMultilangData($pageid, $multilangIndex);
+        if(!$multilangData or !isset($multilangData[$lang]))
+        {
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('We did not find the page id in the mulitlangindex'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+        }
+
+		$navigation 		= new Navigation();
+
+	    $projects 			= $navigation->getAllProjects($this->settings);
+		$baselang = null;
+		foreach ($projects as $project)
+		{
+		    if (!empty($project['base']))
+		    {
+		        $baselang = $project['id'];
+		        break;
+		    }
+		}
+
+		$origUrl 			= $multilangData[$baselang] ?? false;		
+		$transUrl 			= $multilangData[$lang] ?? false;
+
+		if(!$origUrl OR !$transUrl)
+		{
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('We did not find valid urls for the translation or article.'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+		}
+
+		$origItem 			= $navigation->getItemForUrl($origUrl, $urlinfo, $baselang);
+		if(!$origItem)
+		{
+			$response->getBody()->write(json_encode([
+				'message' => 'Page for base language not found',
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+		}
+
+		# configure multilang and multiproject
+		$navigation->setProject($this->settings, $transUrl, $dispatcher = false);
+
+		$transItem 			= $navigation->getItemForUrl($transUrl, $urlinfo, $lang);
+		if(!$transItem)
+		{
+			$response->getBody()->write(json_encode([
+				'message' => 'Translation page not found',
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+		}
+
+		# GET THE CONTENT
+		$content 				= new Content($urlinfo['baseurl'], $this->settings, $dispather = false);
+		$transDraftMarkdown 	= $content->getDraftMarkdown($transItem);
+		$transMarkdown 			= $content->markdownArrayToText($transDraftMarkdown);
+		$origDraftMarkdown		= $content->getDraftMarkdown($origItem);
+		$origMarkdown 			= $content->markdownArrayToText($origDraftMarkdown);
+
+	    $promptname 	= 'translateArticleUpdate';
+		$prompt 		= 'You will receive an <article> tag (source text) and a <translation> tag (existing translation). '
+		        		. 'Read the article and update the translation into the language '
+		        		. $this->settings['projectinstances'][$lang] . ' (' . $lang . '). '
+				        . 'Update only those parts of the translation that differ in meaning, content, or structure from the article. '
+				        . 'Do not rewrite unchanged parts. '
+				        . 'Preserve the Markdown structure (headings, lists, links, emphasis, code blocks). '
+				        . 'Do not translate or alter Markdown syntax. '
+				        . 'Rewrite updated parts freely so the translation sounds natural, fluent, and idiomatic in '
+				        . $this->settings['projectinstances'][$lang] . '. '
+				        . 'Return ONLY the updated translation content in pure Markdown. '
+				        . 'Do NOT include the <translation> tag. '
+				        . 'Do NOT add explanations, comments, headings, or any extra text.';
+	    $article 		= $origMarkdown;
+	    $translation 	= $transMarkdown;
+
+	    switch ($this->aiservice) {
+	    	case 'chatgpt':
+	    		$answer = $this->promptChatGPT($promptname, $prompt, $article, $translation, 'translation');
+	    		break;
+	    	
+	    	case 'claude':
+	    		$answer = $this->promptClaude($promptname, $prompt, $article, $translation, 'translation');
+	    		break;
+
+	    	default:
+	    		$answer = false;
+	    		break;
+	    }
+
+	    if(!isset($answer) or !$answer)
+	    {
+	        $response->getBody()->write(json_encode([
+	            'message' => $this->error
+	        ]));
+
+	        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+	    }
+
+	    $markdownArray 		= $content->markdownTextToArray($answer);
+
+		$content->saveDraftMarkdown($transItem, $markdownArray);
+		
+		# GET THE META
+		$meta 				= new Meta();
+		$origMetadata  		= $meta->getMetaData($origItem);
+		$origMetadata 		= $meta->addMetaDefaults($origMetadata, $origItem, $this->settings['author']);
+		$origMetadata 		= $meta->addMetaTitleDescription($origMetadata, $origItem, $origDraftMarkdown);
+		$transMetadata  	= $meta->getMetaData($transItem);
+		$transMetadata 		= $meta->addMetaDefaults($transMetadata, $transItem, $this->settings['author']);
+		$transMetadata 		= $meta->addMetaTitleDescription($transMetadata, $transItem, $transDraftMarkdown);
+
+		$origYaml = Yaml::dump(
+		    $origMetadata,
+		    10, // depth
+		    2,  // indentation
+		    Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK
+		);
+
+		$transYaml = Yaml::dump(
+		    $transMetadata,
+		    10, // depth
+		    2,  // indentation
+		    Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK
+		);
+
+		$system 			= 'You are a content editor and writing assistant. '
+							. 'Always apply the user prompt to the content inside the <translation></translation> tag. '
+							. 'Return only the updated content as a complete, valid YAML document. '
+							. 'Do not include the <translation> tag. '
+							. 'Do not add comments, explanations, headings, or extra text. '
+							. 'Do not use Markdown or code blocks. '
+							. 'Preserve correct YAML syntax, indentation, quoting, and data types. '
+							. 'For the field "navtitle", use a very short, natural navigation title. '
+							. 'Prefer concise nouns or verb phrases and avoid unnecessary words. '
+							. 'Example: Instead of "create your first page", use "create page".';
+        $this->setSystemMessage($system);
+	    $promptname 		= 'translateMetaUpdate';
+		$prompt 			= 'You will receive an <article> tag (source text) and a <translation> tag (existing translation), both in YAML syntax. '
+							. 'Read the original YAML definitions in the <article> tag and update the translated YAML definitions in the <translation> tag into the language '
+							. $this->settings['projectinstances'][$lang] . ' (' . $lang . '). '
+							. 'Update only those parts of the translation that differ from the YAML definitions in the <article> tag. '
+							. 'Do not rewrite unchanged parts. '
+							. 'NEVER change values for "pageid" and "translation_for". '
+							. 'Translate only YAML values. Never translate keys. '
+							. 'Return ONLY the updated translation content as valid YAML. '
+							. 'Do NOT include the <translation> tag. '
+							. 'Do NOT add explanations, comments, headings, Markdown, or extra text.';
+	    $article 			= $origYaml;
+	    $translation 		= $transYaml;
+
+	    switch ($this->aiservice) {
+	    	case 'chatgpt':
+	    		$answer = $this->promptChatGPT($promptname, $prompt, $article, $translation, 'translation');
+	    		break;
+	    	
+	    	case 'claude':
+	    		$answer = $this->promptClaude($promptname, $prompt, $article, $translation, 'translation');
+	    		break;
+
+	    	default:
+	    		$answer = false;
+	    		break;
+	    }
+
+	    if(!isset($answer) or !$answer)
+	    {
+	        $response->getBody()->write(json_encode([
+	            'message' => $this->error
+	        ]));
+
+	        return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+	    }
+
+		# validate meta
+		$parsedYaml = Yaml::parse($answer);
+
+		if($parsedYaml)
+		{
+	    	$meta->updateMeta($parsedYaml, $transItem);
+		}
+
+	    $navigation->clearNavigation();
+
+	    $response->getBody()->write(json_encode([
+	        'message' 	=> 'Success',
+	    ]));
+
+	    return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
 	}
 }
