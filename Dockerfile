@@ -17,10 +17,9 @@ RUN docker-php-ext-configure gd --with-jpeg && \
 WORKDIR /var/www/html
 COPY . .
 
-# Replace Vue dev build with prod build
-RUN cp system/typemill/author/js/vue.global.prod.js \
-       system/typemill/author/js/vue.js \
- && rm system/typemill/author/js/vue.global.js
+RUN [ -f system/typemill/author/js/vue.js ] \
+ && [ -f system/typemill/author/js/vue.global.prod.js ] \
+ && mv system/typemill/author/js/vue.global.prod.js system/typemill/author/js/vue.js
 
 # Install server dependencies (like Composer)
 RUN chmod +x /var/www/html/docker-utils/install-composer && \
