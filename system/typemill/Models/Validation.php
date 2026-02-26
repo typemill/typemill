@@ -581,6 +581,7 @@ class Validation
 		
 		$v->rule('required', 'slug');
 		$v->rule('regex', 'slug', '/^[a-z0-9-]+$/i');
+		$v->rule('regex', 'project', '/^[a-z0-9-]+$/i');
 
 		if($v->validate())
 		{

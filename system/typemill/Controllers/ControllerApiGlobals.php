@@ -176,16 +176,17 @@ class ControllerApiGlobals extends Controller
 
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
-		$url 				= $params['url'];
+		$slug 				= $params['slug'];
 
 		$navigation 		= new Navigation();
-		$url 				= $navigation->removeEditorFromUrl($url);
-		if($url)
+
+		$project 			= $params['project'] ?? null;
+		if($project)
 		{
-			$navigation->setProject($this->settings, $url, $dispatcher = false);
+			$navigation->setProject($this->settings, $project, $dispatcher = false);
 		}
 
-		$item 				= $navigation->getItemForUrl($url, $urlinfo, $langattr);
+		$items 				= $navigation->getItemsForSlug($slug, $urlinfo, $langattr)
 		if(!$items)
 		{
 			$response->getBody()->write(json_encode([
