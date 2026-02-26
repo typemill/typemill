@@ -6,7 +6,7 @@ class Session
 {
 	public static function startSessionForSegments($sessionSegments, $routepath, $scheme)
 	{
-		if(isset($_SESSION))
+		if (session_status() === PHP_SESSION_ACTIVE)
 		{
 			return false; 
 		}

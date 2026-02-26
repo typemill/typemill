@@ -241,6 +241,8 @@ class User
 	{
 		if($this->user)
 		{
+	        session_regenerate_id(true);
+
 			$this->user['lastlogin'] = time();
 
 			$_SESSION['username'] 	= $this->user['username'];
