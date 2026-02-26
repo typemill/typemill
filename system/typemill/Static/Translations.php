@@ -29,7 +29,7 @@ class Translations
 		$plugins_translations 	= [];
 
 		# theme labels selected according to the environment: admin or user
-		$theme_translations 	= $storage->getYaml('themeFolder', $settings['theme'], $language . '.yaml') ?? [];
+		$theme_translations 	= $storage->getYaml('themesFolder', $settings['theme'], $language . '.yaml') ?? [];
 
 		if($environment == 'admin')
 		{
@@ -44,7 +44,7 @@ class Translations
 			  	{
 					if(isset($config['active']) && $config['active'])
 					{
-						$plugins_translations[$plugin] 	= $storage->getYaml('pluginFolder', $plugin, $language . '.yaml');
+						$plugins_translations[$plugin] 	= $storage->getYaml('pluginsFolder', $plugin, $language . '.yaml');
 					}
 			  	}
 
