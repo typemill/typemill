@@ -2,12 +2,14 @@ guest:
   name: guest
   inherits: NULL
   permissions: 
+    public:
+      - 'read'
     account:
       - 'none'
 member:
   name: member
-  inherits: NULL
-  permissions: 
+  inherits: guest
+  permissions:
     account:
       - 'read'
       - 'update'

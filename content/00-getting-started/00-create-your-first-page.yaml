@@ -1,10 +1,14 @@
 meta:
-    author: Sebastian
-    created: '2026-02-15'
-    time: 14-09-37
+    pageid: 7e3206511eefeff2
     navtitle: 'create your first page'
-    modified: '2026-02-15'
-    owner: trendschau
     title: 'Create Your First Page'
     description: "To create a new page in Typemill, follow these steps: \nUse the interactive navigation located on the left side of the screen. \nEnter a page title for your new"
-    pageid: 7e3206511eefeff2
+    owner: trendschau
+    author: Sebastian
+    allowedrole: member
+    alloweduser: test
+    modified: '2026-02-27'
+    created: '2026-02-15'
+    time: 14-09-37
+    hide: false
+    noindex: false
