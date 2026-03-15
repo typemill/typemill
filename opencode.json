@@ -1,0 +1,73 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "anthropic": {
+      "options": {
+        "timeout": 600000,
+        "setCacheKey": true
+      }
+    }    
+  },
+  "model": "anthropic/claude-sonnet-4-5",
+  "small_model": "anthropic/claude-haiku-4-5",
+  "instructions": [
+    "ai/docs/architecture.md", 
+    "ai/docs/theme-development.md", 
+    "ai/docs/plugin-development.md", 
+  ],
+  "agent": {
+    "api-tester": {
+      "prompt": "{file:./ai/agents/api-tester.md}"
+    },
+    "docs-writer": {
+      "prompt": "{file:./ai/agents/docs-writer.md}"
+    },
+    "security-auditor": {
+      "prompt": "{file:./ai/agents/security-auditor.md}"
+    },
+    "accessibility-auditor": {
+      "prompt": "{file:./ai/agents/accessibility-auditor.md}"
+    },
+  },
+  "command": {
+    "test": {
+      "template": "Run the full test suite with coverage report and show any failures.\nFocus on the failing tests and suggest fixes.",
+      "description": "Run tests with coverage",
+      "agent": "build",
+      "model": "anthropic/claude-haiku-4-5",
+    },
+    "plugin": {
+      "template": "Create a new Plugin skeleton named $ARGUMENTS in the /plugins folder.\nInclude basic structure with a php-file that extends the plugin-class and a yaml file with configurations.",
+      "description": "Create a new plugin",
+    },
+    "theme": {
+      "template": "Create a new Theme skeleton named $ARGUMENTS in the /themes folder.\nInclude basic structure with a yaml file for configurations, twig files, and a public folder with tachyons css library and javascript files if needed.",
+      "description": "Create a new theme",
+    },
+  },
+  "permission": {
+    "read":       "allow", /* Read file contents from your codebase. */
+    "edit":       "ask", /* edit/overwrite files  */
+    "grep":       "allow", /* Search file contents using regular expressions. */
+    "glob":       "allow", /* Find files by pattern matching. */
+    "list":       "allow", /* list files and directories for given path */
+    "lsp":        "allow", /* Interact with your configured LSP servers to get code intelligence features like definitions, references, hover info, and call hierarchy. */
+    "bash":       "ask", /* allows the LLM to run terminal commands like npm install, git status, */
+    "skill":      "allow", /* Load a skill (a SKILL.md file) and return its content in the conversation. */
+    "todowrite":  "allow", /* Manage todo lists during coding sessions. */
+    "todoread":   "allow", /* Read todo lists during coding sessions. */
+    "webfetch":   "allow", /* Allows the LLM to fetch and read web pages. Useful for looking up documentation or researching online resources. */
+    "websearch":  "allow", /* Perform a web search */
+    "question":   "allow", /* Ask the user questions during execution. */
+    "mymcp_*":    "ask", /* use wildcards to control multiple tools at once */
+  },
+  "watcher": {
+    "ignore": [
+      "node_modules/**", 
+      "cypress/**", 
+      ".git/**", 
+      ".system/vendor/**"
+    ]
+  },
+  "mcp": {},
+}
