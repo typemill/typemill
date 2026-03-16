@@ -106,6 +106,7 @@ fieldsetproject:
       type: customfields
       label: 'Additional Projects (ID | label)'
       description: 'For each project, add an ID on the left and a Label on the right. The id will be used as url segment, the label to switch between projects.'
+      keypattern: '[a-z0-9]+'
 fieldsetmedia:
   type: fieldset
   legend: Media
