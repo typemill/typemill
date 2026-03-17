@@ -237,6 +237,8 @@ class ControllerApiGlobals extends Controller
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
 		$url 				= $params['url'];
+		$userrole 			= $request->getAttribute('c_userrole');
+		$username 			= $request->getAttribute('c_username');		
 
 		$navigation 		= new Navigation();
 		$url 				= $navigation->removeEditorFromUrl($url);

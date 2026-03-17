@@ -728,7 +728,7 @@ app.component('component-customfields', {
 			if (this.keypattern)
 			{
 				try {
-			      regex = new RegExp('^' + this.keypattern + '$', 'i');
+			      regex = new RegExp('^' + this.keypattern + '$');
 			      keymessage = 'Error: the input for the KEY must follow the pattern ' + this.keypattern;
 			    } catch (e) {
 			      console.error('Invalid regex pattern from YAML:', this.keypattern, e);

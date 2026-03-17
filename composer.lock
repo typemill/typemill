@@ -122,12 +122,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/erusev/parsedown-extra.git",
-                "reference": "b6a8efbcb0fb37c038ff5d6fc1aa138f5768155d"
+                "reference": "cf4dc29794d22ab441fddd2b336b5c54f7ae2e2f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/erusev/parsedown-extra/zipball/b6a8efbcb0fb37c038ff5d6fc1aa138f5768155d",
-                "reference": "b6a8efbcb0fb37c038ff5d6fc1aa138f5768155d",
+                "url": "https://api.github.com/repos/erusev/parsedown-extra/zipball/cf4dc29794d22ab441fddd2b336b5c54f7ae2e2f",
+                "reference": "cf4dc29794d22ab441fddd2b336b5c54f7ae2e2f",
                 "shasum": ""
             },
             "require": {
@@ -176,7 +176,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-02-18T15:50:12+00:00"
+            "time": "2026-03-03T06:52:47+00:00"
         },
         {
             "name": "fig/http-message-util",

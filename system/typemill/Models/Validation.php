@@ -108,7 +108,7 @@ class Validation
 					return false;
 				}
 
-				$keypattern 	= isset($params[0]['keypattern']) ? '/^' .  $params[0]['keypattern']  . '$/i' : '/^([a-z0-9])+$/i';
+				$keypattern 	= isset($params[0]['keypattern']) ? '/^' .  $params[0]['keypattern']  . '$/' : '/^([a-z0-9])+$/i';
 				if(preg_match($keypattern, $key) == false)
 				{
 		        	return false;
