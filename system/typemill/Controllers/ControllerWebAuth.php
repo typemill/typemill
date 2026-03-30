@@ -9,6 +9,8 @@ use Typemill\Models\Validation;
 use Typemill\Models\User;
 use Typemill\Models\SimpleMail;
 use Typemill\Static\Translations;
+use Typemill\Events\OnUserAuthenticate;
+
 
 class ControllerWebAuth extends Controller
 {
@@ -25,7 +27,6 @@ class ControllerWebAuth extends Controller
         $input 			= $request->getParsedBody();
 		$validation		= new Validation();
 		$securitylog 	= $this->settings['securitylog'] ?? false;
-		$authcodeactive = $this->isAuthcodeActive($this->settings);
 		$authtitle 		= Translations::translate('Verification code missing?');
 		$authtext 		= Translations::translate('If you did not receive an email with the verification code, then the username or password you entered was wrong. Please try again.');
 
@@ -43,7 +44,35 @@ class ControllerWebAuth extends Controller
 
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
 		}
-		
+
+		# Use plugins like ldap for authentication
+		$authResult = $this->c->get('dispatcher')->dispatch(new OnUserAuthenticate($input), 'OnUserAuthenticate')->getData();
+		if(isset($authResult['authenticated']) && $authResult['authenticated'] === true)
+		{
+		    $user = new User();
+
+		    # ensure user exists (plugin may have created it)
+		    if($user->setUser($authResult['username']))
+		    {
+		        $userdata = $user->getUserData();
+
+		        if($this->showAuthcodePage($user, $userdata))
+		        {
+					# show authcode page
+				    return $this->c->get('view')->render($response, 'auth/authcode.twig', [
+						'username' 		=> $userdata['username'],
+						'authtitle' 	=> $authtitle,
+						'authtext' 		=> $authtext
+				    ]);
+		        }
+
+		        $user->login();
+
+		        $redirect = $this->getRedirectDestination($userdata['userrole']);
+		        return $response->withHeader('Location', $this->routeParser->urlFor($redirect))->withStatus(302);
+		    }
+		}
+
 		$user = new User();
 
 		if(!$user->setUserWithPassword($input['username']))
@@ -62,8 +91,6 @@ class ControllerWebAuth extends Controller
 		}
 
 		$userdata 		= $user->getUserData();
-		$authcodedata 	= $this->checkAuthcode($userdata);
-
 		if($userdata && !password_verify($input['password'], $userdata['password']))
 		{
 			if($securitylog)
@@ -72,8 +99,8 @@ class ControllerWebAuth extends Controller
 			}
 
 			# always show authcode page, so attacker does not know if email or password was wrong or mail was send.
-			if($authcodeactive && !$authcodedata['valid'])
-			{
+	        if($this->showAuthcodePage($user, $userdata))
+	        {
 				# a bit slower because send mail takes some time usually
 				usleep(rand(100000, 200000));
 
@@ -83,7 +110,7 @@ class ControllerWebAuth extends Controller
 					'authtitle' 	=> $authtitle,
 					'authtext' 		=> $authtext
 			    ]);
-			}
+	        }
 
 			if($this->c->get('flash'))
 			{
@@ -93,51 +120,14 @@ class ControllerWebAuth extends Controller
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
 		}
 
-		# check device fingerprint
-		if($authcodeactive)
+		if($this->showAuthcodePage($user, $userdata))
 		{
-			$fingerprint = $this->generateDeviceFingerprint();
-			if(!$this->findDeviceFingerprint($fingerprint, $userdata))
-			{
-				# invalidate authcodedata so user has to use a new authcode again
-				$authcodedata['valid'] = false;
-				$authcodedata['validated'] = 12345;
-			}
-		}
-
-		if($authcodeactive && !$authcodedata['valid'] )
-		{
-			# generate new authcode
-			$authcodevalue 	= rand(10000, 99999);
-
-			$mail 			= new SimpleMail($this->settings);
-
-			$subject 		= Translations::translate('Your Typemill verification code');
-			$message		= Translations::translate('Dear user') . ',<br><br>';
-			$message		.= Translations::translate('Someone tried to log in to your Typemill website and we want to make sure it is you. Enter the following verification code to finish your login. The code will be valid for 5 minutes.');
-			$message 		.= '<br><br>' . $authcodevalue . '<br><br>';
-			$message		.= Translations::translate('If you did not make this login attempt, please reset your password immediately.');
-
-			$send 			= $mail->send($userdata['email'], $subject, $message);
-
-			if(!$send)
-			{
-				$authtitle 		= Translations::translate('Error sending email');
-				$authtext 		= Translations::translate('We could not send the email with the verification code to your address. Reason: ') . $mail->error;
-			}
-			else
-			{
-				# store authcode
-				$user->setValue('authcodedata', $authcodevalue . ':' . time() . ':' . $authcodedata['validated']);
-				$user->updateUser();
-			}			
-
 			# show authcode page
 		    return $this->c->get('view')->render($response, 'auth/authcode.twig', [
 				'username' 		=> $userdata['username'],
 				'authtitle' 	=> $authtitle,
 				'authtext'  	=> $authtext
-		    ]);
+		    ]);			
 		}
 
 		# check if user has confirmed the account 
@@ -203,10 +193,26 @@ class ControllerWebAuth extends Controller
 		}
 
 		$userdata 		= $user->getUserData();
-		$authcodevalue 	= $input['code-1'] . $input['code-2'] . $input['code-3'] . $input['code-4'] . $input['code-5'];
-		$authcodedata 	= $this->checkAuthcode($userdata);
 
-		if(!$this->validateAuthcode($authcodevalue, $authcodedata))
+		if(isset($userdata['optintoken']) && $userdata['optintoken'])
+		{
+		    if($securitylog)
+		    {
+		        \Typemill\Static\Helpers::addLogEntry('login: user not confirmed yet.');
+		    }
+
+		    if($this->c->get('flash'))
+		    {
+		        $this->c->get('flash')->addMessage('error', Translations::translate('Your registration is not confirmed yet.'));
+		    }
+
+		    return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
+		}
+
+		$authcodevalue 	= $input['code-1'] . $input['code-2'] . $input['code-3'] . $input['code-4'] . $input['code-5'];
+		$validAuthData 	= $this->validateAuthcode($userdata, $authcodevalue);
+
+		if(!$validAuthData)
 		{
 			if($securitylog)
 			{
@@ -221,17 +227,19 @@ class ControllerWebAuth extends Controller
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
 		}
 
+		# update authcode lastValidation and store
+		$user->setValue('authcodedata', $validAuthData);		
+
 		# add the device fingerprint if not set yet
 		$fingerprints 	= $userdata['fingerprints'] ?? [];
 		$fingerprint 	= $this->generateDeviceFingerprint();
-		if(!$this->findDeviceFingerprint($fingerprint, $userdata))
+		if(!in_array($fingerprint, $fingerprints))
 		{
 			$fingerprints[] = $fingerprint;
 			$user->setValue('fingerprints', $fingerprints);
 		}
 
-		# update authcode lastValidation and store
-		$user->setValue('authcodedata', $authcodevalue . ':' . $authcodedata['generated'] . ':' . time());
+		# update userdata
 		$user->updateUser();
 
 		$user->login();
@@ -397,7 +405,6 @@ class ControllerWebAuth extends Controller
 		return $response->withHeader('Location', $this->routeParser->urlFor($redirect))->withStatus(302);
 	}
 
-
 	private function getRedirectDestination(string $userrole)
 	{
 		# decide where to redirect after login, configurable in settings -> system.yaml
@@ -442,6 +449,61 @@ class ControllerWebAuth extends Controller
 		return $redirect;
 	}
 
+	# log out a user
+	public function logout(Request $request, Response $response)
+	{
+		\Typemill\Static\Session::stopSession();
+
+		return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
+	}
+
+
+	#############
+	# AUTHCODE  #
+	#############
+
+	# format is 'value:timeGenerated:timeLastValidated'
+    # authcodedata: '38251:1705000992:1705001041'
+    # fingerprints:
+    # - 0f5113d4a2b4751f15a2ed787145978e
+    # - 6968aacfd1b6ccd3f9faa5db8260ebc5
+
+	# check if user should see authcode page
+	private function showAuthcodePage($user, $userdata)
+	{
+		if(!$this->isAuthcodeActive($this->settings))
+		{
+			# do not show authcode screen
+			return false;
+		}
+
+		# get device fingerprint because authcode is only valid for a specific device
+		$fingerprint = $this->generateDeviceFingerprint();
+
+		# if authcode is not valid or device not registered yet
+		if(
+			!$this->hasValidAuthCode($userdata)
+			OR
+			!$this->findDeviceFingerprint($fingerprint, $userdata)
+		)
+		{
+			# generate new authcode
+			$authcodevalue 	= $this->generateAuthcodeValue();
+
+			# update authcode and fingerprint in userdata
+			$this->storeNewAuthcode($authcodevalue, $fingerprint, $user);
+			
+			# send mail
+			$this->sendAuthcodeToUser($authcodevalue, $userdata);
+
+			# show authcode screen
+			return true;
+		}
+
+		# if authcode and fingerprint are valid, dont show authcode screen
+		return false;
+	}
+
 	private function isAuthcodeActive($settings)
 	{
 		if(
@@ -457,86 +519,131 @@ class ControllerWebAuth extends Controller
 		return false;
 	}
 
-	# log out a user
-	public function logout(Request $request, Response $response)
+	private function validateAuthcode($userdata, $authcode)
 	{
-		\Typemill\Static\Session::stopSession();
+	    $authcodedata = $userdata['authcodedata'] ?? false;
 
-		return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
+	    if(!$authcodedata)
+	    {
+	        return false;
+	    }
+
+		$authcodedata 	= explode(":", $authcodedata);
+	    $aValue     	= $authcodedata[0] ?? false;
+	    $aGenerated 	= $authcodedata[1] ?? false;
+	    $aValidated 	= $authcodedata[2] ?? false;
+
+		if(!ctype_digit($aValue) || !ctype_digit($aGenerated) || !ctype_digit($aValidated))
+		{
+		    return false;
+		}
+
+	    $now = time();
+
+	    # already used → reject
+	    if($aValidated > 0)
+	    {
+	        return false;
+	    }
+
+	    # expired (older than 5 minutes) → reject
+	    if($now - (60 * 5) > $aGenerated)
+	    {
+	        return false;
+	    }
+
+	    # wrong code → reject
+	    if($aValue !== $authcode)
+	    {
+	        return false;
+	    }
+
+	    # mark as used (only update validated timestamp)
+	    return $aValue . ':' . $aGenerated . ':' . $now;
 	}
 
-
-	# check if the stored authcode in userdata is valid and/or fresh
-	private function checkAuthcode($userdata)
+	private function hasValidAuthcode($userdata)
 	{
-		# format: 12345:time(generated):time(validated)
-
 		$authcodedata = $userdata['authcodedata'] ?? false;
 
+		# user has no stored authcode yet
 		if(!$authcodedata)
-		{
-			return $authcode = [
-				'value' 		=> 12345,
-				'generated'		=> 12345,
-				'validated'		=> 12345,
-				'valid'			=> false,
-				'fresh'			=> false
-			];
-		}
-
-		$validation 	= new Validation();
-		$authcodedata 	= explode(":", $authcodedata);
-		
-		# validate format here, do we need it?
-
-		$now 			= time();
-		$lastValidation	= 60 * 60 * 24;
-		$lastGeneration = 60 * 5;
-		$valid 			= false;
-		$fresh 			= false;
-
-		# if last validation is less than 24 hours old
-		if($now - $lastValidation < $authcodedata[2])
-		{
-			$valid = true;
-		}
-
-		# if last generation is less than 5 minutes old
-		if($now - $lastGeneration < $authcodedata[1])
-		{
-			$fresh = true;
-		}
-
-		$authcode = [
-			'value' 		=> $authcodedata[0],
-			'generated'		=> $authcodedata[1],
-			'validated'		=> $authcodedata[2],
-			'valid'			=> $valid,
-			'fresh'			=> $fresh
-		];
-
-		return $authcode;
-	}
-
-	# check if the submitted authcode is the same as the stored authcode 
-	private function validateAuthcode($authcodevalue, $authcodedata)
-	{
-		if($authcodedata['valid'] === true)
-		{
-			return true;
-		}
-
-		if($authcodedata['fresh'] === false)
 		{
 			return false;
 		}
 
-		if($authcodevalue == $authcodedata['value'])
+		$authcodedata 	= explode(":", $authcodedata);
+	    $aValue     	= $authcodedata[0] ?? false;
+	    $aGenerated 	= $authcodedata[1] ?? false;
+	    $aValidated 	= $authcodedata[2] ?? false;
+
+		if(!ctype_digit($aValue) || !ctype_digit($aGenerated) || !ctype_digit($aValidated))
 		{
-			return true;
+		    return false;
 		}
 
-		return false;
+		# check if last validation is older than 24 hours
+		$now 			= time();
+		$lastValidation	= 60 * 60 * 24;
+		if($now - $lastValidation > $aValidated)
+		{
+			return false;
+		}
+		
+		return true;
+	}
+
+	private function generateAuthcodeValue()
+	{
+		return rand(10000, 99999);
+	}
+
+	private function storeNewAuthcode($authcodevalue, $fingerprint, $user)
+	{
+	    $userdata 		= $user->getUserData();
+	    $fingerprints 	= $userdata['fingerprints'] ?? [];
+		if(!in_array($fingerprint, $fingerprints))
+		{
+		    $fingerprints[] = $fingerprint;
+		}
+
+	    $user->setValue('fingerprints', $fingerprints);
+
+		$generated 		= time();
+		$lastValidated 	= 0; # not validated yet
+
+		$user->setValue(
+			'authcodedata', 
+			$authcodevalue . 
+			':' . $generated . 
+			':' . $lastValidated
+		);
+
+		$user->updateUser();
+	}
+
+	private function sendAuthcodeToUser($authcodevalue, $userdata)
+	{
+		$mail 			= new SimpleMail($this->settings);
+
+		$subject 		= Translations::translate('Your Typemill verification code');
+
+		$message		= Translations::translate('Dear user') . ',<br><br>';
+		$message		.= Translations::translate('Someone tried to log in to your Typemill website and we want to make sure it is you. Enter the following verification code to finish your login. The code will be valid for 5 minutes.');
+		$message 		.= '<br><br>' . $authcodevalue . '<br><br>';
+		$message		.= Translations::translate('If you did not make this login attempt, please reset your password immediately.');
+
+		$send 			= $mail->send($userdata['email'], $subject, $message);
+
+		if(!$send)
+		{
+			return false;
+			
+			$authtitle 		= Translations::translate('Error sending email');
+			$authtext 		= Translations::translate('We could not send the email with the verification code to your address. Reason: ') . $mail->error;
+		}
+
+		return true;
 	}
 
 	# create a simple device fingerprint
@@ -551,7 +658,7 @@ class ControllerWebAuth extends Controller
 	    return $fingerprint;
 	}
 
-	# create a simple device fingerprint
+	# search for fingerprints
 	private function findDeviceFingerprint($fingerprint, $userdata)
 	{
 		if(!isset($userdata['fingerprints']) or empty($userdata['fingerprints']))

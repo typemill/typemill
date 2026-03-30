@@ -1,24 +1,18 @@
 ---
-name: review-standards-vue
-description: Code review standards for Vue components in Typemill
+name: rules-vue
+description: Code rules for Vue components and templates in Typemill
 ---
 
-## Scope
+- version vue?
 
-This skill focuses on Vue-specific logic and architecture.
-Do NOT review HTML semantics or accessibility here → see `review-standards-html`.
 
----
-
-## What we look for
-
-### 1. Project conventions (Typemill-specific)
+## 1. Project conventions (Typemill-specific)
 - Do not use ES modules (`import` / `export`).
 - Use plain Vue component definitions.
 - Use `template:` inside components (no SFC structure).
 - Do not use inline CSS → use Tailwind (admin) or Tachyons (themes).
 
-### 2. Component structure
+## 2. Component structure
 - Keep components small and focused (single responsibility).
 - Separate concerns clearly:
   - `props` → input
@@ -27,51 +21,61 @@ Do NOT review HTML semantics or accessibility here → see `review-standards-htm
   - `methods` → actions
 - Avoid mixing too much logic into templates.
 
-### 3. Props and data integrity
+## 3. Props and data integrity
 - All external data must be defined in `props`.
 - Validate props where possible (type, default).
 - Do not mutate props directly.
 - Use `data` for internal mutable state only.
 
-### 4. Reactivity & state handling
+## 4. Vue template rules
+- Do not mix presentation and logic excessively.
+- Avoid complex inline expressions in templates.
+- Use `v-if` vs `v-show` appropriately.
+- Always provide `:key` in `v-for`.
+- Avoid directly manipulating the DOM.
+- Use correct css classes from Tailwind CSS. 
+- Always add Tailwind classes for dark mode.
+- Always make sure that the layout is responsive.
+
+## 5. Reactivity & state handling
 - Use `computed` instead of duplicating derived values in `data`.
 - Avoid unnecessary watchers; prefer computed properties.
 - Watchers must have a clear purpose (side effects only).
 - Ensure reactivity is preserved (no direct DOM manipulation).
 
-### 5. Lifecycle usage
+## 6. Lifecycle usage
 - Use lifecycle hooks intentionally:
   - `mounted` for DOM-related initialization
 - Avoid heavy logic in lifecycle hooks.
 - Clean up side effects if needed (event listeners, intervals).
 
-### 6. Events & communication
+## 7. Events & communication
 - Use the custom event handler for communication between components/apps.
 - Prefer explicit event flows over implicit coupling.
 - Avoid deeply nested or hard-to-trace event chains.
 
-### 7. API calls (axios)
+## 8. API calls (axios)
 - Use axios consistently for HTTP requests.
 - Handle success and error cases explicitly.
 - Avoid duplicated request logic → extract reusable functions if needed.
 - Do not trigger API calls unnecessarily (e.g. in repeated renders).
 
-### 8. Error handling & robustness
+## 9. Error handling & robustness
 - No silent failures.
 - Handle errors explicitly and predictably.
 - Provide fallback behavior where appropriate.
 
-### 9. Performance & maintainability
+## 10. Performance & maintainability
 - Avoid unnecessary re-renders (check reactive dependencies).
 - Avoid large, monolithic components.
 - Extract reusable logic where it improves clarity.
 - Keep methods short and focused.
 
-### 10. Production readiness
+## 11. Production readiness
 - No `console.log` or debugging artifacts in production code.
 - Remove unused variables, methods, and props.
 
-### 11. External libraries
+## 12. External libraries
 - Use `autosize.js` for textarea resizing where required.
 - Avoid introducing new dependencies without clear justification.
 

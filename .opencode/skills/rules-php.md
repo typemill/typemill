@@ -1,5 +1,5 @@
 ---
-name: review-standards
+name: Rules for php and slim framework
 description: Code review standards for this project
 ---
 
