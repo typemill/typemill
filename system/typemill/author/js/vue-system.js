@@ -108,11 +108,16 @@ const app = Vue.createApp({
 			{
 				if(error.response)
 				{
-					self.message = handleErrorMessage(error);
+					var errorMessage = handleErrorMessage(error);
+					self.message = errorMessage;
 					self.messageClass = 'bg-rose-500';
 					if(error.response.data.errors !== undefined)
 					{
 						self.errors = error.response.data.errors;
+					}
+					if(errorMessage)
+					{
+						self.errors['mailfrom'] = errorMessage;
 					}
 				}
 			});

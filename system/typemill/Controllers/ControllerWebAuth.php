@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Routing\RouteContext;
 use Typemill\Models\Validation;
 use Typemill\Models\User;
-use Typemill\Models\SimpleMail;
+use Typemill\Models\Mail;
 use Typemill\Static\Translations;
 use Typemill\Events\OnUserAuthenticate;
 
@@ -624,7 +624,7 @@ class ControllerWebAuth extends Controller
 
 	private function sendAuthcodeToUser($authcodevalue, $userdata)
 	{
-		$mail 			= new SimpleMail($this->settings);
+		$mail 			= new Mail($this->settings);
 
 		$subject 		= Translations::translate('Your Typemill verification code');
 

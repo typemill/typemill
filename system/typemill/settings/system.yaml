@@ -279,6 +279,43 @@ fieldsetmail:
       placeholder: noreply@yourmail.org
       maxlength: 100
       description: 'Optionally enter a "reply to" address for answers from the receiver. If not set, answers will go to the from-address.'
+    mailsmtp:
+      type: checkbox
+      label: 'Use SMTP'
+      checkboxlabel: 'Send mails via SMTP instead of PHP mail()'
+      description: 'Activate SMTP to send mails via an external mail provider. Required for Docker and most hosting environments.'
+    mailhost:
+      type: text
+      label: 'SMTP Host'
+      placeholder: 'smtp.gmail.com'
+      maxlength: 100
+    mailport:
+      type: text
+      label: 'SMTP Port'
+      placeholder: '587'
+      maxlength: 10
+    mailsmtpsecure:
+      type: select
+      label: 'SMTP Security'
+      options:
+        '': None
+        ssl: SSL/TLS
+        tls: TLS/STARTTLS
+    mailsmtpauth:
+      type: checkbox
+      label: 'SMTP Authentication'
+      checkboxlabel: 'Authenticate via SMTP'
+    mailusername:
+      type: email
+      label: 'SMTP Username'
+      placeholder: 'your@email.com'
+      autocomplete: off
+      maxlength: 100
+    mailpassword:
+      type: password
+      label: 'SMTP Password'
+      autocomplete: new-password
+      description: 'For security reasons, your password is stored separately and will not be visible again after you leave this page.'
 fieldsetrecover:
   type: fieldset
   legend: Password
