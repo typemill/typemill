@@ -6,10 +6,6 @@ use Symfony\Component\EventDispatcher\Event;
 
 use Typemill\Extensions\ParsedownExtension;
 
-/**
- * Event for html page.
- */
-
 class OnOriginalLoaded extends Event
 {
     protected $data;

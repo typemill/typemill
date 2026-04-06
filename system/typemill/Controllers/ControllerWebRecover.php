@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Routing\RouteContext;
 use Typemill\Models\User;
 use Typemill\Models\Validation;
-use Typemill\Models\SimpleMail;
+use Typemill\Models\Mail;
 use Typemill\Static\Translations;
 use Typemill\Extensions\ParsedownExtension;
 
@@ -51,7 +51,7 @@ class ControllerWebRecover extends Controller
 			$link 	= '<a href="'. $url . '">' . $url . '</a>';
 
 			# define the headers
-			$mail 		= new SimpleMail($settings);
+			$mail 		= new Mail($settings);
 
 			$subject 	= (isset($settings['recoversubject']) && ($settings['recoversubject'] != '') )  ? $settings['recoversubject'] : 'Recover your password';
 

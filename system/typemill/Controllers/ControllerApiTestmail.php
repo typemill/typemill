@@ -6,7 +6,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Routing\RouteContext;
 use Typemill\Models\User;
-use Typemill\Models\SimpleMail;
+use Typemill\Models\Mail;
 use Typemill\Static\Translations;
 
 class ControllerApiTestmail extends Controller
@@ -36,7 +36,7 @@ class ControllerApiTestmail extends Controller
 
 		$userdata 		= $user->getUserData();
 
-		$mail 			= new SimpleMail($this->settings);
+		$mail 			= new Mail($this->settings);
 
 		$subject 		= Translations::translate('Testmail from Typemill');
 		$message		= Translations::translate('This is a testmail from Typemill and if you read this e-mail, then everything works fine.');
