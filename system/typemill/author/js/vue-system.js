@@ -17,12 +17,13 @@ const app = Vue.createApp({
 										:userroles="userroles"
 										:value="formData[fieldname]" 
 										v-bind="subfieldDefinition">
-										<slot v-if="fieldname == 'mailfrom'">
-											<button 
-												class   		= "lg:absolute lg:right-0 lg:w-48 lg:ml-2 lg:mt-0 w-full px-2 py-3 mt-2 text-stone-50 bg-stone-700 hover:bg-stone-900 hover:text-white transition duration-100 cursor-pointer" 
-												@click.prevent 	= "testmail()" 
-											>send testmail</button>
-										</slot>
+									<slot v-if="fieldname == 'mailfrom'">
+										<button 
+											class   		= "lg:absolute lg:right-0 lg:w-48 lg:ml-2 lg:mt-0 w-full px-2 py-3 mt-2 text-stone-50 bg-stone-700 hover:bg-stone-900 hover:text-white transition duration-100 cursor-pointer" 
+											@click.prevent 	= "testmail()" 
+										>send testmail</button>
+										<p v-if="testmailMessage" :class="testmailMessageClass" class="text-xs mt-1 w-full">{{ testmailMessage }}</p>
+									</slot>
 									</component>
 								</fieldset>
 							</div>
@@ -41,6 +42,8 @@ const app = Vue.createApp({
 			message: '',
 			messageClass: '',
 			errors: {},
+			testmailMessage: '',
+			testmailMessageClass: '',
 			version: false,
 		}
 	},
@@ -101,8 +104,8 @@ const app = Vue.createApp({
 			})
 			.then(function (response)
 			{
-				self.messageClass = 'bg-teal-500';
-				self.message = response.data.message;
+				self.testmailMessage = response.data.message;
+				self.testmailMessageClass = 'text-teal-600';
 			})
 			.catch(function (error)
 			{
@@ -111,14 +114,8 @@ const app = Vue.createApp({
 					var errorMessage = handleErrorMessage(error);
 					self.message = errorMessage;
 					self.messageClass = 'bg-rose-500';
-					if(error.response.data.errors !== undefined)
-					{
-						self.errors = error.response.data.errors;
-					}
-					if(errorMessage)
-					{
-						self.errors['mailfrom'] = errorMessage;
-					}
+					self.testmailMessage = errorMessage;
+					self.testmailMessageClass = 'text-rose-500';
 				}
 			});
 		},
@@ -150,9 +147,11 @@ const app = Vue.createApp({
 		},
 		reset: function()
 		{
-			this.errors 			= {};
-			this.message 			= '';
-			this.messageClass	= '';
+			this.errors 				= {};
+			this.message 				= '';
+			this.messageClass			= '';
+			this.testmailMessage		= '';
+			this.testmailMessageClass	= '';
 		}
 	},
 })

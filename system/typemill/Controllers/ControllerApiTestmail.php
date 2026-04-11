@@ -46,14 +46,14 @@ class ControllerApiTestmail extends Controller
 		if(!$send)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 	=> Translations::translate('We could not send the testmail to your e-mail address. Reason: ') . $mail->error
+				'message' 	=> Translations::translate('We could not send the testmail to') . ' ' . $userdata['email'] . '. ' . Translations::translate('Reason: ') . $mail->error
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
 
 		$response->getBody()->write(json_encode([
-			'message' => Translations::translate('The testmail has been send, please check your inbox and your spam-folder to varify that you received the mail.')
+			'message' => Translations::translate('The testmail has been sent to') . ' ' . $userdata['email'] . '. ' . Translations::translate('Please check your inbox and your spam folder.')
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json');
