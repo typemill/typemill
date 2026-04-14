@@ -27,6 +27,7 @@ class ControllerWebAuth extends Controller
         $input 			= $request->getParsedBody();
 		$validation		= new Validation();
 		$securitylog 	= $this->settings['securitylog'] ?? false;
+		$debug 			= $this->settings['displayErrorDetails'] ?? false;
 		$authtitle 		= Translations::translate('Verification code missing?');
 		$authtext 		= Translations::translate('If you did not receive an email with the verification code, then the username or password you entered was wrong. Please try again.');
 
@@ -45,32 +46,92 @@ class ControllerWebAuth extends Controller
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
 		}
 
-		# Use plugins like ldap for authentication
-		$authResult = $this->c->get('dispatcher')->dispatch(new OnUserAuthenticate($input), 'OnUserAuthenticate')->getData();
+		# Use plugins (LDAP, SAML, OpenID, etc.)
+		$authResult = $this->c->get('dispatcher')
+		    ->dispatch(new OnUserAuthenticate($input), 'onUserAuthenticate')
+		    ->getData();
+
 		if(isset($authResult['authenticated']) && $authResult['authenticated'] === true)
 		{
 		    $user = new User();
 
-		    # ensure user exists (plugin may have created it)
-		    if($user->setUser($authResult['username']))
+		    # normalize username (required)
+		    $username = $authResult['username'] ?? null;
+
+		    if(!$username)
 		    {
-		        $userdata = $user->getUserData();
+		        # invalid plugin response
 
-		        if($this->showAuthcodePage($user, $userdata))
-		        {
-					# show authcode page
-				    return $this->c->get('view')->render($response, 'auth/authcode.twig', [
-						'username' 		=> $userdata['username'],
-						'authtitle' 	=> $authtitle,
-						'authtext' 		=> $authtext
-				    ]);
-		        }
+				if($securitylog)
+				{
+					\Typemill\Static\Helpers::addLogEntry('login plugin: plugin did not return username.');
+				}
 
-		        $user->login();
-
-		        $redirect = $this->getRedirectDestination($userdata['userrole']);
-		        return $response->withHeader('Location', $this->routeParser->urlFor($redirect))->withStatus(302);
+		        return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
 		    }
+
+		    # ensure user exists (plugin may have created it)
+		    if(!$user->setUser($username))
+		    {
+				if($securitylog)
+				{
+					\Typemill\Static\Helpers::addLogEntry('login plugin: authenticated but user file not found.');
+				}
+
+		        return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
+		    }
+
+		    $userdata = $user->getUserData();
+
+		    # optional: allow plugin to override or inject userdata
+		    if(isset($authResult['userdata']) && is_array($authResult['userdata']))
+		    {
+		        $userdata = array_merge($userdata, $authResult['userdata']);
+		    }
+
+		    # 2FA / authcode
+		    if($this->showAuthcodePage($user, $userdata))
+		    {
+		        return $this->c->get('view')->render($response, 'auth/authcode.twig', [
+		            'username'  => $userdata['username'],
+		            'authtitle' => $authtitle,
+		            'authtext'  => $authtext
+		        ]);
+		    }
+
+		    $user->login();
+
+		    $redirect = $this->getRedirectDestination($userdata['userrole']);
+
+		    return $response
+		        ->withHeader('Location', $this->routeParser->urlFor($redirect))
+		        ->withStatus(302);
+		}
+		elseif(
+			isset($authResult['authenticated']) && $authResult['authenticated'] === false &&
+			isset($authResult['final']) && $authResult['final'] === true
+		)
+		{			
+			# authentication failed and it should not proceed with normal authentication
+			$message = "Authentication with plugin failed";
+
+			if(!empty($authResult['message']))
+			{
+				$message = $authResult['message'];
+			}
+
+			if($securitylog)
+			{
+				\Typemill\Static\Helpers::addLogEntry('login (Plugin): ' . $message);
+			}
+
+			if($this->c->get('flash'))
+			{
+				$this->c->get('flash')->addMessage('error', Translations::translate($message));
+			}		 
+
+			# plugin said authentication failed 
+			return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
 		}
 
 		$user = new User();
