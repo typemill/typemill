@@ -84,10 +84,12 @@ class Plugins
 			'\Plugins\html\html' 					=> 'MAKER',
 			'\Plugins\newsletter\newslettter' 		=> 'MAKER',
 			'\Plugins\register\register' 			=> 'MAKER',
-			'\Plugins\revisions\revisions' 			=> 'BUSINESS',
 			'\Plugins\seo\seo' 						=> 'MAKER',
+			'\Plugins\ṕayhip\payhip' 				=> 'MAKER',
+			'\Plugins\revisions\revisions' 			=> 'BUSINESS',
 			'\Plugins\templates\templates' 			=> 'BUSINESS',
 			'\Plugins\variables\variables' 			=> 'BUSINESS',
+			'\Plugins\ldap\ldap' 					=> 'BUSINESS',
 		];
 
 		if(isset($premiumList[$className]))
