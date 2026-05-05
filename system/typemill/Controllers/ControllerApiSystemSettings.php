@@ -29,6 +29,7 @@ class ControllerApiSystemSettings extends Controller
 		$settingsModel 		= new Settings();
 
 		$formdefinitions 	= $settingsModel->getSettingsDefinitions();
+		$formdefinitions 	= $this->addDatasets($formdefinitions);
 
 		# validate input
 		$validator 			= new Validation();

@@ -974,8 +974,8 @@ class Validation
 			{
 				$fieldvalue = $input[$fieldname];
 
-				# fix false or null values for selectboxes
-				if($fielddefinitions['type'] == "select" && ($fieldvalue === 'NULL' OR $fieldvalue === false))
+				# fix false, null, or empty values for selectboxes
+				if($fielddefinitions['type'] == "select" && ($fieldvalue === 'NULL' OR $fieldvalue === false OR $fieldvalue === ''))
 				{ 
 					$fieldvalue = NULL; 
 				}
