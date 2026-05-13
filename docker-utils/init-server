@@ -5,6 +5,10 @@ find /var/www/html/content -type d -empty -exec cp -R /var/www/html/content.defa
 find /var/www/html/themes -type d -empty -exec cp -R /var/www/html/themes.default/* /var/www/html/themes \;
 find /var/www/html/media -type d -empty -exec cp -R /var/www/html/media.default/* /var/www/html/media \;
 
+if [ -z "$(ls -A /var/www/html/settings)" ]; then
+    cp -R /var/www/html/settings.default/* /var/www/html/settings/
+fi
+
 # Fix ownership (in case of new folders)
 chown -R www-data:www-data /var/www/html/
 

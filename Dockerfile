@@ -1,4 +1,4 @@
-FROM php:8.2-apache
+FROM php:8.3-apache
 
 # Install OS dependencies required
 RUN apt-get update && apt-get upgrade -y && \
@@ -33,7 +33,9 @@ RUN mkdir -p /var/www/html/content.default/ && \
     mkdir -p /var/www/html/themes.default/ && \
     cp -R /var/www/html/themes/* /var/www/html/themes.default/ && \
     mkdir -p /var/www/html/media.default/ && \
-    cp -R /var/www/html/media/* /var/www/html/media.default/
+    cp -R /var/www/html/media/* /var/www/html/media.default/ && \
+    mkdir -p /var/www/html/settings.default/ && \
+    cp -R /var/www/html/settings/* /var/www/html/settings.default/
 
 # Expose useful volumes (see documentation)
 VOLUME /var/www/html/settings
