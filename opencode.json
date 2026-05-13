@@ -8,8 +8,8 @@
       }
     }    
   },
-  "model": "anthropic/claude-sonnet-4-5",
-  "small_model": "anthropic/claude-haiku-4-5",
+  "model": "opencode/claude-sonnet-4-6",
+  "small_model": "opencode/claude-haiku-4-5",
   "instructions": [
     "ai/docs/architecture.md", 
     "ai/docs/theme-development.md", 
@@ -34,7 +34,7 @@
       "template": "Run the full test suite with coverage report and show any failures.\nFocus on the failing tests and suggest fixes.",
       "description": "Run tests with coverage",
       "agent": "build",
-      "model": "anthropic/claude-haiku-4-5",
+      "model": "opencode/claude-haiku-4-5",
     },
     "plugin": {
       "template": "Create a new Plugin skeleton named $ARGUMENTS in the /plugins folder.\nInclude basic structure with a php-file that extends the plugin-class and a yaml file with configurations.",
