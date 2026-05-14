@@ -977,7 +977,14 @@ class ParsedownExtension extends \ParsedownExtra
                 $href = $this->baseUrl . '/' . $href;
             }
             # end typemill
-            
+
+            # block dangerous URI schemes (e.g. javascript:, vbscript:, data:)
+            $scheme = parse_url($href, PHP_URL_SCHEME);
+            if ($scheme !== null && !in_array(strtolower($scheme), ['http', 'https', 'mailto', 'ftp'], true))
+            {
+                $href = '#';
+            }
+
             $Element['attributes']['href'] = $href;
 
             if (isset($matches[2]))

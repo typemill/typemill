@@ -344,11 +344,11 @@ class ControllerWebFrontend extends Controller
 		{
 			$assets->addMeta('noindex','<meta name="robots" content="noindex">');
 		}
-		$assets->addMeta('og_site_name','<meta property="og:site_name" content="' . $this->settings['title'] . '">');
-		$assets->addMeta('og_title','<meta property="og:title" content="' . $metadata['meta']['title'] . '">');
-		$assets->addMeta('og_description','<meta property="og:description" content="' . $metadata['meta']['description'] . '">');
+		$assets->addMeta('og_site_name','<meta property="og:site_name" content="' . htmlspecialchars($this->settings['title'], ENT_QUOTES, 'UTF-8') . '">');
+		$assets->addMeta('og_title','<meta property="og:title" content="' . htmlspecialchars($metadata['meta']['title'], ENT_QUOTES, 'UTF-8') . '">');
+		$assets->addMeta('og_description','<meta property="og:description" content="' . htmlspecialchars($metadata['meta']['description'], ENT_QUOTES, 'UTF-8') . '">');
 		$assets->addMeta('og_type','<meta property="og:type" content="article">');
-		$assets->addMeta('og_url','<meta property="og:url" content="' . $item->urlAbs . '">');
+		$assets->addMeta('og_url','<meta property="og:url" content="' . htmlspecialchars($item->urlAbs, ENT_QUOTES, 'UTF-8') . '">');
 
 
 		# meta image
@@ -377,8 +377,8 @@ class ControllerWebFrontend extends Controller
 		}
 		if($metaImageUrl)
 		{
-			$assets->addMeta('og_image','<meta property="og:image" content="' . $urlinfo['baseurl'] . '/' . $metaImageUrl . '">');
-			$assets->addMeta('twitter_image_alt','<meta name="twitter:image:alt" content="' . $metaImageAlt . '">');
+			$assets->addMeta('og_image','<meta property="og:image" content="' . htmlspecialchars($urlinfo['baseurl'] . '/' . $metaImageUrl, ENT_QUOTES, 'UTF-8') . '">');
+			$assets->addMeta('twitter_image_alt','<meta name="twitter:image:alt" content="' . htmlspecialchars($metaImageAlt, ENT_QUOTES, 'UTF-8') . '">');
 			$assets->addMeta('twitter_card','<meta name="twitter:card" content="summary_large_image">');
 		}
 
@@ -481,22 +481,22 @@ class ControllerWebFrontend extends Controller
 						foreach($projects as $project)
 						{
 							# add meta hreflang to current page
-							if($project['active'])
-							{
-								$assets->addMeta('alternate_' . $project['id'], '<link rel="alternate" hreflang="' . $project['id'] . '" href="' . $urlinfo['baseurl'] . $multilangData[$project['id']] . '" />');
-							}
+						if($project['active'])
+						{
+							$assets->addMeta('alternate_' . $project['id'], '<link rel="alternate" hreflang="' . htmlspecialchars($project['id'], ENT_QUOTES, 'UTF-8') . '" href="' . htmlspecialchars($urlinfo['baseurl'] . $multilangData[$project['id']], ENT_QUOTES, 'UTF-8') . '" />');
+						}
 
-							# add meta hreflang to base language
-							if($project['base'])
-							{
-								$assets->addMeta('alternate_baselang', '<link rel="alternate" hreflang="x-default" href="' . $urlinfo['baseurl'] . $multilangData[$project['id']] . '" />');								
-							}
+						# add meta hreflang to base language
+						if($project['base'])
+						{
+							$assets->addMeta('alternate_baselang', '<link rel="alternate" hreflang="x-default" href="' . htmlspecialchars($urlinfo['baseurl'] . $multilangData[$project['id']], ENT_QUOTES, 'UTF-8') . '" />');								
+						}
 
-							# add meta hreflang to translations
-							if(isset($multilangRefs[$project['id']]))
-							{
-								$assets->addMeta('alternate_' . $project['id'], '<link rel="alternate" hreflang="' . $project['id'] . '" href="' . $urlinfo['baseurl'] . $multilangData[$project['id']] . '" />');
-							}
+						# add meta hreflang to translations
+						if(isset($multilangRefs[$project['id']]))
+						{
+							$assets->addMeta('alternate_' . $project['id'], '<link rel="alternate" hreflang="' . htmlspecialchars($project['id'], ENT_QUOTES, 'UTF-8') . '" href="' . htmlspecialchars($urlinfo['baseurl'] . $multilangData[$project['id']], ENT_QUOTES, 'UTF-8') . '" />');
+						}
 						}
 					}
 
