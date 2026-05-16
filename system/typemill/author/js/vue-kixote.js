@@ -214,12 +214,6 @@ const kixote = Vue.createApp({
 												<span class="ml-2">{{ tab }}</span>
 											</button>
 										</div>
-										<div class="p-5">
-											<div v-if="aiservice">
-												<p>AI service: {{ aiservice }}</p>
-											</div>
-											<div v-else><p>No AI service has been activated.</p><p>You can enable and configure one in the system settings to start using AI features.</p></div>
-										</div>
 									</div>
 									<div class="w-3/4 overflow-auto h-full" ref="kdisplay">
 										<div class="p-5">
@@ -232,8 +226,8 @@ const kixote = Vue.createApp({
 													:navigation 	= "navigation"
 													:item 			= "item"
 													:useragreement 	= "useragreement"
-													:aiservice  	= "aiservice"
-													:tokenstats 	= "tokenstats"
+								:aiservice  	= "aiservice"
+								:aiinfo 		= "aiinfo"
 													:labels 		= "labels"
 													:settings 		= "settings"
 													:settingsSaved 	= "settingsSaved"
@@ -274,19 +268,20 @@ const kixote = Vue.createApp({
             tabs: [ 
             		"Admin", 
             		"Generate", 
-            		"Usage",
+            		"Info",
             ],
 			icons: {
 				Admin: 		"M11.366 22.564l1.291-1.807-1.414-1.414-1.807 1.291c-0.335-0.187-0.694-0.337-1.071-0.444l-0.365-2.19h-2l-0.365 2.19c-0.377 0.107-0.736 0.256-1.071 0.444l-1.807-1.291-1.414 1.414 1.291 1.807c-0.187 0.335-0.337 0.694-0.443 1.071l-2.19 0.365v2l2.19 0.365c0.107 0.377 0.256 0.736 0.444 1.071l-1.291 1.807 1.414 1.414 1.807-1.291c0.335 0.187 0.694 0.337 1.071 0.444l0.365 2.19h2l0.365-2.19c0.377-0.107 0.736-0.256 1.071-0.444l1.807 1.291 1.414-1.414-1.291-1.807c0.187-0.335 0.337-0.694 0.444-1.071l2.19-0.365v-2l-2.19-0.365c-0.107-0.377-0.256-0.736-0.444-1.071zM7 27c-1.105 0-2-0.895-2-2s0.895-2 2-2 2 0.895 2 2-0.895 2-2 2zM32 12v-2l-2.106-0.383c-0.039-0.251-0.088-0.499-0.148-0.743l1.799-1.159-0.765-1.848-2.092 0.452c-0.132-0.216-0.273-0.426-0.422-0.629l1.219-1.761-1.414-1.414-1.761 1.219c-0.203-0.149-0.413-0.29-0.629-0.422l0.452-2.092-1.848-0.765-1.159 1.799c-0.244-0.059-0.492-0.109-0.743-0.148l-0.383-2.106h-2l-0.383 2.106c-0.251 0.039-0.499 0.088-0.743 0.148l-1.159-1.799-1.848 0.765 0.452 2.092c-0.216 0.132-0.426 0.273-0.629 0.422l-1.761-1.219-1.414 1.414 1.219 1.761c-0.149 0.203-0.29 0.413-0.422 0.629l-2.092-0.452-0.765 1.848 1.799 1.159c-0.059 0.244-0.109 0.492-0.148 0.743l-2.106 0.383v2l2.106 0.383c0.039 0.251 0.088 0.499 0.148 0.743l-1.799 1.159 0.765 1.848 2.092-0.452c0.132 0.216 0.273 0.426 0.422 0.629l-1.219 1.761 1.414 1.414 1.761-1.219c0.203 0.149 0.413 0.29 0.629 0.422l-0.452 2.092 1.848 0.765 1.159-1.799c0.244 0.059 0.492 0.109 0.743 0.148l0.383 2.106h2l0.383-2.106c0.251-0.039 0.499-0.088 0.743-0.148l1.159 1.799 1.848-0.765-0.452-2.092c0.216-0.132 0.426-0.273 0.629-0.422l1.761 1.219 1.414-1.414-1.219-1.761c0.149-0.203 0.29-0.413 0.422-0.629l2.092 0.452 0.765-1.848-1.799-1.159c0.059-0.244 0.109-0.492 0.148-0.743l2.106-0.383zM21 15.35c-2.402 0-4.35-1.948-4.35-4.35s1.948-4.35 4.35-4.35 4.35 1.948 4.35 4.35c0 2.402-1.948 4.35-4.35 4.35z",
 				Generate: 	"M8 6l-4-4h-2v2l4 4zM10 0h2v4h-2zM18 10h4v2h-4zM20 4v-2h-2l-4 4 2 2zM0 10h4v2h-4zM10 18h2v4h-2zM2 18v2h2l4-4-2-2zM31.563 27.563l-19.879-19.879c-0.583-0.583-1.538-0.583-2.121 0l-1.879 1.879c-0.583 0.583-0.583 1.538 0 2.121l19.879 19.879c0.583 0.583 1.538 0.583 2.121 0l1.879-1.879c0.583-0.583 0.583-1.538 0-2.121zM15 17l-6-6 2-2 6 6-2 2z",
-				Usage: 		"M0 26h32v4h-32zM4 18h4v6h-4zM10 10h4v14h-4zM16 16h4v8h-4zM22 4h4v20h-4z",
+				Info: 		"M16 4C8.268 4 2 10.268 2 18s6.268 14 14 14 14-6.268 14-14S23.732 4 16 4zm0 6a2 2 0 110 4 2 2 0 010-4zm2 16h-4v-2h1v-6h-1v-2h3v8h1v2z",				
+				Stats: 		"M0 26h32v4h-32zM4 18h4v6h-4zM10 10h4v14h-4zM16 16h4v8h-4zM22 4h4v20h-4z",
 				Automate: 	"M0.001 16.051l-0.001 0c0 0 0 0.003 0.001 0.007 0.003 0.121 0.017 0.24 0.041 0.355 0.006 0.055 0.013 0.114 0.021 0.18 0.007 0.059 0.014 0.122 0.022 0.19 0.012 0.080 0.024 0.165 0.037 0.256 0.027 0.18 0.056 0.379 0.091 0.592 0.042 0.201 0.088 0.419 0.136 0.652 0.022 0.116 0.055 0.235 0.087 0.356s0.065 0.247 0.099 0.375c0.018 0.064 0.032 0.129 0.053 0.194s0.041 0.131 0.062 0.197 0.085 0.268 0.129 0.406c0.011 0.035 0.022 0.069 0.033 0.104 0.013 0.034 0.025 0.069 0.038 0.104 0.026 0.069 0.052 0.139 0.078 0.21 0.053 0.14 0.107 0.284 0.162 0.429 0.061 0.143 0.124 0.288 0.188 0.435 0.032 0.073 0.064 0.147 0.096 0.222s0.071 0.147 0.107 0.221c0.073 0.147 0.146 0.297 0.221 0.448 0.077 0.15 0.163 0.297 0.245 0.448 0.042 0.075 0.084 0.15 0.126 0.226s0.091 0.148 0.136 0.223c0.092 0.148 0.185 0.298 0.279 0.448 0.395 0.59 0.834 1.174 1.319 1.727 0.491 0.549 1.023 1.070 1.584 1.55 0.568 0.473 1.165 0.903 1.773 1.285 0.613 0.376 1.239 0.697 1.856 0.973 0.156 0.064 0.311 0.127 0.465 0.19 0.077 0.030 0.152 0.064 0.229 0.091s0.154 0.054 0.23 0.081 0.302 0.108 0.453 0.156c0.151 0.045 0.3 0.089 0.447 0.133 0.074 0.021 0.146 0.045 0.219 0.063s0.146 0.036 0.218 0.053c0.144 0.035 0.286 0.069 0.425 0.103 0.141 0.027 0.279 0.054 0.415 0.080 0.068 0.013 0.135 0.026 0.201 0.038 0.033 0.006 0.066 0.012 0.099 0.019 0.033 0.005 0.066 0.009 0.099 0.014 0.131 0.018 0.259 0.036 0.384 0.053 0.062 0.009 0.124 0.017 0.185 0.026s0.122 0.012 0.182 0.018c0.119 0.011 0.236 0.021 0.349 0.031s0.222 0.021 0.329 0.023c0.007 0 0.014 0 0.021 0.001 0.019 1.088 0.906 1.964 1.999 1.964 0.017 0 0.034-0.001 0.051-0.001v0.001c0 0 0.003-0 0.007-0.001 0.121-0.003 0.24-0.017 0.355-0.041 0.055-0.006 0.114-0.013 0.18-0.021 0.059-0.007 0.122-0.014 0.19-0.022 0.080-0.012 0.165-0.024 0.256-0.037 0.18-0.027 0.379-0.056 0.592-0.091 0.201-0.042 0.419-0.088 0.652-0.136 0.116-0.022 0.235-0.056 0.356-0.087s0.247-0.065 0.375-0.099c0.064-0.018 0.129-0.032 0.194-0.053s0.13-0.041 0.197-0.062 0.268-0.085 0.406-0.129c0.035-0.011 0.069-0.022 0.104-0.033 0.034-0.013 0.069-0.025 0.104-0.038 0.069-0.026 0.139-0.052 0.21-0.078 0.14-0.053 0.284-0.107 0.429-0.162 0.143-0.061 0.288-0.124 0.436-0.188 0.073-0.032 0.147-0.064 0.222-0.096s0.147-0.071 0.221-0.107c0.147-0.073 0.297-0.146 0.448-0.221 0.15-0.077 0.297-0.163 0.448-0.245 0.075-0.042 0.15-0.084 0.226-0.126s0.148-0.091 0.223-0.136c0.148-0.092 0.298-0.185 0.448-0.279 0.59-0.395 1.174-0.834 1.727-1.319 0.549-0.491 1.070-1.023 1.55-1.584 0.473-0.568 0.903-1.165 1.285-1.773 0.376-0.613 0.697-1.239 0.973-1.855 0.064-0.156 0.127-0.311 0.19-0.465 0.030-0.077 0.064-0.152 0.091-0.229s0.054-0.154 0.081-0.23 0.108-0.302 0.156-0.453c0.045-0.151 0.089-0.3 0.133-0.447 0.021-0.074 0.045-0.146 0.063-0.219s0.036-0.146 0.053-0.218c0.035-0.144 0.069-0.286 0.103-0.425 0.027-0.141 0.054-0.279 0.080-0.415 0.013-0.068 0.026-0.135 0.038-0.201 0.006-0.033 0.012-0.066 0.019-0.099 0.005-0.033 0.009-0.066 0.014-0.099 0.018-0.131 0.036-0.259 0.053-0.384 0.009-0.062 0.017-0.124 0.026-0.185s0.012-0.122 0.018-0.182c0.011-0.119 0.021-0.236 0.031-0.349s0.021-0.222 0.023-0.329c0.001-0.017 0.001-0.033 0.002-0.049 1.101-0.005 1.992-0.898 1.992-2 0-0.017-0.001-0.034-0.001-0.051h0.001c0 0-0-0.003-0.001-0.007-0.003-0.121-0.017-0.24-0.041-0.355-0.006-0.055-0.013-0.114-0.021-0.181-0.007-0.059-0.014-0.122-0.022-0.19-0.012-0.080-0.024-0.165-0.037-0.255-0.027-0.18-0.056-0.379-0.091-0.592-0.042-0.201-0.088-0.419-0.136-0.652-0.022-0.116-0.055-0.235-0.087-0.357s-0.065-0.247-0.099-0.375c-0.018-0.064-0.032-0.129-0.053-0.194s-0.041-0.13-0.062-0.197-0.085-0.268-0.129-0.406c-0.011-0.034-0.022-0.069-0.033-0.104-0.013-0.034-0.025-0.069-0.038-0.104-0.026-0.069-0.052-0.139-0.078-0.21-0.053-0.141-0.107-0.284-0.162-0.429-0.061-0.143-0.124-0.288-0.188-0.435-0.032-0.073-0.064-0.147-0.096-0.222s-0.071-0.147-0.107-0.221c-0.073-0.147-0.146-0.297-0.221-0.448-0.077-0.15-0.163-0.297-0.245-0.448-0.042-0.075-0.084-0.15-0.126-0.226s-0.091-0.148-0.136-0.223c-0.092-0.148-0.185-0.298-0.279-0.448-0.395-0.59-0.834-1.174-1.319-1.727-0.491-0.549-1.023-1.070-1.584-1.55-0.568-0.473-1.165-0.903-1.773-1.285-0.613-0.376-1.239-0.697-1.855-0.973-0.156-0.064-0.311-0.127-0.465-0.19-0.077-0.030-0.152-0.063-0.229-0.091s-0.154-0.054-0.23-0.081-0.302-0.108-0.453-0.156c-0.151-0.045-0.3-0.089-0.447-0.133-0.074-0.021-0.146-0.045-0.219-0.063s-0.146-0.036-0.218-0.053c-0.144-0.035-0.286-0.069-0.425-0.103-0.141-0.027-0.279-0.054-0.415-0.080-0.068-0.013-0.135-0.026-0.201-0.038-0.033-0.006-0.066-0.012-0.099-0.019-0.033-0.005-0.066-0.009-0.099-0.014-0.131-0.018-0.259-0.036-0.384-0.053-0.062-0.009-0.124-0.017-0.185-0.026s-0.122-0.012-0.182-0.018c-0.119-0.010-0.236-0.021-0.349-0.031s-0.222-0.021-0.329-0.023c-0.027-0.001-0.052-0.002-0.078-0.003-0.020-1.087-0.907-1.962-1.999-1.962-0.017 0-0.034 0.001-0.051 0.001l-0-0.001c0 0-0.003 0-0.007 0.001-0.121 0.003-0.24 0.017-0.355 0.041-0.055 0.006-0.114 0.013-0.181 0.021-0.059 0.007-0.122 0.014-0.19 0.022-0.080 0.012-0.165 0.024-0.255 0.037-0.18 0.027-0.379 0.056-0.592 0.091-0.201 0.042-0.419 0.088-0.652 0.136-0.116 0.022-0.235 0.056-0.356 0.087s-0.247 0.065-0.375 0.099c-0.064 0.018-0.129 0.032-0.194 0.053s-0.13 0.041-0.197 0.062-0.268 0.085-0.406 0.129c-0.034 0.011-0.069 0.022-0.104 0.033-0.034 0.013-0.069 0.025-0.104 0.038-0.069 0.026-0.139 0.052-0.21 0.078-0.14 0.053-0.284 0.107-0.429 0.162-0.143 0.061-0.288 0.124-0.435 0.188-0.073 0.032-0.147 0.064-0.222 0.096s-0.147 0.071-0.221 0.107c-0.147 0.073-0.297 0.146-0.448 0.221-0.15 0.077-0.297 0.163-0.448 0.245-0.075 0.042-0.15 0.084-0.226 0.126s-0.148 0.091-0.223 0.136c-0.148 0.092-0.298 0.185-0.448 0.279-0.59 0.395-1.174 0.834-1.727 1.319-0.549 0.491-1.070 1.023-1.55 1.584-0.473 0.568-0.903 1.165-1.285 1.773-0.376 0.613-0.697 1.239-0.973 1.855-0.064 0.156-0.127 0.311-0.19 0.465-0.030 0.077-0.063 0.152-0.091 0.229s-0.054 0.154-0.081 0.23-0.108 0.302-0.156 0.453c-0.045 0.151-0.089 0.3-0.132 0.447-0.021 0.074-0.045 0.146-0.063 0.219s-0.036 0.146-0.053 0.218c-0.035 0.144-0.069 0.286-0.103 0.425-0.027 0.141-0.054 0.279-0.080 0.415-0.013 0.068-0.026 0.135-0.038 0.201-0.006 0.033-0.012 0.066-0.019 0.099-0.005 0.033-0.009 0.066-0.014 0.099-0.018 0.131-0.036 0.259-0.053 0.384-0.009 0.062-0.017 0.124-0.026 0.185s-0.012 0.122-0.018 0.182c-0.010 0.119-0.021 0.236-0.031 0.349s-0.021 0.222-0.023 0.329c-0.001 0.017-0.001 0.034-0.002 0.051-1.074 0.035-1.934 0.916-1.934 1.998 0 0.017 0.001 0.034 0.001 0.051zM2.297 14.022c0.001-0.006 0.003-0.012 0.004-0.018 0.020-0.101 0.051-0.204 0.080-0.311s0.059-0.215 0.090-0.327c0.016-0.056 0.029-0.113 0.048-0.169s0.038-0.113 0.057-0.171 0.077-0.233 0.117-0.353c0.010-0.030 0.020-0.060 0.030-0.090 0.012-0.030 0.023-0.060 0.035-0.090 0.023-0.060 0.047-0.121 0.071-0.182 0.047-0.122 0.096-0.246 0.145-0.373 0.055-0.124 0.111-0.25 0.168-0.377 0.028-0.064 0.057-0.128 0.086-0.192s0.064-0.127 0.095-0.191c0.065-0.128 0.13-0.257 0.197-0.388 0.069-0.129 0.145-0.257 0.219-0.387 0.037-0.065 0.074-0.13 0.112-0.195s0.081-0.128 0.121-0.193c0.082-0.128 0.164-0.257 0.247-0.388 0.351-0.509 0.739-1.012 1.167-1.489 0.434-0.472 0.901-0.919 1.394-1.33 0.499-0.404 1.021-0.77 1.552-1.094 0.535-0.319 1.081-0.589 1.617-0.821 0.136-0.053 0.271-0.106 0.404-0.158 0.067-0.025 0.132-0.053 0.199-0.076s0.134-0.045 0.2-0.067 0.262-0.090 0.392-0.129c0.131-0.037 0.26-0.073 0.387-0.109 0.064-0.017 0.126-0.037 0.189-0.052s0.126-0.029 0.189-0.043c0.124-0.028 0.247-0.056 0.367-0.084 0.121-0.021 0.241-0.043 0.358-0.063 0.058-0.010 0.116-0.021 0.173-0.031 0.029-0.005 0.057-0.010 0.085-0.015 0.029-0.003 0.057-0.007 0.085-0.010 0.113-0.014 0.223-0.028 0.331-0.041 0.054-0.007 0.107-0.013 0.159-0.020s0.105-0.008 0.157-0.013c0.103-0.007 0.203-0.015 0.3-0.022s0.191-0.016 0.283-0.016c0.183-0.004 0.354-0.008 0.512-0.012 0.146 0.005 0.28 0.010 0.401 0.014 0.060 0.002 0.116 0.003 0.17 0.005 0.066 0.004 0.128 0.008 0.186 0.012 0.067 0.004 0.127 0.008 0.182 0.012 0.102 0.016 0.206 0.024 0.312 0.024 0.015 0 0.029-0.001 0.044-0.001 0.004 0 0.007 0 0.007 0v-0.001c0.973-0.024 1.773-0.743 1.924-1.68 0.017 0.004 0.033 0.007 0.050 0.011 0.101 0.020 0.204 0.051 0.311 0.080s0.215 0.059 0.327 0.090c0.056 0.016 0.113 0.029 0.169 0.048s0.113 0.038 0.171 0.057 0.233 0.077 0.353 0.117c0.030 0.010 0.060 0.020 0.090 0.030 0.030 0.012 0.060 0.023 0.090 0.035 0.060 0.023 0.121 0.047 0.182 0.071 0.122 0.047 0.246 0.096 0.373 0.145 0.124 0.055 0.25 0.111 0.378 0.168 0.064 0.028 0.128 0.057 0.192 0.086s0.127 0.064 0.191 0.095c0.128 0.065 0.257 0.13 0.388 0.197 0.13 0.069 0.257 0.145 0.387 0.219 0.065 0.037 0.13 0.074 0.195 0.112s0.128 0.081 0.193 0.121c0.128 0.082 0.257 0.164 0.388 0.247 0.509 0.351 1.012 0.739 1.489 1.167 0.472 0.434 0.919 0.901 1.33 1.394 0.404 0.499 0.77 1.021 1.094 1.552 0.319 0.535 0.589 1.081 0.821 1.617 0.053 0.136 0.106 0.271 0.158 0.404 0.025 0.067 0.053 0.132 0.076 0.199s0.045 0.134 0.067 0.2 0.090 0.262 0.129 0.392c0.037 0.131 0.073 0.26 0.109 0.387 0.017 0.064 0.037 0.126 0.052 0.189s0.029 0.126 0.043 0.189c0.028 0.124 0.056 0.247 0.084 0.367 0.021 0.121 0.043 0.241 0.063 0.358 0.010 0.058 0.020 0.116 0.031 0.173 0.005 0.029 0.010 0.057 0.015 0.085 0.003 0.029 0.007 0.057 0.010 0.085 0.014 0.113 0.028 0.223 0.041 0.331 0.007 0.054 0.014 0.107 0.020 0.159s0.008 0.105 0.013 0.157c0.007 0.103 0.015 0.203 0.022 0.3s0.016 0.191 0.016 0.283c0.004 0.183 0.008 0.354 0.012 0.512-0.005 0.146-0.010 0.28-0.014 0.401-0.002 0.060-0.003 0.116-0.005 0.17-0.004 0.066-0.008 0.128-0.012 0.186-0.004 0.067-0.008 0.127-0.012 0.182-0.016 0.102-0.024 0.206-0.024 0.312 0 0.015 0.001 0.029 0.001 0.044-0 0.004-0 0.007-0 0.007h0.001c0.024 0.961 0.726 1.754 1.646 1.918-0.002 0.009-0.004 0.018-0.006 0.028-0.020 0.102-0.051 0.204-0.080 0.311s-0.059 0.215-0.090 0.327c-0.016 0.056-0.029 0.113-0.048 0.169s-0.038 0.113-0.057 0.171-0.077 0.233-0.117 0.353c-0.010 0.030-0.020 0.060-0.030 0.090-0.012 0.030-0.023 0.060-0.035 0.090-0.023 0.060-0.047 0.121-0.071 0.182-0.047 0.122-0.096 0.246-0.145 0.373-0.055 0.124-0.111 0.25-0.169 0.378-0.028 0.064-0.057 0.128-0.086 0.192s-0.064 0.127-0.095 0.191c-0.065 0.128-0.13 0.257-0.197 0.388-0.069 0.129-0.145 0.257-0.219 0.387-0.037 0.065-0.074 0.13-0.112 0.195s-0.081 0.128-0.121 0.193c-0.082 0.128-0.164 0.257-0.247 0.388-0.351 0.509-0.738 1.012-1.167 1.489-0.434 0.472-0.901 0.919-1.394 1.33-0.499 0.404-1.021 0.77-1.552 1.094-0.535 0.319-1.081 0.589-1.617 0.821-0.136 0.053-0.271 0.106-0.404 0.158-0.067 0.025-0.132 0.053-0.199 0.076s-0.134 0.045-0.2 0.067-0.262 0.090-0.392 0.129c-0.131 0.037-0.26 0.073-0.387 0.109-0.064 0.017-0.126 0.037-0.189 0.052s-0.126 0.029-0.189 0.043c-0.124 0.028-0.247 0.056-0.367 0.084-0.122 0.021-0.241 0.043-0.358 0.063-0.058 0.010-0.116 0.021-0.173 0.031-0.029 0.005-0.057 0.010-0.085 0.015-0.029 0.003-0.057 0.007-0.085 0.010-0.113 0.014-0.223 0.028-0.331 0.041-0.054 0.007-0.107 0.014-0.159 0.020s-0.105 0.008-0.157 0.013c-0.103 0.007-0.203 0.015-0.3 0.022s-0.191 0.016-0.283 0.016c-0.183 0.004-0.354 0.008-0.512 0.012-0.146-0.005-0.28-0.010-0.401-0.014-0.060-0.002-0.116-0.003-0.17-0.005-0.066-0.004-0.128-0.008-0.186-0.012-0.067-0.004-0.127-0.008-0.182-0.012-0.102-0.016-0.206-0.024-0.312-0.024-0.015 0-0.029 0.001-0.044 0.001-0.004-0-0.007-0-0.007-0v0.001c-0.969 0.024-1.766 0.737-1.921 1.668-0.1-0.020-0.201-0.050-0.306-0.079-0.106-0.029-0.215-0.059-0.327-0.090-0.056-0.016-0.113-0.029-0.169-0.048s-0.113-0.038-0.171-0.057-0.233-0.077-0.353-0.117c-0.030-0.010-0.060-0.020-0.090-0.030-0.030-0.012-0.060-0.023-0.090-0.035-0.060-0.023-0.121-0.047-0.182-0.071-0.122-0.048-0.246-0.096-0.373-0.145-0.124-0.055-0.25-0.111-0.377-0.168-0.064-0.028-0.128-0.057-0.192-0.086s-0.127-0.064-0.191-0.095c-0.128-0.065-0.257-0.13-0.388-0.197-0.13-0.069-0.257-0.145-0.387-0.219-0.065-0.037-0.13-0.074-0.195-0.112s-0.128-0.081-0.193-0.121c-0.128-0.082-0.257-0.164-0.388-0.247-0.509-0.351-1.012-0.738-1.489-1.166-0.472-0.434-0.919-0.901-1.33-1.394-0.404-0.499-0.77-1.021-1.094-1.552-0.319-0.535-0.589-1.081-0.821-1.617-0.053-0.136-0.106-0.271-0.158-0.404-0.025-0.067-0.053-0.132-0.076-0.199s-0.045-0.134-0.067-0.2-0.090-0.262-0.129-0.392c-0.037-0.131-0.073-0.26-0.109-0.387-0.017-0.064-0.037-0.126-0.052-0.189s-0.029-0.126-0.043-0.189c-0.028-0.124-0.056-0.247-0.084-0.367-0.021-0.121-0.043-0.241-0.063-0.358-0.010-0.058-0.021-0.116-0.031-0.173-0.005-0.029-0.010-0.057-0.015-0.085-0.003-0.029-0.007-0.057-0.010-0.085-0.014-0.113-0.028-0.223-0.041-0.331-0.007-0.054-0.013-0.107-0.020-0.159s-0.008-0.105-0.013-0.157c-0.007-0.103-0.015-0.203-0.022-0.3s-0.016-0.191-0.016-0.283c-0.004-0.183-0.008-0.354-0.012-0.512 0.005-0.146 0.010-0.28 0.014-0.401 0.002-0.060 0.003-0.116 0.005-0.17 0.004-0.066 0.008-0.128 0.012-0.186 0.004-0.067 0.008-0.127 0.012-0.182 0.015-0.102 0.024-0.206 0.024-0.312 0-0.015-0.001-0.029-0.001-0.044 0-0.004 0.001-0.007 0.001-0.007h-0.001c-0.024-0.981-0.754-1.786-1.701-1.927z",
 				Translate: 	"M16 0c-8.837 0-16 7.163-16 16s7.163 16 16 16 16-7.163 16-16-7.163-16-16-16zM16 30c-1.967 0-3.84-0.407-5.538-1.139l7.286-8.197c0.163-0.183 0.253-0.419 0.253-0.664v-3c0-0.552-0.448-1-1-1-3.531 0-7.256-3.671-7.293-3.707-0.188-0.188-0.442-0.293-0.707-0.293h-4c-0.552 0-1 0.448-1 1v6c0 0.379 0.214 0.725 0.553 0.894l3.447 1.724v5.871c-3.627-2.53-6-6.732-6-11.489 0-2.147 0.484-4.181 1.348-6h3.652c0.265 0 0.52-0.105 0.707-0.293l4-4c0.188-0.188 0.293-0.442 0.293-0.707v-2.419c1.268-0.377 2.61-0.581 4-0.581 2.2 0 4.281 0.508 6.134 1.412-0.13 0.109-0.256 0.224-0.376 0.345-1.133 1.133-1.757 2.64-1.757 4.243s0.624 3.109 1.757 4.243c1.139 1.139 2.663 1.758 4.239 1.758 0.099 0 0.198-0.002 0.297-0.007 0.432 1.619 1.211 5.833-0.263 11.635-0.014 0.055-0.022 0.109-0.026 0.163-2.541 2.596-6.084 4.208-10.004 4.208z",
 				SEO: 		"M16 2c8.837 0 16 7.163 16 16 0 6.025-3.331 11.271-8.25 14h-15.499c-4.92-2.729-8.25-7.975-8.25-14 0-8.837 7.163-16 16-16zM25.060 27.060c2.42-2.42 3.753-5.637 3.753-9.060h-2.813v-2h2.657c-0.219-1.406-0.668-2.755-1.33-4h-3.327v-2h2.009c-0.295-0.368-0.611-0.722-0.949-1.060-1.444-1.444-3.173-2.501-5.060-3.119v2.178h-2v-2.658c-0.656-0.102-1.324-0.155-2-0.155s-1.344 0.053-2 0.155v2.658h-2v-2.178c-1.887 0.617-3.615 1.674-5.060 3.119-0.338 0.338-0.654 0.692-0.949 1.060h2.009v2h-3.327c-0.662 1.245-1.111 2.594-1.33 4h2.657v2h-2.813c0 3.422 1.333 6.64 3.753 9.060 0.335 0.335 0.685 0.648 1.049 0.94h6.011l1.143-16h1.714l1.143 16h6.011c0.364-0.292 0.714-0.606 1.049-0.94z",
 				RAG: 		"M32 10l-16-8-16 8 16 8 16-8zM16 4.655l10.689 5.345-10.689 5.345-10.689-5.345 10.689-5.345zM28.795 14.398l3.205 1.602-16 8-16-8 3.205-1.602 12.795 6.398zM28.795 20.398l3.205 1.602-16 8-16-8 3.205-1.602 12.795 6.398z",
 			},
 			aiservice: false,
-			tokenstats: {},
+			aiinfo: {},
 			useragreement: false,
 			loading: false,
 			item: data.item,
@@ -420,7 +415,7 @@ const kixote = Vue.createApp({
 		        if (response.data)
 		        {
 		        	self.aiservice 		= response.data.aiservice;
-		        	self.tokenstats 	= response.data.tokenstats;
+		        	self.aiinfo 		= response.data.aiinfo;
 		        	self.useragreement 	= response.data.useragreement;
 		        	self.afterContentLoaded();
 		        } 
@@ -517,7 +512,7 @@ const kixote = Vue.createApp({
 */
 
 kixote.component('tab-admin', {
-	props: ['content', 'navigation', 'item', 'useragreement', 'aiservice', 'tokenstats', 'labels', 'settings', 'settingsSaved', 'kixoteSettings', 'urlinfo'],
+	props: ['content', 'navigation', 'item', 'useragreement', 'aiservice', 'aiinfo', 'labels', 'settings', 'settingsSaved', 'kixoteSettings', 'urlinfo'],
 	data: function () {
 		return {
 			messenger: [],
@@ -810,7 +805,7 @@ kixote.component('tab-admin', {
 })
 
 kixote.component('tab-generate', {
-	props: ['content', 'navigation', 'item', 'labels', 'urlinfo', 'settings', 'kixoteSettings', 'settingsSaved', 'aiservice', 'useragreement', 'tokenstats'],
+	props: ['content', 'navigation', 'item', 'labels', 'urlinfo', 'settings', 'kixoteSettings', 'settingsSaved', 'aiservice', 'useragreement', 'aiinfo'],
 	data: function () {
 	    return {
 	        tabs: [
@@ -848,54 +843,48 @@ kixote.component('tab-generate', {
 	template: `<section class="dark:text-stone-200">
 				<Transition name="fade" appear>
 
-					<div v-if="!aiservice" class="dark:bg-stone-700 bg-stone-200 w-full p-5 dark:text-white">
-					    <div class="p-5">
-					        <h2 class="text-xl font-bold mb-4">Your AI Assistant for Typemill</h2>
-					        <p class="mb-4">
-					            Please activate the AI-powered assistance first. Go to <strong>System Settings</strong>, open the <strong>AI</strong> tab, and follow these steps:
-					        </p>
-					        <ol class="list-decimal list-inside space-y-2">
-					            <li>Select an AI service.</li>
-					            <li>Choose a model.</li>
-					            <li>Enter your API key.</li>
-					        </ol>
-					        <p class="mt-4">Once set up, you can start using AI assistance right away!</p>
-					    </div>
-					</div>
+				<div v-if="!aiservice" class="dark:bg-stone-700 bg-stone-200 w-full p-5 dark:text-white">
+				    <div class="p-5">
+				        <h2 class="text-xl font-bold mb-4">Your AI Assistant for Typemill</h2>
+				        <p class="mb-4">
+				            Please activate the AI-powered assistance first. Go to <strong>System Settings</strong>, open the <strong>AI</strong> tab, and follow these steps:
+				        </p>
+				        <ol class="list-decimal list-inside space-y-2">
+				            <li>Select an AI adapter.</li>
+				            <li>Enter the API base URL.</li>
+				            <li>Enter the model name.</li>
+				            <li>Optionally enter an API key (not required for local providers).</li>
+				        </ol>
+				        <p class="mt-4">Once set up, you can start using AI assistance right away!</p>
+				    </div>
+				</div>
 
-					<div v-else-if="!useragreement"  class="dark:bg-stone-700 bg-stone-200 w-full p-5 dark:text-white">
-						<div class="p-5">
-							<div class="w-full">
-								<h2 class="text-xl font-bold mb-2">Agree to {{aiservice}}</h2>
-								<label class="flex items-start mb-2 mt-2">
-									<input 
-										type  = "checkbox" 
-										class = "w-6 h-6 border-stone-300 bg-stone-200" 
-										value = "chatgpt"
-										@change = "agreeTo(aiservice)"
-										>
-										<span class="ml-2 text-sm">
-										    By enabling {{aiservice}}, you agree to the terms and conditions of {{aiservice}}. 
-										    Your prompts and article content will be sent to {{aiservice}} to generate responses. 
-										    You can disable {{aiservice}} at any time in your user account.
-										</span>
-								</label>
-								<div class="text-sm mt-4">
-									<p class="font-bold mt-2 mb-2">Links:</p>
-									<ol v-if="aiservice == 'chatgpt'" class="list-decimal list-inside space-y-2">
-										<li><a class="text-teal-600" href="https://openai.com/policies/terms-of-use" target="_blank">OpenAI Terms of Use</a></li>
-										<li><a class="text-teal-600" href="https://openai.com/policies/service-terms" target="_blank">Service Terms</a></li>
-										<li><a class="text-teal-600" href="https://openai.com/policies/business-terms" target="_blank">Business Terms</a></li>
-									</ol>
-									<ol v-if="aiservice == 'claude'" class="list-decimal list-inside space-y-2">
-										<li><a class="text-teal-600" href="https://console.anthropic.com/legal/terms" target="_blank">Anthropic Terms of Service</a></li>
-										<li><a class="text-teal-600" href="https://docs.anthropic.com/en/docs/claude-code/legal-and-compliance" target="_blank">Anthropic Commercial Terms of Service</a></li>
-										<li><a class="text-teal-600" href="https://privacy.anthropic.com/en/articles/9301722-updates-to-our-acceptable-use-policy-now-usage-policy-consumer-terms-of-service-and-privacy-policy" target="_blank">Anthropic Usage Policy & Privacy Policy</a></li>
-									</ol>	
-								</div>
+				<div v-else-if="!useragreement"  class="dark:bg-stone-700 bg-stone-200 w-full p-5 dark:text-white">
+					<div class="p-5">
+						<div class="w-full">
+							<h2 class="text-xl font-bold mb-2">Agree to AI Usage</h2>
+							<label class="flex items-start mb-2 mt-2">
+								<input 
+									type    = "checkbox" 
+									class   = "w-6 h-6 border-stone-300 bg-stone-200" 
+									@change = "agreeTo(aiservice)"
+									>
+									<span class="ml-2 text-sm">
+									    By enabling AI features, you agree to the terms and conditions of
+									    {{ aiinfo.providername || aiservice }}.
+									    Your prompts and article content will be sent to that provider.
+									    You can disable AI at any time in your user account.
+									</span>
+							</label>
+							<div v-if="aiinfo.providerterms" class="text-sm mt-4">
+								<p class="font-bold mt-2 mb-2">Terms:</p>
+								<a :href="aiinfo.providerterms" class="text-teal-600" target="_blank">
+									{{ aiinfo.providername || aiservice }} Terms &amp; Conditions
+								</a>
 							</div>
 						</div>
 					</div>
+				</div>
 
 			        <div v-else-if="!isReady" class="dark:bg-stone-700 bg-stone-200 w-full p-5 dark:text-white">
 			          <div class="p-5">
@@ -1669,44 +1658,121 @@ kixote.component('tab-generate', {
 	}
 })
 
-kixote.component('tab-usage', {
-	props: ['content', 'navigation', 'item', 'useragreement', 'aiservice', 'tokenstats', 'labels', 'settings', 'settingsSaved', 'kixoteSettings', 'urlinfo'],
+kixote.component('tab-info', {
+	props: ['content', 'navigation', 'item', 'useragreement', 'aiservice', 'aiinfo', 'labels', 'settings', 'settingsSaved', 'kixoteSettings', 'urlinfo'],
 	data: function () {
 		return {
+			models: [],
+			modelsLoading: false,
+			modelsError: '',
+			selectedModel: '',
 		}
 	},
 	template: `<section class="dark:bg-stone-700 dark:text-stone-200 bg-stone-200">
-					<div class="p-5">
-						<div class=" dark:bg-stone-700 dark:text-stone-200 bg-stone-200 w-full p-5 dark:text-white">
-							<h2 class="text-xl font-bold mb-4">Usage and Statistics</h2>
-							<div v-if="aiservice">
-								<div v-if="tokenstats.service == 'Kixote'">
-									<span>{{ tokenstats.token }}</span>
-									<span>Token</span>
+				<div class="p-5">
+					<div class="dark:bg-stone-700 dark:text-stone-200 bg-stone-200 w-full p-5 dark:text-white">
+						<h2 class="text-xl font-bold mb-4">Info</h2>
+						<div v-if="aiservice">
+							<p class="py-2">Active adapter: <strong>{{ aiinfo.adapter }}</strong></p>
+							<p v-if="aiinfo.providername" class="py-2">Provider: <strong>{{ aiinfo.providername }}</strong></p>
+							<p class="py-2">Default model: <strong>{{ aiinfo.model }}</strong></p>
+							<p class="py-2">
+								Selected model:
+								<strong :class="selectedModel && selectedModel !== aiinfo.model ? 'text-teal-600' : ''">{{ selectedModel || aiinfo.model }}</strong>
+								<span v-if="selectedModel && selectedModel !== aiinfo.model" class="ml-2 text-xs text-teal-600">(individual override)</span>
+							</p>
+
+							<div class="mt-6">
+								<p class="font-semibold mb-2">Available models</p>
+								<p class="text-sm text-stone-500 mb-3">
+									Select a model to use for this session. Your choice is saved in the browser and used instead of the configured model until you change it.
+								</p>
+								<div v-if="modelsLoading" class="text-sm text-stone-500">Loading models ...</div>
+								<div v-else-if="modelsError" class="text-sm text-rose-500">{{ modelsError }}</div>
+								<div v-else-if="models.length > 0">
+									<ul class="space-y-1">
+										<li v-for="model in models" :key="model.id">
+											<button
+												@click.prevent="selectModel(model.id)"
+												:class="[
+													'w-full text-left px-3 py-2 border transition duration-100 text-sm font-mono',
+													selectedModel === model.id
+														? 'border-teal-600 bg-teal-600 text-white'
+														: 'border-stone-300 dark:border-stone-500 hover:border-teal-600 hover:text-teal-600 dark:hover:border-teal-500'
+												]"
+											>{{ model.id }}</button>
+										</li>
+									</ul>
+									<button
+										v-if="selectedModel && selectedModel !== aiinfo.model"
+										@click.prevent="clearModelOverride"
+										class="mt-3 px-3 py-1 border border-stone-700 dark:border-stone-200 hover:bg-teal-600 hover:text-white hover:border-teal-600 transition duration-100 text-sm"
+									>Reset to default model</button>
 								</div>
 								<div v-else>
-									<p class="py-2">You can check your usage statistics for {{tokenstats.service}} in your {{ tokenstats.service }}-account.</p>
-									<div v-if="tokenstats.url">
-										<a :href="tokenstats.url" class="text-teal-600" target="_blank">
-								  			<svg class="icon icon-external-link">
-								  				<use xlink:href="#icon-external-link"></use>
-								  			</svg>
-											Usage
-										</a>
-									</div>
+									<p class="text-sm text-stone-500">No model list available from this provider.</p>
 								</div>
+								<button
+									v-if="!modelsLoading"
+									@click.prevent="loadModels"
+									class="mt-3 px-3 py-1 border border-stone-700 dark:border-stone-200 hover:bg-teal-600 hover:text-white hover:border-teal-600 transition duration-100 text-sm"
+								>{{ models.length > 0 ? 'Refresh model-list' : 'Load models' }}</button>
 							</div>
-							<div v-else>
-								<p class="py-2">No AI service has been activated.</p>
-								<p class="py-2">You can enable and configure one in the system settings to start using AI features.</p>
-							</div>
+
+						</div>
+						<div v-else>
+							<p class="py-2">No AI service has been activated.</p>
+							<p class="py-2">You can enable and configure one in the system settings to start using AI features.</p>
 						</div>
 					</div>
-				</section>`,
+				</div>
+			</section>`,
 	mounted: function()
 	{
-
+		// Restore any previously selected model from localStorage
+		var stored = localStorage.getItem('kixote_model_override');
+		if (stored) {
+			this.selectedModel = stored;
+		} else {
+			this.selectedModel = this.aiinfo.model || '';
+		}
 	},
 	methods: {
+		loadModels()
+		{
+			var self = this;
+			self.modelsLoading = true;
+			self.modelsError   = '';
+
+			tmaxios.get('/api/v1/kixote/models')
+			.then(function (response)
+			{
+				self.modelsLoading = false;
+				if (response.data && Array.isArray(response.data.models)) {
+					self.models = response.data.models;
+				} else {
+					self.modelsError = 'No model list returned by provider.';
+				}
+			})
+			.catch(function (error)
+			{
+				self.modelsLoading = false;
+				if (error.response && error.response.data && error.response.data.message) {
+					self.modelsError = error.response.data.message;
+				} else {
+					self.modelsError = 'Could not fetch model list from provider.';
+				}
+			});
+		},
+		selectModel(modelId)
+		{
+			this.selectedModel = modelId;
+			localStorage.setItem('kixote_model_override', modelId);
+		},
+		clearModelOverride()
+		{
+			this.selectedModel = this.aiinfo.model || '';
+			localStorage.removeItem('kixote_model_override');
+		},
 	}
 })
