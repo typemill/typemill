@@ -105,6 +105,8 @@ $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 	$group->post('/prompt', ControllerApiKixote::class . ':prompt')->setName('api.kixote.prompt')->add(new ApiAuthorization($acl, 'mycontent', 'update')); # author
 	$group->post('/autotrans', ControllerApiKixote::class . ':autotrans')->setName('api.kixote.autotrans')->add(new ApiAuthorization($acl, 'mycontent', 'update')); # author
 	$group->put('/autotrans', ControllerApiKixote::class . ':autotransUpdate')->setName('api.kixote.autotransupdate')->add(new ApiAuthorization($acl, 'mycontent', 'update')); # author
+	$group->post('/kixote/test', ControllerApiKixote::class . ':testConnection')->setName('api.kixote.test')->add(new ApiAuthorization($acl, 'user', 'update')); # admin only
+	$group->get('/kixote/models', ControllerApiKixote::class . ':getModels')->setName('api.kixote.models')->add(new ApiAuthorization($acl, 'mycontent', 'update')); # author
 
 	# Multilang
 	$group->get('/multilangindex', ControllerApiMultilang::class . ':getMultilangIndex')->setName('api.multilangindex.get')->add(new ApiAuthorization($acl, 'mycontent', 'read')); # author

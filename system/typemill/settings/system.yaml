@@ -440,64 +440,48 @@ fieldsetai:
   type: fieldset
   legend: AI
   fields:
-    aiprivacy: 
+    aiprivacy:
       type: paragraph
       label: "Notice"
-      description: "You can use the following AI features in the Kixote interface. If you enable any AI integrations, user inputs will be sent to external services for processing. Please review the details for each service and ensure compliance with your local data privacy regulations. Each user will be asked for confirmation before using a model in the Kixote AI interface. Read more in the [documentation](https://docs.typemill.net/admin-guide/ai-tab)"
-    aiservice:
-      type: radio
-      label: 'Choose an AI service'
-      options:
-        none: 'None'
-#        kixote: 'Kixote (not available yet)'
-        chatgpt: 'ChatGPT'
-        claude: 'Claude'
-    chatgptModel:
+      description: "Connect Typemill to any OpenAI-compatible AI provider (OpenAI, Ollama, LM Studio, OpenRouter, ...) or to Anthropic (Claude). For local providers like Ollama no API key is needed. If you use a cloud provider, user inputs will be sent to that external service. Ensure compliance with your local data privacy regulations. Each user will be asked for confirmation before using AI features. Read more in the [documentation](https://docs.typemill.net/admin-guide/ai-tab)"
+    ai_adapter:
       type: select
-      label: 'ChatGPT model'
-      description: "Select the AI model you want to use. Pricing may vary over time, so please check the latest details on [OpenAI's pricing page](https://platform.openai.com/docs/pricing)"
+      label: "AI Adapter"
+      description: "Select 'OpenAI-compatible' for OpenAI, Ollama, LM Studio, OpenRouter, and most other providers. Select 'Anthropic' for Claude."
       options:
-        gpt-5.2:         '5.2 General/Agentic ($1.75 / $14.00)'   # flagship general/agentic model :contentReference[oaicite:1]{index=1}
-        gpt-5.2-chat-latest: '5.2 Chat ($1.75 / $14.00)'          # chat-optimized :contentReference[oaicite:2]{index=2}
-        gpt-5.2-codex:   '5.2 Coding/Agentic ($1.75 / $14.00)'    # coding/agent tasks variant :contentReference[oaicite:3]{index=3}
-        gpt-5.1:         '5.1 General ($1.25 / $10.00)'         # prior version :contentReference[oaicite:4]{index=4}
-        gpt-5:           '5 Standard ($1.25 / $10.00)'          # standard GPT-5 :contentReference[oaicite:5]{index=5}
-        gpt-5-mini:      '5 Mini ($0.25 / $2.00)'               # cheaper smaller variant :contentReference[oaicite:6]{index=6}
-        gpt-5-nano:      '5 Nano ($0.05 / $0.40)'      # fastest, most cost-efficient GPT-5 variant :contentReference[oaicite:7]{index=7}
-        gpt-4.1:         '4.1 ($2.00 / $8.00)'         # improved successor to GPT-4o :contentReference[oaicite:8]{index=8}
-        gpt-4.1-mini:    '4.1 Mini ($0.40 / $1.60)'    # efficient small model :contentReference[oaicite:9]{index=9}
-        gpt-4.1-nano:    '4.1 Nano ($0.10 / $0.40)'    # ultra-light variant :contentReference[oaicite:10]{index=10}
-        o3:              'o3 General Reasoning ($2.00 / $8.00)' # general reasoning model; mid-range :contentReference[oaicite:11]{index=11}
-        o3-deep-research: 'o3 Deep Research ($10 / $40)'      # deeper reasoning research model :contentReference[oaicite:12]{index=12}
-        o4-mini:         'o4 Mini Reasoning ($1.10 / $4.40)'  # compact reasoning model :contentReference[oaicite:13]{index=13}
-        o1:              'o1 Reasoning Legacy ($15 / $60)'                  # older higher-capability model :contentReference[oaicite:14]{index=14}
-    chatgptKey:
+        none: 'None (disabled)'
+        openai: 'OpenAI-compatible (OpenAI, Ollama, LM Studio, OpenRouter ...)'
+        anthropic: 'Anthropic (Claude)'
+    ai_base_url:
+      type: text
+      label: "API Base URL"
+      placeholder: "http://localhost:11434/v1"
+      description: "The base URL of your AI provider. Examples: https://api.openai.com/v1 (OpenAI), http://localhost:11434/v1 (Ollama), http://localhost:1234/v1 (LM Studio), https://api.anthropic.com/v1 (Claude). Do not add a trailing slash. Only point this to trusted endpoints."
+      maxlength: 200
+    ai_model:
+      type: text
+      label: "Model"
+      placeholder: "llama3"
+      description: "The model name as expected by your provider. Examples: gpt-4.1, llama3, mistral, claude-sonnet-4."
+      maxlength: 100
+    ai_api_key:
       type: password
-      autocomplete: new-password 
+      label: "API Key"
+      autocomplete: new-password
       generator: false
-      label: 'ChatGPT Api Key'
-      description: "Enter your ChatGPT API key here. You can generate a new key on [OpenAI's platform](https://platform.openai.com/docs/pricing). For security reasons, your API key is secret and will not be visible again after you leave this page."
-    claudeModel:
-      type: select
-      label: 'Claude model'
-      description: "Select the AI model you want to use. Pricing may vary over time, so please check the latest details on [Claude's pricing page](https://docs.anthropic.com/en/docs/about-claude/models/all-models)"
-      options:
-        claude-opus-4-6:    '4.6 Opus ($5 / $25)'         # latest flagship with long-context & agent features :contentReference[oaicite:1]{index=1}
-        claude-opus-4-5:    '4.5 Opus ($5 / $25)'         # previous top model with strong reasoning & coding :contentReference[oaicite:2]{index=2}
-        claude-opus-4-1:    '4.1 Opus ($15 / $75)'        # earlier flagship variant :contentReference[oaicite:3]{index=3}
-        claude-sonnet-4-5:  '4.5 Sonnet ($3 / $15)'       # mid-range balanced performance :contentReference[oaicite:4]{index=4}
-        claude-sonnet-4:    '4 Sonnet ($3 / $15)'         # core reasoning/performance model :contentReference[oaicite:5]{index=5}
-        claude-haiku-4-5:   '4.5 Haiku ($1 / $5)'         # efficient, cost-effective model :contentReference[oaicite:6]{index=6}
-        claude-3-7-sonnet:  '3.7 Sonnet ($3 / $15)'       # older generation mid-range model :contentReference[oaicite:7]{index=7}
-        claude-3-5-haiku:   '3.5 Haiku ($0.80 / $4)'      # legacy small model :contentReference[oaicite:8]{index=8}
-        claude-3-opus:      '3 Opus ($15 / $75)'         # legacy powerful model :contentReference[oaicite:9]{index=9}
-        claude-3-haiku:     '3 Haiku ($0.25 / $1.25)'     # legacy budget model :contentReference[oaicite:10]{index=10}
-    claudeKey:
-      type: password
-      autocomplete: new-password 
-      generator: false
-      label: 'Claude Api Key'
-      description: "Enter your Claude API key here. You can generate a new key on [Claude's console](https://console.anthropic.com). For security reasons, your API key is secret and will not be visible again after you leave this page."
+      description: "Your API key. Leave empty for local providers like Ollama or LM Studio that do not require authentication. For security reasons your key is stored separately and will not be visible again after you leave this page."
+    ai_provider_name:
+      type: text
+      label: "Provider Name"
+      placeholder: "OpenAI"
+      description: "A human-readable name for your AI provider (e.g. 'OpenAI', 'My Ollama Server'). This name is shown to users on the agreement screen. Leave empty to show the adapter type instead."
+      maxlength: 100
+    ai_provider_terms:
+      type: text
+      label: "Terms & Conditions URL"
+      placeholder: "https://openai.com/policies/terms-of-use"
+      description: "Optional link to the terms and conditions of your AI provider. Shown to users on the agreement screen. Leave empty for local providers that have no terms."
+      maxlength: 500
     aitemperature:
       type: select
       label: 'Temperature (strict/creative)'
