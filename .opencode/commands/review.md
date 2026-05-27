@@ -1,11 +1,9 @@
 ---
-description: Review code against team standards
+description: Review code changes in a given file or path
 agent: reviewer
 ---
 
-Review the changes in @$1.
+Review the code changes in $1.
 
-Load our review standards first:
-skill({ name: "review-standards" })
-
-Then provide thorough feedback.
+Use the `review-standards` skill for our team's review criteria before providing feedback.
+Provide thorough, structured feedback covering correctness, style, and potential issues.
