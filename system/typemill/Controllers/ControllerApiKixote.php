@@ -12,6 +12,7 @@ use Typemill\Models\Multilang;
 use Typemill\Models\Navigation;
 use Typemill\Models\Content;
 use Typemill\Models\Meta;
+use Typemill\Models\KixoteHelp;
 use Typemill\Static\Translations;
 use Symfony\Component\Yaml\Yaml;
 
@@ -762,6 +763,90 @@ class ControllerApiKixote extends Controller
 
 		$response->getBody()->write(json_encode([
 			'message' => 'Success',
+		]));
+		return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+	}
+
+	// -------------------------------------------------------------------------
+	// Help — ask docs.typemill.net using local AI adapter
+	// -------------------------------------------------------------------------
+
+	public function help(Request $request, Response $response): Response
+	{
+		$body = $request->getParsedBody();
+		if (!is_array($body)) {
+			$body = json_decode((string) $request->getBody(), true) ?? [];
+		}
+
+		$question = trim($body['question'] ?? '');
+		$history  = $body['history'] ?? [];
+
+		// ── Validation ──
+		if ($question === '') {
+			$response->getBody()->write(json_encode(['error' => 'Question is required.']));
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+		}
+		if (mb_strlen($question) > 500) {
+			$response->getBody()->write(json_encode(['error' => 'Question too long (max 500 characters).']));
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+		}
+		if (substr_count($question, "\n") >= 5) {
+			$response->getBody()->write(json_encode(['error' => 'Question contains too many lines.']));
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+		}
+
+		if (!is_array($history)) {
+			$history = [];
+		}
+		$history = array_slice($history, -6);
+		$cleanHistory = [];
+		foreach ($history as $entry) {
+			if (!is_array($entry)) {
+				continue;
+			}
+			$role    = strtolower(trim($entry['role'] ?? ''));
+			$content = strip_tags($entry['content'] ?? '');
+			if ($content === '' || ($role !== 'user' && $role !== 'assistant')) {
+				continue;
+			}
+			$cleanHistory[] = ['role' => $role, 'content' => $content];
+		}
+
+		// ── AI must be configured ──
+		$aisettings = $this->setAiInfo();
+		if (!$aisettings) {
+			$response->getBody()->write(json_encode(['error' => $this->error]));
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+		}
+
+		// ── Public key hash for remote auth ──
+		$pkeyfile = getcwd() . DIRECTORY_SEPARATOR . 'settings' . DIRECTORY_SEPARATOR . 'public_key.pem';
+		$publicKeyHash = '';
+		if (file_exists($pkeyfile) && is_readable($pkeyfile)) {
+			$content = file_get_contents($pkeyfile);
+			if ($content !== false) {
+				$publicKeyHash = md5($content);
+			}
+		}
+
+		// ── Run agent loop ──
+		$kixoteHelp = new KixoteHelp($this->settings, $publicKeyHash);
+
+		$callback = function (string $conversation, string $systemPrompt) {
+			$answer = $this->promptGeneric($conversation, $systemPrompt);
+			return $answer === false ? '' : $answer;
+		};
+
+		$result = $kixoteHelp->runAgentLoop($question, $cleanHistory, $callback);
+
+		if (!empty($result['error'])) {
+			$response->getBody()->write(json_encode(['error' => $result['error']]));
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(502);
+		}
+
+		$response->getBody()->write(json_encode([
+			'answer'  => $result['answer'] ?? '',
+			'sources' => $result['sources'] ?? [],
 		]));
 		return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
 	}
