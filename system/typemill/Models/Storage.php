@@ -94,6 +94,35 @@ class Storage
 		return $this->error;
 	}
 
+	private function validatePath($folderpath, $filename)
+	{
+		$base = realpath($folderpath);
+		if ($base === false) {
+			$this->error = Translations::translate('Could not resolve base path');
+			return false;
+		}
+		$base = rtrim($base, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+
+		$target = $folderpath . $filename;
+
+		$resolved = realpath($target);
+		if ($resolved === false) {
+			$resolved = realpath(dirname($target));
+		}
+		if ($resolved === false) {
+			$this->error = Translations::translate('Access denied');
+			return false;
+		}
+
+		$resolved = rtrim($resolved, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+		if (!str_starts_with($resolved, $base)) {
+			$this->error = Translations::translate('Access denied');
+			return false;
+		}
+
+		return $target;
+	}
+
 	public function getFolderPath($location, $folder = NULL)
 	{
 		if(isset($this->$location))
@@ -166,37 +195,57 @@ class Storage
 			return false;
 		}
 
-		$filepath = $this->getFolderPath($location, $folder) . $filename;
-
-		if(is_dir($filepath))
+		$folderpath = $this->getFolderPath($location, $folder);
+		if(!$folderpath)
 		{
-			if(rmdir($dir))
+			return false;
+		}
+
+		$validPath = $this->validatePath($folderpath, $filename);
+		if(!$validPath)
+		{
+			return false;
+		}
+
+		if(is_dir($validPath))
+		{
+			if(rmdir($validPath))
 			{
 				return true;
 			}
 
-			$this->error = Translations::translate('We found the folder but could not delete') . ' ' . $filepath;
+			$this->error = Translations::translate('We found the folder but could not delete') . ' ' . $validPath;
 
 			return false;
 		}
 		
-		$this->error = $filepath . ' ' .Translations::translate('is not a folder') . '.';
+		$this->error = $validPath . ' ' .Translations::translate('is not a folder') . '.';
 
 		return false;
 	}
 
 	public function deleteContentFolder($filepath)
 	{
-		$filepath = $this->getFolderPath('contentFolder') . $filepath;
-
-		if(is_dir($filepath))
+		$folderpath = $this->getFolderPath('contentFolder');
+		if(!$folderpath)
 		{
-			if(rmdir($filepath))
+			return false;
+		}
+
+		$validPath = $this->validatePath($folderpath, $filepath);
+		if(!$validPath)
+		{
+			return false;
+		}
+
+		if(is_dir($validPath))
+		{
+			if(rmdir($validPath))
 			{
 				return true;
 			}
 
-			$this->error = Translations::translate('We found the folder but could not delete it') . ' ' . $filepath;
+			$this->error = Translations::translate('We found the folder but could not delete it') . ' ' . $validPath;
 
 			return false;
 		}
@@ -212,18 +261,29 @@ class Storage
 			$folderdir = $this->getFolderPath('dataFolder');
 		}
 
-		if(!is_dir($folderdir . $folderpath))
+		if(!$folderdir)
+		{
+			return false;
+		}
+
+		$validPath = $this->validatePath($folderdir, $folderpath);
+		if(!$validPath)
+		{
+			return false;
+		}
+
+		if(!is_dir($validPath))
 		{
 			$this->error = $folderpath . ' ' . Translations::translate('is not a directory');
 			return false;
 		}
 
-		$filelist = array_diff(scandir($folderdir . $folderpath), array('..', '.'));
+		$filelist = array_diff(scandir($validPath), array('..', '.'));
 		if(!empty($filelist))
 		{
 			foreach($filelist as $filepath)
 			{
-				$fullfilepath = $folderdir . $folderpath . DIRECTORY_SEPARATOR . $filepath;
+				$fullfilepath = $validPath . DIRECTORY_SEPARATOR . $filepath;
 				if(is_dir($fullfilepath))
 				{
 					$this->deleteContentFolderRecursive($folderpath . DIRECTORY_SEPARATOR . $filepath, $dataFolder);
@@ -240,7 +300,7 @@ class Storage
 			}
 		}
 
-		if(!rmdir($folderdir . $folderpath))
+		if(!rmdir($validPath))
 		{
 			$this->error = Translations::translate('Could not delete folder') . ' ' . $folderpath;
 			
@@ -252,11 +312,22 @@ class Storage
 
 	public function checkFile($location, $folder, $filename)
 	{
-		$filepath = $this->getFolderPath($location, $folder) . $filename;
+		$folderpath = $this->getFolderPath($location, $folder);
 
-		if(!file_exists($filepath))
+		if(!$folderpath)
 		{
-			$this->error = $filepath . ' ' . Translations::translate('does not exist');
+			return false;
+		}
+
+		$validPath = $this->validatePath($folderpath, $filename);
+		if(!$validPath)
+		{
+			return false;
+		}
+
+		if(!file_exists($validPath))
+		{
+			$this->error = $validPath . ' ' . Translations::translate('does not exist');
 
 			return false;
 		}
@@ -266,36 +337,52 @@ class Storage
 
 	public function getFile($location, $folder, $filename, $method = NULL)
 	{
-		if($this->checkFile($location, $folder, $filename))
+		$folderpath = $this->getFolderPath($location, $folder);
+		if(!$folderpath)
 		{
-			$filepath = $this->getFolderPath($location, $folder) . $filename;
-			
-			$fileContent = file_get_contents($filepath);
-		
-			# use unserialise or json_decode
-			if($method && is_callable($method))
-			{
-				$fileContent = $method($fileContent);
-			}
-
-			return $fileContent;
+			return false;
 		}
 
-		return false;
+		$validPath = $this->validatePath($folderpath, $filename);
+		if(!$validPath || !file_exists($validPath))
+		{
+			return false;
+		}
+
+		$fileContent = file_get_contents($validPath);
+
+		# use unserialise or json_decode
+		if($method && is_callable($method))
+		{
+			$fileContent = $method($fileContent);
+		}
+
+		return $fileContent;
 	}
 
 	public function getFileTime($location, $folder, $filename)
 	{
-		$filepath = $this->getFolderPath($location, $folder) . $filename;
+		$folderpath = $this->getFolderPath($location, $folder);
 
-		if(!file_exists($filepath))
+		if(!$folderpath)
 		{
-			$this->error = $filepath . ' ' . Translations::translate('does not exist');
+			return false;
+		}
+
+		$validPath = $this->validatePath($folderpath, $filename);
+		if(!$validPath)
+		{
+			return false;
+		}
+
+		if(!file_exists($validPath))
+		{
+			$this->error = $validPath . ' ' . Translations::translate('does not exist');
 
 			return false;
 		}
 
-		return date("Y-m-d",filemtime($filepath));
+		return date("Y-m-d", filemtime($validPath));
 	}
 
 	public function writeFile($location, $folder, $filename, $data, $method = NULL)
@@ -320,12 +407,22 @@ class Storage
 			}
 		}
 
-		$filepath = $this->getFolderPath($location, $folder) . $filename;
+		$folderpath = $this->getFolderPath($location, $folder);
+		if(!$folderpath)
+		{
+			return false;
+		}
 
-		$openfile = @fopen($filepath, "w");
+		$validPath = $this->validatePath($folderpath, $filename);
+		if(!$validPath)
+		{
+			return false;
+		}
+
+		$openfile = @fopen($validPath, "w");
 		if(!$openfile)
 		{
-			$this->error = Translations::translate('Could not open and read the file') . ' ' . $filepath;
+			$this->error = Translations::translate('Could not open and read the file') . ' ' . $validPath;
 
 			return false;
 		}
@@ -339,7 +436,7 @@ class Storage
 		$writefile = fwrite($openfile, $data);
 		if($writefile === false)
 		{
-			$this->error = Translations::translate('Could not write to the file') . ' ' . $filepath;
+			$this->error = Translations::translate('Could not write to the file') . ' ' . $validPath;
 
 			return false;
 		}
@@ -360,17 +457,31 @@ class Storage
 
 		$folder = trim($folder, DIRECTORY_SEPARATOR);
 
-		$oldFilePath = $this->getFolderPath($location) . $folder . DIRECTORY_SEPARATOR . $oldname;
-		$newFilePath = $this->getFolderPath($location) . $folder . DIRECTORY_SEPARATOR . $newname;
-
-		if($oldFilePath != $newFilePath)
+		$folderpath = $this->getFolderPath($location);
+		if(!$folderpath)
 		{
-			if(!file_exists($oldFilePath))
+			return false;
+		}
+
+		$relativeFolder = ($folder == '') ? '' : $folder . DIRECTORY_SEPARATOR;
+		$oldFilePath = $folderpath . $relativeFolder . $oldname;
+		$newFilePath = $folderpath . $relativeFolder . $newname;
+
+		$validOldPath = $this->validatePath($folderpath, $relativeFolder . $oldname);
+		$validNewPath = $this->validatePath($folderpath, $relativeFolder . $newname);
+		if(!$validOldPath || !$validNewPath)
+		{
+			return false;
+		}
+
+		if($validOldPath != $validNewPath)
+		{
+			if(!file_exists($validOldPath))
 			{
 				return false;
 			}
 
-			if(!rename($oldFilePath, $newFilePath))
+			if(!rename($validOldPath, $validNewPath))
 			{
 				return false;
 			}
@@ -395,15 +506,27 @@ class Storage
 		    $folder = $folder . DIRECTORY_SEPARATOR;
 	    }
 
-	    $oldFilePath = $this->getFolderPath($location) . $folder . $oldname;
-	    $newFilePath = $this->getFolderPath($location) . $folder . $newname;
+	    $folderpath = $this->getFolderPath($location);
+	    if(!$folderpath)
+	    {
+		    return false;
+	    }
 
-	    if ($oldFilePath !== $newFilePath) {
-	        if (!file_exists($oldFilePath)) {
+	    $oldFilePath = $folderpath . $folder . $oldname;
+	    $newFilePath = $folderpath . $folder . $newname;
+
+	    $validOldPath = $this->validatePath($folderpath, $folder . $oldname);
+	    $validNewPath = $this->validatePath($folderpath, $folder . $newname);
+	    if (!$validOldPath || !$validNewPath) {
+	        return false;
+	    }
+
+	    if ($validOldPath !== $validNewPath) {
+	        if (!file_exists($validOldPath)) {
 	            return false;
 	        }
 
-	        if (!copy($oldFilePath, $newFilePath)) {
+	        if (!copy($validOldPath, $validNewPath)) {
 	            return false;
 	        }
 	    }
@@ -422,21 +545,32 @@ class Storage
 
 		if($this->checkFile($location, $folder, $filename))
 		{
-			$filepath = $this->getFolderPath($location) . $folder . DIRECTORY_SEPARATOR . $filename;
-
-			if(is_dir($filepath))
+			$folderpath = $this->getFolderPath($location);
+			if(!$folderpath)
 			{
-				$this->error = Translations::translate('DeleteFile can only delete files, but the path is a folder: ') . ' ' . $filepath;
+				return false;
+			}
+
+			$relativeFolder = ($folder == '') ? '' : trim($folder, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+			$validPath = $this->validatePath($folderpath, $relativeFolder . $filename);
+			if(!$validPath)
+			{
+				return false;
+			}
+
+			if(is_dir($validPath))
+			{
+				$this->error = Translations::translate('DeleteFile can only delete files, but the path is a folder: ') . ' ' . $validPath;
 
 				return false;				
 			}
 	
-			if(unlink($filepath))
+			if(unlink($validPath))
 			{
 				return true;
 			}
 
-			$this->error = Translations::translate('We found the file but could not delete') . ' ' . $filepath;
+			$this->error = Translations::translate('We found the file but could not delete') . ' ' . $validPath;
 
 			return false;
 		}
