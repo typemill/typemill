@@ -1,0 +1,2142 @@
+{
+    "navigation": [
+        {
+            "type": "folder",
+            "title": "Getting Started",
+            "summary": "",
+            "path": "/getting-started",
+            "children": [
+                {
+                    "type": "file",
+                    "title": "Quickstart",
+                    "summary": "Introduces Typemill’s quickstart setup, covering installation, creating the first user, logging in, and basic system configuration. Also outlines how to create content and begin developing a theme.",
+                    "path": "/getting-started/quickstart"
+                },
+                {
+                    "type": "file",
+                    "title": "Requirements",
+                    "summary": "Lists Typemill’s minimal system requirements: PHP 8.1–8.4, a web server, FTP or another upload method, and no database. It also notes supported browsers, with Firefox and Chrome most thoroughly tested, and asks users to report issues on GitHub.",
+                    "path": "/getting-started/system-requirements"
+                },
+                {
+                    "type": "folder",
+                    "title": "Installation",
+                    "summary": "",
+                    "path": "/getting-started/installation",
+                    "children": [
+                        {
+                            "type": "file",
+                            "title": "Download",
+                            "summary": "Explains how to download Typemill either manually from typemill.net or by cloning the GitHub repository. It also shows how to update dependencies with Composer so Typemill can run locally.",
+                            "path": "/getting-started/installation/download"
+                        },
+                        {
+                            "type": "file",
+                            "title": "Permissions",
+                            "summary": "Explains which folders must be writable for the application to function and recommends standard folder/file permissions. Also notes that hosting providers may have their own permissions guidance if problems occur.",
+                            "path": "/getting-started/installation/permissions"
+                        },
+                        {
+                            "type": "file",
+                            "title": "PHP",
+                            "summary": "Lists Typemill’s supported PHP versions (8.1–8.4, with 8.4 not fully supported by all plugins) and the required/recommended PHP extensions for running it. Also notes plugin-specific extension needs and suggests using phpinfo() to verify installed libraries.",
+                            "path": "/getting-started/installation/php"
+                        },
+                        {
+                            "type": "file",
+                            "title": "Localhost",
+                            "summary": "Explains how to run Typemill locally on localhost for development and testing, including premium plugins/themes without restrictions. It covers basic setup requirements and platform-specific instructions for Linux, Windows, and Mac, plus notes on moving a local project to production and clearing cache/navigation afterward.",
+                            "path": "/getting-started/installation/localhost"
+                        },
+                        {
+                            "type": "file",
+                            "title": "Apache",
+                            "summary": "Explains how to run Typemill on Apache by checking system requirements, enabling mod_rewrite, and configuring the .htaccess rewrite rules for paths, HTTPS, www redirects, and subfolders. Also covers Apache setup on Linux/Ubuntu, including installing Apache/PHP and setting AllowOverride All.",
+                            "path": "/getting-started/installation/apache"
+                        },
+                        {
+                            "type": "file",
+                            "title": "Nginx",
+                            "summary": "Provides an example Nginx server configuration for running Typemill, including PHP handling, routing rules, logging, and static asset settings. Also notes how the config can be adapted for reverse proxies, LXD containers, and SSL-disabled setups.",
+                            "path": "/getting-started/installation/nginx"
+                        },
+                        {
+                            "type": "file",
+                            "title": "IIS",
+                            "summary": "Provides steps for running Typemill on an IIS server, including required tools like Composer, curl, and OpenSSL, plus folder permission setup for IIS users. Also explains how to configure URL Rewrite/web.config by importing the .htaccess rules and adjusting them for IIS.",
+                            "path": "/getting-started/installation/iis"
+                        },
+                        {
+                            "type": "file",
+                            "title": "Docker",
+                            "summary": "Explains how to run Typemill with Docker, including building a local image from the repository or using official/community images. It shows how to start Typemill with optional persistent volumes via docker run or docker-compose, and notes that the repo image has no TLS support.",
+                            "path": "/getting-started/installation/docker"
+                        },
+                        {
+                            "type": "file",
+                            "title": "Proxy",
+                            "summary": "Explains how to run Typemill behind a proxy by enabling proxy detection, optionally adding trusted IPs, and deleting the cached navigation so proxy URLs regenerate correctly. Includes an Apache localhost example configuration for proxying Typemill over HTTPS.",
+                            "path": "/getting-started/installation/proxy"
+                        },
+                        {
+                            "type": "file",
+                            "title": "Public Key",
+                            "summary": "Explains the role of Typemill’s `public_key.pem` file in authenticating version-check API calls and validating license data for purchased extensions. Notes that if you don’t use licensed features, the missing-file warning can be ignored for now.",
+                            "path": "/getting-started/installation/public-key"
+                        },
+                        {
+                            "type": "file",
+                            "title": "Troubleshooting",
+                            "summary": "Provides troubleshooting steps for common Typemill issues, including setup misconfigurations, 404 errors on the setup URL, broken navigation after a domain change, and blocked external scripts due to CSP. Also points users to GitHub issues and discussions for additional help.",
+                            "path": "/getting-started/installation/troubleshooting"
+                        }
+                    ]
+                },
+                {
+                    "type": "file",
+                    "title": "Live Migration",
+                    "summary": "Explains how to migrate a Typemill flat-file site between localhost, live servers, or different domains. After moving the site, clear the cache and regenerate navigation in the Kixote interface to update the base URL.",
+                    "path": "/getting-started/live-migration"
+                },
+                {
+                    "type": "file",
+                    "title": "Updates",
+                    "summary": "Explains how Typemill checks for outdated system, theme, and plugin versions and shows an update banner when updates are available. It outlines manual update procedures for the core, plugins, and themes using FTP, and mentions Git/Composer as another update method.",
+                    "path": "/getting-started/update"
+                },
+                {
+                    "type": "folder",
+                    "title": "Upgrade to Version 2",
+                    "summary": "",
+                    "path": "/getting-started/upgrade-from-v1",
+                    "children": [
+                        {
+                            "type": "file",
+                            "title": "Upgrade Typemill",
+                            "summary": "Explains how to upgrade Typemill from version 1 to version 2 by performing a fresh installation, copying content over, and reconfiguring settings. Warns that old plugins and themes are incompatible and recommends testing locally before uploading to the live server.",
+                            "path": "/getting-started/upgrade-from-v1/upgrade-typemill"
+                        },
+                        {
+                            "type": "file",
+                            "title": "Upgrade Themes",
+                            "summary": "Explains how to upgrade themes for Typemill 2.1.0, including checking for CSP blocking of external resources and updating internal Typemill asset URLs. Also notes that Tachyons CSS is no longer bundled and must be added to themes that still use it.",
+                            "path": "/getting-started/upgrade-from-v1/upgrade-themes"
+                        },
+                        {
+                            "type": "file",
+                            "title": "Upgrade Plugins",
+                            "summary": "Describes plugin upgrade changes in Typemill, including replacing `getPath` with route properties, calling `getPluginSettings()` without a plugin name, and using new helper methods to store and retrieve plugin data automatically in the plugin’s data folder.",
+                            "path": "/getting-started/upgrade-from-v1/upgrade-plugins"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "folder",
+            "title": "Author Guide",
+            "summary": "",
+            "path": "/author-guide",
+            "children": [
+                {
+                    "type": "file",
+                    "title": "Markdown Basics",
+                    "summary": "Introduces Markdown basics in Typemill, explaining its simple syntax, advantages over HTML-based editors, and the two available editors: Visual Markdown and Raw Markdown. Also notes Typemill’s Markdown compatibility with the original specification and Markdown Extra elements.",
+                    "path": "/author-guide/markdown"
+                },
+                {
+                    "type": "file",
+                    "title": "Markdown Demo",
+                    "summary": "Demonstrates Typemill’s supported Markdown elements, including headings, paragraphs, line breaks, emphasis, lists, and an automatic table of contents via [TOC]. It serves as a theme design reference to ensure all markdown components are styled properly.",
+                    "path": "/author-guide/markdown-demo"
+                },
+                {
+                    "type": "file",
+                    "title": "Create Pages",
+                    "summary": "Explains how to create and organize pages and folders in Typemill’s left-side navigation, including adding new items, editing them, and rearranging them with drag and drop. It also outlines the difference between files and folders and mentions changing slugs and navigation titles.",
+                    "path": "/author-guide/create-pages"
+                },
+                {
+                    "type": "file",
+                    "title": "Create Posts",
+                    "summary": "Explains how to switch a folder between manually ordered pages and date-sorted posts for blogs or news sections. Posts are automatically ordered by publish date, shown below the folder content, and can use a manual date or the creation date.",
+                    "path": "/author-guide/create-posts"
+                },
+                {
+                    "type": "file",
+                    "title": "Create a Glossary",
+                    "summary": "Explains how to create a glossary view for a folder in Typemill, where sub-pages are shown alphabetically. It notes the themes that support the feature and that you enable it via the folder’s meta tab by checking “Glossary List.”",
+                    "path": "/author-guide/create-glossary"
+                },
+                {
+                    "type": "file",
+                    "title": "Edit Pages",
+                    "summary": "Explains how Typemill’s page editor works, including visual and raw Markdown editors, metadata tabs, and the sticky publish panel. It also covers how authors manage page settings, status, publishing, and deletion.",
+                    "path": "/author-guide/edit-pages"
+                },
+                {
+                    "type": "file",
+                    "title": "Visual Markdown Editor",
+                    "summary": "Explains Typemill’s Visual Markdown Editor, a block-based standard editing mode that instantly renders Markdown to HTML and can be switched to Raw Markdown in the publish panel. Also covers quick productivity tips and basic block actions like adding blocks above or below and deleting blocks.",
+                    "path": "/author-guide/visual-markdown-editor"
+                },
+                {
+                    "type": "file",
+                    "title": "Raw Markdown Editor",
+                    "summary": "Describes Typemill’s Raw Markdown Editor for directly editing Markdown with syntax highlighting and fine-grained control over page structure, including advanced Markdown attributes. Notes its limitations, such as no image/file uploads and difficulty creating complex elements like tables, so editors may switch between raw and visual modes.",
+                    "path": "/author-guide/raw-markdown-editor"
+                },
+                {
+                    "type": "file",
+                    "title": "Edit Page Meta",
+                    "summary": "Explains how to edit a page’s meta information in the Meta tab, including slug, navigation title, meta title/description, hero image, and author/owner settings. Notes that changing the slug changes the URL and can affect links, bookmarks, and search engines.",
+                    "path": "/author-guide/edit-meta-information"
+                },
+                {
+                    "type": "file",
+                    "title": "Publish Pages",
+                    "summary": "Explains how Typemill’s publish panel lets editors publish, unpublish, delete, or discard changes to pages. It also describes page status colors and states: unpublished, published, and modified.",
+                    "path": "/author-guide/publish-pages"
+                },
+                {
+                    "type": "file",
+                    "title": "Restrict Pages",
+                    "summary": "Explains how to enable access management and restrict access to pages, folders, or the entire website for authenticated users, roles, or specific usernames. Also covers hiding restricted pages in navigation and customizing how hidden content is displayed.",
+                    "path": "/author-guide/restrict-pages"
+                },
+                {
+                    "type": "file",
+                    "title": "Media Library",
+                    "summary": "Describes Typemill’s media library for managing images, video, audio, and other files, including the icons used to filter media types. Explains how to open the library from media components or the page toolbar, and mentions search, filtering, and uploading.",
+                    "path": "/author-guide/media-library"
+                },
+                {
+                    "type": "file",
+                    "title": "Kixote: Getting Started",
+                    "summary": "Introduces Kixote as Typemill’s interface for authors and admins, providing administrative commands and AI-powered content tools. It explains how to enable AI in system settings, choose a provider/model, and use the AI interface from a content page or the Kixote button.",
+                    "path": "/author-guide/kixote-getting-started"
+                },
+                {
+                    "type": "file",
+                    "title": "Kixote: Content AI",
+                    "summary": "Explains how Kixote’s Generate tab lets you use AI to edit or create article content from the current page’s Markdown, with prompt input, focused editing, versioning, and saving. Also covers the Prompts tab for managing custom prompts and enabling or disabling built-in system prompts.",
+                    "path": "/author-guide/ai-with-kixote"
+                },
+                {
+                    "type": "file",
+                    "title": "Multi-Project",
+                    "summary": "Explains Typemill’s multi-project feature for splitting one site into multiple projects, each with its own navigation and optional frontend project switcher. It also covers common use cases, performance benefits for large sites, and how to set up project IDs and names in system settings.",
+                    "path": "/author-guide/multi-project"
+                },
+                {
+                    "type": "file",
+                    "title": "Multi-Language",
+                    "summary": "Explains how to build multilingual websites using projects, including enabling multilingual projects in settings and creating language variants for pages. Also notes how Typemill links the base language to translated versions for easy switching.",
+                    "path": "/author-guide/multi-language"
+                },
+                {
+                    "type": "file",
+                    "title": "Google Sitemap",
+                    "summary": "Explains how Typemill automatically generates and updates a Google sitemap, how to submit it to search engines, and how to exclude pages with the noindex setting. Also covers when and why you might disable the sitemap for performance or private sites.",
+                    "path": "/author-guide/google-sitemap"
+                },
+                {
+                    "type": "file",
+                    "title": "eBooks",
+                    "summary": "",
+                    "path": "/author-guide/ebooks"
+                },
+                {
+                    "type": "file",
+                    "title": "Content Templates",
+                    "summary": "Describes a plugin for managing content templates in Typemill, including saving pages as reusable templates and loading predefined templates from a server. It also notes integration with AI workflows like Kixote and requires a business license.",
+                    "path": "/author-guide/content-templates"
+                },
+                {
+                    "type": "file",
+                    "title": "Content Revisions",
+                    "summary": "Describes the Revisions plugin for tracking content changes, viewing revision history, and restoring previous page versions. Also explains settings for revision frequency, storage limits, version-tracking mode, and preserving revisions after page deletion.",
+                    "path": "/author-guide/content-revisions"
+                },
+                {
+                    "type": "file",
+                    "title": "Content Variables",
+                    "summary": "Explains the Variables and Snippets Plugin, which lets you create reusable text variables and Markdown snippets in one central place and insert them into content with shortcodes. It also notes common use cases like manuals, templates, and centralized content updates, and requires a BUSINESS license.",
+                    "path": "/author-guide/content-variables"
+                },
+                {
+                    "type": "file",
+                    "title": "Content Embeddings",
+                    "summary": "Explains the Content Embeddings plugin for embedding media from platforms like YouTube, Vimeo, Google Maps, and SoundCloud via an embed shortcode, available with a MAKER license. Also covers an optional privacy feature that prompts users to consent before loading embedded content from each platform.",
+                    "path": "/author-guide/content-embeddings"
+                },
+                {
+                    "type": "file",
+                    "title": "HTML",
+                    "summary": "Explains Typemill’s HTML plugin, which lets users insert selected HTML tags via shortcodes in both the raw and visual editors, and requires a MAKER License. It also supports UI components like FAQs, tabs, slideshows, and accordion-style content through custom HTML, CSS, and JavaScript.",
+                    "path": "/author-guide/html"
+                },
+                {
+                    "type": "file",
+                    "title": "Mermaid Diagrams",
+                    "summary": "Explains how to use the free Mermaid plugin in Typemill to create charts and diagrams by adding Mermaid syntax in a code block. Includes example diagram types like flowcharts, sequence, class, state, and ER diagrams, plus links to tools for getting started.",
+                    "path": "/author-guide/mermaid-diagrams"
+                },
+                {
+                    "type": "file",
+                    "title": "External Content",
+                    "summary": "Explains how Typemill uses Content Security Policy (CSP) to block manually added external scripts and protect against unsafe content. It shows how to whitelist allowed domains in the Developer settings or identify blocked domains via browser developer tools.",
+                    "path": "/author-guide/external-content"
+                }
+            ]
+        },
+        {
+            "type": "folder",
+            "title": "Admin Guide",
+            "summary": "",
+            "path": "/admin-guide",
+            "children": [
+                {
+                    "type": "file",
+                    "title": "Security",
+                    "summary": "Outlines Typemill security measures and recommends configurations such as HTTPS, login verification, captcha, and security logging to protect authors and admins. It also notes optional password recovery and SVG uploads, with guidance to handle them carefully due to security risks.",
+                    "path": "/admin-guide/security"
+                },
+                {
+                    "type": "file",
+                    "title": "Configurations",
+                    "summary": "Typemill’s configuration page centralizes global system settings in the author panel, including site, media, writing, access, email, security, developer, and AI options. It also covers theme, plugin, license, account, and user management settings, which are stored in the \\settings folder and should not be edited manually.",
+                    "path": "/admin-guide/configurations"
+                },
+                {
+                    "type": "file",
+                    "title": "System Tab",
+                    "summary": "Describes the System tab for configuring core website settings like title, owner, copyright, and language. It also covers Google sitemap options, including enabling or disabling automatic sitemap generation.",
+                    "path": "/admin-guide/system-tab"
+                },
+                {
+                    "type": "file",
+                    "title": "Project Tab",
+                    "summary": "Explains the Project Tab settings for managing multi-project or multi-language websites, including enabling project switching, setting the base project, and adding additional projects. Also describes how project labels and homepage linking behave in the author and frontend views.",
+                    "path": "/admin-guide/project-tab"
+                },
+                {
+                    "type": "file",
+                    "title": "Media Tab",
+                    "summary": "Explains the Media tab settings for uploading a logo and favicon and configuring image upload behavior. Covers options like image dimensions, upload size limits, SVG अनुमति, and automatic WebP conversion.",
+                    "path": "/admin-guide/media-tab"
+                },
+                {
+                    "type": "file",
+                    "title": "Writing Tab",
+                    "summary": "Explains the Writing tab settings for choosing the default editor and configuring visual editor formatting options. Also covers headline anchors and whitelisted URL schemes for external links.",
+                    "path": "/admin-guide/writing-tab"
+                },
+                {
+                    "type": "file",
+                    "title": "Access Tab",
+                    "summary": "Explains the Access tab for enabling website-wide or page-specific access restrictions, including hiding restricted pages, truncating content, and showing restriction notices. Also covers redirect targets after login for different user groups, such as admins and editors.",
+                    "path": "/admin-guide/access-tab"
+                },
+                {
+                    "type": "file",
+                    "title": "Email Tab",
+                    "summary": "Configures the sender details and SMTP settings for notification emails, including password recovery and login verification. Recommends testing email delivery before enabling email-dependent features.",
+                    "path": "/admin-guide/email-tab"
+                },
+                {
+                    "type": "file",
+                    "title": "Password Tab",
+                    "summary": "Explains how to activate and configure password recovery in the Password tab, including required email settings and recovery email text. Notes the security implications and points users to the password recovery guide.",
+                    "path": "/admin-guide/password-tab"
+                },
+                {
+                    "type": "file",
+                    "title": "Security Tab",
+                    "summary": "Explains the Security tab, where you can enable login verification, configure captcha behavior, and turn on a security log. It also notes requirements and cautions for login verification and IP tracking in the security log.",
+                    "path": "/admin-guide/security-tab"
+                },
+                {
+                    "type": "file",
+                    "title": "Developer Tab",
+                    "summary": "Describes the Developer tab settings for configuring advanced Typemill behavior, including error reporting, Twig caching, navigation auto-refresh, and proxy options. It also covers security-related headers such as custom headers, CORS, and CSP controls.",
+                    "path": "/admin-guide/developer-tab"
+                },
+                {
+                    "type": "file",
+                    "title": "AI Tab",
+                    "summary": "Explains how to configure Typemill’s AI tab to connect to OpenAI-compatible providers or Anthropic, including base URL, model, API key, provider name, temperature, and token limits. Also notes Bring Your Own AI support for local or cloud providers and the privacy/confirmation considerations for sending user data externally.",
+                    "path": "/admin-guide/ai-tab"
+                },
+                {
+                    "type": "file",
+                    "title": "License",
+                    "summary": "Explains how to purchase a Typemill license, activate it in the site settings with a key, email, and domain, and view the resulting license details. It also notes that subscriptions are managed through Paddle and renew automatically each year.",
+                    "path": "/admin-guide/license"
+                },
+                {
+                    "type": "file",
+                    "title": "Themes",
+                    "summary": "Explains how to add, activate, and configure Typemill themes in the system area. It also covers the theme directory, installing new themes, and the common custom CSS option available across themes.",
+                    "path": "/admin-guide/themes"
+                },
+                {
+                    "type": "file",
+                    "title": "Plugins",
+                    "summary": "Explains how to find, install, activate, configure, and update Typemill plugins from the system area and plugin directory. It also notes that some plugins are free while others require MAKER or BUSINESS licenses.",
+                    "path": "/admin-guide/plugins"
+                },
+                {
+                    "type": "file",
+                    "title": "Users",
+                    "summary": "Explains Typemill’s user management for creating, deleting, searching, and assigning roles to users. Also outlines the built-in roles and their permissions, from Guest and Member through Author, Editor, Manager, and Administrator.",
+                    "path": "/admin-guide/users"
+                },
+                {
+                    "type": "file",
+                    "title": "Kixote",
+                    "summary": "Describes Kixote, Typemill’s separate admin/authors interface for conversational commands and AI prompts. Lists core commands like help, cache/navigation clearing, security log viewing, and links to AI prompting documentation.",
+                    "path": "/admin-guide/kixote"
+                },
+                {
+                    "type": "file",
+                    "title": "Setup Password Recovery",
+                    "summary": "Explains how to enable Typemill’s built-in password recovery in system settings and cautions that it should only be used when necessary due to security implications. Also covers recovering a lost admin password without password recovery and recommends using strong, unique passwords with a password manager.",
+                    "path": "/admin-guide/password-recovery"
+                },
+                {
+                    "type": "file",
+                    "title": "Setup Login Verification",
+                    "summary": "Explains how to enable Typemill’s login verification feature to add an extra security step after login by sending a 5-digit code to a registered email address. Includes setup requirements for email notifications, activation in system settings, and how the 24-hour verification window works.",
+                    "path": "/admin-guide/login-verification"
+                },
+                {
+                    "type": "file",
+                    "title": "Setup Login Link",
+                    "summary": "Explains how to enable Typemill’s Login with Link feature and configure guest users to access frontend pages via a special login URL. It also notes that the feature is limited to guest accounts and should be used cautiously because of security concerns.",
+                    "path": "/admin-guide/login-link"
+                },
+                {
+                    "type": "file",
+                    "title": "Add Translations",
+                    "summary": "Explains how to contribute Typemill translations by editing existing language files on GitHub or adding missing entries, with strict rules to only change the translation text on the right side. Also introduces contributing a new language and emphasizes preserving translation keys and order.",
+                    "path": "/admin-guide/translations"
+                },
+                {
+                    "type": "file",
+                    "title": "Use Without Admin",
+                    "summary": "Explains how to manage Typemill without the admin interface by rebuilding the navigation cache manually, automatically, or via API. It covers auto-refresh navigation, cache-clearing endpoints, and deleting cache files directly.",
+                    "path": "/admin-guide/use-without-admin"
+                }
+            ]
+        },
+        {
+            "type": "folder",
+            "title": "Developer Basics",
+            "summary": "",
+            "path": "/developer-basics",
+            "children": [
+                {
+                    "type": "file",
+                    "title": "Tech Overview",
+                    "summary": "Explains Typemill’s core tech stack, including PHP, Slim, Twig, Vue.js, Tailwind, and Tachyons, plus supporting libraries for Markdown, events, ACL, and validation. Also notes that dependencies are managed with Composer and that Typemill avoids JS package managers and build tools for most frontend assets.",
+                    "path": "/developer-basics/tech-overview"
+                },
+                {
+                    "type": "file",
+                    "title": "Folder Overview",
+                    "summary": "Explains the Typemill folder structure, including where cached files, content, media, settings, system code, plugins, and themes are stored. Also notes the main subfolders and file types used for content, user data, and uploaded media.",
+                    "path": "/developer-basics/folder-overview"
+                },
+                {
+                    "type": "file",
+                    "title": "Content",
+                    "summary": "Explains Typemill’s flat-file content structure, where Markdown files store text, YAML files store metadata, and media lives in the /media folder. It also describes how pages and folders are organized hierarchically, including folder content via index files and numeric prefixes to control ordering.",
+                    "path": "/developer-basics/content"
+                }
+            ]
+        },
+        {
+            "type": "folder",
+            "title": "Theme Developers",
+            "summary": "",
+            "path": "/theme-developers",
+            "children": [
+                {
+                    "type": "file",
+                    "title": "Intro",
+                    "summary": "Introduces Typemill theme development and explains that themes are built with Twig, YAML, CSS, HTML, and JavaScript, with a recommendation to use the new developer kit and Dev Theme guide. It also outlines what themes can do and the frontend knowledge expected to get started.",
+                    "path": "/theme-developers/intro"
+                },
+                {
+                    "type": "file",
+                    "title": "Quick Start",
+                    "summary": "Provides a quick start for creating a Typemill theme, including using the developer kit, locating themes in the `theme` folder, and selecting them in the author panel. It also outlines the minimal required theme files and how to define theme metadata and settings in `themeName.yaml`.",
+                    "path": "/theme-developers/quick-start"
+                },
+                {
+                    "type": "file",
+                    "title": "Theme Structure",
+                    "summary": "Explains that Typemill themes have no fixed structure beyond a few required files: index.twig, 404.twig, a theme YAML file, and preview images. It also gives naming rules and an example of an extended Twig-based theme folder layout with CSS, JS, images, pages, and partials.",
+                    "path": "/theme-developers/theme-structure"
+                },
+                {
+                    "type": "file",
+                    "title": "Theme Configuration",
+                    "summary": "Explains how to create a Typemill theme configuration YAML file with required basic metadata and optional settings, admin forms, page-specific tabs, and CSP entries. Also notes how to add a PayPal donation button to the theme configuration.",
+                    "path": "/theme-developers/configuration-file"
+                },
+                {
+                    "type": "file",
+                    "title": "Twig",
+                    "summary": "Introduces Twig as a fast, secure templating engine and explains why it’s useful for cleaner, less error-prone templates. Also covers the basic Twig syntax for printing variables and running statements like loops in TypeMill.",
+                    "path": "/theme-developers/twig"
+                },
+                {
+                    "type": "folder",
+                    "title": "Theme Variables",
+                    "summary": "",
+                    "path": "/theme-developers/theme-variables",
+                    "children": [
+                        {
+                            "type": "file",
+                            "title": "home",
+                            "summary": "Explains the Twig variable `home`, which returns `true` on the homepage and `false` on subpages. Includes an example of using it to conditionally render different templates.",
+                            "path": "/theme-developers/theme-variables/home"
+                        },
+                        {
+                            "type": "file",
+                            "title": "content",
+                            "summary": "Explains that the Twig variable `{{ content }}` contains the full HTML content of a Markdown file and shows basic usage examples. Notes that Twig filters like `striptags` can manipulate the output, though plugins or shortcodes are usually better for more advanced content changes.",
+                            "path": "/theme-developers/theme-variables/content"
+                        },
+                        {
+                            "type": "file",
+                            "title": "title",
+                            "summary": "Explains the Twig `{{ title }}` variable, which returns the first `<h1>` in a content file as plain text or falls back to the file name. Shows how to use it in an HTML `<title>` tag and with Twig filters like `title`.",
+                            "path": "/theme-developers/theme-variables/title"
+                        },
+                        {
+                            "type": "file",
+                            "title": "baseurl",
+                            "summary": "Explains that the Twig variable `{{ base_url }}` provides the site’s base URL for building absolute links, especially for CSS and JS assets. For homepage links, it recommends using the separate `home url` variable instead.",
+                            "path": "/theme-developers/theme-variables/baseurl"
+                        },
+                        {
+                            "type": "file",
+                            "title": "homeurl",
+                            "summary": "Explains the Twig variable `{{ home_url }}`, which provides the site base URL or current project URL for building home links. Includes an example of using it for a logo link and notes that admins can change its behavior in project settings.",
+                            "path": "/theme-developers/theme-variables/homeurl"
+                        },
+                        {
+                            "type": "file",
+                            "title": "metatabs",
+                            "summary": "Explains the `metatabs` Twig variable, which exposes page meta information stored in content YAML for use in themes and meta tags. It also shows how plugins and themes can extend metatabs with additional tabs and fields.",
+                            "path": "/theme-developers/theme-variables/metatabs"
+                        },
+                        {
+                            "type": "file",
+                            "title": "image",
+                            "summary": "Explains the Twig `image` variable, which provides the lead image URL and alt text for an article, falling back from hero image to first content image to logo if needed. Includes examples for using it as a header image or in social media meta tags.",
+                            "path": "/theme-developers/theme-variables/image"
+                        },
+                        {
+                            "type": "file",
+                            "title": "breadcrumb",
+                            "summary": "Explains the Twig `{{ breadcrumb }}` variable, which provides the page’s breadcrumb trail as a one-dimensional array of item objects. Shows how to loop through the breadcrumb and render links using each item’s available properties.",
+                            "path": "/theme-developers/theme-variables/breadcrumb"
+                        },
+                        {
+                            "type": "file",
+                            "title": "item",
+                            "summary": "Explains the Twig `{{ item }}` variable, which represents the current page item and exposes properties like title, URL, slug, and chapter data. It also shows how to use `item` for folder-based navigations and article listings, noting some properties apply only to folders.",
+                            "path": "/theme-developers/theme-variables/item"
+                        },
+                        {
+                            "type": "file",
+                            "title": "navigation",
+                            "summary": "Describes the Twig `{{ navigation }}` variable, which provides the full content folder structure as a multidimensional array of item objects for building global navigation. It includes nearly all item-object data except paging fields like `thisChapter`, `nextItem`, and `prevItem`.",
+                            "path": "/theme-developers/theme-variables/navigation"
+                        },
+                        {
+                            "type": "file",
+                            "title": "settings",
+                            "summary": "Describes the Twig `settings` variable in Typemill, which provides system, theme, and plugin settings for use in templates. Shows how to access built-in values like title, author, and language, as well as specific theme/plugin settings by name.",
+                            "path": "/theme-developers/theme-variables/settings"
+                        },
+                        {
+                            "type": "file",
+                            "title": "logo",
+                            "summary": "Describes the Twig `logo` variable, which contains the relative URL of the uploaded logo or `false` if no logo is configured. Shows how to conditionally display the logo image or fall back to the site title.",
+                            "path": "/theme-developers/theme-variables/logo"
+                        },
+                        {
+                            "type": "file",
+                            "title": "currentpage",
+                            "summary": "Describes the Twig variable `currentpage`, which returns the current page number for valid paginated URLs like `/p/2`, or `false` when no valid pagination exists. Pagination is only valid for folders containing posts and pages that map to an existing page.",
+                            "path": "/theme-developers/theme-variables/currentpage"
+                        },
+                        {
+                            "type": "file",
+                            "title": "widgets",
+                            "summary": "Describes the Twig `widgets` variable, which contains HTML snippets injected by plugins and returns `false` when no widgets are available. Includes an example of looping through widgets in a theme to render them in a widgetized area.",
+                            "path": "/theme-developers/theme-variables/widgets"
+                        }
+                    ]
+                },
+                {
+                    "type": "folder",
+                    "title": "Theme Functions",
+                    "summary": "",
+                    "path": "/theme-developers/theme-functions",
+                    "children": [
+                        {
+                            "type": "file",
+                            "title": "renderMeta",
+                            "summary": "`assets.renderMeta()` adds Typemill’s standard meta tags to a theme, including Open Graph and optional admin-defined tags like favicon, noindex, and Twitter image data. Title, description, and canonical tags are not added automatically and must be added manually, while plugin methods like `getMeta()` and `addMeta()` can be used to manage meta tags.",
+                            "path": "/theme-developers/theme-functions/rendermeta"
+                        },
+                        {
+                            "type": "file",
+                            "title": "renderCSS",
+                            "summary": "Describes the Twig function `assets.renderCSS()` for outputting plugin CSS references and inline CSS. Recommends placing it after your theme stylesheets and before the closing `</head>` tag, ideally inside a Twig block.",
+                            "path": "/theme-developers/theme-functions/rendercss"
+                        },
+                        {
+                            "type": "file",
+                            "title": "renderJS",
+                            "summary": "Explains how to use Twig’s `assets.renderJS()` function to output JavaScript references and inline scripts from plugins. Recommends placing it near the end of the page inside a `javascripts` block before the closing `body` tag.",
+                            "path": "/theme-developers/theme-functions/renderjs"
+                        },
+                        {
+                            "type": "file",
+                            "title": "activateAxios",
+                            "summary": "Describes the Twig function `assets.activateAxios()` for adding and initializing Axios in a theme with the base URL and a `tmaxios` helper. Includes an example of making API requests with the initialized client.",
+                            "path": "/theme-developers/theme-functions/activateaxios"
+                        },
+                        {
+                            "type": "file",
+                            "title": "activateVue",
+                            "summary": "Explains how to use the Twig function `{{ assets.activateVue() }}` to add the Vue library to a theme. Includes a basic example of placing it in the `javascripts` block before loading a Vue app script.",
+                            "path": "/theme-developers/theme-functions/activatevue"
+                        },
+                        {
+                            "type": "file",
+                            "title": "getPageMeta",
+                            "summary": "Describes the Twig function `getPageMeta(settings, pageItem)`, which returns a page’s metadata as an array for use in templates. It’s useful for listing meta information like titles and descriptions from pages in a folder or navigation.",
+                            "path": "/theme-developers/theme-functions/getpagemeta"
+                        },
+                        {
+                            "type": "file",
+                            "title": "getPageList",
+                            "summary": "Describes the Twig function `getPageList()` for retrieving a folder item by relative URL, using navigation and base URL as inputs. It is mainly used to list content from another folder, such as showing news posts on a homepage.",
+                            "path": "/theme-developers/theme-functions/getpagelist"
+                        },
+                        {
+                            "type": "file",
+                            "title": "getProjectsHome",
+                            "summary": "Describes the Twig function `getProjectsHome(settings)`, which returns metadata for project start pages so they can be listed on a homepage or other page. Includes the required `settings` parameter, the array return value, and an example of looping through projects to display titles, descriptions, and links.",
+                            "path": "/theme-developers/theme-functions/getprojectshome"
+                        },
+                        {
+                            "type": "file",
+                            "title": "markdown",
+                            "summary": "Describes the Twig `markdown()` function, which converts a markdown string into HTML for use in theme settings and other template content. Includes the required string parameter, HTML return value, and an example of rendering markdown from a textarea setting.",
+                            "path": "/theme-developers/theme-functions/markdown"
+                        },
+                        {
+                            "type": "file",
+                            "title": "image resize",
+                            "summary": "Describes the Twig `assets.image(...).resize(width, height).src()` method for resizing or cropping images on the fly, with examples for setting width, height, or both. It explains the required image path parameter, optional dimensions, and that the resized image is returned as a relative URL stored under `/media/custom`.",
+                            "path": "/theme-developers/theme-functions/image-resize"
+                        },
+                        {
+                            "type": "file",
+                            "title": "image grayscale",
+                            "summary": "Describes how to grayscale an image on the fly using the Twig `assets.image(...).grayscale().src()` function, including optional chaining with resize. The function takes a required image path and returns the relative path to the grayscaled image stored under `/media/custom`.",
+                            "path": "/theme-developers/theme-functions/image-grayscale"
+                        }
+                    ]
+                },
+                {
+                    "type": "folder",
+                    "title": "eBook Layouts",
+                    "summary": "",
+                    "path": "/theme-developers/ebook-layouts",
+                    "children": [
+                        {
+                            "type": "file",
+                            "title": "develop a layout",
+                            "summary": "Explains how to develop a custom eBook layout for the eBook plugin using YAML definitions and a Twig template, similar to Typemill themes. Lists the standard files in a layout folder, including config.yaml, cover.png, index.twig, and style.css.",
+                            "path": "/theme-developers/ebook-layouts/develop-layout"
+                        },
+                        {
+                            "type": "file",
+                            "title": "develop the yaml file",
+                            "summary": "Explains how to create a layout YAML configuration file with basic metadata like name, copyright, and links, which is shown in the layout selection. It also shows how to define custom form fields for ebook layout settings using the `customforms` section.",
+                            "path": "/theme-developers/ebook-layouts/develop-yaml-file"
+                        },
+                        {
+                            "type": "file",
+                            "title": "develop the twig template",
+                            "summary": "Explains how to develop a Typemill eBook Twig template, typically based on a single `index.twig` file copied from the demo template and adapted to your needs. It also outlines the basic layout structure, including the use of paged.js, Twig, HTML, CSS, JavaScript, and ebook data passed into the page.",
+                            "path": "/theme-developers/ebook-layouts/develop-twig-template"
+                        }
+                    ]
+                },
+                {
+                    "type": "folder",
+                    "title": "Examples",
+                    "summary": "",
+                    "path": "/theme-developers/examples",
+                    "children": [
+                        {
+                            "type": "file",
+                            "title": "Create a Full Navigation",
+                            "summary": "Explains how to build a full content navigation in Twig using the `navigation` variable and a recursive macro to render all levels. Also shows how to limit the navigation depth with a configurable `maxdepth` setting.",
+                            "path": "/theme-developers/examples/create-a-full-navigation"
+                        },
+                        {
+                            "type": "file",
+                            "title": "Create a Folder Navigation",
+                            "summary": "Explains how to build folder navigation in Twig using the `item` variable, including listing the first level of folder contents. It also shows how to recursively render all levels with a macro or move the navigation into a reusable partial.",
+                            "path": "/theme-developers/examples/create-a-folder-navigation"
+                        },
+                        {
+                            "type": "file",
+                            "title": "List Articles",
+                            "summary": "Explains how to list articles from a Typemill folder using folderContent, optionally enriching each entry with meta information via getPageMeta. Also shows how to list articles from any folder on the site using getPageList for blog-style layouts.",
+                            "path": "/theme-developers/examples/list-articles"
+                        },
+                        {
+                            "type": "file",
+                            "title": "Selectable Page Templates",
+                            "summary": "Explains how to let authors choose between multiple page templates by adding a select field to theme settings. It also shows how to conditionally include the chosen Twig template and create the corresponding template file.",
+                            "path": "/theme-developers/examples/selectable-page-templates"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "folder",
+            "title": "Plugin Developers",
+            "summary": "",
+            "path": "/plugin-developers",
+            "children": [
+                {
+                    "type": "file",
+                    "title": "intro",
+                    "summary": "Introduces Typemill plugins and the many ways they can extend the system, from editor features and shortcodes to routes, middleware, roles, and Twig functions. Notes that plugin development assumes solid PHP knowledge, with familiarity in OOP, namespacing, MVC, and frameworks like Slim being helpful.",
+                    "path": "/plugin-developers/intro"
+                },
+                {
+                    "type": "file",
+                    "title": "Quick Start",
+                    "summary": "Introduces Typemill plugin development with a quick start for creating minimal PHP plugins, including the required PHP and YAML files, class structure, and event subscription pattern. Also outlines the core concepts used by plugins, such as namespaces, inheritance, events, methods, routes, and middleware, with a pointer to Vue-based plugin guides.",
+                    "path": "/plugin-developers/quick-start"
+                },
+                {
+                    "type": "file",
+                    "title": "Quick Start with Vue",
+                    "summary": "Introduces how to add Vue applications to Typemill via its internal API, covering use cases like editor tabs, system menu items, and frontend pages. It also shows the basic PHP/YAML plugin structure needed to load Vue JavaScript and CSS into the interface.",
+                    "path": "/plugin-developers/quick-start-with-vue"
+                },
+                {
+                    "type": "file",
+                    "title": "Plugin Structure",
+                    "summary": "Explains the required file structure for a plugin, starting with a minimal setup of one folder plus PHP and YAML files. It also covers naming rules and how to extend the structure with additional code, templates, JavaScript, and vendor libraries for more complex plugins.",
+                    "path": "/plugin-developers/plugin-structure"
+                },
+                {
+                    "type": "file",
+                    "title": "Plugin Configuration",
+                    "summary": "Explains how to create a Typemill plugin configuration YAML file with required metadata such as name, version, author, and license, plus optional donation links. Also covers defining default settings and forms so users can customize plugin behavior in the author panel.",
+                    "path": "/plugin-developers/plugin-configuration"
+                },
+                {
+                    "type": "folder",
+                    "title": "Plugin Events",
+                    "summary": "",
+                    "path": "/plugin-developers/plugin-events",
+                    "children": [
+                        {
+                            "type": "file",
+                            "title": "Introduction",
+                            "summary": "Explains Typemill’s event-driven plugin system and how plugins subscribe to events with getSubscribedEvents(). Also covers assigning multiple handlers with priorities and reading/manipulating event data with getData() and setData().",
+                            "path": "/plugin-developers/plugin-events/introduction"
+                        },
+                        {
+                            "type": "file",
+                            "title": "onBreadcrumbLoaded",
+                            "summary": "Describes the onBreadcrumbLoaded frontend event, which fires after a page breadcrumb is created so plugins can modify or return the breadcrumb before display. It is available on all frontend pages except the homepage, and a breadcrumb must be returned or it will not appear in the frontend.",
+                            "path": "/plugin-developers/plugin-events/onbreadcrumbloaded"
+                        },
+                        {
+                            "type": "file",
+                            "title": "onContentArrayLoaded",
+                            "summary": "Describes the onContentArrayLoaded frontend event, triggered after Markdown is parsed into a content array but before it is rendered to HTML, allowing plugins to modify or insert content at specific elements. Plugins must return a content array for the page content to remain available in the frontend.",
+                            "path": "/plugin-developers/plugin-events/oncontentarrayloaded"
+                        },
+                        {
+                            "type": "file",
+                            "title": "onCspLoaded",
+                            "summary": "Describes the `onCspLoaded` event, which fires after plugins and themes load and lets plugins add external domains to the site’s CSP whitelist. Plugins must return and update an array of domains so third-party resources can load correctly.",
+                            "path": "/plugin-developers/plugin-events/oncsploaded"
+                        },
+                        {
+                            "type": "file",
+                            "title": "onHtmlLoaded",
+                            "summary": "Describes the onHtmlLoaded event, which fires after markdown is converted to HTML on frontend pages and lets plugins read and modify the page content. Plugins must return an HTML string, and the content passed in does not include the first H1 element.",
+                            "path": "/plugin-developers/plugin-events/onhtmlloaded"
+                        },
+                        {
+                            "type": "file",
+                            "title": "onItemLoaded",
+                            "summary": "Describes the onItemLoaded event, which fires after a page item is extracted from navigation and is available on frontend pages and editor pages in the author environment. Plugins must return the item object through setData/getData to avoid errors, and the page includes a PHP example of using the event to add metadata.",
+                            "path": "/plugin-developers/plugin-events/onitemloaded"
+                        },
+                        {
+                            "type": "file",
+                            "title": "onMarkdownLoaded",
+                            "summary": "Describes the onMarkdownLoaded event, which fires after a page’s markdown is loaded but before it is converted to HTML, allowing plugins to read or modify the markdown. It also notes availability, the required markdown string data format, and provides a plugin example.",
+                            "path": "/plugin-developers/plugin-events/onmarkdownloaded"
+                        },
+                        {
+                            "type": "file",
+                            "title": "onMetaDefinitionsLoaded",
+                            "summary": "Describes the onMetaDefinitionsLoaded event, which fires after meta-data field definitions are loaded in the editor view. Plugins must return an array of meta-definitions here to enable the meta tabs, and it differs from onMetaLoaded, which provides the meta-data itself.",
+                            "path": "/plugin-developers/plugin-events/onmetadefinitionsloaded"
+                        },
+                        {
+                            "type": "file",
+                            "title": "onMetaLoaded",
+                            "summary": "Describes the onMetaLoaded frontend event, which fires after page metadata is loaded and requires plugins to return the metadata array for it to be available in the frontend. Includes the event’s data structure, a PHP example, and links to related meta-definition and authoring docs.",
+                            "path": "/plugin-developers/plugin-events/onmetaloaded"
+                        },
+                        {
+                            "type": "file",
+                            "title": "onPageCreated",
+                            "summary": "Describes the onPageCreated event, which fires after a page is created in the author interface and can be used to sync page-related data. It is available only for the POST /api/v2/article endpoint, provides page markdown, metadata, itempath, and username via getData, and does not support setData.",
+                            "path": "/plugin-developers/plugin-events/onpagecreated"
+                        },
+                        {
+                            "type": "file",
+                            "title": "onPageDeleted",
+                            "summary": "Triggered after a page is deleted in the author interface, `onPageDeleted` provides the deleted page’s item object so plugins can sync or clean up related data. It is only available for the DELETE `/api/v2/article` endpoint, and `setData` is not supported.",
+                            "path": "/plugin-developers/plugin-events/onpagedeleted"
+                        },
+                        {
+                            "type": "file",
+                            "title": "onPageDiscard",
+                            "summary": "Describes the onPageDiscard event, which fires after a page’s changes are discarded in the author interface and can be used to sync related data. It is available only for the /api/v2/article/discard endpoint, does not support setData, and provides getData with the new markdown, username, and item.",
+                            "path": "/plugin-developers/plugin-events/onpagediscard"
+                        },
+                        {
+                            "type": "file",
+                            "title": "onPagePublished",
+                            "summary": "Triggered after a page is published in the author interface, this event provides the page’s item, username, markdown, and metadata so plugins can sync or process the published content. It is only available for the PUT /api/v2/article endpoint, and setData is not supported.",
+                            "path": "/plugin-developers/plugin-events/onpagepublished"
+                        },
+                        {
+                            "type": "file",
+                            "title": "onPageReady",
+                            "summary": "Describes the onPageReady event, which fires when a page is fully prepared for rendering and lets plugins add extra page data before it is shown. It applies to frontend and author editor pages, and merged data can be set via the page data array.",
+                            "path": "/plugin-developers/plugin-events/onpageready"
+                        },
+                        {
+                            "type": "file",
+                            "title": "onPageRenamed",
+                            "summary": "Describes the onPageRenamed event, which fires after a page slug is changed in the author interface and can be used to sync related data. It includes the available API endpoint, event data structure, and a PHP example for handling renamed page revisions.",
+                            "path": "/plugin-developers/plugin-events/onpagerenamed"
+                        },
+                        {
+                            "type": "file",
+                            "title": "onPageSorted",
+                            "summary": "`onPageSorted` fires after a page is reordered in the author interface, letting plugins sync related data. It is only available for POST `/api/v2/article/sort`, and provides the old and new item via `getData` (no `setData`).",
+                            "path": "/plugin-developers/plugin-events/onpagesorted"
+                        },
+                        {
+                            "type": "file",
+                            "title": "onPageUnpublished",
+                            "summary": "Describes the onPageUnpublished event, which fires after a page is deleted in the author interface and can be used to sync related data. It is available only for the /api/v2/article delete endpoint, provides deleted page data via getData, and does not support setData.",
+                            "path": "/plugin-developers/plugin-events/onpageunpublished"
+                        },
+                        {
+                            "type": "file",
+                            "title": "onPageUpdated",
+                            "summary": "Describes the onPageUpdated event, which is available only on the PUT /api/v2/draft endpoint and provides the old and new markdown, username, and item via getData. It is intended for syncing extra data, and setData is not available.",
+                            "path": "/plugin-developers/plugin-events/onpageupdated"
+                        },
+                        {
+                            "type": "file",
+                            "title": "onPagetreeLoaded",
+                            "summary": "Triggered after the content navigation tree is built, this event lets plugins modify the navigation for the frontend or author interface. Plugins must return the navigation data, or it will not be available.",
+                            "path": "/plugin-developers/plugin-events/onpagetreeloaded"
+                        },
+                        {
+                            "type": "file",
+                            "title": "onPluginsLoaded",
+                            "summary": "Triggered after all active plugins have loaded, this event lets you inspect which plugins are available by reading the plugin name/class list from `getData`. It is available everywhere and does not support `setData`.",
+                            "path": "/plugin-developers/plugin-events/onpluginsloaded"
+                        },
+                        {
+                            "type": "file",
+                            "title": "onProjectFound",
+                            "summary": "Describes the onProjectFound event, which fires after a project is detected in the current URL when the projects feature is enabled. It provides the project ID via getData and is useful for plugins that need project-specific behavior.",
+                            "path": "/plugin-developers/plugin-events/onprojectfound"
+                        },
+                        {
+                            "type": "file",
+                            "title": "onResourcesLoaded",
+                            "summary": "Describes the onResourcesLoaded event, which fires after resource definitions load and lets plugins add or modify ACL resources. It applies everywhere and requires plugins to return a valid resource array so roles and permissions work correctly.",
+                            "path": "/plugin-developers/plugin-events/onresourcesloaded"
+                        },
+                        {
+                            "type": "file",
+                            "title": "onRolesPermissionsLoaded",
+                            "summary": "Describes the onRolesPermissionsLoaded event, which fires after ACL roles and permissions are loaded and can be used to add or modify user roles. Plugins must return the roles-and-rights array for ACL to work correctly.",
+                            "path": "/plugin-developers/plugin-events/onrolespermissionsloaded"
+                        },
+                        {
+                            "type": "file",
+                            "title": "onSessionSegmentsLoaded",
+                            "summary": "Describes the onSessionSegmentsLoaded event, which runs after session URL segments are loaded and lets plugins add segments to start sessions for specific pages or integrations. It notes that plugins must return the segment array, or sessions for other plugins will not start.",
+                            "path": "/plugin-developers/plugin-events/onsessionsegmentsloaded"
+                        },
+                        {
+                            "type": "file",
+                            "title": "onSettingsLoaded",
+                            "summary": "Describes the `onSettingsLoaded` event, which fires after all settings have been merged and loaded and is available everywhere. Plugin developers should use `getSettings` or `getPluginSettings` to access settings, since `setData` is not available for this event.",
+                            "path": "/plugin-developers/plugin-events/onsettingsloaded"
+                        },
+                        {
+                            "type": "file",
+                            "title": "onShortcodeFound",
+                            "summary": "Describes the onShortcodeFound event, which fires when markdown shortcodes are parsed into HTML and can be used by plugins to create or replace shortcode output. It includes the shortcode data available, notes that plugins must return replacement data for frontend availability, and shows a PHP usage example.",
+                            "path": "/plugin-developers/plugin-events/onshortcodefound"
+                        },
+                        {
+                            "type": "file",
+                            "title": "onSystemnaviLoaded",
+                            "summary": "Describes the onSystemnaviLoaded event, which fires when the system navigation loads and lets plugins add or modify navigation items. Plugins must return a two-dimensional array of system navigation entries for the system view in the admin interface.",
+                            "path": "/plugin-developers/plugin-events/onsystemnaviloaded"
+                        },
+                        {
+                            "type": "file",
+                            "title": "onTwigGlobalsLoaded",
+                            "summary": "Describes the onTwigGlobalsLoaded event, which fires early in the application lifecycle so plugins can register Twig globals for initialization in slim. Plugins must return an array of Twig globals for the event to work, and the page includes a PHP example of adding a custom global.",
+                            "path": "/plugin-developers/plugin-events/ontwigglobalsloaded"
+                        },
+                        {
+                            "type": "file",
+                            "title": "onTwigLoaded",
+                            "summary": "Triggered when the Twig extension has loaded, this event is used to add templates, JavaScript, Vue apps, or CSS. It is available on frontend sites, author/admin interfaces, and API endpoints, and sends no data.",
+                            "path": "/plugin-developers/plugin-events/ontwigloaded"
+                        },
+                        {
+                            "type": "file",
+                            "title": "onUserfieldsLoaded",
+                            "summary": "Triggered after user fields are loaded, this event lets plugins add fields for all users or specific roles and requires returning the full content array for frontend availability. Added fields must use matching array keys and field names or validation will remove them.",
+                            "path": "/plugin-developers/plugin-events/onuserfieldsloaded"
+                        }
+                    ]
+                },
+                {
+                    "type": "folder",
+                    "title": "Plugin Methods",
+                    "summary": "",
+                    "path": "/plugin-developers/plugin-methods",
+                    "children": [
+                        {
+                            "type": "file",
+                            "title": "addNewRoutes",
+                            "summary": "Explains how to use the static addNewRoutes() method to register new frontend or API routes. Includes a simple PHP example mapping an HTTP method and route to a controller action.",
+                            "path": "/plugin-developers/plugin-methods/addnewroutes"
+                        },
+                        {
+                            "type": "file",
+                            "title": "addNewMiddleware",
+                            "summary": "Explains how to use the `addNewMiddleware()` static method to register new middleware in Typemill. Includes a simple example returning the middleware class name and parameters.",
+                            "path": "/plugin-developers/plugin-methods/addnewmiddleware"
+                        },
+                        {
+                            "type": "file",
+                            "title": "getSettings",
+                            "summary": "Explains how to use `$this->getSettings()` in a Typemill plugin to retrieve all Typemill settings as an array. Includes a simple example method showing the call inside a plugin class.",
+                            "path": "/plugin-developers/plugin-methods/getsettings"
+                        },
+                        {
+                            "type": "file",
+                            "title": "getPluginSettings",
+                            "summary": "Describes the `getPluginSettings` method for retrieving a plugin’s settings from Typemill, either for a specified plugin or the currently active one by default. Includes the return type and a usage example.",
+                            "path": "/plugin-developers/plugin-methods/getpluginsettings"
+                        },
+                        {
+                            "type": "file",
+                            "title": "storePluginData",
+                            "summary": "Explains how to use `storePluginData()` to save plugin data into a file under the plugin’s `data` folder. Includes parameter details, optional data transformation methods like `serialize` or `json_encode`, return values, and example usage.",
+                            "path": "/plugin-developers/plugin-methods/storeplugindata"
+                        },
+                        {
+                            "type": "file",
+                            "title": "storePluginYamlData",
+                            "summary": "Describes how to store plugin YAML data with `$this->storePluginYamlData()`, including validation against field definitions before writing to a specified YAML file. Also notes the possible return values for success, errors, or validation failures.",
+                            "path": "/plugin-developers/plugin-methods/storepluginyamldata"
+                        },
+                        {
+                            "type": "file",
+                            "title": "getPluginData",
+                            "summary": "Explains how to use getPluginData($filename) to retrieve data from a specified file in a plugin’s data folder. Includes the parameter, return value, and a PHP usage example.",
+                            "path": "/plugin-developers/plugin-methods/getplugindata"
+                        },
+                        {
+                            "type": "file",
+                            "title": "getPluginYamlData",
+                            "summary": "Retrieves YAML-formatted data from a specified file in the current plugin. Returns the parsed array if the file is found, or false otherwise.",
+                            "path": "/plugin-developers/plugin-methods/getpluginyamldata"
+                        },
+                        {
+                            "type": "file",
+                            "title": "deletePluginData",
+                            "summary": "Describes the `deletePluginData($filename)` method for removing a file associated with the current plugin. Includes the required filename parameter and a PHP example of usage.",
+                            "path": "/plugin-developers/plugin-methods/deleteplugindata"
+                        },
+                        {
+                            "type": "file",
+                            "title": "getDispatcher",
+                            "summary": "Describes how `$this->getDispatcher()` returns the Symfony event dispatcher for dispatching new or existing events. The example shows using it to trigger `onTwigLoaded` so related services, like mail, become available.",
+                            "path": "/plugin-developers/plugin-methods/getdispatcher"
+                        },
+                        {
+                            "type": "file",
+                            "title": "getTwig",
+                            "summary": "Describes the `getTwig()` method for retrieving the Twig environment so a plugin can load and render templates. Includes an example showing how to add a template path and render a Twig file with variables.",
+                            "path": "/plugin-developers/plugin-methods/gettwig"
+                        },
+                        {
+                            "type": "file",
+                            "title": "addTwigGlobal",
+                            "summary": "Explains how to add a global variable to Twig with addTwigGlobal(), including the required onTwigGlobalsLoaded initialization step. Shows the parameters and a PHP/Twig example of exposing a class instance as a template global.",
+                            "path": "/plugin-developers/plugin-methods/addtwigglobal"
+                        },
+                        {
+                            "type": "file",
+                            "title": "addTwigFilter",
+                            "summary": "Describes how to register a custom Twig filter with `$this->addTwigFilter($name, $filter)`, including the required name and `TwigFilter` object parameters. Shows an example plugin adding a `rot13` filter and using it in a Twig template.",
+                            "path": "/plugin-developers/plugin-methods/addtwigfilter"
+                        },
+                        {
+                            "type": "file",
+                            "title": "addTwigFunction",
+                            "summary": "Adds a custom Twig function to the template environment using `$this->addTwigFunction($name, $function)`. Includes parameter details and an example of registering and calling the function in a Twig template.",
+                            "path": "/plugin-developers/plugin-methods/addtwigfunction"
+                        },
+                        {
+                            "type": "file",
+                            "title": "addJS",
+                            "summary": "Describes the `addJS($JS)` method for adding JavaScript file references to a page in a Typemill plugin. It also shows how to render the included scripts in the template using `{{ renderJS() }}` before the closing body tag.",
+                            "path": "/plugin-developers/plugin-methods/addjs"
+                        },
+                        {
+                            "type": "file",
+                            "title": "addInlineJS",
+                            "summary": "Explains how to add inline JavaScript to a page using `$this->addInlineJS($JS)` in a Typemill plugin. Shows that the injected code is rendered in the template with `{{ renderJS() }}` before the closing body tag.",
+                            "path": "/plugin-developers/plugin-methods/addinlinejs"
+                        },
+                        {
+                            "type": "file",
+                            "title": "addCSS",
+                            "summary": "Describes the `addCSS($CSS)` method for adding a CSS file reference to a page, using a relative path or URL. It also notes that the included styles are rendered in templates with `{{ renderCSS() }}` in the HTML header.",
+                            "path": "/plugin-developers/plugin-methods/addcss"
+                        },
+                        {
+                            "type": "file",
+                            "title": "addInlineCSS",
+                            "summary": "Describes the addInlineCSS method for adding inline CSS code to a page. The CSS is rendered in the template with renderCSS(), typically placed in the HTML header.",
+                            "path": "/plugin-developers/plugin-methods/addinlinecss"
+                        },
+                        {
+                            "type": "file",
+                            "title": "addSvgSymbol",
+                            "summary": "Describes the `addSvgSymbol($symbol)` method for adding an SVG symbol to a plugin. Includes the required string parameter and a PHP usage example.",
+                            "path": "/plugin-developers/plugin-methods/addsvgsymbol"
+                        },
+                        {
+                            "type": "file",
+                            "title": "getMeta",
+                            "summary": "Describes the getMeta() method, which retrieves all frontend HTML meta-tag information. It returns an array of meta data and shows basic usage in a plugin method.",
+                            "path": "/plugin-developers/plugin-methods/getmeta"
+                        },
+                        {
+                            "type": "file",
+                            "title": "addMeta",
+                            "summary": "Describes the `addMeta($key, $meta)` method for adding HTML meta tags to the frontend. Includes parameter details and an example that adds a `noindex` robots meta tag.",
+                            "path": "/plugin-developers/plugin-methods/addmeta"
+                        },
+                        {
+                            "type": "file",
+                            "title": "activateAxios",
+                            "summary": "Explains how to activate the Axios library in the frontend using `$this->activateAxios()` inside a plugin. It also notes that the generated script is rendered in the template with `{{ renderJS() }}` before the closing body tag.",
+                            "path": "/plugin-developers/plugin-methods/activateaxios"
+                        },
+                        {
+                            "type": "file",
+                            "title": "activateVue",
+                            "summary": "Explains how to activate Vue.js in a plugin using `$this->activateVue()`. The Vue assets are rendered in the template with `{{ renderJS() }}`, which should be placed before the closing body tag.",
+                            "path": "/plugin-developers/plugin-methods/activatevue"
+                        },
+                        {
+                            "type": "file",
+                            "title": "markdownToHtml",
+                            "summary": "Converts a Markdown string to HTML using `$this->markdownToHtml($markdown)`. Returns the converted HTML string and includes a simple PHP usage example.",
+                            "path": "/plugin-developers/plugin-methods/markdowntohtml"
+                        },
+                        {
+                            "type": "file",
+                            "title": "generateForm",
+                            "summary": "Generates a form from a plugin’s YAML form definitions for a given route name. Returns the generated form HTML as a string on success, or false if generation fails.",
+                            "path": "/plugin-developers/plugin-methods/generateform"
+                        },
+                        {
+                            "type": "file",
+                            "title": "validateParams",
+                            "summary": "Validates form or request parameters using field types and optional regex rules from YAML form definitions. Returns the validated values on success or false on failure, with errors added to the session automatically.",
+                            "path": "/plugin-developers/plugin-methods/validateparams"
+                        }
+                    ]
+                },
+                {
+                    "type": "folder",
+                    "title": "Tutorial",
+                    "summary": "",
+                    "path": "/plugin-developers/tutorial",
+                    "children": [
+                        {
+                            "type": "file",
+                            "title": "Cookie Consent Plugin",
+                            "summary": "Explains the Cookie Consent plugin, which adds a cookie banner to site pages. It contrasts the plugin with hardcoding the script into a theme, highlighting easier maintenance and admin-side configuration of banner text, colors, and enable/disable settings.",
+                            "path": "/plugin-developers/tutorial/cookie-consent-plugin"
+                        },
+                        {
+                            "type": "file",
+                            "title": "Write the YAML File",
+                            "summary": "Explains how to create a plugin YAML configuration file in the plugin root with the same name as the plugin folder, including basic metadata like name, version, author, and license. Also describes how YAML maps to arrays in TYPEMILL, how nested options use two-space indentation, and warns to use spaces instead of tabs.",
+                            "path": "/plugin-developers/tutorial/write-the-yaml-file"
+                        },
+                        {
+                            "type": "file",
+                            "title": "Write the PHP File",
+                            "summary": "Explains how to create a TYPEMILL plugin’s main PHP file and define its plugin class with the correct namespace and base-class inheritance. It also introduces the required static `getSubscribedEvents` method that every plugin must provide.",
+                            "path": "/plugin-developers/tutorial/write-the-php-file"
+                        },
+                        {
+                            "type": "file",
+                            "title": "Add Methods",
+                            "summary": "Explains how to implement plugin event methods by subscribing to `onSettingsLoaded` and `onTwigLoaded`, retrieving settings data from event objects, and preparing to manipulate returned data with `getData()`/`setData()`. It then introduces adding CSS and JavaScript assets and injecting initial script/template content into the theme.",
+                            "path": "/plugin-developers/tutorial/add-methods"
+                        },
+                        {
+                            "type": "file",
+                            "title": "Create the Structure",
+                            "summary": "Explains the basic folder and file structure for a TypeMill plugin, using a cookie consent plugin as an example with a matching PHP entry file, YAML config, Twig template, and public CSS/JS assets. It also outlines naming conventions and notes that the next step is creating the configuration file.",
+                            "path": "/plugin-developers/tutorial/create-the-structure"
+                        },
+                        {
+                            "type": "file",
+                            "title": "Add Twig Template",
+                            "summary": "Explains how to create a Twig template for the cookie consent initialization script instead of embedding hardcoded JavaScript directly. It also shows how to load the template through Twig in PHP so the values can later be made editable with variables.",
+                            "path": "/plugin-developers/tutorial/add-twig-template"
+                        },
+                        {
+                            "type": "file",
+                            "title": "Add Default Values",
+                            "summary": "Explains how to add default plugin values in TYPEMILL by defining a `settings` block in the plugin YAML file with two-space indentation. It also shows how these defaults are merged with global and user settings and accessed in the plugin via `onSettingsLoaded`.",
+                            "path": "/plugin-developers/tutorial/add-default-values"
+                        },
+                        {
+                            "type": "file",
+                            "title": "Use Variables in Twig",
+                            "summary": "Explains how to define default plugin settings in YAML and load them in PHP so they can be passed into a Twig template. Shows how the Cookie Consent plugin renders its banner script by fetching the Twig file with the settings array.",
+                            "path": "/plugin-developers/tutorial/use-variables-in-twig"
+                        },
+                        {
+                            "type": "file",
+                            "title": "Make Variables Editable",
+                            "summary": "Explains how to make plugin settings editable in the TYPEMILL UI by defining `forms` and `fields` in the plugin’s YAML configuration. Shows that field names must match default settings and gives a `select` example for a `position` setting.",
+                            "path": "/plugin-developers/tutorial/make-variables-editable"
+                        }
+                    ]
+                },
+                {
+                    "type": "folder",
+                    "title": "Examples",
+                    "summary": "",
+                    "path": "/plugin-developers/examples",
+                    "children": [
+                        {
+                            "type": "file",
+                            "title": "Add a Userrole",
+                            "summary": "Explains Typemill’s ACL-based role and permission system, including how to add or modify user roles, permissions, routes, and admin resources. It also lists the default roles and shows how plugins can access role data via the `onRolesPermissionsLoaded` event.",
+                            "path": "/plugin-developers/examples/add-new-userrole"
+                        },
+                        {
+                            "type": "file",
+                            "title": "Change System Navigation",
+                            "summary": "Describes Typemill’s default system navigation items and the access rights required to view them, noting that only account is visible to standard users. It also explains how plugins can use the `onSystemnaviLoaded` event to extend system navigation, add custom items, and restrict them by role or permission.",
+                            "path": "/plugin-developers/examples/system-navigation"
+                        },
+                        {
+                            "type": "file",
+                            "title": "Create a Shortcode",
+                            "summary": "Explains Typemill shortcodes, which let authors insert small snippets into markdown pages using a special syntax. It shows how plugins can listen for the `onShortcodeFound` event to replace a shortcode with custom HTML and notes that shortcodes can also be registered for use in the visual editor.",
+                            "path": "/plugin-developers/examples/shortcodes"
+                        },
+                        {
+                            "type": "file",
+                            "title": "Add a New Route",
+                            "summary": "Explains how to add custom TYPEMILL routes from a plugin using the `addNewRoutes()` static method, specifying the HTTP method, route path, and controller class/method. It also shows how to register multiple routes and create the corresponding plugin controller file.",
+                            "path": "/plugin-developers/examples/routes"
+                        },
+                        {
+                            "type": "file",
+                            "title": "Add a New Middleware",
+                            "summary": "Explains how to add plugin middleware in Typemill using the addNewMiddleware() method, which returns a middleware class name and optional parameters. Notes that middleware support is basic and currently limited to global middleware with fixed execution order.",
+                            "path": "/plugin-developers/examples/middleware"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "folder",
+            "title": "Forms",
+            "summary": "",
+            "path": "/forms",
+            "children": [
+                {
+                    "type": "file",
+                    "title": "introduction",
+                    "summary": "Explains how Typemill generates forms from simple YAML definitions for plugins and themes, allowing authors to configure settings, add page metadata, and create public forms. It also shows the basic `forms > fields` structure and how submitted values can be accessed in templates.",
+                    "path": "/forms/introduction"
+                },
+                {
+                    "type": "file",
+                    "title": "field overview",
+                    "summary": "Explains Typemill form fields, including the parts of a field definition, supported field types, and common attributes like required, placeholder, and validation patterns. Also shows example usage for building forms with different field types.",
+                    "path": "/forms/field-overview"
+                },
+                {
+                    "type": "file",
+                    "title": "themes and plugins",
+                    "summary": "Explains how to add editable configuration forms to themes or plugins using YAML form definitions, including field setup and available field types. It also shows where saved settings are stored and how to access them in Twig templates or plugin code.",
+                    "path": "/forms/themes-and-plugins"
+                },
+                {
+                    "type": "file",
+                    "title": "meta tabs",
+                    "summary": "Explains how to add custom fields or new meta-tabs for pages in Typemill using a plugin/theme YAML definition and Vue.js. It also shows how page meta is stored separately from markdown, accessed in Twig via `metatabs`, and read in plugins through the `onMetaLoaded` event.",
+                    "path": "/forms/meta-tabs"
+                },
+                {
+                    "type": "file",
+                    "title": "public forms",
+                    "summary": "Explains how to define public forms in a Typemill plugin using YAML, with front-end generation, validation, spam protection, and CSRF handling done automatically. Also shows how admins can customize public form labels, help text, and descriptions through referenced settings fields.",
+                    "path": "/forms/public-forms"
+                }
+            ]
+        },
+        {
+            "type": "folder",
+            "title": "API",
+            "summary": "",
+            "path": "/api",
+            "children": [
+                {
+                    "type": "file",
+                    "title": "Introduction",
+                    "summary": "",
+                    "path": "/api/introduction"
+                },
+                {
+                    "type": "file",
+                    "title": "Postman",
+                    "summary": "Provides a downloadable Postman testing pack for Typemill API, including a collection, runner data, and scripts. It also explains how to run multi-role authorization tests in a STAGE environment using the Collection Runner or manual requests.",
+                    "path": "/api/postman"
+                },
+                {
+                    "type": "file",
+                    "title": "/mainnavi",
+                    "summary": "Returns the main navigation items for the current user, with the menu contents varying by role permissions. Requires at least the \"member\" role and is available via GET /api/v1/mainnavi/.",
+                    "path": "/api/get-mainnavi"
+                },
+                {
+                    "type": "file",
+                    "title": "/systemnavi",
+                    "summary": "Returns the system navigation items available to the current user, with content varying by role and permissions. Requires at least the \"member\" role and is accessed via GET /api/v1/systemnavi/.",
+                    "path": "/api/get-systemnavi"
+                },
+                {
+                    "type": "file",
+                    "title": "/navigation",
+                    "summary": "Returns the full content navigation as a multidimensional array of item objects, including published pages by default and unpublished pages when `draft=true` is set. Requires member-level authorization and is available at `GET /api/v1/navigation`.",
+                    "path": "/api/get-navigation"
+                },
+                {
+                    "type": "file",
+                    "title": "/article/content",
+                    "summary": "Retrieves an article’s content as an array of blocks containing each block’s id, markdown, and HTML via GET /api/v1/article/content. Requires author access and a relative url query parameter, with an optional draft flag to return the draft version.",
+                    "path": "/api/get-article"
+                },
+                {
+                    "type": "file",
+                    "title": "/article/meta",
+                    "summary": "Retrieves an article’s metadata from its meta-tabs via GET /api/v1/article/meta, using a required relative url query parameter. Authorization requires at least the author role.",
+                    "path": "/api/get-meta"
+                },
+                {
+                    "type": "file",
+                    "title": "/article/item",
+                    "summary": "Describes the GET /api/v1/article/item endpoint for retrieving a specific article item by its relative URL, with author-level authorization required. Notes that it is best used when the URL is stable; otherwise, use get items to search by slug.",
+                    "path": "/api/get-item"
+                },
+                {
+                    "type": "file",
+                    "title": "/article/items",
+                    "summary": "Retrieves one or more article items by slug via GET /api/v1/article/items. It returns an array because slugs can repeat across folders, and requires at least the author role.",
+                    "path": "/api/get-items"
+                },
+                {
+                    "type": "file",
+                    "title": "/settings",
+                    "summary": "Retrieves the system settings for the application via GET /api/v1/settings/. Requires manager authorization and returns configuration details such as version, title, editor, formats, image sizes, and plugin settings.",
+                    "path": "/api/get-settings"
+                },
+                {
+                    "type": "file",
+                    "title": "/users/getbymail",
+                    "summary": "Retrieves a single user by email via GET /api/v1/users/getbyemail. Requires administrator authorization and an email query parameter.",
+                    "path": "/api/get-user-by-email"
+                },
+                {
+                    "type": "file",
+                    "title": "/users/getbynames",
+                    "summary": "Retrieves a list of user records for the specified usernames via GET /api/v1/users/getbynames. Requires administrator authorization and a required usernames array query parameter.",
+                    "path": "/api/get-users-by-name"
+                },
+                {
+                    "type": "file",
+                    "title": "/users/getbyrole",
+                    "summary": "Retrieves a list of users filtered by a specified user role via GET /api/v1/users/getbyrole. Requires administrator authorization and the role query parameter.",
+                    "path": "/api/get-users-by-role"
+                }
+            ]
+        },
+        {
+            "type": "file",
+            "title": "chatbot-privacy",
+            "summary": "",
+            "path": "/chatbot-privacy"
+        }
+    ],
+    "pages": {
+        "/getting-started/quickstart": {
+            "title": "Quickstart",
+            "summary": "Introduces Typemill’s quickstart setup, covering installation, creating the first user, logging in, and basic system configuration. Also outlines how to create content and begin developing a theme."
+        },
+        "/getting-started/system-requirements": {
+            "title": "Requirements",
+            "summary": "Lists Typemill’s minimal system requirements: PHP 8.1–8.4, a web server, FTP or another upload method, and no database. It also notes supported browsers, with Firefox and Chrome most thoroughly tested, and asks users to report issues on GitHub."
+        },
+        "/getting-started/installation/download": {
+            "title": "Download",
+            "summary": "Explains how to download Typemill either manually from typemill.net or by cloning the GitHub repository. It also shows how to update dependencies with Composer so Typemill can run locally."
+        },
+        "/getting-started/installation/permissions": {
+            "title": "Permissions",
+            "summary": "Explains which folders must be writable for the application to function and recommends standard folder/file permissions. Also notes that hosting providers may have their own permissions guidance if problems occur."
+        },
+        "/getting-started/installation/php": {
+            "title": "PHP",
+            "summary": "Lists Typemill’s supported PHP versions (8.1–8.4, with 8.4 not fully supported by all plugins) and the required/recommended PHP extensions for running it. Also notes plugin-specific extension needs and suggests using phpinfo() to verify installed libraries."
+        },
+        "/getting-started/installation/localhost": {
+            "title": "Localhost",
+            "summary": "Explains how to run Typemill locally on localhost for development and testing, including premium plugins/themes without restrictions. It covers basic setup requirements and platform-specific instructions for Linux, Windows, and Mac, plus notes on moving a local project to production and clearing cache/navigation afterward."
+        },
+        "/getting-started/installation/apache": {
+            "title": "Apache",
+            "summary": "Explains how to run Typemill on Apache by checking system requirements, enabling mod_rewrite, and configuring the .htaccess rewrite rules for paths, HTTPS, www redirects, and subfolders. Also covers Apache setup on Linux/Ubuntu, including installing Apache/PHP and setting AllowOverride All."
+        },
+        "/getting-started/installation/nginx": {
+            "title": "Nginx",
+            "summary": "Provides an example Nginx server configuration for running Typemill, including PHP handling, routing rules, logging, and static asset settings. Also notes how the config can be adapted for reverse proxies, LXD containers, and SSL-disabled setups."
+        },
+        "/getting-started/installation/iis": {
+            "title": "IIS",
+            "summary": "Provides steps for running Typemill on an IIS server, including required tools like Composer, curl, and OpenSSL, plus folder permission setup for IIS users. Also explains how to configure URL Rewrite/web.config by importing the .htaccess rules and adjusting them for IIS."
+        },
+        "/getting-started/installation/docker": {
+            "title": "Docker",
+            "summary": "Explains how to run Typemill with Docker, including building a local image from the repository or using official/community images. It shows how to start Typemill with optional persistent volumes via docker run or docker-compose, and notes that the repo image has no TLS support."
+        },
+        "/getting-started/installation/proxy": {
+            "title": "Proxy",
+            "summary": "Explains how to run Typemill behind a proxy by enabling proxy detection, optionally adding trusted IPs, and deleting the cached navigation so proxy URLs regenerate correctly. Includes an Apache localhost example configuration for proxying Typemill over HTTPS."
+        },
+        "/getting-started/installation/public-key": {
+            "title": "Public Key",
+            "summary": "Explains the role of Typemill’s `public_key.pem` file in authenticating version-check API calls and validating license data for purchased extensions. Notes that if you don’t use licensed features, the missing-file warning can be ignored for now."
+        },
+        "/getting-started/installation/troubleshooting": {
+            "title": "Troubleshooting",
+            "summary": "Provides troubleshooting steps for common Typemill issues, including setup misconfigurations, 404 errors on the setup URL, broken navigation after a domain change, and blocked external scripts due to CSP. Also points users to GitHub issues and discussions for additional help."
+        },
+        "/getting-started/live-migration": {
+            "title": "Live Migration",
+            "summary": "Explains how to migrate a Typemill flat-file site between localhost, live servers, or different domains. After moving the site, clear the cache and regenerate navigation in the Kixote interface to update the base URL."
+        },
+        "/getting-started/update": {
+            "title": "Updates",
+            "summary": "Explains how Typemill checks for outdated system, theme, and plugin versions and shows an update banner when updates are available. It outlines manual update procedures for the core, plugins, and themes using FTP, and mentions Git/Composer as another update method."
+        },
+        "/getting-started/upgrade-from-v1/upgrade-typemill": {
+            "title": "Upgrade Typemill",
+            "summary": "Explains how to upgrade Typemill from version 1 to version 2 by performing a fresh installation, copying content over, and reconfiguring settings. Warns that old plugins and themes are incompatible and recommends testing locally before uploading to the live server."
+        },
+        "/getting-started/upgrade-from-v1/upgrade-themes": {
+            "title": "Upgrade Themes",
+            "summary": "Explains how to upgrade themes for Typemill 2.1.0, including checking for CSP blocking of external resources and updating internal Typemill asset URLs. Also notes that Tachyons CSS is no longer bundled and must be added to themes that still use it."
+        },
+        "/getting-started/upgrade-from-v1/upgrade-plugins": {
+            "title": "Upgrade Plugins",
+            "summary": "Describes plugin upgrade changes in Typemill, including replacing `getPath` with route properties, calling `getPluginSettings()` without a plugin name, and using new helper methods to store and retrieve plugin data automatically in the plugin’s data folder."
+        },
+        "/author-guide/markdown": {
+            "title": "Markdown Basics",
+            "summary": "Introduces Markdown basics in Typemill, explaining its simple syntax, advantages over HTML-based editors, and the two available editors: Visual Markdown and Raw Markdown. Also notes Typemill’s Markdown compatibility with the original specification and Markdown Extra elements."
+        },
+        "/author-guide/markdown-demo": {
+            "title": "Markdown Demo",
+            "summary": "Demonstrates Typemill’s supported Markdown elements, including headings, paragraphs, line breaks, emphasis, lists, and an automatic table of contents via [TOC]. It serves as a theme design reference to ensure all markdown components are styled properly."
+        },
+        "/author-guide/create-pages": {
+            "title": "Create Pages",
+            "summary": "Explains how to create and organize pages and folders in Typemill’s left-side navigation, including adding new items, editing them, and rearranging them with drag and drop. It also outlines the difference between files and folders and mentions changing slugs and navigation titles."
+        },
+        "/author-guide/create-posts": {
+            "title": "Create Posts",
+            "summary": "Explains how to switch a folder between manually ordered pages and date-sorted posts for blogs or news sections. Posts are automatically ordered by publish date, shown below the folder content, and can use a manual date or the creation date."
+        },
+        "/author-guide/create-glossary": {
+            "title": "Create a Glossary",
+            "summary": "Explains how to create a glossary view for a folder in Typemill, where sub-pages are shown alphabetically. It notes the themes that support the feature and that you enable it via the folder’s meta tab by checking “Glossary List.”"
+        },
+        "/author-guide/edit-pages": {
+            "title": "Edit Pages",
+            "summary": "Explains how Typemill’s page editor works, including visual and raw Markdown editors, metadata tabs, and the sticky publish panel. It also covers how authors manage page settings, status, publishing, and deletion."
+        },
+        "/author-guide/visual-markdown-editor": {
+            "title": "Visual Markdown Editor",
+            "summary": "Explains Typemill’s Visual Markdown Editor, a block-based standard editing mode that instantly renders Markdown to HTML and can be switched to Raw Markdown in the publish panel. Also covers quick productivity tips and basic block actions like adding blocks above or below and deleting blocks."
+        },
+        "/author-guide/raw-markdown-editor": {
+            "title": "Raw Markdown Editor",
+            "summary": "Describes Typemill’s Raw Markdown Editor for directly editing Markdown with syntax highlighting and fine-grained control over page structure, including advanced Markdown attributes. Notes its limitations, such as no image/file uploads and difficulty creating complex elements like tables, so editors may switch between raw and visual modes."
+        },
+        "/author-guide/edit-meta-information": {
+            "title": "Edit Page Meta",
+            "summary": "Explains how to edit a page’s meta information in the Meta tab, including slug, navigation title, meta title/description, hero image, and author/owner settings. Notes that changing the slug changes the URL and can affect links, bookmarks, and search engines."
+        },
+        "/author-guide/publish-pages": {
+            "title": "Publish Pages",
+            "summary": "Explains how Typemill’s publish panel lets editors publish, unpublish, delete, or discard changes to pages. It also describes page status colors and states: unpublished, published, and modified."
+        },
+        "/author-guide/restrict-pages": {
+            "title": "Restrict Pages",
+            "summary": "Explains how to enable access management and restrict access to pages, folders, or the entire website for authenticated users, roles, or specific usernames. Also covers hiding restricted pages in navigation and customizing how hidden content is displayed."
+        },
+        "/author-guide/media-library": {
+            "title": "Media Library",
+            "summary": "Describes Typemill’s media library for managing images, video, audio, and other files, including the icons used to filter media types. Explains how to open the library from media components or the page toolbar, and mentions search, filtering, and uploading."
+        },
+        "/author-guide/kixote-getting-started": {
+            "title": "Kixote: Getting Started",
+            "summary": "Introduces Kixote as Typemill’s interface for authors and admins, providing administrative commands and AI-powered content tools. It explains how to enable AI in system settings, choose a provider/model, and use the AI interface from a content page or the Kixote button."
+        },
+        "/author-guide/ai-with-kixote": {
+            "title": "Kixote: Content AI",
+            "summary": "Explains how Kixote’s Generate tab lets you use AI to edit or create article content from the current page’s Markdown, with prompt input, focused editing, versioning, and saving. Also covers the Prompts tab for managing custom prompts and enabling or disabling built-in system prompts."
+        },
+        "/author-guide/multi-project": {
+            "title": "Multi-Project",
+            "summary": "Explains Typemill’s multi-project feature for splitting one site into multiple projects, each with its own navigation and optional frontend project switcher. It also covers common use cases, performance benefits for large sites, and how to set up project IDs and names in system settings."
+        },
+        "/author-guide/multi-language": {
+            "title": "Multi-Language",
+            "summary": "Explains how to build multilingual websites using projects, including enabling multilingual projects in settings and creating language variants for pages. Also notes how Typemill links the base language to translated versions for easy switching."
+        },
+        "/author-guide/google-sitemap": {
+            "title": "Google Sitemap",
+            "summary": "Explains how Typemill automatically generates and updates a Google sitemap, how to submit it to search engines, and how to exclude pages with the noindex setting. Also covers when and why you might disable the sitemap for performance or private sites."
+        },
+        "/author-guide/ebooks": {
+            "title": "eBooks",
+            "summary": ""
+        },
+        "/author-guide/content-templates": {
+            "title": "Content Templates",
+            "summary": "Describes a plugin for managing content templates in Typemill, including saving pages as reusable templates and loading predefined templates from a server. It also notes integration with AI workflows like Kixote and requires a business license."
+        },
+        "/author-guide/content-revisions": {
+            "title": "Content Revisions",
+            "summary": "Describes the Revisions plugin for tracking content changes, viewing revision history, and restoring previous page versions. Also explains settings for revision frequency, storage limits, version-tracking mode, and preserving revisions after page deletion."
+        },
+        "/author-guide/content-variables": {
+            "title": "Content Variables",
+            "summary": "Explains the Variables and Snippets Plugin, which lets you create reusable text variables and Markdown snippets in one central place and insert them into content with shortcodes. It also notes common use cases like manuals, templates, and centralized content updates, and requires a BUSINESS license."
+        },
+        "/author-guide/content-embeddings": {
+            "title": "Content Embeddings",
+            "summary": "Explains the Content Embeddings plugin for embedding media from platforms like YouTube, Vimeo, Google Maps, and SoundCloud via an embed shortcode, available with a MAKER license. Also covers an optional privacy feature that prompts users to consent before loading embedded content from each platform."
+        },
+        "/author-guide/html": {
+            "title": "HTML",
+            "summary": "Explains Typemill’s HTML plugin, which lets users insert selected HTML tags via shortcodes in both the raw and visual editors, and requires a MAKER License. It also supports UI components like FAQs, tabs, slideshows, and accordion-style content through custom HTML, CSS, and JavaScript."
+        },
+        "/author-guide/mermaid-diagrams": {
+            "title": "Mermaid Diagrams",
+            "summary": "Explains how to use the free Mermaid plugin in Typemill to create charts and diagrams by adding Mermaid syntax in a code block. Includes example diagram types like flowcharts, sequence, class, state, and ER diagrams, plus links to tools for getting started."
+        },
+        "/author-guide/external-content": {
+            "title": "External Content",
+            "summary": "Explains how Typemill uses Content Security Policy (CSP) to block manually added external scripts and protect against unsafe content. It shows how to whitelist allowed domains in the Developer settings or identify blocked domains via browser developer tools."
+        },
+        "/admin-guide/security": {
+            "title": "Security",
+            "summary": "Outlines Typemill security measures and recommends configurations such as HTTPS, login verification, captcha, and security logging to protect authors and admins. It also notes optional password recovery and SVG uploads, with guidance to handle them carefully due to security risks."
+        },
+        "/admin-guide/configurations": {
+            "title": "Configurations",
+            "summary": "Typemill’s configuration page centralizes global system settings in the author panel, including site, media, writing, access, email, security, developer, and AI options. It also covers theme, plugin, license, account, and user management settings, which are stored in the \\settings folder and should not be edited manually."
+        },
+        "/admin-guide/system-tab": {
+            "title": "System Tab",
+            "summary": "Describes the System tab for configuring core website settings like title, owner, copyright, and language. It also covers Google sitemap options, including enabling or disabling automatic sitemap generation."
+        },
+        "/admin-guide/project-tab": {
+            "title": "Project Tab",
+            "summary": "Explains the Project Tab settings for managing multi-project or multi-language websites, including enabling project switching, setting the base project, and adding additional projects. Also describes how project labels and homepage linking behave in the author and frontend views."
+        },
+        "/admin-guide/media-tab": {
+            "title": "Media Tab",
+            "summary": "Explains the Media tab settings for uploading a logo and favicon and configuring image upload behavior. Covers options like image dimensions, upload size limits, SVG अनुमति, and automatic WebP conversion."
+        },
+        "/admin-guide/writing-tab": {
+            "title": "Writing Tab",
+            "summary": "Explains the Writing tab settings for choosing the default editor and configuring visual editor formatting options. Also covers headline anchors and whitelisted URL schemes for external links."
+        },
+        "/admin-guide/access-tab": {
+            "title": "Access Tab",
+            "summary": "Explains the Access tab for enabling website-wide or page-specific access restrictions, including hiding restricted pages, truncating content, and showing restriction notices. Also covers redirect targets after login for different user groups, such as admins and editors."
+        },
+        "/admin-guide/email-tab": {
+            "title": "Email Tab",
+            "summary": "Configures the sender details and SMTP settings for notification emails, including password recovery and login verification. Recommends testing email delivery before enabling email-dependent features."
+        },
+        "/admin-guide/password-tab": {
+            "title": "Password Tab",
+            "summary": "Explains how to activate and configure password recovery in the Password tab, including required email settings and recovery email text. Notes the security implications and points users to the password recovery guide."
+        },
+        "/admin-guide/security-tab": {
+            "title": "Security Tab",
+            "summary": "Explains the Security tab, where you can enable login verification, configure captcha behavior, and turn on a security log. It also notes requirements and cautions for login verification and IP tracking in the security log."
+        },
+        "/admin-guide/developer-tab": {
+            "title": "Developer Tab",
+            "summary": "Describes the Developer tab settings for configuring advanced Typemill behavior, including error reporting, Twig caching, navigation auto-refresh, and proxy options. It also covers security-related headers such as custom headers, CORS, and CSP controls."
+        },
+        "/admin-guide/ai-tab": {
+            "title": "AI Tab",
+            "summary": "Explains how to configure Typemill’s AI tab to connect to OpenAI-compatible providers or Anthropic, including base URL, model, API key, provider name, temperature, and token limits. Also notes Bring Your Own AI support for local or cloud providers and the privacy/confirmation considerations for sending user data externally."
+        },
+        "/admin-guide/license": {
+            "title": "License",
+            "summary": "Explains how to purchase a Typemill license, activate it in the site settings with a key, email, and domain, and view the resulting license details. It also notes that subscriptions are managed through Paddle and renew automatically each year."
+        },
+        "/admin-guide/themes": {
+            "title": "Themes",
+            "summary": "Explains how to add, activate, and configure Typemill themes in the system area. It also covers the theme directory, installing new themes, and the common custom CSS option available across themes."
+        },
+        "/admin-guide/plugins": {
+            "title": "Plugins",
+            "summary": "Explains how to find, install, activate, configure, and update Typemill plugins from the system area and plugin directory. It also notes that some plugins are free while others require MAKER or BUSINESS licenses."
+        },
+        "/admin-guide/users": {
+            "title": "Users",
+            "summary": "Explains Typemill’s user management for creating, deleting, searching, and assigning roles to users. Also outlines the built-in roles and their permissions, from Guest and Member through Author, Editor, Manager, and Administrator."
+        },
+        "/admin-guide/kixote": {
+            "title": "Kixote",
+            "summary": "Describes Kixote, Typemill’s separate admin/authors interface for conversational commands and AI prompts. Lists core commands like help, cache/navigation clearing, security log viewing, and links to AI prompting documentation."
+        },
+        "/admin-guide/password-recovery": {
+            "title": "Setup Password Recovery",
+            "summary": "Explains how to enable Typemill’s built-in password recovery in system settings and cautions that it should only be used when necessary due to security implications. Also covers recovering a lost admin password without password recovery and recommends using strong, unique passwords with a password manager."
+        },
+        "/admin-guide/login-verification": {
+            "title": "Setup Login Verification",
+            "summary": "Explains how to enable Typemill’s login verification feature to add an extra security step after login by sending a 5-digit code to a registered email address. Includes setup requirements for email notifications, activation in system settings, and how the 24-hour verification window works."
+        },
+        "/admin-guide/login-link": {
+            "title": "Setup Login Link",
+            "summary": "Explains how to enable Typemill’s Login with Link feature and configure guest users to access frontend pages via a special login URL. It also notes that the feature is limited to guest accounts and should be used cautiously because of security concerns."
+        },
+        "/admin-guide/translations": {
+            "title": "Add Translations",
+            "summary": "Explains how to contribute Typemill translations by editing existing language files on GitHub or adding missing entries, with strict rules to only change the translation text on the right side. Also introduces contributing a new language and emphasizes preserving translation keys and order."
+        },
+        "/admin-guide/use-without-admin": {
+            "title": "Use Without Admin",
+            "summary": "Explains how to manage Typemill without the admin interface by rebuilding the navigation cache manually, automatically, or via API. It covers auto-refresh navigation, cache-clearing endpoints, and deleting cache files directly."
+        },
+        "/developer-basics/tech-overview": {
+            "title": "Tech Overview",
+            "summary": "Explains Typemill’s core tech stack, including PHP, Slim, Twig, Vue.js, Tailwind, and Tachyons, plus supporting libraries for Markdown, events, ACL, and validation. Also notes that dependencies are managed with Composer and that Typemill avoids JS package managers and build tools for most frontend assets."
+        },
+        "/developer-basics/folder-overview": {
+            "title": "Folder Overview",
+            "summary": "Explains the Typemill folder structure, including where cached files, content, media, settings, system code, plugins, and themes are stored. Also notes the main subfolders and file types used for content, user data, and uploaded media."
+        },
+        "/developer-basics/content": {
+            "title": "Content",
+            "summary": "Explains Typemill’s flat-file content structure, where Markdown files store text, YAML files store metadata, and media lives in the /media folder. It also describes how pages and folders are organized hierarchically, including folder content via index files and numeric prefixes to control ordering."
+        },
+        "/theme-developers/intro": {
+            "title": "Intro",
+            "summary": "Introduces Typemill theme development and explains that themes are built with Twig, YAML, CSS, HTML, and JavaScript, with a recommendation to use the new developer kit and Dev Theme guide. It also outlines what themes can do and the frontend knowledge expected to get started."
+        },
+        "/theme-developers/quick-start": {
+            "title": "Quick Start",
+            "summary": "Provides a quick start for creating a Typemill theme, including using the developer kit, locating themes in the `theme` folder, and selecting them in the author panel. It also outlines the minimal required theme files and how to define theme metadata and settings in `themeName.yaml`."
+        },
+        "/theme-developers/theme-structure": {
+            "title": "Theme Structure",
+            "summary": "Explains that Typemill themes have no fixed structure beyond a few required files: index.twig, 404.twig, a theme YAML file, and preview images. It also gives naming rules and an example of an extended Twig-based theme folder layout with CSS, JS, images, pages, and partials."
+        },
+        "/theme-developers/configuration-file": {
+            "title": "Theme Configuration",
+            "summary": "Explains how to create a Typemill theme configuration YAML file with required basic metadata and optional settings, admin forms, page-specific tabs, and CSP entries. Also notes how to add a PayPal donation button to the theme configuration."
+        },
+        "/theme-developers/twig": {
+            "title": "Twig",
+            "summary": "Introduces Twig as a fast, secure templating engine and explains why it’s useful for cleaner, less error-prone templates. Also covers the basic Twig syntax for printing variables and running statements like loops in TypeMill."
+        },
+        "/theme-developers/theme-variables/home": {
+            "title": "home",
+            "summary": "Explains the Twig variable `home`, which returns `true` on the homepage and `false` on subpages. Includes an example of using it to conditionally render different templates."
+        },
+        "/theme-developers/theme-variables/content": {
+            "title": "content",
+            "summary": "Explains that the Twig variable `{{ content }}` contains the full HTML content of a Markdown file and shows basic usage examples. Notes that Twig filters like `striptags` can manipulate the output, though plugins or shortcodes are usually better for more advanced content changes."
+        },
+        "/theme-developers/theme-variables/title": {
+            "title": "title",
+            "summary": "Explains the Twig `{{ title }}` variable, which returns the first `<h1>` in a content file as plain text or falls back to the file name. Shows how to use it in an HTML `<title>` tag and with Twig filters like `title`."
+        },
+        "/theme-developers/theme-variables/baseurl": {
+            "title": "baseurl",
+            "summary": "Explains that the Twig variable `{{ base_url }}` provides the site’s base URL for building absolute links, especially for CSS and JS assets. For homepage links, it recommends using the separate `home url` variable instead."
+        },
+        "/theme-developers/theme-variables/homeurl": {
+            "title": "homeurl",
+            "summary": "Explains the Twig variable `{{ home_url }}`, which provides the site base URL or current project URL for building home links. Includes an example of using it for a logo link and notes that admins can change its behavior in project settings."
+        },
+        "/theme-developers/theme-variables/metatabs": {
+            "title": "metatabs",
+            "summary": "Explains the `metatabs` Twig variable, which exposes page meta information stored in content YAML for use in themes and meta tags. It also shows how plugins and themes can extend metatabs with additional tabs and fields."
+        },
+        "/theme-developers/theme-variables/image": {
+            "title": "image",
+            "summary": "Explains the Twig `image` variable, which provides the lead image URL and alt text for an article, falling back from hero image to first content image to logo if needed. Includes examples for using it as a header image or in social media meta tags."
+        },
+        "/theme-developers/theme-variables/breadcrumb": {
+            "title": "breadcrumb",
+            "summary": "Explains the Twig `{{ breadcrumb }}` variable, which provides the page’s breadcrumb trail as a one-dimensional array of item objects. Shows how to loop through the breadcrumb and render links using each item’s available properties."
+        },
+        "/theme-developers/theme-variables/item": {
+            "title": "item",
+            "summary": "Explains the Twig `{{ item }}` variable, which represents the current page item and exposes properties like title, URL, slug, and chapter data. It also shows how to use `item` for folder-based navigations and article listings, noting some properties apply only to folders."
+        },
+        "/theme-developers/theme-variables/navigation": {
+            "title": "navigation",
+            "summary": "Describes the Twig `{{ navigation }}` variable, which provides the full content folder structure as a multidimensional array of item objects for building global navigation. It includes nearly all item-object data except paging fields like `thisChapter`, `nextItem`, and `prevItem`."
+        },
+        "/theme-developers/theme-variables/settings": {
+            "title": "settings",
+            "summary": "Describes the Twig `settings` variable in Typemill, which provides system, theme, and plugin settings for use in templates. Shows how to access built-in values like title, author, and language, as well as specific theme/plugin settings by name."
+        },
+        "/theme-developers/theme-variables/logo": {
+            "title": "logo",
+            "summary": "Describes the Twig `logo` variable, which contains the relative URL of the uploaded logo or `false` if no logo is configured. Shows how to conditionally display the logo image or fall back to the site title."
+        },
+        "/theme-developers/theme-variables/currentpage": {
+            "title": "currentpage",
+            "summary": "Describes the Twig variable `currentpage`, which returns the current page number for valid paginated URLs like `/p/2`, or `false` when no valid pagination exists. Pagination is only valid for folders containing posts and pages that map to an existing page."
+        },
+        "/theme-developers/theme-variables/widgets": {
+            "title": "widgets",
+            "summary": "Describes the Twig `widgets` variable, which contains HTML snippets injected by plugins and returns `false` when no widgets are available. Includes an example of looping through widgets in a theme to render them in a widgetized area."
+        },
+        "/theme-developers/theme-functions/rendermeta": {
+            "title": "renderMeta",
+            "summary": "`assets.renderMeta()` adds Typemill’s standard meta tags to a theme, including Open Graph and optional admin-defined tags like favicon, noindex, and Twitter image data. Title, description, and canonical tags are not added automatically and must be added manually, while plugin methods like `getMeta()` and `addMeta()` can be used to manage meta tags."
+        },
+        "/theme-developers/theme-functions/rendercss": {
+            "title": "renderCSS",
+            "summary": "Describes the Twig function `assets.renderCSS()` for outputting plugin CSS references and inline CSS. Recommends placing it after your theme stylesheets and before the closing `</head>` tag, ideally inside a Twig block."
+        },
+        "/theme-developers/theme-functions/renderjs": {
+            "title": "renderJS",
+            "summary": "Explains how to use Twig’s `assets.renderJS()` function to output JavaScript references and inline scripts from plugins. Recommends placing it near the end of the page inside a `javascripts` block before the closing `body` tag."
+        },
+        "/theme-developers/theme-functions/activateaxios": {
+            "title": "activateAxios",
+            "summary": "Describes the Twig function `assets.activateAxios()` for adding and initializing Axios in a theme with the base URL and a `tmaxios` helper. Includes an example of making API requests with the initialized client."
+        },
+        "/theme-developers/theme-functions/activatevue": {
+            "title": "activateVue",
+            "summary": "Explains how to use the Twig function `{{ assets.activateVue() }}` to add the Vue library to a theme. Includes a basic example of placing it in the `javascripts` block before loading a Vue app script."
+        },
+        "/theme-developers/theme-functions/getpagemeta": {
+            "title": "getPageMeta",
+            "summary": "Describes the Twig function `getPageMeta(settings, pageItem)`, which returns a page’s metadata as an array for use in templates. It’s useful for listing meta information like titles and descriptions from pages in a folder or navigation."
+        },
+        "/theme-developers/theme-functions/getpagelist": {
+            "title": "getPageList",
+            "summary": "Describes the Twig function `getPageList()` for retrieving a folder item by relative URL, using navigation and base URL as inputs. It is mainly used to list content from another folder, such as showing news posts on a homepage."
+        },
+        "/theme-developers/theme-functions/getprojectshome": {
+            "title": "getProjectsHome",
+            "summary": "Describes the Twig function `getProjectsHome(settings)`, which returns metadata for project start pages so they can be listed on a homepage or other page. Includes the required `settings` parameter, the array return value, and an example of looping through projects to display titles, descriptions, and links."
+        },
+        "/theme-developers/theme-functions/markdown": {
+            "title": "markdown",
+            "summary": "Describes the Twig `markdown()` function, which converts a markdown string into HTML for use in theme settings and other template content. Includes the required string parameter, HTML return value, and an example of rendering markdown from a textarea setting."
+        },
+        "/theme-developers/theme-functions/image-resize": {
+            "title": "image resize",
+            "summary": "Describes the Twig `assets.image(...).resize(width, height).src()` method for resizing or cropping images on the fly, with examples for setting width, height, or both. It explains the required image path parameter, optional dimensions, and that the resized image is returned as a relative URL stored under `/media/custom`."
+        },
+        "/theme-developers/theme-functions/image-grayscale": {
+            "title": "image grayscale",
+            "summary": "Describes how to grayscale an image on the fly using the Twig `assets.image(...).grayscale().src()` function, including optional chaining with resize. The function takes a required image path and returns the relative path to the grayscaled image stored under `/media/custom`."
+        },
+        "/theme-developers/ebook-layouts/develop-layout": {
+            "title": "develop a layout",
+            "summary": "Explains how to develop a custom eBook layout for the eBook plugin using YAML definitions and a Twig template, similar to Typemill themes. Lists the standard files in a layout folder, including config.yaml, cover.png, index.twig, and style.css."
+        },
+        "/theme-developers/ebook-layouts/develop-yaml-file": {
+            "title": "develop the yaml file",
+            "summary": "Explains how to create a layout YAML configuration file with basic metadata like name, copyright, and links, which is shown in the layout selection. It also shows how to define custom form fields for ebook layout settings using the `customforms` section."
+        },
+        "/theme-developers/ebook-layouts/develop-twig-template": {
+            "title": "develop the twig template",
+            "summary": "Explains how to develop a Typemill eBook Twig template, typically based on a single `index.twig` file copied from the demo template and adapted to your needs. It also outlines the basic layout structure, including the use of paged.js, Twig, HTML, CSS, JavaScript, and ebook data passed into the page."
+        },
+        "/theme-developers/examples/create-a-full-navigation": {
+            "title": "Create a Full Navigation",
+            "summary": "Explains how to build a full content navigation in Twig using the `navigation` variable and a recursive macro to render all levels. Also shows how to limit the navigation depth with a configurable `maxdepth` setting."
+        },
+        "/theme-developers/examples/create-a-folder-navigation": {
+            "title": "Create a Folder Navigation",
+            "summary": "Explains how to build folder navigation in Twig using the `item` variable, including listing the first level of folder contents. It also shows how to recursively render all levels with a macro or move the navigation into a reusable partial."
+        },
+        "/theme-developers/examples/list-articles": {
+            "title": "List Articles",
+            "summary": "Explains how to list articles from a Typemill folder using folderContent, optionally enriching each entry with meta information via getPageMeta. Also shows how to list articles from any folder on the site using getPageList for blog-style layouts."
+        },
+        "/theme-developers/examples/selectable-page-templates": {
+            "title": "Selectable Page Templates",
+            "summary": "Explains how to let authors choose between multiple page templates by adding a select field to theme settings. It also shows how to conditionally include the chosen Twig template and create the corresponding template file."
+        },
+        "/plugin-developers/intro": {
+            "title": "intro",
+            "summary": "Introduces Typemill plugins and the many ways they can extend the system, from editor features and shortcodes to routes, middleware, roles, and Twig functions. Notes that plugin development assumes solid PHP knowledge, with familiarity in OOP, namespacing, MVC, and frameworks like Slim being helpful."
+        },
+        "/plugin-developers/quick-start": {
+            "title": "Quick Start",
+            "summary": "Introduces Typemill plugin development with a quick start for creating minimal PHP plugins, including the required PHP and YAML files, class structure, and event subscription pattern. Also outlines the core concepts used by plugins, such as namespaces, inheritance, events, methods, routes, and middleware, with a pointer to Vue-based plugin guides."
+        },
+        "/plugin-developers/quick-start-with-vue": {
+            "title": "Quick Start with Vue",
+            "summary": "Introduces how to add Vue applications to Typemill via its internal API, covering use cases like editor tabs, system menu items, and frontend pages. It also shows the basic PHP/YAML plugin structure needed to load Vue JavaScript and CSS into the interface."
+        },
+        "/plugin-developers/plugin-structure": {
+            "title": "Plugin Structure",
+            "summary": "Explains the required file structure for a plugin, starting with a minimal setup of one folder plus PHP and YAML files. It also covers naming rules and how to extend the structure with additional code, templates, JavaScript, and vendor libraries for more complex plugins."
+        },
+        "/plugin-developers/plugin-configuration": {
+            "title": "Plugin Configuration",
+            "summary": "Explains how to create a Typemill plugin configuration YAML file with required metadata such as name, version, author, and license, plus optional donation links. Also covers defining default settings and forms so users can customize plugin behavior in the author panel."
+        },
+        "/plugin-developers/plugin-events/introduction": {
+            "title": "Introduction",
+            "summary": "Explains Typemill’s event-driven plugin system and how plugins subscribe to events with getSubscribedEvents(). Also covers assigning multiple handlers with priorities and reading/manipulating event data with getData() and setData()."
+        },
+        "/plugin-developers/plugin-events/onbreadcrumbloaded": {
+            "title": "onBreadcrumbLoaded",
+            "summary": "Describes the onBreadcrumbLoaded frontend event, which fires after a page breadcrumb is created so plugins can modify or return the breadcrumb before display. It is available on all frontend pages except the homepage, and a breadcrumb must be returned or it will not appear in the frontend."
+        },
+        "/plugin-developers/plugin-events/oncontentarrayloaded": {
+            "title": "onContentArrayLoaded",
+            "summary": "Describes the onContentArrayLoaded frontend event, triggered after Markdown is parsed into a content array but before it is rendered to HTML, allowing plugins to modify or insert content at specific elements. Plugins must return a content array for the page content to remain available in the frontend."
+        },
+        "/plugin-developers/plugin-events/oncsploaded": {
+            "title": "onCspLoaded",
+            "summary": "Describes the `onCspLoaded` event, which fires after plugins and themes load and lets plugins add external domains to the site’s CSP whitelist. Plugins must return and update an array of domains so third-party resources can load correctly."
+        },
+        "/plugin-developers/plugin-events/onhtmlloaded": {
+            "title": "onHtmlLoaded",
+            "summary": "Describes the onHtmlLoaded event, which fires after markdown is converted to HTML on frontend pages and lets plugins read and modify the page content. Plugins must return an HTML string, and the content passed in does not include the first H1 element."
+        },
+        "/plugin-developers/plugin-events/onitemloaded": {
+            "title": "onItemLoaded",
+            "summary": "Describes the onItemLoaded event, which fires after a page item is extracted from navigation and is available on frontend pages and editor pages in the author environment. Plugins must return the item object through setData/getData to avoid errors, and the page includes a PHP example of using the event to add metadata."
+        },
+        "/plugin-developers/plugin-events/onmarkdownloaded": {
+            "title": "onMarkdownLoaded",
+            "summary": "Describes the onMarkdownLoaded event, which fires after a page’s markdown is loaded but before it is converted to HTML, allowing plugins to read or modify the markdown. It also notes availability, the required markdown string data format, and provides a plugin example."
+        },
+        "/plugin-developers/plugin-events/onmetadefinitionsloaded": {
+            "title": "onMetaDefinitionsLoaded",
+            "summary": "Describes the onMetaDefinitionsLoaded event, which fires after meta-data field definitions are loaded in the editor view. Plugins must return an array of meta-definitions here to enable the meta tabs, and it differs from onMetaLoaded, which provides the meta-data itself."
+        },
+        "/plugin-developers/plugin-events/onmetaloaded": {
+            "title": "onMetaLoaded",
+            "summary": "Describes the onMetaLoaded frontend event, which fires after page metadata is loaded and requires plugins to return the metadata array for it to be available in the frontend. Includes the event’s data structure, a PHP example, and links to related meta-definition and authoring docs."
+        },
+        "/plugin-developers/plugin-events/onpagecreated": {
+            "title": "onPageCreated",
+            "summary": "Describes the onPageCreated event, which fires after a page is created in the author interface and can be used to sync page-related data. It is available only for the POST /api/v2/article endpoint, provides page markdown, metadata, itempath, and username via getData, and does not support setData."
+        },
+        "/plugin-developers/plugin-events/onpagedeleted": {
+            "title": "onPageDeleted",
+            "summary": "Triggered after a page is deleted in the author interface, `onPageDeleted` provides the deleted page’s item object so plugins can sync or clean up related data. It is only available for the DELETE `/api/v2/article` endpoint, and `setData` is not supported."
+        },
+        "/plugin-developers/plugin-events/onpagediscard": {
+            "title": "onPageDiscard",
+            "summary": "Describes the onPageDiscard event, which fires after a page’s changes are discarded in the author interface and can be used to sync related data. It is available only for the /api/v2/article/discard endpoint, does not support setData, and provides getData with the new markdown, username, and item."
+        },
+        "/plugin-developers/plugin-events/onpagepublished": {
+            "title": "onPagePublished",
+            "summary": "Triggered after a page is published in the author interface, this event provides the page’s item, username, markdown, and metadata so plugins can sync or process the published content. It is only available for the PUT /api/v2/article endpoint, and setData is not supported."
+        },
+        "/plugin-developers/plugin-events/onpageready": {
+            "title": "onPageReady",
+            "summary": "Describes the onPageReady event, which fires when a page is fully prepared for rendering and lets plugins add extra page data before it is shown. It applies to frontend and author editor pages, and merged data can be set via the page data array."
+        },
+        "/plugin-developers/plugin-events/onpagerenamed": {
+            "title": "onPageRenamed",
+            "summary": "Describes the onPageRenamed event, which fires after a page slug is changed in the author interface and can be used to sync related data. It includes the available API endpoint, event data structure, and a PHP example for handling renamed page revisions."
+        },
+        "/plugin-developers/plugin-events/onpagesorted": {
+            "title": "onPageSorted",
+            "summary": "`onPageSorted` fires after a page is reordered in the author interface, letting plugins sync related data. It is only available for POST `/api/v2/article/sort`, and provides the old and new item via `getData` (no `setData`)."
+        },
+        "/plugin-developers/plugin-events/onpageunpublished": {
+            "title": "onPageUnpublished",
+            "summary": "Describes the onPageUnpublished event, which fires after a page is deleted in the author interface and can be used to sync related data. It is available only for the /api/v2/article delete endpoint, provides deleted page data via getData, and does not support setData."
+        },
+        "/plugin-developers/plugin-events/onpageupdated": {
+            "title": "onPageUpdated",
+            "summary": "Describes the onPageUpdated event, which is available only on the PUT /api/v2/draft endpoint and provides the old and new markdown, username, and item via getData. It is intended for syncing extra data, and setData is not available."
+        },
+        "/plugin-developers/plugin-events/onpagetreeloaded": {
+            "title": "onPagetreeLoaded",
+            "summary": "Triggered after the content navigation tree is built, this event lets plugins modify the navigation for the frontend or author interface. Plugins must return the navigation data, or it will not be available."
+        },
+        "/plugin-developers/plugin-events/onpluginsloaded": {
+            "title": "onPluginsLoaded",
+            "summary": "Triggered after all active plugins have loaded, this event lets you inspect which plugins are available by reading the plugin name/class list from `getData`. It is available everywhere and does not support `setData`."
+        },
+        "/plugin-developers/plugin-events/onprojectfound": {
+            "title": "onProjectFound",
+            "summary": "Describes the onProjectFound event, which fires after a project is detected in the current URL when the projects feature is enabled. It provides the project ID via getData and is useful for plugins that need project-specific behavior."
+        },
+        "/plugin-developers/plugin-events/onresourcesloaded": {
+            "title": "onResourcesLoaded",
+            "summary": "Describes the onResourcesLoaded event, which fires after resource definitions load and lets plugins add or modify ACL resources. It applies everywhere and requires plugins to return a valid resource array so roles and permissions work correctly."
+        },
+        "/plugin-developers/plugin-events/onrolespermissionsloaded": {
+            "title": "onRolesPermissionsLoaded",
+            "summary": "Describes the onRolesPermissionsLoaded event, which fires after ACL roles and permissions are loaded and can be used to add or modify user roles. Plugins must return the roles-and-rights array for ACL to work correctly."
+        },
+        "/plugin-developers/plugin-events/onsessionsegmentsloaded": {
+            "title": "onSessionSegmentsLoaded",
+            "summary": "Describes the onSessionSegmentsLoaded event, which runs after session URL segments are loaded and lets plugins add segments to start sessions for specific pages or integrations. It notes that plugins must return the segment array, or sessions for other plugins will not start."
+        },
+        "/plugin-developers/plugin-events/onsettingsloaded": {
+            "title": "onSettingsLoaded",
+            "summary": "Describes the `onSettingsLoaded` event, which fires after all settings have been merged and loaded and is available everywhere. Plugin developers should use `getSettings` or `getPluginSettings` to access settings, since `setData` is not available for this event."
+        },
+        "/plugin-developers/plugin-events/onshortcodefound": {
+            "title": "onShortcodeFound",
+            "summary": "Describes the onShortcodeFound event, which fires when markdown shortcodes are parsed into HTML and can be used by plugins to create or replace shortcode output. It includes the shortcode data available, notes that plugins must return replacement data for frontend availability, and shows a PHP usage example."
+        },
+        "/plugin-developers/plugin-events/onsystemnaviloaded": {
+            "title": "onSystemnaviLoaded",
+            "summary": "Describes the onSystemnaviLoaded event, which fires when the system navigation loads and lets plugins add or modify navigation items. Plugins must return a two-dimensional array of system navigation entries for the system view in the admin interface."
+        },
+        "/plugin-developers/plugin-events/ontwigglobalsloaded": {
+            "title": "onTwigGlobalsLoaded",
+            "summary": "Describes the onTwigGlobalsLoaded event, which fires early in the application lifecycle so plugins can register Twig globals for initialization in slim. Plugins must return an array of Twig globals for the event to work, and the page includes a PHP example of adding a custom global."
+        },
+        "/plugin-developers/plugin-events/ontwigloaded": {
+            "title": "onTwigLoaded",
+            "summary": "Triggered when the Twig extension has loaded, this event is used to add templates, JavaScript, Vue apps, or CSS. It is available on frontend sites, author/admin interfaces, and API endpoints, and sends no data."
+        },
+        "/plugin-developers/plugin-events/onuserfieldsloaded": {
+            "title": "onUserfieldsLoaded",
+            "summary": "Triggered after user fields are loaded, this event lets plugins add fields for all users or specific roles and requires returning the full content array for frontend availability. Added fields must use matching array keys and field names or validation will remove them."
+        },
+        "/plugin-developers/plugin-methods/addnewroutes": {
+            "title": "addNewRoutes",
+            "summary": "Explains how to use the static addNewRoutes() method to register new frontend or API routes. Includes a simple PHP example mapping an HTTP method and route to a controller action."
+        },
+        "/plugin-developers/plugin-methods/addnewmiddleware": {
+            "title": "addNewMiddleware",
+            "summary": "Explains how to use the `addNewMiddleware()` static method to register new middleware in Typemill. Includes a simple example returning the middleware class name and parameters."
+        },
+        "/plugin-developers/plugin-methods/getsettings": {
+            "title": "getSettings",
+            "summary": "Explains how to use `$this->getSettings()` in a Typemill plugin to retrieve all Typemill settings as an array. Includes a simple example method showing the call inside a plugin class."
+        },
+        "/plugin-developers/plugin-methods/getpluginsettings": {
+            "title": "getPluginSettings",
+            "summary": "Describes the `getPluginSettings` method for retrieving a plugin’s settings from Typemill, either for a specified plugin or the currently active one by default. Includes the return type and a usage example."
+        },
+        "/plugin-developers/plugin-methods/storeplugindata": {
+            "title": "storePluginData",
+            "summary": "Explains how to use `storePluginData()` to save plugin data into a file under the plugin’s `data` folder. Includes parameter details, optional data transformation methods like `serialize` or `json_encode`, return values, and example usage."
+        },
+        "/plugin-developers/plugin-methods/storepluginyamldata": {
+            "title": "storePluginYamlData",
+            "summary": "Describes how to store plugin YAML data with `$this->storePluginYamlData()`, including validation against field definitions before writing to a specified YAML file. Also notes the possible return values for success, errors, or validation failures."
+        },
+        "/plugin-developers/plugin-methods/getplugindata": {
+            "title": "getPluginData",
+            "summary": "Explains how to use getPluginData($filename) to retrieve data from a specified file in a plugin’s data folder. Includes the parameter, return value, and a PHP usage example."
+        },
+        "/plugin-developers/plugin-methods/getpluginyamldata": {
+            "title": "getPluginYamlData",
+            "summary": "Retrieves YAML-formatted data from a specified file in the current plugin. Returns the parsed array if the file is found, or false otherwise."
+        },
+        "/plugin-developers/plugin-methods/deleteplugindata": {
+            "title": "deletePluginData",
+            "summary": "Describes the `deletePluginData($filename)` method for removing a file associated with the current plugin. Includes the required filename parameter and a PHP example of usage."
+        },
+        "/plugin-developers/plugin-methods/getdispatcher": {
+            "title": "getDispatcher",
+            "summary": "Describes how `$this->getDispatcher()` returns the Symfony event dispatcher for dispatching new or existing events. The example shows using it to trigger `onTwigLoaded` so related services, like mail, become available."
+        },
+        "/plugin-developers/plugin-methods/gettwig": {
+            "title": "getTwig",
+            "summary": "Describes the `getTwig()` method for retrieving the Twig environment so a plugin can load and render templates. Includes an example showing how to add a template path and render a Twig file with variables."
+        },
+        "/plugin-developers/plugin-methods/addtwigglobal": {
+            "title": "addTwigGlobal",
+            "summary": "Explains how to add a global variable to Twig with addTwigGlobal(), including the required onTwigGlobalsLoaded initialization step. Shows the parameters and a PHP/Twig example of exposing a class instance as a template global."
+        },
+        "/plugin-developers/plugin-methods/addtwigfilter": {
+            "title": "addTwigFilter",
+            "summary": "Describes how to register a custom Twig filter with `$this->addTwigFilter($name, $filter)`, including the required name and `TwigFilter` object parameters. Shows an example plugin adding a `rot13` filter and using it in a Twig template."
+        },
+        "/plugin-developers/plugin-methods/addtwigfunction": {
+            "title": "addTwigFunction",
+            "summary": "Adds a custom Twig function to the template environment using `$this->addTwigFunction($name, $function)`. Includes parameter details and an example of registering and calling the function in a Twig template."
+        },
+        "/plugin-developers/plugin-methods/addjs": {
+            "title": "addJS",
+            "summary": "Describes the `addJS($JS)` method for adding JavaScript file references to a page in a Typemill plugin. It also shows how to render the included scripts in the template using `{{ renderJS() }}` before the closing body tag."
+        },
+        "/plugin-developers/plugin-methods/addinlinejs": {
+            "title": "addInlineJS",
+            "summary": "Explains how to add inline JavaScript to a page using `$this->addInlineJS($JS)` in a Typemill plugin. Shows that the injected code is rendered in the template with `{{ renderJS() }}` before the closing body tag."
+        },
+        "/plugin-developers/plugin-methods/addcss": {
+            "title": "addCSS",
+            "summary": "Describes the `addCSS($CSS)` method for adding a CSS file reference to a page, using a relative path or URL. It also notes that the included styles are rendered in templates with `{{ renderCSS() }}` in the HTML header."
+        },
+        "/plugin-developers/plugin-methods/addinlinecss": {
+            "title": "addInlineCSS",
+            "summary": "Describes the addInlineCSS method for adding inline CSS code to a page. The CSS is rendered in the template with renderCSS(), typically placed in the HTML header."
+        },
+        "/plugin-developers/plugin-methods/addsvgsymbol": {
+            "title": "addSvgSymbol",
+            "summary": "Describes the `addSvgSymbol($symbol)` method for adding an SVG symbol to a plugin. Includes the required string parameter and a PHP usage example."
+        },
+        "/plugin-developers/plugin-methods/getmeta": {
+            "title": "getMeta",
+            "summary": "Describes the getMeta() method, which retrieves all frontend HTML meta-tag information. It returns an array of meta data and shows basic usage in a plugin method."
+        },
+        "/plugin-developers/plugin-methods/addmeta": {
+            "title": "addMeta",
+            "summary": "Describes the `addMeta($key, $meta)` method for adding HTML meta tags to the frontend. Includes parameter details and an example that adds a `noindex` robots meta tag."
+        },
+        "/plugin-developers/plugin-methods/activateaxios": {
+            "title": "activateAxios",
+            "summary": "Explains how to activate the Axios library in the frontend using `$this->activateAxios()` inside a plugin. It also notes that the generated script is rendered in the template with `{{ renderJS() }}` before the closing body tag."
+        },
+        "/plugin-developers/plugin-methods/activatevue": {
+            "title": "activateVue",
+            "summary": "Explains how to activate Vue.js in a plugin using `$this->activateVue()`. The Vue assets are rendered in the template with `{{ renderJS() }}`, which should be placed before the closing body tag."
+        },
+        "/plugin-developers/plugin-methods/markdowntohtml": {
+            "title": "markdownToHtml",
+            "summary": "Converts a Markdown string to HTML using `$this->markdownToHtml($markdown)`. Returns the converted HTML string and includes a simple PHP usage example."
+        },
+        "/plugin-developers/plugin-methods/generateform": {
+            "title": "generateForm",
+            "summary": "Generates a form from a plugin’s YAML form definitions for a given route name. Returns the generated form HTML as a string on success, or false if generation fails."
+        },
+        "/plugin-developers/plugin-methods/validateparams": {
+            "title": "validateParams",
+            "summary": "Validates form or request parameters using field types and optional regex rules from YAML form definitions. Returns the validated values on success or false on failure, with errors added to the session automatically."
+        },
+        "/plugin-developers/tutorial/cookie-consent-plugin": {
+            "title": "Cookie Consent Plugin",
+            "summary": "Explains the Cookie Consent plugin, which adds a cookie banner to site pages. It contrasts the plugin with hardcoding the script into a theme, highlighting easier maintenance and admin-side configuration of banner text, colors, and enable/disable settings."
+        },
+        "/plugin-developers/tutorial/write-the-yaml-file": {
+            "title": "Write the YAML File",
+            "summary": "Explains how to create a plugin YAML configuration file in the plugin root with the same name as the plugin folder, including basic metadata like name, version, author, and license. Also describes how YAML maps to arrays in TYPEMILL, how nested options use two-space indentation, and warns to use spaces instead of tabs."
+        },
+        "/plugin-developers/tutorial/write-the-php-file": {
+            "title": "Write the PHP File",
+            "summary": "Explains how to create a TYPEMILL plugin’s main PHP file and define its plugin class with the correct namespace and base-class inheritance. It also introduces the required static `getSubscribedEvents` method that every plugin must provide."
+        },
+        "/plugin-developers/tutorial/add-methods": {
+            "title": "Add Methods",
+            "summary": "Explains how to implement plugin event methods by subscribing to `onSettingsLoaded` and `onTwigLoaded`, retrieving settings data from event objects, and preparing to manipulate returned data with `getData()`/`setData()`. It then introduces adding CSS and JavaScript assets and injecting initial script/template content into the theme."
+        },
+        "/plugin-developers/tutorial/create-the-structure": {
+            "title": "Create the Structure",
+            "summary": "Explains the basic folder and file structure for a TypeMill plugin, using a cookie consent plugin as an example with a matching PHP entry file, YAML config, Twig template, and public CSS/JS assets. It also outlines naming conventions and notes that the next step is creating the configuration file."
+        },
+        "/plugin-developers/tutorial/add-twig-template": {
+            "title": "Add Twig Template",
+            "summary": "Explains how to create a Twig template for the cookie consent initialization script instead of embedding hardcoded JavaScript directly. It also shows how to load the template through Twig in PHP so the values can later be made editable with variables."
+        },
+        "/plugin-developers/tutorial/add-default-values": {
+            "title": "Add Default Values",
+            "summary": "Explains how to add default plugin values in TYPEMILL by defining a `settings` block in the plugin YAML file with two-space indentation. It also shows how these defaults are merged with global and user settings and accessed in the plugin via `onSettingsLoaded`."
+        },
+        "/plugin-developers/tutorial/use-variables-in-twig": {
+            "title": "Use Variables in Twig",
+            "summary": "Explains how to define default plugin settings in YAML and load them in PHP so they can be passed into a Twig template. Shows how the Cookie Consent plugin renders its banner script by fetching the Twig file with the settings array."
+        },
+        "/plugin-developers/tutorial/make-variables-editable": {
+            "title": "Make Variables Editable",
+            "summary": "Explains how to make plugin settings editable in the TYPEMILL UI by defining `forms` and `fields` in the plugin’s YAML configuration. Shows that field names must match default settings and gives a `select` example for a `position` setting."
+        },
+        "/plugin-developers/examples/add-new-userrole": {
+            "title": "Add a Userrole",
+            "summary": "Explains Typemill’s ACL-based role and permission system, including how to add or modify user roles, permissions, routes, and admin resources. It also lists the default roles and shows how plugins can access role data via the `onRolesPermissionsLoaded` event."
+        },
+        "/plugin-developers/examples/system-navigation": {
+            "title": "Change System Navigation",
+            "summary": "Describes Typemill’s default system navigation items and the access rights required to view them, noting that only account is visible to standard users. It also explains how plugins can use the `onSystemnaviLoaded` event to extend system navigation, add custom items, and restrict them by role or permission."
+        },
+        "/plugin-developers/examples/shortcodes": {
+            "title": "Create a Shortcode",
+            "summary": "Explains Typemill shortcodes, which let authors insert small snippets into markdown pages using a special syntax. It shows how plugins can listen for the `onShortcodeFound` event to replace a shortcode with custom HTML and notes that shortcodes can also be registered for use in the visual editor."
+        },
+        "/plugin-developers/examples/routes": {
+            "title": "Add a New Route",
+            "summary": "Explains how to add custom TYPEMILL routes from a plugin using the `addNewRoutes()` static method, specifying the HTTP method, route path, and controller class/method. It also shows how to register multiple routes and create the corresponding plugin controller file."
+        },
+        "/plugin-developers/examples/middleware": {
+            "title": "Add a New Middleware",
+            "summary": "Explains how to add plugin middleware in Typemill using the addNewMiddleware() method, which returns a middleware class name and optional parameters. Notes that middleware support is basic and currently limited to global middleware with fixed execution order."
+        },
+        "/forms/introduction": {
+            "title": "introduction",
+            "summary": "Explains how Typemill generates forms from simple YAML definitions for plugins and themes, allowing authors to configure settings, add page metadata, and create public forms. It also shows the basic `forms > fields` structure and how submitted values can be accessed in templates."
+        },
+        "/forms/field-overview": {
+            "title": "field overview",
+            "summary": "Explains Typemill form fields, including the parts of a field definition, supported field types, and common attributes like required, placeholder, and validation patterns. Also shows example usage for building forms with different field types."
+        },
+        "/forms/themes-and-plugins": {
+            "title": "themes and plugins",
+            "summary": "Explains how to add editable configuration forms to themes or plugins using YAML form definitions, including field setup and available field types. It also shows where saved settings are stored and how to access them in Twig templates or plugin code."
+        },
+        "/forms/meta-tabs": {
+            "title": "meta tabs",
+            "summary": "Explains how to add custom fields or new meta-tabs for pages in Typemill using a plugin/theme YAML definition and Vue.js. It also shows how page meta is stored separately from markdown, accessed in Twig via `metatabs`, and read in plugins through the `onMetaLoaded` event."
+        },
+        "/forms/public-forms": {
+            "title": "public forms",
+            "summary": "Explains how to define public forms in a Typemill plugin using YAML, with front-end generation, validation, spam protection, and CSRF handling done automatically. Also shows how admins can customize public form labels, help text, and descriptions through referenced settings fields."
+        },
+        "/api/introduction": {
+            "title": "Introduction",
+            "summary": ""
+        },
+        "/api/postman": {
+            "title": "Postman",
+            "summary": "Provides a downloadable Postman testing pack for Typemill API, including a collection, runner data, and scripts. It also explains how to run multi-role authorization tests in a STAGE environment using the Collection Runner or manual requests."
+        },
+        "/api/get-mainnavi": {
+            "title": "/mainnavi",
+            "summary": "Returns the main navigation items for the current user, with the menu contents varying by role permissions. Requires at least the \"member\" role and is available via GET /api/v1/mainnavi/."
+        },
+        "/api/get-systemnavi": {
+            "title": "/systemnavi",
+            "summary": "Returns the system navigation items available to the current user, with content varying by role and permissions. Requires at least the \"member\" role and is accessed via GET /api/v1/systemnavi/."
+        },
+        "/api/get-navigation": {
+            "title": "/navigation",
+            "summary": "Returns the full content navigation as a multidimensional array of item objects, including published pages by default and unpublished pages when `draft=true` is set. Requires member-level authorization and is available at `GET /api/v1/navigation`."
+        },
+        "/api/get-article": {
+            "title": "/article/content",
+            "summary": "Retrieves an article’s content as an array of blocks containing each block’s id, markdown, and HTML via GET /api/v1/article/content. Requires author access and a relative url query parameter, with an optional draft flag to return the draft version."
+        },
+        "/api/get-meta": {
+            "title": "/article/meta",
+            "summary": "Retrieves an article’s metadata from its meta-tabs via GET /api/v1/article/meta, using a required relative url query parameter. Authorization requires at least the author role."
+        },
+        "/api/get-item": {
+            "title": "/article/item",
+            "summary": "Describes the GET /api/v1/article/item endpoint for retrieving a specific article item by its relative URL, with author-level authorization required. Notes that it is best used when the URL is stable; otherwise, use get items to search by slug."
+        },
+        "/api/get-items": {
+            "title": "/article/items",
+            "summary": "Retrieves one or more article items by slug via GET /api/v1/article/items. It returns an array because slugs can repeat across folders, and requires at least the author role."
+        },
+        "/api/get-settings": {
+            "title": "/settings",
+            "summary": "Retrieves the system settings for the application via GET /api/v1/settings/. Requires manager authorization and returns configuration details such as version, title, editor, formats, image sizes, and plugin settings."
+        },
+        "/api/get-user-by-email": {
+            "title": "/users/getbymail",
+            "summary": "Retrieves a single user by email via GET /api/v1/users/getbyemail. Requires administrator authorization and an email query parameter."
+        },
+        "/api/get-users-by-name": {
+            "title": "/users/getbynames",
+            "summary": "Retrieves a list of user records for the specified usernames via GET /api/v1/users/getbynames. Requires administrator authorization and a required usernames array query parameter."
+        },
+        "/api/get-users-by-role": {
+            "title": "/users/getbyrole",
+            "summary": "Retrieves a list of users filtered by a specified user role via GET /api/v1/users/getbyrole. Requires administrator authorization and the role query parameter."
+        },
+        "/chatbot-privacy": {
+            "title": "chatbot-privacy",
+            "summary": ""
+        }
+    },
+    "built": "2026-06-04T01:55:30+02:00",
+    "fetched_at": 1780859780
+}
