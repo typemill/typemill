@@ -324,13 +324,14 @@ class Validation
 	public function authcode(array $params)
 	{
 		$v = new Validator($params);
-		$v->rule('required', ['username', 'code-1', 'code-2', 'code-3', 'code-4', 'code-5'])->message("Required");
+		$v->rule('required', ['username', 'code-1', 'code-2', 'code-3', 'code-4', 'code-5', 'code-6'])->message("Required");
 		$v->rule('alphaNum', 'username')->message("Invalid characters");
 		$v->rule('regex', 'code-1', '/^[0-9]{1}$/')->message("Must be 1-9");
 		$v->rule('regex', 'code-2', '/^[0-9]{1}$/')->message("Must be 1-9");
 		$v->rule('regex', 'code-3', '/^[0-9]{1}$/')->message("Must be 1-9");
 		$v->rule('regex', 'code-4', '/^[0-9]{1}$/')->message("Must be 1-9");
 		$v->rule('regex', 'code-5', '/^[0-9]{1}$/')->message("Must be 1-9");
+		$v->rule('regex', 'code-6', '/^[0-9]{1}$/')->message("Must be 1-9");
 		
 		if($v->validate())
 		{

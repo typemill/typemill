@@ -255,6 +255,25 @@ class ControllerWebAuth extends Controller
 
 		$userdata 		= $user->getUserData();
 
+		# slow down brute force attempts
+		usleep(300000);
+
+		$attempts = $userdata['authcodeattempts'] ?? 0;
+		if($attempts >= 5)
+		{
+			if($securitylog)
+			{
+				\Typemill\Static\Helpers::addLogEntry('login: too many verification code attempts');
+			}
+
+			if($this->c->get('flash'))
+			{
+				$this->c->get('flash')->addMessage('error', Translations::translate('The verification was wrong or outdated, please start again.'));
+			}
+
+			return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
+		}
+
 		if(isset($userdata['optintoken']) && $userdata['optintoken'])
 		{
 		    if($securitylog)
@@ -270,7 +289,7 @@ class ControllerWebAuth extends Controller
 		    return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
 		}
 
-		$authcodevalue 	= $input['code-1'] . $input['code-2'] . $input['code-3'] . $input['code-4'] . $input['code-5'];
+		$authcodevalue 	= $input['code-1'] . $input['code-2'] . $input['code-3'] . $input['code-4'] . $input['code-5'] . $input['code-6'];
 		$validAuthData 	= $this->validateAuthcode($userdata, $authcodevalue);
 
 		if(!$validAuthData)
@@ -280,6 +299,9 @@ class ControllerWebAuth extends Controller
 				\Typemill\Static\Helpers::addLogEntry('login: verification code wrong or outdated.');
 			}
 
+			$user->setValue('authcodeattempts', $attempts + 1);
+			$user->updateUser();
+
 			if($this->c->get('flash'))
 			{
 				$this->c->get('flash')->addMessage('error', Translations::translate('The verification was wrong or outdated, please start again.'));
@@ -287,6 +309,9 @@ class ControllerWebAuth extends Controller
 
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
 		}
+
+		# reset attempts on success
+		$user->setValue('authcodeattempts', 0);
 
 		# update authcode lastValidation and store
 		$user->setValue('authcodedata', $validAuthData);		
@@ -656,7 +681,7 @@ class ControllerWebAuth extends Controller
 
 	private function generateAuthcodeValue()
 	{
-		return rand(10000, 99999);
+		return random_int(100000, 999999);
 	}
 
 	private function storeNewAuthcode($authcodevalue, $fingerprint, $user)
@@ -674,13 +699,19 @@ class ControllerWebAuth extends Controller
 		$lastValidated 	= 0; # not validated yet
 
 		$user->setValue(
-			'authcodedata', 
-			$authcodevalue . 
-			':' . $generated . 
+			'authcodedata',
+			$authcodevalue .
+			':' . $generated .
 			':' . $lastValidated
 		);
 
+		# reset failed attempts for the new code
+		$user->setValue('authcodeattempts', 0);
+
 		$user->updateUser();
+
+		# slow down rapid code cycling
+		usleep(200000);
 	}
 
 	private function sendAuthcodeToUser($authcodevalue, $userdata)
