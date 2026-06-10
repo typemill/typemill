@@ -47,7 +47,8 @@ class ControllerWebRecover extends Controller
 			$recoverdate 					= date("Y-m-d H:i:s");
 			$recovertoken 					= bin2hex(random_bytes(32));
 
-			$url 	= $urlinfo['baseurl'] . '/tm/reset?username=' . $requiredUser['username'] . '&recovertoken=' . $recovertoken;
+			$baseUrl = !empty($settings['fqdn']) ? rtrim($settings['fqdn'], '/') : ($urlinfo['scheme'] . '://' . ($_SERVER['SERVER_NAME'] ?? $urlinfo['authority']) . $urlinfo['basepath']);
+			$url 	= rtrim($baseUrl, '/') . '/tm/reset?username=' . $requiredUser['username'] . '&recovertoken=' . $recovertoken;
 			$link 	= '<a href="'. $url . '">' . $url . '</a>';
 
 			# define the headers

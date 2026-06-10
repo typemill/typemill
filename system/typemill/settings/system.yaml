@@ -320,10 +320,14 @@ fieldsetrecover:
   type: fieldset
   legend: Password
   fields:
-    recoverhint: 
+    recoverhint:
       type: paragraph
       label: 'Notice'
-      description: 'Enable password recovery for users. Since this has security implications, use it only when necessary. Make sure mail is configured first. Read more in the [documentation](https://docs.typemill.net/admin-guide/password-tab)'
+      description: 'Enable password recovery for users. Because password recovery can increase the attack surface of your website, enable it only if needed. Make sure email settings are configured correctly before activating this feature.'
+    recoversecurity:
+      type: paragraph
+      label: 'Security Recommendation'
+      description: 'To improve security, configure a Fully Qualified Domain Name (FQDN) in the Developer settings. Password recovery emails use this address to generate reset links. If no FQDN is configured, reset links may be generated from request data and could be manipulated on improperly configured servers.'
     recoverpw:
       type: checkbox
       label: 'Recover password'
@@ -395,9 +399,13 @@ fieldsetdeveloper:
     trustedproxies:
       type: text
       label: "Trusted IPs for proxies (comma separated)"
+      placeholder: "192.168.1.1, 203.0.113.0"
+      description: "Restrict proxies to certain IP adresses."
     fqdn:
       type: text
-      label: "If your proxy does not work, try to add the base-url of your proxy here like https://mywebsite.com."
+      label: "FQDN (Fully Qualified Domain Name)"
+      placeholder: "https://mywebsite.com"
+      description: "If your proxy does not work, add the base-url of your website here."
     headersoff:
       type: checkbox
       label: "Disable Custom Headers"
