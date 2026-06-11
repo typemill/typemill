@@ -8,6 +8,7 @@ use Slim\Routing\RouteContext;
 use Typemill\Models\Navigation;
 use Typemill\Models\Content;
 use Typemill\Models\User;
+use Typemill\Models\Settings;
 use Typemill\Events\OnPagetreeLoaded;
 use Typemill\Events\OnItemLoaded;
 use Typemill\Events\OnMarkdownLoaded;
@@ -100,7 +101,7 @@ class ControllerWebAuthor extends Controller
 			'darkmode'			=> $request->getAttribute('c_darkmode'),
 			'mainnavi'			=> $mainNavigation,
 			'content' 			=> $draftMarkdownHtml,
-			'jsdata' 			=> [
+		    'jsdata' 			=> [
 										'settings' 		=> $this->settings,
 										'urlinfo'		=> $urlinfo,
 										'labels'		=> $this->c->get('translations'),
@@ -109,7 +110,8 @@ class ControllerWebAuthor extends Controller
 										'home' 			=> $home,
 										'project'		=> $project,
 										'projects' 		=> $projects,
-										'content' 		=> $draftMarkdownHtml
+										'content' 		=> $draftMarkdownHtml,
+										'aiconfigured'	=> (new Settings())->isAiConfigured()
 									]
 		]);
 	}
@@ -176,7 +178,7 @@ class ControllerWebAuthor extends Controller
 			'darkmode'			=> $request->getAttribute('c_darkmode'),
 			'mainnavi'			=> $mainNavigation,
 			'content' 			=> $draftMarkdownHtml,
-			'jsdata' 			=> [
+		    'jsdata' 			=> [
 										'settings' 		=> $this->settings,
 										'urlinfo'		=> $urlinfo,
 										'labels'		=> $this->c->get('translations'),
@@ -185,6 +187,7 @@ class ControllerWebAuthor extends Controller
 										'home' 			=> $home,
 										'projects' 		=> $projects,
 										'content' 		=> $draftMarkdownHtml,
+										'aiconfigured'	=> (new Settings())->isAiConfigured()
 									]
 		]);
 	}
