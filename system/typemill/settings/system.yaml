@@ -323,11 +323,7 @@ fieldsetrecover:
     recoverhint:
       type: paragraph
       label: 'Notice'
-      description: 'Enable password recovery for users. Because password recovery can increase the attack surface of your website, enable it only if needed. Make sure email settings are configured correctly before activating this feature.'
-    recoversecurity:
-      type: paragraph
-      label: 'Security Recommendation'
-      description: 'To improve security, configure a Fully Qualified Domain Name (FQDN) in the Developer settings. Password recovery emails use this address to generate reset links. If no FQDN is configured, reset links may be generated from request data and could be manipulated on improperly configured servers.'
+      description: 'Enable password recovery only if needed and ensure email settings are configured correctly. To improve security, configure a Fully Qualified Domain Name (FQDN) in the Developer settings. Without an FQDN, password reset links may be vulnerable to manipulation on certain server configurations.'
     recoverpw:
       type: checkbox
       label: 'Recover password'
