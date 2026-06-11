@@ -378,4 +378,39 @@ class Settings
 
         return false;
     }
+
+	public function isAiConfigured(): bool
+	{
+		$settings = $this->loadSettings();
+
+		$adapter = $settings['ai_adapter'] ?? null;
+		$baseUrl = $settings['ai_base_url'] ?? null;
+		$model   = $settings['ai_model'] ?? null;
+
+		// Fallback: migrate from old provider-specific settings
+		if (!$adapter || $adapter === 'none') {
+			$oldService = $settings['aiservice'] ?? null;
+			if ($oldService === 'chatgpt') {
+				$adapter = 'openai';
+				$baseUrl = $baseUrl ?: 'https://api.openai.com/v1';
+				$model   = $model ?: ($settings['chatgptModel'] ?? null);
+			} elseif ($oldService === 'claude') {
+				$adapter = 'anthropic';
+				$baseUrl = $baseUrl ?: 'https://api.anthropic.com/v1';
+				$model   = $model ?: ($settings['claudeModel'] ?? null);
+			}
+		}
+
+		if (!$adapter || $adapter === 'none') {
+			return false;
+		}
+		if (!$baseUrl) {
+			return false;
+		}
+		if (!$model) {
+			return false;
+		}
+
+		return true;
+	}
 }

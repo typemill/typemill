@@ -469,7 +469,7 @@ app.component('tab-lang', {
 										@click.prevent="storeTranslation(langKey)" 
 										:title="$filters.translate('Create translation page')"
 									>
-										<svg v-if="autotranslateActive" class="icon icon-magic-wand">
+										<svg v-if="autotranslateActive()" class="icon icon-magic-wand">
 											<use xlink:href="#icon-magic-wand"></use>
 										</svg>
 										{{ $filters.translate('create') }}
@@ -630,12 +630,7 @@ app.component('tab-lang', {
 		},
 		autotranslateActive()
 		{
-			if(this.settings.autotranslate)
-			{
-				return true;
-			}
-
-			return false;
+			return this.settings.autotranslate && data.aiconfigured;
 		},
 		hasTranslation(langKey)
 		{
@@ -667,7 +662,7 @@ app.component('tab-lang', {
 		},
 		showUpdate(langKey)
 		{
-			return this.hasTranslation(langKey) && this.autotranslateActive;
+			return this.hasTranslation(langKey) && this.autotranslateActive();
 		},
 		refreshEditData()
 		{

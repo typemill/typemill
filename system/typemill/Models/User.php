@@ -206,6 +206,13 @@ class User
 			$userfields = $customfields['userfields'];
 		}
 
+		# hide AI consent fields if no AI service is configured
+		$settingsModel = new Settings();
+		if (!$settingsModel->isAiConfigured())
+		{
+			unset($userfields['aiservices']);
+		}
+
 		# CONDITIONALLY CLEANUP FIELDS BELOW
 
 		# only guest can have access with login link
