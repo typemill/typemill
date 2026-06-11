@@ -24,8 +24,14 @@ class User
 		$this->storage 	= new StorageWrapper('\Typemill\Models\Storage');
 	}
 
+	public function sanitizeUsername(string $username)
+	{
+		return preg_replace('/[\r\n\t\0]/', '', trim($username));
+	}
+
 	public function setUser(string $username)
 	{
+		$username = $this->sanitizeUsername($username);
 		$this->user = $this->storage->getYaml('settingsFolder', 'users', $username . '.yaml');
 	
 		if(!$this->user)
@@ -43,6 +49,7 @@ class User
 
 	public function setUserWithPassword(string $username)
 	{
+		$username = $this->sanitizeUsername($username);
 		$this->user = $this->storage->getYaml('settingsFolder', 'users', $username . '.yaml');
 
 		if(!$this->user)
@@ -128,6 +135,7 @@ class User
 
 	public function createUser(array $params)
 	{
+		$params['username'] = $this->sanitizeUsername($params['username']);
 		$params['password'] = $this->generatePassword($params['password']);
 	
 		if($this->storage->updateYaml('settingsFolder', 'users', $params['username'] . '.yaml', $params))
@@ -143,8 +151,9 @@ class User
 	}
 
 	public function updateUser()
-	{		
-		if($this->storage->updateYaml('settingsFolder', 'users', $this->user['username'] . '.yaml', $this->user))
+	{
+		$username = $this->sanitizeUsername($this->user['username']);
+		if($this->storage->updateYaml('settingsFolder', 'users', $username . '.yaml', $this->user))
 		{
 			$this->deleteUserIndex();
 	
@@ -158,7 +167,8 @@ class User
 
 	public function deleteUser()
 	{
-		if($this->storage->deleteFile('settingsFolder', 'users', $this->user['username'] . '.yaml'))
+		$username = $this->sanitizeUsername($this->user['username']);
+		if($this->storage->deleteFile('settingsFolder', 'users', $username . '.yaml'))
 		{
 			$this->deleteUserIndex();
 

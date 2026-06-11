@@ -65,6 +65,7 @@ class Validation
 		# checks if username is free when create new user
 		Validator::addRule('userAvailable', function($field, $value, array $params, array $fields) use ($user)
 		{
+			$value = $user->sanitizeUsername($value);
 			$activeUser 	= $user->setUser($value);
 			$inactiveUser 	= $user->setUser("_" . $value);
 			if($activeUser OR $inactiveUser){ return false; }
@@ -74,6 +75,7 @@ class Validation
 		# checks if user exists when userdata is updated
 		Validator::addRule('userExists', function($field, $value, array $params, array $fields) use ($user)
 		{
+			$value = $user->sanitizeUsername($value);
 			if($user->setUser($value)){ return true; }
 			return false;
 		}, 'does not exist');
