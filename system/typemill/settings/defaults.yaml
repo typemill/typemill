@@ -31,3 +31,9 @@ images:
   thumbs:
     width: 250
     height: 150
+authpagebgcolor: '#0d9488'
+authpagetextcolor: '#ffffff'
+authpagerightside: true
+authpagerightbg: '#ffffff'
+authpagerighttextcolor: '#000000'
+authpagerightcontent: ''

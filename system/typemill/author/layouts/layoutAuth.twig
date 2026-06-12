@@ -20,6 +20,117 @@
 		<link rel="stylesheet" href="{{ base_url() }}/system/typemill/author/css/output.css?v={{ settings.version }}" />
 
 		{{ assets.renderCSS() }}
+
+		<style>
+			.auth-right-side {
+				background-color: {{ authpagebgcolor|default('#0d9488') }};
+				color: {{ authpagetextcolor|default('#ffffff') }};
+			}
+			@media (min-width: 1024px) {
+				.auth-right-side {
+					background-color: {{ authpagerightbg|default('#ffffff') }};
+					color: {{ authpagerighttextcolor|default('#000000') }};
+				}
+			}
+			.auth-btn:hover {
+				background-color: rgba(0,0,0,0.15);
+			}
+			.auth-right-side h1,
+			.auth-right-side h2,
+			.auth-right-side h3,
+			.auth-right-side h4,
+			.auth-right-side h5,
+			.auth-right-side h6 {
+				margin-top: 1.5em;
+				margin-bottom: 0.5em;
+				font-weight: 700;
+				line-height: 1.2;
+			}
+			.auth-right-side h1:first-child,
+			.auth-right-side h2:first-child,
+			.auth-right-side h3:first-child,
+			.auth-right-side h4:first-child,
+			.auth-right-side h5:first-child,
+			.auth-right-side h6:first-child {
+				margin-top: 0;
+			}
+			.auth-right-side h1 { font-size: 2.25em; }
+			.auth-right-side h2 { font-size: 1.75em; }
+			.auth-right-side h3 { font-size: 1.5em; }
+			.auth-right-side h4 { font-size: 1.25em; }
+			.auth-right-side h5 { font-size: 1.1em; }
+			.auth-right-side h6 { font-size: 1em; }
+			.auth-right-side p {
+				margin-bottom: 1em;
+				line-height: 1.6;
+			}
+			.auth-right-side a {
+				color: inherit;
+				text-decoration: underline;
+			}
+			.auth-right-side ul,
+			.auth-right-side ol {
+				margin-bottom: 1em;
+				padding-left: 1.5em;
+			}
+			.auth-right-side ul {
+				list-style-type: disc;
+			}
+			.auth-right-side ol {
+				list-style-type: decimal;
+			}
+			.auth-right-side li {
+				margin-bottom: 0.25em;
+				line-height: 1.5;
+			}
+			.auth-right-side img {
+				max-width: 100%;
+				height: auto;
+				display: block;
+				margin: 1em 0;
+			}
+			.auth-right-side blockquote {
+				margin: 1em 0;
+				padding-left: 1em;
+				border-left: 3px solid currentColor;
+				opacity: 0.85;
+			}
+			.auth-right-side code {
+				background-color: rgba(0,0,0,0.08);
+				padding: 0.2em 0.4em;
+				border-radius: 3px;
+				font-family: monospace;
+				font-size: 0.9em;
+			}
+			.auth-right-side pre {
+				background-color: rgba(0,0,0,0.08);
+				padding: 1em;
+				border-radius: 4px;
+				overflow-x: auto;
+				margin-bottom: 1em;
+			}
+			.auth-right-side pre code {
+				background: none;
+				padding: 0;
+				font-size: 0.9em;
+			}
+			.auth-right-side table {
+				width: 100%;
+				border-collapse: collapse;
+				margin-bottom: 1em;
+			}
+			.auth-right-side th,
+			.auth-right-side td {
+				border: 1px solid rgba(0,0,0,0.2);
+				padding: 0.5em;
+				text-align: left;
+			}
+			.auth-right-side hr {
+				margin: 1.5em 0;
+				border: none;
+				border-top: 1px solid rgba(0,0,0,0.2);
+			}
+		</style>
 		
 	</head>
 	<body class="text-base">

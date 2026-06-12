@@ -229,6 +229,39 @@ fieldsetaccess:
       type: checkbox
       label: 'Wrap restriction notice'
       checkboxlabel: 'Wrap the restriction notice above into a notice-4 element (which can be designed as special box)'
+fieldsetauthpage:
+  type: fieldset
+  legend: Login
+  fields:
+    authpagehint:
+      type: paragraph
+      label: 'Notice'
+      description: 'Customize the authentication pages and define redirects after login.'
+    authpagebgcolor:
+      type: text
+      label: 'Background color (form side)'
+      placeholder: '#0d9488'
+      css: lg:w-half
+    authpagetextcolor:
+      type: text
+      label: 'Text color (form side)'
+      placeholder: '#ffffff'
+      css: lg:w-half
+    authpagerightbg:
+      type: text
+      label: 'Background color (info side)'
+      placeholder: '#ffffff'
+      css: lg:w-half
+    authpagerighttextcolor:
+      type: text
+      label: 'Text color (info side)'
+      placeholder: '#000000'
+      css: lg:w-half
+    authpagerightcontent:
+      type: textarea
+      label: 'Content for login page (use markdown)'
+      description: 'If empty, the login page shows the default text. If filled, this content is shown on the login page only. Other pages like password recovery always show their original content.'
+      maxlength: 2000
     redirectadminrights:
       type: select
       label: 'After login redirect users with admin rights to'

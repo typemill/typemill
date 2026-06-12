@@ -16,10 +16,10 @@ class ControllerWebAuth extends Controller
 {
 	public function show(Request $request, Response $response)
 	{
-	    return $this->c->get('view')->render($response, 'auth/login.twig', [
+	    return $this->c->get('view')->render($response, 'auth/login.twig', array_merge([
 			'recover' 		=> $this->settings['recoverpw'] ?? false,
 			'captcha' 		=> $this->settings['authcaptcha'] ?? false,
-	    ]);
+	    ], $this->getAuthPageSettings()));
 	}
 	
 	public function login(Request $request, Response $response)
@@ -92,11 +92,11 @@ class ControllerWebAuth extends Controller
 		    # 2FA / authcode
 		    if($this->showAuthcodePage($user, $userdata))
 		    {
-		        return $this->c->get('view')->render($response, 'auth/authcode.twig', [
-		            'username'  => $userdata['username'],
-		            'authtitle' => $authtitle,
-		            'authtext'  => $authtext
-		        ]);
+        return $this->c->get('view')->render($response, 'auth/authcode.twig', array_merge([
+            'username'  => $userdata['username'],
+            'authtitle' => $authtitle,
+            'authtext'  => $authtext
+        ], $this->getAuthPageSettings()));
 		    }
 
 		    $user->login();
@@ -166,11 +166,11 @@ class ControllerWebAuth extends Controller
 				usleep(rand(100000, 200000));
 
 				# show authcode page
-			    return $this->c->get('view')->render($response, 'auth/authcode.twig', [
+			    return $this->c->get('view')->render($response, 'auth/authcode.twig', array_merge([
 					'username' 		=> $userdata['username'],
 					'authtitle' 	=> $authtitle,
 					'authtext' 		=> $authtext
-			    ]);
+			    ], $this->getAuthPageSettings()));
 	        }
 
 			if($this->c->get('flash'))
@@ -184,11 +184,11 @@ class ControllerWebAuth extends Controller
 		if($this->showAuthcodePage($user, $userdata))
 		{
 			# show authcode page
-		    return $this->c->get('view')->render($response, 'auth/authcode.twig', [
+		    return $this->c->get('view')->render($response, 'auth/authcode.twig', array_merge([
 				'username' 		=> $userdata['username'],
 				'authtitle' 	=> $authtitle,
 				'authtext'  	=> $authtext
-		    ]);			
+		    ], $this->getAuthPageSettings()));			
 		}
 
 		# check if user has confirmed the account 
@@ -543,6 +543,17 @@ class ControllerWebAuth extends Controller
 		return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
 	}
 
+	protected function getAuthPageSettings(): array
+	{
+		return [
+			'authpagebgcolor'        => $this->settings['authpagebgcolor'] ?? '#0d9488',
+			'authpagetextcolor'      => $this->settings['authpagetextcolor'] ?? '#ffffff',
+			'authpagerightside'      => $this->settings['authpagerightside'] ?? true,
+			'authpagerightbg'        => $this->settings['authpagerightbg'] ?? '#ffffff',
+			'authpagerighttextcolor' => $this->settings['authpagerighttextcolor'] ?? '#000000',
+			'authpagerightcontent'   => $this->settings['authpagerightcontent'] ?? '',
+		];
+	}
 
 	#############
 	# AUTHCODE  #
