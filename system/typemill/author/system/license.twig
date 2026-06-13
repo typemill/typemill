@@ -3,7 +3,15 @@
 
 {% block content %}
 	
-	<h1 class="text-3xl font-bold mb-4">{{ translate('License') }} </h1>
+	<h1 class="flex items-center text-3xl font-bold mb-4">{{ translate('License') }}
+		{% if jsdata.aiconfigured %}
+			<span class="pl-4 text-lg">
+				<a href="javascript:void(0)" onclick="eventBus.$emit('startHelp')" class="text-stone-400 hover:text-teal-600 transition duration-100">
+					<svg class="icon icon-question"><use xlink:href="#icon-question"></use></svg>
+				</a>
+			</span>	
+		{% endif %}
+	</h1>
 	
 	<div id="license" v-cloak></div>
 

@@ -48,7 +48,8 @@ class ControllerWebSystem extends Controller
 										'system'		=> $systemfields,
 										'systemnavi'	=> $systemNavigation,
 										'labels'		=> $this->c->get('translations'),
-										'urlinfo'		=> $this->c->get('urlinfo')
+										'urlinfo'		=> $this->c->get('urlinfo'),
+										'aiconfigured'	=> (new Settings())->isAiConfigured()
 									]
 	    ]);
 	}
@@ -117,7 +118,8 @@ class ControllerWebSystem extends Controller
 										'theme'			=> $this->settings['theme'],
 										'license' 		=> $license,
 										'labels'		=> $this->c->get('translations'),
-										'urlinfo'		=> $this->c->get('urlinfo')
+										'urlinfo'		=> $this->c->get('urlinfo'),
+										'aiconfigured'	=> (new Settings())->isAiConfigured()
 									]
 	    ]);
 	}
@@ -186,7 +188,8 @@ class ControllerWebSystem extends Controller
 										'definitions'	=> $pluginDefinitions,
 										'license'		=> $license,
 										'labels'		=> $this->c->get('translations'),
-										'urlinfo'		=> $this->c->get('urlinfo')
+										'urlinfo'		=> $this->c->get('urlinfo'),
+										'aiconfigured'	=> (new Settings())->isAiConfigured()
 									]
 	    ]);
 	}
@@ -242,7 +245,9 @@ class ControllerWebSystem extends Controller
 										'licensefields'	=> $licensefields,
 										'message'		=> $message,
 										'labels'		=> $this->c->get('translations'),
-										'urlinfo'		=> $this->c->get('urlinfo')							]
+										'urlinfo'		=> $this->c->get('urlinfo'),
+										'aiconfigured'	=> (new Settings())->isAiConfigured()
+									]
 	    ]);
 	}
 
@@ -281,7 +286,8 @@ class ControllerWebSystem extends Controller
 										'userfields'	=> $userfields,
 										'userroles'		=> $this->c->get('acl')->getRoles(),
 										'labels'		=> $this->c->get('translations'),
-										'urlinfo'		=> $this->c->get('urlinfo')
+										'urlinfo'		=> $this->c->get('urlinfo'),
+										'aiconfigured'	=> (new Settings())->isAiConfigured()
 									]
 	    ]);
 	}
@@ -327,7 +333,8 @@ class ControllerWebSystem extends Controller
 										'userdata'		=> $userdata,
 										'userroles'		=> $this->c->get('acl')->getRoles(),
 										'labels'		=> $this->c->get('translations'),
-										'urlinfo'		=> $this->c->get('urlinfo')
+										'urlinfo'		=> $this->c->get('urlinfo'),
+										'aiconfigured'	=> (new Settings())->isAiConfigured()
 									]
 	    ]);
 	}
@@ -376,7 +383,8 @@ class ControllerWebSystem extends Controller
 										'userfields'	=> $userfields,
 										'userroles'		=> $this->c->get('acl')->getRoles(),
 										'labels'		=> $this->c->get('translations'),
-										'urlinfo'		=> $this->c->get('urlinfo')
+										'urlinfo'		=> $this->c->get('urlinfo'),
+										'aiconfigured'	=> (new Settings())->isAiConfigured()
 									]
 	    ]);
 	}
@@ -407,7 +415,8 @@ class ControllerWebSystem extends Controller
 										'systemnavi'		=> $systemNavigation,
 										'userroles'		=> $this->c->get('acl')->getRoles(),
 										'labels'		=> $this->c->get('translations'),
-										'urlinfo'		=> $this->c->get('urlinfo')
+										'urlinfo'		=> $this->c->get('urlinfo'),
+										'aiconfigured'	=> (new Settings())->isAiConfigured()
 									]
 	    ]);
 	}
@@ -453,7 +462,8 @@ class ControllerWebSystem extends Controller
 										'urlinfo'		=> $this->c->get('urlinfo'),
 										'acl'			=> $this->c->get('acl'),
 										'userroles'		=> $this->c->get('acl')->getRoles(),
-										'plugin'		=> $pluginDefinitions
+										'plugin'		=> $pluginDefinitions,
+										'aiconfigured'	=> (new Settings())->isAiConfigured()
 									]
 	    ]);
 	}

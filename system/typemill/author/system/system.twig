@@ -2,8 +2,21 @@
 {% block title %}{{ translate('System Settings') }}{% endblock %}
 
 {% block content %}
-	
-	<h1 class="text-3xl font-bold mb-4">{{ translate('System') }} <span class="text-xs font-normal text-stone-700">version {{settings.version}}</span></h1>
+
+	<div class="flex justify-between items-center mb-4">
+		<h1 class="flex items-center text-3xl font-bold">{{ translate('System') }}
+			{% if jsdata.aiconfigured %}
+				<span class="pl-4 text-lg">
+					<a href="javascript:void(0)" onclick="eventBus.$emit('startHelp')" class="text-stone-400 hover:text-teal-600 transition duration-100">
+						<svg class="icon icon-question"><use xlink:href="#icon-question"></use></svg>
+					</a>
+				</span>	
+			{% endif %}
+		</h1>
+		<a href="https://typemill.net/typemill/roadmap" target="_blank" class="inline-block px-2 py-1 text-xs font-medium bg-stone-200 text-stone-700 rounded hover:bg-stone-300 dark:bg-stone-600 dark:text-stone-200 dark:hover:bg-stone-500 transition duration-100">
+			v{{ settings.version }}
+		</a>
+	</div>
 	
 	<div id="system" v-cloak></div>
 

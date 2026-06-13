@@ -302,6 +302,8 @@ const kixote = Vue.createApp({
 
 		eventBus.$on('startAi', this.startAi);
 
+		eventBus.$on('startHelp', this.startHelp);
+
 		eventBus.$on('kiExit', this.stopKixote);
 
 		eventBus.$on('kiScrollBottom', this.scrollToBottom);
@@ -445,6 +447,11 @@ const kixote = Vue.createApp({
 		{
 			this.showKixote = true;
 			this.switchToGenerateTab = true;
+		},
+		startHelp()
+		{
+			this.currentTab = 'Help';
+			this.showKixote = true;
 		},
 		afterContentLoaded()
 		{
@@ -1686,12 +1693,18 @@ kixote.component('tab-help', {
 	},
 	template: `<section class="dark:bg-stone-700 smooth-scroll dark:text-stone-200 bg-stone-200">
 					<div v-if="!aiservice || !useragreement" class="p-5">
-						<h1 class="mb-d3"><span class="text-teal-600">Ask the Docs</span></h1>
-						<p class="text-sm">Help is available once you activate an AI service and accept the usage terms.</p>
+						<h1 class="mb-d3">Ask the Docs</h1>
+						<div class="py-2">
+							<p class="text-xs">This assistant uses the content of the <a class="text-teal-600" href="https://docs.typemill.net">Typemill documentation</a> to generate AI-powered answers with your configured AI service.</p>
+							<p class="text-xs pt-2">The AI-assisted help is available once you activate an AI service and accept the usage terms.</p>
+						</div>
 					</div>
 					<div v-else>
 						<div class="p-5">
-							<h1 class="mb-d3">How can I help? You can <span class="text-teal-600">ask the docs</span> here.</h1>
+							<h1 class="mb-d3">How can I help?</h1>
+							<div class="py-2">
+								<p class="text-xs">This assistant uses the content of the <a class="text-teal-600" href="https://docs.typemill.net">Typemill documentation</a> to generate AI-powered answers with your configured AI service.</p>
+							</div>
 						</div>
 						<div>
 							<div v-for="message,index in messenger">
@@ -1703,7 +1716,7 @@ kixote.component('tab-help', {
 							</div>
 							</div>
 						</div>
-						<div class="p-5" v-if="!loading">
+						<div class="p-5 pb-8" v-if="!loading">
 							<div class="w-full bg-stone-100 dark:bg-stone-600 p-2 flex justify-between">
 								<p class="flex w-full">
 									<span class="text-teal-600 p-1">Ki></span>
@@ -1715,9 +1728,6 @@ kixote.component('tab-help', {
 						        	:disabled = "loading"
 						        	>send
 						        </button>
-							</div>
-							<div class="py-2">
-								<p class="text-xs">Ask questions about Typemill documentation.</p>
 							</div>
 						</div>
 					</div>
