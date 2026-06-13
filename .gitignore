@@ -1,10 +1,12 @@
-ai
+ai/tasks
 cache/timer.yaml
 cache/sitemap.xml
 media/tmp/.gitkeep
 system/vendor
 cypress
 data/navigation
+data/kixote
+data/multilang
 data/css
 data/security/securitylog.txt
 node_modules
