@@ -136,14 +136,6 @@ class Storage
 				$folder = trim($folder, DIRECTORY_SEPARATOR);
 				$path .= $folder . DIRECTORY_SEPARATOR; 
 			}
-			elseif($location == 'basepath')
-			{
-				# do not allow direct access to basepath files
-
-				$this->error = Translations::translate('Access to basepath is not allowed.');
-				
-				return false;
-			}
 
 			return $path;
 		}
