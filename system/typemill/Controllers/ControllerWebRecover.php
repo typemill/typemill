@@ -22,6 +22,7 @@ class ControllerWebRecover extends Controller
 			'authpagerightbg'        => $this->settings['authpagerightbg'] ?? '#ffffff',
 			'authpagerighttextcolor' => $this->settings['authpagerighttextcolor'] ?? '#000000',
 			'authpagerightcontent'   => $this->settings['authpagerightcontent'] ?? '',
+			'authpagestacked'        => $this->settings['authpagestacked'] ?? false,
 		];
 	}
 

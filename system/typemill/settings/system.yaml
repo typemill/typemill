@@ -266,6 +266,11 @@ fieldsetauthpage:
       label: 'Content for login page (use markdown)'
       description: 'If empty, the login page shows the default text. If filled, this content is shown on the login page only. Other pages like password recovery always show their original content.'
       maxlength: 2000
+    authpagestacked:
+      type: checkbox
+      label: 'Stacked layout (top/bottom instead of left/right)'
+      checkboxlabel: 'Use a top/bottom layout for all authentication pages'
+      description: 'If activated, the info text appears at the top and the form below on all screen sizes.'
     redirectadminrights:
       type: select
       label: 'After login redirect users with admin rights to'

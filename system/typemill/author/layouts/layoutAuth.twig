@@ -23,14 +23,8 @@
 
 		<style>
 			.auth-right-side {
-				background-color: {{ authpagebgcolor|default('#0d9488') }};
-				color: {{ authpagetextcolor|default('#ffffff') }};
-			}
-			@media (min-width: 1024px) {
-				.auth-right-side {
-					background-color: {{ authpagerightbg|default('#ffffff') }};
-					color: {{ authpagerighttextcolor|default('#000000') }};
-				}
+				background-color: {{ authpagerightbg|default('#ffffff') }};
+				color: {{ authpagerighttextcolor|default('#000000') }};
 			}
 			.auth-btn:hover {
 				background-color: rgba(0,0,0,0.15);

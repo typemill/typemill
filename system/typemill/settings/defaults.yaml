@@ -37,3 +37,4 @@ authpagerightside: true
 authpagerightbg: '#ffffff'
 authpagerighttextcolor: '#000000'
 authpagerightcontent: ''
+authpagestacked: false

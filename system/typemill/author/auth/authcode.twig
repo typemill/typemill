@@ -4,9 +4,9 @@
 
 {% block content %}
 
-	<div class="lg:flex-row flex flex-col-reverse min-h-screen lg:min-h-0 justify-end">
+	<div class="flex flex-col-reverse min-h-screen justify-end {{ authpagestacked ? '' : 'lg:flex-row lg:min-h-0' }}">
 		
-		<div class="lg:w-1/2 flex-1 lg:flex-none lg:min-h-screen flex justify-center items-center" style="background-color: {{ authpagebgcolor|default('#0d9488') }}; color: {{ authpagetextcolor|default('#ffffff') }};">
+		<div class="flex-1 flex justify-center items-center {{ authpagestacked ? 'w-full' : 'lg:w-1/2 lg:flex-none lg:min-h-screen' }}" style="background-color: {{ authpagebgcolor|default('#0d9488') }}; color: {{ authpagetextcolor|default('#ffffff') }};">
 			<div class="max-w-md content-center">
 			
 				<p>{{ translate('Enter the verification code from your email:') }}</p>
@@ -83,7 +83,7 @@
 							type="submit" 
 							value="{{ translate('Confirm') }}" 
 							style="color: {{ authpagetextcolor|default('#ffffff') }}; border-color: {{ authpagetextcolor|default('#ffffff') }};"
-                      		class="block w-full mt-6 px-3 py-3 border-0 font-medium text-xs leading-tight uppercase border-2 pointer auth-btn cursor-pointer focus:outline-none focus:ring-0 transition duration-100 ease-in-out"
+                       		class="block w-full mt-6 px-3 py-3 border-0 font-medium text-xs leading-tight uppercase border-2 pointer auth-btn cursor-pointer focus:outline-none focus:ring-0 transition duration-100 ease-in-out"
 						/>
 
 					</fieldset>
@@ -105,8 +105,8 @@
 			</div>
 		</div>
 		
-		<div class="lg:w-1/2 p-5 border-b border-white content-center flex justify-center items-center auth-right-side">
-			<div class="max-w-md content-center">
+		<div class="p-5 border-b border-white content-center flex justify-center items-center auth-right-side {{ authpagestacked ? 'w-full' : 'lg:w-1/2' }}">
+			<div class="max-w-md content-center {{ authpagestacked ? 'text-center' : '' }}">
 				<h1 class="text-4xl py-5">{{ authtitle|e }}</h1>
 				<p class="py-2">{{ authtext|e }}</p>
 				<a class="py-2" href="{{ url_for('auth.show') }}">&#x2192; {{ translate('Back to login') }}</a>
