@@ -121,6 +121,13 @@ class ControllerApiKixote extends Controller
 		return max(256, min(12000, $hardCap));
 	}
 
+	private function getTimeout(): int
+	{
+		$timeout = (int) ($this->settings['aitimeout'] ?? 120);
+		// Clamp: min 30, max 600
+		return max(30, min(600, $timeout));
+	}
+
 	/**
 	 * Dispatch a fully-assembled user message to the configured AI provider.
 	 * Callers are responsible for building $userMessage (prompt + tagged XML content).
@@ -134,6 +141,7 @@ class ControllerApiKixote extends Controller
 		$systemMessage = $systemMessageOverride ?? $this->getSystemMessage();
 		$maxTokens     = $this->getOutputBudget($userMessage);
 		$temperature   = $this->getTemperature();
+		$timeout       = $this->getTimeout();
 
 		$adapter = AiAdapter::create(
 			$this->aiadapter,
@@ -142,7 +150,7 @@ class ControllerApiKixote extends Controller
 			$this->apikey ?? ''
 		);
 
-		$answer = $adapter->chat($systemMessage, $userMessage, $maxTokens, $temperature);
+		$answer = $adapter->chat($systemMessage, $userMessage, $maxTokens, $temperature, $timeout);
 
 		if ($answer === false) {
 			$this->error = $adapter->getError();

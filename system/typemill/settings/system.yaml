@@ -556,3 +556,17 @@ fieldsetai:
         '8000': '8000 (Research)'
         '10000': '10000 (High)'
         '12000': '12000 (Max)'
+    aitimeout:
+      type: select
+      label: 'AI request timeout'
+      description: "Default: 120 sec (increase for very long articles)"
+      class: "w-half"
+      options:
+        '120': '120 sec (default)'
+        '180': '180 sec'
+        '240': '240 sec'
+        '300': '300 sec'
+        '360': '360 sec'
+        '420': '420 sec'
+        '480': '480 sec'
+        '600': '600 sec'
