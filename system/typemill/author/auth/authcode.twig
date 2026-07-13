@@ -15,62 +15,15 @@
 				
 					<fieldset>
 
-						<div class="flex justify-between my-2">
-							<input 
-								type="text" 
-								inputmode="numeric"
-								name="code-1" 
-								pattern="[0-9]" 
-								maxlength="1" 
-								oninput="moveToNextField(this)"	
-								class="mr-2 form-control block w-full px-3 py-3 text-xl text-center font-bold text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-non"
-							required>
-							<input 
-								type="text" 
-								inputmode="numeric"
-								name="code-2" 
-								pattern="[0-9]" 
-								maxlength="1" 
-								oninput="moveToNextField(this)"	
-								class="mr-2 form-control block w-full px-3 py-3 text-xl text-center font-bold text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-non"
-							required>
-							<input 
-								type="text" 
-								inputmode="numeric"
-								name="code-3" 
-								pattern="[0-9]" 
-								maxlength="1" 
-								oninput="moveToNextField(this)"	
-								class="mr-2 form-control block w-full px-3 py-3 text-xl text-center font-bold text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-non"
-							required>
-							<input 
-								type="text" 
-								inputmode="numeric"
-								name="code-4" 
-								pattern="[0-9]" 
-								maxlength="1" 
-								oninput="moveToNextField(this)"	
-								class="mr-2 form-control block w-full px-3 py-3 text-xl text-center font-bold text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-non"
-							required>
-							<input 
-								type="text" 
-								inputmode="numeric"
-								name="code-5" 
-								pattern="[0-9]" 
-								maxlength="1" 
-								oninput="moveToNextField(this)"	
-								class="mr-2 form-control block w-full px-3 py-3 text-xl text-center font-bold text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-non"
-							required>
-							<input 
-								type="text" 
-								inputmode="numeric"
-								name="code-6" 
-								pattern="[0-9]" 
-								maxlength="1" 
-								oninput="moveToNextField(this)"	
-								class="form-control block w-full px-3 py-3 text-xl text-center font-bold text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-non"
-							required>
-						</div>
+						<input
+							type="text"
+							inputmode="numeric"
+							name="authcode"
+							pattern="[0-9]{6}"
+							maxlength="6"
+							class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+							required
+						>
 
 						<input type="hidden" value="{{username|e}}" name="username">
 
@@ -79,28 +32,13 @@
 							<input type="text" name="personal-honey-mail">
 						</div>
 
-						<input 
-							type="submit" 
-							value="{{ translate('Confirm') }}" 
+						<input
+							type="submit"
+							value="{{ translate('Confirm') }}"
 							style="color: {{ authpagetextcolor|default('#ffffff') }}; border-color: {{ authpagetextcolor|default('#ffffff') }};"
-                       		class="block w-full mt-6 px-3 py-3 border-0 font-medium text-xs leading-tight uppercase border-2 pointer auth-btn cursor-pointer focus:outline-none focus:ring-0 transition duration-100 ease-in-out"
+							class="block w-full mt-6 px-3 py-3 border-0 font-medium text-xs leading-tight uppercase border-2 pointer auth-btn cursor-pointer focus:outline-none focus:ring-0 transition duration-100 ease-in-out"
 						/>
-
 					</fieldset>
-					<script>
-					  function moveToNextField(currentField) {
-					    var inputValue = currentField.value;
-					    var inputLength = inputValue.length;
-					    if (inputLength === 1)
-					    {
-					      var nextField = currentField.nextElementSibling;
-					      if (nextField)
-					      {
-					        nextField.focus();
-					      }
-					    }
-					  }						
-					</script>
 				</form>
 			</div>
 		</div>

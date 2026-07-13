@@ -289,7 +289,7 @@ class ControllerWebAuth extends Controller
 		    return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
 		}
 
-		$authcodevalue 	= $input['code-1'] . $input['code-2'] . $input['code-3'] . $input['code-4'] . $input['code-5'] . $input['code-6'];
+		$authcodevalue 	= $input['authcode'] ?? '';
 		$validAuthData 	= $this->validateAuthcode($userdata, $authcodevalue);
 
 		if(!$validAuthData)
