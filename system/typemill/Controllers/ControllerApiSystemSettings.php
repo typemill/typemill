@@ -35,6 +35,19 @@ class ControllerApiSystemSettings extends Controller
 		$validator 			= new Validation();
 		$validatedOutput 	= $validator->recursiveValidation($formdefinitions, $settingsinput);
 
+		# Base project fields are mandatory when multi-project is enabled
+		if(isset($validatedOutput['projects']) && $validatedOutput['projects'] !== 'standard')
+		{
+			if(empty($validatedOutput['baseprojectid']))
+			{
+				$validator->errors['baseprojectid'] = Translations::translate('Base Project ID is required for multi-project websites.');
+			}
+			if(empty($validatedOutput['baseprojectlabel']))
+			{
+				$validator->errors['baseprojectlabel'] = Translations::translate('Base Project Label is required for multi-project websites.');
+			}
+		}
+
 		if(!empty($validator->errors))
 		{
 			$response->getBody()->write(json_encode([
