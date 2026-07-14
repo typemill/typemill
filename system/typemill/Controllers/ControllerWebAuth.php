@@ -259,6 +259,17 @@ class ControllerWebAuth extends Controller
 		usleep(300000);
 
 		$attempts = $userdata['authcodeattempts'] ?? 0;
+		$locked   = $userdata['authcodelocked'] ?? 0;
+
+		# cooldown expired after 15 minutes
+		if($attempts >= 5 && $locked && (time() - $locked > 900))
+		{
+			$attempts = 0;
+			$user->setValue('authcodeattempts', 0);
+			$user->setValue('authcodelocked', 0);
+			$user->updateUser();
+		}
+
 		if($attempts >= 5)
 		{
 			if($securitylog)
@@ -300,6 +311,10 @@ class ControllerWebAuth extends Controller
 			}
 
 			$user->setValue('authcodeattempts', $attempts + 1);
+			if(($attempts + 1) >= 5)
+			{
+				$user->setValue('authcodelocked', time());
+			}
 			$user->updateUser();
 
 			if($this->c->get('flash'))
@@ -310,8 +325,9 @@ class ControllerWebAuth extends Controller
 			return $response->withHeader('Location', $this->routeParser->urlFor('auth.show'))->withStatus(302);
 		}
 
-		# reset attempts on success
+		# reset attempts and lockout on success
 		$user->setValue('authcodeattempts', 0);
+		$user->setValue('authcodelocked', 0);
 
 		# update authcode lastValidation and store
 		$user->setValue('authcodedata', $validAuthData);		
@@ -585,6 +601,24 @@ class ControllerWebAuth extends Controller
 			!$this->findDeviceFingerprint($fingerprint, $userdata)
 		)
 		{
+			$attempts = $userdata['authcodeattempts'] ?? 0;
+			$locked   = $userdata['authcodelocked'] ?? 0;
+
+			# account is locked due to too many failed attempts
+			if($attempts >= 5 && $locked && (time() - $locked <= 900))
+			{
+				# show authcode screen but do not generate a new code or send email
+				return true;
+			}
+
+			# cooldown expired, clear lockout before generating a new code
+			if($attempts >= 5 && $locked && (time() - $locked > 900))
+			{
+				$user->setValue('authcodeattempts', 0);
+				$user->setValue('authcodelocked', 0);
+				$user->updateUser();
+			}
+
 			# generate new authcode
 			$authcodevalue 	= $this->generateAuthcodeValue();
 
@@ -716,9 +750,6 @@ class ControllerWebAuth extends Controller
 			':' . $generated .
 			':' . $lastValidated
 		);
-
-		# reset failed attempts for the new code
-		$user->setValue('authcodeattempts', 0);
 
 		$user->updateUser();
 
