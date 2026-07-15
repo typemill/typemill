@@ -17,10 +17,11 @@ interface AiAdapterInterface
      * @return string|false          The answer string, or false on failure.
      */
     public function chat(
-        string $systemMessage,
-        string $userMessage,
-        int    $maxTokens,
-        float  $temperature
+        string  $systemMessage,
+        string  $userMessage,
+        int     $maxTokens,
+        float   $temperature,
+        ?int    $timeout = null
     ): string|false;
 
     /**
@@ -53,7 +54,7 @@ class OpenAiAdapter implements AiAdapterInterface
         $this->apikey  = $apikey;
     }
 
-    public function chat(string $systemMessage, string $userMessage, int $maxTokens, float $temperature): string|false
+    public function chat(string $systemMessage, string $userMessage, int $maxTokens, float $temperature, ?int $timeout = null): string|false
     {
         $url = $this->baseUrl . '/chat/completions';
 
@@ -74,7 +75,7 @@ class OpenAiAdapter implements AiAdapterInterface
         ];
 
         $api = new ApiCalls();
-        $api->setTimeout(120);
+        $api->setTimeout($timeout ?? 120);
         $response = $api->makePostCall($url, $postdata, $headers);
 
         if (!$response) {
@@ -161,7 +162,7 @@ class AnthropicAdapter implements AiAdapterInterface
         $this->apikey  = $apikey;
     }
 
-    public function chat(string $systemMessage, string $userMessage, int $maxTokens, float $temperature): string|false
+    public function chat(string $systemMessage, string $userMessage, int $maxTokens, float $temperature, ?int $timeout = null): string|false
     {
         $url = $this->baseUrl . '/messages';
 
@@ -181,7 +182,7 @@ class AnthropicAdapter implements AiAdapterInterface
         ];
 
         $api = new ApiCalls();
-        $api->setTimeout(120);
+        $api->setTimeout($timeout ?? 120);
         $response = $api->makePostCall($url, $postdata, $headers);
 
         if (!$response) {
