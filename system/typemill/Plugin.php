@@ -345,6 +345,71 @@ abstract class Plugin implements EventSubscriberInterface
 		return $form;
 	}
 
+	/**
+	 * Generate a static asset from source content and return its public URL.
+	 *
+	 * The asset is stored in /cache/generated/{namespace}/ using a SHA1 content hash.
+	 * If the file already exists, the generator callable is skipped.
+	 *
+	 * @param string   $source     Raw source content (used for deterministic hash)
+	 * @param callable $generator  Function that receives the source and returns file content
+	 * @param string   $extension  File extension, e.g. 'svg', 'png'
+	 * @param string   $namespace  Optional namespace; defaults to the plugin name
+	 * @return string Public URL to the generated asset
+	 */
+	protected function generateStaticAsset(
+		string $source,
+		callable $generator,
+		string $extension = 'svg',
+		string $namespace = null
+	): string
+	{
+		$namespace	= $namespace ?? $this->getPluginName();
+		$baseurl	= $this->urlinfo['baseurl'] ?? '';
+		$cachePath	= getcwd() . DIRECTORY_SEPARATOR . 'cache';
+
+		$hash		= sha1($source);
+		$filename	= $hash . '.' . $extension;
+		$dir		= $cachePath . DIRECTORY_SEPARATOR . 'generated' . DIRECTORY_SEPARATOR . $namespace;
+		$filepath	= $dir . DIRECTORY_SEPARATOR . $filename;
+
+		if (!file_exists($filepath))
+		{
+			if (!is_dir($dir))
+			{
+				mkdir($dir, 0755, true);
+			}
+			$content = $generator($source);
+			file_put_contents($filepath, $content);
+		}
+
+		return $baseurl . '/cache/generated/' . $namespace . '/' . $filename;
+	}
+
+	/**
+	 * Get the absolute filesystem path for a generated static asset.
+	 *
+	 * Useful for EPUB/PDF generators that need local file paths rather than URLs.
+	 *
+	 * @param string   $source     Raw source content
+	 * @param string   $extension  File extension
+	 * @param string   $namespace  Optional namespace; defaults to the plugin name
+	 * @return string Absolute filesystem path
+	 */
+	protected function getStaticAssetPath(
+		string $source,
+		string $extension = 'svg',
+		string $namespace = null
+	): string
+	{
+		$namespace	= $namespace ?? $this->getPluginName();
+		$cachePath	= getcwd() . DIRECTORY_SEPARATOR . 'cache';
+		$hash		= sha1($source);
+		$filename	= $hash . '.' . $extension;
+
+		return $cachePath . DIRECTORY_SEPARATOR . 'generated' . DIRECTORY_SEPARATOR . $namespace . DIRECTORY_SEPARATOR . $filename;
+	}
+
 	protected function validateParams($params)
 	{
 		$pluginname 		= $this->getPluginName();
