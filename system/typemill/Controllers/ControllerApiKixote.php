@@ -128,6 +128,14 @@ class ControllerApiKixote extends Controller
 		return max(30, min(600, $timeout));
 	}
 
+	private function getReasoningEffort(): ?string
+	{
+		$value = $this->settings['ai_reasoning_effort'] ?? '';
+		$allowed = ['none', 'low', 'medium', 'high'];
+
+		return in_array($value, $allowed, true) ? $value : null;
+	}
+
 	/**
 	 * Dispatch a fully-assembled user message to the configured AI provider.
 	 * Callers are responsible for building $userMessage (prompt + tagged XML content).
@@ -138,10 +146,11 @@ class ControllerApiKixote extends Controller
 		?string $systemMessageOverride = null
 	): string|false
 	{
-		$systemMessage = $systemMessageOverride ?? $this->getSystemMessage();
-		$maxTokens     = $this->getOutputBudget($userMessage);
-		$temperature   = $this->getTemperature();
-		$timeout       = $this->getTimeout();
+		$systemMessage   = $systemMessageOverride ?? $this->getSystemMessage();
+		$maxTokens       = $this->getOutputBudget($userMessage);
+		$temperature     = $this->getTemperature();
+		$timeout         = $this->getTimeout();
+		$reasoningEffort = $this->getReasoningEffort();
 
 		$adapter = AiAdapter::create(
 			$this->aiadapter,
@@ -150,7 +159,7 @@ class ControllerApiKixote extends Controller
 			$this->apikey ?? ''
 		);
 
-		$answer = $adapter->chat($systemMessage, $userMessage, $maxTokens, $temperature, $timeout);
+		$answer = $adapter->chat($systemMessage, $userMessage, $maxTokens, $temperature, $timeout, $reasoningEffort);
 
 		if ($answer === false) {
 			$this->error = $adapter->getError();

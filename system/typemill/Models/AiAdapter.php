@@ -21,7 +21,8 @@ interface AiAdapterInterface
         string  $userMessage,
         int     $maxTokens,
         float   $temperature,
-        ?int    $timeout = null
+        ?int    $timeout = null,
+        ?string $reasoningEffort = null
     ): string|false;
 
     /**
@@ -54,7 +55,7 @@ class OpenAiAdapter implements AiAdapterInterface
         $this->apikey  = $apikey;
     }
 
-    public function chat(string $systemMessage, string $userMessage, int $maxTokens, float $temperature, ?int $timeout = null): string|false
+    public function chat(string $systemMessage, string $userMessage, int $maxTokens, float $temperature, ?int $timeout = null, ?string $reasoningEffort = null): string|false
     {
         $url = $this->baseUrl . '/chat/completions';
 
@@ -72,7 +73,12 @@ class OpenAiAdapter implements AiAdapterInterface
             ],
             'temperature' => $temperature,
             'max_tokens'  => $maxTokens,
+            'stream'      => false,
         ];
+
+        if (!empty($reasoningEffort)) {
+            $postdata['reasoning_effort'] = $reasoningEffort;
+        }
 
         $api = new ApiCalls();
         $api->setTimeout($timeout ?? 120);
@@ -90,12 +96,18 @@ class OpenAiAdapter implements AiAdapterInterface
             return false;
         }
 
-        if (empty($data['choices'][0]['message']['content'])) {
-            $this->error = 'AI provider did not return a valid answer.';
+        $content = $data['choices'][0]['message']['content'] ?? '';
+        if (empty($content)) {
+            $finishReason = $data['choices'][0]['finish_reason'] ?? '';
+            if ($finishReason === 'length') {
+                $this->error = 'The AI response was cut off because the maximum output length was reached. Please increase the output token limit or shorten the prompt.';
+            } else {
+                $this->error = 'AI provider did not return a valid answer.';
+            }
             return false;
         }
 
-        return trim($data['choices'][0]['message']['content']);
+        return trim($content);
     }
 
     public function listModels(): array|false
@@ -162,7 +174,7 @@ class AnthropicAdapter implements AiAdapterInterface
         $this->apikey  = $apikey;
     }
 
-    public function chat(string $systemMessage, string $userMessage, int $maxTokens, float $temperature, ?int $timeout = null): string|false
+    public function chat(string $systemMessage, string $userMessage, int $maxTokens, float $temperature, ?int $timeout = null, ?string $reasoningEffort = null): string|false
     {
         $url = $this->baseUrl . '/messages';
 

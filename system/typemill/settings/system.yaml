@@ -570,3 +570,14 @@ fieldsetai:
         '420': '420 sec'
         '480': '480 sec'
         '600': '600 sec'
+    ai_reasoning_effort:
+      type: select
+      label: 'Reasoning effort'
+      description: "For thinking/reasoning models only (e.g. Ollama, OpenAI o1/o3). 'Default' lets the provider decide. 'Off' disables reasoning. Other levels control reasoning depth."
+      class: "w-half"
+      options:
+        '': 'Default (provider decides)'
+        'none': 'Off'
+        'low': 'Low'
+        'medium': 'Medium'
+        'high': 'High'

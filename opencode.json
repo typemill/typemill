@@ -10,7 +10,7 @@
   },
 /*  "model": "opencode/claude-sonnet-4-6", */
 /*  "small_model": "opencode/claude-haiku-4-5", */
-  "model": "opencode/kimi-k2.6",
+  "model": "opencode/kimi-k2.7-code",
   "small_model": "opencode/minimax-m2.7",
   "instructions": [
     "ai/docs/architecture.md",
