@@ -8,7 +8,7 @@ data/navigation
 data/kixote
 data/multilang
 data/css
-data/security/securitylog.txt
+data/security
 node_modules
 plugins/search
 plugins/demo
