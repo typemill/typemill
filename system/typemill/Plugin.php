@@ -361,7 +361,7 @@ abstract class Plugin implements EventSubscriberInterface
 		string $source,
 		callable $generator,
 		string $extension = 'svg',
-		string $namespace = null
+		?string $namespace = null
 	): string
 	{
 		$namespace	= $namespace ?? $this->getPluginName();
@@ -399,7 +399,7 @@ abstract class Plugin implements EventSubscriberInterface
 	protected function getStaticAssetPath(
 		string $source,
 		string $extension = 'svg',
-		string $namespace = null
+		?string $namespace = null
 	): string
 	{
 		$namespace	= $namespace ?? $this->getPluginName();
