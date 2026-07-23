@@ -9,6 +9,9 @@
         "vendor-dir": "system/vendor",
         "allow-plugins": {
             "composer/installers": true
+        },
+        "platform": { 
+            "php": "8.2.0" 
         }
     },
     "require": {
