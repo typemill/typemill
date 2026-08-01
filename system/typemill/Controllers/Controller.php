@@ -144,8 +144,8 @@ abstract class Controller
 
 			if(isset($field['type']) && ($field['type'] == 'select' ) )
 			{
-				# always add null as first option in selectboxes.
-				$options = [null => null];
+				# always add empty string as first option in selectboxes.
+				$options = ['' => ''];
 				
 				if(isset($field['options']) && is_array($field['options']))
 				{
