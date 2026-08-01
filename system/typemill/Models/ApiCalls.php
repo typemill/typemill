@@ -74,11 +74,9 @@ class ApiCalls
         if ($response === false)
         {
             $this->error = curl_error($curl);
-            curl_close($curl);
             return false;
         }
 
-        curl_close($curl);
         return $response;
     }
 
