@@ -39,4 +39,18 @@ Plugins must not:
 3. Hooks execute during request lifecycle.
 4. Plugin may alter behavior through defined extension points.
 
+### Reuse Existing Classes
+
+Before you create any new class, scan the model folder in /system/typemill/Models and use existing classes. For example:
+
+1. For API calls use ApiCalls.php
+2. For AI operations, use AiAdapter.php
+3. For content operations, use Content.php
+4. For email-messaging use Mail.php
+5. For meta-data use Meta.php
+6. For Navigation use Navigation.php
+7. For settings use Settings.php
+8. For general storage use Storage.php and the native storage methods for plugins in the extended Plugin class.
+
+
 ---

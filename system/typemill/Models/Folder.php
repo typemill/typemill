@@ -79,6 +79,35 @@ class Folder
 	}
 
 	/*
+	* Detects ordering prefixes for navigation items.
+	* Only plain numeric order prefixes (e.g. 01, 1, 001) or ISO date-style
+	* prefixes (e.g. 2023-01-01 or 20230101) are treated as ordering prefixes.
+	* Other dash-separated segments like "theme" in "theme-development.md" are
+	* kept as part of the item name/slug.
+	*/
+	private function extractOrderAndSlug($nameWithoutType)
+	{
+		if(preg_match('/^(\d{4}-\d{2}-\d{2})(?:-(.+))?$/', $nameWithoutType, $matches))
+		{
+			return [$matches[1], isset($matches[2]) ? $matches[2] : $matches[1]];
+		}
+		if(preg_match('/^(\d{8})(?:-(.+))?$/', $nameWithoutType, $matches))
+		{
+			return [$matches[1], isset($matches[2]) ? $matches[2] : $matches[1]];
+		}
+		if(preg_match('/^(\d+)-(.+)$/', $nameWithoutType, $matches))
+		{
+			return [$matches[1], $matches[2]];
+		}
+		return [NULL, $nameWithoutType];
+	}
+
+	private function isDateOrder($order)
+	{
+		return ($order && (preg_match('/^\d{4}-\d{2}-\d{2}$/', $order) === 1 || preg_match('/^\d{8}$/', $order) === 1));
+	}
+
+	/*
 	* Transforms array of folder item into an array of item-objects with additional information for each item
 	* vars: multidimensional array with folder- and file-names
 	* returns: array of objects. Each object contains information about an item (file or folder).
@@ -96,7 +125,9 @@ class Folder
 
 			if(is_array($name))
 			{
-				$nameParts = $this->getStringParts($key);
+				$nameWithoutType 		= $this->getNameWithoutType($key);
+				list($order, $rawSlug) 	= $this->extractOrderAndSlug($nameWithoutType);
+				$nameParts 				= $this->getStringParts($rawSlug);
 				
 				$fileType = '';
 				$status = 'undefined';
@@ -121,7 +152,7 @@ class Folder
 				$item->contains			= $this->getFolderContentType($name, $fullPath . DIRECTORY_SEPARATOR . $key . DIRECTORY_SEPARATOR . 'index.yaml');
 				$item->status			= $status;
 				$item->fileType			= $fileType;
-				$item->order 			= count($nameParts) > 1 ? array_shift($nameParts) : NULL;
+				$item->order 			= $order;
 				$item->name 			= implode(" ",$nameParts);
 				$item->name				= iconv(mb_detect_encoding($item->name, mb_detect_order(), true), "UTF-8", $item->name);
 				$item->slug				= implode("-",$nameParts);
@@ -157,9 +188,10 @@ class Folder
 				# do not use index files
 				if($name == 'index.md' || $name == 'index.txt' || $name == 'index.txtmd' ) continue;
 
-				$nameParts 				= $this->getStringParts($name);
-				$fileType 				= array_pop($nameParts);
 				$nameWithoutType		= $this->getNameWithoutType($name);
+				list($order, $rawSlug) 	= $this->extractOrderAndSlug($nameWithoutType);
+				$nameParts 				= $this->getStringParts($rawSlug);
+				$fileType 				= $this->getFileType($name);
 				
 				if($fileType == 'md')
 				{
@@ -179,7 +211,7 @@ class Folder
 				$item->elementType		= 'file';
 				$item->status 			= $status;
 				$item->fileType			= $fileType;
-				$item->order 			= count($nameParts) > 1 ? array_shift($nameParts) : NULL;
+				$item->order 			= $order;
 				$item->name 			= implode(" ",$nameParts);
 				$item->name				= iconv(mb_detect_encoding($item->name, mb_detect_order(), true), "UTF-8", $item->name);				
 				$item->slug				= implode("-",$nameParts);
@@ -236,20 +268,16 @@ class Folder
 				return 'pages';
 			}
 
-			$nameParts 		= $this->getStringParts($file);
-			$order 			= count($nameParts) > 1 ? array_shift($nameParts) : NULL;
+		$nameWithoutType 	= $this->getNameWithoutType($file);
+		list($order, $rawSlug) = $this->extractOrderAndSlug($nameWithoutType);
 
-			if($order && strlen($order > 8))
-			{
-				$order 			= substr($order, 0, 7);
-				
-				if(\DateTime::createFromFormat('Ymd', $order) !== FALSE)
-				{
-					return "posts";
-				}
-			}
-			
-			return "pages";
+		if($order && $this->isDateOrder($order))
+		{
+			return "posts";
+		}
+		
+		return "pages";
+
 		}
 	}
 			

@@ -49,28 +49,37 @@ forms:
       dataset: userroles
       description: The standard userrole is "member". A member can only edit his account. Be careful if you select other roles.
 
-    number:
-      type: number
-      label: Number
+    fields:
+      type: fieldset
+      label: 'fieldset'
+      fields:
+        number:
+          type: number
+          label: Number
+          css: 'lg:w-half'
 
-    date:
-      type: date
-      label: Date
+        date:
+          type: date
+          label: Date
+          css: 'lg:w-half'
 
-    email:
-      type: email
-      label: Email
-      description: Please help me here.
+        email:
+          type: email
+          label: Email
+          description: Please help me here.
+          css: 'lg:w-half'
 
-    tel:
-      type: tel
-      label: Phone number
-      description: Please help me here.
+        tel:
+          type: tel
+          label: Phone number
+          description: Please help me here.
+          css: 'lg:w-half'
 
     pass:
       type: password
       label: Password
       description: Please help me here.
+      css: 'lg:w-half'
 
     website:
       type: url

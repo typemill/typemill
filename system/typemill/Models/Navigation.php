@@ -1020,8 +1020,9 @@ class Navigation extends Folder
 	public function renameItem($item, $newslug)
 	{
 		$folder 	= str_replace($item->originalName, '', $item->path);
-		$oldname 	= $item->order . '-' . $item->slug;
-		$newname 	= $item->order . '-' . $newslug;
+		$prefix 	= ($item->order && $item->order !== false) ? $item->order . '-' : '';
+		$oldname 	= $prefix . $item->slug;
+		$newname 	= $prefix . $newslug;
 		$result 	= true;
 
 		if($item->elementType == 'folder')

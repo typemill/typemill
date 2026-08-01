@@ -329,7 +329,7 @@ class ControllerApiAuthorMeta extends Controller
 		if( 
 			$params['tab'] == 'meta' &&
 			$item->elementType == "file" &&
-			strlen($item->order) == 12 &&
+			is_string($item->order) && strlen($item->order) == 12 &&
 			$this->hasChanged($params['data'], $originalmeta['meta'], 'manualdate')
 		)
 		{
