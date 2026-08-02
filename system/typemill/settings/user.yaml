@@ -3,7 +3,7 @@ username:
   label: 'Username (read only)' 
   type: 'text'
   readonly: true
-image:
+profileimage:
   name: profileimage
   label: 'Profile Image'
   type: 'image' 

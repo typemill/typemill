@@ -309,11 +309,7 @@ class Media
 			$resizedImage = $this->resizeImage($image, $desiredsize, $originalsize);
 
 			$this->saveResizedImage($resizedImage, $destinationfolder, $this->extension);
-
-			imagedestroy($resizedImage);
 		}
-
-		imagedestroy($image);
 
 		if(empty($this->errors))
 		{
