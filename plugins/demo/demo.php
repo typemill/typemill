@@ -63,7 +63,7 @@ class demo extends Plugin
 				'httpMethod' 	=> 'get', 
 				'route' 		=> '/demo', 
 				'name' 			=> 'demo.frontend', 
-				'class' 		=> 'Plugins\demo\DemoController:index',
+				'class' 		=> 'Plugins\demo\demo:demoPage',
 				# optionallly restrict page:
 				# 'resource' 	=> 'account', 
 				# 'privilege' 	=> 'view'
@@ -72,9 +72,9 @@ class demo extends Plugin
 			# add a frontend route to receive form data
 			[	
 				'httpMethod' 	=> 'post', 
-				'route' 		=> '/demo', 
+				'route' 		=> '/demoprocessor', 
 				'name' 			=> 'demo.send', 
-				'class' 		=> 'Plugins\demo\DemoController:formdata',
+				'class' 		=> 'Plugins\demo\demo:formdata',
 				# optionallly restrict page:
 				# 'resource' 	=> 'account', 
 				# 'privilege' 	=> 'view'
@@ -142,10 +142,15 @@ class demo extends Plugin
 	}
 
 
-	# you can add a new session segment in frontend, for example if you add frontend fomrs
+	# add a new session segment in frontend, so cookies and csrf are active for the demo form
 	public function onSessionSegmentsLoaded($segments)
 	{
 		$arrayOfSegments = $segments->getData();
+
+		$arrayOfSegments[] = 'demo';
+		$arrayOfSegments[] = '/demo';
+		$arrayOfSegments[] = 'demoprocessor';
+		$arrayOfSegments[] = '/demoprocessor';
 
 		$segments->setData($arrayOfSegments);
 	}
@@ -331,31 +336,41 @@ class demo extends Plugin
 	# add a new page into the system area
 	public function onPageReady($data)
 	{
-		/*
-		# admin stuff
-		if($this->adminroute && $this->route == 'tm/demo')
+		# do not inject widgets into admin or editor pages
+		if($this->adminroute || $this->editorroute)
 		{
-			$this->addJS('/ebookproducts/js/vue-ebookproducts.js');
-
-			$pagedata = $data->getData();
-
-			$twig 	= $this->getTwig();
-			$loader = $twig->getLoader();
-			$loader->addPath(__DIR__ . '/templates');
-				
-			# fetch the template and render it with twig
-			$content = $twig->fetch('/ebookproducts.twig', []);
-
-			$pagedata['content'] = $content;
-
-			$data->setData($pagedata);
+			return;
 		}
-		*/
+
+		$pluginsettings = $this->getPluginSettings('demo');
+
+		if(!is_array($pluginsettings) || empty($pluginsettings['showwidget']))
+		{
+			return;
+		}
+
+		$widgetTitle = $pluginsettings['widgettitle'] ?? 'Demo Widget';
+		$widgetMessage = $pluginsettings['widgetmessage'] ?? 'Hello from the demo plugin!';
+
+		$pagedata = $data->getData();
+
+		# add the widget assets only when the widget is active
+		$this->addCSS('/demo/css/demo.css');
+		$this->addJS('/demo/js/widgetdemo.js');
+
+		$pagedata['widgets']['demo'] = '<div class="demo-widget"'
+									. ' data-title="' . htmlspecialchars($widgetTitle, ENT_QUOTES, 'UTF-8') . '"'
+									. ' data-message="' . htmlspecialchars($widgetMessage, ENT_QUOTES, 'UTF-8') . '">'
+										. '<h3>' . htmlspecialchars($widgetTitle, ENT_QUOTES, 'UTF-8') . '</h3>'
+										. '<p>' . htmlspecialchars($widgetMessage, ENT_QUOTES, 'UTF-8') . '</p>'
+									. '</div>';
+
+		$data->setData($pagedata);
 	}
 
 
 	#########################################
-	#   	Add methods for new routes 		#
+	#	   Add methods for new routes 		#
 	#########################################
 
 	# gets the centrally stored ebook-data for ebook-plugin in settings-area
@@ -396,5 +411,76 @@ class demo extends Plugin
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json');
+	}
+
+	# render the demo page with the public form
+	public function demoPage(Request $request, Response $response, $args)
+	{
+		$pluginSettings	= $this->getPluginSettings();
+
+		$result = $_SESSION['demoform']['result'] ?? false;
+		$output = '<h1>' . ($pluginSettings['demotitle'] ?? 'Demo Form') . '</h1>';
+
+		if($result == 'success')
+		{
+			$output .= '<div class="tm-demoform-result tm-demoform-success"><div class="mailresult">' . $this->markdownToHtml($pluginSettings['message_success'] ?? 'Thank you! Your input is valid.') . '</div></div>';
+
+			$formdata = $_SESSION['demoform']['data'] ?? [];
+			if(!empty($formdata))
+			{
+				$output .= '<div class="tm-demoform-data"><h3>Validated data</h3><dl>';
+				foreach($formdata as $key => $value)
+				{
+					$output .= '<dt>' . htmlspecialchars($key, ENT_QUOTES, 'UTF-8') . '</dt><dd>' . htmlspecialchars($value, ENT_QUOTES, 'UTF-8') . '</dd>';
+				}
+				$output .= '</dl></div>';
+			}
+
+			unset($_SESSION['demoform']);
+		}
+		elseif($result == 'error')
+		{
+			$output .= '<div class="tm-demoform-result tm-demoform-error"><div class="mailresult">' . $this->markdownToHtml($pluginSettings['message_error'] ?? 'Please correct the errors in the form.') . '</div></div>';
+			unset($_SESSION['demoform']);
+		}
+		else
+		{
+			$output .= '<div class="tm-demoform">' . $this->generateForm('demo.send') . '</div>';
+		}
+
+		$response->getBody()->write($output);
+
+		return $response;
+	}
+
+	# receive and validate the public demo form
+	public function formdata(Request $request, Response $response, $args)
+	{
+		$forminput 	= $request->getParsedBody();
+		$referer 	= $request->getHeaderLine('Referer');
+
+		if(empty($referer))
+		{
+			$baseurl 	= rtrim($this->urlinfo['baseurl'], '/');
+			$referer 	= $baseurl . '/demo';
+		}
+
+		# validate input with the public form definitions
+		$validvalues = $this->validateParams($forminput);
+		if(!$validvalues)
+		{
+			# errors are set in session by validateParams
+			$_SESSION['demoform']['result'] = 'error';
+			$_SESSION['demoform']['errors'] = $_SESSION['errors'] ?? [];
+			unset($_SESSION['errors']);
+
+			return $response->withHeader('Location', $referer)->withStatus(302);
+		}
+
+		# keep the validated data for display in the success message
+		$_SESSION['demoform']['result'] = 'success';
+		$_SESSION['demoform']['data'] 	= $validvalues;
+
+		return $response->withHeader('Location', $referer)->withStatus(302);
 	}
 }

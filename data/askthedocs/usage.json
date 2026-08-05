@@ -1,0 +1,15 @@
+{
+    "2026-08-02": {
+        "total_questions": 1,
+        "total_tokens": 1317,
+        "visitors": {
+            "da3be1792fad7646": {
+                "questions": 1,
+                "tokens": 1317,
+                "minutes": {
+                    "2026-08-02 18:30": 1
+                }
+            }
+        }
+    }
+}

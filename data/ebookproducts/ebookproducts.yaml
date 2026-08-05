@@ -1,0 +1,12 @@
+test:
+    title: title
+    cover: media/live/chatgpt-typemill-dummy-wide.webp
+    description: asdfasdf
+    downloadlabel1: asdf
+    downloadurl1: media/files/markdown.png
+    downloadlabel2: asdf
+    downloadurl2: media/files/
+    noaccesslabel1: ''
+    noaccessurl1: ''
+    noaccesslabel2: ''
+    noaccessurl2: ''

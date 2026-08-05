@@ -13,6 +13,14 @@ settings:
   message: 'You can enter a message here.'
   website: 'http://typemill.net'
   background: '#ffffff'
+  demotitle: 'Demo Form'
+  message_success: "## Thank you!\r\n\r\nYour input passed validation and was stored as a demo record."
+  message_error: "## Error\r\n\r\nPlease correct the errors in the form."
+  name_label: Name
+  email_label: E-mail
+  subject_label: Subject
+  message_label: Message
+  button_label: Send
 
 forms:
   fields:
@@ -20,6 +28,21 @@ forms:
     text:
       type: text
       label: Text Input
+
+    showwidget:
+      type: checkbox
+      label: Show demo widget
+      checkboxlabel: Display the demo widget on all pages
+
+    widgettitle:
+      type: text
+      label: Title of the demo widget
+      placeholder: 'Demo Widget'
+
+    widgetmessage:
+      type: textarea
+      label: Message of the demo widget
+      placeholder: 'Hello from the demo plugin!'
 
     message:
       type: textarea
@@ -93,6 +116,54 @@ forms:
       label: Color
       placeholder: 'Add hex color value like #ffffff'
       required: true
+
+    demotitle:
+      type: text
+      label: Title of the demo page
+      placeholder: 'Demo Form'
+      required: true
+
+    message_success:
+      type: textarea
+      rows: 5
+      label: Message after successful validation (use markdown)
+      placeholder: 'Thank you message'
+
+    message_error:
+      type: textarea
+      rows: 5
+      label: Message after validation error (use markdown)
+      placeholder: 'Error message'
+
+    publicformlabels:
+      type: fieldset
+      legend: Labels for the public demo form
+      fields:
+        name_label:
+          type: text
+          label: Label for Name Input
+          placeholder: 'Name'
+          required: true
+        email_label:
+          type: text
+          label: Label for E-Mail Input
+          placeholder: 'E-Mail'
+          required: true
+        subject_label:
+          type: text
+          label: Label for Subject Input
+          placeholder: 'Subject'
+          required: true
+        message_label:
+          type: text
+          label: Label for Message Input
+          placeholder: 'Message'
+          required: true
+        button_label:
+          type: text
+          label: Label for Submit Button
+          placeholder: 'Send'
+          required: true
 
     singlecheckbox:
       type: checkbox

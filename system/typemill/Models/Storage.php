@@ -1015,7 +1015,7 @@ class Storage
 	## 	  FILES 	##
 	##################
  	
- 	public function checkFileExists($filepath)
+  	public function checkFileExists($filepath)
 	{
 		$pathinfo = pathinfo($filepath);
 		if(!$pathinfo)
@@ -1025,7 +1025,7 @@ class Storage
 			return false;
 		}
 
-		$filename 	= $pathinfo['filename'] . '.' . $pathinfo['extension'];
+		$filename = isset($pathinfo['extension']) ? $pathinfo['filename'] . '.' . $pathinfo['extension'] : $pathinfo['filename'];
 		$newpath 	= false;
 
 		if($this->checkFile('fileFolder', '', $filename))
@@ -1046,8 +1046,9 @@ class Storage
 			return false;
 		}
 
-		$filename = $pathinfo['filename'] . '.' . $pathinfo['extension'];
+		$filename = isset($pathinfo['extension']) ? $pathinfo['filename'] . '.' . $pathinfo['extension'] : $pathinfo['filename'];
 		$filepath = $this->tmpFolder . $filename;
+
 
 		if(!file_exists($this->tmpFolder . $filename))
 		{
