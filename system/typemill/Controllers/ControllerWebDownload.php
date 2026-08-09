@@ -18,6 +18,14 @@ class ControllerWebDownload extends Controller
 			return $response->withStatus(404);
 		}
 
+		# normalize path to prevent path-equivalence bypasses
+		$normalizedFilename = $this->normalizeFilename($filename);
+		if($normalizedFilename === false)
+		{
+			$response->getBody()->write(Translations::translate('the requested file does not exist.'));
+			return $response->withStatus(404);
+		}
+
 		$storage 		= new StorageWrapper('\Typemill\Models\Storage');
 		$restrictions 	= $storage->getYaml('fileFolder', '', 'filerestrictions.yaml');
 
@@ -26,16 +34,25 @@ class ControllerWebDownload extends Controller
 
 		# validate
 		$allowedFiletypes = [];
-		if(!$this->validate($filepath, $filename, $allowedFiletypes))
+		if(!$this->validate($filepath, $normalizedFilename, $allowedFiletypes))
 		{
 			$response->getBody()->write(Translations::translate('the requested filetype does not exist.'));
 			return $response->withStatus(404);
 		}
 
-		if($restrictions && isset($restrictions[$filefolder . $filename]))
+		# resolve and confine the path to the media root
+		$realBasePath = realpath($filepath);
+		$realFilePath = realpath($filepath . $normalizedFilename);
+		if($realBasePath === false || $realFilePath === false || !str_starts_with($realFilePath, $realBasePath . DIRECTORY_SEPARATOR))
+		{
+			$response->getBody()->write(Translations::translate('the requested file does not exist.'));
+			return $response->withStatus(404);
+		}
+
+		if($restrictions && isset($restrictions[$filefolder . $normalizedFilename]))
 		{
 			$userrole 			= $request->getAttribute('c_userrole');
-			$allowedrole 		= $restrictions[$filefolder . $filename];
+			$allowedrole 		= $restrictions[$filefolder . $normalizedFilename];
 
 			if(!$userrole)
 			{
@@ -55,7 +72,7 @@ class ControllerWebDownload extends Controller
 			}
 		}
 
-		$file = $filepath . $filename;
+		$file = $realFilePath;
 
 	    # Dynamically determine MIME type based on the file extension
 	    $pathinfo   = pathinfo($file);
@@ -129,10 +146,16 @@ class ControllerWebDownload extends Controller
 	 */
 	private function validate($path, $filename, $allowedFiletypes) 
 	{
-		$filepath = $path . $filename;
+		$normalizedFilename = $this->normalizeFilename($filename);
+		if($normalizedFilename === false)
+		{
+			return false;
+		}
+
+		$filepath = $path . $normalizedFilename;
 
 		# check if file exists
-		if (!isset($filepath)  || empty($filepath)  || !file_exists($filepath) )
+		if (empty($filepath) || !file_exists($filepath))
 		{
 			return false;
 		}
@@ -143,21 +166,73 @@ class ControllerWebDownload extends Controller
 			$fileAllowed = false;
 			foreach ($allowedFiletypes as $filetype) 
 			{
-				if (strpos($filename, $filetype) === (strlen($filename) - strlen($filetype))) 
+				if (substr($normalizedFilename, -strlen($filetype)) === $filetype) 
 				{
 					$fileAllowed = true; //ends with $filetype
+					break;
 				}
 			}
 			
 			if (!$fileAllowed) return false;
 		}
 
-		# check download directory
-		if (strpos($filename, '..') !== false)
+		return true;
+	}
+
+	/**
+	 * Normalize a file path from the URL and reject traversal attempts.
+	 *
+	 * @param string $filename
+	 * @return string|false Normalized path or false if the path is invalid
+	 */
+	private function normalizeFilename($filename)
+	{
+		if(!is_string($filename) || $filename === '')
 		{
 			return false;
 		}
 
-		return true;
+		# decode percent-encoded characters (e.g. %2e, %2f)
+		$normalized = rawurldecode($filename);
+
+		# reject NUL bytes
+		if(strpos($normalized, "\0") !== false)
+		{
+			return false;
+		}
+
+		# normalize directory separators to forward slashes
+		$normalized = str_replace('\\', '/', $normalized);
+
+		# remove leading slash
+		$normalized = ltrim($normalized, '/');
+
+		# split into segments and remove path-equivalence segments
+		$segments = explode('/', $normalized);
+		$cleanSegments = [];
+
+		foreach($segments as $segment)
+		{
+			if($segment === '' || $segment === '.')
+			{
+				# skip empty segments (//) and current-dir segments (./)
+				continue;
+			}
+
+			if($segment === '..')
+			{
+				# directory traversal is never allowed
+				return false;
+			}
+
+			$cleanSegments[] = $segment;
+		}
+
+		if(empty($cleanSegments))
+		{
+			return false;
+		}
+
+		return implode('/', $cleanSegments);
 	}
 }
