@@ -203,6 +203,9 @@ class demo extends Plugin
 		if($this->editorroute)
 		{
 			$this->addJS('/demo/js/editordemo.js');
+			$this->addBloxConfigJS('/demo/js/demobloxconfig.js');
+			$this->addJS('/demo/js/demobloxcomponent.js');
+			$this->addSvgSymbol('<symbol id="icon-dice" viewBox="0 0 32 32"><title>dice</title><path d="M6 2h20c2.209 0 4 1.791 4 4v20c0 2.209-1.791 4-4 4h-20c-2.209 0-4-1.791-4-4v-20c0-2.209 1.791-4 4-4zM24 24h4v-4h-4v4zM24 16h4v-4h-4v4zM16 24h4v-4h-4v4zM16 16h4v-4h-4v4zM8 24h4v-4h-4v4zM8 16h4v-4h-4v4zM24 8h4v-4h-4v4zM16 8h4v-4h-4v4zM8 8h4v-4h-4v4z"></path></symbol>');
 		}
 
 		# get the twig-object
