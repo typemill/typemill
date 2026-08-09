@@ -17,11 +17,11 @@
 						<li class="db list tl pa0 w-100 mh0 mh2-l mt2 mb5 mb4-l shadow-2-hover">
 							<a class="link mv4 dim" href="{{ element.urlAbs }}">
 								<div class="db h4-5 overflow-hidden">
-									<img class="db w-100" src="{{base_url}}/{{ page.meta.heroimage }}" alt="{{ page.meta.heroimagealt }}">
+									<img class="db w-100" src="{{base_url}}/{{ page.meta.heroimage }}" alt="{{ page.meta.heroimagealt|e('html_attr') }}">
 								</div>
 								<div class="pa2 ph3-ns pb3-ns">
-									<h3>{{ page.meta.title }}</h3>
-									<p class="f5 lh-copy">{{ page.meta.description|length > 80 ? page.meta.description|slice(0, 81)|split(' ')|slice(0, -1)|join(' ') ~ '…' : page.meta.description }}</p>
+									<h3>{{ page.meta.title|e }}</h3>
+									<p class="f5 lh-copy">{{ (page.meta.description|length > 80 ? page.meta.description|slice(0, 81)|split(' ')|slice(0, -1)|join(' ') ~ '…' : page.meta.description)|e }}</p>
 								</div>
 							</a>
 						</li>
@@ -43,12 +43,12 @@
 
 							<a class="link mv4 dim" href="{{ element.urlAbs }}">
 								<div class="db h4-5 overflow-hidden">
-									<img class="db w-100" src="{{base_url}}/{{ post.meta.heroimage }}" alt="{{ post.meta.heroimagealt }}">
+									<img class="db w-100" src="{{base_url}}/{{ post.meta.heroimage }}" alt="{{ post.meta.heroimagealt|e('html_attr') }}">
 								</div>
 								<div class="pa2 ph3-ns pb3-ns">
-									<h3>{{ post.meta.title }}</h3>
-									<small class="f6"><time datetime="{{date}}">{{ date | date("d.m.Y") }}</time> | {{ post.meta.author | default(post.meta.owner) }}</small>
-									<p class="f5 lh-copy">{{ post.meta.description|length > 80 ? post.meta.description|slice(0, 81)|split(' ')|slice(0, -1)|join(' ') ~ '…' : post.meta.description }}</p>
+									<h3>{{ post.meta.title|e }}</h3>
+									<small class="f6"><time datetime="{{date}}">{{ date | date("d.m.Y") }}</time> | {{ post.meta.author | default(post.meta.owner)|e }}</small>
+									<p class="f5 lh-copy">{{ (post.meta.description|length > 80 ? post.meta.description|slice(0, 81)|split(' ')|slice(0, -1)|join(' ') ~ '…' : post.meta.description)|e }}</p>
 								</div>
 							</a>
 						</li>

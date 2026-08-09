@@ -35,7 +35,7 @@
 	<div class="mw8 pb3 pt3 pt6-l ph3 center">
 
 		<header>
-			<h1 class="f2 f-large-l lh-title-l mv2">{{ title }}</h1>
+			<h1 class="f2 f-large-l lh-title-l mv2">{{ title|e }}</h1>
 		</header>
 
 		<div class="f5 f4-ns fw3 lh-copy">
@@ -59,11 +59,11 @@
 
 					<li class="db list tl pa0 w-100 w-30-l mh0 mv2 mh2-l shadow-2-hover flex flex-column flex-grow-0 flex-basis bg-white">
 						<div class="pa2 ph3-ns pb3-ns flex-grow">
-							<h3>{{ page.meta.shorttitle }}</h3>
-							<p class="f5 lh-copy">{{ page.meta.description }}</p>
+							<h3>{{ page.meta.shorttitle|e }}</h3>
+							<p class="f5 lh-copy">{{ page.meta.description|e }}</p>
 						</div>
 						<div class="pa2 ph3-ns pb3-ns">
-							<a href="{{ element.urlAbs }}" class="button link w-100 db dim pa3 ba w-100 white tc">{{ page.meta.shorttitle }}</a>	
+							<a href="{{ element.urlAbs }}" class="button link w-100 db dim pa3 ba w-100 white tc">{{ page.meta.shorttitle|e }}</a>	
 						<div>
 					</li>
 

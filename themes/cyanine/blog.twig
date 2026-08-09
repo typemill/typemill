@@ -63,7 +63,7 @@
 							<header>
 								{% if settings.themes.cyanine.blogimage and post.meta.heroimage != '' %}
 									<figure>
-										<img src="{{ assets.image(post.meta.heroimage).resize(820,500).src() }}"{% if post.meta.heroimage != '' %} alt="{{ post.meta.heroimage }}"{% endif %} />
+										<img src="{{ assets.image(post.meta.heroimage).resize(820,500).src() }}"{% if post.meta.heroimagealt and post.meta.heroimagealt != '' %} alt="{{ post.meta.heroimagealt|e('html_attr') }}"{% endif %} />
 									</figure>
 								{% endif %}
 								<a class="link f-link underline-hover" href="{{ element.urlAbs }}"><h2 class="mt4 mb2">{{ post.meta.title|e }}</h2></a>
