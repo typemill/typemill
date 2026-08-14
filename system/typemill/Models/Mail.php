@@ -36,7 +36,7 @@ class Mail
         }
     }
 
-    public function send(string $to, string $subject, string $message): bool
+    public function send(string $to, string $subject, string $message, ?string $replyTo = null, ?string $replyToName = null, ?string $altBody = null): bool
     {
         if ($this->from === '')
         {
@@ -51,7 +51,11 @@ class Mail
             $mail->CharSet = PHPMailer::CHARSET_UTF8;
             $mail->setFrom($this->from, $this->fromName);
 
-            if ($this->replyTo !== '')
+            if ($replyTo !== null && $replyTo !== '')
+            {
+                $mail->addReplyTo($replyTo, $replyToName ?? '');
+            }
+            elseif ($this->replyTo !== '')
             {
                 $mail->addReplyTo($this->replyTo);
             }
@@ -98,7 +102,7 @@ class Mail
             $mail->isHTML(true);
             $mail->Subject = $subject;
             $mail->Body    = $message;
-            $mail->AltBody = strip_tags($message);
+            $mail->AltBody = ($altBody !== null) ? $altBody : strip_tags($message);
 
             $mail->send();
 

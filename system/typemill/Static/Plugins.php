@@ -78,11 +78,12 @@ class Plugins
 	public static function getPremiumLicense($className)
 	{
 		$premiumList = [
+			'\Plugins\askthedocs\askthedocs' 		=> 'MAKER',
 			'\Plugins\bettersearch\bettersearch' 	=> 'MAKER',
 			'\Plugins\ebookproducts\ebookproducts' 	=> 'MAKER',
 			'\Plugins\embed\embed' 					=> 'MAKER',
 			'\Plugins\html\html' 					=> 'MAKER',
-			'\Plugins\newsletter\newslettter' 		=> 'MAKER',
+			'\Plugins\newsletter\newsletter' 		=> 'MAKER',
 			'\Plugins\register\register' 			=> 'MAKER',
 			'\Plugins\seo\seo' 						=> 'MAKER',
 			'\Plugins\ṕayhip\payhip' 				=> 'MAKER',
