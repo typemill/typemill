@@ -1,15 +1,16 @@
+zips
+cypress
+cypress.json
+node_modules
 ai/tasks
 cache/timer.yaml
 cache/sitemap.xml
-media/tmp/.gitkeep
-system/vendor
-cypress
 data/navigation
 data/kixote
 data/multilang
 data/css
 data/security
-node_modules
+media/tmp/.gitkeep
 plugins/search
 plugins/demo
 settings/settings.yaml
@@ -17,5 +18,4 @@ settings/kixote.yaml
 settings/secrets.yaml
 settings/license.yaml
 settings/users
-zips
-cypress.json
+system/vendor
