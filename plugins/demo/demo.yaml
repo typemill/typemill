@@ -6,7 +6,6 @@ homepage: http://typemill.net
 license: MAKER
 dependencies: 
   - register
-  - mail
 
 settings:
   theme: 'edgeless'

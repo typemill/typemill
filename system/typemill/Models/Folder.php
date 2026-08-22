@@ -95,6 +95,10 @@ class Folder
 		{
 			return [$matches[1], isset($matches[2]) ? $matches[2] : $matches[1]];
 		}
+		if(preg_match('/^(\d{12})(?:-(.+))?$/', $nameWithoutType, $matches))
+		{
+			return [$matches[1], isset($matches[2]) ? $matches[2] : $matches[1]];
+		}
 		if(preg_match('/^(\d+)-(.+)$/', $nameWithoutType, $matches))
 		{
 			return [$matches[1], $matches[2]];
@@ -104,7 +108,7 @@ class Folder
 
 	private function isDateOrder($order)
 	{
-		return ($order && (preg_match('/^\d{4}-\d{2}-\d{2}$/', $order) === 1 || preg_match('/^\d{8}$/', $order) === 1));
+		return ($order && (preg_match('/^\d{4}-\d{2}-\d{2}$/', $order) === 1 || preg_match('/^\d{8}$/', $order) === 1 || preg_match('/^\d{12}$/', $order) === 1));
 	}
 
 	/*
@@ -240,33 +244,37 @@ class Folder
 
 	public function getFolderContentType($folder, $yamlpath)
 	{
-		# check if folder is empty or has only index.yaml-file. This is a rare case so make it quick and dirty
-		if(count($folder) <= 1)
+		# check if in folder yaml file contains an explicit "contains" setting
+		$folderyamlpath = getcwd() . DIRECTORY_SEPARATOR . 'content' . DIRECTORY_SEPARATOR . $yamlpath;
+		
+		$fileContent = false;
+		if(file_exists($folderyamlpath))
 		{
-			# check if in folder yaml file contains "posts", then return posts
-			$folderyamlpath = getcwd() . DIRECTORY_SEPARATOR . 'content' . DIRECTORY_SEPARATOR . $yamlpath;
-			
-			$fileContent = false;
-			if(file_exists($folderyamlpath))
-			{
-				$fileContent = file_get_contents($folderyamlpath);
-			}
+			$fileContent = file_get_contents($folderyamlpath);
+		}
 
-			if($fileContent && strpos($fileContent, 'contains: posts') !== false)
-			{
-				return 'posts';
-			}
+		if($fileContent && strpos($fileContent, 'contains: posts') !== false)
+		{
+			return 'posts';
+		}
+		if($fileContent && strpos($fileContent, 'contains: pages') !== false)
+		{
 			return 'pages';
 		}
-		else
+
+		# fallback: detect based on the first item in the folder
+		if(count($folder) <= 1)
 		{
-			$firstKey 		= array_key_first($folder); 
-			$file 			= $folder[$firstKey];
-			if(is_array($file))
-			{
-				# first item in folder is folder again, so return pages
-				return 'pages';
-			}
+			return 'pages';
+		}
+
+		$firstKey 		= array_key_first($folder); 
+		$file 			= $folder[$firstKey];
+		if(is_array($file))
+		{
+			# first item in folder is folder again, so return pages
+			return 'pages';
+		}
 
 		$nameWithoutType 	= $this->getNameWithoutType($file);
 		list($order, $rawSlug) = $this->extractOrderAndSlug($nameWithoutType);
@@ -277,8 +285,6 @@ class Folder
 		}
 		
 		return "pages";
-
-		}
 	}
 			
 	public function getStringParts($name)
