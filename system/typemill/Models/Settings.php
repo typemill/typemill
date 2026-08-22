@@ -33,6 +33,12 @@ class Settings
 				$settings['images'] = $images;
 			}
 		}
+
+		# Enable proxy detection for Docker deployments behind reverse proxies
+		if(getenv('TYPEMILL_PROXY_DETECTION') === 'true')
+		{
+			$settings['proxy'] = true;
+		}
 ####
 		$settings['rootPath'] = getcwd();
 ####

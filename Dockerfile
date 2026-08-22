@@ -12,6 +12,9 @@ RUN a2enmod rewrite && \
 RUN docker-php-ext-configure gd --with-jpeg && \
     docker-php-ext-install gd
 
+# Enable proxy detection for Docker deployments behind reverse proxies
+ENV TYPEMILL_PROXY_DETECTION=true
+
 # Copy app content
 # Use the .dockerignore file to control what ends up inside the image!
 WORKDIR /var/www/html
