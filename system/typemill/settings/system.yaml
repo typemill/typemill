@@ -439,6 +439,10 @@ fieldsetdeveloper:
       label: "Trusted IPs for proxies (comma separated)"
       placeholder: "192.168.1.1, 203.0.113.0"
       description: "Restrict proxies to certain IP adresses."
+    proxyhint:
+      type: paragraph
+      label: "Proxy Notice"
+      description: "If Typemill runs under a subpath behind a proxy (e.g. /typemill), the proxy must send the X-Forwarded-Prefix header. Without it, the original base path is preserved. If the proxy serves Typemill at root, no extra header is needed."
     fqdn:
       type: text
       label: "FQDN (Fully Qualified Domain Name)"

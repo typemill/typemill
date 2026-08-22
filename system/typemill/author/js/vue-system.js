@@ -29,6 +29,7 @@ const app = Vue.createApp({
 							</div>
 							<div class="my-5">
 								<div :class="messageClass" class="block w-full h-8 px-3 py-1 my-1 text-white transition duration-100">{{ $filters.translate(message) }}</div>
+								<div v-if="warning" class="block w-full px-3 py-2 my-1 text-stone-900 bg-stone-200 text-xs transition duration-100">{{ $filters.translate(warning) }}</div>
 								<input type="submit" @click.prevent="save()" :value="$filters.translate('save')" class="w-full p-3 my-1 dark:bg-stone-600 hover:dark:bg-stone-900 bg-stone-700 hover:bg-stone-900 text-white cursor-pointer transition duration-100">
 							</div>
 						</form>
@@ -41,6 +42,7 @@ const app = Vue.createApp({
 			formData: data.settings,
 			message: '',
 			messageClass: '',
+			warning: '',
 			errors: {},
 			testmailMessage: '',
 			testmailMessageClass: '',
@@ -131,6 +133,10 @@ const app = Vue.createApp({
 			{
 				self.messageClass = 'bg-teal-500';
 				self.message = response.data.message;
+				if(response.data.warning)
+				{
+					self.warning = response.data.warning;
+				}
 			})
 			.catch(function (error)
 			{
@@ -150,6 +156,7 @@ const app = Vue.createApp({
 			this.errors 				= {};
 			this.message 				= '';
 			this.messageClass			= '';
+			this.warning 				= '';
 			this.testmailMessage		= '';
 			this.testmailMessageClass	= '';
 		}

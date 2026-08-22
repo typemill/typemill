@@ -93,9 +93,17 @@ class ControllerApiSystemSettings extends Controller
 
 		$updatedSettings 	= $settingsModel->updateSettings($validatedOutput);
 
-		$response->getBody()->write(json_encode([
+		$responseData = [
 			'message' => Translations::translate('settings have been saved'),
-		]));
+		];
+
+		# Security hint: proxy detection without trusted proxies trusts all proxies
+		if(isset($validatedOutput['proxy']) && $validatedOutput['proxy'] && empty($validatedOutput['trustedproxies']))
+		{
+			$responseData['warning'] = Translations::translate('Proxy detection is active but no trusted proxies are configured. All proxies are trusted, which can be a security risk. Add trusted proxy IP addresses for stronger protection.');
+		}
+
+		$response->getBody()->write(json_encode($responseData));
 
 		return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
 	}

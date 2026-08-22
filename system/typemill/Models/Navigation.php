@@ -1009,7 +1009,7 @@ class Navigation extends Folder
 		$item->chapter			= false;
 		$item->urlRel			= '/' . $slug;
 		$item->urlRelWoF		= '/' . $slug;
-		$item->urlAbs			= trim($baseUrl, '/') . '/' . $slug;
+		$item->urlAbs			= trim($baseUrl ?? '', '/') . '/' . $slug;
 		$item->active			= false;
 		$item->activeParent		= false;
 		$item->hide 			= false;

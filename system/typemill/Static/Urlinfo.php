@@ -112,8 +112,6 @@ class Urlinfo
 
 	private static function updateBasepath($basepath)
 	{
-		$basepath = "";
-
 		# if proxy has basepath, then
 		if (isset($_SERVER['HTTP_X_FORWARDED_PREFIX']))
 		{
