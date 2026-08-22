@@ -348,9 +348,9 @@ fieldsetmail:
       label: 'SMTP Authentication'
       checkboxlabel: 'Authenticate via SMTP'
     mailusername:
-      type: email
+      type: text
       label: 'SMTP Username'
-      placeholder: 'your@email.com'
+      placeholder: 'your SMTP username'
       autocomplete: off
       maxlength: 100
     mailpassword:
