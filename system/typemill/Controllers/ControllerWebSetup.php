@@ -17,28 +17,24 @@ class ControllerWebSetup extends Controller
 	{
 		# make some checks befor you install
 		$storage = new StorageWrapper('\Typemill\Models\Storage');		
-		$systemerrors = array();
+		$systemerrors = [];
 
-		# check folders and create them if possible
-		if( !$storage->checkFolder('settingsFolder'))
-		{ 
-			$systemerrors[] = $storage->getError(); 
-		}
-		if( !$storage->checkFolder('settingsFolder', 'users')){	$systemerrors[] = $storage->getError(); }
-		if( !$storage->checkFolder('contentFolder')){ 			$systemerrors[] = $storage->getError(); }
-		if( !$storage->checkFolder('dataFolder')){ 				$systemerrors[] = $storage->getError(); }
-		if( !$storage->checkFolder('cacheFolder')){ 			$systemerrors[] = $storage->getError(); }
-		if( !$storage->checkFolder('tmpFolder')){ 				$systemerrors[] = $storage->getError(); }
-		if( !$storage->checkFolder('originalFolder')){ 			$systemerrors[] = $storage->getError(); }
-		if( !$storage->checkFolder('liveFolder')){ 				$systemerrors[] = $storage->getError(); }
-		if( !$storage->checkFolder('thumbsFolder')){ 			$systemerrors[] = $storage->getError(); }
-		if( !$storage->checkFolder('customFolder')){ 			$systemerrors[] = $storage->getError(); }
-		if( !$storage->checkFolder('fileFolder')){ 				$systemerrors[] = $storage->getError(); }
+		$systemerrors = $this->checkAndCreateFolder($storage, $systemerrors, 'settingsFolder');
+		$systemerrors = $this->checkAndCreateFolder($storage, $systemerrors, 'settingsFolder', 'users');
+		$systemerrors = $this->checkAndCreateFolder($storage, $systemerrors, 'contentFolder');
+		$systemerrors = $this->checkAndCreateFolder($storage, $systemerrors, 'dataFolder');
+		$systemerrors = $this->checkAndCreateFolder($storage, $systemerrors, 'cacheFolder');
+		$systemerrors = $this->checkAndCreateFolder($storage, $systemerrors, 'tmpFolder');
+		$systemerrors = $this->checkAndCreateFolder($storage, $systemerrors, 'originalFolder');
+		$systemerrors = $this->checkAndCreateFolder($storage, $systemerrors, 'liveFolder');
+		$systemerrors = $this->checkAndCreateFolder($storage, $systemerrors, 'thumbsFolder');
+		$systemerrors = $this->checkAndCreateFolder($storage, $systemerrors, 'customFolder');
+		$systemerrors = $this->checkAndCreateFolder($storage, $systemerrors, 'fileFolder');
 
 		# check php-version
-		if (version_compare(phpversion(), '8.0.0', '<')) 
+		if (version_compare(phpversion(), '8.2.0', '<')) 
 		{
-			$systemerrors[] = 'The PHP-version of your server is ' . phpversion() . ' and Typemill needs at least 8.0.0';
+			$systemerrors[] = 'The PHP-version of your server is ' . phpversion() . ' and Typemill needs at least 8.2.0';
 		}
 
 		# check if extensions are loaded
@@ -53,6 +49,19 @@ class ControllerWebSetup extends Controller
 	    return $this->c->get('view')->render($response, 'auth/setup.twig', [
 	    	'systemerrors' => $systemerrors 
 	    ]);
+	}
+
+	private function checkAndCreateFolder($storage, array $systemerrors, string $foldername, $subfoldername = NULL)
+	{
+		if(!$storage->checkFolder($foldername, $subfoldername))
+		{
+			if(!$storage->createFolder($foldername, $subfoldername))
+			{
+				$systemerrors[] = $storage->getError();
+			}
+		}
+
+		return $systemerrors;
 	}
 
 	public function create(Request $request, Response $response, $args)
