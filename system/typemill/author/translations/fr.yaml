@@ -360,7 +360,7 @@ SHOW_AFTER_FIRST_WRONG_INPUT: 'Afficher après la première saisie incorrecte'
 SHOW_ANCHORS_NEXT_TO_HEADLINE_IN_FRONTEND: 'Afficher des ancres à côté du titre dans le frontend'
 SHOW_THE_WEBSITE_ONLY_TO_AUTHENTICATED_USERS_AND_REDIRECT_ALL_OTHER_USERS_TO_THE_LOGIN_PAGE: 'Afficher le site uniquement pour les utilisateurs authentifiés et rediriger tous les autres vers la page de login.'
 SLUG: 'Identifiant'
-SOMEONE_TRIED_TO_LOG_IN_TO_YOUR_TYPEMILL_WEBSITE_AND_WE_WANT_TO_MAKE_SURE_IT_IS_YOU_ENTER_THE_FOLLOWING_VERIFICATION_CODE_TO_FINISH_YOUR_LOGIN_THE_CODE_WILL_BE_VALID_FOR_5_MINUTES: "Quelqu'un a essayé de se connecter à votre site TypeMill et nous voulons nous assurer que c'est vous. Entrez le code de vérification suivant pour terminer votre connexion. Le code sera valide pendant 5 minutes."
+SOMEONE_TRIED_TO_LOG_IN_TO_YOUR_TYPEMILL_WEBSITE_AND_WE_WANT_TO_MAKE_SURE_IT_IS_YOU_ENTER_THE_FOLLOWING_VERIFICATION_CODE_TO_FINISH_YOUR_LOGIN_THE_CODE_WILL_BE_VALID_FOR_5_MINUTES: "Quelqu'un a essayé de se connecter à votre site Typemill et nous voulons nous assurer que c'est vous. Entrez le code de vérification suivant pour terminer votre connexion. Le code sera valide pendant 5 minutes."
 SOMETHING_WENT_WRONG_PLEASE_REFRESH_THE_PAGE_AND_CHECK_IF_ALL_FOLDERS_AND_FILES_ARE_WRITABLE: 'Quelque chose a mal tourné. Veuillez rafraîchir la page et vérifier si tous les dossiers et fichiers sont modifiables.'
 SOMETHING_WENT_WRONG_THE_INPUT_IS_NOT_VALID: "Quelque chose a mal tourné. L'entrée n'est pas valide."
 SOURCE: 'Source'
@@ -378,7 +378,7 @@ TABLE: Tableau
 TABLE_OF_CONTENTS: Sommaire
 TAB_NOT_FOUND: 'Onglet non trouvé'
 TEMPORARY_REDIRECT_302_THE_USER_TO_THE_REFERENCED_INTERNAL_PAGE: "Redirection temporaire 302 de l'utilisateur vers la page interne référencée"
-TESTMAIL_FROM_TYPEMILL: 'Email de test de TypeMill'
+TESTMAIL_FROM_TYPEMILL: 'Email de test de Typemill'
 TEXT_BEFORE_RECOVER_LINK_IN_EMAIL_MESSAGE: 'Texte avant le lien de récupération dans le message email'
 TEXT_FILE: 'Fichier texte'
 THEMES: Thèmes
@@ -414,7 +414,7 @@ THE_VERSION_CHECK_FAILED_BECAUSE_OF_INVALID_PARAMETERS: 'La vérification de la 
 THE_WEBSITE_IS_RUNNING_NOT_UNDER_THE_DOMAIN_OF_YOUR_LICENSE: 'Le site web ne fonctionne pas sous le domaine de votre licence.'
 THIS: 'Ceci'
 THIS_FOLDER_CONTAINS: 'Ce dossier contient'
-THIS_IS_A_TESTMAIL_FROM_TYPEMILL_AND_IF_YOU_READ_THIS_E_MAIL_THEN_EVERYTHING_WORKS_FINE: 'Ceci est un email de test de TypeMill et si vous lisez cet email, alors tout fonctionne bien.'
+THIS_IS_A_TESTMAIL_FROM_TYPEMILL_AND_IF_YOU_READ_THIS_E_MAIL_THEN_EVERYTHING_WORKS_FINE: 'Ceci est un email de test de Typemill et si vous lisez cet email, alors tout fonctionne bien.'
 THIS_PAGE_HAS_BEEN_MODIFIED: 'Cette page a été modifiée.'
 THIS_PAGE_HAS_UNSAVED_CHANGES: 'Cette page a des modifications non enregistrées.'
 TITLE: Titre
@@ -484,7 +484,7 @@ WEBSITE_OWNER: 'Propriétaire du site'
 WEBSITE_RESTRICTION: 'Restriction sur le site'
 WEBSITE_TITLE: 'Titre du site'
 WELCOME_BACK: 'Bienvenue de nouveau'
-WELCOME_TO_TYPEMILL: 'Bienvenue dans TypeMill'
+WELCOME_TO_TYPEMILL: 'Bienvenue dans Typemill'
 WE_CANNOT_CREATE_A_FOLDER_ONLY_FILES: 'Nous ne pouvons pas créer de dossier, seulement des fichiers'
 WE_COULD_NOT_CREATE_A_SANITIZED_VERSION_OF_THE_SVG_IT_PROBABLY_HAS_INVALID_CONTENT: 'Nous n’avons pas pu créer une version assainie du SVG, elle a probablement un contenu invalide'
 WE_COULD_NOT_CREATE_THE_BASE_LANGUAGE_FOLDER: 'Nous n’avons pas pu créer le dossier de langue de base'
@@ -525,7 +525,7 @@ WE_FOUND_THE_FOLDER_BUT_COULD_NOT_DELETE: 'Nous avons trouvé le dossier mais n�
 WE_FOUND_THE_FOLDER_BUT_COULD_NOT_DELETE_IT: 'Nous avons trouvé le dossier mais n’avons pas pu le supprimer'
 WE_GOT_AN_ERROR_FROM_FILE_GET_CONTENTS: 'Nous avons eu une erreur lors de la récupération du contenu du fichier'
 WE_GOT_AN_ERROR_WHILE_PUBLISHING_THE_FILE: 'Nous avons eu une erreur lors de la publication du fichier'
-WE_HOPE_YOU_LIKE_TYPEMILL_BECAUSE_WE_CODED_IT_JUST_FOR_YOU: 'Nous espérons que vous aimez TypeMill car nous l’avons codé juste pour vous'
+WE_HOPE_YOU_LIKE_TYPEMILL_BECAUSE_WE_CODED_IT_JUST_FOR_YOU: 'Nous espérons que vous aimez Typemill car nous l’avons codé juste pour vous'
 WE_WILL_CHECK_IT_AGAIN_IN_24_HOURS: 'Nous vérifierons à nouveau dans 24 heures'
 WIDTH: 'Largeur'
 WIDTH_HEIGHT: 'Largeur x Hauteur'
@@ -539,7 +539,7 @@ YOUR_BROWSER_CAN_REMEMBER_ALL_OF_YOUR_PASSWORDS: 'Votre navigateur peut se souve
 YOUR_EMAIL: 'Votre e-mail'
 YOUR_LICENSE_KEY: 'Votre clé de licence'
 YOUR_REGISTRATION_IS_NOT_CONFIRMED_YET_PLEASE_CHECK_YOUR_E_MAILS_AND_USE_THE_CONFIRMATION_LINK: 'Votre inscription n’est pas encore confirmée, veuillez vérifier vos e-mails et utiliser le lien de confirmation'
-YOUR_TYPEMILL_VERIFICATION_CODE: 'Votre code de vérification TypeMill'
+YOUR_TYPEMILL_VERIFICATION_CODE: 'Votre code de vérification Typemill'
 YOUTUBE_DEPRECATED: 'YouTube obsolète'
 YOU_ARE_NOT_ALLOWED_TO_DELETE_ANOTHER_USER: 'Vous n’êtes pas autorisé à supprimer un autre utilisateur'
 YOU_ARE_NOT_ALLOWED_TO_UPDATE_ANOTHER_USER: 'Vous n’êtes pas autorisé à mettre à jour un autre utilisateur'
@@ -562,7 +562,7 @@ DO_YOU_REALLY_WANT_TO_DELETE_THIS_PAGE: 'Voulez-vous vraiment supprimer cette pa
 FILE_IS_BIGGER_THAN_20MB: 'Le fichier est plus grand que 20 Mo'
 LICENSE_DATA_INCOMPLETE: 'Données de licence incomplètes'
 LICENSE_DATA_INVALID: 'Données de licence invalides'
-LIST_ALL_DOMAINS_SEPARATED_BY_COMMA_THAT_SHOULD_HAVE_ACCESS_TO_THE_TYPEMILL_API_DOMAINS_WILL_BE_ADDED_TO_THE_CORS_HEADER: "Listez tous les domaines séparés par des virgules qui devraient avoir accès à l'API TypeMill. Les domaines seront ajoutés à l'en-tête CORS."
+LIST_ALL_DOMAINS_SEPARATED_BY_COMMA_THAT_SHOULD_HAVE_ACCESS_TO_THE_TYPEMILL_API_DOMAINS_WILL_BE_ADDED_TO_THE_CORS_HEADER: "Listez tous les domaines séparés par des virgules qui devraient avoir accès à l'API Typemill. Les domaines seront ajoutés à l'en-tête CORS."
 MEDIALIB: 'Bibliothèque multimédia'
 NO_LICENSE_FOUND: 'Aucune licence trouvée'
 SPECIAL_CHARACTERS_ARE_NOT_ALLOWED_LENGTH_BETWEEN_1_AND_40: 'Les caractères spéciaux ne sont pas autorisés, longueur entre 1 et 40'
