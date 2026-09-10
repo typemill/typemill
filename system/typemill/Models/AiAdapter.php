@@ -13,14 +13,14 @@ interface AiAdapterInterface
      * @param string $systemMessage  The system/role instruction.
      * @param string $userMessage    The assembled user message (prompt + tagged content).
      * @param int    $maxTokens      Maximum output tokens.
-     * @param float  $temperature    Temperature (0.0–1.0).
+     * @param ?float $temperature   Temperature (0.0–1.0), or null to omit the parameter.
      * @return string|false          The answer string, or false on failure.
      */
     public function chat(
         string  $systemMessage,
         string  $userMessage,
         int     $maxTokens,
-        float   $temperature,
+        ?float  $temperature,
         ?int    $timeout = null,
         ?string $reasoningEffort = null
     ): string|false;
@@ -55,7 +55,7 @@ class OpenAiAdapter implements AiAdapterInterface
         $this->apikey  = $apikey;
     }
 
-    public function chat(string $systemMessage, string $userMessage, int $maxTokens, float $temperature, ?int $timeout = null, ?string $reasoningEffort = null): string|false
+    public function chat(string $systemMessage, string $userMessage, int $maxTokens, ?float $temperature, ?int $timeout = null, ?string $reasoningEffort = null): string|false
     {
         $url = $this->baseUrl . '/chat/completions';
 
@@ -71,10 +71,13 @@ class OpenAiAdapter implements AiAdapterInterface
                 ['role' => 'system', 'content' => $systemMessage],
                 ['role' => 'user',   'content' => $userMessage],
             ],
-            'temperature' => $temperature,
             'max_tokens'  => $maxTokens,
             'stream'      => false,
         ];
+
+        if ($temperature !== null) {
+            $postdata['temperature'] = $temperature;
+        }
 
         if (!empty($reasoningEffort)) {
             $postdata['reasoning_effort'] = $reasoningEffort;
@@ -174,7 +177,7 @@ class AnthropicAdapter implements AiAdapterInterface
         $this->apikey  = $apikey;
     }
 
-    public function chat(string $systemMessage, string $userMessage, int $maxTokens, float $temperature, ?int $timeout = null, ?string $reasoningEffort = null): string|false
+    public function chat(string $systemMessage, string $userMessage, int $maxTokens, ?float $temperature, ?int $timeout = null, ?string $reasoningEffort = null): string|false
     {
         $url = $this->baseUrl . '/messages';
 
@@ -189,9 +192,12 @@ class AnthropicAdapter implements AiAdapterInterface
             'messages'    => [
                 ['role' => 'user', 'content' => $userMessage],
             ],
-            'temperature' => $temperature,
             'max_tokens'  => $maxTokens,
         ];
+
+        if ($temperature !== null) {
+            $postdata['temperature'] = $temperature;
+        }
 
         $api = new ApiCalls();
         $api->setTimeout($timeout ?? 120);

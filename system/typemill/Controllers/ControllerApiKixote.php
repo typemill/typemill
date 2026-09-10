@@ -107,9 +107,16 @@ class ControllerApiKixote extends Controller
 		return $this->system;
 	}
 
-	private function getTemperature(): float
+	private function getTemperature(): ?float
 	{
-		$temperature = (float) ($this->settings['aitemperature'] ?? 0.7);
+		$value = $this->settings['aitemperature'] ?? null;
+
+		// Empty/null means "do not send temperature" (required by some newer Anthropic models).
+		if ($value === null || $value === '') {
+			return null;
+		}
+
+		$temperature = (float) $value;
 		// Clamp: 0.0 – 1.0
 		return max(0.0, min(1.0, $temperature));
 	}

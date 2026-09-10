@@ -34,7 +34,7 @@ The filesystem is the single source of truth for content and structure.
 
 ### Backend
 
-* PHP 8.1 – 8.4
+* PHP 8.2 – 8.5
 * Slim 4
 * PHP-DI
 * Twig

@@ -535,7 +535,7 @@ fieldsetai:
     aitemperature:
       type: select
       label: 'Temperature (strict/creative)'
-      description: "Default: 0.7 (0.1 = very strict, 1.0 = very creative)"
+      description: "0.1 = very strict, 1.0 = very creative. Leave empty to let the provider decide (required for newer Anthropic models like Sonnet 5)."
       class: "w-half"
       options:
         '0.1': '0.1'
