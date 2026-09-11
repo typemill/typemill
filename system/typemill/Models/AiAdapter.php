@@ -2,6 +2,8 @@
 
 namespace Typemill\Models;
 
+use Typemill\Static\Translations;
+
 /**
  * Contract for all AI provider adapters.
  */
@@ -88,22 +90,46 @@ class OpenAiAdapter implements AiAdapterInterface
         $response = $api->makePostCall($url, $postdata, $headers);
 
         if (!$response) {
-            $this->error = 'Failed to communicate with AI provider: ' . $api->getError();
+            $httpStatus = $api->getLastHttpStatus();
+            $baseError  = 'Failed to communicate with AI provider: ' . $api->getError();
+
+            if ($httpStatus !== null && $httpStatus >= 500) {
+                $this->error = $baseError . ' ' . Translations::translate('Please check if your ai-adapter and model name are correct.');
+            } else {
+                $this->error = $baseError;
+            }
             return false;
         }
 
         $data = json_decode($response, true);
 
         if (isset($data['error'])) {
-            $this->error = $data['error']['message'] ?? 'AI provider returned an error.';
+            $errorMessage = $data['error']['message'] ?? 'AI provider returned an error.';
+            $errorType    = $data['error']['type'] ?? '';
+            $httpStatus   = $api->getLastHttpStatus();
+
+            $isInternal = ($httpStatus !== null && $httpStatus >= 500)
+                || stripos($errorMessage, 'internal') !== false
+                || stripos($errorType, 'internal') !== false
+                || stripos($errorMessage, 'server') !== false
+                || empty($errorMessage);
+
+            if ($isInternal) {
+                $this->error = $errorMessage . ' ' . Translations::translate('Please check if your ai adapter and model name are correct.');
+            } else {
+                $this->error = $errorMessage;
+            }
             return false;
         }
 
         $content = $data['choices'][0]['message']['content'] ?? '';
         if (empty($content)) {
             $finishReason = $data['choices'][0]['finish_reason'] ?? '';
+            $httpStatus   = $api->getLastHttpStatus();
             if ($finishReason === 'length') {
                 $this->error = 'The AI response was cut off because the maximum output length was reached. Please increase the output token limit or shorten the prompt.';
+            } elseif ($httpStatus !== null && $httpStatus >= 500) {
+                $this->error = 'AI provider did not return a valid answer. ' . Translations::translate('Please check if your ai-adapter and model name is correct.');
             } else {
                 $this->error = 'AI provider did not return a valid answer.';
             }
@@ -215,12 +241,22 @@ class AnthropicAdapter implements AiAdapterInterface
             return false;
         }
 
-        if (empty($data['content'][0]['text'])) {
-            $this->error = 'Anthropic did not return a valid answer.';
+        $content = '';
+        if (isset($data['content']) && is_array($data['content'])) {
+            foreach ($data['content'] as $block) {
+                if (isset($block['type']) && $block['type'] === 'text' && isset($block['text'])) {
+                    $content = $block['text'];
+                    break;
+                }
+            }
+        }
+
+        if (empty($content)) {
+            $this->error = Translations::translate('Anthropic did not return a valid answer.');
             return false;
         }
 
-        return trim($data['content'][0]['text']);
+        return trim($content);
     }
 
     public function listModels(): array|false
@@ -269,6 +305,130 @@ class AnthropicAdapter implements AiAdapterInterface
 }
 
 /**
+ * Adapter for the OpenAI Responses API.
+ * Supports providers that route newer models (e.g. GPT 5.x) through the
+ * POST {baseUrl}/responses endpoint instead of /chat/completions.
+ */
+class OpenAiResponsesAdapter implements AiAdapterInterface
+{
+    private string $baseUrl;
+    private string $model;
+    private string $apikey;
+    private string $error = '';
+
+    public function __construct(string $baseUrl, string $model, string $apikey)
+    {
+        $this->baseUrl = rtrim($baseUrl, '/');
+        $this->model   = $model;
+        $this->apikey  = $apikey;
+    }
+
+    public function chat(string $systemMessage, string $userMessage, int $maxTokens, ?float $temperature, ?int $timeout = null, ?string $reasoningEffort = null): string|false
+    {
+        $url = $this->baseUrl . '/responses';
+
+        $headers = [];
+        if (!empty($this->apikey)) {
+            $headers[] = "Authorization: Bearer {$this->apikey}";
+        }
+
+        $postdata = [
+            'model'             => $this->model,
+            'input'             => [
+                ['role' => 'system', 'content' => $systemMessage],
+                ['role' => 'user',   'content' => $userMessage],
+            ],
+            'max_output_tokens' => $maxTokens,
+            'stream'            => false,
+        ];
+
+        if ($temperature !== null) {
+            $postdata['temperature'] = $temperature;
+        }
+
+        if (!empty($reasoningEffort)) {
+            $postdata['reasoning'] = ['effort' => $reasoningEffort];
+        }
+
+        $api = new ApiCalls();
+        $api->setTimeout($timeout ?? 120);
+        $response = $api->makePostCall($url, $postdata, $headers);
+
+        if (!$response) {
+            $this->error = Translations::translate('Failed to communicate with AI provider: ') . $api->getError();
+            return false;
+        }
+
+        $data = json_decode($response, true);
+
+        if (isset($data['error'])) {
+            $this->error = $data['error']['message'] ?? Translations::translate('AI provider returned an error.');
+            return false;
+        }
+
+        $content = '';
+        if (isset($data['output']) && is_array($data['output'])) {
+            foreach ($data['output'] as $item) {
+                if (isset($item['type']) && $item['type'] === 'message' && isset($item['content'][0]['text'])) {
+                    $content = $item['content'][0]['text'];
+                    break;
+                }
+            }
+        }
+
+        if (empty($content)) {
+            $this->error = Translations::translate('AI provider did not return a valid answer.');
+            return false;
+        }
+
+        return trim($content);
+    }
+
+    public function listModels(): array|false
+    {
+        $url     = $this->baseUrl . '/models';
+        $headers = [];
+        if (!empty($this->apikey)) {
+            $headers[] = "Authorization: Bearer {$this->apikey}";
+        }
+
+        $api = new ApiCalls();
+        $api->setTimeout(30);
+        $response = $api->makeGetCall($url, $headers);
+
+        if (!$response) {
+            $this->error = Translations::translate('Failed to fetch model list: ') . $api->getError();
+            return false;
+        }
+
+        $data = json_decode($response, true);
+
+        if (isset($data['error'])) {
+            $this->error = $data['error']['message'] ?? Translations::translate('Provider returned an error.');
+            return false;
+        }
+
+        if (!isset($data['data']) || !is_array($data['data'])) {
+            $this->error = Translations::translate('Provider did not return a valid model list.');
+            return false;
+        }
+
+        $models = [];
+        foreach ($data['data'] as $entry) {
+            if (!empty($entry['id'])) {
+                $models[] = ['id' => $entry['id']];
+            }
+        }
+
+        usort($models, fn($a, $b) => strcmp($a['id'], $b['id']));
+
+        return $models;
+    }
+
+    public function getError(): string { return $this->error; }
+}
+
+/**
  * Factory: instantiate the correct adapter from configuration.
  */
 class AiAdapter
@@ -276,8 +436,9 @@ class AiAdapter
     public static function create(string $adapter, string $baseUrl, string $model, string $apikey): AiAdapterInterface
     {
         return match ($adapter) {
-            'anthropic' => new AnthropicAdapter($baseUrl, $model, $apikey),
-            default     => new OpenAiAdapter($baseUrl, $model, $apikey),
+            'anthropic'        => new AnthropicAdapter($baseUrl, $model, $apikey),
+            'openai-responses' => new OpenAiResponsesAdapter($baseUrl, $model, $apikey),
+            default            => new OpenAiAdapter($baseUrl, $model, $apikey),
         };
     }
 }

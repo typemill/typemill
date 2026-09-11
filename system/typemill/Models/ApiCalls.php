@@ -8,6 +8,8 @@ class ApiCalls
 
     private $timeout = 5;
 
+    private ?int $lastHttpStatus = null;
+
     public function getError()
     {
         return $this->error;
@@ -16,6 +18,16 @@ class ApiCalls
     public function setTimeout(int $timeout)
     {
         $this->timeout = $timeout;
+    }
+
+    /**
+     * Return the HTTP status code of the last request, or null if unavailable.
+     *
+     * @return int|null
+     */
+    public function getLastHttpStatus(): ?int
+    {
+        return $this->lastHttpStatus;
     }
 
     public function makePostCall(string $url, array $data, $authHeader = '')
@@ -70,6 +82,7 @@ class ApiCalls
 #        curl_setopt($curl, CURLOPT_FAILONERROR, true);
 
         $response = curl_exec($curl);
+        $this->lastHttpStatus = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
         if ($response === false)
         {
@@ -112,15 +125,19 @@ class ApiCalls
         $context = stream_context_create($options);
         $response = file_get_contents($url, false, $context);
 
+        if (!empty($http_response_header) && isset($http_response_header[0]))
+        {
+            $parts                = explode(' ', $http_response_header[0], 3);
+            $this->lastHttpStatus = isset($parts[1]) ? (int) $parts[1] : null;
+        }
+
         if ($response === false)
         {
-            if (!empty($http_response_header) && isset($http_response_header[0]))
+            if ($this->lastHttpStatus !== null)
             {
-                $parts          = explode(' ', $http_response_header[0], 3);
-                $status_code    = $parts[1] ?? 'Unknown';
-                $msg            = $parts[2] ?? 'No status message';
+                $msg         = $parts[2] ?? 'No status message';
 
-                $this->error = Translations::translate('We got an error from file_get_contents: ') . $status_code . ' ' . $msg;
+                $this->error = Translations::translate('We got an error from file_get_contents: ') . $this->lastHttpStatus . ' ' . $msg;
             }
             else
             {

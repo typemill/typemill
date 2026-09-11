@@ -1407,10 +1407,12 @@ kixote.component('tab-generate', {
 			var self = this;
 			eventBus.$emit('switchLoading');
 
+			var modelOverride = localStorage.getItem('kixote_model_override') || '';
 			tmaxios.post('/api/v1/prompt',{
 				'prompt': this.prompt,
 				'article': this.versions[this.activeversion],
-				'example': this.examplecontent
+				'example': this.examplecontent,
+				'model': modelOverride
 			})
 			.then(function (response)
 			{
@@ -1803,6 +1805,7 @@ kixote.component('tab-help', {
 			tmaxios.post('/api/v1/kixote/help', {
 				question: question,
 				history: history,
+				model: localStorage.getItem('kixote_model_override') || ''
 			})
 			.then(function (response)
 			{
@@ -2027,6 +2030,9 @@ kixote.component('tab-info', {
 								<p class="font-semibold mb-2">Available models</p>
 								<p class="text-sm text-stone-500 mb-3">
 									Select a model to use for this session. Your choice is saved in the browser and used instead of the configured model until you change it.
+								</p>
+								<p class="text-sm text-rose-500 mb-3">
+									Some AI providers like OpenCode route different models through different API formats. If a selected model does not work, you may need to select a different AI adapter in the system settings.
 								</p>
 								<div v-if="modelsLoading" class="text-sm text-stone-500">Loading models ...</div>
 								<div v-else-if="modelsError" class="text-sm text-rose-500">{{ modelsError }}</div>

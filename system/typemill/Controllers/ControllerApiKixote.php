@@ -144,6 +144,24 @@ class ControllerApiKixote extends Controller
 	}
 
 	/**
+	 * Apply a per-session model override sent from the Kixote UI.
+	 * Validates the value before replacing the configured model.
+	 */
+	private function applyModelOverride(?string $override): void
+	{
+		if (empty($override) || !is_string($override)) {
+			return;
+		}
+
+		$override = trim($override);
+		if (mb_strlen($override, 'UTF-8') === 0 || mb_strlen($override, 'UTF-8') > 100) {
+			return;
+		}
+
+		$this->aimodel = $override;
+	}
+
+	/**
 	 * Dispatch a fully-assembled user message to the configured AI provider.
 	 * Callers are responsible for building $userMessage (prompt + tagged XML content).
 	 * Pass $systemMessageOverride for calls that need a different system prompt (e.g. YAML translation).
@@ -426,6 +444,9 @@ class ControllerApiKixote extends Controller
 			]));
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
+
+		// Allow per-session model override selected in the Kixote Info tab
+		$this->applyModelOverride($params['model'] ?? null);
 
 		$prompt  = $params['prompt'] ?? '';
 		$article = $params['article'] ?? '';
@@ -842,6 +863,9 @@ class ControllerApiKixote extends Controller
 			$response->getBody()->write(json_encode(['error' => $this->error]));
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
+
+		// Allow per-session model override selected in the Kixote Info tab
+		$this->applyModelOverride($body['model'] ?? null);
 
 		// ── Public key hash for remote auth ──
 		$pkeyfile = getcwd() . DIRECTORY_SEPARATOR . 'settings' . DIRECTORY_SEPARATOR . 'public_key.pem';

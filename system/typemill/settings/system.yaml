@@ -493,15 +493,16 @@ fieldsetai:
     aiprivacy:
       type: paragraph
       label: "Notice"
-      description: "Connect Typemill to any OpenAI-compatible AI provider (OpenAI, Ollama, LM Studio, OpenRouter, ...) or to Anthropic (Claude). For local providers like Ollama no API key is needed. If you use a cloud provider, user inputs will be sent to that external service. Ensure compliance with your local data privacy regulations. Each user will be asked for confirmation before using AI features."
+      description: "Connect Typemill to an AI provider using the OpenAI Chat Completions API, OpenAI Responses API, or Anthropic Messages API. This includes providers such as OpenAI, Ollama, LM Studio, OpenRouter, and Anthropic. Local providers such as Ollama usually do not require an API key. When using a cloud provider, user inputs are sent to that external service. Ensure compliance with applicable data privacy regulations. Each user will be asked for confirmation before using AI features."
     ai_adapter:
       type: select
       label: "AI Adapter"
-      description: "Select 'OpenAI-compatible' for OpenAI, Ollama, LM Studio, OpenRouter, and most other providers. Select 'Anthropic' for Claude."
+      description: "Choose the API format required by your AI provider. If you are unsure, select 'OpenAI Chat Completions API' first. Ollama and LM Studio support both OpenAI options. Use 'Anthropic Messages API' for Claude and other Anthropic-compatible services."      
       options:
         none: 'None (disabled)'
-        openai: 'OpenAI-compatible (OpenAI, Ollama, LM Studio, OpenRouter ...)'
-        anthropic: 'Anthropic (Claude)'
+        openai: 'OpenAI Chat Completions API (recommended default)'
+        openai-responses: 'OpenAI Responses API'
+        anthropic: 'Anthropic Messages API (Claude-compatible)'
     ai_base_url:
       type: text
       label: "API Base URL"
@@ -512,7 +513,7 @@ fieldsetai:
       type: text
       label: "Model"
       placeholder: "llama3"
-      description: "The model name as expected by your provider. Examples: gpt-4.1, llama3, mistral, claude-sonnet-4."
+      description: "The model name as expected by your AI provider. Check your provider's documentation or model list for the correct name."
       maxlength: 100
     ai_api_key:
       type: password
