@@ -338,9 +338,12 @@ app.component('tab-lang', {
 			editData: {},
 			langErrors: {},
 			langMessages: {},
+			message: false,
+			messageClass: false,
 			project: data.project,
 			loading: true,
 			translate: false,
+			busyLabel: 'Working ...',
 			settings: data.settings,
 			multilangIndex: {},
 			showMultilangIndex: false,
@@ -377,9 +380,11 @@ app.component('tab-lang', {
 				</div>
 			</div>
 
+			<div v-if="message" :class="messageClass" class="block w-full px-3 py-2 my-1 text-white transition duration-100">{{ $filters.translate(message) }}</div>
+
 			<div v-if="!showMultilangIndex">
 				<div v-if="loading" class="pv-5">{{ $filters.translate('Loading translations...') }}</div>
-				<form v-else>
+				<form v-else-if="formDefinitions && formDefinitions.fields">
 					<div v-if="project">
 						<div 
 							v-for="(fieldDefinition, langKey) in formDefinitions.fields" 
@@ -419,12 +424,12 @@ app.component('tab-lang', {
 							<div 
 								v-if="translate == langKey"
 								class="absolute right-0 left-0 top-0 bottom-0 pt-6 bg-stone-50 dark:bg-stone-700 dark:text-stone-200 bg-opacity-90 flex"
-								>
-									<p class="p-3 font-bold text-teal-600">Translating ... </p> 
-									<svg class="animate-spin mt-3 h-5 w-5 text-stone-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-										<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-										<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-									</svg>
+							>
+								<p class="p-3 font-bold text-teal-600">{{ $filters.translate(busyLabel) }}</p> 
+								<svg class="animate-spin mt-3 h-5 w-5 text-stone-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+									<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+									<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+								</svg>
 							</div>
 							<label class="block mb-1 font-medium">{{ fieldDefinition.label }}</label>
 							<div class="flex">
@@ -458,8 +463,8 @@ app.component('tab-lang', {
 									>x</button>
 
 									<!-- create -->
-									<button 
-										v-if="!showUpdate(langKey)"
+									<button
+										v-if="!showUpdate(langKey) && !isHome()"
 										class= "flex-1 px-1 py-3 ml-1 
 												text-stone-50 bg-stone-700 
 										       	hover:bg-stone-900 hover:text-white 
@@ -480,7 +485,9 @@ app.component('tab-lang', {
 										v-if="showUpdate(langKey)"
 										class =	"flex-1 px-1 py-3 ml-1 text-center transition duration-100 
 												bg-stone-700 text-white
-										       	hover:bg-stone-900"
+										       	hover:bg-stone-900
+										       	disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-800"
+										:disabled="isBusy()"
 										@click.prevent="updateTranslation(langKey)" 
 									>
 										<svg class="icon icon-magic-wand">
@@ -490,11 +497,11 @@ app.component('tab-lang', {
 									</button>
 
 									<!-- visit -->
-									<a 
+									<a
 										:href="getEditorPath(langKey)"
 										:class="[
 											'flex-1 px-1 py-3 ml-1 text-center transition duration-100',
-											hasTranslation(langKey)
+											(hasTranslation(langKey) || isHome())
 									      	? 'bg-stone-700 hover:bg-stone-900 text-white'
 									      	: 'bg-stone-200 text-stone-800 cursor-not-allowed pointer-events-none'
 									  	]"
@@ -507,19 +514,23 @@ app.component('tab-lang', {
 							</div>
 							<div v-if="!fieldDefinition.base" class="text-sm mt-1">
 								<div v-if="langMessages[langKey]" class="text-teal-600">
-									{{ langMessages[langKey] }}
+									{{ $filters.translate(langMessages[langKey]) }}
 								</div>
 								<div v-else-if="langErrors[langKey]" class="p-1 bg-rose-500 text-white">
 									{{ langErrors[langKey] }}
 								</div>
+								<div v-else-if="isHome()" class="text-stone-500">
+									{{ $filters.translate('The homepage for this language has been created automatically.') }}
+								</div>
 								<div v-else class="text-stone-500">
-									Edit and save the url to create a new translation page.
+									{{ $filters.translate('Edit and save the url to create a new translation page.') }}
 								</div>
 							</div>
 						</div>
 					</div>
 
 				</form>
+				<div v-else class="mt-5">{{ $filters.translate('No translations available for this page') }}</div>
 
 			</div>
 
@@ -561,7 +572,7 @@ app.component('tab-lang', {
 			          <!-- Base page -->
 			          <td class="p-2 font-mono text-xs">
 
-			            {{ row.en }}
+			            {{ row[settings.baseprojectid] }}
 
 			          </td>
 
@@ -642,23 +653,28 @@ app.component('tab-lang', {
 		},
 		isInputDisabled(langKey)
 		{
-		  // disabled if translation exists
-		  return this.hasTranslation(langKey);
+		  // disabled if translation exists or if it is the homepage (created automatically, no slug)
+		  return this.hasTranslation(langKey) || this.isHome();
 		},
 		isInputBlurred(langKey)
 		{
 		  // blurred only if no translation AND not changed
 		  return !this.hasTranslation(langKey) && !this.isUrlChanged(langKey);
 		},
+		isBusy()
+		{
+			// lock all action buttons while any translation request is in flight
+			return this.translate !== false;
+		},
 		canUseButtons(langKey)
 		{
-		  // buttons enabled only if translation exists
-		  return this.hasTranslation(langKey);
+		  // buttons enabled only if translation exists and no request is in flight
+		  return this.hasTranslation(langKey) && !this.isBusy();
 		},
 		canCreate(langKey)
 		{
-		  // create if no translation AND url changed
-		  return !this.hasTranslation(langKey) && this.isUrlChanged(langKey);
+		  // create if no translation AND url changed AND no request is in flight
+		  return !this.hasTranslation(langKey) && this.isUrlChanged(langKey) && !this.isBusy();
 		},
 		showUpdate(langKey)
 		{
@@ -667,6 +683,11 @@ app.component('tab-lang', {
 		refreshEditData()
 		{
 			this.editData = [];
+
+			if(!this.formDefinitions || !this.formDefinitions.fields)
+			{
+				return;
+			}
 
 			for (const langKey in this.formDefinitions.fields)
 			{
@@ -762,12 +783,12 @@ app.component('tab-lang', {
 				})
 				.catch(error => {
 					this.message 			= handleErrorMessage(error) || 'Failed to load translations';
-					this.messageClass 		= 'bg-red-600';
+					this.messageClass 		= 'bg-rose-500';
 				});
 		},
 		loadTranslations()
 		{
-			tmaxios.get(`/api/v1/multilang`, {
+			return tmaxios.get(`/api/v1/multilang`, {
 				  params: {
 				  	'url':				data.urlinfo.route,
 				  	'pageid': 			this.pageid,
@@ -783,16 +804,18 @@ app.component('tab-lang', {
 				.catch(error => {
 					this.loading 			= false;
 					this.message 			= handleErrorMessage(error) || 'Failed to load translations';
-					this.messageClass 		= 'bg-red-600';
+					this.messageClass 		= 'bg-rose-500';
 				});
 		},
 		storeTranslation(langKey)
 		{
+			this.translate = langKey;
+			this.busyLabel = 'Creating ...';
 			this.langMessages[langKey] = false;
 			this.langErrors[langKey] = false;
 
 			const path = this.editData[langKey];
-			if (/^[a-z0-9\-_/]*$/.test(path)) 
+			if (/^[a-z0-9\-_/]*$/.test(path))
 			{
 				tmaxios.post(`/api/v1/multilang`, {
 					pageid: this.pageid,
@@ -800,8 +823,6 @@ app.component('tab-lang', {
 					path: path,
 				})
 				.then((response) => {
-					this.langMessages[langKey] = 'Page created';
-					this.translate = false;
 					if(response.data.multilangData)
 					{
 						this.formData = response.data.multilangData;
@@ -809,22 +830,32 @@ app.component('tab-lang', {
 						if(response.data.autotranslate)
 						{
 							this.autotranslate(langKey);
+							return;
 						}
 					}
-					else
+
+					this.translate = false;
+					this.langMessages[langKey] = 'Page created';
+					if(!response.data.multilangData)
 					{
 						this.loadTranslations();
 					}
 				})
 				.catch(error => {
+					this.translate = false;
 					this.langErrors[langKey] = handleErrorMessage(error) || 'Failed to save translation';
 				});
+			}
+			else
+			{
+				this.translate = false;
 			}
 		},
 		updateTranslation(langKey)
 		{
 			this.translate = langKey;
-			this.langMessages[langKey] = 'updating ...';
+			this.busyLabel = 'Updating ...';
+			this.langMessages[langKey] = false;
 			this.langErrors[langKey] = false;
 
 			tmaxios.put(`/api/v1/autotrans`, {
@@ -833,17 +864,23 @@ app.component('tab-lang', {
 			})
 			.then((response) => {
 				this.translate = false;
-				this.langMessages[langKey] = 'Page translated';
+				this.loadTranslations().then(() => {
+					this.langMessages[langKey] = 'Page translated';
+				});
 			})
 			.catch(error => {
 				this.translate = false;
-				this.langErrors[langKey] = handleErrorMessage(error) || 'Failed to save translation';
+				const errorMessage = handleErrorMessage(error) || 'Failed to save translation';
+				this.loadTranslations().then(() => {
+					this.langErrors[langKey] = errorMessage;
+				});
 			});
 		},
 		autotranslate(langKey)
 		{
 			this.translate = langKey;
-			this.langMessages[langKey] = 'tranlating ...';
+			this.busyLabel = 'Translating ...';
+			this.langMessages[langKey] = false;
 			this.langErrors[langKey] = false;
 
 			tmaxios.post(`/api/v1/autotrans`, {
@@ -852,15 +889,22 @@ app.component('tab-lang', {
 			})
 			.then((response) => {
 				this.translate = false;
-				this.langMessages[langKey] = 'Page translated';
+				this.loadTranslations().then(() => {
+					this.langMessages[langKey] = 'Page translated';
+				});
 			})
 			.catch(error => {
 				this.translate = false;
-				this.langErrors[langKey] = handleErrorMessage(error) || 'Failed to save translation';
+				const errorMessage = handleErrorMessage(error) || 'Failed to save translation';
+				this.loadTranslations().then(() => {
+					this.langErrors[langKey] = errorMessage;
+				});
 			});
 		},
 		unlinkTranslation(langKey)
 		{
+			this.translate = langKey;
+			this.busyLabel = 'Unlinking ...';
 			this.langMessages[langKey] = false;
 			this.langErrors[langKey] = false;
 
@@ -872,7 +916,8 @@ app.component('tab-lang', {
 				}
 			})
 			.then((response) => {
-				this.langMessages[langKey] = 'Unlinked translation page';
+				this.translate = false;
+				this.langMessages[langKey] = response.data.message || 'Unlinked translation page';
 				if(response.data.multilangData)
 				{
 					this.formData = response.data.multilangData;
@@ -884,6 +929,7 @@ app.component('tab-lang', {
 				}
 			})	
 			.catch(error => {
+				this.translate = false;
 				this.langErrors[langKey] = handleErrorMessage(error) || 'Failed to unlink translation page';
 			});
 		},

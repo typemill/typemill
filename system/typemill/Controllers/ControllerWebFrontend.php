@@ -618,6 +618,17 @@ class ControllerWebFrontend extends Controller
 	{
 		$langnavi = new Navigation();
 		$langnavi->setProject($this->settings, $url);
+		$storage = new StorageWrapper($this->settings['storage']);
+
+		# homepages are not part of the navigation, so check the published file directly on disk
+		$home = $langnavi->getProject() ? '/' . $langnavi->getProject() : '/';
+		if(trim($url, '/') === trim($home, '/'))
+		{
+			$homeItem = $langnavi->getHomepageItem($urlinfo['baseurl']);
+
+			return $storage->checkFile('contentFolder', '', $homeItem->pathWithoutType . '.md');
+		}
+
 		$pageinfo = $langnavi->getPageInfoForUrl($url, $urlinfo, $langattr);
 		if(!$pageinfo OR !isset($pageinfo['path']))
 		{
@@ -628,16 +639,13 @@ class ControllerWebFrontend extends Controller
 
     	if (pathinfo($path, PATHINFO_EXTENSION))
     	{
-	        if (pathinfo($path, PATHINFO_EXTENSION) === 'md')
-	        {
-		        return true;
-        	}
+	        # the cached navigation path can be outdated (draft or published state), so check the published file on disk
+	        $pathWithoutExtension = substr($path, 0, -(strlen(pathinfo($path, PATHINFO_EXTENSION)) + 1));
 
-        	return false;
+	        return $storage->checkFile('contentFolder', '', $pathWithoutExtension . '.md');
     	}
 
-	    $indexFile = $path . '/index.md';	    
-		$storage = new StorageWrapper($this->settings['storage']);
+	    $indexFile = $path . '/index.md';
 	    if ($storage->checkFile('contentFolder', '', $indexFile))
 	    {
 	        return true;

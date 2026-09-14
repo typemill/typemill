@@ -9,6 +9,7 @@ use Typemill\Models\Multilang;
 use Typemill\Models\Meta;
 use Typemill\Models\Navigation;
 use Typemill\Models\StorageWrapper;
+use Typemill\Models\Validation;
 use Typemill\Static\Translations;
 
 class ControllerApiMultilang extends Controller
@@ -27,14 +28,19 @@ class ControllerApiMultilang extends Controller
 	public function getMultilangIndex(Request $request, Response $response, $args)
 	{
 		$params 			= $request->getQueryParams();
-		
-		if(!$params['url'])
+
+		# validate input
+		$validate			= new Validation();
+		$validInput 		= $validate->articleUrl($params);
+		if($validInput !== true)
 		{
+			$errors 		= $validate->returnFirstValidationErrors($validInput);
 			$response->getBody()->write(json_encode([
-				'message' => Translations::translate('pageid or url is missing'),
+				'message' 	=> reset($errors),
+				'errors' 	=> $errors
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
 		$navigation             = new Navigation(); 
@@ -50,10 +56,12 @@ class ControllerApiMultilang extends Controller
         $project 				= $navigation->getProject();
 
         $multilang 				= new Multilang();
-		$multilangIndex         = $multilang->getMultilangIndex($navigation->getProject());
+		$multilangIndex         = $multilang->getMultilangIndex();
         if(!$multilangIndex)
         {
-        	$multilangIndex 	= $this->getFreshMultilangIndex($multilang);
+        	# no index yet, so create a fresh one from the filesystem
+        	$urlinfo 			= $this->c->get('urlinfo');
+        	$multilangIndex 	= $multilang->createFreshIndex($this->settings, $urlinfo);
             if(!$multilangIndex)
             {
 				$response->getBody()->write(json_encode([
@@ -75,14 +83,19 @@ class ControllerApiMultilang extends Controller
 	public function getMultilang(Request $request, Response $response, $args)
 	{
 		$params 			= $request->getQueryParams();
-		
-		if(!$params['pageid'] OR !$params['url'])
+
+		# validate input
+		$validate			= new Validation();
+		$validInput 		= $validate->multilangGet($params);
+		if($validInput !== true)
 		{
+			$errors 		= $validate->returnFirstValidationErrors($validInput);
 			$response->getBody()->write(json_encode([
-				'message' => Translations::translate('pageid or url is missing'),
+				'message' 	=> reset($errors),
+				'errors' 	=> $errors
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
 		$navigation             = new Navigation(); 
@@ -98,10 +111,12 @@ class ControllerApiMultilang extends Controller
         $project 				= $navigation->getProject();
 
         $multilang 				= new Multilang();
-		$multilangIndex         = $multilang->getMultilangIndex($navigation->getProject());
+		$multilangIndex         = $multilang->getMultilangIndex();
         if(!$multilangIndex)
         {
-        	$multilangIndex 	= $this->getFreshMultilangIndex($multilang);
+        	# no index yet, so create a fresh one from the filesystem
+        	$urlinfo 			= $this->c->get('urlinfo');
+        	$multilangIndex 	= $multilang->createFreshIndex($this->settings, $urlinfo);
             if(!$multilangIndex)
             {
 				$response->getBody()->write(json_encode([
@@ -154,21 +169,34 @@ class ControllerApiMultilang extends Controller
 	{
 		$baselang 			= $this->settings['baseprojectid'] ?? false;
 		$params 			= $request->getParsedBody();
-    	$pageid				= $params['pageid'] ?? false;
-		$lang 				= $params['lang'] ?? false; 
-		$path 				= $params['path'] ?? false;
 
-		# validate params
-		if(!$pageid or !$baselang or !$lang or !$path)
+		# validate input
+		$validate			= new Validation();
+		$validInput 		= $validate->multilangCreate($params);
+		if($validInput !== true)
 		{
+			$errors 		= $validate->returnFirstValidationErrors($validInput);
 			$response->getBody()->write(json_encode([
-				'message' => Translations::translate('pageid, baselang, lang or slug is missing'),
+				'message' 	=> reset($errors),
+				'errors' 	=> $errors
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);			
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
-# check if lang defined in project settings
+		$pageid				= $params['pageid'];
+		$lang 				= $params['lang'];
+		$path 				= $params['path'];
+
+		# check if lang is defined in the project settings
+		if($lang == $baselang OR !isset($this->settings['projectinstances'][$lang]))
+		{
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('language is not defined in the project settings'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+		}
 
 		$navigation = new Navigation(); 
 		if(!$navigation->checkProjectSettings($this->settings) OR $this->settings['projects'] !== 'languages')
@@ -184,21 +212,44 @@ class ControllerApiMultilang extends Controller
 		$multilangIndex 	= $multilang->getMultilangIndex();
         if(!$multilangIndex)
         {
-			$response->getBody()->write(json_encode([
-				'message' => Translations::translate('no index for multilanguage found'),
-			]));
+        	# no index yet, so create a fresh one from the filesystem
+        	$urlinfo 		= $this->c->get('urlinfo');
+        	$multilangIndex = $multilang->createFreshIndex($this->settings, $urlinfo);
+        	if(!$multilangIndex)
+        	{
+				$response->getBody()->write(json_encode([
+					'message' => Translations::translate('could not create multilangindex'),
+				]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+        	}
         }
 
 		$multilangData 	= $multilang->getMultilangData($pageid, $multilangIndex);
         if(!$multilangData)
         {
-			$response->getBody()->write(json_encode([
-				'message' => Translations::translate('We did not find the page id in the mulitlangindex'),
-			]));
+        	# the index might be outdated, so recreate it from the filesystem and retry once
+        	$urlinfo 		= $this->c->get('urlinfo');
+        	$multilangIndex = $multilang->createFreshIndex($this->settings, $urlinfo);
+        	$multilangData 	= $multilang->getMultilangData($pageid, $multilangIndex);
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+        	if(!$multilangIndex)
+        	{
+				$response->getBody()->write(json_encode([
+					'message' => Translations::translate('could not create multilangindex'),
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+        	}
+
+        	if(!$multilangData)
+        	{
+				$response->getBody()->write(json_encode([
+					'message' => Translations::translate('We did not find the page id in the multilangindex'),
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+        	}
         }
 
 		# first check if the language folder exists in the content folder
@@ -207,10 +258,10 @@ class ControllerApiMultilang extends Controller
 		{
 			$response->getBody()->write(json_encode([
 				'message' => Translations::translate('We could not create the base language folder.'),
-				'error' => $result
+				'error' => $baselangfolder
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);			
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);			
 		}
 
 		# first check if the target page already exists
@@ -237,6 +288,15 @@ class ControllerApiMultilang extends Controller
 
 			# the original page that should be translated
 			$sourceInfo = $this->getSourceInfo($multilangData[$baselang]);
+
+			if(!$sourceInfo)
+			{
+				$response->getBody()->write(json_encode([
+					'message' => Translations::translate('We did not find the base page for this translation.'),
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+			}
 
 			# the target
 			$segments = explode('/', trim($path, '/'));
@@ -267,7 +327,17 @@ class ControllerApiMultilang extends Controller
 				}
 			}
 
-			$this->copyPage($sourceInfo, $targetParentInfo, $slug, $lang, $pageid);
+			$result = $this->copyPage($sourceInfo, $targetParentInfo, $slug, $lang, $pageid);
+			if($result !== true)
+			{
+				# do not write an index entry for a page that could not be created
+				$response->getBody()->write(json_encode([
+					'message' => Translations::translate('We could not create the translation page.'),
+					'error' => $result
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+			}
 		}
 
 		# update the multilangIndex
@@ -294,18 +364,33 @@ class ControllerApiMultilang extends Controller
 	{
 		$baselang 			= $this->settings['baseprojectid'] ?? false;
 		$params 			= $request->getParsedBody();
-    	$pageid				= $params['pageid'] ?? false;
-		$lang 				= $params['lang'] ?? false; 
-		$url 				= $params['url'] ?? false; 
 
-		# validate params
-		if(!$pageid or !$baselang or !$lang or !$url)
+		# validate input
+		$validate			= new Validation();
+		$validInput 		= $validate->multilangDelete($params);
+		if($validInput !== true)
 		{
+			$errors 		= $validate->returnFirstValidationErrors($validInput);
 			$response->getBody()->write(json_encode([
-				'message' => Translations::translate('pageid, baselang, lang or url is missing'),
+				'message' 	=> reset($errors),
+				'errors' 	=> $errors
 			]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);			
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+		}
+
+		$pageid				= $params['pageid'];
+		$lang 				= $params['lang'];
+		$url 				= $params['url'];
+
+		# check if lang is defined in the project settings
+		if($lang == $baselang OR !isset($this->settings['projectinstances'][$lang]))
+		{
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('language is not defined in the project settings'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
 		$navigation = new Navigation(); 
@@ -322,21 +407,44 @@ class ControllerApiMultilang extends Controller
 		$multilangIndex 	= $multilang->getMultilangIndex();
         if(!$multilangIndex)
         {
-			$response->getBody()->write(json_encode([
-				'message' => Translations::translate('no index for multilanguage found'),
-			]));
+        	# no index yet, so create a fresh one from the filesystem
+        	$urlinfo 		= $this->c->get('urlinfo');
+        	$multilangIndex = $multilang->createFreshIndex($this->settings, $urlinfo);
+        	if(!$multilangIndex)
+        	{
+				$response->getBody()->write(json_encode([
+					'message' => Translations::translate('could not create multilangindex'),
+				]));
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+        	}
         }
 
 		$multilangData 	= $multilang->getMultilangData($pageid, $multilangIndex);
         if(!$multilangData)
         {
-			$response->getBody()->write(json_encode([
-				'message' => Translations::translate('We did not find the page id in the mulitlangindex'),
-			]));
+        	# the index might be outdated, so recreate it from the filesystem and retry once
+        	$urlinfo 		= $this->c->get('urlinfo');
+        	$multilangIndex = $multilang->createFreshIndex($this->settings, $urlinfo);
+        	$multilangData 	= $multilang->getMultilangData($pageid, $multilangIndex);
 
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+        	if(!$multilangIndex)
+        	{
+				$response->getBody()->write(json_encode([
+					'message' => Translations::translate('could not create multilangindex'),
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+        	}
+
+        	if(!$multilangData)
+        	{
+				$response->getBody()->write(json_encode([
+					'message' => Translations::translate('We did not find the page id in the multilangindex'),
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+        	}
         }
 
 		# update the multilangIndex
@@ -344,20 +452,22 @@ class ControllerApiMultilang extends Controller
 
 		$multilang->storeMultilangIndex($multilangIndex);
 
-		# update meta
+		# update meta of the translation page
 		$storage 			= new StorageWrapper($this->settings['storage']);
 		$targetInfo 		= $this->getSourceInfo($url, $lang);
-		$targetPath 		= $targetInfo['path'];
 
-		if($targetInfo['extension'])
+		if($targetInfo)
 		{
-			$targetPath = $targetInfo['pathWoE'] . '.yaml';
-			$this->updateMeta($storage, $targetPath, '');
-		}
-		else
-		{
-			$targetPath = $targetInfo['pathWoE'] . DIRECTORY_SEPARATOR . 'index.yaml';
-			$this->updateMeta($storage, $targetPath, '');
+			if($targetInfo['extension'])
+			{
+				$targetPath = $targetInfo['pathWoE'] . '.yaml';
+				$this->updateMeta($storage, $targetPath, '');
+			}
+			else
+			{
+				$targetPath = $targetInfo['pathWoE'] . DIRECTORY_SEPARATOR . 'index.yaml';
+				$this->updateMeta($storage, $targetPath, '');
+			}
 		}
 
 		$multilangData 	= $multilang->getMultilangData($pageid, $multilangIndex);
@@ -368,38 +478,11 @@ class ControllerApiMultilang extends Controller
 
 		# send the updated data to the frontend
 		$response->getBody()->write(json_encode([
-			'multilangData' 			=> $multilangData
+			'multilangData' 			=> $multilangData,
+			'message'					=> $targetInfo ? Translations::translate('Unlinked translation page') : Translations::translate('Translation page not found, index entry removed'),
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json');        
-	}
-
-	private function getFreshMultilangIndex($multilang)
-	{
-    	# create a fresh mulitlang index
-        $langattr               = $this->settings['langattr'];
-        $urlinfo    			= $this->c->get('urlinfo');
-        $meta                   = new Meta();
-		$navigation          	= new Navigation(); 
-        $draftNav               = $navigation->getFullDraftNavigation($urlinfo, $langattr);
-
-        $multilangIndex         = $multilang->generateMultilangBaseIndex($meta, $draftNav, $this->settings);
-
-        foreach($this->settings['projectinstances'] as $lang => $label)
-        {
-        	$navigation->setProject($this->settings, $lang);
-        	$draftNav 				= $navigation->getFullDraftNavigation($urlinfo, $langattr);
-            $multilangIndex         = $multilang->addProjectToIndex($lang, $meta, $draftNav, $multilangIndex);
-        }
-
-        if($multilangIndex && is_array($multilangIndex))
-        {
-            $multilang->storeMultilangIndex($multilangIndex);
-
-            return $multilangIndex;
-        }
-
-        return false;
 	}
 
 	private function checkBaseFolder($lang)
@@ -408,19 +491,38 @@ class ControllerApiMultilang extends Controller
 
 		$storage = new StorageWrapper($this->settings['storage']);
 
-		$result = true;
-		
 		if(!$storage->checkFolder('contentFolder', $lang))
 		{
 			$result = $storage->createFolder('contentFolder', $lang);
-
-			$result = $storage->copyFile('contentFolder', '', 'index.yaml', $lang . 'index.yaml');
-
-## rewrite index.yaml with unique id and translateionfor
-
 			if(!$result)
 			{
 				return $storage->getError();
+			}
+
+			$result = $storage->copyFile('contentFolder', '', 'index.yaml', $lang . 'index.yaml');
+			if(!$result)
+			{
+				return $storage->getError();
+			}
+
+			# rewrite the copied index.yaml with a unique pageid and link it to the base home page
+			$basemeta 	= $storage->getYaml('contentFolder', '', 'index.yaml');
+			$langmeta 	= $storage->getYaml('contentFolder', '', $lang . 'index.yaml');
+			if($langmeta)
+			{
+				if(!isset($langmeta['meta']) OR !is_array($langmeta['meta']))
+				{
+					$langmeta['meta'] = [];
+				}
+
+				$langmeta['meta']['pageid'] = bin2hex(random_bytes(8));
+
+				if($basemeta && isset($basemeta['meta']['pageid']) && $basemeta['meta']['pageid'])
+				{
+					$langmeta['meta']['translation_for'] = $basemeta['meta']['pageid'];
+				}
+
+				$storage->updateYaml('contentFolder', '', $lang . 'index.yaml', $langmeta);
 			}
 
 			if($storage->checkFile('contentFolder', '', 'index.txt'))
@@ -495,6 +597,10 @@ class ControllerApiMultilang extends Controller
 		{
 			# create folder
 			$result = $storage->createFolder('contentFolder', $targetPath);
+			if(!$result)
+			{
+				return $storage->getError();
+			}
 
 			# copy yaml
 			$result = $storage->copyFile(

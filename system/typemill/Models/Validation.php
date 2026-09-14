@@ -589,6 +589,72 @@ class Validation
 		return $v->errors();
 	}
 
+	public function multilangCreate(array $params)
+	{
+		$v = new Validator($params);
+		
+		$v->rule('required', ['pageid', 'lang', 'path']);
+		$v->rule('regex', 'pageid', '/^[a-z0-9]{8,32}$/i');
+		$v->rule('regex', 'lang', '/^[a-z0-9\-]+$/i');
+		$v->rule('regex', 'path', '/^\/[a-z0-9\-_\/]+$/i');
+
+		if($v->validate())
+		{
+			return true;
+		}
+
+		return $v->errors();
+	}
+
+	public function multilangDelete(array $params)
+	{
+		$v = new Validator($params);
+		
+		$v->rule('required', ['pageid', 'lang', 'url']);
+		$v->rule('regex', 'pageid', '/^[a-z0-9]{8,32}$/i');
+		$v->rule('regex', 'lang', '/^[a-z0-9\-]+$/i');
+		$v->rule('regex', 'url', '/^\/[a-z0-9\-_\/]+$/i');
+
+		if($v->validate())
+		{
+			return true;
+		}
+
+		return $v->errors();
+	}
+
+	public function multilangGet(array $params)
+	{
+		$v = new Validator($params);
+		
+		$v->rule('required', ['pageid', 'url']);
+		$v->rule('regex', 'pageid', '/^[a-z0-9]{8,32}$/i');
+		$v->rule('regex', 'url', '/^\/[a-z0-9\-_\/]+$/i');
+
+		if($v->validate())
+		{
+			return true;
+		}
+
+		return $v->errors();
+	}
+
+	public function autotransInput(array $params)
+	{
+		$v = new Validator($params);
+		
+		$v->rule('required', ['pageid', 'lang']);
+		$v->rule('regex', 'pageid', '/^[a-z0-9]{8,32}$/i');
+		$v->rule('regex', 'lang', '/^[a-z0-9\-]+$/i');
+
+		if($v->validate())
+		{
+			return true;
+		}
+
+		return $v->errors();
+	}
+
 	public function blockInput(array $params)
 	{
 		$v = new Validator($params);

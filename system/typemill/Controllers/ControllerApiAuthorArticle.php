@@ -91,7 +91,7 @@ class ControllerApiAuthorArticle extends Controller
 		}
 
 		$naviFileName 		= $navigation->getNaviFileNameForPath($item->path);
-	    $navigation->clearNavigation([$naviFileName]);
+	    $navigation->clearNavigation([$naviFileName, $naviFileName . '-extended']);
 
 		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
 		$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
@@ -198,7 +198,7 @@ class ControllerApiAuthorArticle extends Controller
 		$content->unpublishMarkdown($item, $draftMarkdown);
 
 		$naviFileName 		= $navigation->getNaviFileNameForPath($item->path);
-	    $navigation->clearNavigation([$naviFileName]);
+	    $navigation->clearNavigation([$naviFileName, $naviFileName . '-extended']);
 
 		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
 		$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
@@ -310,7 +310,7 @@ class ControllerApiAuthorArticle extends Controller
 		$content->saveDraftMarkdown($item, $markdownArray);
 
 		$naviFileName 		= $navigation->getNaviFileNameForPath($item->path);
-	    $navigation->clearNavigation([$naviFileName]);
+	    $navigation->clearNavigation([$naviFileName, $naviFileName . '-extended']);
 		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
 		$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
 		$item 				= $navigation->getItemWithKeyPath($draftNavigation, $item->keyPathArray);
@@ -405,7 +405,7 @@ class ControllerApiAuthorArticle extends Controller
 		$content->publishMarkdown($item, $markdownArray);
 
 		$naviFileName 		= $navigation->getNaviFileNameForPath($item->path);
-	    $navigation->clearNavigation([$naviFileName]);
+	    $navigation->clearNavigation([$naviFileName, $naviFileName . '-extended']);
 
 		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
 		$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);
@@ -511,7 +511,7 @@ class ControllerApiAuthorArticle extends Controller
 		$content->deleteDraft($item);
 
 		$naviFileName 		= $navigation->getNaviFileNameForPath($item->path);
-	    $navigation->clearNavigation([$naviFileName]);
+	    $navigation->clearNavigation([$naviFileName, $naviFileName . '-extended']);
 
 		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
 		$draftNavigation 	= $navigation->setActiveNaviItemsWithKeyPath($draftNavigation, $item->keyPathArray);

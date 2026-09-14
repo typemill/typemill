@@ -9,6 +9,7 @@ use Typemill\Models\Extension;
 use Typemill\Models\Media;
 use Typemill\Models\User;
 use Typemill\Models\Settings;
+use Typemill\Models\Multilang;
 use Typemill\Static\Translations;
 
 class ControllerApiSystemSettings extends Controller
@@ -92,6 +93,18 @@ class ControllerApiSystemSettings extends Controller
 		}
 
 		$updatedSettings 	= $settingsModel->updateSettings($validatedOutput);
+
+		# if the project or language settings changed, then the multilang index is outdated
+		$projectkeys = ['projects', 'baseprojectid', 'baseprojectlabel', 'projectinstances'];
+		foreach($projectkeys as $projectkey)
+		{
+			if(isset($validatedOutput[$projectkey]) && isset($this->settings[$projectkey]) && $validatedOutput[$projectkey] != $this->settings[$projectkey])
+			{
+				$multilang = new Multilang();
+				$multilang->deleteMultilangIndex();
+				break;
+			}
+		}
 
 		$responseData = [
 			'message' => Translations::translate('settings have been saved'),

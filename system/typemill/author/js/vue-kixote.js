@@ -79,7 +79,7 @@ const kixoteCommands = [
 	},
 	{
 		name: 'clear multilang',
-		description: 'Clear the multilanguage index. It will be recreated after next ',
+		description: 'Clear the multilanguage index. It will be recreated automatically with the next pageview in the author area.',
 		method: function()
 				{
 					var self = this;

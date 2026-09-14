@@ -193,6 +193,90 @@ class ControllerApiKixote extends Controller
 		return $answer;
 	}
 
+	/**
+	 * Parse an AI answer that should contain a YAML document.
+	 * Models often wrap the yaml in markdown code fences or keep the wrapper
+	 * tags despite instructions, so the answer is sanitized before parsing.
+	 * Returns the parsed array with a "meta" section or false.
+	 */
+	private function parseYamlAnswer(string $answer): array|false
+	{
+		$answer = trim($answer);
+
+		if ($answer === '') {
+			return false;
+		}
+
+		# if the answer contains a fenced code block, use only the fenced part
+		if (preg_match('/```[a-zA-Z]*\s*\n(.*?)```/s', $answer, $matches)) {
+			$answer = trim($matches[1]);
+		}
+
+		# remove wrapper tag lines that models sometimes keep
+		$answer = preg_replace('/^\s*<\/?(?:article|translation)>\s*$/m', '', $answer);
+		$answer = trim($answer);
+
+		if ($answer === '') {
+			return false;
+		}
+
+		try
+		{
+			$parsedYaml = Yaml::parse($answer);
+		}
+		catch(\Exception $e)
+		{
+			return false;
+		}
+
+		if (!is_array($parsedYaml) OR !isset($parsedYaml['meta']) OR !is_array($parsedYaml['meta'])) {
+			return false;
+		}
+
+		return $parsedYaml;
+	}
+
+	/**
+	 * Ask the AI to translate the meta yaml and return the parsed document.
+	 * Retries once, because models sometimes return invalid yaml on the first attempt.
+	 * Returns ['yaml' => array] or ['error' => string].
+	 */
+	private function getTranslatedMeta(string $metaUserMessage, string $metaSystemMessage): array
+	{
+		for ($attempt = 1; $attempt <= 2; $attempt++)
+		{
+			$metaAnswer = $this->promptGeneric($metaUserMessage, $metaSystemMessage);
+
+			if (!$metaAnswer) {
+				return ['error' => $this->error];
+			}
+
+			$parsedYaml = $this->parseYamlAnswer($metaAnswer);
+
+			if ($parsedYaml !== false) {
+				return ['yaml' => $parsedYaml];
+			}
+		}
+
+		return ['error' => Translations::translate('The content was translated, but the AI response for the meta translation was invalid. Please try again.')];
+	}
+
+	/**
+	 * Restore identity and ownership fields from the original meta,
+	 * so the AI can never change or drop them in the translated yaml.
+	 */
+	private function restoreIdentityFields(array $parsedYaml, array $originalMeta): array
+	{
+		foreach (['pageid', 'translation_for', 'owner'] as $identityfield)
+		{
+			if (isset($originalMeta['meta'][$identityfield]) && $originalMeta['meta'][$identityfield]) {
+				$parsedYaml['meta'][$identityfield] = $originalMeta['meta'][$identityfield];
+			}
+		}
+
+		return $parsedYaml;
+	}
+
 	// -------------------------------------------------------------------------
 	// Kixote prompt settings (custom prompt list)
 	// -------------------------------------------------------------------------
@@ -502,10 +586,17 @@ class ControllerApiKixote extends Controller
 		$pageid  = $params['pageid'] ?? false;
 		$urlinfo = $this->c->get('urlinfo');
 
-		if (!$pageid || !$lang) {
+		# validate input
+		$validate			= new Validation();
+		$validInput 		= $validate->autotransInput($params);
+		if($validInput !== true)
+		{
+			$errors 		= $validate->returnFirstValidationErrors($validInput);
 			$response->getBody()->write(json_encode([
-				'message' => 'Prompt is missing or invalid.'
+				'message' 	=> reset($errors),
+				'errors' 	=> $errors
 			]));
+
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
@@ -520,18 +611,28 @@ class ControllerApiKixote extends Controller
 		$multilang      = new Multilang();
 		$multilangIndex = $multilang->getMultilangIndex();
 		if (!$multilangIndex) {
-			$response->getBody()->write(json_encode([
-				'message' => Translations::translate('no index for multilanguage found'),
-			]));
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+			# no index yet, so create a fresh one from the filesystem
+			$multilangIndex = $multilang->createFreshIndex($this->settings, $urlinfo);
+			if (!$multilangIndex) {
+				$response->getBody()->write(json_encode([
+					'message' => Translations::translate('could not create multilangindex'),
+				]));
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+			}
 		}
 
 		$multilangData = $multilang->getMultilangData($pageid, $multilangIndex);
 		if (!$multilangData || !isset($multilangData[$lang])) {
-			$response->getBody()->write(json_encode([
-				'message' => Translations::translate('We did not find the page id in the mulitlangindex'),
-			]));
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+			# the index might be outdated, so recreate it from the filesystem and retry once
+			$multilangIndex = $multilang->createFreshIndex($this->settings, $urlinfo);
+			$multilangData  = $multilang->getMultilangData($pageid, $multilangIndex);
+			if (!$multilangData || !isset($multilangData[$lang])) {
+				$response->getBody()->write(json_encode([
+					'message'       => Translations::translate('We did not find the page id in the multilangindex'),
+					'multilangData' => $multilangData,
+				]));
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+			}
 		}
 
 		$navigation = new Navigation();
@@ -542,10 +643,23 @@ class ControllerApiKixote extends Controller
 
 		$item = $navigation->getItemForUrl($url, $urlinfo, $lang);
 		if (!$item) {
-			$response->getBody()->write(json_encode([
-				'message' => 'page not found',
-			]));
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+			# the index might be outdated, so recreate it from the filesystem and retry once
+			$multilangIndex = $multilang->createFreshIndex($this->settings, $urlinfo);
+			$multilangData  = $multilang->getMultilangData($pageid, $multilangIndex);
+
+			if ($multilangData && isset($multilangData[$lang])) {
+				$url        = $multilangData[$lang];
+				$navigation->setProject($this->settings, $url, $dispatcher = false);
+				$item       = $navigation->getItemForUrl($url, $urlinfo, $lang);
+			}
+
+			if (!$item) {
+				$response->getBody()->write(json_encode([
+					'message'       => Translations::translate('Translation page not found'),
+					'multilangData' => $multilangData,
+				]));
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+			}
 		}
 
 		// GET THE CONTENT
@@ -573,7 +687,13 @@ class ControllerApiKixote extends Controller
 		}
 
 		$markdownArray = $content->markdownTextToArray($answer);
-		$content->saveDraftMarkdown($item, $markdownArray);
+		$saved = $content->saveDraftMarkdown($item, $markdownArray);
+		if ($saved !== true) {
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('could not save translation') . ': ' . $saved,
+			]));
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
+		}
 
 		// GET THE META
 		$meta     = new Meta();
@@ -596,28 +716,36 @@ class ControllerApiKixote extends Controller
 			. ' apply the prompt to the provided content inside the <article></article> tag and return only the updated content in valid YAML format,'
 			. ' without any extra comments, explanations, or formatting outside YAML.'
 			. ' Preserve correct YAML syntax, indentation, quoting, and data types.'
+			. ' Do not wrap the YAML in markdown code fences.'
 			. ' Always return the full YAML document without the <article> tag.'
 			. ' For the field "navtitle", use a very short, natural navigation title.'
 			. ' Prefer concise nouns or verb phrases and avoid unnecessary words.'
 			. ' Example: Instead of "create your first page", use "create page".';
 
 		$metaUserMessage = $metaPrompt . "\n<article>" . $yaml . "</article>";
-		$metaAnswer      = $this->promptGeneric($metaUserMessage, $metaSystemMessage);
 
-		if (!$metaAnswer) {
+		// validate and save meta (retries once, because models sometimes return invalid yaml)
+		$metaResult = $this->getTranslatedMeta($metaUserMessage, $metaSystemMessage);
+		if (isset($metaResult['error'])) {
 			$response->getBody()->write(json_encode([
-				'message' => $this->error
+				'message' => $metaResult['error'],
 			]));
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
-		// validate and save meta
-		$parsedYaml = Yaml::parse($metaAnswer);
-		if ($parsedYaml) {
-			$meta->updateMeta($parsedYaml, $item);
-			$navigation->getNaviFileNameForPath($item->path);
-			$navigation->clearNavigation();
+		# never let the AI change or drop the identity and ownership fields
+		$parsedYaml = $this->restoreIdentityFields($metaResult['yaml'], $metadata);
+
+		$stored = $meta->updateMeta($parsedYaml, $item);
+		if ($stored !== true) {
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('could not save translation') . ': ' . $stored,
+			]));
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
+
+		$navigation->getNaviFileNameForPath($item->path);
+		$navigation->clearNavigation();
 
 		$response->getBody()->write(json_encode([
 			'message' => 'Success',
@@ -632,10 +760,17 @@ class ControllerApiKixote extends Controller
 		$pageid  = $params['pageid'] ?? false;
 		$urlinfo = $this->c->get('urlinfo');
 
-		if (!$pageid || !$lang) {
+		# validate input
+		$validate			= new Validation();
+		$validInput 		= $validate->autotransInput($params);
+		if($validInput !== true)
+		{
+			$errors 		= $validate->returnFirstValidationErrors($validInput);
 			$response->getBody()->write(json_encode([
-				'message' => 'Page id or language is missing.'
+				'message' 	=> reset($errors),
+				'errors' 	=> $errors
 			]));
+
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
@@ -650,18 +785,28 @@ class ControllerApiKixote extends Controller
 		$multilang      = new Multilang();
 		$multilangIndex = $multilang->getMultilangIndex();
 		if (!$multilangIndex) {
-			$response->getBody()->write(json_encode([
-				'message' => Translations::translate('no index for multilanguage found'),
-			]));
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+			# no index yet, so create a fresh one from the filesystem
+			$multilangIndex = $multilang->createFreshIndex($this->settings, $urlinfo);
+			if (!$multilangIndex) {
+				$response->getBody()->write(json_encode([
+					'message' => Translations::translate('could not create multilangindex'),
+				]));
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+			}
 		}
 
 		$multilangData = $multilang->getMultilangData($pageid, $multilangIndex);
 		if (!$multilangData || !isset($multilangData[$lang])) {
-			$response->getBody()->write(json_encode([
-				'message' => Translations::translate('We did not find the page id in the mulitlangindex'),
-			]));
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+			# the index might be outdated, so recreate it from the filesystem and retry once
+			$multilangIndex = $multilang->createFreshIndex($this->settings, $urlinfo);
+			$multilangData  = $multilang->getMultilangData($pageid, $multilangIndex);
+			if (!$multilangData || !isset($multilangData[$lang])) {
+				$response->getBody()->write(json_encode([
+					'message'       => Translations::translate('We did not find the page id in the multilangindex'),
+					'multilangData' => $multilangData,
+				]));
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+			}
 		}
 
 		$navigation = new Navigation();
@@ -686,10 +831,22 @@ class ControllerApiKixote extends Controller
 
 		$origItem = $navigation->getItemForUrl($origUrl, $urlinfo, $baselang);
 		if (!$origItem) {
-			$response->getBody()->write(json_encode([
-				'message' => 'Page for base language not found',
-			]));
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+			# the index might be outdated, so recreate it from the filesystem and retry once
+			$multilangIndex = $multilang->createFreshIndex($this->settings, $urlinfo);
+			$multilangData  = $multilang->getMultilangData($pageid, $multilangIndex);
+
+			if ($multilangData && isset($multilangData[$baselang]) && $multilangData[$baselang]) {
+				$origUrl  = $multilangData[$baselang];
+				$origItem = $navigation->getItemForUrl($origUrl, $urlinfo, $baselang);
+			}
+
+			if (!$origItem) {
+				$response->getBody()->write(json_encode([
+					'message'       => Translations::translate('Page for base language not found'),
+					'multilangData' => $multilangData,
+				]));
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+			}
 		}
 
 		// configure multilang and multiproject
@@ -697,10 +854,23 @@ class ControllerApiKixote extends Controller
 
 		$transItem = $navigation->getItemForUrl($transUrl, $urlinfo, $lang);
 		if (!$transItem) {
-			$response->getBody()->write(json_encode([
-				'message' => 'Translation page not found',
-			]));
-			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+			# the index might be outdated, so recreate it from the filesystem and retry once
+			$multilangIndex = $multilang->createFreshIndex($this->settings, $urlinfo);
+			$multilangData  = $multilang->getMultilangData($pageid, $multilangIndex);
+
+			if ($multilangData && isset($multilangData[$lang]) && $multilangData[$lang]) {
+				$transUrl = $multilangData[$lang];
+				$navigation->setProject($this->settings, $transUrl, $dispatcher = false);
+				$transItem = $navigation->getItemForUrl($transUrl, $urlinfo, $lang);
+			}
+
+			if (!$transItem) {
+				$response->getBody()->write(json_encode([
+					'message'       => Translations::translate('Translation page not found'),
+					'multilangData' => $multilangData,
+				]));
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+			}
 		}
 
 		// GET THE CONTENT
@@ -737,7 +907,13 @@ class ControllerApiKixote extends Controller
 		}
 
 		$markdownArray = $content->markdownTextToArray($answer);
-		$content->saveDraftMarkdown($transItem, $markdownArray);
+		$saved = $content->saveDraftMarkdown($transItem, $markdownArray);
+		if ($saved !== true) {
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('could not save translation') . ': ' . $saved,
+			]));
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
+		}
 
 		// GET THE META
 		$meta         = new Meta();
@@ -789,19 +965,24 @@ class ControllerApiKixote extends Controller
 			. "\n<article>" . $origYaml . "</article>"
 			. "\n<translation>" . $transYaml . "</translation>";
 
-		$metaAnswer = $this->promptGeneric($metaUserMessage, $metaSystemMessage);
-
-		if (!$metaAnswer) {
+		// validate and save meta (retries once, because models sometimes return invalid yaml)
+		$metaResult = $this->getTranslatedMeta($metaUserMessage, $metaSystemMessage);
+		if (isset($metaResult['error'])) {
 			$response->getBody()->write(json_encode([
-				'message' => $this->error
+				'message' => $metaResult['error'],
 			]));
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
 
-		// validate and save meta
-		$parsedYaml = Yaml::parse($metaAnswer);
-		if ($parsedYaml) {
-			$meta->updateMeta($parsedYaml, $transItem);
+		# never let the AI change or drop the identity and ownership fields
+		$parsedYaml = $this->restoreIdentityFields($metaResult['yaml'], $transMetadata);
+
+		$stored = $meta->updateMeta($parsedYaml, $transItem);
+		if ($stored !== true) {
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('could not save translation') . ': ' . $stored,
+			]));
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(500);
 		}
 
 		$navigation->clearNavigation();

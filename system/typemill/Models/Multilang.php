@@ -221,13 +221,152 @@ class Multilang
 	    return $this->storage->writeFile('dataFolder', $this->langFolder, 'index.txt', $multilangIndex, 'serialize');
 	}
 
-	public function updateMultilangIndex($pageid, $data)
+	# creates a fresh index from the filesystem (base navigation plus all project navigations) and stores it
+	public function createFreshIndex($settings, $urlinfo)
 	{
-	    $multilangIndex = $this->getMultilangIndex();
+		$langattr 			= $settings['langattr'];
+		$meta 				= new Meta();
+		$navigation 		= new Navigation();
 
-	    $multilangIndex[$pageid] = $data;
+		$draftNav 			= $navigation->getFullDraftNavigation($urlinfo, $langattr);
 
-	    return $this->storage->writeFile('dataFolder', $this->langFolder, 'index.txt', $multilangIndex, 'serialize');
+		# add the base homepage first, so all language homepages can link to it
+		$multilangIndex 	= [];
+		$baseHomePageId 	= $this->addBaseHomeToIndex($meta, $navigation, $settings, $urlinfo, $multilangIndex);
+
+		$multilangIndex 	= $this->generateMultilangBaseIndex($meta, $draftNav, $settings, null, $multilangIndex);
+
+		foreach($settings['projectinstances'] as $lang => $label)
+		{
+			# skip the base language if someone added it to the multilanguages by mistake
+			if($lang === $settings['baseprojectid'])
+			{
+				continue;
+			}
+
+			$navigation->setProject($settings, $lang);
+			$draftNav 			= $navigation->getFullDraftNavigation($urlinfo, $langattr);
+
+			# add the automatically created language homepage and link it to the base homepage
+			$this->addLanguageHomeToIndex($lang, $meta, $navigation, $baseHomePageId, $settings, $urlinfo, $multilangIndex);
+
+			$multilangIndex 	= $this->addProjectToIndex($lang, $meta, $draftNav, $multilangIndex);
+		}
+
+		if($multilangIndex && is_array($multilangIndex))
+		{
+			$this->storeMultilangIndex($multilangIndex);
+
+			return $multilangIndex;
+		}
+
+		return false;
+	}
+
+	# reads the meta of a homepage item, returns false if there is no meta file yet
+	private function getHomeMeta($meta, $homeItem)
+	{
+		$yamlpath = $homeItem->pathWithoutType . '.yaml';
+
+		if(!$this->storage->checkFile('contentFolder', '', $yamlpath))
+		{
+			return false;
+		}
+
+		$metadata = $meta->getMetaData($homeItem);
+
+		if(!is_array($metadata) OR !isset($metadata['meta']) OR !is_array($metadata['meta']))
+		{
+			return false;
+		}
+
+		return $metadata;
+	}
+
+	# adds the base homepage to the index and returns its pageid (a missing pageid is generated and stored)
+	private function addBaseHomeToIndex($meta, $navigation, $settings, $urlinfo, &$multilangIndex)
+	{
+		$homeItem 	= $navigation->getHomepageItem($urlinfo['baseurl']);
+		$metadata 	= $this->getHomeMeta($meta, $homeItem);
+
+		if($metadata && isset($metadata['meta']['pageid']) && $metadata['meta']['pageid'])
+		{
+			$pageId = $metadata['meta']['pageid'];
+		}
+		else
+		{
+			# generate a unique pageid for the homepage and persist it, so it survives index rebuilds
+			$metadata = $meta->addMetaDefaults($metadata, $homeItem, $settings['author'] ?? false, false);
+			if(!isset($metadata['meta']['pageid']))
+			{
+				return false;
+			}
+
+			$pageId = $metadata['meta']['pageid'];
+		}
+
+		# initialize the index entry for the homepage (base url is /)
+		$pageIndex = [];
+		$pageIndex[$settings['baseprojectid']] = $homeItem->urlRelWoF;
+
+		foreach($settings['projectinstances'] as $langcode => $langlabel)
+		{
+			# skip base language if someone added it to multilanguages by mistake
+			if($langcode === $settings['baseprojectid'])
+			{
+				continue;
+			}
+			$pageIndex[$langcode] = '';
+		}
+
+		$pageIndex['parent'] = null;
+
+		$multilangIndex[$pageId] = $pageIndex;
+
+		return $pageId;
+	}
+
+	# adds the automatically created language homepage to the index and links it to the base homepage
+	private function addLanguageHomeToIndex($lang, $meta, $navigation, $baseHomePageId, $settings, $urlinfo, &$multilangIndex)
+	{
+		if(!$baseHomePageId)
+		{
+			return false;
+		}
+
+		$homeItem 	= $navigation->getHomepageItem($urlinfo['baseurl']);
+		$metadata 	= $this->getHomeMeta($meta, $homeItem);
+
+		if($metadata && isset($metadata['meta']['translation_for']) && $metadata['meta']['translation_for'])
+		{
+			# the language homepage is already linked, so keep the existing link
+			$pageId = $metadata['meta']['translation_for'];
+		}
+		else
+		{
+			# the language homepage is created automatically, so initialize its meta and link it to the base homepage
+			$metadata = $meta->addMetaDefaults($metadata, $homeItem, $settings['author'] ?? false, false);
+			if(!isset($metadata['meta']['pageid']))
+			{
+				return false;
+			}
+
+			$metadata['meta']['translation_for'] = $baseHomePageId;
+
+			if($meta->updateMeta($metadata, $homeItem) !== true)
+			{
+				return false;
+			}
+
+			$pageId = $baseHomePageId;
+		}
+
+		if(isset($multilangIndex[$pageId]))
+		{
+			$multilangIndex[$pageId][$lang] = $homeItem->urlRelWoF;
+		}
+
+		return true;
 	}
 
 	# NOT IN USE

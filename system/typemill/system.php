@@ -233,7 +233,7 @@ $dispatcher->addSubscriber(new MediaExtension($settings['rootPath'], $urlinfo['b
 
 if(isset($settings['projects']) && $settings['projects'] == 'languages')
 {
-	# add multilanguage extension to update the index when pages are deleted, renamed, or moved.
+	# add multilanguage extension to update the index when pages are created, deleted, renamed, or moved.
 	$dispatcher->addSubscriber(new MultilangExtension($settings['storage']));
 }
 

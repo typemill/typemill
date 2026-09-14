@@ -132,6 +132,7 @@ class ControllerWebAuthor extends Controller
 		$extendedNavigation 	= $navigation->getFullExtendedNavigation($urlinfo, $langattr);
 
 	    $projects 			= $navigation->getAllProjects($this->settings);
+		$project 			= $navigation->getProject();
 
 		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $langattr);
 	    $home 				= $navigation->getHomepageItem($urlinfo['baseurl']);
@@ -185,6 +186,7 @@ class ControllerWebAuthor extends Controller
 										'navigation'	=> $draftNavigation,
 										'item'			=> $item,
 										'home' 			=> $home,
+										'project'		=> $project,
 										'projects' 		=> $projects,
 										'content' 		=> $draftMarkdownHtml,
 										'aiconfigured'	=> (new Settings())->isAiConfigured()

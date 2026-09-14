@@ -112,8 +112,8 @@ $app->group('/api/v1', function (RouteCollectorProxy $group) use ($acl) {
 	# Multilang
 	$group->get('/multilangindex', ControllerApiMultilang::class . ':getMultilangIndex')->setName('api.multilangindex.get')->add(new ApiAuthorization($acl, 'mycontent', 'read')); # author
 	$group->get('/multilang', ControllerApiMultilang::class . ':getMultilang')->setName('api.multilang.get')->add(new ApiAuthorization($acl, 'mycontent', 'read')); # author;
-	$group->post('/multilang', ControllerApiMultilang::class . ':createMultilang')->setName('api.multilang.create')->add(new ApiAuthorization($acl, 'mycontent', 'read')); # author
-	$group->delete('/multilang', ControllerApiMultilang::class . ':deleteMultilang')->setName('api.multilang.delete')->add(new ApiAuthorization($acl, 'mycontent', 'read')); # author
+	$group->post('/multilang', ControllerApiMultilang::class . ':createMultilang')->setName('api.multilang.create')->add(new ApiAuthorization($acl, 'content', 'create')); # author, creates/copies pages
+	$group->delete('/multilang', ControllerApiMultilang::class . ':deleteMultilang')->setName('api.multilang.delete')->add(new ApiAuthorization($acl, 'content', 'update')); # editor, rewrites meta of existing pages
 
 	# API USED ONLY EXTERNALLY
 	$group->get('/systemnavi', ControllerApiGlobals::class . ':getSystemnavi')->setName('api.systemnavi.get')->add(new ApiAuthorization($acl, 'account', 'read')); # member

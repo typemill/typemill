@@ -19,10 +19,17 @@ class MultilangExtension implements EventSubscriberInterface
     {
         # another very simple option: delete the index file
         return [
+            'onPageCreated'     => 'onPageCreated',
             'onPageDeleted'     => 'onPageDeleted',
             'onPageRenamed'     => 'onPageRenamed',
             'onPageSorted'      => 'onPageSorted',
         ];
+    }
+
+    public function onPageCreated($data)
+    {
+        # new pages are not in the index yet, so delete it and let it rebuild lazily
+        $this->deleteIndex();
     }
 
     public function onPageDeleted($data)
