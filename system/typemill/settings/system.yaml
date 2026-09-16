@@ -555,12 +555,17 @@ fieldsetai:
       description: "Default: 4000 (output tokens determine the length/cost of answers)"
       class: "w-half"
       options:
-        '2000': '2000 (Chat)'
-        '4000': '4000 (Docs)'
-        '6000': '6000 (Analysis)'
-        '8000': '8000 (Research)'
-        '10000': '10000 (High)'
-        '12000': '12000 (Max)'
+        '2000': '2000'
+        '4000': '4000'
+        '6000': '6000'
+        '8000': '8000'
+        '10000': '10000'
+        '12000': '12000'
+        '16000': '16000'
+        '20000': '20000'
+        '32000': '32000'
+        '64000': '64000'
+        '128000': '128000'
     aitimeout:
       type: select
       label: 'AI request timeout'

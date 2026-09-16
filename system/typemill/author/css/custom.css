@@ -173,6 +173,13 @@
   padding: 0.7rem 1.4ch;
   line-height: 1.313;
 }
+
+/* Kixote article editor: remove vertical padding so autosize can measure height
+   accurately in Tailwind's border-box layout. The parent container provides p-8. */
+#kieditor {
+  padding-top: 0;
+  padding-bottom: 0;
+}
 .highlight {
   position: absolute;
   top: 0;

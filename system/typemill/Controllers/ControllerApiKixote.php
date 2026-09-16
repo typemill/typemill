@@ -124,8 +124,8 @@ class ControllerApiKixote extends Controller
 	private function getOutputBudget(string $content): int
 	{
 		$hardCap = (int) ($this->settings['aioutputtoken'] ?? 4000);
-		// Clamp: min 256, max 12000
-		return max(256, min(12000, $hardCap));
+		// Clamp: min 256, max 128000 to support long articles and modern models.
+		return max(256, min(128000, $hardCap));
 	}
 
 	private function getTimeout(): int
