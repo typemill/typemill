@@ -207,26 +207,12 @@ class Media
 
 		if($this->extension == "svg")
 		{
-			$svg = new SvgSanitizer();
-			
-			$loaded = $svg->loadSVG($this->filedata);
-			if($loaded === false)
+			if(!$this->sanitizeSvgFiledata())
 			{
-				$this->errors[] = Translations::translate('We could not load the svg file, it is probably corrupted.');
 				return false;
 			}
-
-			$svg->sanitize();
-			$sanitized 	= $svg->saveSVG();
-			if($sanitized === false)
-			{
-				$this->errors[] = Translations::translate('We could not create a sanitized version of the svg, it probably has invalid content.');
-				return false;
-			}
-
-			$this->filedata = $sanitized;
 		}
-		
+
 		$fullpath = $this->getFullPath();
 
 		if($this->filedata !== false && file_put_contents($fullpath, $this->filedata))
@@ -342,25 +328,36 @@ class Media
 
 		if($this->extension == "svg")
 		{
-			$svg = new SvgSanitizer();
-			
-			$loaded = $svg->loadSVG($this->filedata);
-			if($loaded === false)
-			{
-				$this->errors[] = Translations::translate('We could not load the svg file, it is probably corrupted.');
-				return false;
-			}
-
-			$svg->sanitize();
-			$sanitized 	= $svg->saveSVG();
-			if($sanitized === false)
-			{
-				$this->errors[] = Translations::translate('We could not create a sanitized version of the svg, it probably has invalid content.');
-				return false;
-			}
-
-			$this->filedata = $sanitized;
+			return $this->sanitizeSvgFiledata();
 		}
+
+		return true;
+	}
+
+	private function sanitizeSvgFiledata()
+	{
+		$svg = new SvgSanitizer();
+
+		if($svg->loadSVG($this->filedata) === false)
+		{
+			$this->errors[] = Translations::translate('We could not load the svg file, it is probably corrupted.');
+			return false;
+		}
+
+		if($svg->sanitize() === false)
+		{
+			$this->errors[] = Translations::translate('SVG files with a DOCTYPE (DTD) declaration are not allowed for security reasons. Please remove the DOCTYPE declaration and upload the plain SVG again.');
+			return false;
+		}
+
+		$sanitized = $svg->saveSVG();
+		if($sanitized === false)
+		{
+			$this->errors[] = Translations::translate('We could not create a sanitized version of the svg, it probably has invalid content.');
+			return false;
+		}
+
+		$this->filedata = $sanitized;
 
 		return true;
 	}

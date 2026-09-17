@@ -64,12 +64,24 @@ class SvgSanitizer {
 	}
 
 	function loadSVG(string $string) {
-		$result = $this->xmlDoc->loadXML($string);
+		$internalErrors 	= libxml_use_internal_errors(true);
+		$result 			= $this->xmlDoc->loadXML($string, LIBXML_NONET);
+		libxml_clear_errors();
+		libxml_use_internal_errors($internalErrors);
+
+		return $result;
 	}
-	
-	//Remove any elements from the XML that are unrelated to SVGs
+
+	//Remove any elements from the XML that are unrelated to SVGs. Returns false if the SVG contains a doctype (dtd) declaration.
 	function sanitize() {
-		
+
+		if(!is_null($this->xmlDoc->doctype))
+		{
+			return false;
+		}
+
+		$this->removeProcessingInstructionsAndComments();
+
 		//Get every element in the document, and loop through them all
 		$allElements = $this->xmlDoc->getElementsByTagName("*");
 
@@ -101,6 +113,39 @@ class SvgSanitizer {
 					}
 				}
 		    }	
+		}
+
+		return true;
+	}
+
+	//Remove processing instructions and comments from the whole document, they can trigger xslt transformations in browsers
+	private function removeProcessingInstructionsAndComments() {
+		$stack = [$this->xmlDoc];
+
+		while(!empty($stack))
+		{
+			$node 		= array_pop($stack);
+			$children 	= [];
+
+			if($node->hasChildNodes())
+			{
+				foreach($node->childNodes as $child)
+				{
+					$children[] = $child;
+				}
+			}
+
+			foreach($children as $child)
+			{
+				if($child->nodeType == XML_PI_NODE || $child->nodeType == XML_COMMENT_NODE)
+				{
+					$node->removeChild($child);
+				}
+				elseif($child->nodeType == XML_ELEMENT_NODE)
+				{
+					$stack[] = $child;
+				}
+			}
 		}
 	}
 
