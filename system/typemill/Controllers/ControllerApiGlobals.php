@@ -147,6 +147,8 @@ class ControllerApiGlobals extends Controller
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
 		$url 				= $params['url'];
+		$userrole 			= $request->getAttribute('c_userrole');
+		$username 			= $request->getAttribute('c_username');
 
 		$navigation 		= new Navigation();
 		$navigation->setProject($this->settings, $url, $dispatcher = false);
@@ -162,7 +164,21 @@ class ControllerApiGlobals extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 		}
 
-# we have to check if user is allowed to see, e.g. if not published?
+		$meta 				= new Meta();
+		$metadata 			= $meta->getMetaData($item);
+
+		$access 			= $this->publicApiIsAllowed($username, $userrole, $item, $metadata);
+		if(!$access['allowed'])
+		{
+			$status 		= ($access['reason'] == 'unpublished') ? 404 : 403;
+			$message 		= ($status == 404) ? Translations::translate('page not found') : Translations::translate('You do not have enough rights.');
+
+			$response->getBody()->write(json_encode([
+				'message' => $message,
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus($status);
+		}
 
 		$response->getBody()->write(json_encode([
 			'item'		=> $item
@@ -190,6 +206,8 @@ class ControllerApiGlobals extends Controller
 		$urlinfo 			= $this->c->get('urlinfo');
 		$langattr 			= $this->settings['langattr'];
 		$slug 				= $params['slug'];
+		$userrole 			= $request->getAttribute('c_userrole');
+		$username 			= $request->getAttribute('c_username');
 
 		$navigation 		= new Navigation();
 
@@ -209,10 +227,29 @@ class ControllerApiGlobals extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 		}
 
-## we have to check if item is published and user allowed to see?
+		$meta 				= new Meta();
+		$allowedItems 		= [];
+		foreach($items as $item)
+		{
+			$metadata 		= $meta->getMetaData($item);
+			$access 		= $this->publicApiIsAllowed($username, $userrole, $item, $metadata);
+			if($access['allowed'])
+			{
+				$allowedItems[] = $item;
+			}
+		}
+
+		if(empty($allowedItems))
+		{
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('page not found'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+		}
 
 		$response->getBody()->write(json_encode([
-			'items'		=> $items
+			'items'		=> $allowedItems
 		]));
 
 		return $response->withHeader('Content-Type', 'application/json');
@@ -257,20 +294,20 @@ class ControllerApiGlobals extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 		}
 
-		# if user is not allowed to perform this action (e.g. not admin)
-		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'read'))
-		{
-			# then check if user is allowed to see content
-			$meta = new Meta();
-			$metadata = $meta->getMetaData($item);
-			if(!$this->contentIsAllowed($request->getAttribute('c_username'), $request->getAttribute('c_userrole'), $metadata))
-			{
-				$response->getBody()->write(json_encode([
-					'message' 	=> Translations::translate('You do not have enough rights.'),
-				]));
+		$meta 				= new Meta();
+		$metadata 			= $meta->getMetaData($item);
 
-				return $response->withHeader('Content-Type', 'application/json')->withStatus(403);				
-			}
+		$access 			= $this->publicApiIsAllowed($username, $userrole, $item, $metadata);
+		if(!$access['allowed'])
+		{
+			$status 		= ($access['reason'] == 'unpublished') ? 404 : 403;
+			$message 		= ($status == 404) ? Translations::translate('page not found') : Translations::translate('You do not have enough rights.');
+
+			$response->getBody()->write(json_encode([
+				'message' 	=> $message,
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus($status);				
 		}
 
 		# GET THE CONTENT
@@ -286,6 +323,20 @@ class ControllerApiGlobals extends Controller
 				]));
 
 				return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
+			}
+
+			# if user is not allowed to read any draft content
+			if(!$this->userroleIsAllowed($userrole, 'content', 'read'))
+			{
+				# then check if user is the owner of this content
+				if(!$this->userIsAllowed($username, $metadata))
+				{
+					$response->getBody()->write(json_encode([
+						'message' 	=> Translations::translate('You do not have enough rights.'),
+					]));
+
+					return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
+				}
 			}
 
 			# if draft is explicitly requested
@@ -350,24 +401,26 @@ class ControllerApiGlobals extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 		}
 
-		# if user is not allowed to perform this action (e.g. not admin)
-		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'read'))
-		{
-			# then check if user is allowed to see content
-			$meta = new Meta();
-			$metadata = $meta->getMetaData($item);
-			if(!$this->contentIsAllowed($request->getAttribute('c_username'), $request->getAttribute('c_userrole'), $metadata))
-			{
-				$response->getBody()->write(json_encode([
-					'message' 	=> Translations::translate('You do not have enough rights.'),
-				]));
+		$userrole 			= $request->getAttribute('c_userrole');
+		$username 			= $request->getAttribute('c_username');
 
-				return $response->withHeader('Content-Type', 'application/json')->withStatus(403);				
-			}
+		$meta 				= new Meta();
+		$metadata 			= $meta->getMetaData($item);
+
+		$access 			= $this->publicApiIsAllowed($username, $userrole, $item, $metadata);
+		if(!$access['allowed'])
+		{
+			$status 		= ($access['reason'] == 'unpublished') ? 404 : 403;
+			$message 		= ($status == 404) ? Translations::translate('page not found') : Translations::translate('You do not have enough rights.');
+
+			$response->getBody()->write(json_encode([
+				'message' 	=> $message,
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus($status);				
 		}
 
 		# GET THE META
-		$meta 				= new Meta();
 		$metadata  			= $meta->getMetaData($item);
 		$metadata 			= $meta->addMetaDefaults($metadata, $item, $this->settings['author']);
 #		$metadata 			= $meta->addMetaTitleDescription($metadata, $item, $markdown);

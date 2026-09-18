@@ -244,6 +244,37 @@ abstract class Controller
 		return true;
 	}
 
+	# used for public api endpoints (apiGlobals)
+	# decides whether a public api consumer may access a single page/item.
+	# returns an array with 'allowed' (bool) and 'reason' ('content_read', 'owner', 'content_allowed', 'unpublished', 'restricted')
+	protected function publicApiIsAllowed($username, $userrole, $item, $pagemeta)
+	{
+		if($this->userroleIsAllowed($userrole, 'content', 'read'))
+		{
+			return ['allowed' => true, 'reason' => 'content_read'];
+		}
+
+		if(isset($item->status) && $item->status == 'unpublished')
+		{
+			if(
+				$this->userroleIsAllowed($userrole, 'mycontent', 'read') &&
+				$this->userIsAllowed($username, $pagemeta)
+			)
+			{
+				return ['allowed' => true, 'reason' => 'owner'];
+			}
+
+			return ['allowed' => false, 'reason' => 'unpublished'];
+		}
+
+		if($this->contentIsAllowed($username, $userrole, $pagemeta))
+		{
+			return ['allowed' => true, 'reason' => 'content_allowed'];
+		}
+
+		return ['allowed' => false, 'reason' => 'restricted'];
+	}
+
 
 	# used to protect api access, can we do it with middleware?
 	protected function validateRights($userrole, $resource, $action)
