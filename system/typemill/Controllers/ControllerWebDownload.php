@@ -42,17 +42,31 @@ class ControllerWebDownload extends Controller
 
 		# resolve and confine the path to the media root
 		$realBasePath = realpath($filepath);
-		$realFilePath = realpath($filepath . $normalizedFilename);
-		if($realBasePath === false || $realFilePath === false || !str_starts_with($realFilePath, $realBasePath . DIRECTORY_SEPARATOR))
+		$requestedPath = $filepath . $normalizedFilename;
+		$realFilePath = realpath($requestedPath);
+		if(
+			$realBasePath === false
+			|| $realFilePath === false
+			|| !str_starts_with($realFilePath, $realBasePath . DIRECTORY_SEPARATOR)
+			|| is_link($requestedPath)
+			|| !is_file($realFilePath)
+		)
 		{
 			$response->getBody()->write(Translations::translate('the requested file does not exist.'));
 			return $response->withStatus(404);
 		}
 
-		if($restrictions && isset($restrictions[$filefolder . $normalizedFilename]))
+		# Build the canonical ACL key from the filesystem-resolved path.
+		# This ensures the restriction lookup keys on the file actually served,
+		# not on the request string, which prevents case-/encoding-equivalence
+		# bypasses on case-insensitive or Unicode-normalizing filesystems.
+		$canonicalRelativePath = str_replace('\\', '/', substr($realFilePath, strlen($realBasePath) + 1));
+		$aclKey = $filefolder . $canonicalRelativePath;
+
+		if($restrictions && isset($restrictions[$aclKey]))
 		{
 			$userrole 			= $request->getAttribute('c_userrole');
-			$allowedrole 		= $restrictions[$filefolder . $normalizedFilename];
+			$allowedrole 		= $restrictions[$aclKey];
 
 			if(!$userrole)
 			{
