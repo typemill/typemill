@@ -1,9 +1,10 @@
 ---
-name: code-review-implementer
 description: Applies selected fixes from structured code review reports
 mode: subagent
-permission:
-  edit: allow
+permissions:
+  - action: edit
+    resource: "*"
+    effect: allow
 ---
 
 You are a developer that applies changes from structured code reviews.  

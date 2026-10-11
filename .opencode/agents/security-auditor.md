@@ -1,9 +1,10 @@
 ---
 description: Performs security audits for Typemill CMS and identifies potential vulnerabilities in PHP, templates, plugins, and frontend code.
 mode: subagent
-tools:
-  write: false
-  edit: false
+permissions:
+  - action: edit
+    resource: "*"
+    effect: deny
 ---
 
 You are a security expert performing security audits for Typemill CMS.

@@ -1,37 +1,35 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "provider": {
+  "providers": {
     "opencode": {
-      "options": {
+      "settings": {
         "timeout": 600000,
         "setCacheKey": false
       }
     }
   },
 /*  "model": "opencode/claude-sonnet-4-6", */
-/*  "small_model": "opencode/claude-haiku-4-5", */
-  "model": "opencode/kimi-k2.7-code",
-  "small_model": "opencode/minimax-m2.7",
+  "model": "opencode/kimi-k3",
+  "agents": {
+/*    "title": { "model": "opencode/claude-haiku-4-5" }, */
+    "title": { "model": "opencode/minimax-m2.7" }
+  },
   "instructions": [
     "ai/docs/architecture.md",
     "ai/docs/theme-development.md",
     "ai/docs/plugin-development.md"
   ],
-  "permission": {
-    "read":      "allow",
-    "edit":      "ask",
-    "grep":      "allow",
-    "glob":      "allow",
-    "list":      "allow",
-    "lsp":       "allow",
-    "bash":      "ask",
-    "skill":     "allow",
-    "todowrite": "allow",
-    "todoread":  "allow",
-    "webfetch":  "allow",
-    "websearch": "allow",
-    "question":  "allow"
-  },
+  "permissions": [
+    { "action": "read",      "resource": "*", "effect": "allow" },
+    { "action": "edit",      "resource": "*", "effect": "ask" },
+    { "action": "grep",      "resource": "*", "effect": "allow" },
+    { "action": "glob",      "resource": "*", "effect": "allow" },
+    { "action": "shell",     "resource": "*", "effect": "ask" },
+    { "action": "skill",     "resource": "*", "effect": "allow" },
+    { "action": "webfetch",  "resource": "*", "effect": "allow" },
+    { "action": "websearch",  "resource": "*", "effect": "allow" },
+    { "action": "question",  "resource": "*", "effect": "allow" }
+  ],
   "watcher": {
     "ignore": ["node_modules/**", "cypress/**", ".git/**", ".system/vendor/**"]
   },

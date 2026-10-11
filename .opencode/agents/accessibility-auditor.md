@@ -1,9 +1,10 @@
 ---
 description: Performs accessibility fixes for frontend templates and identifies WCAG 2.1 AA issues.
 mode: subagent
-tools:
-  write: true
-  edit: true
+permissions:
+  - action: edit
+    resource: "*"
+    effect: allow
 ---
 
 You are an accessibility expert and frontend developer specialized in fixing frontend templates built with HTML, CSS, and Vue.js.

@@ -1,8 +1,10 @@
 ---
 description: Code reviewer
 mode: subagent
-permission:
-  edit: deny
+permissions:
+  - action: edit
+    resource: "*"
+    effect: deny
 ---
 
 You are a code reviewer. Be thorough but constructive.  

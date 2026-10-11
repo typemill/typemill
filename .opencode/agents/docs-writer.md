@@ -1,8 +1,10 @@
 ---
 description: Maintains and generates documentation for Typemill core features, plugins, and themes.
 mode: subagent
-tools:
-  bash: false
+permissions:
+  - action: shell
+    resource: "*"
+    effect: deny
 ---
 
 You are a technical writer responsible for documentation in the Typemill CMS project.
