@@ -36,7 +36,7 @@ class Multilang
 		$fields[$settings['baseprojectid']] = [
 			'type' 			=> 'text',
 			'label' 		=> 'URL: ' . $settings['baseprojectlabel'] . ' (Base Language)',
-			'maxlength' 	=> 60,
+			'maxlength' 	=> 200,
 			'description' 	=> 'Url to the base language ' . $settings['baseprojectlabel'] . ' (read only, change the slug in the meta tab)',
 			'disabled' 		=> 'disabled',
 			'active' 		=> ($project == $settings['baseprojectid']) ? true : false,
@@ -77,7 +77,7 @@ class Multilang
         $fields[$baseLang] = [
             'type'     		=> 'text',
             'label'   		=> 'url: ' . $baseLabel . ' (Base Language)',
-            'maxlength'		=> 60,
+            'maxlength'		=> 200,
             'disabled'		=> true,
             'base'			=> true
         ];
@@ -91,7 +91,7 @@ class Multilang
             $fields[$languagecode] = [
                 'type'        => 'text',
                 'label'       => 'url: ' . $languagelabel,
-                'maxlength'   => 60,
+                'maxlength'   => 200,
             ];
         }
 

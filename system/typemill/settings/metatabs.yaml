@@ -9,7 +9,7 @@ meta:
     translation_for:
       type: text
       label: Translation For
-      maxlength: 60
+      maxlength: 200
       readonly: true
       css: 'hidden'
     navtitle:
