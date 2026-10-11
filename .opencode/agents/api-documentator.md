@@ -1,10 +1,13 @@
 ---
 description: Generates and maintains the OpenAPI spec and Postman collection for Typemill by reading the actual route and controller files.
 mode: subagent
-tools:
-  bash: false
-  write: true
-  edit: true
+permissions:
+  - action: shell
+    resource: "*"
+    effect: deny
+  - action: edit
+    resource: "*"
+    effect: allow
 ---
 
 # Typemill API Documentation Agent
