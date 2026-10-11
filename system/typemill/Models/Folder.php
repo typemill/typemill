@@ -15,6 +15,10 @@ class Folder
 	public function scanFolder($folderPath, $flat = NULL)
 	{
 		$folderItems 	= scandir($folderPath);
+
+		# sort naturally so numeric order prefixes with different widths stay in order (e.g. 99- before 100-)
+		usort($folderItems, 'strnatcmp');
+
 		$folderContent 	= array();
 
 		foreach ($folderItems as $key => $item)

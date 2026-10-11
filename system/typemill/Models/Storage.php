@@ -3,6 +3,7 @@
 namespace Typemill\Models;
 
 use Typemill\Static\Helpers;
+use Typemill\Static\Slug;
 use Typemill\Static\Translations;
 
 class Storage
@@ -579,7 +580,7 @@ class Storage
 		$filetypes			= array('md', 'txt', 'yaml');
 		
 		# set new order as string
-		$newOrder			= ($index < 10) ? '0' . $index : $index;
+		$newOrder			= Slug::getOrderPrefix($index);
 
 		$newPath 			= $this->contentFolder . $folderPath . DIRECTORY_SEPARATOR . $newOrder . '-' . $item->slug;
 
@@ -1199,12 +1200,7 @@ class Storage
 			# create old filename without filetype
 			$oldFile 	= $this->contentFolder . $page->pathWithoutType;
 
-			$order 		= $index;
-
-			if($index < 10)
-			{
-				$order = '0' . $index;
-			}
+			$order 		= Slug::getOrderPrefix($index);
 
 			# create new file-name without filetype
 			$newFile 	= $this->contentFolder . $folder->path . DIRECTORY_SEPARATOR . $order . '-' . $page->slug;

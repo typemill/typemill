@@ -652,7 +652,7 @@ class ControllerApiAuthorArticle extends Controller
 		}
 
 		# add prefix number to the name
-		$namePath 	= $index > 9 ? $index . '-' . $slug : '0' . $index . '-' . $slug;
+		$namePath 	= Slug::getOrderPrefix($index) . '-' . $slug;
 
 		# create default content
 		$markdown 	= '# ' . $params['item_name'] . '/n/n' . 'Content';

@@ -28,6 +28,17 @@ class Slug
 		return $parts[0];
 	}
 
+	/*
+	* Formats the numeric order prefix for content files and folders.
+	* Pads single digits with a leading zero (01- to 09-), wider numbers
+	* are used as they are (10- to 99- and 100+). Natural sorting in
+	* Folder::scanFolder() keeps mixed widths in the correct order.
+	*/
+	public static function getOrderPrefix($index)
+	{
+		return ($index < 10) ? '0' . $index : (string)$index;
+	}
+
 	public static function createSlug($name, $language = 'en')
 	{
 		$name = iconv(mb_detect_encoding($name, mb_detect_order(), true), "UTF-8", $name);
