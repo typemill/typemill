@@ -985,6 +985,7 @@ class Storage
 
 		# delete custom images (resized and grayscaled) array_map('unlink', glob("some/dir/*.txt"));
 		$pathinfo = pathinfo($name);
+		$pathinfo['extension'] = $pathinfo['extension'] ?? '';
 
 		foreach(glob($this->originalFolder . $pathinfo['filename'] . '\.*') as $image)
 		{

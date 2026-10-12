@@ -31,6 +31,21 @@ class securityMiddleware implements MiddlewareInterface
 	{
 		if($request->getMethod() == 'POST')
 		{
+			# api calls are protected by authentication and acl middleware, the form security checks below do not apply
+			# basepath from script name, same as in system.php, because route context has no basepath at this point
+			$basePath 		= preg_replace('/(.*)\/.*/', '$1', $_SERVER['SCRIPT_NAME'] ?? '');
+			$path 			= $request->getUri()->getPath();
+
+			if($basePath !== '' && strpos($path, $basePath) === 0)
+			{
+				$path = substr($path, strlen($basePath));
+			}
+
+			if(strpos($path, '/api/') === 0)
+			{
+				return $handler->handle($request);
+			}
+
 			$params 	= $request->getParsedBody();
 			$referer 	= $request->getHeader('HTTP_REFERER');
 

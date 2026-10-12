@@ -544,8 +544,16 @@ class Validation
 	{
 		$v = new Validator($params);
 
-		$v->rule('required', ['folder_id', 'item_name', 'type']);
+		$v->rule('required', ['item_name', 'type']);
+
+		# folder_id (keypath) is required only if no parent_url is given (api alternative)
+		if(empty($params['parent_url']))
+		{
+			$v->rule('required', 'folder_id');
+		}
+
 		$v->rule('regex', 'folder_id', '/^(root)|([0-9.]+)$/i');
+		$v->rule('regex', 'parent_url', '/^\/?[a-z0-9\-\/]*$/i');
 		$v->rule('navigation', 'item_name');
 		$v->rule('lengthBetween', 'item_name', 1, 60);
 		$v->rule('in', 'type', ['file', 'folder']);
@@ -731,22 +739,28 @@ class Validation
 	{
 		$v = new Validator($params);
 
-		# special conditions for startpage
-		if(isset($params['item_id']) && $params['item_id'] == '')
+		$v->rule('required', 'url');
+
+		# item_id is not used anymore, validated only for backwards compatibility
+		if(isset($params['item_id']) && $params['item_id'] !== '')
 		{
-			$v->rule('required', ['url', 'title', 'body']);
-			$v->rule('markdownSecure', 'title');
-			$v->rule('markdownSecure', 'body');
+			$v->rule('regex', 'item_id', '/^[0-9.]+$/i');
+		}
+
+		# accept either a full markdown document or title and body
+		if(isset($params['markdown']))
+		{
+			$v->rule('required', 'markdown');
+			$v->rule('markdownSecure', 'markdown');
 		}
 		else
 		{
-			$v->rule('required', ['item_id', 'url', 'title', 'body']);
-			$v->rule('regex', 'item_id', '/^[0-9.]+$/i');
+			$v->rule('required', ['title', 'body']);
 			$v->rule('markdownSecure', 'title');
 			$v->rule('markdownSecure', 'body');
 		}
-
-		if($v->validate())
+		
+		if($v->validate()) 
 		{
 			return true;
 		} 

@@ -21,6 +21,17 @@ class JsonBodyParser implements MiddlewareInterface
 				$request = $request->withParsedBody($contents);
 			}
 		}
+		elseif (
+			strstr($contentType, 'application/x-www-form-urlencoded')
+			&& in_array($request->getMethod(), ['PUT', 'PATCH', 'DELETE'])
+			&& $request->getParsedBody() === null
+		)
+		{
+			# slim parses urlencoded bodies only for POST, so parse them here for other methods
+			parse_str(file_get_contents('php://input'), $contents);
+
+			$request = $request->withParsedBody($contents);
+		}
 
 		return $handler->handle($request);
 	}

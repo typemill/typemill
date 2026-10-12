@@ -252,7 +252,7 @@ class ControllerApiAuthorArticle extends Controller
 
 	public function updateDraft(Request $request, Response $response, $args)
 	{
-		$params 			= $request->getParsedBody();
+		$params 			= $request->getParsedBody() ?? [];
 		$userrole 			= $request->getAttribute('c_userrole');
 		$username 			= $request->getAttribute('c_username');
 		$validate			= new Validation();
@@ -305,7 +305,17 @@ class ControllerApiAuthorArticle extends Controller
 	    # save draft content
 		$content 			= new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
 		$oldMarkdown  		= $content->getDraftMarkdown($item);
-		$markdown 			= $params['title'] . PHP_EOL . PHP_EOL . $params['body'];
+
+		# use the full markdown document if given, otherwise combine title and body
+		if(isset($params['markdown']))
+		{
+			$markdown 		= $params['markdown'];
+		}
+		else
+		{
+			$markdown 		= $params['title'] . PHP_EOL . PHP_EOL . $params['body'];
+		}
+
 		$markdownArray 		= $content->markdownTextToArray($markdown);
 		$content->saveDraftMarkdown($item, $markdownArray);
 
@@ -348,7 +358,7 @@ class ControllerApiAuthorArticle extends Controller
 
 	public function publishDraft(Request $request, Response $response, $args)
 	{
-		$params 			= $request->getParsedBody();
+		$params 			= $request->getParsedBody() ?? [];
 		$userrole 			= $request->getAttribute('c_userrole');
 		$username 			= $request->getAttribute('c_username');
 		$validate			= new Validation();
@@ -400,7 +410,17 @@ class ControllerApiAuthorArticle extends Controller
 
 	    # save draft content
 		$content 			= new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
-		$markdown 			= $params['title'] . PHP_EOL . PHP_EOL . $params['body'];
+
+		# use the full markdown document if given, otherwise combine title and body
+		if(isset($params['markdown']))
+		{
+			$markdown 		= $params['markdown'];
+		}
+		else
+		{
+			$markdown 		= $params['title'] . PHP_EOL . PHP_EOL . $params['body'];
+		}
+
 		$markdownArray 		= $content->markdownTextToArray($markdown);
 		$content->publishMarkdown($item, $markdownArray);
 
@@ -574,12 +594,31 @@ class ControllerApiAuthorArticle extends Controller
 		# get navigation
 		$navigation 		= new Navigation();
 
+		# url is used to detect the project context, fall back to parent_url
+		$params['url'] 		= $params['url'] ?? $params['parent_url'] ?? '/';
+
 		# configure multilang and multiproject
 		$navigation->setProject($this->settings, $params['url'], $this->c->get('dispatcher'));
 
 	    $draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $langattr) ?: [];
 
-	    if($params['folder_id'] == 'root')
+	    # api alternative: resolve the parent folder by url instead of keypath
+	    if(isset($params['parent_url']) && trim($params['parent_url'], '/') !== '')
+	    {
+			$folder				= $navigation->getItemForUrl($params['parent_url'], $urlinfo, $langattr);
+
+			if(!$folder || $folder->elementType != 'folder')
+			{
+				$response->getBody()->write(json_encode([
+					'message' 	=> Translations::translate('We could not find the parent folder. Please refresh and try again.')
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+			}
+
+			$folderContent		= $folder->folderContent ?? [];
+	    }
+	    elseif(($params['folder_id'] ?? 'root') == 'root')
 	    {
    			if($params['item_name'] == 'tm')
    			{
@@ -703,6 +742,10 @@ class ControllerApiAuthorArticle extends Controller
 	    $navigation->clearNavigation([$naviFileName, $naviFileName . '-extended']);
 		$draftNavigation 	= $navigation->getFullDraftNavigation($urlinfo, $this->settings['langattr']);
 
+		# get the created item from the refreshed navigation, so api consumers know the new url and keypath
+		$itemKeyPath 		= isset($folder) ? array_merge($folder->keyPathArray, [$index]) : [$index];
+		$newitem 			= $navigation->getItemWithKeyPath($draftNavigation, $itemKeyPath);
+
 		# If only certain folders are allowed for users, filter the navigation accordingly
 	    $userModel = new User();
 	    $user = $userModel->setUser($username);
@@ -723,6 +766,7 @@ class ControllerApiAuthorArticle extends Controller
 
 		$response->getBody()->write(json_encode([
 			'navigation'	=> $draftNavigation,
+			'item'			=> $newitem,
 			'message'		=> '',
 			'url' 			=> false
 		]));
@@ -1195,7 +1239,7 @@ class ControllerApiAuthorArticle extends Controller
 
 	public function deleteArticle(Request $request, Response $response, $args)
 	{
-		$params 			= $request->getParsedBody();
+		$params 			= $request->getParsedBody() ?? [];
 		$userrole 			= $request->getAttribute('c_userrole');
 		$username 			= $request->getAttribute('c_username');
 		$validate			= new Validation();

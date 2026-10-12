@@ -352,6 +352,21 @@ class ControllerApiGlobals extends Controller
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 		}
 
+		# return the raw markdown document if requested (e.g. for api consumers)
+		if(isset($params['format']) && $params['format'] == 'raw')
+		{
+			if(is_array($markdown))
+			{
+				$markdown 	= $content->markdownArrayToText($markdown);
+			}
+
+			$response->getBody()->write(json_encode([
+				'content'		=> $markdown
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json');
+		}
+
 		if(!is_array($markdown))
 		{
 			$markdown 		= $content->markdownTextToArray($markdown);
