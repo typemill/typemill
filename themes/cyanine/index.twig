@@ -1,24 +1,36 @@
 {% extends '/layout.twig' %}
 
-{% block title %}{{ metatabs.meta.title }} | {{ settings.title }}{% endblock %}
+{# Effective theme configuration: merge theme settings with the cyhome metadata
+   of the homepage. On pages inside a project (e.g. /it/page), use the cyhome
+   metadata of the project homepage (e.g. /it) instead. Empty values are dropped
+   so that cleared fields fall back to the theme defaults. #}
+{% set cyhome = metatabs.cyhome|default({}) %}
+{% if project %}
+	{% set projectshome = getProjectsHome(settings) %}
+	{% set cyhome = projectshome[project].meta.cyhome|default(cyhome)|default({}) %}
+{% endif %}
+{% set theme = settings.themes.cyanine|merge(cyhome|filter((v) => v is not empty)) %}
+{% set meta = metatabs.meta %}
+
+{% block title %}{{ meta.title }} | {{ settings.title }}{% endblock %}
 
 {% block content %}
 	
-	{% if home and settings.themes.cyanine.landingpage %}
+	{% if home and theme.landingpage %}
 	
-		{% include 'home.twig' %}
+		{% include 'pages/home.twig' %}
 
-	{% elseif home and settings.themes.cyanine.blog %}
+	{% elseif home and theme.blog %}
 	
-		{% include 'blog.twig' %}
+		{% include 'pages/blog.twig' %}
 		
-	{% elseif metatabs.meta.template == "landingpage" %}
+	{% elseif meta.template == "landingpage" %}
 		
-		{% include 'landingpage.twig' %}
+		{% include 'pages/landingpage.twig' %}
 
 	{% else %}
 		
-		{% include 'page.twig' %}
+		{% include 'pages/page.twig' %}
 	
 	{% endif %}
 	

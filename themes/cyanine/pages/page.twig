@@ -1,4 +1,4 @@
-{% set published = metatabs.meta.manualdate ? metatabs.meta.manualdate : metatabs.meta.modified %}
+{% set published = meta.manualdate ? meta.manualdate : meta.modified %}
 
 <main class="{{ item.elementType }} w-100 pb5 bl br bb">
 
@@ -45,22 +45,22 @@
 				
 					<h1>{{ title }}</h1>
 
-					{% if ("top" in settings.themes.cyanine.datePosition or "top" in settings.themes.cyanine.authorPosition or "top" in settings.themes.cyanine.gitPosition or "top" in settings.themes.cyanine.printPosition) %}
+					{% if ("top" in theme.datePosition or "top" in theme.authorPosition or "top" in theme.gitPosition or "top" in theme.printPosition) %}
 					    <div class="f5 pv1 flex justify-between">
 					        <div class="byline">
-					            {% if "top" in settings.themes.cyanine.datePosition %}
-					                <time pubdate datetime="{{ published }}" class="pr2">{{ settings.themes.cyanine.dateIntro }} {{ published|date(settings.themes.cyanine.dateFormat)  }}</time>
+					            {% if "top" in theme.datePosition %}
+					                <time pubdate datetime="{{ published }}" class="pr2">{{ theme.dateIntro }} {{ published|date(theme.dateFormat)  }}</time>
 					            {% endif %}
-					            {% if "top" in settings.themes.cyanine.authorPosition %}
-					                <adress class="pr2">{{ settings.themes.cyanine.authorIntro }} {{ metatabs.meta.author|default(settings.author) }}</adress>
+					            {% if "top" in theme.authorPosition %}
+					                <adress class="pr2">{{ theme.authorIntro }} {{ meta.author|default(settings.author) }}</adress>
 					            {% endif %}
 					        </div>
 					        <div class="funcicons">
-					            {% if "top" in settings.themes.cyanine.gitPosition %}
-					                <a class="link" title="edit on github" href="{{ settings.themes.cyanine.gitLink }}{{ item.path }}">{% if settings.themes.cyanine.editIcon %}<svg class="icon baseline icon-pencil"><use xlink:href="#icon-pencil"></use></svg>{% else %}{{ settings.themes.cyanine.editText }}{% endif %}</a>
+					            {% if "top" in theme.gitPosition %}
+					                <a class="link" title="edit on github" href="{{ theme.gitLink }}{{ item.path }}">{% if theme.editIcon %}<svg class="icon baseline icon-pencil"><use xlink:href="#icon-pencil"></use></svg>{% else %}{{ theme.editText }}{% endif %}</a>
 					            {% endif %}
-					            {% if "top" in settings.themes.cyanine.printPosition %}
-					                <a class="link" title="open printer dialogue" href="#" onclick="if (window.print) {window.print();}">{% if settings.themes.cyanine.printIcon %}<svg class="icon baseline icon-printer"><use xlink:href="#icon-printer"></use></svg>{% else %}{{ settings.themes.cyanine.printText }}{% endif %}</a>
+					            {% if "top" in theme.printPosition %}
+					                <a class="link" title="open printer dialogue" href="#" onclick="if (window.print) {window.print();}">{% if theme.printIcon %}<svg class="icon baseline icon-printer"><use xlink:href="#icon-printer"></use></svg>{% else %}{{ theme.printText }}{% endif %}</a>
 					            {% endif %}
 					        </div>
 					    </div>
@@ -70,22 +70,22 @@
 
 				{{ content }}
 
-				{% if ("bottom" in settings.themes.cyanine.datePosition or "bottom" in settings.themes.cyanine.authorPosition or "bottom" in settings.themes.cyanine.gitPosition or "bottom" in settings.themes.cyanine.printPosition) %}
+				{% if ("bottom" in theme.datePosition or "bottom" in theme.authorPosition or "bottom" in theme.gitPosition or "bottom" in theme.printPosition) %}
 				    <div class="f5 pv1 flex justify-between">
 				        <div class="byline">
-				            {% if "bottom" in settings.themes.cyanine.datePosition %}
-				                <time pubdate datetime="{{ published }}" class="pr2">{{ settings.themes.cyanine.dateIntro }} {{ published|date(settings.themes.cyanine.dateFormat)  }}</time>
+				            {% if "bottom" in theme.datePosition %}
+				                <time pubdate datetime="{{ published }}" class="pr2">{{ theme.dateIntro }} {{ published|date(theme.dateFormat)  }}</time>
 				            {% endif %}
-				            {% if "bottom" in settings.themes.cyanine.authorPosition %}
-				                <adress class="pr2">{{ settings.themes.cyanine.authorIntro }} {{ metatabs.meta.author|default(settings.author) }}</adress>
+				            {% if "bottom" in theme.authorPosition %}
+				                <adress class="pr2">{{ theme.authorIntro }} {{ meta.author|default(settings.author) }}</adress>
 				            {% endif %}
 				        </div>
 				        <div class="funcicons">
-				            {% if "bottom" in settings.themes.cyanine.gitPosition %}
-				                <a class="link" title="edit on github" href="{{ settings.themes.cyanine.gitLink }}{{ item.path }}">{% if settings.themes.cyanine.editIcon %}<svg class="icon baseline icon-pencil"><use xlink:href="#icon-pencil"></use></svg>{% else %}{{ settings.themes.cyanine.editText }}{% endif %}</a>
+				            {% if "bottom" in theme.gitPosition %}
+				                <a class="link" title="edit on github" href="{{ theme.gitLink }}{{ item.path }}">{% if theme.editIcon %}<svg class="icon baseline icon-pencil"><use xlink:href="#icon-pencil"></use></svg>{% else %}{{ theme.editText }}{% endif %}</a>
 				            {% endif %}
-				            {% if "bottom" in settings.themes.cyanine.printPosition %}
-				                <a class="link" title="open printer dialogue" href="#" onclick="if (window.print) {window.print();}">{% if settings.themes.cyanine.printIcon %}<svg class="icon baseline icon-printer"><use xlink:href="#icon-printer"></use></svg>{% else %}{{ settings.themes.cyanine.printText }}{% endif %}</a>
+				            {% if "bottom" in theme.printPosition %}
+				                <a class="link" title="open printer dialogue" href="#" onclick="if (window.print) {window.print();}">{% if theme.printIcon %}<svg class="icon baseline icon-printer"><use xlink:href="#icon-printer"></use></svg>{% else %}{{ theme.printText }}{% endif %}</a>
 				            {% endif %}
 				        </div>
 				    </div>
@@ -97,7 +97,7 @@
 
 				{% if item.prevItem or item.nextItem %}
 
-					<div id="bottompager" class="f5 pv5 flex-l flex-m justify-between {{ settings.themes.cyanine.fontnavi|default('tm-sans-serif') }}">
+					<div id="bottompager" class="f5 pv5 flex-l flex-m justify-between {{ theme.fontnavi|default('tm-sans-serif') }}">
 						{% if item.prevItem %}
 							<a class="navigation link w-100 w-40-l w-40-m mv1 pv2 ph3 ba dim dib" href="{{ item.prevItem.urlRel }}">&lsaquo;&nbsp; {{ item.prevItem.name }}</a>
 						{% endif %}
@@ -110,7 +110,7 @@
 			
 			{% endif %}
 
-			{% if item.elementType == 'folder' and metatabs.meta.glossary %}
+			{% if item.elementType == 'folder' and meta.glossary %}
 
 				<nav class="f4-l f5">
 					{% include 'partials/navigationGlossary.twig'  with {'glossary': item.folderContent} %}
@@ -118,9 +118,9 @@
 
 			{% elseif item.elementType == 'folder' and item.contains == 'pages' %}
 
-				{% if settings.themes.cyanine.nofoldernavi and (item.prevItem or item.nextItem) %}
+				{% if theme.nofoldernavi and (item.prevItem or item.nextItem) %}
 
-					<div id="bottompager" class="f5 pv5 flex-l flex-m justify-between {{ settings.themes.cyanine.fontnavi|default('tm-sans-serif') }}">
+					<div id="bottompager" class="f5 pv5 flex-l flex-m justify-between {{ theme.fontnavi|default('tm-sans-serif') }}">
 						{% if item.prevItem %}
 							<a class="navigation link w-100 w-40-l w-40-m mv1 pv2 ph3 ba dim dib" href="{{ item.prevItem.urlRel }}">&lsaquo;&nbsp; {{ item.prevItem.name }}</a>
 						{% endif %}
@@ -147,7 +147,7 @@
 
 		<aside class="grid-sidebar ph3 pv3">
 
-			<nav id="contentnav" class="contentnav{{ settings.themes.cyanine.collapseNav ? ' collapse' : '' }}" aria-label="Menu">
+			<nav id="contentnav" class="contentnav{{ theme.collapseNav ? ' collapse' : '' }}" aria-label="Menu">
 
 				<!-- burger menu controlled by invisible checkbox -->
 	  			<input type="checkbox" id="burger" class="dn">

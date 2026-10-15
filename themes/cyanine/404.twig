@@ -1,5 +1,8 @@
 {% extends 'layout.twig' %}
 
+{# 404 pages have no page metadata, so use the plain theme settings #}
+{% set theme = settings.themes.cyanine %}
+
 {% block title %}ERROR 404: Page not found{% endblock %}
 
 {% block content %}

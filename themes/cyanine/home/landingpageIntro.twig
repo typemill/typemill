@@ -1,11 +1,11 @@
-{% if settings.themes.cyanine.introFullsize %}
+{% if theme.introFullsize %}
 
 	<section id="landingpageintro" class="landingpageintro vh-100 dt w-100 tc bt bl br bb">
 
-		{% if settings.themes.cyanine.introImage %}
-  			<div class="cover dtc v-mid bg-left bg-center-l" style="background-image: url({{metatabs.meta.heroimage}});background-color:rgba(255,255,255,{{settings.themes.cyanine.introImageOpacity|default('0.8')}});background-blend-mode: {{settings.themes.cyanine.introImageBlendmode|default('lighten')}};">
-		{% elseif settings.themes.cyanine.introBackground %}
-  			<div class="cover dtc v-mid bg-left bg-center-l" style="background-image: url({{settings.themes.cyanine.introBackground}});background-color:rgba(255,255,255,{{settings.themes.cyanine.introImageOpacity|default('0.8')}});background-blend-mode: {{settings.themes.cyanine.introImageBlendmode|default('lighten')}};">
+		{% if theme.introImage %}
+  			<div class="cover dtc v-mid bg-left bg-center-l" style="background-image: url({{metatabs.meta.heroimage}});background-color:rgba(255,255,255,{{theme.introImageOpacity|default('0.8')}});background-blend-mode: {{theme.introImageBlendmode|default('lighten')}};">
+		{% elseif theme.introBackground %}
+  			<div class="cover dtc v-mid bg-left bg-center-l" style="background-image: url({{theme.introBackground}});background-color:rgba(255,255,255,{{theme.introImageOpacity|default('0.8')}});background-blend-mode: {{theme.introImageBlendmode|default('lighten')}};">
 		{% else %}
   			<div class="cover dtc v-mid bg-left bg-center-l">
 		{% endif %}
@@ -16,10 +16,10 @@
 
 	<section id="landingpageintro" class="landingpageintro w-100 dib tc bt bl br bb">
 
-		{% if settings.themes.cyanine.introImage %}
-  			<div class="cover bg-left bg-center-l" style="background-image: url({{metatabs.meta.heroimage}});background-color:rgba(255,255,255,{{settings.themes.cyanine.introImageOpacity|default('0.8')}});background-blend-mode: {{settings.themes.cyanine.introImageBlendmode|default('lighten')}};">
-		{% elseif settings.themes.cyanine.introBackground %}
-  			<div class="cover bg-left bg-center-l" style="background-image: url({{settings.themes.cyanine.introBackground}});background-color:rgba(255,255,255,{{settings.themes.cyanine.introImageOpacity|default('0.8')}});background-blend-mode: {{settings.themes.cyanine.introImageBlendmode|default('lighten')}};">
+		{% if theme.introImage %}
+  			<div class="cover bg-left bg-center-l" style="background-image: url({{metatabs.meta.heroimage}});background-color:rgba(255,255,255,{{theme.introImageOpacity|default('0.8')}});background-blend-mode: {{theme.introImageBlendmode|default('lighten')}};">
+		{% elseif theme.introBackground %}
+  			<div class="cover bg-left bg-center-l" style="background-image: url({{theme.introBackground}});background-color:rgba(255,255,255,{{theme.introImageOpacity|default('0.8')}});background-blend-mode: {{theme.introImageBlendmode|default('lighten')}};">
 		{% else %}
   			<div class="cover bg-left bg-center-l">
 		{% endif %}
@@ -29,26 +29,26 @@
 {% endif %}
 				<div class="introbg pa4">
 					<header>
-						{% if settings.themes.cyanine.introLogoTitle %}
+						{% if theme.introLogoTitle %}
 							<img src="{{ base_url }}/{{ logo }}" class="logo-image"/>
-						{% elseif settings.themes.cyanine.introTitleFallback %}
+						{% elseif theme.introTitleFallback %}
 							<h1 class="f-large lh-title mv2">{{ title|e }}</h1>
-						{% elseif settings.themes.cyanine.introTitle %}
-							<h1 class="f-large lh-title mv2">{{ settings.themes.cyanine.introTitle|e }}</h1>
+						{% elseif theme.introTitle %}
+							<h1 class="f-large lh-title mv2">{{ theme.introTitle|e }}</h1>
 						{% endif %}
 					</header>
 
 					<div class="f5 f4-ns fw3 lh-copy">
-						{% if settings.themes.cyanine.introMarkdownFallback %}
+						{% if theme.introMarkdownFallback %}
 							{{ content }}
-						{% elseif settings.themes.cyanine.introMarkdown %}
-							{{ markdown(settings.themes.cyanine.introMarkdown) }}
+						{% elseif theme.introMarkdown %}
+							{{ markdown(theme.introMarkdown) }}
 						{% endif %}
 					</div>
 
-					{% if settings.themes.cyanine.introButtonLink %}
+					{% if theme.introButtonLink %}
 
-						<a class="button link dim ph4 pv3 mt3 ba dib" href="{{ settings.themes.cyanine.introButtonLink }}">{{ settings.themes.cyanine.introButtonLabel|e }}</a>
+						<a class="button link dim ph4 pv3 mt3 ba dib" href="{{ theme.introButtonLink }}">{{ theme.introButtonLabel|e }}</a>
 
 					{% endif %}
 				</div>

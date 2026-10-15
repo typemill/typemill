@@ -5,8 +5,8 @@
 		<title>{% block title %}{% endblock %}</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-		<meta name="description" content="{{ metatabs.meta.description }}" />
-		<meta name="author" content="{{ metatabs.meta.author }}" />
+		<meta name="description" content="{{ meta.description }}" />
+		<meta name="author" content="{{ meta.author }}" />
 		<meta name="generator" content="TYPEMILL" />
 		<link rel="canonical" href="{{ item.urlAbs }}" />
 
@@ -23,7 +23,7 @@
 				**  LAYOUT SIZES  **
 				*******************/
 			
-				{% if settings.themes.cyanine.layoutsize == 'large' %}
+				{% if theme.layoutsize == 'large' %}
 					@media screen and (min-width: 50em){
 						.grid-container{
 							max-width: 82rem;
@@ -34,7 +34,7 @@
 							margin: 0 auto;
 						}
 					}
-				{% elseif settings.themes.cyanine.layoutsize == 'full' %}
+				{% elseif theme.layoutsize == 'full' %}
 					@media screen and (min-width: 70em){
 						.grid-container{
 							max-width: 100%;
@@ -62,87 +62,87 @@
 				*******************/
 
 				body,.landingpagecontrast{
-					font-family: {{ settings.themes.cyanine.font|default('-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif') }};
+					font-family: {{ theme.font|default('-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif') }};
 				}
 				h1,h2,h3,h4,h5,h6,.logo{
-					font-family: {{ settings.themes.cyanine.fontheadline|default('-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif') }};
+					font-family: {{ theme.fontheadline|default('-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif') }};
 				}
 				.navigation, button, .button, .mainnavigation{
-					font-family: {{ settings.themes.cyanine.fontnavi|default('-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif') }};
+					font-family: {{ theme.fontnavi|default('-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif') }};
 				}
 
 				/*******************
 				**      COLORS    **
 				*******************/
 				body,.landingpagecontrast,.account,form input[type="submit"],from button,form .button{
-					background: {{ settings.themes.cyanine.brandcolorprimary|default('lightseagreen') }};
+					background: {{ theme.brandcolorprimary|default('lightseagreen') }};
 				}
 				main, footer, .landingpageintro, .landingpageinfo, .landingpageteaser, .landingpagenavi, .landingpagecontrast, .landingpagenews,form input[type="submit"],from button,form .button{
-					border-color: {{ settings.themes.cyanine.brandcolorprimary|default('lightseagreen') }};
+					border-color: {{ theme.brandcolorprimary|default('lightseagreen') }};
 				}
 				.landingpagecontrast a, .landingpagecontrast a:link, .landingpagecontrast a:visited{
-					background: {{ settings.themes.cyanine.brandcolorprimary|default('lightseagreen') }};
+					background: {{ theme.brandcolorprimary|default('lightseagreen') }};
 				}
 				body,.landingpagecontrast, a,
 				.landingpagecontrast a, .landingpagecontrast a:link, .landingpagecontrast a:visited,
 				.account, .account a, .account a:link, .account a:hover, .account a:focus, .account a:visited,
 				form input[type="submit"],from button,form .button{
-					color: {{ settings.themes.cyanine.fontcolorprimary|default('#F7F7F7') }};
+					color: {{ theme.fontcolorprimary|default('#F7F7F7') }};
 				}
 				.landingpagecontrast a, .landingpagecontrast a:link, .landingpagecontrast a:visited{
-					border-color: {{ settings.themes.cyanine.fontcolorprimary|default('#F7F7F7') }};
+					border-color: {{ theme.fontcolorprimary|default('#F7F7F7') }};
 				}
 
 				main, footer, .landingpageintro, .landingpageinfo, .landingpageteaser, .landingpagenavi, .landingpagenews,button.expander, .notice4{
-					background: {{ settings.themes.cyanine.brandcolorsecondary|default('#f7f7f7') }};
+					background: {{ theme.brandcolorsecondary|default('#f7f7f7') }};
 				}
 				.notice4{
-					box-shadow: 0 -100px 80px 0px {{ settings.themes.cyanine.brandcolorsecondary|default('#f7f7f7') }};
+					box-shadow: 0 -100px 80px 0px {{ theme.brandcolorsecondary|default('#f7f7f7') }};
 				}
 				main, footer, .landingpageintro, .landingpageinfo, .landingpageteaser, .landingpagenavi, .landingpagenews, .logo a, button.expander{
-					color: {{ settings.themes.cyanine.fontcolorsecondary|default('#333') }};					
+					color: {{ theme.fontcolorsecondary|default('#333') }};					
 				}
 				button.expander{
-					border-color: {{ settings.themes.cyanine.fontcolorsecondary|default('#333') }};
+					border-color: {{ theme.fontcolorsecondary|default('#333') }};
 				}
 
 				main a, main a:before, footer a, .landingpageintro p a, .landingpageinfo p a, .landingpageteaser p a, .landingpagenavi p a{
-					color: {{ settings.themes.cyanine.fontcolorlink|default('#007474') }};
+					color: {{ theme.fontcolorlink|default('#007474') }};
 			  	}
 				.TOC li a, .TOC li a:hover,.TOC li a:focus,.TOC li a:active{
-					border-color: {{ settings.themes.cyanine.fontcolorlink|default('#007474') }};
+					border-color: {{ theme.fontcolorlink|default('#007474') }};
 				}
 
 				.navigation, button, .button,thead{
-					background: {{ settings.themes.cyanine.brandcolortertiary|default('lightseagreen') }};
+					background: {{ theme.brandcolortertiary|default('lightseagreen') }};
 				}
 				.navigation, button, .button{
-					border-color: {{ settings.themes.cyanine.bordercolortertiary|default('lightseagreen') }};
+					border-color: {{ theme.bordercolortertiary|default('lightseagreen') }};
 				}
 				.navigation, button, .button,thead,
 				.navigation a,.navigation a:hover,.navigation a:focus, .navigation a:active{
-					color: {{ settings.themes.cyanine.fontcolortertiary|default('#F7F7F7') }};
+					color: {{ theme.fontcolortertiary|default('#F7F7F7') }};
 				}
 				article pre{
-					border-left: 4px solid {{ settings.themes.cyanine.brandcolortertiary|default('lightseagreen') }};
+					border-left: 4px solid {{ theme.brandcolortertiary|default('lightseagreen') }};
 				}
 				article pre, article code{
-					background: {{ settings.themes.cyanine.codebackground|default('#ddd') }};
-					color: {{ settings.themes.cyanine.codecolor|default('#333') }};
+					background: {{ theme.codebackground|default('#ddd') }};
+					color: {{ theme.codecolor|default('#333') }};
 				}
 
 				.mainnavigation a:hover,.mainnavigation a:focus,.mainnavigation a:active, .mainnavigation .active > a:first-child{
-					background: {{ settings.themes.cyanine.contentnavihoverbackground|default('lightseagreen') }};
-					color: {{ settings.themes.cyanine.contentnavihovercolor|default('white') }};
+					background: {{ theme.contentnavihoverbackground|default('lightseagreen') }};
+					color: {{ theme.contentnavihovercolor|default('white') }};
 				}
 				.landingpagenews li, .newsbox{
-					background: {{ settings.themes.cyanine.newsbackground|default('white') }};
+					background: {{ theme.newsbackground|default('white') }};
 				}
 				.landingpagenews li a, .newsbox, .newsbox a{
-					color: {{ settings.themes.cyanine.newscolor|default('#333') }};
+					color: {{ theme.newscolor|default('#333') }};
 				}
 				.mainnavigation li, tr, hr, .notice4{
-					border-color: {{ settings.themes.cyanine.thinbordercolor|default('lightgray') }};
+					border-color: {{ theme.thinbordercolor|default('lightgray') }};
 				}
 				
 				.notice1{
@@ -158,7 +158,7 @@
 				    border-left: 4px solid #3c7bf6;	
 				}
 
-				{% if settings.themes.cyanine.noticecolors %}
+				{% if theme.noticecolors %}
 					.notice1 {
 						background-color: #fafafa;
 						border-left: 10px solid #000;
@@ -215,7 +215,7 @@
 
 			{{ assets.renderCSS() }}
 			
-			{% if settings.themes.cyanine.collapseNav %}
+			{% if theme.collapseNav %}
 				<script>
 					var expandButton 	= document.getElementById("expander");
 					

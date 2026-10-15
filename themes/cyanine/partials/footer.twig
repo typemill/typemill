@@ -1,14 +1,14 @@
-{% if settings.themes.cyanine.footercolumns is not empty %}
+{% if theme.footercolumns is not empty %}
  
 	<footer class="w-100 bl br bb lh-copy">
 		<div class="w-100 center grid-container">
 			<div class="grid-footer">
 				<div class="center pv3 flex-l">
-					{% for column,key in settings.themes.cyanine.footercolumns %}
+					{% for column,key in theme.footercolumns %}
 
-						{% if settings.themes.cyanine[key] %}
+						{% if theme[key] %}
 							<div class="w-100 pv3 ph3 ph4-l">
-								{{ markdown(settings.themes.cyanine[key]) }}
+								{{ markdown(theme[key]) }}
 							</div>
 						{% endif %}
 
@@ -25,8 +25,8 @@
 		<div class="grid-footer">
 			<div class="ph3 ph4-l">
 
-				{% if settings.themes.cyanine.copyrightline %}
-					{{ markdown(settings.themes.cyanine.copyrightlinetext) }}
+				{% if theme.copyrightline %}
+					{{ markdown(theme.copyrightlinetext) }}
 				{% else %}
 					{% set nowYear = "now"|date("Y") %}
 					{% if settings.year is empty or settings.year == nowYear %}

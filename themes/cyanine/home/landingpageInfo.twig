@@ -2,15 +2,15 @@
 		
 		<div class="f5 f4-ns mw7 ph3 fw3 lh-copy center">
 			
-			{{ markdown(settings.themes.cyanine.infoMarkdown) }}
+			{{ markdown(theme.infoMarkdown) }}
 
 		</div>
 	
-		{% if settings.themes.cyanine.infoFolder %}
+		{% if theme.infoFolder %}
 
 			<div class="mw8 pv2 center">
 
-				{% set pagelist = getPageList(navigation, settings.themes.cyanine.infoFolder, base_url) %}
+				{% set pagelist = getPageList(navigation, theme.infoFolder, base_url) %}
 
 
 				<ul class="flex-l flex-wrap-l justify-between pa0 ma3 mh0-l">

@@ -2,9 +2,9 @@
 		
 		<div class="mw8 pv6 ph3 center">
 
-			<h2 class="f2">{{ settings.themes.cyanine.newsHeadline|e }}</h2>
+			<h2 class="f2">{{ theme.newsHeadline|e }}</h2>
 
-			{% set pagelist = getPageList(navigation, settings.themes.cyanine.newsFolder, base_url) %}
+			{% set pagelist = getPageList(navigation, theme.newsFolder, base_url) %}
 
 			{% if pagelist.contains == 'pages' %}
 
@@ -59,7 +59,7 @@
 
 			{% endif %}	
 			
-			<a href="{{base_url}}{{ settings.themes.cyanine.newsFolder }}" class="button link dim dib pa3 ma1 ba">{{ settings.themes.cyanine.newsLabel }}</a>
+			<a href="{{base_url}}{{ theme.newsFolder }}" class="button link dim dib pa3 ma1 ba">{{ theme.newsLabel }}</a>
 
 		</div>
 

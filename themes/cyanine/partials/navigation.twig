@@ -30,14 +30,14 @@
 
 {% import _self as macros %}
 
-{% if settings.themes.cyanine.collapseNav %}
+{% if theme.collapseNav %}
     <button 
     	id="expander" 
-    	data-expandlabel="{{ settings.themes.cyanine.expand|default('expand navigation')|e }}" 
-    	data-collapselabel="{{ settings.themes.cyanine.collapse|default('collapse navigation')|e }}" 
-    	class="expander dim dn db-l link pointer w-100 ba pa2 mb3 f6">{{ settings.themes.cyanine.expand|default('expand navigation')|e }}</button>
+    	data-expandlabel="{{ theme.expand|default('expand navigation')|e }}" 
+    	data-collapselabel="{{ theme.collapse|default('collapse navigation')|e }}" 
+    	class="expander dim dn db-l link pointer w-100 ba pa2 mb3 f6">{{ theme.expand|default('expand navigation')|e }}</button>
 {% endif %}
 
 <ul class="cy-nav mainnavigation list pa0 menu f5">
-    {{ macros.loop_over(navigation, settings.themes.cyanine.chapnum ) }}
+    {{ macros.loop_over(navigation, theme.chapnum ) }}
 </ul>
