@@ -7,6 +7,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Routing\RouteContext;
 use Typemill\Models\Navigation;
 use Typemill\Models\Content;
+use Typemill\Models\Meta;
 use Typemill\Models\User;
 use Typemill\Models\Settings;
 use Typemill\Events\OnPagetreeLoaded;
@@ -86,6 +87,16 @@ class ControllerWebAuthor extends Controller
 	      	}
 	    }
 
+		# if user is not allowed to read all content (e.g. not author or higher)
+		if(!$this->userMayOpenDraft($request, $item))
+		{
+			# then show a 404 so that reengineering of urls and guessing of drafts is not possible
+			return $this->c->get('view')->render($response->withStatus(404), '404.twig', [
+				'title'			=> 'Blox editor',
+				'description'	=> 'Edit your content with the visual blox editor'
+			]);
+		}
+
 	#	$item->modified		= ($item->published OR $item->drafted) ? filemtime($this->settings['contentFolder'] . $this->path) : false;
 
 		$mainNavigation 	= $navigation->getMainNavigation($request->getAttribute('c_userrole'), $this->c->get('acl'), $urlinfo, $this->settings['editor']);
@@ -123,6 +134,7 @@ class ControllerWebAuthor extends Controller
 		$urlinfo 			= $this->c->get('urlinfo');
 		$fullUrl  			= $urlinfo['baseurl'] . $url;
 		$langattr 			= $this->settings['langattr'];
+		$username 			= $request->getAttribute('c_username');
 
 	    $navigation 		= new Navigation();
 
@@ -163,6 +175,38 @@ class ControllerWebAuthor extends Controller
 			$item 				= $this->c->get('dispatcher')->dispatch(new OnItemLoaded($item), 'onItemLoaded')->getData();
 		}
 
+	    $userModel = new User();
+	    $user = $userModel->setUser($username);
+	    if($user && $user->getValue('folderaccess'))
+	    {
+	        # then create navigation based on allowed folders (to be implemented)
+	      	$draftNavigation = $navigation->getAllowedFolders($draftNavigation, $user->getValue('folderaccess'));
+
+	      	if($url != '/')
+	      	{
+		    	$accessallowed = $navigation->checkFolderAccess($url, $user->getValue('folderaccess'));
+
+		        # if not allowed show a 404 not found so that reengineering of urls is not possible
+		        if(!$accessallowed)
+		        {
+		        	$destination = isset($draftNavigation[0]->slug) ? $draftNavigation[0]->slug : '';
+					$redirect = $urlinfo['baseurl'] . '/tm/content/raw/' . $destination;
+
+					return $response->withHeader('Location', $redirect)->withStatus(302);
+		        }
+	      	}
+	    }
+
+		# if user is not allowed to read all content (e.g. not author or higher)
+		if(!$this->userMayOpenDraft($request, $item))
+		{
+			# then show a 404 so that reengineering of urls and guessing of drafts is not possible
+			return $this->c->get('view')->render($response->withStatus(404), '404.twig', [
+				'title'			=> 'Raw editor',
+				'description'	=> 'Edit your content with the raw editor in pure markdown syntax.'
+			]);
+		}
+
 	#	$item->modified		= ($item->published OR $item->drafted) ? filemtime($this->settings['contentFolder'] . $this->path) : false;
 
 		$mainNavigation 	= $navigation->getMainNavigation($request->getAttribute('c_userrole'), $this->c->get('acl'), $urlinfo, $this->settings['editor']);
@@ -192,5 +236,24 @@ class ControllerWebAuthor extends Controller
 										'aiconfigured'	=> (new Settings())->isAiConfigured()
 									]
 		]);
+	}
+
+	# draft editor gate, same ownership check as the author api read endpoints:
+	# users with the content:read permission (author and higher) may open all pages,
+	# everyone else (e.g. contributors with mycontent only) only pages they own
+	protected function userMayOpenDraft(Request $request, $item)
+	{
+		$userrole 			= $request->getAttribute('c_userrole');
+		$username 			= $request->getAttribute('c_username');
+
+		if($this->userroleIsAllowed($userrole, 'content', 'read'))
+		{
+			return true;
+		}
+
+		$meta 				= new Meta();
+		$metadata 			= $meta->getMetaData($item);
+
+		return $this->userIsAllowed($username, $metadata);
 	}
 }
