@@ -382,6 +382,21 @@ forms:
           label: 'Homepage Intro Text'
           checkboxlabel: 'Show the text of the homepage and list posts below'
 
+    fieldsetLanguages:
+      type: fieldset
+      legend: 'Languages'
+      fields:
+        detectLang:
+          type: checkbox
+          label: 'Detect Browser Language'
+          checkboxlabel: 'Redirect visitors automatically to their preferred language version'
+          description: 'Detects the browser language on the first visit to the base homepage and redirects to the language version. Only active on multi-language websites. Manually selected languages always take precedence over the detection.'
+        introLangswitch:
+          type: checkbox
+          label: 'Language Switch'
+          checkboxlabel: 'Show language switch'
+          description: 'Shows links to all published translations below the intro button on the landingpage. Only visible in multilanguage projects.'
+
     landing:
       type: fieldset
       legend: 'Landingpage'
@@ -475,11 +490,6 @@ forms:
           type: checkbox
           label: Background Image Fallback
           checkboxlabel: Use the hero-image of the homepage as background image
-        introLangswitch:
-          type: checkbox
-          label: Language Switch
-          checkboxlabel: Show language switch
-          description: Shows links to all published translations below the intro button. Only visible in multilanguage projects.
 
     landingpageInfo:
       type: fieldset

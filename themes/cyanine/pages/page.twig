@@ -155,9 +155,7 @@
 
 	  			{% if multilang %}
 	  				<div class="flex dib w-100 mb2">
-		  				{% for lang,link in multilang %}
-		  					<a class="pa2 mr1 ba link" href="{{ base_url }}{{ link }}">{{ lang|upper }}</a>
-		  				{% endfor %}
+		  				{% include 'partials/languageswitch.twig' %}
 		  			</div>
 	  			{% endif %}
 

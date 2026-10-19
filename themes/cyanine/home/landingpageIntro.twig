@@ -55,9 +55,7 @@
 					{% if theme.introLangswitch and multilang %}
 
 						<div class="mt3">
-							{% for lang,link in multilang %}
-								<a class="link dim ph2 pv1 mh1 ba dib" href="{{ base_url }}{{ link }}">{{ lang|upper }}</a>
-							{% endfor %}
+							{% include 'partials/languageswitch.twig' with {'classes': 'link dim ph2 pv1 mh1 ba dib'} %}
 						</div>
 
 					{% endif %}

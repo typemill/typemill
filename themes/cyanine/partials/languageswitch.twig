@@ -1,0 +1,7 @@
+{# Language switch: links to all published translations of the current page.
+   The data-tmlang attribute stores the selected language preference (see layout.twig). #}
+{% if multilang %}
+	{% for lang, link in multilang %}
+		<a data-tmlang="{{ lang }}" hreflang="{{ lang }}" class="{{ classes|default('pa2 mr1 ba link') }}" href="{{ base_url }}{{ link }}">{{ lang|upper }}</a>
+	{% endfor %}
+{% endif %}

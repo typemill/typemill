@@ -12,6 +12,50 @@
 
 		{{ assets.renderMeta() }}
 
+		{# language preference: tracks manual language switches and detects the browser language on multi-language websites #}
+		{% if settings.projects == 'languages' %}
+		<script>
+		(function(){
+			"use strict";
+			var key = "tm-lang";
+			function readLang(){ try { return localStorage.getItem(key); } catch(e){ return null; } }
+			function storeLang(value){ try { localStorage.setItem(key, value); return true; } catch(e){ return false; } }
+
+			/* manual language selection always wins: store the code before the link is followed */
+			document.addEventListener("click", function(e){
+				var link = e.target && e.target.closest ? e.target.closest("a[data-tmlang]") : null;
+				if(link){ storeLang(link.getAttribute("data-tmlang")); }
+			});
+
+			{% if theme.detectLang and home and not project and not is_loggedin() %}
+			/* automatic redirect: base homepage only, never for logged-in users */
+			var targets = {{ multilang|default({})|json_encode|raw }};
+			var base = {{ settings.baseprojectid|default(settings.langattr)|json_encode|raw }};
+			var stored = readLang();
+			var go = function(code){
+				if(code && code !== base && targets[code]){
+					window.location.replace("{{ base_url }}" + targets[code]);
+				}
+			};
+			if(!stored){
+				/* first visit: detect the browser language, remember it, then redirect */
+				var list = navigator.languages || (navigator.language ? [navigator.language] : []);
+				var detected = base;
+				for(var i = 0; i < list.length; i++){
+					var code = (list[i] || "").toLowerCase().split("-")[0];
+					if(code === base){ break; }
+					if(targets[code]){ detected = code; break; }
+				}
+				if(storeLang(detected)){ go(detected); }
+			} else {
+				/* returning visitor: the stored preference (manual or detected) wins */
+				go(stored);
+			}
+			{% endif %}
+		})();
+		</script>
+		{% endif %}
+
 		{% block stylesheets %}
     
 			<link rel="stylesheet" href="{{ base_url }}/themes/cyanine/css/tachyons.min.css?20220527" />
