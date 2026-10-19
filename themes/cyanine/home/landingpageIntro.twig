@@ -51,6 +51,16 @@
 						<a class="button link dim ph4 pv3 mt3 ba dib" href="{{ theme.introButtonLink }}">{{ theme.introButtonLabel|e }}</a>
 
 					{% endif %}
+
+					{% if theme.introLangswitch and multilang %}
+
+						<div class="mt3">
+							{% for lang,link in multilang %}
+								<a class="link dim ph2 pv1 mh1 ba dib" href="{{ base_url }}{{ link }}">{{ lang|upper }}</a>
+							{% endfor %}
+						</div>
+
+					{% endif %}
 				</div>
 			</div>
 		</div>		

@@ -446,10 +446,38 @@ class ControllerWebFrontend extends Controller
 				{
 					$multilang 			= new Multilang();
 					$multilangIndex 	= $multilang->getMultilangIndex();
-					$multilangData      = $multilang->getMultilangData($pageid, $multilangIndex);
-					$multilangRefs 		= [];					
+					$indexRebuilt 		= false;
 
-					unset($multilangData['parent']);
+					# the index is deleted on every page change, so recreate it lazily (same as in the api controllers)
+					if(!$multilangIndex)
+					{
+						$multilangIndex = $multilang->createFreshIndex($this->settings, $urlinfo);
+						$indexRebuilt 	= true;
+					}
+
+					$multilangData      = false;
+					if($multilangIndex)
+					{
+						$multilangData = $multilang->getMultilangData($pageid, $multilangIndex);
+					}
+
+					# the index can be outdated, so rebuild it once and retry if the page is missing
+					if(!$multilangData && $multilangIndex && !$indexRebuilt)
+					{
+						$multilangIndex = $multilang->createFreshIndex($this->settings, $urlinfo);
+
+						if($multilangIndex)
+						{
+							$multilangData = $multilang->getMultilangData($pageid, $multilangIndex);
+						}
+					}
+
+					$multilangRefs 		= [];
+
+					if($multilangData && is_array($multilangData))
+					{
+						unset($multilangData['parent']);
+					}
  
 					foreach($projects as $project)
 					{

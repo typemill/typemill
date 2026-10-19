@@ -8,16 +8,14 @@
       }
     }
   },
-/*  "model": "opencode/claude-sonnet-4-6", */
-  "model": "opencode/kimi-k3",
+  "model": "opencode/glm-5.3",
   "agents": {
-/*    "title": { "model": "opencode/claude-haiku-4-5" }, */
-    "title": { "model": "opencode/minimax-m2.7" }
+    "title": { "model": "opencode/minimax-m3" }
   },
   "instructions": [
-    "ai/docs/architecture.md",
-    "ai/docs/theme-development.md",
-    "ai/docs/plugin-development.md"
+    "docs/08-ai/architecture.md",
+    "docs/08-ai/theme-development.md",
+    "docs/08-ai/plugin-development.md"
   ],
   "permissions": [
     { "action": "read",      "resource": "*", "effect": "allow" },

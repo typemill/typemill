@@ -145,7 +145,7 @@
 
 		</div>
 
-		<aside class="grid-sidebar ph3 pv3">
+		<aside class="grid-sidebar ph3 pv3"> 
 
 			<nav id="contentnav" class="contentnav{{ theme.collapseNav ? ' collapse' : '' }}" aria-label="Menu">
 
@@ -156,7 +156,7 @@
 	  			{% if multilang %}
 	  				<div class="flex dib w-100 mb2">
 		  				{% for lang,link in multilang %}
-		  					<a class="pa2 mr1 ba link" href="{{ base_url }}{{ link }}">{{ lang }}</a>
+		  					<a class="pa2 mr1 ba link" href="{{ base_url }}{{ link }}">{{ lang|upper }}</a>
 		  				{% endfor %}
 		  			</div>
 	  			{% endif %}

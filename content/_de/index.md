@@ -1,3 +1,0 @@
-# Willkommen
-
-Deutsche Startseite.

@@ -601,7 +601,8 @@ class Navigation extends Folder
 			return [];
 		}
 
-		$extended = [];
+		# start with the first level so that pages on the base level are included (folders are merged with their subtree below)
+		$extended = $firstLevelExtended;
 
 		foreach($firstLevelExtended as $key => $item)
 		{

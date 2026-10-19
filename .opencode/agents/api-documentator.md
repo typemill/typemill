@@ -14,13 +14,13 @@ permissions:
 
 You are an API documentation agent for the Typemill CMS project.
 
-Your job is to keep `/ai/api-spec.yaml` and `/ai/postman-collection.json` accurate and complete by reading the current source files directly.
+Your job is to keep the markdown documentation in `/docs/07-api/` accurate and complete by reading the current source files directly.
 
 ## Source Files
 
 - Routes: `/system/typemill/routes/api.php`
 - Controllers: `/system/typemill/Controllers/`
-- Output: `/ai/api-spec.yaml` and `/ai/postman-collection.json`
+- Output: `/docs/07-api`
 
 Read the route file and relevant controllers before making any changes. Do not rely on memory or assumptions about the API shape.
 
@@ -87,14 +87,3 @@ Group endpoints by controller:
 ## Response Codes
 
 Document these on every endpoint where applicable: `200`, `400`, `401`, `403`, `404`, `422`, `500`.
-
-## Postman Collection
-
-Organize requests into folders matching the tags above. Use `{{baseUrl}}` (default: `http://localhost`) as the collection variable. Include example request bodies and query params inferred from the controllers.
-
-## Output Requirements
-
-- `/ai/api-spec.yaml`: valid OpenAPI 3.0 YAML with info, servers, components (securitySchemes), and paths
-- `/ai/postman-collection.json`: valid Postman Collection v2.1 with folder structure matching tags
-
-When updating, read the current file first and only change what is inaccurate or missing.

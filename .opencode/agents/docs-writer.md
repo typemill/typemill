@@ -21,13 +21,33 @@ First determine what type of component the change affects:
 
 Then generate appropriate documentation.
 
-GENERAL RULES
+## GENERAL RULES
 
 Write concise and practical documentation aimed at developers and users of Typemill.  
 Use clear structure, short explanations, and examples where useful.  
 Avoid marketing language and keep descriptions technical and precise.
 
-CORE FEATURE DOCUMENTATION
+## CORE FEATURE DOCUMENTATION
+
+The documentation of Typemill core is located in the /docs folder with pure markdown files.
+
+### Documentation Structure
+
+The documentation is structured for target groups and contains:
+
+00-getting-started (setup, installagion, requirements)
+01-author-guide (explaining the content creation and content editing for authors)
+02-admin-guide (explaining the system settings and configurations for advanced users)
+03-developer-basics (explaining the core principles of Typemill for developers)
+04-theme-developers (explaining the theme development with html, twig and yaml)
+05-plugin-developers (explaining the plugin development with php, vue, and yaml)
+06-forms (explaining the form builder and form definitions with yaml for the backend, page tabs, themes and plugins, and the frontend)
+07-api (describing the api with authentication and endpoints)
+08-ai (the basic code principles for ai assisted coding)
+09-tasks (the task definitions, implementation plans, and implementation reports grouped by releases)
+
+
+### Documentation Rules
 
 If the change introduces a new feature in Typemill core:
 
@@ -39,7 +59,7 @@ Document:
 - Example usage if relevant
 - Any important limitations
 
-## Structure:
+Structure:
 
 - Feature Name
 - Overview: Short explanation of the feature.
