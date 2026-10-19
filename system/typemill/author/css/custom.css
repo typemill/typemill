@@ -179,7 +179,13 @@
 #kieditor {
   padding-top: 0;
   padding-bottom: 0;
+  max-height: none !important;
+  overflow: visible !important;
 }
+#kieditor .codearea {
+  max-height: none !important;
+  overflow: visible !important;
+} 
 .highlight {
   position: absolute;
   top: 0;
@@ -201,7 +207,8 @@
 [data-el="editor"][data-initialized="true"] {
   color: transparent;
   resize: none;
-  overflow: hidden;
+  max-height: none !important;
+  overflow: visible !important;
 }
 [data-el="highlight"] {
   font-family: inherit;
