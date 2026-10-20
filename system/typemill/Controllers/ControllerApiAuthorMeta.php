@@ -39,19 +39,6 @@ class ControllerApiAuthorMeta extends Controller
 
 		$metadata = $meta->getMetaData($item);
 
-		if(
-			!$metadata or 
-			!isset($metadata['meta']['owner']) OR 
-			!$metadata['meta']['owner'] OR 
-			!isset($metadata['meta']['pageid']) OR
-			!isset($metadata['meta']['modified']) OR
-			!$metadata['meta']['modified']
-#			$metadata['meta']['pageid']
-		)
-		{
-			$metadata = $meta->addMetaDefaults($metadata, $item, $this->settings['author'], $request->getAttribute('c_username'));
-		}
-		
 		# if user is not allowed to perform this action (e.g. not admin)
 		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'read'))
 		{
@@ -74,6 +61,21 @@ class ControllerApiAuthorMeta extends Controller
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
+		}
+
+		# fill missing meta defaults (owner, pageid, modified) only after the access checks
+		# passed, so ownership is always checked against the stored metadata
+		if(
+			!$metadata or 
+			!isset($metadata['meta']['owner']) OR 
+			!$metadata['meta']['owner'] OR 
+			!isset($metadata['meta']['pageid']) OR
+			!isset($metadata['meta']['modified']) OR
+			!$metadata['meta']['modified']
+#			$metadata['meta']['pageid']
+		)
+		{
+			$metadata = $meta->addMetaDefaults($metadata, $item, $this->settings['author'], $request->getAttribute('c_username'));
 		}
 
 		$home = $navigation->isHome($url);
