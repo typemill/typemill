@@ -5,6 +5,7 @@ namespace Typemill\Controllers;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Typemill\Models\Media;
+use Typemill\Models\Meta;
 use Typemill\Models\StorageWrapper;
 use Typemill\Models\Navigation;
 use Typemill\Models\User;
@@ -16,18 +17,65 @@ class ControllerApiImage extends Controller
 	public function getPagemedia(Request $request, Response $response, $args)
 	{
 		$url 			= $request->getQueryParams()['url'] ?? false;
-		$path 			= $request->getQueryParams()['path'] ?? false;
 		$pagemedia 		= [];
 
-		if(!$path)
+		if(!$url)
 		{
 			$response->getBody()->write(json_encode([
-				'message' 		=> Translations::translate('Path is missing.')
+				'message' 		=> Translations::translate('Url is missing.')
 			]));
 
 			return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
 		}
-		
+
+		$urlinfo 		= $this->c->get('urlinfo');
+		$langattr 		= $this->settings['langattr'];
+
+		$navigation 	= new Navigation();
+
+		# configure multilang or multiproject
+		$navigation->setProject($this->settings, $url, $this->c->get('dispatcher'));
+
+		$item 			= $navigation->getItemForUrl($url, $urlinfo, $langattr);
+		if(!$item)
+		{
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('page not found'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
+		}
+
+		# if user is not allowed to perform this action (e.g. not author)
+		if(!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'read'))
+		{
+			# then check if user is the owner of this content
+			$meta 		= new Meta();
+			$metadata 	= $meta->getMetaData($item);
+
+			if(!$this->userIsAllowed($request->getAttribute('c_username'), $metadata))
+			{
+				$response->getBody()->write(json_encode([
+					'message' 	=> Translations::translate('You do not have enough rights.'),
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
+			}
+		}
+
+		# check if the page is within the folders the user is restricted to (folderaccess)
+		if(!$this->urlIsWithinFolderScope($request->getAttribute('c_username'), $url))
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> Translations::translate('You do not have enough rights.'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
+		}
+
+		# read files only from the resolved item path, never from user input
+		$path 			= $item->pathWithoutType;
+
 		$storage 		= new StorageWrapper('\Typemill\Models\Storage');
 
 		$markdown 	= $storage->getFile('contentFolder', '', $path . '.txt');
