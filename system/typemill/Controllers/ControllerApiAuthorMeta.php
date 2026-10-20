@@ -66,6 +66,16 @@ class ControllerApiAuthorMeta extends Controller
 			}
 		}
 
+		# check if the page is within the folders the user is restricted to (folderaccess)
+		if(!$this->urlIsWithinFolderScope($request->getAttribute('c_username'), $url))
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> Translations::translate('You do not have enough rights.'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
+		}
+
 		$home = $navigation->isHome($url);
 
 		# if item is a folder
@@ -177,6 +187,16 @@ class ControllerApiAuthorMeta extends Controller
 
 				return $response->withHeader('Content-Type', 'application/json')->withStatus(403);				
 			}
+		}
+
+		# check if the page is within the folders the user is restricted to (folderaccess)
+		if(!$this->urlIsWithinFolderScope($request->getAttribute('c_username'), $params['url']))
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> Translations::translate('You do not have enough rights.'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
 		}
 
 		$home = $navigation->isHome($params['url']);

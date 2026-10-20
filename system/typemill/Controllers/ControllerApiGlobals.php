@@ -80,6 +80,13 @@ class ControllerApiGlobals extends Controller
 			}
 
 			$contentnavi   	= $navigation->getFullDraftNavigation($urlinfo, $langattr);
+
+			# if the user is restricted to certain folders (folderaccess), filter the draft navigation accordingly
+			$folderaccess 	= $this->getFolderAccess($username);
+			if($folderaccess)
+			{
+				$contentnavi 	= $navigation->getAllowedFolders($contentnavi, $folderaccess);
+			}
 		}
 		else
 		{

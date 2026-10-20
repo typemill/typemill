@@ -4,6 +4,8 @@ namespace Typemill\Controllers;
 
 use DI\Container;
 use Slim\Routing\RouteContext;
+use Typemill\Models\User;
+use Typemill\Models\Navigation;
 use Typemill\Models\StorageWrapper;
 use Typemill\Events\OnTwigLoaded;
 
@@ -211,6 +213,50 @@ abstract class Controller
 		}
 
 		return false;
+	}
+
+	# returns the folderaccess restriction of a user (comma separated folder list) or false if the user is unrestricted
+	protected function getFolderAccess($username)
+	{
+		$userModel 		= new User();
+		$user 			= $userModel->setUser($username);
+
+		if($user && $user->getValue('folderaccess'))
+		{
+			return $user->getValue('folderaccess');
+		}
+
+		return false;
+	}
+
+	# folderaccess scope gate for existing pages: the home page is always allowed, same as in the web editor
+	protected function urlIsWithinFolderScope($username, $url)
+	{
+		$folderaccess 	= $this->getFolderAccess($username);
+
+		if(!$folderaccess)
+		{
+			return true;
+		}
+
+		$navigation 	= new Navigation();
+
+		return $navigation->checkFolderAccess($url, $folderaccess);
+	}
+
+	# folderaccess scope gate for create and move destinations: the root folder is never allowed for restricted users
+	protected function urlIsWithinDestinationScope($username, $destinationUrl)
+	{
+		$folderaccess 	= $this->getFolderAccess($username);
+
+		if(!$folderaccess)
+		{
+			return true;
+		}
+
+		$navigation 	= new Navigation();
+
+		return $navigation->checkFolderAccessForDestination($destinationUrl, $folderaccess);
 	}
 
 	# used for public api endpoints (apiGlobals)

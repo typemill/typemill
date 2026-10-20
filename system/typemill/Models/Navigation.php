@@ -1172,6 +1172,24 @@ class Navigation extends Folder
         return false;
 	}
 
+	# checks if a target folder for create and move operations is within the folderaccess scope of a user.
+	# the root folder is not allowed for restricted users, because pages created there would escape the assigned scope.
+	public function checkFolderAccessForDestination($folderUrl, $folderaccess)
+	{
+		if(!$folderaccess or $folderaccess == '')
+		{
+			return true;
+		}
+
+		# the root folder as destination is never allowed for restricted users
+		if(trim($folderUrl, '/') == '')
+		{
+			return false;
+		}
+
+		return $this->checkFolderAccess($folderUrl, $folderaccess);
+	}
+
 	public function getAllowedFolders($navigation, $folderaccess, $frontend = false)
 	{
 		if(!$folderaccess or $folderaccess == '')

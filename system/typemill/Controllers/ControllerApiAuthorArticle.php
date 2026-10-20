@@ -77,6 +77,16 @@ class ControllerApiAuthorArticle extends Controller
 			}
 		}
 
+		# check if the page is within the folders the user is restricted to (folderaccess)
+		if(!$this->urlIsWithinFolderScope($username, $params['url']))
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> Translations::translate('You do not have enough rights.'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
+		}
+
 	    # publish content
 		$content 			= new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
 		$draftMarkdown  	= $content->getDraftMarkdown($item);
@@ -192,6 +202,16 @@ class ControllerApiAuthorArticle extends Controller
 			}
 		}
 
+		# check if the page is within the folders the user is restricted to (folderaccess)
+		if(!$this->urlIsWithinFolderScope($username, $params['url']))
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> Translations::translate('You do not have enough rights.'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
+		}
+
 	    # publish content
 		$content 			= new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
 		$draftMarkdown  	= $content->getDraftMarkdown($item);
@@ -302,6 +322,16 @@ class ControllerApiAuthorArticle extends Controller
 			}
 		}
 
+		# check if the page is within the folders the user is restricted to (folderaccess)
+		if(!$this->urlIsWithinFolderScope($username, $params['url']))
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> Translations::translate('You do not have enough rights.'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
+		}
+
 	    # save draft content
 		$content 			= new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
 		$oldMarkdown  		= $content->getDraftMarkdown($item);
@@ -406,6 +436,16 @@ class ControllerApiAuthorArticle extends Controller
 
 				return $response->withHeader('Content-Type', 'application/json')->withStatus(403);				
 			}
+		}
+
+		# check if the page is within the folders the user is restricted to (folderaccess)
+		if(!$this->urlIsWithinFolderScope($username, $params['url']))
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> Translations::translate('You do not have enough rights.'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
 		}
 
 	    # save draft content
@@ -524,6 +564,16 @@ class ControllerApiAuthorArticle extends Controller
 
 				return $response->withHeader('Content-Type', 'application/json')->withStatus(403);				
 			}
+		}
+
+		# check if the page is within the folders the user is restricted to (folderaccess)
+		if(!$this->urlIsWithinFolderScope($username, $params['url']))
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> Translations::translate('You do not have enough rights.'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
 		}
 
 	    # publish content
@@ -650,6 +700,17 @@ class ControllerApiAuthorArticle extends Controller
 
 			$folderContent		= $folder->folderContent;
 	    }
+
+		# check if the user is restricted to certain folders (folderaccess) and if the target folder is within that scope
+		$destinationUrl 	= isset($folder) ? $folder->urlRelWoF : '/';
+		if(!$this->urlIsWithinDestinationScope($username, $destinationUrl))
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> Translations::translate('You do not have enough rights.'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
+		}
 
 		$slug 			= Slug::createSlug($params['item_name'], $langattr);
 
@@ -827,6 +888,17 @@ class ControllerApiAuthorArticle extends Controller
 			$folderContent		= $folder->folderContent;
 	    }
 
+		# check if the user is restricted to certain folders (folderaccess) and if the target folder is within that scope
+		$destinationUrl 	= isset($folder) ? $folder->urlRelWoF : '/';
+		if(!$this->urlIsWithinDestinationScope($username, $destinationUrl))
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> Translations::translate('You do not have enough rights.'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
+		}
+
 		$slug 			= Slug::createSlug($params['item_name'], $langattr);
 
 		# iterate through the whole content of the new folder
@@ -972,6 +1044,16 @@ class ControllerApiAuthorArticle extends Controller
 
 				return $response->withHeader('Content-Type', 'application/json')->withStatus(403);				
 			}
+		}
+
+		# check if the page is within the folders the user is restricted to (folderaccess)
+		if(!$this->urlIsWithinFolderScope($username, $params['url']))
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> Translations::translate('You do not have enough rights.'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
 		}
 
 		# check if name exists
@@ -1132,6 +1214,20 @@ class ControllerApiAuthorArticle extends Controller
 			$folderContent		= $newFolder->folderContent;
 		}
 
+		# check if the user is restricted to certain folders (folderaccess) and if the source page and the target folder are within that scope
+		$destinationUrl 	= ($params['parent_id_to'] == '') ? '/' : $newFolder->urlRelWoF;
+		if(
+			!$this->urlIsWithinFolderScope($username, $item->urlRelWoF) OR
+			!$this->urlIsWithinDestinationScope($username, $destinationUrl)
+		)
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> Translations::translate('You do not have enough rights.'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
+		}
+
 		# if the item has been moved within the same folder
 		if($params['parent_id_from'] == $params['parent_id_to'])
 		{
@@ -1287,6 +1383,16 @@ class ControllerApiAuthorArticle extends Controller
 
 				return $response->withHeader('Content-Type', 'application/json')->withStatus(403);				
 			}
+		}
+
+		# check if the page is within the folders the user is restricted to (folderaccess)
+		if(!$this->urlIsWithinFolderScope($username, $params['url']))
+		{
+			$response->getBody()->write(json_encode([
+				'message' 	=> Translations::translate('You do not have enough rights.'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
 		}
 
 		$content = new Content($urlinfo['baseurl'], $this->settings, $this->c->get('dispatcher'));
