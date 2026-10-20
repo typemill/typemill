@@ -1,10 +1,14 @@
 meta:
-    modified: '2026-10-19'
     pageid: ac6731dd94c0c02d
-    author: Sebastian
-    created: '2026-10-19'
-    time: 11-48-47
-    navtitle: home
-    title: Welcome
-    description: Content
+    navtitle: Startseite
+    title: Typemill
+    description: 'Das Open-Source-Flat-File-CMS für textbasierte Websites. Erstellen Sie Handbücher, Dokumentationen, Anleitungen, Web-Romane, traditionelle Webseiten und mehr.'
+    heroimage: media/live/publisher.png
+    owner: typemill
+    author: typemill
+    modified: '2026-08-22'
+    created: '2024-03-19'
+    time: 17-56-00
+    hide: false
+    noindex: false
     translation_for: c9eb33d2af86b19a

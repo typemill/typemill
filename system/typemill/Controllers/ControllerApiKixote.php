@@ -277,6 +277,25 @@ class ControllerApiKixote extends Controller
 		return $parsedYaml;
 	}
 
+	/**
+	 * Rights gate for the translation endpoints, same ownership check as the
+	 * author api endpoints: users with the passed permission (e.g. content:update)
+	 * may use all pages, everyone else only pages they own.
+	 * Runs on the stored metadata only, never on addMetaDefaults output.
+	 */
+	private function userMayUseItem(Request $request, $item, string $resource, string $action): bool
+	{
+		if($this->userroleIsAllowed($request->getAttribute('c_userrole'), $resource, $action))
+		{
+			return true;
+		}
+
+		$meta 		= new Meta();
+		$metadata 	= $meta->getMetaData($item);
+
+		return $this->userIsAllowed($request->getAttribute('c_username'), $metadata);
+	}
+
 	// -------------------------------------------------------------------------
 	// Kixote prompt settings (custom prompt list)
 	// -------------------------------------------------------------------------
@@ -622,11 +641,12 @@ class ControllerApiKixote extends Controller
 		}
 
 		$multilangData = $multilang->getMultilangData($pageid, $multilangIndex);
-		if (!$multilangData || !isset($multilangData[$lang])) {
+		# empty string means the translation page does not exist yet, an empty url would resolve the homepage
+		if (!$multilangData || empty($multilangData[$lang])) {
 			# the index might be outdated, so recreate it from the filesystem and retry once
 			$multilangIndex = $multilang->createFreshIndex($this->settings, $urlinfo);
 			$multilangData  = $multilang->getMultilangData($pageid, $multilangIndex);
-			if (!$multilangData || !isset($multilangData[$lang])) {
+			if (!$multilangData || empty($multilangData[$lang])) {
 				$response->getBody()->write(json_encode([
 					'message'       => Translations::translate('We did not find the page id in the multilangindex'),
 					'multilangData' => $multilangData,
@@ -647,7 +667,7 @@ class ControllerApiKixote extends Controller
 			$multilangIndex = $multilang->createFreshIndex($this->settings, $urlinfo);
 			$multilangData  = $multilang->getMultilangData($pageid, $multilangIndex);
 
-			if ($multilangData && isset($multilangData[$lang])) {
+			if ($multilangData && !empty($multilangData[$lang])) {
 				$url        = $multilangData[$lang];
 				$navigation->setProject($this->settings, $url, $dispatcher = false);
 				$item       = $navigation->getItemForUrl($url, $urlinfo, $lang);
@@ -660,6 +680,16 @@ class ControllerApiKixote extends Controller
 				]));
 				return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 			}
+		}
+
+		# if user is not allowed to write the translation page (e.g. not editor or owner), deny
+		if(!$this->userMayUseItem($request, $item, 'content', 'update'))
+		{
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('You do not have enough rights.'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
 		}
 
 		// GET THE CONTENT
@@ -871,6 +901,26 @@ class ControllerApiKixote extends Controller
 				]));
 				return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 			}
+		}
+
+		# if user is not allowed to write the translation page (e.g. not editor or owner), deny
+		if(!$this->userMayUseItem($request, $transItem, 'content', 'update'))
+		{
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('You do not have enough rights.'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
+		}
+
+		# the original page is read as translation source, so check read rights on it separately
+		if(!$this->userMayUseItem($request, $origItem, 'content', 'read'))
+		{
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('You do not have enough rights.'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
 		}
 
 		// GET THE CONTENT
