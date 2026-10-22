@@ -1153,20 +1153,20 @@ class Navigation extends Folder
 			return true;
 		}
 
-        # normalize allowed folders
+        # normalize allowed folders, keep multi segment entries like "de/news" intact (task 24)
         $folderlist = array_map(function($f)
         {
-            return trim(explode('/', trim($f, '/'))[0]);
+            return trim(trim($f), '/');
         }, explode(',', $folderaccess));
 
-        # get first segment of current url
-        $segments   = explode('/', trim($url, '/'));
-        $firstSegment = $segments[0] ?? '';
-
-        # check if first segment is explicitly allowed
-        if(in_array($firstSegment, $folderlist, true))
+        # check if the url is within one of the allowed folders (task 24)
+        $trimmedUrl = trim($url, '/');
+        foreach($folderlist as $folder)
         {
-            return true;
+            if($folder !== '' && ($trimmedUrl === $folder || strpos($trimmedUrl, $folder . '/') === 0))
+            {
+                return true;
+            }
         }
 
         return false;

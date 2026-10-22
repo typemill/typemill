@@ -252,6 +252,16 @@ class ControllerApiMultilang extends Controller
         	}
         }
 
+		# the source page is read for the copy, so check the folderaccess scope of the user first (task 24)
+		if(!$this->urlIsWithinFolderScope($request->getAttribute('c_username'), $multilangData[$baselang] ?? '/'))
+		{
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('You do not have enough rights.'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
+		}
+
 		# first check if the language folder exists in the content folder
 		$baselangfolder = $this->checkBaseFolder($lang);
 		if($baselangfolder !== true)
@@ -270,17 +280,40 @@ class ControllerApiMultilang extends Controller
 		{
 			$storage = new StorageWrapper($this->settings['storage']);
 
-			# if page exists already
+			# the existing target page must be within the folderaccess scope of the user (task 24)
+			if(!$this->urlIsWithinFolderScope($request->getAttribute('c_username'), $path))
+			{
+				$response->getBody()->write(json_encode([
+					'message' => Translations::translate('You do not have enough rights.'),
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
+			}
+
+			# rewriting the meta of an existing page is an update, so check the update rights, too (task 24)
 			if($targetInfo['extension'])
 			{
 				$targetPath = $targetInfo['pathWoE'] . '.yaml';
-				$this->updateMeta($storage, $targetPath, $pageid);
 			}
 			else
 			{
 				$targetPath = $targetInfo['pathWoE'] . DIRECTORY_SEPARATOR . 'index.yaml';
-				$this->updateMeta($storage, $targetPath, $pageid);
 			}
+
+			$targetMeta = $storage->getYaml('contentFolder', '', $targetPath);
+			if(
+				!$this->userroleIsAllowed($request->getAttribute('c_userrole'), 'content', 'update')
+				AND !$this->userIsAllowed($request->getAttribute('c_username'), $targetMeta)
+			)
+			{
+				$response->getBody()->write(json_encode([
+					'message' => Translations::translate('You do not have enough rights.'),
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
+			}
+
+			$this->updateMeta($storage, $targetPath, $pageid);
 		}
 		else
 		{
@@ -325,6 +358,17 @@ class ControllerApiMultilang extends Controller
 
 					return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 				}
+			}
+
+			# check the folderaccess scope for the destination before the page is created (task 24)
+			$destinationUrl = $targetParentInfo ? $parentUrl : '/' . $lang;
+			if(!$this->urlIsWithinDestinationScope($request->getAttribute('c_username'), $destinationUrl))
+			{
+				$response->getBody()->write(json_encode([
+					'message' => Translations::translate('You do not have enough rights.'),
+				]));
+
+				return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
 			}
 
 			$result = $this->copyPage($sourceInfo, $targetParentInfo, $slug, $lang, $pageid);
@@ -446,6 +490,20 @@ class ControllerApiMultilang extends Controller
 				return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
         	}
         }
+
+		# check the folderaccess scope for source and target before the shared index is written (task 24)
+		$targetUrl = (strpos($url, '/' . $lang . '/') === 0 OR $url === '/' . $lang) ? $url : '/' . $lang . $url;
+		if(
+			!$this->urlIsWithinFolderScope($request->getAttribute('c_username'), $multilangData[$baselang] ?? '/')
+			OR !$this->urlIsWithinFolderScope($request->getAttribute('c_username'), $targetUrl)
+		)
+		{
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('You do not have enough rights.'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
+		}
 
 		# update the multilangIndex
 		$multilangIndex[$pageid][$lang] = '';

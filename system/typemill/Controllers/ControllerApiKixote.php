@@ -682,6 +682,16 @@ class ControllerApiKixote extends Controller
 			}
 		}
 
+		# if the translation page is outside the folderaccess scope of the user, deny (task 24)
+		if(!$this->urlIsWithinFolderScope($request->getAttribute('c_username'), $url))
+		{
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('You do not have enough rights.'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
+		}
+
 		# if user is not allowed to write the translation page (e.g. not editor or owner), deny
 		if(!$this->userMayUseItem($request, $item, 'content', 'update'))
 		{
@@ -901,6 +911,19 @@ class ControllerApiKixote extends Controller
 				]));
 				return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
 			}
+		}
+
+		# if the base page or the translation page is outside the folderaccess scope of the user, deny (task 24)
+		if(
+			!$this->urlIsWithinFolderScope($request->getAttribute('c_username'), $origUrl)
+			OR !$this->urlIsWithinFolderScope($request->getAttribute('c_username'), $transUrl)
+		)
+		{
+			$response->getBody()->write(json_encode([
+				'message' => Translations::translate('You do not have enough rights.'),
+			]));
+
+			return $response->withHeader('Content-Type', 'application/json')->withStatus(403);
 		}
 
 		# if user is not allowed to write the translation page (e.g. not editor or owner), deny
