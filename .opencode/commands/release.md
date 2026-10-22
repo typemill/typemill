@@ -5,11 +5,11 @@ description: Create a Release Summary
 ## Where to find release information
 
 * check the latest changes in git for the release $ARGUMENTS
-* inside the folder /docs/09-tasks read all files in the release folder with $ARGUMENTS
+* inside the folder /tasks read all files in the release folder with $ARGUMENTS
 
 ## Where to write release information
 
-Inside the folder /docs/09-tasks in the folder with $ARGUMENTS write the release summary into the index.md file.
+Inside the folder /tasks in the folder with $ARGUMENTS write the release summary into the index.md file.
 
 ## How to write release information
 

@@ -165,7 +165,6 @@ class ControllerApiFile extends Controller
 		$extension 	= pathinfo($params['name'], PATHINFO_EXTENSION);
 		$finfo 		= finfo_open( FILEINFO_MIME_TYPE );
 		$mtype 		= @finfo_file( $finfo, $params['file'] );
-		finfo_close($finfo);
 
 		if ($size === 0)
 		{
@@ -232,7 +231,6 @@ class ControllerApiFile extends Controller
 			$fullPath 	= $this->settings['rootPath'] . DIRECTORY_SEPARATOR . $filePath;
 			$finfo 		= finfo_open( FILEINFO_MIME_TYPE );
 			$mtype 		= @finfo_file( $finfo, $fullPath );
-			finfo_close($finfo);
 
 			if(!$mtype OR !$this->checkAllowedMimeTypes($mtype, $extension))
 			{

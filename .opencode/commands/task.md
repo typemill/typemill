@@ -2,6 +2,6 @@
 description: Review a Task
 ---
 
-Read the task $ARGUMENTS in the folder /docs/09-tasks/ and review the implementation plan or create an implementation plan if no plan exists yet. 
+Read the task $ARGUMENTS in the folder /tasks/ and review the implementation plan or create an implementation plan if no plan exists yet. 
 
 Append your review and improvements to the task and wait for confirmation before you apply any changes or further code.
