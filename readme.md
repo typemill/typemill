@@ -55,6 +55,11 @@ composer update
 
 Use the official image from [DockerHub](https://hub.docker.com/r/kixote/typemill) or read the description on [docs.typemill.net](https://docs.typemill.net/getting-started/installation/docker)
 
+## One-Click Deploy
+
+<a href="https://repocloud.io/details/Typemill/"><img src="https://d16t0pc4846x52.cloudfront.net/deploylobe.svg" alt="Deploy on RepoCloud" height="42"></a>
+<a href="https://zeabur.com/templates/DKCR51"><img src="https://zeabur.com/button.svg" alt="Deploy on Zeabur" height="42"></a>
+
 ## Folder Permissions
 
 Ensure that the following folders are writable:
